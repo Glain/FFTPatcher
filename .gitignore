@@ -1,3 +1,9 @@
+# Glain - FFTPatcher
+*.vshost.exe
+*.vshost.exe.config
+bin/
+obj/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
