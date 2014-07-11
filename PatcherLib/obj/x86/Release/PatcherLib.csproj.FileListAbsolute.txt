@@ -1,7 +1,0 @@
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\bin\x86\Release\PatcherLib.dll
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\bin\x86\Release\PatcherLib.pdb
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\bin\x86\Release\ICSharpCode.SharpZipLib.dll
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\obj\x86\Release\PatcherLib.Properties.Resources.resources
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\obj\x86\Release\PatcherLib.csproj.GenerateResource.Cache
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\obj\x86\Release\PatcherLib.dll
-C:\csharp\FFH_Combined_VS\FFTPatcher\PatcherLib\obj\x86\Release\PatcherLib.pdb

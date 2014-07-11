@@ -1,5 +1,0 @@
-C:\csharp\MassHexASM\ASMUtility\bin\Debug\ASMUtilities.dll
-C:\csharp\MassHexASM\ASMUtility\bin\Debug\ASMUtilities.pdb
-C:\csharp\MassHexASM\ASMUtility\obj\x86\Debug\ASMUtilities.csprojResolveAssemblyReference.cache
-C:\csharp\MassHexASM\ASMUtility\obj\x86\Debug\ASMUtilities.dll
-C:\csharp\MassHexASM\ASMUtility\obj\x86\Debug\ASMUtilities.pdb

@@ -1,8 +1,0 @@
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\bin\Release\ASMEncodingData\psp_vfpu_regs.dat
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\bin\Release\ASMEncodingData\psx_encode.dat
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\bin\Release\ASMEncodingData\mips_encode.dat
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\bin\Release\ASMEncodingData\mips_gp_regs.dat
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\bin\Release\ASMEncodingData\psp_encode.dat
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\bin\Release\ASMEncoding.dll
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\obj\x86\Release\ASMEncoding.dll
-C:\csharp\FFH_Combined_VS\FFTPatcher\ASMEncoding\obj\x86\Release\ASMEncoding.csprojResolveAssemblyReference.cache
