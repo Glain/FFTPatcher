@@ -55,3 +55,6 @@ C:\csharp\FFH_Combined_VS\FFTPatcher\obj\x86\Release\FFTPatcher.PatchPSXForm.res
 C:\csharp\FFH_Combined_VS\FFTPatcher\obj\x86\Release\FFTPatcher.csproj.GenerateResource.Cache
 C:\csharp\FFH_Combined_VS\FFTPatcher\obj\x86\Release\FFTPatcher.exe
 C:\csharp\FFH_Combined_VS\FFTPatcher\obj\x86\Release\FFTPatcher.pdb
+C:\csharp\FFH_Git\FFTPatcher\bin\x86\Release\FFTPatcher.exe.config
+C:\csharp\FFH_Git\FFTPatcher\obj\x86\Release\FFTPatcher.exe
+C:\csharp\FFH_Git\FFTPatcher\obj\x86\Release\FFTPatcher.pdb

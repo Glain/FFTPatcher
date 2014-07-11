@@ -1,9 +1,0 @@
-In FFTPatcher, you can select "Generate Resources.zip".
-This will create a zip file that you can edit.
-Place the zip file in the same directory as PatcherLib.Resources.dll
-
-Edit the XML files in the zip file in order to change the TEXT
-that is displayed in FFTPatcher, FFTacText, and 
-Shishi Sprite Editor.
-
-THIS DOES NOT AFFECT THE TEXT THAT IS DISPLAYED IN THE GAME.
