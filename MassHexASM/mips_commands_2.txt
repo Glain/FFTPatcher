@@ -1,0 +1,62 @@
+
+TYPE
+1: $d, $s, $t
+2: $s, $t, i
+3: $t, $s, i
+4: $s, i
+5: $s, $t
+6: i
+7: $s
+8: $t, i($s)
+9: $t, i
+10: $d
+11: (nothing)
+12: $d, $t, h
+13: $d, $t, $s
+
+add : 1 : 0000 00ss ssst tttt dddd d000 0010 0000
+addi : 3 : 0010 00ss ssst tttt iiii iiii iiii iiii
+addiu : 3 : 0010 01ss ssst tttt iiii iiii iiii iiii
+addu : 1 : 0000 00ss ssst tttt dddd d000 0010 0001
+and : 1 : 0000 00ss ssst tttt dddd d000 0010 0100
+andi : 3 : 0011 00ss ssst tttt iiii iiii iiii iiii
+beq : 2 : 0001 00ss ssst tttt iiii iiii iiii iiii
+bgez : 4 : 0000 01ss sss0 0001 iiii iiii iiii iiii
+bgezal : 4 : 0000 01ss sss1 0001 iiii iiii iiii iiii
+bgtz : 4 : 0001 11ss sss0 0000 iiii iiii iiii iiii
+blez : 4 : 0001 10ss sss0 0000 iiii iiii iiii iiii
+bltz : 4 : 0000 01ss sss0 0000 iiii iiii iiii iiii
+bltzal : 4 : 0000 01ss sss1 0000 iiii iiii iiii iiii
+bne : 2 : 0001 01ss ssst tttt iiii iiii iiii iiii
+div : 5 : 0000 00ss ssst tttt 0000 0000 0001 1010
+divu : 5 : 0000 00ss ssst tttt 0000 0000 0001 1011
+j : 6 : 0000 10ii iiii iiii iiii iiii iiii iiii
+jal : 6 : 0000 11ii iiii iiii iiii iiii iiii iiii
+jr : 7 : 0000 00ss sss0 0000 0000 0000 0000 1000
+lb : 8 : 1000 00ss ssst tttt iiii iiii iiii iiii
+lui : 9 : 0011 11-- ---t tttt iiii iiii iiii iiii
+lw : 8 : 1000 11ss ssst tttt iiii iiii iiii iiii
+mfhi : 10 : 0000 0000 0000 0000 dddd d000 0001 0000
+mflo : 10 : 0000 0000 0000 0000 dddd d000 0001 0010
+mult : 5 : 0000 00ss ssst tttt 0000 0000 0001 1000
+multu : 5 : 0000 00ss ssst tttt 0000 0000 0001 1001
+nop : 11 : 0000 0000 0000 0000 0000 0000 0000 0000
+noop : 11 : 0000 0000 0000 0000 0000 0000 0000 0000
+or : 1 : 0000 00ss ssst tttt dddd d000 0010 0101
+ori : 3 : 0011 01ss ssst tttt iiii iiii iiii iiii
+sb : 8 : 1010 00ss ssst tttt iiii iiii iiii iiii
+sll : 12 : 0000 00ss ssst tttt dddd dhhh hh00 0000
+sllv : 13 : 0000 00ss ssst tttt dddd d--- --00 0100
+slt : 1 : 0000 00ss ssst tttt dddd d000 0010 1010
+slti : 3 : 0010 10ss ssst tttt iiii iiii iiii iiii
+sltiu : 3 : 0010 11ss ssst tttt iiii iiii iiii iiii
+sltu : 1 : 0000 00ss ssst tttt dddd d000 0010 1011
+sra : 12 : 0000 00-- ---t tttt dddd dhhh hh00 0011
+srl : 12 : 0000 00-- ---t tttt dddd dhhh hh00 0010
+srlv : 13 : 0000 00ss ssst tttt dddd d000 0000 0110
+sub : 1 : 0000 00ss ssst tttt dddd d000 0010 0010
+subu : 1 : 0000 00ss ssst tttt dddd d000 0010 0011
+sw : 8 : 1010 11ss ssst tttt iiii iiii iiii iiii
+syscall : 11 : 0000 00-- ---- ---- ---- ---- --00 1100
+xor : 1 : 0000 00ss ssst tttt dddd d--- --10 0110
+xori : 3 : 0011 10ss ssst tttt iiii iiii iiii iiii 

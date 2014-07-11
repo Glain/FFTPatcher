@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/469/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader
+END
+ImageRecord.cs
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/ImageRecord.cs
+END
+ImageReader.cs
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/401/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/ImageReader.cs
+END
+IImageRecord.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/IImageRecord.cs
+END

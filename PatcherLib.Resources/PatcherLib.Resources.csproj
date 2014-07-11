@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E8B981CB-2A97-4901-9A04-E6E5D369F471}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PatcherLib.Resources</RootNamespace>
+    <AssemblyName>PatcherLib.Resources</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\PatcherLib\Resources\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSPResources.cs" />
+    <Compile Include="PSXResources.cs" />
+    <Compile Include="Resources.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\AbilityFormulas.xml" />
+    <Content Include="Resources\digestTransform.xsl" />
+    <Content Include="Resources\PSP\Abilities\Abilities.xml" />
+    <Content Include="Resources\PSP\Abilities\Effects.xml" />
+    <Content Include="Resources\PSP\Abilities\Strings.xml" />
+    <Content Include="Resources\PSP\Chronicle.xml" />
+    <Content Include="Resources\PSP\EventNames.xml" />
+    <Content Include="Resources\PSP\Items\ItemAttributes.xml" />
+    <Content Include="Resources\PSP\Items\Items.xml" />
+    <Content Include="Resources\PSP\Items\Strings.xml" />
+    <Content Include="Resources\PSP\Jobs.xml" />
+    <Content Include="Resources\PSP\MapNames.xml" />
+    <Content Include="Resources\PSP\Errands.xml" />
+    <Content Include="Resources\PSP\ShopNames.xml" />
+    <Content Include="Resources\PSP\SkillSets.xml" />
+    <Content Include="Resources\PSP\SpecialNames.xml" />
+    <Content Include="Resources\PSP\SpriteFiles.xml" />
+    <Content Include="Resources\PSP\SpriteSets.xml" />
+    <Content Include="Resources\PSP\StatusNames.xml" />
+    <Content Include="Resources\PSP\UnitNames.xml" />
+    <Content Include="Resources\PSX-US\Abilities\Abilities.xml" />
+    <Content Include="Resources\PSX-US\Abilities\Effects.xml" />
+    <Content Include="Resources\PSX-US\Abilities\Strings.xml" />
+    <Content Include="Resources\PSX-US\BraveStory.xml" />
+    <Content Include="Resources\PSX-US\EventNames.xml" />
+    <Content Include="Resources\PSX-US\FileList.txt" />
+    <Content Include="Resources\PSX-US\Items\ItemAttributes.xml" />
+    <Content Include="Resources\PSX-US\Items\Items.xml" />
+    <Content Include="Resources\PSX-US\Items\Strings.xml" />
+    <Content Include="Resources\PSX-US\Jobs.xml" />
+    <Content Include="Resources\PSX-US\MapNames.xml" />
+    <Content Include="Resources\PSX-US\Propositions.xml" />
+    <Content Include="Resources\PSX-US\ShopNames.xml" />
+    <Content Include="Resources\PSX-US\SkillSets.xml" />
+    <Content Include="Resources\PSX-US\SpecialNames.xml" />
+    <Content Include="Resources\PSX-US\SpriteFiles.xml" />
+    <Content Include="Resources\PSX-US\SpriteSets.xml" />
+    <Content Include="Resources\PSX-US\StatusNames.xml" />
+    <Content Include="Resources\PSX-US\UnitNames.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ENTD1.ENT" />
+    <None Include="Resources\ENTD2.ENT" />
+    <None Include="Resources\ENTD3.ENT" />
+    <None Include="Resources\ENTD4.ENT" />
+    <None Include="Resources\MoveFind.bin" />
+    <None Include="Resources\Propositions.bin" />
+    <None Include="Resources\PSP\bin\AbilityAnimations.bin" />
+    <None Include="Resources\PSP\bin\AbilityEffects.bin" />
+    <None Include="Resources\PSP\bin\ActionEvents.bin" />
+    <None Include="Resources\PSP\bin\ENTD5.bin" />
+    <None Include="Resources\PSP\bin\font.bin" />
+    <None Include="Resources\PSP\bin\FontWidths.bin" />
+    <None Include="Resources\PSP\bin\ICON0" />
+    <None Include="Resources\PSP\bin\InflictStatuses.bin" />
+    <None Include="Resources\PSP\bin\ItemEffects.bin" />
+    <None Include="Resources\PSP\bin\JobLevels.bin" />
+    <None Include="Resources\PSP\bin\Jobs.bin" />
+    <None Include="Resources\PSP\bin\MonsterSkills.bin" />
+    <None Include="Resources\PSP\bin\NewItemAttributes.bin" />
+    <None Include="Resources\PSP\bin\NewItems.bin" />
+    <None Include="Resources\PSP\bin\OldItemAttributes.bin" />
+    <None Include="Resources\PSP\bin\OldItems.bin" />
+    <None Include="Resources\PSP\bin\PoachProbabilities.bin" />
+    <None Include="Resources\PSP\bin\SkillSetsBin.bin" />
+    <None Include="Resources\PSP\bin\StatusAttributes.bin" />
+    <None Include="Resources\PSX-US\bin\Abilities.bin" />
+    <None Include="Resources\PSX-US\bin\AbilityAnimations.bin" />
+    <None Include="Resources\PSX-US\bin\AbilityEffects.bin" />
+    <None Include="Resources\PSX-US\bin\ActionEvents.bin" />
+    <None Include="Resources\PSX-US\bin\font.bin" />
+    <None Include="Resources\PSX-US\bin\FontWidths.bin" />
+    <None Include="Resources\PSX-US\bin\InflictStatuses.bin" />
+    <None Include="Resources\PSX-US\bin\ItemEffects.bin" />
+    <None Include="Resources\PSX-US\bin\JobLevels.bin" />
+    <None Include="Resources\PSX-US\bin\Jobs.bin" />
+    <None Include="Resources\PSX-US\bin\MonsterSkills.bin" />
+    <None Include="Resources\PSX-US\bin\OldItemAttributes.bin" />
+    <None Include="Resources\PSX-US\bin\OldItems.bin" />
+    <None Include="Resources\PSX-US\bin\PoachProbabilities.bin" />
+    <None Include="Resources\ReactionEffects.bin" />
+    <None Include="Resources\PSX-US\bin\SCEAP.DAT.patched.bin" />
+    <None Include="Resources\PSX-US\bin\SkillSetsBin.bin" />
+    <None Include="Resources\PSX-US\bin\StatusAttributes.bin" />
+    <None Include="Resources\StoreInventories.bin" />
+    <None Include="zipResources.bat" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PSPResources.Binaries.cs" />
+    <Compile Include="PSPResources.Lists.cs" />
+    <Compile Include="PSXResources.Binaries.cs" />
+    <Compile Include="PSXResources.Lists.cs" />
+    <Compile Include="Resources\PSP\bin\Abilities.bin" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PatcherLib\PatcherLib.csproj">
+      <Project>{BB7322AD-75D3-44AF-A0BF-76015C53998F}</Project>
+      <Name>PatcherLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)zipResources.bat" "$(ProjectDir)"</PreBuildEvent>
+  </PropertyGroup>
+</Project>

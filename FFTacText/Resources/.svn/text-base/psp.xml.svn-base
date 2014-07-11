@@ -1,0 +1,1408 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PSP>
+  <QuickEdit>
+    <JobDescriptions>
+      <MainFile>
+        <Guid>{B66C9774-1EA0-422C-9148-B5019301EAB4}</Guid>
+        <Section>12</Section>
+        <Offset>0</Offset>
+        <Length>169</Length>
+      </MainFile>
+      <File>
+        <Guid>{8B291A28-EAEA-42E7-8BB3-150871BBB89F}</Guid>
+        <Offset>0</Offset>
+        <Section>12</Section>
+      </File>
+      <File>
+        <Guid>{7B15B85F-238D-40D5-AED0-5BC1E1BBF8C4}</Guid>
+        <Offset>0</Offset>
+        <Section>12</Section>
+      </File>
+    </JobDescriptions>
+    <JobNames>
+      <File>
+        <Guid>{1C12B7FA-638A-493F-AB21-929236DAA15F}</Guid>
+        <Offset>0</Offset>
+        <Section>6</Section>
+      </File>
+      <File>
+        <Guid>{396EF3EC-D861-4DC9-B4DA-BBCEC443FFC2}</Guid>
+        <Offset>0</Offset>
+        <Section>4</Section>
+      </File>
+      <File>
+        <Guid>{CE4B8E36-0DA8-4A2E-A03E-ABEF21AD3A03}</Guid>
+        <Offset>0</Offset>
+        <Section>2</Section>
+      </File>
+      <File>
+        <Guid>{B213AD73-E433-46A8-BBD2-34147A1A7B6D}</Guid>
+        <Offset>0</Offset>
+        <Section>6</Section>
+      </File>
+      <MainFile>
+        <Guid>{7A61692C-D0A8-471C-8C42-95D9D00B79FD}</Guid>
+        <Offset>0</Offset>
+        <Section>0</Section>
+        <Length>169</Length>
+      </MainFile>
+    </JobNames>
+    <ItemDescriptions>
+      <MainFile>
+        <Guid>{B66C9774-1EA0-422C-9148-B5019301EAB4}</Guid>
+        <Offset>0</Offset>
+        <Section>13</Section>
+        <Length>316</Length>
+      </MainFile>
+      <File>
+        <Guid>{8B291A28-EAEA-42E7-8BB3-150871BBB89F}</Guid>
+        <Offset>0</Offset>
+        <Section>13</Section>
+      </File>
+      <File>
+        <Guid>{7B15B85F-238D-40D5-AED0-5BC1E1BBF8C4}</Guid>
+        <Offset>0</Offset>
+        <Section>13</Section>
+      </File>
+    </ItemDescriptions>
+    <ItemNames>
+      <MainFile>
+        <Guid>{1C12B7FA-638A-493F-AB21-929236DAA15F}</Guid>
+        <Section>7</Section>
+        <Offset>0</Offset>
+        <Length>316</Length>
+      </MainFile>
+      <File>
+        <Guid>{B213AD73-E433-46A8-BBD2-34147A1A7B6D}</Guid>
+        <Section>7</Section>
+        <Offset>0</Offset>
+      </File>
+    </ItemNames>
+    <SkillsetNames>
+      <File>
+        <Guid>{1C12B7FA-638A-493F-AB21-929236DAA15F}</Guid>
+        <Section>22</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{B213AD73-E433-46A8-BBD2-34147A1A7B6D}</Guid>
+        <Section>22</Section>
+        <Offset>0</Offset>
+      </File>
+      <MainFile>
+        <Guid>{21DE48BF-8E4B-4DF4-9C09-5EAE49756526}</Guid>
+        <Section>0</Section>
+        <Offset>0</Offset>
+        <Length>227</Length>
+      </MainFile>
+    </SkillsetNames>
+    <SkillsetDescriptions>
+      <MainFile>
+        <Guid>{B66C9774-1EA0-422C-9148-B5019301EAB4}</Guid>
+        <Section>19</Section>
+        <Offset>0</Offset>
+        <Length>227</Length>
+      </MainFile>
+      <File>
+        <Guid>{8B291A28-EAEA-42E7-8BB3-150871BBB89F}</Guid>
+        <Section>19</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{7B15B85F-238D-40D5-AED0-5BC1E1BBF8C4}</Guid>
+        <Section>19</Section>
+        <Offset>0</Offset>
+      </File>
+    </SkillsetDescriptions>
+    <AbilityNames>
+      <File>
+        <Guid>{1C12B7FA-638A-493F-AB21-929236DAA15F}</Guid>
+        <Section>14</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{B213AD73-E433-46A8-BBD2-34147A1A7B6D}</Guid>
+        <Section>14</Section>
+        <Offset>0</Offset>
+      </File>
+      <MainFile>
+        <Guid>{AFF6A62D-A9B1-400F-A247-B21E49B0FCEC}</Guid>
+        <Section>0</Section>
+        <Offset>0</Offset>
+        <Length>512</Length>
+      </MainFile>
+    </AbilityNames>
+    <AbilityDescriptions>
+      <File>
+        <Guid>{B66C9774-1EA0-422C-9148-B5019301EAB4}</Guid>
+        <Section>15</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{7B15B85F-238D-40D5-AED0-5BC1E1BBF8C4}</Guid>
+        <Section>15</Section>
+        <Offset>0</Offset>
+      </File>
+      <MainFile>
+        <Guid>{8B291A28-EAEA-42E7-8BB3-150871BBB89F}</Guid>
+        <Section>15</Section>
+        <Offset>0</Offset>
+        <Length>512</Length>
+      </MainFile>
+    </AbilityDescriptions>
+    <JobRequirements>
+      <MainFile>
+        <Guid>{EC126CCF-77B2-4622-859D-ECF6B501004D}</Guid>
+        <Section>0</Section>
+        <Offset>0</Offset>
+        <Length>99</Length>
+      </MainFile>
+    </JobRequirements>
+  </QuickEdit>
+  <Files>
+
+
+    <OneShotFile>
+      <DisplayName>TUTO1.MES</DisplayName>
+      <Guid>{8A643A2D-CAD2-4AD6-B9F8-F9AC2CA80316}</Guid>
+      <Size>4096</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO1_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="17" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>TUTO2.MES</DisplayName>
+      <Guid>{D919EC74-C369-4017-9ACE-837891028E29}</Guid>
+      <Size>8192</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO2_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="24" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>TUTO3.MES</DisplayName>
+      <Guid>{5DD88D77-7B05-4978-B050-9A055EBD6A53}</Guid>
+      <Size>8192</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO3_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="51" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>TUTO4.MES</DisplayName>
+      <Guid>{138199D1-E5AF-4112-B962-A92EB2EBBB4E}</Guid>
+      <Size>4096</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO4_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="11" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>TUTO5.MES</DisplayName>
+      <Guid>{4DACA8D3-0553-4529-958E-6233993124AE}</Guid>
+      <Size>6144</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO5_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="24" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>TUTO6.MES</DisplayName>
+      <Guid>{AAFD4846-2416-4057-A049-B7F0BD0A4D9E}</Guid>
+      <Size>4096</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO6_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="8" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>TUTO7.MES</DisplayName>
+      <Guid>{7D4FE1BD-B635-4882-A0AD-5EC4E72F3618}</Guid>
+      <Size>2048</Size>
+      <Sectors>
+        <FFTPack index="MENU_TUTO7_MES" offset="0"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="6" empty="true" dte="true" name=""/>
+      </Sections>
+    </OneShotFile>
+
+    <SectionedFile>
+      <DisplayName>ATCHELP.LZW</DisplayName>
+      <Guid>{B66C9774-1EA0-422C-9148-B5019301EAB4}</Guid>
+      <Size>129076</Size>
+      <Sectors>
+        <FFTPack index="EVENT_ATCHELP_LZW" offset="0"/>
+      </Sectors>
+      <Sections count="21">
+        <Section value="0" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="1" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="2" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="3" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="4" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="5" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="6" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="7" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="8" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="9" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="10" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="11" entries="40" empty="false" dte="true" name="Help">
+          <include name="Help1" start="0" end="39" offset="0"/>
+        </Section>
+        <Section value="12" entries="169" empty="false" dte="true" name="Job descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="168" offset="0"/>
+        </Section>
+        <Section value="13" entries="316" empty="false" dte="true" name="Item descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.Items" start="0" end="315" offset="0"/>
+        </Section>
+        <Section value="14" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="15" entries="512" empty="false" dte="true" name="Ability descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+        </Section>
+        <Section value="16" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="17" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="18" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="19" entries="227" empty="false" dte="true" name="Skillset descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0"/>
+        </Section>
+        <Section value="20" entries="1" empty="true" dte="true" hide="true"/>
+      </Sections>
+      <DisallowedEntries>
+        <Section value="15">
+          <entry>0</entry>
+          <entry>1</entry>
+          <entry>2</entry>
+          <entry>3</entry>
+          <entry>4</entry>
+          <entry>5</entry>
+          <entry>6</entry>
+          <entry>7</entry>
+          <entry>8</entry>
+          <entry>9</entry>
+          <entry>10</entry>
+          <entry>11</entry>
+          <entry>12</entry>
+          <entry>13</entry>
+          <entry>14</entry>
+          <entry>15</entry>
+          <entry>16</entry>
+          <entry>17</entry>
+          <entry>18</entry>
+          <entry>19</entry>
+          <entry>20</entry>
+          <entry>21</entry>
+          <entry>22</entry>
+          <entry>23</entry>
+          <entry>24</entry>
+          <entry>25</entry>
+          <entry>26</entry>
+          <entry>27</entry>
+          <entry>28</entry>
+          <entry>29</entry>
+          <entry>30</entry>
+          <entry>31</entry>
+          <entry>32</entry>
+          <entry>33</entry>
+          <entry>34</entry>
+          <entry>35</entry>
+          <entry>36</entry>
+          <entry>37</entry>
+          <entry>38</entry>
+          <entry>39</entry>
+          <entry>40</entry>
+          <entry>41</entry>
+          <entry>42</entry>
+          <entry>43</entry>
+          <entry>44</entry>
+          <entry>46</entry>
+          <entry>47</entry>
+          <entry>48</entry>
+          <entry>49</entry>
+          <entry>50</entry>
+          <entry>51</entry>
+          <entry>52</entry>
+          <entry>53</entry>
+          <entry>54</entry>
+          <entry>55</entry>
+          <entry>56</entry>
+          <entry>57</entry>
+          <entry>58</entry>
+          <entry>59</entry>
+          <entry>60</entry>
+          <entry>61</entry>
+          <entry>62</entry>
+          <entry>63</entry>
+          <entry>64</entry>
+          <entry>65</entry>
+          <entry>66</entry>
+          <entry>67</entry>
+          <entry>68</entry>
+          <entry>69</entry>
+          <entry>70</entry>
+          <entry>71</entry>
+          <entry>72</entry>
+          <entry>73</entry>
+          <entry>74</entry>
+          <entry>75</entry>
+          <entry>76</entry>
+          <entry>77</entry>
+          <entry>78</entry>
+          <entry>79</entry>
+          <entry>80</entry>
+          <entry>81</entry>
+          <entry>82</entry>
+          <entry>83</entry>
+          <entry>84</entry>
+          <entry>85</entry>
+          <entry>86</entry>
+          <entry>87</entry>
+          <entry>88</entry>
+          <entry>89</entry>
+          <entry>90</entry>
+          <entry>91</entry>
+          <entry>92</entry>
+          <entry>93</entry>
+          <entry>94</entry>
+          <entry>95</entry>
+          <entry>96</entry>
+          <entry>97</entry>
+          <entry>98</entry>
+          <entry>99</entry>
+          <entry>100</entry>
+          <entry>101</entry>
+          <entry>102</entry>
+          <entry>103</entry>
+          <entry>104</entry>
+          <entry>105</entry>
+          <entry>106</entry>
+          <entry>107</entry>
+          <entry>108</entry>
+          <entry>109</entry>
+          <entry>110</entry>
+          <entry>111</entry>
+          <entry>112</entry>
+          <entry>113</entry>
+          <entry>114</entry>
+          <entry>115</entry>
+          <entry>116</entry>
+          <entry>117</entry>
+          <entry>118</entry>
+          <entry>119</entry>
+          <entry>120</entry>
+          <entry>121</entry>
+          <entry>122</entry>
+          <entry>123</entry>
+          <entry>124</entry>
+          <entry>125</entry>
+          <entry>126</entry>
+          <entry>127</entry>
+          <entry>128</entry>
+          <entry>129</entry>
+          <entry>130</entry>
+          <entry>131</entry>
+          <entry>132</entry>
+          <entry>133</entry>
+          <entry>134</entry>
+          <entry>135</entry>
+          <entry>136</entry>
+          <entry>137</entry>
+          <entry>138</entry>
+          <entry>139</entry>
+          <entry>140</entry>
+          <entry>141</entry>
+          <entry>142</entry>
+          <entry>143</entry>
+          <entry>144</entry>
+          <entry>145</entry>
+          <entry>146</entry>
+          <entry>147</entry>
+          <entry>148</entry>
+          <entry>149</entry>
+          <entry>150</entry>
+          <entry>151</entry>
+          <entry>152</entry>
+          <entry>153</entry>
+          <entry>154</entry>
+          <entry>155</entry>
+          <entry>156</entry>
+          <entry>157</entry>
+          <entry>158</entry>
+          <entry>159</entry>
+          <entry>160</entry>
+          <entry>161</entry>
+          <entry>162</entry>
+          <entry>163</entry>
+          <entry>164</entry>
+          <entry>165</entry>
+          <entry>166</entry>
+          <entry>167</entry>
+          <entry>168</entry>
+          <entry>169</entry>
+          <entry>170</entry>
+          <entry>171</entry>
+          <entry>172</entry>
+          <entry>173</entry>
+          <entry>174</entry>
+          <entry>175</entry>
+          <entry>176</entry>
+          <entry>177</entry>
+          <entry>178</entry>
+          <entry>179</entry>
+          <entry>180</entry>
+          <entry>181</entry>
+          <entry>182</entry>
+          <entry>183</entry>
+          <entry>185</entry>
+          <entry>186</entry>
+          <entry>187</entry>
+          <entry>188</entry>
+          <entry>189</entry>
+          <entry>190</entry>
+          <entry>191</entry>
+          <entry>192</entry>
+          <entry>193</entry>
+          <entry>194</entry>
+          <entry>195</entry>
+          <entry>196</entry>
+          <entry>197</entry>
+          <entry>198</entry>
+          <entry>199</entry>
+          <entry>200</entry>
+          <entry>201</entry>
+          <entry>202</entry>
+          <entry>203</entry>
+          <entry>204</entry>
+          <entry>205</entry>
+          <entry>206</entry>
+          <entry>207</entry>
+          <entry>208</entry>
+          <entry>209</entry>
+          <entry>210</entry>
+          <entry>211</entry>
+          <entry>212</entry>
+          <entry>213</entry>
+          <entry>214</entry>
+          <entry>215</entry>
+          <entry>216</entry>
+          <entry>217</entry>
+          <entry>218</entry>
+          <entry>221</entry>
+          <entry>222</entry>
+          <entry>223</entry>
+          <entry>224</entry>
+          <entry>225</entry>
+          <entry>226</entry>
+          <entry>227</entry>
+          <entry>228</entry>
+          <entry>229</entry>
+          <entry>230</entry>
+          <entry>231</entry>
+          <entry>232</entry>
+          <entry>233</entry>
+          <entry>234</entry>
+          <entry>235</entry>
+          <entry>236</entry>
+          <entry>237</entry>
+          <entry>238</entry>
+          <entry>239</entry>
+          <entry>240</entry>
+          <entry>241</entry>
+          <entry>242</entry>
+          <entry>243</entry>
+          <entry>244</entry>
+          <entry>245</entry>
+          <entry>246</entry>
+          <entry>247</entry>
+          <entry>248</entry>
+          <entry>249</entry>
+          <entry>250</entry>
+          <entry>251</entry>
+          <entry>252</entry>
+          <entry>253</entry>
+          <entry>254</entry>
+          <entry>255</entry>
+          <entry>256</entry>
+          <entry>257</entry>
+          <entry>258</entry>
+          <entry>259</entry>
+          <entry>260</entry>
+          <entry>261</entry>
+          <entry>262</entry>
+          <entry>263</entry>
+          <entry>264</entry>
+        </Section>
+      </DisallowedEntries>
+    </SectionedFile>
+
+    <CompressedFile>
+      <DisplayName>BOOT.BIN[28E5EC]</DisplayName>
+      <Guid>{1C12B7FA-638A-493F-AB21-929236DAA15F}</Guid>
+      <Size>22538</Size>
+      <Sectors>
+        <BootBin offset="2680300"/>
+        <BootBin offset="3187096"/>
+      </Sectors>
+      <Sections count="24">
+        <Section value="0" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="1" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="2" entries="39" empty="false" dte="true" compressible="true" name="Battle messages">
+          <entry value="0" name=""/>
+          <entry value="1" name="Don't move"/>
+          <entry value="2" name="Don't act"/>
+          <entry value="3" name="Underwater"/>
+          <entry value="4" name="Out of range"/>
+          <entry value="5" name="Unusable abilities"/>
+          <entry value="6" name="No combos"/>
+          <entry value="7" name="Toad"/>
+          <entry value="8" name="Insufficient MP"/>
+          <entry value="9" name="Silence"/>
+          <entry value="10" name="No units in range"/>
+          <entry value="11" name="Out of stock"/>
+          <entry value="12" name="Out of stock (Throw)"/>
+          <entry value="13" name="Out of stock (Draw out)"/>
+          <entry value="14" name=""/>
+          <entry value="15" name="Out of gun range"/>
+          <entry value="16" name="Can't target self "/>
+          <entry value="17" name="Can't target ally"/>
+          <entry value="18" name="Select target"/>
+          <entry value="19" name="Can't target panel"/>
+          <entry value="20" name="Can't target ally"/>
+          <entry value="21" name="Select target to protect"/>
+          <entry value="22" name="Can't target enemy"/>
+          <entry value="23" name="Learn ability?"/>
+          <entry value="24" name="Inherit abilities?"/>
+          <entry value="25" name="Restore HP/MP?"/>
+          <entry value="26" name="Received item"/>
+          <entry value="27" name="Received item (full stock)"/>
+          <entry value="28" name="Discovered item"/>
+          <entry value="29" name="Discovered item (full stock)"/>
+          <entry value="30" name=""/>
+          <entry value="31" name="Add party member?"/>
+          <entry value="32" name="Equipment sold"/>
+          <entry value="33" name="Party full"/>
+          <entry value="34" name="Select unit to dismiss"/>
+          <entry value="35" name=""/>
+          <entry value="36" name="Don't have Geomancy"/>
+          <entry value="37" name="Can't move"/>
+          <entry value="38" name="Arithmeticks not allowed"/>
+        </Section>
+        <Section value="3" entries="80" empty="false" dte="true" compressible="true" name="Battle messages">
+          <entry value="0" name=""/>
+          <entry value="1" name="Item broke"/>
+          <entry value="2" name="Stole item"/>
+          <entry value="3" name="Stole gil"/>
+          <entry value="4" name="Invited"/>
+          <entry value="5" name="Stole XP"/>
+          <entry value="6" name="Unit joined"/>
+          <entry value="7" name="WT=0"/>
+          <entry value="8" name="Brave++"/>
+          <entry value="9" name="Brave--"/>
+          <entry value="10" name="Faith++"/>
+          <entry value="11" name="Faith--"/>
+          <entry value="12" name="Death sentence"/>
+          <entry value="13" name="Got gil"/>
+          <entry value="14" name="Berserk"/>
+          <entry value="15" name="Asleep"/>
+          <entry value="16" name="Destroyed item"/>
+          <entry value="17" name="MP--"/>
+          <entry value="18" name="Speed--"/>
+          <entry value="19" name="ATK--"/>
+          <entry value="20" name="MAG--"/>
+          <entry value="21" name="ATK++"/>
+          <entry value="22" name=""/>
+          <entry value="23" name="Speed++"/>
+          <entry value="24" name=""/>
+          <entry value="25" name="Max power"/>
+          <entry value="26" name="Sealed movement"/>
+          <entry value="27" name="Killed"/>
+          <entry value="28" name=""/>
+          <entry value="29" name="Barely survived"/>
+          <entry value="30" name="Sealed Act"/>
+          <entry value="31" name="Sealed Move"/>
+          <entry value="32" name="Caused Silence"/>
+          <entry value="33" name=""/>
+          <entry value="34" name=""/>
+          <entry value="35" name="Vampire"/>
+          <entry value="36" name="Oil"/>
+          <entry value="37" name=""/>
+          <entry value="38" name=""/>
+          <entry value="39" name="Sealed"/>
+          <entry value="40" name="Tamed"/>
+          <entry value="41" name="ATK++"/>
+          <entry value="42" name="Confused"/>
+          <entry value="43" name="Malboro"/>
+          <entry value="44" name="ATK++"/>
+          <entry value="45" name="MAG++"/>
+          <entry value="46" name="Speed++"/>
+          <entry value="47" name="Damage=gil"/>
+          <entry value="48" name="Degenerator"/>
+          <entry value="49" name="Deathtrap"/>
+          <entry value="50" name="Sleeping gas"/>
+          <entry value="51" name="Steel needle"/>
+          <entry value="52" name=""/>
+          <entry value="53" name=""/>
+          <entry value="54" name="Found item"/>
+          <entry value="55" name=""/>
+          <entry value="56" name="Successful poach"/>
+          <entry value="57" name=""/>
+          <entry value="58" name="Failed mimic"/>
+          <entry value="59" name="Failed teleport"/>
+          <entry value="60" name="Unit dropped treasure"/>
+          <entry value="61" name="Unit became crystal"/>
+          <entry value="62" name="Job level up"/>
+          <entry value="63" name="Level up"/>
+          <entry value="64" name=""/>
+          <entry value="65" name=""/>
+          <entry value="66" name=""/>
+          <entry value="67" name=""/>
+          <entry value="68" name=""/>
+          <entry value="69" name=""/>
+          <entry value="70" name=""/>
+          <entry value="71" name=""/>
+          <entry value="72" name=""/>
+          <entry value="73" name=""/>
+          <entry value="74" name=""/>
+          <entry value="75" name=""/>
+          <entry value="76" name=""/>
+          <entry value="77" name=""/>
+          <entry value="78" name=""/>
+          <entry value="79" name=""/>
+        </Section>
+        <Section value="4" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="5" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="6" entries="169" empty="false" dte="true" compressible="false" name="Job names">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="168" offset="0"/>
+        </Section>
+        <Section value="7" entries="316" empty="false" dte="true"  compressible="false" name="Item names">
+          <includeResource name="PatcherLib.PSPResources+Lists.Items" start="0" end="315" offset="0"/>
+        </Section>
+        <Section value="8" entries="26" empty="true" dte="false"  compressible="false" name="Blank spaces" hide="true"/>
+        <Section value="9" entries="64" empty="true" dte="true" compressible="false" name="Terrain names"/>
+        <Section value="10" entries="20" empty="true" dte="true" compressible="false" name="Battle menus"/>
+        <Section value="11" entries="26" empty="true" dte="false" compressible="false" name="Blank spaces" hide="true"/>
+        <Section value="12" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="13" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="14" entries="512" empty="false" dte="true"  compressible="false" name="Ability names">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+        </Section>
+        <Section value="15" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="16" entries="20" empty="false" dte="true" compressible="true" name="Battle messages">
+          <entry value="0" name=""/>
+          <entry value="1" name="Charging"/>
+          <entry value="2" name="Performing"/>
+          <entry value="3" name="Move"/>
+          <entry value="4" name="Ride chocobo"/>
+          <entry value="5" name="Inherit crystal"/>
+          <entry value="6" name="Move confirmation"/>
+          <entry value="7" name="Select combo"/>
+          <entry value="8" name="Combo target"/>
+          <entry value="9" name="Select magic"/>
+          <entry value="10" name="Insufficient MP"/>
+          <entry value="11" name="Select target"/>
+          <entry value="12" name="Select target"/>
+          <entry value="13" name="Confirm attack"/>
+          <entry value="14" name="Confirm protect"/>
+          <entry value="15" name="Set direction"/>
+          <entry value="16" name="Select chargeup ability"/>
+          <entry value="17" name="Confirm chargeup ability"/>
+          <entry value="18" name="Confirm action"/>
+          <entry value="19" name="Silence"/>
+        </Section>
+        <Section value="17" entries="40" empty="false" dte="true" compressible="false" name="Status names">
+          <includeResource name="PatcherLib.PSPResources+Lists.StatusNames" start="0" end="39" offset="0"/>
+        </Section>
+        <Section value="18" entries="76" empty="true" dte="false" compressible="false" name="Misc. messages"/>
+        <Section value="19" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="20" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="21" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="22" entries="227" empty="false" dte="true" compressible="false" name="Skillset names">
+          <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0"/>
+        </Section>
+        <Section value="23" entries="26" empty="false" dte="true" compressible="false" name="Summon/Iaido">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="60" end="85" offset="-60"/>
+        </Section>
+      </Sections>
+      <DisallowedEntries>
+        <Section value="8">
+          <entry staticValue="                ">0</entry>
+          <entry staticValue="                ">1</entry>
+          <entry staticValue="                ">2</entry>
+          <entry staticValue="                ">3</entry>
+          <entry staticValue="                ">4</entry>
+          <entry staticValue="                ">5</entry>
+          <entry staticValue="                ">6</entry>
+          <entry staticValue="                ">7</entry>
+          <entry staticValue="                ">8</entry>
+          <entry staticValue="                ">9</entry>
+          <entry staticValue="                ">10</entry>
+          <entry staticValue="                ">11</entry>
+          <entry staticValue="                ">12</entry>
+          <entry staticValue="                ">13</entry>
+          <entry staticValue="                ">14</entry>
+          <entry staticValue="                ">15</entry>
+          <entry staticValue="                ">16</entry>
+          <entry staticValue="                ">17</entry>
+          <entry staticValue="                ">18</entry>
+          <entry staticValue="                ">19</entry>
+          <entry staticValue="                ">20</entry>
+          <entry staticValue="                ">21</entry>
+          <entry staticValue="                ">22</entry>
+          <entry staticValue="                ">23</entry>
+          <entry staticValue="                ">24</entry>
+          <entry staticValue="                ">25</entry>
+        </Section>
+        <Section value="11">
+          <entry staticValue="                ">0</entry>
+          <entry staticValue="                ">1</entry>
+          <entry staticValue="                ">2</entry>
+          <entry staticValue="                ">3</entry>
+          <entry staticValue="                ">4</entry>
+          <entry staticValue="                ">5</entry>
+          <entry staticValue="                ">6</entry>
+          <entry staticValue="                ">7</entry>
+          <entry staticValue="                ">8</entry>
+          <entry staticValue="                ">9</entry>
+          <entry staticValue="                ">10</entry>
+          <entry staticValue="                ">11</entry>
+          <entry staticValue="                ">12</entry>
+          <entry staticValue="                ">13</entry>
+          <entry staticValue="                ">14</entry>
+          <entry staticValue="                ">15</entry>
+          <entry staticValue="                ">16</entry>
+          <entry staticValue="                ">17</entry>
+          <entry staticValue="                ">18</entry>
+          <entry staticValue="                ">19</entry>
+          <entry staticValue="                ">20</entry>
+          <entry staticValue="                ">21</entry>
+          <entry staticValue="                ">22</entry>
+          <entry staticValue="                ">23</entry>
+          <entry staticValue="                ">24</entry>
+          <entry staticValue="                ">25</entry>
+        </Section>
+      </DisallowedEntries>
+    </CompressedFile>
+
+    <CompressedFile>
+      <DisplayName>BOOT.BIN[299024]</DisplayName>
+      <Guid>{396EF3EC-D861-4DC9-B4DA-BBCEC443FFC2}</Guid>
+      <Size>14510</Size>
+      <Sectors>
+        <BootBin offset="2723876"/>
+      </Sectors>
+      <Sections count="5">
+        <Section value="0" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="1" entries="176" dte="true" compressible="true" name="Faith/Brave Warning quotes">
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="23" format="{0}\nLow Brave"/>
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="97" format="{0}\nHigh Faith"/>
+        </Section>
+        <Section value="2" entries="176" name="Faith/Brave Leaving quotes" compressible="true" dte="false">
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="23" format="{0}\nLow Brave\n(Leaving)"/>
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="97" format="{0}\nHigh Faith\n(Leaving)"/>
+        </Section>
+        <Section value="3" entries="175" empty="false" name="Dismiss quotes" compressible="true" dte="false">
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="23" format="Dismissed\n{0}"/>
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="97" format="{0}\nforced to stay"/>
+        </Section>
+        <Section value="4" entries="155" empty="false" dte="true" compressible="false" name="Job names">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="154" offset="0"/>
+        </Section>
+      </Sections>      
+    </CompressedFile>
+
+    <SectionedFile>
+      <DisplayName>BOOT.BIN[29E334]</DisplayName>
+      <Guid>{CE4B8E36-0DA8-4A2E-A03E-ABEF21AD3A03}</Guid>
+      <Size>10351</Size>
+      <Sectors>
+        <BootBin offset="2745140"/>
+        <BootBin offset="3060928"/>
+      </Sectors>
+      <Sections count="31">
+        <Section value="0" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="1" entries="1024" empty="true" dte="false" name="Unit names"/>
+        <Section value="2" entries="170" empty="false" dte="false" name="Job names">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="169" offset="0"/>
+        </Section>
+        <Section value="3" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="4" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="5" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="6" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="7" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="8" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="9" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="10" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="11" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="12" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="13" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="14" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="15" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="16" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="17" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="18" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="19" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="20" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="21" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="22" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="23" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="24" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="25" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="26" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="27" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="28" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="29" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="30" entries="1" empty="true" dte="true" hide="true"/>
+      </Sections>
+    </SectionedFile>
+
+    <SectionedFile>
+      <DisplayName>OPEN.LZW</DisplayName>
+      <Guid>{3364B175-33BD-4607-A218-659CCF09EE81}</Guid>
+      <Size>24717</Size>
+      <Sectors>
+        <FFTPack index="EVENT_OPEN_LZW" offset="0"/>
+      </Sectors>
+      <Sections count="32">
+        <Section value="0" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="1" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="2" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="3" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="4" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="5" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="6" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="7" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="8" entries="1024" empty="true" dte="false" name="Unit names"/>
+        <Section value="9" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="10" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="11" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="12" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="13" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="14" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="15" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="16" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="17" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="18" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="19" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="20" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="21" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="22" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="23" entries="16" empty="true" dte="true" name="Birthday"/>
+        <Section value="24" entries="97" empty="true" dte="false" name="Track names"/>
+        <Section value="25" entries="96" empty="true" dte="false" name="Composers comments"/>
+        <Section value="26" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="27" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="28" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="29" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="30" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="31" entries="12" empty="true" dte="true" name="Months"/>
+      </Sections>
+    </SectionedFile>
+
+    <CompressedFile>
+      <DisplayName>WORLD.LZW</DisplayName>
+      <Guid>{B213AD73-E433-46A8-BBD2-34147A1A7B6D}</Guid>
+      <Size>81920</Size>
+      <Sectors>
+        <FFTPack index="EVENT_WORLD_LZW" offset="0"/>
+      </Sectors>
+      <Sections count="32">
+        <Section value="0" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="1" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="2" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="3" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="4" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="5" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="6" entries="169" empty="false" dte="false" compressible="false" name="Job names">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="168" offset="0"/>
+        </Section>
+        <Section value="7" entries="316" empty="false" dte="true" compressible="false" name="Item names">
+          <includeResource name="PatcherLib.PSPResources+Lists.Items" start="0" end="315" offset="0"/>
+        </Section>
+        <Section value="8" entries="1024" empty="true" dte="false" compressible="false" name="Unit names"/>
+        <Section value="9" entries="1024" empty="true" dte="false" compressible="false" name="Unit names"/>
+        <Section value="10" entries="11" empty="true" dte="true" compressible="false" name="Battle menus"/>
+        <Section value="11" entries="2" empty="true" dte="true" compressible="false" name="Map help"/>
+        <Section value="12" entries="96" empty="true" dte="true" compressible="true" name="Errand names"/>
+        <Section value="13" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="14" entries="512" empty="false" dte="true" compressible="false" name="Ability names">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+        </Section>
+          <Section value="15" entries="77" empty="false" dte="true" compressible="true" name="Feat rewards">
+              <includeResource name="PatcherLib.PSPResources+Lists.Artefacts" start="0" end="30" offset="46"/>
+              <includeResource name="PatcherLib.PSPResources+Lists.Wonders" start="0" end="15" offset="27"/>
+          </Section>
+        <Section value="16" entries="76" empty="true" dte="true" compressible="true" name="Tutorial menus"/>
+        <Section value="17" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
+        <Section value="18" entries="44" empty="true" dte="true" compressible="false" name="Location names"/>
+        <Section value="19" entries="24" empty="true" dte="true" compressible="false" name="Facts"/>
+        <Section value="20" entries="1" empty="true" dte="true" compressible="false" name="Map menu text"/>
+        <Section value="21" entries="115" empty="true" dte="true" compressible="true" name="Event names"/>
+        <Section value="22" entries="227" empty="false" dte="true" compressible="true" name="Skillset names">
+          <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0"/>
+        </Section>
+        <Section value="23" entries="374" empty="true" dte="false" compressible="false" name="Tavern text"/>
+        <Section value="24" entries="32" empty="true" dte="true" compressible="true" name="Tutorial menus"/>
+        <Section value="25" entries="185" empty="true" dte="true" compressible="true" name="Rumors/Multiplayer text"/>
+        <Section value="26" entries="96" empty="true" dte="true" compressible="true" name="Feats names"/>
+          <Section value="27" entries="16" empty="false" dte="true" compressible="true" name="Wonders names">
+              <includeResource name="PatcherLib.PSPResources+Lists.Wonders" start="0" end="15" offset="0"/>
+          </Section>
+          <Section value="28" entries="47" empty="false" dte="true" compressible="true" name="Artefacts names">
+              <includeResource name="PatcherLib.PSPResources+Lists.Artefacts" start="0" end="31" offset="0"/>
+              <entry value="32" name=""/>
+              <entry value="33" name=""/>
+              <includeResource name="PatcherLib.PSPResources+Lists.Artefacts" start="32" end="44" offset="2"/>
+          </Section>
+        <Section value="29" entries="78" empty="true" dte="true" compressible="true" name="Events names"/>
+        <Section value="30" entries="1024" empty="true" dte="false" compressible="false" name="Personae names"/>
+        <Section value="31" entries="96" empty="true" dte="true"  compressible="true" name="Feats descriptions"/>
+      </Sections>
+    </CompressedFile>
+    <CompressedFile>
+      <DisplayName>BOOT.BIN[2A1630]</DisplayName>
+      <Guid>{8B291A28-EAEA-42E7-8BB3-150871BBB89F}</Guid>
+      <Size>220264</Size>
+      <Sectors>
+        <BootBin offset="2758192"/>
+      </Sectors>
+      <Sections count="21">
+        <Section value="0" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="1" entries="50" empty="false" dte="true" compressible="true" name="Help">
+          <include name="Help1" start="0" end="39" offset="0"/>
+          <entry value="40" name="Add"/>
+          <entry value="41" name="Don't add"/>
+          <entry value="42" name="Details"/>
+          <entry value="43" name="Dismiss"/>
+          <entry value="44" name="Cancel dismiss"/>
+          <entry value="45" name="Move"/>
+          <entry value="46" name="Action"/>
+          <entry value="47" name="End turn"/>
+          <entry value="48" name="View status"/>
+          <entry value="49" name="AI"/>
+        </Section>
+        <Section value="2" entries="181" empty="true" dte="true" compressible="true" name="Menu/Options help"/>
+        <Section value="3" entries="2" empty="true" dte="true" compressible="false" name="" hide="true"/>
+        <Section value="4" entries="31" empty="true" dte="false" compressible="false" name=""/>
+        <Section value="5" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="6" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="7" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="8" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="9" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="10" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="11" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="12" entries="169" empty="false" dte="true" compressible="true" name="Job descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="168" offset="0"/>
+        </Section>
+        <Section value="13" entries="316" empty="false" dte="true" compressible="true" name="Item descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.Items" start="0" end="315" offset="0"/>
+        </Section>
+        <Section value="14" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="15" entries="512" empty="false" dte="true" compressible="true" name="Ability descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+        </Section>
+        <Section value="16" entries="45" empty="true" dte="true" compressible="true" name="Location descriptions"/>
+        <Section value="17" entries="116" empty="true" dte="true" compressible="true" name="Location descriptions"/>
+        <Section value="18" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="19" entries="227" empty="false" dte="true" compressible="true" name="Skillset descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0"/>
+        </Section>
+        <Section value="20" entries="768" empty="false" dte="true" name="Unit quotes" compressible="true">
+          <includeResource name="PatcherLib.PSPResources+Lists.UnitNames" start="0" end="767" offset="0"/>
+        </Section>
+      </Sections>
+    </CompressedFile>
+
+    <CompressedFile>
+      <DisplayName>BOOT.BIN[32D368]</DisplayName>
+      <Guid>{7B15B85F-238D-40D5-AED0-5BC1E1BBF8C4}</Guid>
+      <Size>184155</Size>
+      <Sectors>
+        <BootBin offset="3330920"/>
+      </Sectors>
+      <Sections count="21">
+        <Section value="0" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="1" entries="50" empty="false" dte="true" compressible="true" name="Help">
+          <include name="Help1" start="0" end="39" offset="0"/>
+          <entry value="40" name="Add"/>
+          <entry value="41" name="Don't add"/>
+          <entry value="42" name="Details"/>
+          <entry value="43" name="Dismiss"/>
+          <entry value="44" name="Cancel dismiss"/>
+          <entry value="45" name="Move"/>
+          <entry value="46" name="Action"/>
+          <entry value="47" name="End turn"/>
+          <entry value="48" name="View status"/>
+          <entry value="49" name="AI"/>
+        </Section>
+        <Section value="2" entries="157" empty="true" dte="true" compressible="true" name="Menu/Options help"/>
+        <Section value="3" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="4" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="5" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="6" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="7" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="8" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="9" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="10" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="11" entries="64" empty="true" dte="true" compressible="true" name="Terrain descriptions"/>
+        <Section value="12" entries="169" empty="false" dte="true" compressible="true" name="Job descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="168" offset="0"/>
+        </Section>
+        <Section value="13" entries="316" empty="false" dte="true" compressible="true" name="Item descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.Items" start="0" end="315" offset="0"/>
+        </Section>
+        <Section value="14" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="15" entries="512" empty="false" dte="true" compressible="true" name="Ability descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+        </Section>
+        <Section value="16" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="17" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="18" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
+        <Section value="19" entries="227" empty="false" dte="true" compressible="true" name="Skillset descriptions">
+          <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0"/>
+        </Section>
+        <Section value="20" entries="40" empty="false" dte="true" compressible="true" name="Status messages">
+          <includeResource name="PatcherLib.PSPResources+Lists.StatusNames" start="0" end="39" offset="0"/>
+        </Section>
+      </Sections>
+    </CompressedFile>
+    <!--
+    <OneShotFile>
+      <DisplayName></DisplayName>
+      <Size></Size>
+      <Sectors>
+        <BootBin offset="" />
+        <FFTPack index="" offset="" />
+      </Sectors>
+      <Sections count="">
+      </Sections>
+    </OneShotFile>
+    -->
+    <OneShotFile>
+      <DisplayName>BOOT.BIN 1</DisplayName>
+      <Guid>{21DE48BF-8E4B-4DF4-9C09-5EAE49756526}</Guid>
+      <Size>1218</Size>
+      <Sectors>
+        <BootBin offset="3305252"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="227" empty="false" dte="true" name="Skillset names">
+          <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0" />
+        </Section>
+      </Sections>
+    </OneShotFile>
+    <OneShotFile>
+      <DisplayName>BOOT.BIN 2</DisplayName>
+      <Guid>{7A61692C-D0A8-471C-8C42-95D9D00B79FD}</Guid>
+      <Size>1545</Size>
+      <Sectors>
+        <BootBin offset="3306472"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="169" empty="false" dte="true" name="Job names">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="0" end="168" offset="0"/>
+        </Section>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>BOOT.BIN 3</DisplayName>
+      <Guid>{AFF6A62D-A9B1-400F-A247-B21E49B0FCEC}</Guid>
+      <Size>5092</Size>
+      <Sectors>
+        <BootBin offset="3308020"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="512" empty="false" dte="true" name="Ability names">
+          <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+        </Section>
+      </Sections>
+    </OneShotFile>
+
+    <OneShotFile>
+      <DisplayName>BOOT.BIN 4</DisplayName>
+      <Guid>{156491F6-8376-48B1-B9DB-4C8E5B279303}</Guid>
+      <Size>1616</Size>
+      <Sectors>
+        <BootBin offset="3313112"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="31" empty="true" dte="false" name="Error"/>
+      </Sections>
+    </OneShotFile>
+
+    <CompressibleOneShotFile>
+      <DisplayName>BOOT.BIN 5</DisplayName>
+      <Guid>{8AB063AC-7E8E-4B8F-9F67-11D16560B874}</Guid>
+      <Size>4246</Size>
+      <Sectors>
+        <BootBin offset="3314728"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="175" empty="false" name="Dismiss quotes" compressible="true" dte="false">
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="23" format="Dismissed\n{0}"/>
+          <includeResource name="PatcherLib.PSPResources+Lists.SpriteSets" start="1" end="73" offset="97" format="{0}\nforced to stay"/>
+        </Section>
+      </Sections>
+    </CompressibleOneShotFile>
+
+    <CompressibleOneShotFile>
+      <DisplayName>BOOT.BIN 6</DisplayName>
+      <Guid>{EC126CCF-77B2-4622-859D-ECF6B501004D}</Guid>
+      <Size>7159</Size>
+      <Sectors>
+        <BootBin offset="3318976"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="99" empty="false" dte="true" compressible="true" name="Job requirements">
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="74" end="93" offset="-74"/>
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="1" end="74" offset="19"/>
+          <includeResource name="PatcherLib.PSPResources+Lists.JobNames" start="160" end="164" offset="-66"/>
+        </Section>
+      </Sections>
+    </CompressibleOneShotFile>
+
+    <CompressibleOneShotFile>
+      <DisplayName>BOOT.BIN 7</DisplayName>
+      <Guid>{331C389C-15BD-43DE-ADAF-EEFE3871C051}</Guid>
+      <Size>3841</Size>
+      <Sectors>
+        <BootBin offset="3327076"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="74" empty="true" dte="false" compressible="true" name="Shop text"/>
+      </Sections>
+    </CompressibleOneShotFile>
+
+    <OneShotFile>
+      <DisplayName>BOOT.BIN 8</DisplayName>
+      <Guid>{78E00673-E7FE-47BC-A85C-C2DEE5F6B492}</Guid>
+      <Size>537</Size>
+      <Sectors>
+        <BootBin offset="2995732"/>
+      </Sectors>
+      <Sections count="1">
+        <Section value="0" entries="31" empty="true" dte="true" compressible="false" name=""/>
+      </Sections>
+    </OneShotFile>
+    
+    <PartitionedFile>
+      <DisplayName>SNPLMES.BIN</DisplayName>
+      <Guid>{66600266-8B13-4DD5-AE01-82E2FF8516B3}</Guid>
+      <PartitionSize>40960</PartitionSize>
+      <Size>245760</Size>
+      <Sectors>
+        <FFTPack index="WORLD_SNPLMES_BIN" offset="0"/>
+      </Sectors>
+      <Sections count="6">
+        <Section value="0" entries="204" empty="true" dte="true" name="Mesa's Musings"/>
+        <Section value="1" entries="168" empty="true" dte="true" name="Nanai's Histories"/>
+        <Section value="2" entries="186" empty="true" dte="true" name="Veil of Wiyu"/>
+        <Section value="3" entries="217" empty="true" dte="true" name="Enavia Chronicles"/>
+        <Section value="4" entries="40" empty="true" dte="true" name="Germonik Scriptures"/>
+        <Section value="5" entries="14" empty="true" dte="true" name="Test book"/>
+      </Sections>
+    </PartitionedFile>
+
+    <PartitionedFile>
+      <DisplayName>WLDMES.BIN</DisplayName>
+      <Guid>{CC222621-1B07-45E6-8E3B-8A72E02A1CC8}</Guid>
+      <PartitionSize>32768</PartitionSize>
+      <Size>3964928</Size>
+      <Sectors>
+        <FFTPack index="WORLD_WLDMES_BIN" offset="0"/>
+      </Sectors>
+      <Sections count="121">
+        <Section value="0" entries="68" empty="true" dte="true"/>
+        <Section value="1" entries="96" empty="true" dte="true"/>
+          <Section value="2" entries="16" empty="false" dte="true">
+              <includeResource name="PatcherLib.PSPResources+Lists.Wonders" start="0" end="15" offset="0"/>
+          </Section>
+          <Section value="3" entries="47" empty="false" dte="true">
+              <includeResource name="PatcherLib.PSPResources+Lists.Artefacts" start="0" end="31" offset="0"/>
+              <entry value="32" name=""/>
+              <entry value="33" name=""/>
+              <includeResource name="PatcherLib.PSPResources+Lists.Artefacts" start="32" end="44" offset="2"/>
+          </Section>
+        <Section value="4" entries="48" empty="true" dte="true"/>
+        <Section value="5" entries="30" empty="true" dte="true"/>
+        <Section value="6" entries="24" empty="true" dte="true"/>
+        <Section value="7" entries="24" empty="true" dte="true"/>
+        <Section value="8" entries="24" empty="true" dte="true"/>
+        <Section value="9" entries="128" empty="true" dte="true"/>
+        <Section value="10" entries="128" empty="true" dte="true"/>
+        <Section value="11" entries="128" empty="true" dte="true"/>
+        <Section value="12" entries="128" empty="true" dte="true"/>
+        <Section value="13" entries="128" empty="true" dte="true"/>
+        <Section value="14" entries="128" empty="true" dte="true"/>
+        <Section value="15" entries="128" empty="true" dte="true"/>
+        <Section value="16" entries="128" empty="true" dte="true"/>
+        <Section value="17" entries="48" empty="true" dte="true"/>
+        <Section value="18" entries="48" empty="true" dte="true"/>
+        <Section value="19" entries="24" empty="true" dte="true" name="Facts"/>
+        <Section value="20" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="21" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="22" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="23" entries="1" empty="true" dte="true" hide="true"/>
+        <Section value="24" entries="168" empty="true" dte="true"/>
+        <Section value="25" entries="168" empty="true" dte="true"/>
+        <Section value="26" entries="168" empty="true" dte="true"/>
+        <Section value="27" entries="168" empty="true" dte="true"/>
+        <Section value="28" entries="168" empty="true" dte="true"/>
+        <Section value="29" entries="168" empty="true" dte="true"/>
+        <Section value="30" entries="168" empty="true" dte="true"/>
+        <Section value="31" entries="168" empty="true" dte="true"/>
+        <Section value="32" entries="168" empty="true" dte="true"/>
+        <Section value="33" entries="168" empty="true" dte="true"/>
+        <Section value="34" entries="168" empty="true" dte="true"/>
+        <Section value="35" entries="168" empty="true" dte="true"/>
+        <Section value="36" entries="168" empty="true" dte="true"/>
+        <Section value="37" entries="168" empty="true" dte="true"/>
+        <Section value="38" entries="168" empty="true" dte="true"/>
+        <Section value="39" entries="168" empty="true" dte="true"/>
+        <Section value="40" entries="168" empty="true" dte="true"/>
+        <Section value="41" entries="168" empty="true" dte="true"/>
+        <Section value="42" entries="168" empty="true" dte="true"/>
+        <Section value="43" entries="168" empty="true" dte="true"/>
+        <Section value="44" entries="168" empty="true" dte="true"/>
+        <Section value="45" entries="168" empty="true" dte="true"/>
+        <Section value="46" entries="168" empty="true" dte="true"/>
+        <Section value="47" entries="168" empty="true" dte="true"/>
+        <Section value="48" entries="168" empty="true" dte="true"/>
+        <Section value="49" entries="168" empty="true" dte="true"/>
+        <Section value="50" entries="168" empty="true" dte="true"/>
+        <Section value="51" entries="168" empty="true" dte="true"/>
+        <Section value="52" entries="168" empty="true" dte="true"/>
+        <Section value="53" entries="168" empty="true" dte="true"/>
+        <Section value="54" entries="168" empty="true" dte="true"/>
+        <Section value="55" entries="168" empty="true" dte="true"/>
+        <Section value="56" entries="168" empty="true" dte="true"/>
+        <Section value="57" entries="168" empty="true" dte="true"/>
+        <Section value="58" entries="168" empty="true" dte="true"/>
+        <Section value="59" entries="168" empty="true" dte="true"/>
+        <Section value="60" entries="168" empty="true" dte="true"/>
+        <Section value="61" entries="168" empty="true" dte="true"/>
+        <Section value="62" entries="168" empty="true" dte="true"/>
+        <Section value="63" entries="168" empty="true" dte="true"/>
+        <Section value="64" entries="168" empty="true" dte="true"/>
+        <Section value="65" entries="168" empty="true" dte="true"/>
+        <Section value="66" entries="168" empty="true" dte="true"/>
+        <Section value="67" entries="168" empty="true" dte="true"/>
+        <Section value="68" entries="168" empty="true" dte="true"/>
+        <Section value="69" entries="168" empty="true" dte="true"/>
+        <Section value="70" entries="168" empty="true" dte="true"/>
+        <Section value="71" entries="168" empty="true" dte="true"/>
+        <Section value="72" entries="168" empty="true" dte="true"/>
+        <Section value="73" entries="168" empty="true" dte="true"/>
+        <Section value="74" entries="168" empty="true" dte="true"/>
+        <Section value="75" entries="168" empty="true" dte="true"/>
+        <Section value="76" entries="168" empty="true" dte="true"/>
+        <Section value="77" entries="168" empty="true" dte="true"/>
+        <Section value="78" entries="168" empty="true" dte="true"/>
+        <Section value="79" entries="168" empty="true" dte="true"/>
+        <Section value="80" entries="168" empty="true" dte="true"/>
+        <Section value="81" entries="168" empty="true" dte="true"/>
+        <Section value="82" entries="168" empty="true" dte="true"/>
+        <Section value="83" entries="168" empty="true" dte="true"/>
+        <Section value="84" entries="168" empty="true" dte="true"/>
+        <Section value="85" entries="168" empty="true" dte="true"/>
+        <Section value="86" entries="168" empty="true" dte="true"/>
+        <Section value="87" entries="168" empty="true" dte="true"/>
+        <Section value="88" entries="168" empty="true" dte="true"/>
+        <Section value="89" entries="168" empty="true" dte="true"/>
+        <Section value="90" entries="168" empty="true" dte="true"/>
+        <Section value="91" entries="168" empty="true" dte="true"/>
+        <Section value="92" entries="168" empty="true" dte="true"/>
+        <Section value="93" entries="168" empty="true" dte="true"/>
+        <Section value="94" entries="168" empty="true" dte="true"/>
+        <Section value="95" entries="168" empty="true" dte="true"/>
+        <Section value="96" entries="168" empty="true" dte="true"/>
+        <Section value="97" entries="168" empty="true" dte="true"/>
+        <Section value="98" entries="168" empty="true" dte="true"/>
+        <Section value="99" entries="168" empty="true" dte="true"/>
+        <Section value="100" entries="168" empty="true" dte="true"/>
+        <Section value="101" entries="168" empty="true" dte="true"/>
+        <Section value="102" entries="168" empty="true" dte="true"/>
+        <Section value="103" entries="168" empty="true" dte="true"/>
+        <Section value="104" entries="168" empty="true" dte="true"/>
+        <Section value="105" entries="168" empty="true" dte="true"/>
+        <Section value="106" entries="168" empty="true" dte="true"/>
+        <Section value="107" entries="168" empty="true" dte="true"/>
+        <Section value="108" entries="168" empty="true" dte="true"/>
+        <Section value="109" entries="168" empty="true" dte="true"/>
+        <Section value="110" entries="168" empty="true" dte="true"/>
+        <Section value="111" entries="168" empty="true" dte="true"/>
+        <Section value="112" entries="168" empty="true" dte="true"/>
+        <Section value="113" entries="168" empty="true" dte="true"/>
+        <Section value="114" entries="168" empty="true" dte="true"/>
+        <Section value="115" entries="168" empty="true" dte="true"/>
+        <Section value="116" entries="168" empty="true" dte="true"/>
+        <Section value="117" entries="168" empty="true" dte="true"/>
+        <Section value="118" entries="168" empty="true" dte="true"/>
+        <Section value="119" entries="168" empty="true" dte="true"/>
+        <Section value="120" entries="30" empty="true" dte="true"/>
+      </Sections>
+    </PartitionedFile>
+</Files>
+  <Templates>
+    <Help1>
+      <entry value="0" name="Unit #"/>
+      <entry value="1" name="Level"/>
+      <entry value="2" name="HP"/>
+      <entry value="3" name="MP"/>
+      <entry value="4" name="CT"/>
+      <entry value="5" name="AT"/>
+      <entry value="6" name="Exp"/>
+      <entry value="7" name="Name"/>
+      <entry value="8" name="Brave"/>
+      <entry value="9" name="Faith"/>
+      <entry value="10" name=""/>
+      <entry value="11" name="Move"/>
+      <entry value="12" name="Jump"/>
+      <entry value="13" name=""/>
+      <entry value="14" name=""/>
+      <entry value="15" name=""/>
+      <entry value="16" name="Speed"/>
+      <entry value="17" name="ATK"/>
+      <entry value="18" name="Weapon ATK"/>
+      <entry value="19" name=""/>
+      <entry value="20" name="Eva%"/>
+      <entry value="21" name="SEv%"/>
+      <entry value="22" name="AEv%"/>
+      <entry value="23" name="Phys land effect"/>
+      <entry value="24" name="Magic land effect"/>
+      <entry value="25" name="Estimated"/>
+      <entry value="26" name="Hit rate"/>
+      <entry value="27" name="Aries"/>
+      <entry value="28" name="Taurus"/>
+      <entry value="29" name="Gemini"/>
+      <entry value="30" name="Cancer"/>
+      <entry value="31" name="Leo"/>
+      <entry value="32" name="Virgo"/>
+      <entry value="33" name="Libra"/>
+      <entry value="34" name="Scorpio"/>
+      <entry value="35" name="Sagittarius"/>
+      <entry value="36" name="Capricorn"/>
+      <entry value="37" name="Aquarius"/>
+      <entry value="38" name="Pisces"/>
+      <entry value="39" name="Serpentarius"/>
+    </Help1>
+  </Templates>
+</PSP>

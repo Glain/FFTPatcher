@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/478/branches/imageEditorv2/FFTPatcher/Editors
+END
+ElementsEditor.resx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/ElementsEditor.resx
+END
+BaseEditor.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/466/branches/imageEditorv2/FFTPatcher/Editors/BaseEditor.cs
+END
+ElementsEditor.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/ElementsEditor.Designer.cs
+END
+FFTPatchEditor.resx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/FFTPatchEditor.resx
+END
+ElementsEditor.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/434/branches/imageEditorv2/FFTPatcher/Editors/ElementsEditor.cs
+END
+INotifyDataChanged.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/INotifyDataChanged.cs
+END
+FFTPatchEditor.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/476/branches/imageEditorv2/FFTPatcher/Editors/FFTPatchEditor.Designer.cs
+END
+FFTPatchEditor.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/475/branches/imageEditorv2/FFTPatcher/Editors/FFTPatchEditor.cs
+END
+CodeCreator.resx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/CodeCreator.resx
+END
+CodeCreator.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/CodeCreator.Designer.cs
+END
+CodeCreator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Editors/CodeCreator.cs
+END

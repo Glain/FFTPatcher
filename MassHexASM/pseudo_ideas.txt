@@ -1,0 +1,153 @@
+
+mips_encode.dat
+
++TranslatePseudo()*
++TranslatePseudoSingle()*
++ProcessPC()*
++ProcessOrg()*
++SplitLine()*
++RemoveLabel()*
++AddLabel()
++TryEncodeSingle()*
++RemoveFromLines()*
++CreateEncodeLine()*
++GetUnsignedValue()*
++U_BinaryToUnsigned()*
++U_HexToUnsigned()*
++U_HexToUnsigned_AnySign()*
+
+*EncodeASM()*
+*FindLabels()*
+*ReadEncodeList()*
+*ReadRegisterList()*
+
+====
+
+1. li v0,0x801908cc
+
+lui v0,0x8019
+ori v0,v0,0x08cc
+
+2. lw v0,0x801908cc(v1)
+
+lui at,0x8019
+addu at,at,v1
+lw v0,0x08cc(at)
+
+2b. lw v0,0x8019f0cc(v1)
+
+lui at,0x801a
+addu at,at,v1
+lw v0,-0x0f34(at)
+
+3. lw v0,0x801908cc
+
+lui v0,0x8019
+lw v0,0x08cc(v0)
+
+3b. lw v0,0x8019f0cc
+
+lui v0,0x801a
+lw v0,-0x0f34(v0)
+
+--
+
+4. bgt rs,rt,(addr)
+
+slt at,rt,rs
+bne at,zero,(addr)
+
+5. blt rs,rt,(addr)
+
+slt at,rs,rt
+bne at,zero,(addr)
+
+6. bge rs,rt,(addr)
+
+slt at,rs,rt
+beq at,zero,(addr)
+
+7. ble rs,rt,(addr)
+
+slt at,rt,rs
+beq at,zero,(addr)
+
+--
+
+8. mul v0,a0,a1
+
+mult a0,a1
+mflo v0
+
+9. div v0,a0,a1
+
+div a0,a1
+mflo v0
+
+10. rem v0,a0,a1
+    mod v0,a0,a1
+
+div a0,a1
+mfhi v0
+
+====
+
+SOME COPY STUFF
+
+====
+
+								byte[] bytes = EncodeASMSingle(parts, curEncoding, pc);
+								foreach (Byte iByte in bytes)
+								{
+									result.Add(iByte);
+								}
+(When adding to PC)
+====
+
+SOME OLD STUFF
+
+====
+
+// Otherwise, this may be a label; if so, encode the statement after it
+				else if (!string.IsNullOrEmpty(parts[0]))
+				{
+					if (parts[0].EndsWith(":"))
+					{						
+						if (!string.IsNullOrEmpty(parts[1]))
+						{
+							string curLine = RemoveLeadingSpaces(parts[1]);
+							curLine = RemoveComment(curLine);
+							int curSpaceIndex = curLine.IndexOf(' ');
+							
+							if (curSpaceIndex > -1)
+								parts[0] = curLine.Substring(0,curSpaceIndex);
+							else
+								parts[0] = curLine;
+							
+							if ((curLine.Length > curSpaceIndex) && (curSpaceIndex > -1))
+								parts[1] = curLine.Substring(curSpaceIndex+1,curLine.Length-curSpaceIndex-1);
+							
+							// If this is an ASM command, pass off line to encoding routine
+							EncodingFormat? curEncodingOrNull = EncodingFormatListCommand(encodeList, parts[0]);
+							if (curEncodingOrNull != null)
+							{
+								EncodingFormat curEncoding = (EncodingFormat)curEncodingOrNull;
+								
+								try
+								{
+									txt_Hex.Text += EncodeASMSingle(parts, curEncoding, pc, spacePadding) + "\r\n";
+									newTextASMLine = (chk_Decode_IncludeAddress.Checked ? ("[0x" + UnsignedToHex_WithLength(pc, 8) + "] ") : "") + origModLine + "\r\n";
+								}
+								catch
+								{
+									txt_Messages.Text += "FAILED TO ENCODE LINE : " + processLine + " " + ((_errorMessage != "") ? ("(" + _errorMessage + ")") : "") + "\r\n";
+								}
+								finally
+								{
+									_errorMessage = "";
+								}
+								
+								pc += 4;
+							}
+						}
+					}

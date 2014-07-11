@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+  <!-- "ignore" is an optional attribute -->
+  <Patch name="Patch name" ignore="true">
+    <Description>A long description can go here. This tag is optional.</Description>
+
+    <!-- the file name should be the file as its stored on the FFT disc
+       with all slashes turned into _ and all dots turned into _
+       Examples:
+         BATTLE_BIN
+         WORLD_WORLD_BIN
+         SCUS_942_21
+         EVENT_ATTACK_OUT
+         BATTLE_BOM_SPR
+       -->
+
+    <!-- offset should be a string of hex digits -->
+    <Location file="BATTLE_BIN" offset="ABCD">
+      <!-- Anything inside a Location tag will be converted to binary
+         All spaces are ignored, but there must be an even number
+         of hex digits -->
+      00 01 23 45
+    </Location>
+
+    <Location file="EVENT_ATTACK_OUT" offset="EF1234">
+      1234567890
+      0987654321
+      12 34 56 78 90
+      09 87 65 43 21
+    </Location>
+
+    <!-- Variables are always 1 byte -->
+    <Variable file="BATTLE_BIN" offset="11F468" name="X"/>
+
+  </Patch>
+  
+  <ImportFilePatch name="Patch name" ignore="false">
+    <!-- This type of patch will force you to select a file to read
+         before patching -->
+    <!-- The "file" attribute here is which file on the CD should be replaced -->
+    <ImportFile file="EVENT_FRAME_BIN" offset="0" expectedLength="92C0"/>
+  </ImportFilePatch>
+</Patches>

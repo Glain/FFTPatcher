@@ -1,0 +1,607 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{48BE23D0-2943-44EF-A3A6-8537D7695B37}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FFTPatcher</RootNamespace>
+    <AssemblyName>FFTPatcher</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'asd|x86' ">
+    <OutputPath>bin\x86\asd\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>PatcherLib\Resources\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CheckedListBoxNoHighlightWithDefault.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ComboBoxWithDefault.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DualList\DualList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\DualList\DualListActionEventArgs.cs" />
+    <Compile Include="Controls\DualList\DualListCancelEventArgs.cs" />
+    <Compile Include="Controls\DualList\DualListDesigner.cs" />
+    <Compile Include="Controls\ModifiedListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NumericUpDownWithDefault.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\VerticalLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Datatypes\Abilities\AllAnimations.cs" />
+    <Compile Include="Datatypes\Abilities\Animation.cs" />
+    <Compile Include="Datatypes\BaseDataType.cs" />
+    <Compile Include="Datatypes\FFTPatch.cs" />
+    <Compile Include="Datatypes\IGenerateCodes.cs" />
+    <Compile Include="Datatypes\ISupportDefault.cs" />
+    <Compile Include="Datatypes\Items\StoreInventory.cs" />
+    <Compile Include="Datatypes\Propositions\AllPropositions.cs" />
+    <Compile Include="Datatypes\Propositions\Proposition.cs" />
+    <Compile Include="Editors\Abilities\AllAnimationsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Abilities\AllAnimationsEditor.Designer.cs">
+      <DependentUpon>AllAnimationsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\AllStoreInventoryEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\AllStoreInventoryEditor.Designer.cs">
+      <DependentUpon>AllStoreInventoryEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\StoreInventoryEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\StoreInventoryEditor.Designer.cs">
+      <DependentUpon>StoreInventoryEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Propositions\AdditionalRewardsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Propositions\AdditionalRewardsEditor.Designer.cs">
+      <DependentUpon>AdditionalRewardsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Propositions\AllPropositionDetailsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Propositions\AllPropositionDetailsEditor.Designer.cs">
+      <DependentUpon>AllPropositionDetailsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Propositions\AllPropositionsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Propositions\AllPropositionsEditor.Designer.cs">
+      <DependentUpon>AllPropositionsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Propositions\ClassBonusesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Propositions\ClassBonusesEditor.Designer.cs">
+      <DependentUpon>ClassBonusesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Propositions\PropositionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Propositions\PropositionEditor.designer.cs">
+      <DependentUpon>PropositionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Propositions\StatLevelBonusesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Propositions\StatLevelBonusesEditor.Designer.cs">
+      <DependentUpon>StatLevelBonusesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatchPSPForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PatchPSPForm.Designer.cs">
+      <DependentUpon>PatchPSPForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Datatypes\Abilities\AbilityAttributes.cs" />
+    <Compile Include="Datatypes\Abilities\AbilityFormula.cs" />
+    <Compile Include="Datatypes\Abilities\AllAbilities.cs" />
+    <Compile Include="Datatypes\Abilities\Ability.cs" />
+    <Compile Include="Datatypes\Abilities\AIFlags.cs" />
+    <Compile Include="Datatypes\Abilities\Effect.cs" />
+    <Compile Include="Datatypes\Elements.cs" />
+    <Compile Include="Datatypes\ENTD\ENTD.cs" />
+    <Compile Include="Datatypes\ENTD\Event.cs" />
+    <Compile Include="Datatypes\ENTD\EventUnit.cs" />
+    <Compile Include="Datatypes\ENTD\Months.cs" />
+    <Compile Include="Datatypes\ENTD\SpecialName.cs" />
+    <Compile Include="Datatypes\ENTD\SpriteSet.cs" />
+    <Compile Include="Datatypes\HexAttribute.cs" />
+    <Compile Include="Datatypes\ISupportDigest.cs" />
+    <Compile Include="Datatypes\Items\MoveFindItem.cs" />
+    <Compile Include="Datatypes\IXmlDigest.cs" />
+    <Compile Include="Datatypes\Items\Accessory.cs" />
+    <Compile Include="Datatypes\Items\AllItems.cs" />
+    <Compile Include="Datatypes\Items\Armor.cs" />
+    <Compile Include="Datatypes\Items\ChemistItem.cs" />
+    <Compile Include="Datatypes\Items\Item.cs" />
+    <Compile Include="Datatypes\Items\ItemAttributes.cs" />
+    <Compile Include="Datatypes\Items\PoachProbability.cs" />
+    <Compile Include="Datatypes\Items\Shield.cs" />
+    <Compile Include="Datatypes\Items\Weapon.cs" />
+    <Compile Include="Datatypes\Job\ActionMenu.cs" />
+    <Compile Include="Datatypes\Job\Equipment.cs" />
+    <Compile Include="Datatypes\Job\Job.cs" />
+    <Compile Include="Datatypes\Job\JobLevels.cs" />
+    <Compile Include="Datatypes\Job\MonsterSkills.cs" />
+    <Compile Include="Datatypes\Job\SkillSet.cs" />
+    <Compile Include="Datatypes\PatchableFile.cs" />
+    <Compile Include="Datatypes\Status\InflictStatus.cs" />
+    <Compile Include="Datatypes\Status\StatusAttribute.cs" />
+    <Compile Include="Datatypes\Status\Statuses.cs" />
+    <Compile Include="Editors\Abilities\AbilityAttributesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Abilities\AbilityAttributesEditor.Designer.cs">
+      <DependentUpon>AbilityAttributesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Abilities\AbilityEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Abilities\AbilityEditor.Designer.cs">
+      <DependentUpon>AbilityEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Abilities\AllAbilitiesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Abilities\AllAbilitiesEditor.Designer.cs">
+      <DependentUpon>AllAbilitiesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BaseEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\INotifyDataChanged.cs" />
+    <Compile Include="Editors\Items\AllMoveFindItemsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\AllMoveFindItemsEditor.Designer.cs">
+      <DependentUpon>AllMoveFindItemsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\MapMoveFindItemEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\MapMoveFindItemEditor.Designer.cs">
+      <DependentUpon>MapMoveFindItemEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\MoveFindItemEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\MoveFindItemEditor.Designer.cs">
+      <DependentUpon>MoveFindItemEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\AllActionMenusEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\AllActionMenusEditor.Designer.cs">
+      <DependentUpon>AllActionMenusEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Status\AllInflictStatusesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Status\AllInflictStatusesEditor.Designer.cs">
+      <DependentUpon>AllInflictStatusesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\AllItemAttributesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\AllItemAttributesEditor.Designer.cs">
+      <DependentUpon>AllItemAttributesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\AllItemsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\AllItemsEditor.Designer.cs">
+      <DependentUpon>AllItemsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\AllJobsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\AllJobsEditor.Designer.cs">
+      <DependentUpon>AllJobsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\AllMonsterSkillsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\AllMonsterSkillsEditor.Designer.cs">
+      <DependentUpon>AllMonsterSkillsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\AllPoachProbabilitiesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\AllPoachProbabilitiesEditor.Designer.cs">
+      <DependentUpon>AllPoachProbabilitiesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\AllSkillSetsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\AllSkillSetsEditor.Designer.cs">
+      <DependentUpon>AllSkillSetsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Status\AllStatusAttributesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Status\AllStatusAttributesEditor.Designer.cs">
+      <DependentUpon>AllStatusAttributesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\CodeCreator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\CodeCreator.Designer.cs">
+      <DependentUpon>CodeCreator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Abilities\CommonAbilitiesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Abilities\CommonAbilitiesEditor.Designer.cs">
+      <DependentUpon>CommonAbilitiesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ElementsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ElementsEditor.Designer.cs">
+      <DependentUpon>ElementsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ENTD\ENTDEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ENTD\ENTDEditor.Designer.cs">
+      <DependentUpon>ENTDEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\EquipmentEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\EquipmentEditor.Designer.cs">
+      <DependentUpon>EquipmentEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ENTD\EventEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ENTD\EventEditor.Designer.cs">
+      <DependentUpon>EventEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ENTD\EventUnitEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ENTD\EventUnitEditor.Designer.cs">
+      <DependentUpon>EventUnitEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\FFTPatchEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\FFTPatchEditor.Designer.cs">
+      <DependentUpon>FFTPatchEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Status\InflictStatusEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Status\InflictStatusEditor.Designer.cs">
+      <DependentUpon>InflictStatusEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\ItemAttributeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\ItemAttributeEditor.Designer.cs">
+      <DependentUpon>ItemAttributeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Items\ItemEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Items\ItemEditor.Designer.cs">
+      <DependentUpon>ItemEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\JobEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\JobEditor.Designer.cs">
+      <DependentUpon>JobEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\JobLevelsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\JobLevelsEditor.Designer.cs">
+      <DependentUpon>JobLevelsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\RequirementsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\RequirementsEditor.Designer.cs">
+      <DependentUpon>RequirementsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Job\SkillSetEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Job\SkillSetEditor.Designer.cs">
+      <DependentUpon>SkillSetEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Status\StatusAttributeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Status\StatusAttributeEditor.Designer.cs">
+      <DependentUpon>StatusAttributeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Status\StatusesEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\Status\StatusesEditor.Designer.cs">
+      <DependentUpon>StatusesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatchPSXForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PatchPSXForm.Designer.cs">
+      <DependentUpon>PatchPSXForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Abilities\AllAnimationsEditor.resx">
+      <DependentUpon>AllAnimationsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\AllStoreInventoryEditor.resx">
+      <DependentUpon>AllStoreInventoryEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\StoreInventoryEditor.resx">
+      <DependentUpon>StoreInventoryEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Propositions\AdditionalRewardsEditor.resx">
+      <DependentUpon>AdditionalRewardsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Propositions\AllPropositionDetailsEditor.resx">
+      <DependentUpon>AllPropositionDetailsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Propositions\AllPropositionsEditor.resx">
+      <DependentUpon>AllPropositionsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Propositions\ClassBonusesEditor.resx">
+      <DependentUpon>ClassBonusesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Propositions\PropositionEditor.resx">
+      <DependentUpon>PropositionEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Propositions\StatLevelBonusesEditor.resx">
+      <DependentUpon>StatLevelBonusesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatchPSPForm.resx">
+      <DependentUpon>PatchPSPForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Abilities\AbilityAttributesEditor.resx">
+      <DependentUpon>AbilityAttributesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Abilities\AbilityEditor.resx">
+      <DependentUpon>AbilityEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Abilities\AllAbilitiesEditor.resx">
+      <DependentUpon>AllAbilitiesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\AllMoveFindItemsEditor.resx">
+      <DependentUpon>AllMoveFindItemsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\MapMoveFindItemEditor.resx">
+      <DependentUpon>MapMoveFindItemEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\MoveFindItemEditor.resx">
+      <DependentUpon>MoveFindItemEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\AllActionMenusEditor.resx">
+      <DependentUpon>AllActionMenusEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Status\AllInflictStatusesEditor.resx">
+      <DependentUpon>AllInflictStatusesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\AllItemAttributesEditor.resx">
+      <DependentUpon>AllItemAttributesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\AllItemsEditor.resx">
+      <DependentUpon>AllItemsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\AllJobsEditor.resx">
+      <DependentUpon>AllJobsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\AllMonsterSkillsEditor.resx">
+      <DependentUpon>AllMonsterSkillsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\AllPoachProbabilitiesEditor.resx">
+      <DependentUpon>AllPoachProbabilitiesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\AllSkillSetsEditor.resx">
+      <DependentUpon>AllSkillSetsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Status\AllStatusAttributesEditor.resx">
+      <DependentUpon>AllStatusAttributesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\CodeCreator.resx">
+      <DependentUpon>CodeCreator.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Abilities\CommonAbilitiesEditor.resx">
+      <DependentUpon>CommonAbilitiesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ElementsEditor.resx">
+      <DependentUpon>ElementsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ENTD\ENTDEditor.resx">
+      <DependentUpon>ENTDEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\EquipmentEditor.resx">
+      <DependentUpon>EquipmentEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ENTD\EventEditor.resx">
+      <DependentUpon>EventEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ENTD\EventUnitEditor.resx">
+      <DependentUpon>EventUnitEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FFTPatchEditor.resx">
+      <DependentUpon>FFTPatchEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Status\InflictStatusEditor.resx">
+      <DependentUpon>InflictStatusEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\ItemAttributeEditor.resx">
+      <DependentUpon>ItemAttributeEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Items\ItemEditor.resx">
+      <DependentUpon>ItemEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\JobEditor.resx">
+      <DependentUpon>JobEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\JobLevelsEditor.resx">
+      <DependentUpon>JobLevelsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\RequirementsEditor.resx">
+      <DependentUpon>RequirementsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Job\SkillSetEditor.resx">
+      <DependentUpon>SkillSetEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Status\StatusAttributeEditor.resx">
+      <DependentUpon>StatusAttributeEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\Status\StatusesEditor.resx">
+      <DependentUpon>StatusesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatchPSXForm.resx">
+      <DependentUpon>PatchPSXForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <Compile Include="Utilities\Codes.cs" />
+    <Compile Include="Utilities\DigestGenerator.cs" />
+    <Compile Include="Utilities\PspIso.cs" />
+    <Compile Include="Utilities\PsxIso.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="PatcherLib.Resources\PatcherLib.Resources.csproj">
+      <Project>{E8B981CB-2A97-4901-9A04-E6E5D369F471}</Project>
+      <Name>PatcherLib.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="PatcherLib\PatcherLib.csproj">
+      <Project>{BB7322AD-75D3-44AF-A0BF-76015C53998F}</Project>
+      <Name>PatcherLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)zipResources.bat" "$(ProjectDir)"
+</PreBuildEvent>
+  </PropertyGroup>
+</Project>

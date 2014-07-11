@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BS>
+    <UnexploredLands>
+        <entry value="0" name="Shrine of Chaos"/>
+        <entry value="1" name="Forbidden Land Eureka"/>
+        <entry value="2" name="Pandemonium"/>
+        <entry value="3" name="Mirage Tower"/>
+        <entry value="4" name="Floating Castle"/>
+        <entry value="5" name="Matoya Cave"/>
+        <entry value="6" name="Crystal Tower"/>
+        <entry value="7" name="Magic Continent"/>
+        <entry value="8" name="Castle of Trials"/>
+        <entry value="9" name="Tower of Babel"/>
+        <entry value="10" name="Ronkan Ruins"/>
+        <entry value="11" name="Falgabird"/>
+        <entry value="12" name="Magic Train"/>
+        <entry value="13" name="Touzas Village"/>
+        <entry value="14" name="Chocobo Forest"/>
+        <entry value="15" name="Semite Falls"/>
+    </UnexploredLands>
+    <Treasures>
+        <entry value="0" name="Four Gods Set"/>
+        <entry value="1" name="Statue of Lylis"/>
+        <entry value="2" name="Beetle Charm"/>
+        <entry value="3" name="Tobacco Pipe"/>
+        <entry value="4" name="Zeni-Sword"/>
+        <entry value="5" name="Black Cat"/>
+        <entry value="6" name="Malice Mask"/>
+        <entry value="7" name="Parade Helmet"/>
+        <entry value="8" name="Kid's Bread"/>
+        <entry value="9" name="Adult's Bread"/>
+        <entry value="10" name="Calcobrina"/>
+        <entry value="11" name="Yurgeivogue"/>
+        <entry value="12" name="Red Materia"/>
+        <entry value="13" name="Blue Materia"/>
+        <entry value="14" name="Black Materia"/>
+        <entry value="15" name="White Materia"/>
+        <entry value="16" name="Rat Tail"/>
+        <entry value="17" name="M-Fiction Novel"/>
+        <entry value="18" name="Diary of Nanai"/>
+        <entry value="19" name="Wyuvle"/>
+        <entry value="20" name="Book of Enavia"/>
+        <entry value="21" name="Magical Gun"/>
+        <entry value="22" name="M Machinegun"/>
+        <entry value="23" name="Magi-Sword"/>
+        <entry value="24" name="Minu Orb"/>
+        <entry value="25" name="Tarot of Ben"/>
+        <entry value="26" name="Excalipar"/>
+        <entry value="27" name="Parasite Tree"/>
+        <entry value="28" name="Longibunne Spear"/>
+        <entry value="29" name="Chocobo Cannon"/>
+        <entry value="30" name="St. Elmo's Fire"/>
+        <entry value="31" name="Germonik Scriptures"/>
+        <entry value="32" name="Aries"/>
+        <entry value="33" name="Taurus"/>
+        <entry value="34" name="Gemini"/>
+        <entry value="35" name="Cancer"/>
+        <entry value="36" name="Leo"/>
+        <entry value="37" name="Virgo"/>
+        <entry value="38" name="Libra"/>
+        <entry value="39" name="Scorpio"/>
+        <entry value="40" name="Sagittarius"/>
+        <entry value="41" name="Capricorn"/>
+        <entry value="42" name="Aquarius"/>
+        <entry value="43" name="Pisces"/>
+        <entry value="44" name="Serpentarius"/>
+    </Treasures>
+</BS>

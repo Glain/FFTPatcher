@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/474/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages
+END
+PalettedImage4bpp.cs
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/PalettedImage4bpp.cs
+END
+PartiallyVisiblePalettedImage4bpp.cs
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/470/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/PartiallyVisiblePalettedImage4bpp.cs
+END
+StupidTM2Image.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/StupidTM2Image.cs
+END
+PalettedImage8bpp.cs
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/PalettedImage8bpp.cs
+END
+AllOtherImages.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/AllOtherImages.cs
+END
+PSXWorldMap.cs
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/474/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/PSXWorldMap.cs
+END
+Raw16BitImage.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/Raw16BitImage.cs
+END
+StupidTM2Image4bpp.cs
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/470/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/StupidTM2Image4bpp.cs
+END
+AbstractImage.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/473/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/AbstractImage.cs
+END
+Greyscale4bppImage.cs
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/Greyscale4bppImage.cs
+END
+RawNybbleImage.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/472/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/RawNybbleImage.cs
+END
+WldTex2.cs
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/460/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/DataTypes/OtherImages/WldTex2.cs
+END

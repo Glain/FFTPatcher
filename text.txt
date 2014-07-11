@@ -1,0 +1,130 @@
+FFTacText v0.388 readme
+-----------------------
+
+Required files
+--------------
+FFTacText.exe v0.388
+PatcherLib.dll v0.388
+PatcherLib.Resources.dll v0.388
+ICSharpCode.SharpZipLib.dll
+
+How to get started
+------------------
+From the ISO menu, import a PSP or PSX ISO.
+PSX ISOs should be unmodified Mode2/2352 images.
+PSP ISOs should be unmodified Mode1/2048 images. The European and US versions
+are supported. You can rip a PSP ISO using custom firmware.
+
+Editing text
+------------
+Edit each entry in the grid. Some special codes allowed:
+{Color XX} - Changes the text to a certain color. XX must be 00-FF (uppercase)
+{Delay XX} - Changes the delay that is used after each character of text.
+             If you want text to be slow, set this very high.
+             XX must be 00-FF (uppercase)
+{Tab XX} - PSP only. Moves the text output to a certain tab-stop on the screen
+{Serpentarius} - The Serpentarius Zodiac symbol
+{Ramza} - The main character's name
+{SP} - A special space character. If you see it, you probably shouldn't change it.
+{SP2} - A special space character. If you see it, you probably shouldn't change it.
+{0xE1} - Sometimes you'll see something like "Allow {0xE1} to join your party?"
+         The game will substitute the unit's name (or whatever) where it says {0xE1}
+{0xXX}     - You can insert your own custom binary data into the text stream.
+{0xXXXX}     1, 2, or 3 bytes are allowed
+{0xXXXXXX}   This probably shouldn't be used.
+{Newline} - Inserts a new line.
+
+The program uses the "Arial Unicode MS" font. If you don't have it, you should
+get it (somehow...)
+
+What is DTE?
+------------
+DTE means dual-tile encoding. It's a method of storing text in the 
+game so that ONE BYTE can represent MORE THAN ONE CHARACTER.
+For example, you might analyze the text and see that a comma (",") is
+usually followed by a space (" "). So if you combine both characters
+into one byte (", "), you can save space. Note that after you do this, 
+it is still possible to have a comma "," or space " " alone.
+
+How does FFTacText do DTE?
+---------------------------
+First, it goes through all the files and checks to see if they are
+too large.
+If it finds files that are too big, it sorts them based on which
+file is "too big"-est.
+Then, starting with the biggest file, it analyzes the text for
+common pairs of letters, performing replacements and keeping a list
+of what strings map to what DTE byte. Once the first file is done,
+it checks to see if the rest of the files can be compressed using
+the information retrieved from the first file. If not, it analyzes
+the second file, etc.
+There are only about 100 bytes available to use for encoding text pairs.
+If FFTacText runs out of pairs, it will give up and give you an error.
+
+Can I open .ffttext files from the old version?
+-----------------------------------------------
+No.
+
+Can I edit .ffttext files in a text editor?
+------------------------------------------
+Yes. Make sure to save as UTF-8 and do not remove any <Entry> elements.
+
+What is QuickEdit?
+------------------
+It's a way to make changes to several files at once.
+There are ten categories in QuickEdit:
+  Item Names
+  Item Descriptions
+  Ability Names
+  Ability Descriptions
+  Skillset Names
+  Skillset Descriptions
+  Job Names
+  Job Descriptions
+  Job Requirements
+  Spell Quotes (not in PSP)
+Once you change something in QuickEdit, the change is applied to every
+file in the game that contains that information.
+
+What does the Restore button do?
+--------------------------------
+It rereads a specific file off of your ISO. 
+
+Problems
+--------
+Problem: Diagonal lines show up through the text
+Solution: This usually happens of a line of text is too "wide" to fit on screen.
+          Try adding some {Newline} to the text.
+
+P: The screen flashes and then all my text gets replaced with katakana and kanji
+S: This usually happens of a line of text is too "wide" to fit on screen.
+   Try adding some {Newline} to the text.
+
+P: Dismiss quotes are messed up in battle
+S: Still trying to fix this
+
+P: On the PSP, the character portrait shows up on top of the Personae text
+S: Some {SP2} bytes got removed. Try using the "Restore" button on WLDMES.BIN
+
+P: I'm stuck inside the editing grid.
+S: There's something wrong with your text. 
+   Make sure that all { are matched with }
+   Make sure you aren't using an illegal character.
+   A message will show up below the grid that tells you where it found
+   the error while processing.
+   
+Help needed:
+    - Tell me about any visual anomalies that appear in-game after using the program
+      Include as many of the following things as possible:
+        A memory card with a save RIGHT BEFORE the problem happens
+        A savestate RIGHT BEFORE the problem happens
+        Your .ffttext file
+        A screenshot of the problem
+        Instructions on how to make the problem occur after loading the save/savestate
+      
+Thanks to:
+  Gomtuu: His page helped me understand the text compression algorithm and how
+    the double-byte characters were processed. http://gomtuu.org/fft/
+  Zodiac: Got me started with a list of text locations in the Playstation version.
+  Phoenix (SadNES cITy): Explained how sadNES implemented DTE in the Italian 
+    translation. Gave me the asm used for graphical DTE on PSX.

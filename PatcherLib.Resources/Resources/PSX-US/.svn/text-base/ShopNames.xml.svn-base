@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ShopNames>
+  <Shop value="Bervenia"   name="Bervenia Free City"/>
+  <Shop value="Dorter"     name="Dorter Trade City"/>
+  <Shop value="Gariland"   name="Gariland Magic City"/>
+  <Shop value="Goland"     name="Goland Coal City"/>
+  <Shop value="Goug"       name="Goug Machine City"/>
+  <Shop value="Igros"      name="Igros Castle"/>
+  <Shop value="Lesalia"    name="Lesalia Imperial Castle"/>
+  <Shop value="Limberry"   name="Limberry Castle"/>
+  <Shop value="Lionel"     name="Lionel Castle"/>
+  <Shop value="None"       name="Unknown"/>
+  <Shop value="Riovanes"   name="Riovanes Castle"/>
+  <Shop value="Warjilis"   name="Warjilis Trade City"/>
+  <Shop value="Yardrow"    name="Yardow Fort City"/>
+  <Shop value="Zaland"     name="Zaland Fort City"/>
+  <Shop value="Zarghidas"  name="Zarghidas Trade City"/>
+  <Shop value="Zeltennia"  name="Zeltennia Castle"/>
+</ShopNames>

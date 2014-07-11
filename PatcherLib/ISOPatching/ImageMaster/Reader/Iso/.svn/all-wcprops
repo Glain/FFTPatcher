@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/469/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/Iso
+END
+IsoReader.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/401/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/Iso/IsoReader.cs
+END
+VolumeDescriptor.cs
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/Iso/VolumeDescriptor.cs
+END
+IsoRecordDateTime.cs
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/Iso/IsoRecordDateTime.cs
+END
+IsoDateTime.cs
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/Iso/IsoDateTime.cs
+END
+IsoRecord.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/469/branches/imageEditorv2/FFTPatcher/PatcherLib/ISOPatching/ImageMaster/Reader/Iso/IsoRecord.cs
+END

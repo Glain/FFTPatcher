@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate
+END
+Rotate.cs
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate/Rotate.cs
+END
+Rotation.cs
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate/Rotation.cs
+END
+RotateSpan.cs
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate/RotateSpan.cs
+END
+RotateToTangent.cs
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate/RotateToTangent.cs
+END
+Oriented.cs
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate/Oriented.cs
+END
+RotateToNormal.cs
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/!svn/ver/419/branches/imageEditorv2/FFTPatcher/ShishiSpriteEditor/Controls/Bimixual.Animation/AlterationInterface/Rotate/RotateToNormal.cs
+END

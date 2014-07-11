@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2007, Joe Davidson <joedavidson@gmail.com>
+
+    This file is part of FFTPatcher.
+
+    FFTPatcher is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    FFTPatcher is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<AbilityStrings>
+  <AI>
+    <string value="0" name="HP"/>
+    <string value="1" name="MP"/>
+    <string value="2" name="Cancel Status"/>
+    <string value="3" name="Add Status"/>
+    <string value="4" name="Stats"/>
+    <string value="5" name="Unequip"/>
+    <string value="6" name="Target Enemies"/>
+    <string value="7" name="Target Allies"/>
+    <string value="8" name="Line of Site"/>
+    <string value="9" name="Reflectable"/>
+    <string value="10" name="Undead Reverse"/>
+    <string value="11" name="Unknown"/>
+    <string value="12" name="Allow randomly"/>
+    <string value="13" name="Unknown"/>
+    <string value="14" name="Unknown"/>
+    <string value="15" name="Silence"/>
+    <string value="16" name=""/>
+    <string value="17" name="Direct Attack"/>
+    <string value="18" name="Linear Attack"/>
+    <string value="19" name="Vertical Increase"/>
+    <string value="20" name="Triple Attack"/>
+    <string value="21" name="Triple Bracelet"/>
+    <string value="22" name="Magic Defense Up"/>
+    <string value="23" name="Defense Up"/>
+  </AI>
+  <Attributes>
+    <string value="0" name=""/>
+    <string value="1" name=""/>
+    <string value="2" name="Weapon Range"/>
+    <string value="3" name="Vertical Fixed"/>
+    <string value="4" name="Vertical Tolerance"/>
+    <string value="5" name="Weapon Strike"/>
+    <string value="6" name="Auto"/>
+    <string value="7" name="Target Self"/>
+    <string value="8" name="Hit Enemies"/>
+    <string value="9" name="Hit Allies"/>
+    <string value="10" name=""/>
+    <string value="11" name="Follow Target"/>
+    <string value="12" name="Random Fire"/>
+    <string value="13" name="Linear Attack"/>
+    <string value="14" name="3 Directions"/>
+    <string value="15" name="Hit Caster"/>
+    <string value="16" name="Reflect"/>
+    <string value="17" name="Math Skill"/>
+    <string value="18" name="Silence"/>
+    <string value="19" name="Mimic"/>
+    <string value="20" name="Normal Attack?"/>
+    <string value="21" name="Persevere"/>
+    <string value="22" name="Quote"/>
+    <string value="23" name="Animate on miss"/>
+    <string value="24" name="Counter Flood"/>
+    <string value="25" name="Counter Magic"/>
+    <string value="26" name="Direct"/>
+    <string value="27" name="Blade Grasp"/>
+    <string value="28" name="Requires Sword"/>
+    <string value="29" name="Requires Materia Blade"/>
+    <string value="30" name="Evadeable"/>
+    <string value="31" name="Targeting"/>
+  </Attributes>
+  <Types>
+    <string value="0" name="Blank"/>
+    <string value="1" name="Normal"/>
+    <string value="2" name="Item"/>
+    <string value="3" name="Throwing"/>
+    <string value="4" name="Jumping"/>
+    <string value="5" name="Aim"/>
+    <string value="6" name="Math Skill"/>
+    <string value="7" name="Reaction"/>
+    <string value="8" name="Support"/>
+    <string value="9" name="Movement"/>
+    <string value="10" name="Unknown1"/>
+    <string value="11" name="Unknown2"/>
+    <string value="12" name="Unknown3"/>
+    <string value="13" name="Unknown4"/>
+    <string value="14" name="Unknown5"/>
+    <string value="15" name="Unknown6"/>
+  </Types>
+</AbilityStrings>

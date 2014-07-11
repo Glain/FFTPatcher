@@ -1,0 +1,30 @@
+unknown: 50400028
+01010000010000000000000000101000
+opcode 010100
+BEQL -> Branch on Equal Likely
+
+unknown: 5440ff17
+01010100
+opcode 010101
+BNEL -> Branch on Not Equal Likely
+
+unknown: 0056b82c
+00000000010101101011100000101100
+opcode 000000 (R-type)
+function 101100 ?
+?????
+
+unknown: 0296b82c
+00000010100101101011100000101100
+?????
+
+unknown: 460018c1
+01000110000000000001100011000001
+opcode 010001 COP1 (FPU)
+function 000001
+Seems to be sub.s -> decode isn't working here
+
+
+
+
+

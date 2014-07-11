@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="FFTPatcher.SpriteEditor.AbstractSprite">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <Members>
+      <Property Name="BitmapDirty" Hidden="true" />
+      <Method Name="BuildPalettes" Hidden="true" />
+      <Method Name="BuildPixels" Hidden="true" />
+      <Property Name="CachedBitmap" Hidden="true" />
+      <Method Name="DrawSpriteInternal" Hidden="true" />
+      <Method Name="FirePixelsChanged" Hidden="true" />
+      <Method Name="ImportSPRInner" Hidden="true" />
+      <Property Name="OriginalSize" Hidden="true" />
+      <Property Name="PortraitRectangle" Hidden="true" />
+      <Method Name="ToBitmapInner" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Delegate Name="FFTPatcher.SpriteEditor.AbstractSprite.SetPixel" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DataTypes\Sprites\AbstractSprite.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EACEAAASBEQAwhAAoYABDGQEAAAAAgBAACgAiBCAABA=</HashCode>
+      <FileName>DataTypes\Sprites\AbstractSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.AbstractCompressedSprite" Collapsed="true">
+    <Position X="3.75" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>EAAEAAISBAQCgBAAAICAACAEAAABAAIAAAABCAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\AbstractCompressedSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.TYPE1Sprite" Collapsed="true">
+    <Position X="2.25" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\TYPE1Sprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.TYPE2Sprite" Collapsed="true">
+    <Position X="6.75" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\TYPE2Sprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.MonsterSprite" Collapsed="true">
+    <Position X="6.5" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACBEACAAAAAIAAAAAAAAAAAABAAAAACAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\MonsterSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.ARUTE" Collapsed="true">
+    <Position X="3.5" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\ARUTE.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.CYOKO" Collapsed="true">
+    <Position X="4.25" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\CYOKO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.KANZEN" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\KANZEN.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.ShortSprite" Collapsed="true">
+    <Position X="4" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAASBEAAgAAAAIAAACAEAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\ShortSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFTPatcher.SpriteEditor.AbstractShapedSprite">
+    <Position X="3.5" Y="3.5" Width="2.5" />
+    <Members>
+      <Method Name="AbstractShapedSprite" Hidden="true" />
+      <Method Name="Import" Hidden="true" />
+      <Method Name="ImportBitmap" Hidden="true" />
+      <Method Name="ImportSPRInner" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAEAAIAAQAgAAAIAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Sprites\AbstractShapedSprite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

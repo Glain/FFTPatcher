@@ -1,0 +1,5 @@
+C:\csharp\MassHexASM\ASMUtility\bin\Debug\ASMUtility.dll
+C:\csharp\MassHexASM\ASMUtility\bin\Debug\ASMUtility.pdb
+C:\csharp\MassHexASM\ASMUtility\obj\x86\Debug\ASMUtility.csprojResolveAssemblyReference.cache
+C:\csharp\MassHexASM\ASMUtility\obj\x86\Debug\ASMUtility.dll
+C:\csharp\MassHexASM\ASMUtility\obj\x86\Debug\ASMUtility.pdb

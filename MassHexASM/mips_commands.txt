@@ -1,0 +1,137 @@
+add $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 0000
+
+addi $t, $s, imm
+0010 00ss ssst tttt iiii iiii iiii iiii
+
+addiu $t, $s, imm
+0010 01ss ssst tttt iiii iiii iiii iiii
+
+addu $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 0001
+
+and $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 0100
+
+andi $t, $s, imm
+0011 00ss ssst tttt iiii iiii iiii iiii
+
+beq $s, $t, offset
+0001 00ss ssst tttt iiii iiii iiii iiii
+
+bgez $s, offset
+0000 01ss sss0 0001 iiii iiii iiii iiii
+
+bgezal $s, offset
+0000 01ss sss1 0001 iiii iiii iiii iiii
+
+bgtz $s, offset
+0001 11ss sss0 0000 iiii iiii iiii iiii
+
+blez $s, offset
+0001 10ss sss0 0000 iiii iiii iiii iiii
+
+bltz $s, offset
+0000 01ss sss0 0000 iiii iiii iiii iiii
+
+bltzal $s, offset
+0000 01ss sss1 0000 iiii iiii iiii iiii
+
+bne $s, $t, offset
+0001 01ss ssst tttt iiii iiii iiii iiii
+
+div $s, $t
+0000 00ss ssst tttt 0000 0000 0001 1010
+
+divu $s, $t
+0000 00ss ssst tttt 0000 0000 0001 1011
+
+j target
+0000 10ii iiii iiii iiii iiii iiii iiii
+
+jal target
+0000 11ii iiii iiii iiii iiii iiii iiii
+
+jr $s
+0000 00ss sss0 0000 0000 0000 0000 1000
+
+lb $t, offset($s)
+1000 00ss ssst tttt iiii iiii iiii iiii
+
+lui $t, imm
+0011 11-- ---t tttt iiii iiii iiii iiii
+
+lw $t, offset($s)
+1000 11ss ssst tttt iiii iiii iiii iiii
+
+mfhi $d
+0000 0000 0000 0000 dddd d000 0001 0000
+
+mflo $d
+0000 0000 0000 0000 dddd d000 0001 0010
+
+mult $s, $t
+0000 00ss ssst tttt 0000 0000 0001 1000
+
+multu $s, $t
+0000 00ss ssst tttt 0000 0000 0001 1001
+
+nop
+0000 0000 0000 0000 0000 0000 0000 0000
+
+noop
+0000 0000 0000 0000 0000 0000 0000 0000
+
+or $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 0101
+
+ori $t, $s, imm
+0011 01ss ssst tttt iiii iiii iiii iiii
+
+sb $t, offset($s)
+1010 00ss ssst tttt iiii iiii iiii iiii
+
+sll $d, $t, h
+0000 00ss ssst tttt dddd dhhh hh00 0000
+
+sllv $d, $t, $s
+0000 00ss ssst tttt dddd d--- --00 0100
+
+slt $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 1010
+
+slti $t, $s, imm
+0010 10ss ssst tttt iiii iiii iiii iiii
+
+sltiu $t, $s, imm
+0010 11ss ssst tttt iiii iiii iiii iiii
+
+sltu $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 1011
+
+sra $d, $t, h
+0000 00-- ---t tttt dddd dhhh hh00 0011
+
+srl $d, $t, h
+0000 00-- ---t tttt dddd dhhh hh00 0010
+
+srlv $d, $t, $s
+0000 00ss ssst tttt dddd d000 0000 0110
+
+sub $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 0010
+
+subu $d, $s, $t
+0000 00ss ssst tttt dddd d000 0010 0011
+
+sw $t, offset($s)
+1010 11ss ssst tttt iiii iiii iiii iiii
+
+syscall
+0000 00-- ---- ---- ---- ---- --00 1100
+
+xor $d, $s, $t
+0000 00ss ssst tttt dddd d--- --10 0110
+
+xori $t, $s, imm
+0011 10ss ssst tttt iiii iiii iiii iiii 

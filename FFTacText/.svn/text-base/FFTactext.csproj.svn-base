@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{210DDF20-2CEA-4A2C-B2C6-D2EB7938BEB2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FFTPatcher.TextEditor</RootNamespace>
+    <AssemblyName>FFTactext</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MEASURESTRINGS</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;MEASURESTRINGS</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\utils\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharmapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharmapForm.Designer.cs">
+      <DependentUpon>CharmapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharmapViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharmapViewer.Designer.cs">
+      <DependentUpon>CharmapViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\FileEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\FileEditor.Designer.cs">
+      <DependentUpon>FileEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\GlyphEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\GlyphEditor.Designer.cs">
+      <DependentUpon>GlyphEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\StringListEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\StringListEditor.Designer.cs">
+      <DependentUpon>StringListEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Files\ATCHELP.cs" />
+    <Compile Include="Files\CompressibleOneShotFile.cs" />
+    <Compile Include="Files\IFile.cs" />
+    <Compile Include="Files\ISerializableFile.cs" />
+    <Compile Include="Files\AbstractFile.cs" />
+    <Compile Include="Files\PartitionedFile.cs" />
+    <Compile Include="Files\QuickEdit.cs" />
+    <Compile Include="Files\SectionedFile.cs" />
+    <Compile Include="Files\FFTTextFactory.cs" />
+    <Compile Include="ImportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportForm.Designer.cs">
+      <DependentUpon>ImportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InvalidStringException.cs" />
+    <Compile Include="ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\DTE.cs" />
+    <Compile Include="Utilities\DTEAnalyzer.cs" />
+    <Compile Include="Utilities\SectionType.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Files\FFTText.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharmapForm.resx">
+      <DependentUpon>CharmapForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FileEditor.resx">
+      <DependentUpon>FileEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\GlyphEditor.resx">
+      <DependentUpon>GlyphEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\StringListEditor.resx">
+      <DependentUpon>StringListEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportForm.resx">
+      <DependentUpon>ImportForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Files.cd" />
+    <None Include="zipResources.bat" />
+    <Compile Include="Utilities\CharMap.cs" />
+    <Compile Include="Utilities\Resources.cs" />
+    <Compile Include="Utilities\TextUtilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PatcherLib.Resources\PatcherLib.Resources.csproj">
+      <Project>{E8B981CB-2A97-4901-9A04-E6E5D369F471}</Project>
+      <Name>PatcherLib.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PatcherLib\PatcherLib.csproj">
+      <Project>{BB7322AD-75D3-44AF-A0BF-76015C53998F}</Project>
+      <Name>PatcherLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\bg.gif" />
+    <Content Include="Files\PSP\FileContents.txt" />
+    <Content Include="Files\PSX\FileContents.txt" />
+    <Content Include="notes.txt" />
+    <Content Include="Resources\FFTTextCompression.dll" />
+    <Content Include="Resources\psx.xml" />
+    <Content Include="Resources\psp.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>rem copy "$(SolutionDir)\$(ConfigurationName)\FFTTextCompression.dll" "$(TargetDir)"</PostBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)zipResources.bat" "$(ProjectDir)"</PreBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,18 @@
++ struct LoadParam
+enum EncodingType
+EncodeASMSingle()
+DecodeASMSingle()
+TranslateRegister()
+ReadEncodeList()
+ReadRegisterList()
+FindCommandByFunction_R()
++FindCommand_FPU()
++FindCommand_Special3()
++FindIntegerValue()
++EncodeBranchImmediate(int)
++EncodeBranchImmediate(string)
++DecodeBranchImmediate()
++DecodeSignedImmediate()
++DecodeLongImmediate()
++FindLoadParam()
++ExpandFormat()

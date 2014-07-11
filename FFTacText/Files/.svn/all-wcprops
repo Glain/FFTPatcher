@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/478/branches/imageEditorv2/FFTPatcher/FFTacText/Files
+END
+FFTTextFactory.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/478/branches/imageEditorv2/FFTPatcher/FFTacText/Files/FFTTextFactory.cs
+END
+SectionedFile.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/449/branches/imageEditorv2/FFTPatcher/FFTacText/Files/SectionedFile.cs
+END
+ISerializableFile.cs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/467/branches/imageEditorv2/FFTPatcher/FFTacText/Files/ISerializableFile.cs
+END
+ATCHELP.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/477/branches/imageEditorv2/FFTPatcher/FFTacText/Files/ATCHELP.cs
+END
+PartitionedFile.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/478/branches/imageEditorv2/FFTPatcher/FFTacText/Files/PartitionedFile.cs
+END
+QuickEdit.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/449/branches/imageEditorv2/FFTPatcher/FFTacText/Files/QuickEdit.cs
+END
+AbstractFile.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/467/branches/imageEditorv2/FFTPatcher/FFTacText/Files/AbstractFile.cs
+END
+FFTText.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/470/branches/imageEditorv2/FFTPatcher/FFTacText/Files/FFTText.cs
+END
+CompressibleOneShotFile.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/449/branches/imageEditorv2/FFTPatcher/FFTacText/Files/CompressibleOneShotFile.cs
+END
+IFile.cs
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/449/branches/imageEditorv2/FFTPatcher/FFTacText/Files/IFile.cs
+END

@@ -1,0 +1,102 @@
+
+.org 0x0015c9bc
+
+lbu r14,0x0169(r13)
+andi r5,r5,0x00ff
+
+addiu r3,r14,0x0001
+andi r3,r3,0x00ff
+slti r3,r3,0x0002
+beq r3,r0,0x0015c9fc
+nop
+bne r14,r0,0x0015c9f4
+nop
+
+lui r14,0x0006
+lbu r14,0x8053(r14)
+nop
+
+bne r14,r0,0x0015ca04
+nop
+
+lbu r14,0x0022(r13)
+j 0x0015ca04
+
+lui r3,0x0006
+sb r14,0x8053(r3)
+
+jr r31
+nop
+
+=====
+
+
+.org 0x0015c9bc
+
+add r0,r3,r5
+beq r0,r3,0x0015c9e0
+xori r2,r2,0x00a8
+bgez r2,0x0015ca00
+divu r6,r7
+jal 0x0012c8e0
+jr r31
+lhu r3,0x0014(r2)
+lui r9,0x0015
+mflo r12
+nop
+srl r3,r7,0x00
+sllv r7,r9,r3
+
+=====
+
+
+.org 0x0015c9bc
+
+lbu r14,0x0169(r13)
+andi r5,r5,0x00ff
+
+addiu r3,r14,0x0001
+andi r3,r3,0x00ff
+slti r3,r3,0x0002
+beq r3,r0,0x0015c9fc
+nop
+bne r14,r0,0x0015c9f4
+nop
+
+lui r14,0x0006
+lbu r14,-0x7fad(r14)
+nop
+
+bne r14,r0,0x0015ca04
+nop
+
+lbu r14,0x0022(r13)
+j 0x0015ca04
+
+lui r3,0x0006
+sb r14,-0x7fad(r3)
+
+jr r31
+nop
+
+=====
+
+lbu r14,0x0169(r13)
+andi r5,r5,0x00ff
+addiu r3,r14,0x0001
+andi r3,r3,0x00ff
+slti r3,r3,0x0002
+beq r3,r0,0x0015c9fc
+nop
+bne r14,r0,0x0015c9f4
+nop
+
+=====
+
+addi $v1,$zero,0x0003
+START:
+addi $v0,$v0,0x0001
+bne $v0,$v1,START
+nop
+jr $ra
+nop

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/411/branches/imageEditorv2/FFTPatcher/Controls/DualList
+END
+DualListActionEventArgs.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Controls/DualList/DualListActionEventArgs.cs
+END
+DualList.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/411/branches/imageEditorv2/FFTPatcher/Controls/DualList/DualList.cs
+END
+DualListDesigner.cs
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Controls/DualList/DualListDesigner.cs
+END
+DualListCancelEventArgs.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/394/branches/imageEditorv2/FFTPatcher/Controls/DualList/DualListCancelEventArgs.cs
+END
