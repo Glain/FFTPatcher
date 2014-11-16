@@ -17,6 +17,8 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+//Choto trying to connect to GIT
+
 using System;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
