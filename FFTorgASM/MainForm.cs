@@ -151,6 +151,24 @@ namespace FFTorgASM
             }
         }
 
+        private void PatchSaveStbutton_Click(object sender, EventArgs e)
+        {
+            //Patchbutton copy. Modify to patch byte array right to savestate.
+            saveFileDialog1.Filter = "PSV files (*.psv)|*.psv;*";
+            saveFileDialog1.FileName = string.Empty;
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                byte[] filecopy = File.ReadAllBytes(saveFileDialog1.FileName);
+                using (BinaryReader b = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
+                {
+                    foreach (AsmPatch patch in checkedListBox1.CheckedItems)
+                    {
+                        PatcherLib.Iso.PsxIso.PatchPsxSaveState(b, patch, filecopy);
+                    }
+                }
+            }
+        }
+
         private void checkedListBox1_DragEnter( object sender, DragEventArgs e )
         {
             if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
@@ -196,5 +214,6 @@ namespace FFTorgASM
                     checkedListBox1.SetItemChecked( i, !checkedListBox1.GetItemChecked( i ) );
             }
         }
+
     }
 }

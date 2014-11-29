@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
@@ -114,6 +115,173 @@ namespace PatcherLib.Iso
             return ReadFile( iso, knownPositions.Sector, knownPositions.StartLocation, knownPositions.Length );
         }
 
+        public static void patchsavestate(long offset, byte[] arraytopatch, byte[] filecopy,BinaryReader b)
+        {
+            b.BaseStream.Position = offset;
+            for(int i = 0;i<arraytopatch.Length;i++)
+            {
+               b.BaseStream.WriteByte(arraytopatch[i]);
+            }
+        }
+
+        public static void PatchPsxSaveState(BinaryReader b, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches, byte[] filecopy)
+        {
+            byte[] data = new byte[4];
+            byte[] checkbyte = new byte[4];
+            long position = 0;
+
+            long BattleOffset = 0;
+            long WldcoreOffset = 0;
+            long WorldOffset = 0;
+            long RequireOffset = 0;
+            long EquipOffset = 0;
+            long ScusOffset = 0;
+            bool[] LoadedFiles = new bool[6] {false,false,false,false,false,false};
+
+            for (int j = 1; j < 6; j++ )
+            {
+                #region Set Checkbytes and position
+                switch (j)
+                    {
+                        case 1: //Battle
+                            checkbyte[0] = 0x88;
+                            checkbyte[1] = 0x88;
+                            checkbyte[2] = 0x06;
+                            checkbyte[3] = 0x80;
+                            position = 0x67000;
+                            break;
+                        case 2: // Wldcore
+                            checkbyte[0] = 0x44;
+                            checkbyte[1] = 0x8a;
+                            checkbyte[2] = 0x06;
+                            checkbyte[3] = 0x80;
+                            position = 0x67000;
+                            break;
+                        case 3: //World
+                            checkbyte[0] = 0x70;
+                            checkbyte[1] = 0x73;
+                            checkbyte[2] = 0x5f;
+                            checkbyte[3] = 0x73;
+                            position = 0xE0000;
+                            break;
+                        case 4://SCUS
+                            checkbyte[0] = 0x00;
+                            checkbyte[1] = 0x70;
+                            checkbyte[2] = 0x06;
+                            checkbyte[3] = 0x80;
+                            position = 0xF800;
+                            break;
+                        case 5://REQUIRE
+                            checkbyte[0] = 0x57;
+                            checkbyte[1] = 0x41;
+                            checkbyte[2] = 0x49;
+                            checkbyte[3] = 0x54;
+                            position = 0x1bf000;
+                            break;
+                        case 6://EQUIP
+                            checkbyte[0] = 0x25;
+                            checkbyte[1] = 0x64;
+                            checkbyte[2] = 0x00;
+                            checkbyte[3] = 0x44;
+                            position = 0x1bf000;
+                            break;
+                    }
+                #endregion
+                b.BaseStream.Position = position;
+
+                for (int i = 0; i < 0x1000; i++)
+                {
+                    data = b.ReadBytes(4);
+                    if (data[0] == checkbyte[0] &&
+                       data[1] == checkbyte[1] &&
+                       data[2] == checkbyte[2] &&
+                       data[3] == checkbyte[3])
+                    {
+                        #region Set position and loaded file bool
+                        switch (j)
+                        {
+                             case 1:
+                                BattleOffset = b.BaseStream.Position - 4;
+                                LoadedFiles[0] = true;
+                                break;
+                            case 2:
+                                WldcoreOffset = b.BaseStream.Position - 4;
+                                LoadedFiles[1] = true;
+                                break;
+                            case 3:
+                                WorldOffset = b.BaseStream.Position - 4;
+                                LoadedFiles[2] = true;
+                                break;
+                            case 4:
+                                ScusOffset = b.BaseStream.Position - 4;
+                                LoadedFiles[3] = true;
+                                break;
+                            case 5:
+                                RequireOffset = b.BaseStream.Position - 4;
+                                LoadedFiles[4] = true;
+                                break;
+                            case 6:
+                                EquipOffset = b.BaseStream.Position - 4;
+                                LoadedFiles[5] = true;
+                                break;
+                        }
+                        #endregion
+                        i = 0x1002;
+                    }
+                }
+            }
+            long startoffset = 0;
+            bool Valid = false;
+            foreach (var patch in patches)
+            {
+                try
+                {
+                    string file = patch.SectorEnum.ToString();
+                    #region Check if valid to write and set write location
+                    switch (file)
+                    {
+                        case "BATTLE_BIN":
+                            startoffset = BattleOffset;
+                            Valid = LoadedFiles[0];
+                            break;
+                        case "WORLD_WLDCORE_BIN":
+                            startoffset = WldcoreOffset;
+                            Valid = LoadedFiles[1];
+                            break;
+                        case "WORLD_WORLD_BIN":
+                            startoffset = WorldOffset;
+                            Valid = LoadedFiles[2];
+                            break;
+                        case "SCUS_942_21":
+                            startoffset = ScusOffset;
+                            Valid = LoadedFiles[3];
+                            break;
+                        case "EVENT_REQUIRE_OUT":
+                            startoffset = RequireOffset;
+                            Valid = LoadedFiles[4];
+                            break;
+                        case "EVENT_EQUIP_OUT":
+                            startoffset = EquipOffset;
+                            Valid = LoadedFiles[5];
+                            break;
+                    }
+                    long offset = patch.Offset + startoffset;
+                    #endregion
+                    if (Valid)
+                    {
+                        patchsavestate(offset, patch.GetBytes(), filecopy, b);
+                    }
+                    else
+                    {
+                        MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                    }
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+            }
+        }
         public static void PatchPsxIso( Stream iso, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches )
         {
             foreach (var patch in patches)
