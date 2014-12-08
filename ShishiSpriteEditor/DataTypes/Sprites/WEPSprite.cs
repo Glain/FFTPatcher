@@ -21,5 +21,9 @@ namespace FFTPatcher.SpriteEditor
             : base(bytes)
         {
         }
+        public override Shape Shape
+        {
+            get { return Shape.WEP1; }
+        }
     }
 }

@@ -175,10 +175,10 @@ namespace FFTPatcher.SpriteEditor
                     case SpriteType.ARUTE:
                         CachedSprite = new ARUTE(bytes);
                         break;
-                    //case SpriteType.WEP1:
-                    //case SpriteType.WEP2:
-                    //    cachedSprite = new WEPSprite(bytes);
-                    //    break;
+                    case SpriteType.WEP1:
+                    case SpriteType.WEP2:
+                        CachedSprite = new WEPSprite(bytes);
+                        break;
                     //case SpriteType.WEP3:
                     //    cachedSprite = new WEP3Sprite(bytes);
                     //    break;
@@ -231,13 +231,13 @@ namespace FFTPatcher.SpriteEditor
                     case SpriteType.ARUTE:
                         CachedSprite = new ARUTE(bytes);
                         break;
-                    //case SpriteType.WEP1:
-                    //case SpriteType.WEP2:
-                    //    cachedSprite = new WEPSprite(bytes);
-                    //    break;
-                    //case SpriteType.WEP3:
-                    //    cachedSprite = new WEP3Sprite(bytes);
-                    //    break;
+                    case SpriteType.WEP1:
+                    case SpriteType.WEP2:
+                        CachedSprite = new WEPSprite(bytes);
+                        break;
+                    case SpriteType.EFF1:
+                        CachedSprite = new WEP3Sprite(bytes);
+                        break;
                     default:
                         CachedSprite = null;
                         break;

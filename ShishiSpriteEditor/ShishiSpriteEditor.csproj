@@ -191,8 +191,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\SpriteEditor.resx">
       <DependentUpon>SpriteEditor.cs</DependentUpon>
@@ -206,13 +206,12 @@
       <DependentUpon>TestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <None Include="DataTypes\Sprites\SpriteTypes.cd" />
+    <None Include="EFF1.SEQ" />
+    <None Include="EFF1.SHP" />
+    <None Include="EFF2.SEQ" />
+    <None Include="EFF2.SHP" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -406,11 +405,15 @@
     <None Include="Resources\MENU\BK_SHOP.TIM" />
     <None Include="Resources\MENU\BK_SHOP2.TIM" />
     <None Include="Resources\MENU\BK_SHOP3.TIM" />
+    <None Include="Resources\MON.SEQ" />
     <None Include="Resources\OPEN\OPNBK.BIN" />
     <None Include="Resources\OPEN\OPNTEX.BIN" />
     <None Include="Resources\PatchedDummyFolder.bin" />
+    <None Include="Resources\RUKA.SEQ" />
     <None Include="Resources\TYPE1.SEQ" />
     <None Include="Resources\TYPE2.SEQ" />
+    <None Include="Resources\WEP1.SEQ" />
+    <None Include="Resources\WEP2.SEQ" />
     <None Include="Resources\WORLD\WLDPIC.BIN" />
     <None Include="Resources\WORLD\WLDTEX.TM2" />
     <None Include="Resources\BATTLE\other\ARUTE.SHP" />
@@ -424,6 +427,11 @@
     <None Include="Resources\BATTLE\TYPE2\TYPE2.SHP" />
     <None Include="Resources\WEP1.SHP" />
     <None Include="Resources\WEP2.SHP" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>

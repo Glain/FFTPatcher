@@ -83,5 +83,9 @@ namespace FFTPatcher.SpriteEditor
                 bmd.SetPixel8bpp( i % Width, i / Width, Pixels[i] );
             }
         }
+        public override Shape Shape
+        {
+            get { return Shape.MON; }
+        }
     }
 }

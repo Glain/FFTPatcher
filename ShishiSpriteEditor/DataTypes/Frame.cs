@@ -50,13 +50,21 @@ namespace FFTPatcher.SpriteEditor
 
 		#region Constructors (1) 
 
-        public Frame( IList<byte> bytes, int yOffset )
+        public Frame( IList<byte> bytes, int yOffset,string name )
         {
+            int ydisplayoffset = 0;
             int numberOfTiles = bytes[0] + bytes[1] * 256;
+            if (name == "WEP1" || name == "WEP2" ||name == "EFF1" || name == "EFF2" )
+            {
+                numberOfTiles = 0;
+                ydisplayoffset = bytes[0] / 4;
+
+            }
             tiles = new List<Tile>( numberOfTiles + 1 );
             for( int i = 0; i <= numberOfTiles; i++ )
             {
-                tiles.Add( new Tile( bytes.Sub( 2 + i * 4, 2 + i * 4 + 3 ), yOffset ) );
+                tiles.Add( new Tile( bytes.Sub( 2 + i * 4, 2 + i * 4 + 3 ), yOffset) );
+                
             }
 
             tiles.Reverse();

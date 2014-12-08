@@ -160,4 +160,31 @@
   <data name="KANZEN_SEQ" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\KANZEN.SEQ;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="MON_SEQ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MON.SEQ;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MON_SHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MON.SHP;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="RUKA_SEQ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RUKA.SEQ;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="WEP1_SEQ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WEP1.SEQ;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="WEP2_SEQ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WEP2.SEQ;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="WEP1_SHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WEP1.SHP;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="WEP2_SHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WEP2.SHP;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="EFF1_SHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EFF1.SHP;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="EFF2_SHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EFF2.SHP;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

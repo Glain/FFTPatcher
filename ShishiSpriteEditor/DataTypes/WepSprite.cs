@@ -10,7 +10,8 @@ namespace FFTPatcher.SpriteEditor
         {
             WEP1,
             WEP2,
-            WEP3
+            EFF1,
+            EFF2
         }
 
         public Wep WEP { get; private set; }
@@ -34,7 +35,10 @@ namespace FFTPatcher.SpriteEditor
                     case Wep.WEP2:
                         CachedSprite = new WEPSprite(bytes);
                         break;
-                    case Wep.WEP3:
+                    case Wep.EFF1:
+                        CachedSprite = new WEP3Sprite(bytes);
+                        break;
+                    case Wep.EFF2:
                         CachedSprite = new WEP3Sprite(bytes);
                         break;
                     default:

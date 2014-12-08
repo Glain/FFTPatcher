@@ -64,7 +64,7 @@ namespace FFTPatcher.SpriteEditor
             byte xByte = bytes[0];
             byte yByte = bytes[1];
             sbyte x = (sbyte)xByte;
-            sbyte y = (sbyte)yByte;
+            sbyte y = (sbyte)yByte ;
 
             ushort flags = (ushort)(bytes[2] + bytes[3] * 256);
             ReverseX = (flags & 0x4000) == 0x4000;
@@ -72,7 +72,6 @@ namespace FFTPatcher.SpriteEditor
             byte f = (byte)((flags >> 10) & 0x0F);
             int tileX = (flags & 0x1F) * 8;
             int tileY = ((flags >> 5) & 0x1F) * 8 + yOffset;
-
 
             Location = new Point(x + 53, y + 118);
 

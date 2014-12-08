@@ -57,9 +57,11 @@ namespace FFTPatcher.SpriteEditor
             return new AllSprites( Context.US_PSX, AllSpriteAttributes.FromPsxIso( iso ), SpriteFileLocations.FromPsxIso( iso ),
                 new Sprite[] {
                     new WepSprite(Context.US_PSX, WepSprite.Wep.WEP1, "WEP1", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,0,256*256/2+0x200)),
-                    new WepSprite(Context.US_PSX, WepSprite.Wep.WEP2, "WEP2", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,256*256/2+0x200,256*256/2+0x200)),
-                    new WepSprite(Context.US_PSX, WepSprite.Wep.WEP3, "WEP3", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,(256*256/2+0x200)*2,144*256/2+0x200)) }
-                );
+                    new WepSprite(Context.US_PSX, WepSprite.Wep.WEP2, "WEP2", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,0,256*256/2+0x200)),
+                    new WepSprite(Context.US_PSX, WepSprite.Wep.EFF1, "EFF1", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,256*256/2+0x200,256*256/2+0x200)) ,
+                    new WepSprite(Context.US_PSX, WepSprite.Wep.EFF2, "EFF2", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,256*256/2+0x200,256*256/2+0x200)) ,
+                    new WepSprite(Context.US_PSX, WepSprite.Wep.EFF1, "TRAP1", new PatcherLib.Iso.PsxIso.KnownPosition( PatcherLib.Iso.PsxIso.Sectors.BATTLE_WEP_SPR,(256*256/2+0x200)*2,144*256/2+0x200)) ,}
+                   );
 
         }
 
@@ -70,9 +72,11 @@ namespace FFTPatcher.SpriteEditor
             return new AllSprites( Context.US_PSP, AllSpriteAttributes.FromPspIso( iso, info ), SpriteFileLocations.FromPspIso( iso, info ),
                 new Sprite[] {
                     new WepSprite(Context.US_PSP, WepSprite.Wep.WEP1, "WEP1", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,0,256*256/2+0x200)),
-                    new WepSprite(Context.US_PSP, WepSprite.Wep.WEP2, "WEP2", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,256*256/2+0x200,256*256/2+0x200)),
-                    new WepSprite(Context.US_PSP, WepSprite.Wep.WEP3, "WEP3", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,(256*256/2+0x200)*2,144*256/2+0x200)) }
-                );
+                    new WepSprite(Context.US_PSP, WepSprite.Wep.WEP2, "WEP2", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,0,256*256/2+0x200)),
+                    new WepSprite(Context.US_PSP, WepSprite.Wep.EFF1, "EFF1", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,256*256/2+0x200,256*256/2+0x200)) ,
+                    new WepSprite(Context.US_PSP, WepSprite.Wep.EFF2, "EFF2", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,256*256/2+0x200,256*256/2+0x200)),
+                    new WepSprite(Context.US_PSP, WepSprite.Wep.EFF2, "TRAP1", new PatcherLib.Iso.PspIso.KnownPosition( PatcherLib.Iso.FFTPack.Files.BATTLE_WEP_SPR,(256*256/2+0x200)*2,144*256/2+0x200)),}
+                     );
         }
 
         struct Time

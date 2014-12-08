@@ -21,25 +21,37 @@ namespace FFTPatcher.SpriteEditor
         static Sequence()
         {
             Dictionary<SpriteType, IList<Sequence>> sequences = new Dictionary<SpriteType,IList<Sequence>>();
-
+            bool mon = false;
             sequences[SpriteType.TYPE1] =
-                BuildSequences( Properties.Resources.TYPE1_SEQ, new string[218].SetAll( string.Empty ) );
+                BuildSequences( Properties.Resources.TYPE1_SEQ, new string[218].SetAll( string.Empty ),mon );
             sequences[SpriteType.TYPE2] =
-                BuildSequences( Properties.Resources.TYPE2_SEQ, new string[208].SetAll( string.Empty ) );
+                BuildSequences(Properties.Resources.TYPE2_SEQ, new string[208].SetAll(string.Empty), mon);
             sequences[SpriteType.CYOKO] =
-                BuildSequences( Properties.Resources.CYOKO_SEQ, new string[104].SetAll( string.Empty ) );
+                BuildSequences(Properties.Resources.CYOKO_SEQ, new string[104].SetAll(string.Empty), mon);
             sequences[SpriteType.KANZEN] =
-                BuildSequences( Properties.Resources.KANZEN_SEQ, new string[79].SetAll( string.Empty ) );
+                BuildSequences(Properties.Resources.KANZEN_SEQ, new string[79].SetAll(string.Empty), mon);
             sequences[SpriteType.ARUTE] =
-                BuildSequences( Properties.Resources.ARUTE_SEQ, new string[79].SetAll( string.Empty ) );
+                BuildSequences(Properties.Resources.ARUTE_SEQ, new string[79].SetAll(string.Empty), mon);
+            sequences[SpriteType.MON] =
+                BuildSequences(Properties.Resources.MON_SEQ, new string[194].SetAll(string.Empty), mon = true);
+            sequences[SpriteType.RUKA] =
+                BuildSequences(Properties.Resources.RUKA_SEQ, new string[194].SetAll(string.Empty), mon = true);
+            sequences[SpriteType.WEP1] =
+                BuildSequences(Properties.Resources.WEP1_SEQ, new string[194].SetAll(string.Empty), mon);
+            sequences[SpriteType.WEP2] =
+                BuildSequences(Properties.Resources.WEP2_SEQ, new string[194].SetAll(string.Empty), mon);
             Sequences = new ReadOnlyDictionary<SpriteType, IList<Sequence>>( sequences );
         }
 
-        public static IList<Sequence> BuildSequences( IList<byte> bytes, IList<string> names )
+        public static IList<Sequence> BuildSequences( IList<byte> bytes, IList<string> names,bool mon )
         {
             List<UInt32> offsets = new List<uint>();
             for ( int i = 0; i < 0x100; i++ )
             {
+                if (mon && offsets.Count >= 194)
+                {
+                    break;
+                }
                 UInt32 currentOffset = bytes.Sub( i * 4 + 4, ( i + 1 ) * 4 + 4 - 1 ).ToUInt32();
                 if ( currentOffset == 0xFFFFFFFF )
                 {
@@ -91,7 +103,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        private static Sequence BuildSequence( IList<byte> bytes, int index, string name )
+        private static Sequence BuildSequence( IList<byte> bytes, int index, string name)
         {
             var frames =
                 ProcessSequence( bytes, index );

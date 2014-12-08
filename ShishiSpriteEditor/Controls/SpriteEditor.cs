@@ -91,24 +91,49 @@ namespace FFTPatcher.SpriteEditor
             spriteViewer1.Sprite = AbstractSprite;
 
             UpdateCheckBoxesEtc(Sprite as CharacterSprite);
-            UpdateShapes(Sprite as CharacterSprite);
-            UpdateAnimationTab(Sprite as CharacterSprite);
+            UpdateShapes(Sprite as CharacterSprite,Sprite);
+            UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
             maxSizeLabel.Visible = true;
             maxSizeLabel.Text = string.Format("Max SPR size:" + Environment.NewLine + "{0} bytes", Sprite.Size);
             ignoreChanges = oldIgnoreChanges;
         }
 
         private Shape currentShape;
-        private void UpdateShapes(CharacterSprite charSprite)
+        private void UpdateShapes(CharacterSprite charSprite,Sprite sprite)
         {
             bool oldIgnoreChanges = ignoreChanges;
             ignoreChanges = true;
-            if (charSprite == null)
+            if (charSprite == null )
             {
                 tabControl1.Enabled = false;
+                if ( sprite.ToString() == "WEP1" || sprite.ToString() == "WEP2" ||
+                     sprite.ToString() == "EFF1" || sprite.ToString() == "EFF2")
+                {
+                     tabControl1.Enabled = true;
+                     if (sprite.ToString() == "WEP1")
+                     {
+                         currentShape = Shape.Shapes[SpriteType.WEP1];
+                     }
+                     else if (sprite.ToString() == "WEP2")
+                     {
+                         currentShape = Shape.Shapes[SpriteType.WEP2];
+                     }
+                     else if (sprite.ToString() == "EFF1")
+                     {
+                         currentShape = Shape.Shapes[SpriteType.EFF1];
+                     }
+                     else if (sprite.ToString() == "EFF2")
+                     {
+                         currentShape = Shape.Shapes[SpriteType.EFF2];
+                     }
+                     numericUpDown1.Maximum = currentShape.Frames.Count - 1;
+                     UpdatePictureBox();
+            
+                }
             }
             else
             {
+          
                 tabControl1.Enabled = true;
                 if (Shape.Shapes.ContainsKey(charSprite.SHP))
                 {
@@ -134,7 +159,7 @@ namespace FFTPatcher.SpriteEditor
         {
             InitializeComponent();
             var s = new List<SpriteType>( (SpriteType[])Enum.GetValues( typeof( SpriteType ) ) );
-            s.Remove(SpriteType.RUKA);
+            //s.Remove(SpriteType.RUKA);
 
             shpComboBox.DataSource = s.ToArray();
             seqComboBox.DataSource = Enum.GetValues(typeof(SpriteType));
@@ -172,7 +197,7 @@ namespace FFTPatcher.SpriteEditor
             {
                 (Sprite as CharacterSprite).SetSHP( iso, (SpriteType)shpComboBox.SelectedItem );
                 ReloadSprite();
-                UpdateAnimationTab(Sprite as CharacterSprite);
+                UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
             }
         }
 
@@ -181,7 +206,7 @@ namespace FFTPatcher.SpriteEditor
             if ( !ignoreChanges )
             {
                 (Sprite as CharacterSprite).SetSEQ(iso, (SpriteType)seqComboBox.SelectedItem);
-                UpdateAnimationTab(Sprite as CharacterSprite);
+                UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
             }
         }
 
@@ -235,8 +260,25 @@ namespace FFTPatcher.SpriteEditor
 
         private IList<Sequence> currentSequences;
 
-        private void UpdateAnimationTab(CharacterSprite charSprite)
+        private void UpdateAnimationTab(CharacterSprite charSprite, Sprite sprite)
         {
+            if(sprite.ToString() == "WEP1")
+            {
+                seqComboBox.SelectedItem = seqComboBox.Items[7];
+            }
+            else if (sprite.ToString() == "WEP2")
+            {
+                seqComboBox.SelectedItem = seqComboBox.Items[8];
+            }
+            else if (sprite.ToString() == "EFF1")
+            {
+                seqComboBox.SelectedItem = seqComboBox.Items[9];
+            }
+            else if (sprite.ToString() == "EFF2")
+            {
+                seqComboBox.SelectedItem = seqComboBox.Items[10];
+            }
+            
             if (charSprite != null &&
                 seqComboBox.SelectedItem != null)
             {
