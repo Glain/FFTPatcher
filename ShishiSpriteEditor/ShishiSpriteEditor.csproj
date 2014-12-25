@@ -208,10 +208,8 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="DataTypes\Sprites\SpriteTypes.cd" />
-    <None Include="EFF1.SEQ" />
-    <None Include="EFF1.SHP" />
-    <None Include="EFF2.SEQ" />
-    <None Include="EFF2.SHP" />
+    <None Include="Resources\EFF1.SEQ" />
+    <None Include="Resources\EFF2.SEQ" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

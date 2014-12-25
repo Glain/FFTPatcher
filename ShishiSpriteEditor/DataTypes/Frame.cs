@@ -52,18 +52,20 @@ namespace FFTPatcher.SpriteEditor
 
         public Frame( IList<byte> bytes, int yOffset,string name )
         {
+            int rotation = 0;
             int ydisplayoffset = 0;
             int numberOfTiles = bytes[0] + bytes[1] * 256;
             if (name == "WEP1" || name == "WEP2" ||name == "EFF1" || name == "EFF2" )
             {
                 numberOfTiles = 0;
+                rotation = bytes[0] + bytes[1] * 256;
                 ydisplayoffset = bytes[0] / 4;
 
             }
             tiles = new List<Tile>( numberOfTiles + 1 );
             for( int i = 0; i <= numberOfTiles; i++ )
             {
-                tiles.Add( new Tile( bytes.Sub( 2 + i * 4, 2 + i * 4 + 3 ), yOffset) );
+                tiles.Add( new Tile( bytes.Sub( 2 + i * 4, 2 + i * 4 + 3 ), yOffset,rotation) );
                 
             }
 
@@ -83,17 +85,23 @@ namespace FFTPatcher.SpriteEditor
             Bitmap result = new Bitmap( defaultFrameSize.Width, defaultFrameSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
             Bitmap sourceBmp = source.ToBitmap();
+            //sourceBmp = sourceBmp.RotateImg(90, Color.Transparent);
             result.Palette = sourceBmp.Palette;
+            float rotation = 0;
 
             foreach ( Tile t in tiles )
             {
+                rotation = t.Rotation;
                 sourceBmp.CopyRectangleToPoint( t.Rectangle, result, t.Location, source.Palettes[0], t.ReverseX, t.ReverseY );
+                
             }
+           
+             
 
             return result;
         }
 
-
+      
 		#endregion Methods 
 
     }
