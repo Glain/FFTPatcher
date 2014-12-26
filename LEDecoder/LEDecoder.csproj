@@ -54,6 +54,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Autonotator\Autonotator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Autonotator\Autonotator.Designer.cs">
+      <DependentUpon>Autonotator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Autonotator\MainAddress.cs" />
+    <Compile Include="Autonotator\Register.cs" />
+    <Compile Include="Autonotator\SubData.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,13 +73,28 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Autonotator\Autonotator.resx">
+      <DependentUpon>Autonotator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\BATTLE Disassembly.txt" />
+    <EmbeddedResource Include="Resources\BATTLEWIKI.txt" />
+    <EmbeddedResource Include="Resources\EQUIP Disassembly.txt" />
+    <EmbeddedResource Include="Resources\EQUIPWIKI.txt" />
     <Content Include="ProfilingSessions\Session20110917_183754.sdps" />
     <Content Include="ProfilingSessions\Session20120128_104630.sdps" />
+    <EmbeddedResource Include="Resources\REQUIRE Disassembly.txt" />
+    <EmbeddedResource Include="Resources\REQUIREWIKI.txt" />
+    <EmbeddedResource Include="Resources\SCUS Disassembly.txt" />
+    <EmbeddedResource Include="Resources\SCUSWIKI.txt" />
+    <EmbeddedResource Include="Resources\WLDCORE Disassembly.txt" />
+    <EmbeddedResource Include="Resources\WLDCOREWIKI.txt" />
+    <EmbeddedResource Include="Resources\WORLD Disassembly.txt" />
+    <EmbeddedResource Include="Resources\WORLDWIKI.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ASMEncoding\ASMEncoding.csproj">

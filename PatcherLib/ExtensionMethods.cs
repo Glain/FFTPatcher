@@ -42,6 +42,7 @@ namespace PatcherLib.Utilities
     {
 
         #region Methods (14)
+        #region Xmlwriter
         public static void WriteValueElement( this XmlWriter writer, string name, UInt16 value )
         {
             writer.WriteStartElement( name );
@@ -66,6 +67,7 @@ namespace PatcherLib.Utilities
             writer.WriteValue( value );
             writer.WriteEndElement();
         }
+        #endregion
 
         public static XmlDocument ToXmlDocument( this string s )
         {
@@ -74,6 +76,7 @@ namespace PatcherLib.Utilities
             return result;
         }
 
+        #region Ilist / IEnumerable
         public static int IndexOf<T>( this IList<T> list, T item )
         {
             for (int i = 0; i < list.Count; i++)
@@ -95,7 +98,16 @@ namespace PatcherLib.Utilities
 
             return new List<T>( collection ).AsReadOnly();
         }
+        public static IList<T> SetAll<T>(this IList<T> list, T value)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i] = value;
+            }
+            return list;
+        }
 
+        
         public static bool TrueForAll<T>( this IList<T> list, Predicate<T> condition )
         {
             if (list == null) throw new ArgumentNullException( "list" );
@@ -106,7 +118,6 @@ namespace PatcherLib.Utilities
             }
             return true;
         }
-
         public static bool TrueForAll<T>( this IEnumerable<T> list, Predicate<T> condition )
         {
             if (list == null) throw new ArgumentNullException( "list" );
@@ -117,6 +128,7 @@ namespace PatcherLib.Utilities
             }
             return true;
         }
+        #endregion
 
         public static void Copy<T>( this IList<T> sourceList, int sourceIndex, IList<T> destinationList, int destinationIndex, int length )
         {
@@ -133,15 +145,7 @@ namespace PatcherLib.Utilities
             }
         }
 
-        public static IList<T> SetAll<T>( this IList<T> list, T value )
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                list[i] = value;
-            }
-            return list;
-        }
-
+        
         [System.Diagnostics.DebuggerStepThrough]
         public static IDictionary<TKey, TValue> AsReadOnly<TKey, TValue>( this IDictionary<TKey, TValue> dict )
         {
@@ -568,7 +572,12 @@ namespace PatcherLib.Utilities
             }
         }
 
-
+        public static string[] ToLines(this string wholestring)
+        {
+            string[] result = wholestring.Replace("\r", "").Split('\n');
+            return result;
+        }
+  
         #endregion Methods
     }
 }

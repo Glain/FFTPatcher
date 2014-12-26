@@ -63,6 +63,9 @@ namespace LEDecoder
             this.txt_BPLbox = new System.Windows.Forms.TextBox();
             this.lab_PSX = new System.Windows.Forms.Label();
             this.chk_SpaceBox = new System.Windows.Forms.CheckBox();
+            this.btn_UpdateWiki = new System.Windows.Forms.Button();
+            this.cmb_FileofRoutine = new System.Windows.Forms.ComboBox();
+            this.lbl_FileofRoutine = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pic_LED)).BeginInit();
             this.Functionpanel.SuspendLayout();
             this.SuspendLayout();
@@ -156,15 +159,15 @@ namespace LEDecoder
             // 
             // txt_StartingAddress
             // 
-            this.txt_StartingAddress.Location = new System.Drawing.Point(120, 196);
+            this.txt_StartingAddress.Location = new System.Drawing.Point(120, 199);
             this.txt_StartingAddress.Name = "txt_StartingAddress";
-            this.txt_StartingAddress.Size = new System.Drawing.Size(76, 20);
+            this.txt_StartingAddress.Size = new System.Drawing.Size(97, 20);
             this.txt_StartingAddress.TabIndex = 10;
             // 
             // lbl_StartingAddress
             // 
             this.lbl_StartingAddress.AutoSize = true;
-            this.lbl_StartingAddress.Location = new System.Drawing.Point(28, 196);
+            this.lbl_StartingAddress.Location = new System.Drawing.Point(28, 199);
             this.lbl_StartingAddress.Name = "lbl_StartingAddress";
             this.lbl_StartingAddress.Size = new System.Drawing.Size(87, 13);
             this.lbl_StartingAddress.TabIndex = 11;
@@ -184,7 +187,7 @@ namespace LEDecoder
             // cb_Mode
             // 
             this.cb_Mode.FormattingEnabled = true;
-            this.cb_Mode.Location = new System.Drawing.Point(123, 228);
+            this.cb_Mode.Location = new System.Drawing.Point(123, 231);
             this.cb_Mode.Name = "cb_Mode";
             this.cb_Mode.Size = new System.Drawing.Size(65, 21);
             this.cb_Mode.TabIndex = 13;
@@ -193,7 +196,7 @@ namespace LEDecoder
             // lbl_Mode
             // 
             this.lbl_Mode.AutoSize = true;
-            this.lbl_Mode.Location = new System.Drawing.Point(76, 231);
+            this.lbl_Mode.Location = new System.Drawing.Point(76, 234);
             this.lbl_Mode.Name = "lbl_Mode";
             this.lbl_Mode.Size = new System.Drawing.Size(37, 13);
             this.lbl_Mode.TabIndex = 14;
@@ -245,7 +248,6 @@ namespace LEDecoder
             this.JalFindButton.TabIndex = 0;
             this.JalFindButton.Text = "Find Jal Structure";
             this.JalFindButton.UseVisualStyleBackColor = true;
-            this.JalFindButton.Visible = false;
             this.JalFindButton.CheckedChanged += new System.EventHandler(this.JalFindButton_CheckedChanged);
             // 
             // PrintHexButton
@@ -275,7 +277,7 @@ namespace LEDecoder
             // lab_Length
             // 
             this.lab_Length.AutoSize = true;
-            this.lab_Length.Location = new System.Drawing.Point(228, 196);
+            this.lab_Length.Location = new System.Drawing.Point(228, 199);
             this.lab_Length.Name = "lab_Length";
             this.lab_Length.Size = new System.Drawing.Size(43, 13);
             this.lab_Length.TabIndex = 11;
@@ -284,7 +286,7 @@ namespace LEDecoder
             // 
             // txt_Length
             // 
-            this.txt_Length.Location = new System.Drawing.Point(278, 193);
+            this.txt_Length.Location = new System.Drawing.Point(278, 196);
             this.txt_Length.Name = "txt_Length";
             this.txt_Length.Size = new System.Drawing.Size(85, 20);
             this.txt_Length.TabIndex = 16;
@@ -293,7 +295,7 @@ namespace LEDecoder
             // lab_BPL
             // 
             this.lab_BPL.AutoSize = true;
-            this.lab_BPL.Location = new System.Drawing.Point(202, 227);
+            this.lab_BPL.Location = new System.Drawing.Point(202, 230);
             this.lab_BPL.Name = "lab_BPL";
             this.lab_BPL.Size = new System.Drawing.Size(73, 13);
             this.lab_BPL.TabIndex = 11;
@@ -302,7 +304,7 @@ namespace LEDecoder
             // 
             // txt_BPLbox
             // 
-            this.txt_BPLbox.Location = new System.Drawing.Point(278, 224);
+            this.txt_BPLbox.Location = new System.Drawing.Point(278, 227);
             this.txt_BPLbox.Name = "txt_BPLbox";
             this.txt_BPLbox.Size = new System.Drawing.Size(85, 20);
             this.txt_BPLbox.TabIndex = 16;
@@ -311,7 +313,7 @@ namespace LEDecoder
             // lab_PSX
             // 
             this.lab_PSX.AutoSize = true;
-            this.lab_PSX.Location = new System.Drawing.Point(133, 231);
+            this.lab_PSX.Location = new System.Drawing.Point(123, 234);
             this.lab_PSX.Name = "lab_PSX";
             this.lab_PSX.Size = new System.Drawing.Size(28, 13);
             this.lab_PSX.TabIndex = 11;
@@ -321,7 +323,7 @@ namespace LEDecoder
             // chk_SpaceBox
             // 
             this.chk_SpaceBox.AutoSize = true;
-            this.chk_SpaceBox.Location = new System.Drawing.Point(231, 250);
+            this.chk_SpaceBox.Location = new System.Drawing.Point(231, 253);
             this.chk_SpaceBox.Name = "chk_SpaceBox";
             this.chk_SpaceBox.Size = new System.Drawing.Size(149, 17);
             this.chk_SpaceBox.TabIndex = 17;
@@ -329,21 +331,57 @@ namespace LEDecoder
             this.chk_SpaceBox.UseVisualStyleBackColor = true;
             this.chk_SpaceBox.Visible = false;
             // 
+            // btn_UpdateWiki
+            // 
+            this.btn_UpdateWiki.Location = new System.Drawing.Point(12, 282);
+            this.btn_UpdateWiki.Name = "btn_UpdateWiki";
+            this.btn_UpdateWiki.Size = new System.Drawing.Size(130, 30);
+            this.btn_UpdateWiki.TabIndex = 18;
+            this.btn_UpdateWiki.Text = "Update Wiki Resource";
+            this.btn_UpdateWiki.UseVisualStyleBackColor = true;
+            this.btn_UpdateWiki.Visible = false;
+            this.btn_UpdateWiki.Click += new System.EventHandler(this.btn_UpdateWiki_Click);
+            // 
+            // cmb_FileofRoutine
+            // 
+            this.cmb_FileofRoutine.FormattingEnabled = true;
+            this.cmb_FileofRoutine.Items.AddRange(new object[] {
+            "BATTLE - REQUIRE",
+            "BATTLE - EQUIP",
+            "WLDCORE - WORLD "});
+            this.cmb_FileofRoutine.Location = new System.Drawing.Point(120, 169);
+            this.cmb_FileofRoutine.Name = "cmb_FileofRoutine";
+            this.cmb_FileofRoutine.Size = new System.Drawing.Size(97, 21);
+            this.cmb_FileofRoutine.TabIndex = 19;
+            this.cmb_FileofRoutine.Visible = false;
+            // 
+            // lbl_FileofRoutine
+            // 
+            this.lbl_FileofRoutine.AutoSize = true;
+            this.lbl_FileofRoutine.Location = new System.Drawing.Point(35, 172);
+            this.lbl_FileofRoutine.Name = "lbl_FileofRoutine";
+            this.lbl_FileofRoutine.Size = new System.Drawing.Size(78, 13);
+            this.lbl_FileofRoutine.TabIndex = 11;
+            this.lbl_FileofRoutine.Text = "File of Routine:";
+            this.lbl_FileofRoutine.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 324);
+            this.Controls.Add(this.cmb_FileofRoutine);
+            this.Controls.Add(this.btn_UpdateWiki);
             this.Controls.Add(this.chk_SpaceBox);
             this.Controls.Add(this.txt_BPLbox);
             this.Controls.Add(this.txt_Length);
             this.Controls.Add(this.Functionpanel);
             this.Controls.Add(this.lbl_Mode);
-            this.Controls.Add(this.cb_Mode);
             this.Controls.Add(this.chk_NameRegisters);
             this.Controls.Add(this.lab_BPL);
             this.Controls.Add(this.lab_PSX);
             this.Controls.Add(this.lab_Length);
+            this.Controls.Add(this.lbl_FileofRoutine);
             this.Controls.Add(this.lbl_StartingAddress);
             this.Controls.Add(this.txt_StartingAddress);
             this.Controls.Add(this.lbl_Overwrite);
@@ -356,6 +394,7 @@ namespace LEDecoder
             this.Controls.Add(this.txt_InputFile);
             this.Controls.Add(this.lbl_OutputFile);
             this.Controls.Add(this.lbl_InputFile);
+            this.Controls.Add(this.cb_Mode);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "MainForm";
@@ -394,5 +433,8 @@ namespace LEDecoder
         private System.Windows.Forms.TextBox txt_BPLbox;
         private System.Windows.Forms.Label lab_PSX;
         private System.Windows.Forms.CheckBox chk_SpaceBox;
+        private System.Windows.Forms.Button btn_UpdateWiki;
+        private System.Windows.Forms.ComboBox cmb_FileofRoutine;
+        private System.Windows.Forms.Label lbl_FileofRoutine;
 	}
 }
