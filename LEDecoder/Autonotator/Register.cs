@@ -6,13 +6,18 @@ namespace LEDecoder
 {
     public class Register
     {
-        public int Value = 0;
+        public long Value = 0;
         public string Name = "";
         public string Description = "";
+        public string SpecialCommand = "";
+        public bool originalvalue = false;
+        public int multiplier = 0;
+        public string Inputis = "";
 
         public Register(int input)
         {
             Name = "r" + input;
+            Description = "r" + input + "Input";
             if(input == 0)
             {
                 Description = "0";
@@ -25,6 +30,16 @@ namespace LEDecoder
             {
                 Description = "Stack Pointer";
             }
+            if (input == 32)
+            {
+                Description = "Lo";
+            }
+            if (input == 33)
+            {
+                Description = "Hi";
+            }
+          
+
         }
 
           public void GetDescription(MainForm mainform)

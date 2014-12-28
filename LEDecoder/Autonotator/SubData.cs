@@ -6,21 +6,22 @@ namespace LEDecoder
 {
     public class SubData
     {
-        bool known = false;
-        string size = "byte";
-        int offsetaddress;
-        string description;
-        string[] flags;
-        string type;
+        public int size = 1;
+        public int offsetaddress;
+        public string description;
+        public string[] flags;
+        public string type;
       
         public SubData()
         {
 
         }
-        public SubData(string Size, int OffsetAddress, string Description)
+        public SubData(string line)
         {
-
+         
         }
+
+
 
     }
 

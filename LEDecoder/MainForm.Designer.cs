@@ -236,7 +236,6 @@ namespace LEDecoder
             this.AutoNotateButton.TabStop = true;
             this.AutoNotateButton.Text = "AutoNotate";
             this.AutoNotateButton.UseVisualStyleBackColor = true;
-            this.AutoNotateButton.Visible = false;
             this.AutoNotateButton.CheckedChanged += new System.EventHandler(this.AutoNotateButton_CheckedChanged);
             // 
             // JalFindButton
