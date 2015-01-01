@@ -101,6 +101,14 @@
       <Project>{4AB43571-545C-4F80-AFF1-F6E43DE31F47}</Project>
       <Name>ASMEncoding</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PatcherLib.Resources\PatcherLib.Resources.csproj">
+      <Project>{e8b981cb-2a97-4901-9a04-e6e5d369f471}</Project>
+      <Name>PatcherLib.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PatcherLib\PatcherLib.csproj">
+      <Project>{bb7322ad-75d3-44af-a0bf-76015c53998f}</Project>
+      <Name>PatcherLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

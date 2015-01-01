@@ -6,7 +6,8 @@ namespace LEDecoder
 {
     public class MainAddress
     {
-        public long Value;
+        public long Address;
+        public long PointedAddress = 0;
         public int OffsetMod = 0;
         public string Description = "";
         public int FrameSize;
@@ -18,9 +19,9 @@ namespace LEDecoder
         {
 
         }
-        public MainAddress(string value)
+        public MainAddress(string address)
         {
-            Value = StringToAddress(value);
+            Address = StringToAddress(address);
         }
 
        public void AddFrame(long length)

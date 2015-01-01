@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+
 namespace LEDecoder
 {
     public partial class Autonotator : Form
@@ -97,10 +98,10 @@ namespace LEDecoder
         
         public void GetRegisterDescriptions()
         {
-            foreach(Register reg in Mainform.Registers)
-            {
-                reg.GetDescription(Mainform);
-            }
+            //foreach(Register reg in Mainform.Registers)
+            //{
+            //    reg.GetDescription(Mainform);
+            //}
         }
         public void GetRegisterValues()
         {
