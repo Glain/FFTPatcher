@@ -22,7 +22,7 @@ namespace LEDecoder
         {
            
             Name = "r" + input;
-            Description = "r" + input + "Input";
+            Description = "r" + input + " Input";
             if(input == 0)
             {
                 Description = "0";
@@ -47,34 +47,35 @@ namespace LEDecoder
 
         }
 
-          public string GetDescription(long MainAddress, long Offset, MainForm mainform)
+          public string GetDescription(long MainAddress, MainForm mainform)
         {
-            Offset += SubsetOffset;
-            MainAddress = MainAddress & 0x7FFFFFFF;
             string result = "";
+            MainAddress = MainAddress & 0x7FFFFFFF;
+
+
+            long Offset = 0;
             long wholeaddress = MainAddress + Offset;
-            foreach (MainAddress Main in mainform.MainAddresses)
+
+            for (int i = 0; i < mainform.MainAddresses.Length;i++)
             {
-                if (Main.Address == MainAddress || Main.Address == wholeaddress)
+                if(mainform.MainAddresses[i].Address == MainAddress)
                 {
-                    Mainaddress = Main;
-                    if (Main.Frame != null)
+                    Mainaddress = mainform.MainAddresses[i];
+                    AttachAddresstoRegister(MainAddress, mainform);
+                    result = mainform.MainAddresses[i].Description;
+                }
+                else if(i != mainform.MainAddresses.Length - 1)
+                {
+                    if(MainAddress < mainform.MainAddresses[i + 1].Address &&
+                        MainAddress > mainform.MainAddresses[i].Address)
                     {
-                        if (Main.Frame.Length == Offset)
-                        {
-                            result = "this " + Main.Description;
-                        }
-                        else
-                        {
-                            result = GetSubDataDescription(MainAddress, Offset, mainform);
-                        }
-                    }
-                    if (result == "")
-                    {
-                        result = Main.Description;
+                        Offset = MainAddress - mainform.MainAddresses[i].Address;
+                        result = GetSubDataDescription(mainform.MainAddresses[i].Address, Offset, mainform);
+                        AttachDatatoRegister(mainform.MainAddresses[i].Address, Offset, mainform);
                     }
                 }
             }
+               
             return result;
         }
 

@@ -66,6 +66,8 @@ namespace LEDecoder
             this.btn_UpdateWiki = new System.Windows.Forms.Button();
             this.cmb_FileofRoutine = new System.Windows.Forms.ComboBox();
             this.lbl_FileofRoutine = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.btn_AutoNotateForm = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pic_LED)).BeginInit();
             this.Functionpanel.SuspendLayout();
             this.SuspendLayout();
@@ -364,11 +366,35 @@ namespace LEDecoder
             this.lbl_FileofRoutine.Text = "File of Routine:";
             this.lbl_FileofRoutine.Visible = false;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(310, 143);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(90, 17);
+            this.checkBox1.TabIndex = 20;
+            this.checkBox1.Text = "Overwrite File";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // btn_AutoNotateForm
+            // 
+            this.btn_AutoNotateForm.Location = new System.Drawing.Point(205, 282);
+            this.btn_AutoNotateForm.Name = "btn_AutoNotateForm";
+            this.btn_AutoNotateForm.Size = new System.Drawing.Size(115, 30);
+            this.btn_AutoNotateForm.TabIndex = 21;
+            this.btn_AutoNotateForm.Text = "Autonotate Settings";
+            this.btn_AutoNotateForm.UseVisualStyleBackColor = true;
+            this.btn_AutoNotateForm.Visible = false;
+            this.btn_AutoNotateForm.Click += new System.EventHandler(this.btn_AutoNotateForm_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 324);
+            this.Controls.Add(this.btn_AutoNotateForm);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.cmb_FileofRoutine);
             this.Controls.Add(this.btn_UpdateWiki);
             this.Controls.Add(this.chk_SpaceBox);
@@ -435,5 +461,7 @@ namespace LEDecoder
         private System.Windows.Forms.Button btn_UpdateWiki;
         private System.Windows.Forms.ComboBox cmb_FileofRoutine;
         private System.Windows.Forms.Label lbl_FileofRoutine;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button btn_AutoNotateForm;
 	}
 }

@@ -66,7 +66,8 @@ namespace LEDecoder
         #endregion
 
         #region Autonotator Variables
-        public Register[] Registers = new Register[32];
+        public Autonotator An = new Autonotator();
+        public Register[] Registers = new Register[33];
         public MainAddress[] MainAddresses;
         public bool settingregisters = false;
         int[] linestoinsert = new int[1];
@@ -111,7 +112,7 @@ namespace LEDecoder
 			InitializeComponent();
 			DoProcess();
              #region Autonotator
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 33; i++)
             {
                 Registers[i] = new Register(i);
             }
@@ -280,6 +281,8 @@ namespace LEDecoder
             txt_InputFile.Enabled = true;
             btn_InputFile.Enabled = true;
             btn_UpdateWiki.Visible = false;
+            btn_AutoNotateForm.Visible = false;
+
             if (CollapseRoutinesButton.Checked)
             {
                 Function = "Collapse Routines";
@@ -301,7 +304,8 @@ namespace LEDecoder
             lbl_FileofRoutine.Visible = true;
             txt_InputFile.Enabled = false;
             btn_InputFile.Enabled = false;
-            btn_UpdateWiki.Visible = false;
+            btn_UpdateWiki.Visible = true;
+            btn_AutoNotateForm.Visible = true;
 
             if (AutoNotateButton.Checked)
             {
@@ -324,6 +328,7 @@ namespace LEDecoder
             txt_InputFile.Enabled = false;
             btn_InputFile.Enabled = false;
             btn_UpdateWiki.Visible = true;
+            btn_AutoNotateForm.Visible = false;
 
             if (JalFindButton.Checked)
             {
@@ -346,6 +351,8 @@ namespace LEDecoder
             txt_InputFile.Enabled = true;
             btn_InputFile.Enabled = true;
             btn_UpdateWiki.Visible = false;
+            btn_AutoNotateForm.Visible = false;
+
             if (PrintHexButton.Checked)
             {
                 Function = "Print Hex";
@@ -368,10 +375,24 @@ namespace LEDecoder
             txt_InputFile.Enabled = true;
             btn_InputFile.Enabled = true;
             btn_UpdateWiki.Visible = false;
+            btn_AutoNotateForm.Visible = false;
+
             if (DecodeASMButton.Checked)
             {
                 Function = "Collapse Routines";
             }
+        }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                LEDecoder.Properties.Settings.Default.OverwriteFile = true;
+            }
+            else
+            {
+                LEDecoder.Properties.Settings.Default.OverwriteFile = false;
+            }
+
         }
 
         private void cb_Mode_SelectedIndexChanged(object sender, EventArgs e)
@@ -446,11 +467,9 @@ namespace LEDecoder
         public long ReadHexOrDec(string Entry)
         {
             long output = 0;
-            string input = "";
             if (Entry.IndexOf('x') > 0)
             {
-                input = Entry.Substring(2);
-                output = Convert.ToInt32(input, 16);
+                output = StringToAddress(Entry);
             }
             else
             {
@@ -547,7 +566,7 @@ namespace LEDecoder
             string[] wikilines = ToLines(filewiki);
             foreach(string line in wikilines)
             {
-                if(line.IndexOf(address) > 0)
+                if(line.IndexOf(address) > -1)
                 {
                     if(line.IndexOf(" title") > 0)
                     {
@@ -679,11 +698,6 @@ namespace LEDecoder
 
             return intout;
         }
-        public static long HextoSignedLong(string InString)
-        {
-            long outlong = 0;
-                return outlong;
-        }
         public string Indent(int amount)
         {
             string result = "";
@@ -809,7 +823,17 @@ namespace LEDecoder
             #region Main Jalfinder Function
             if (txt_OutputFile.Text != "")
             {
-                using (StreamWriter sw = File.AppendText(txt_OutputFile.Text))
+                StreamWriter sw;
+                if(checkBox1.Checked)
+                {
+                    sw = File.CreateText(txt_OutputFile.Text);
+                }
+                else
+                {
+                    sw = File.AppendText(txt_OutputFile.Text);
+                }
+
+                using (sw)
                 {
                     long address = StringToAddress(txt_StartingAddress.Text);
                     CurrentFile = SCUSDisassembly;
@@ -885,7 +909,7 @@ namespace LEDecoder
                                     sw.WriteLine(jaladdress + ": " + description + "\r");
                             }
                          }
-                        else if (tempstring.Contains("jr"))
+                        else if (tempstring.Contains("jr r31"))
                         {
                             break;
                         }
@@ -928,8 +952,8 @@ namespace LEDecoder
                     BinaryWriter bw = new BinaryWriter(File.Open(txt_OutputFile.Text, FileMode.OpenOrCreate));
                     string[] output = new string[1];
                     long length = ReadHexOrDec(txt_Length.Text);
-                    b.BaseStream.Position = ReadHexOrDec(txt_StartingAddress.Text);
-                    for (long i = b.BaseStream.Position; i < ReadHexOrDec(txt_StartingAddress.Text) + length; i++)
+                    b.BaseStream.Position = StringToAddress(txt_StartingAddress.Text);
+                    for (long i = b.BaseStream.Position; i < StringToAddress(txt_StartingAddress.Text) + length; i++)
                     {
                         byte[] Word = b.ReadBytes((int)ReadHexOrDec(txt_BPLbox.Text));
 
@@ -977,6 +1001,8 @@ namespace LEDecoder
                     //}
 
                     //File.WriteAllLines(txt_OutputFile.Text + ".txt", Output);
+                    bw.Close();
+                    b.Close();
                 }
 
                 DrawLED(Color.Green);
@@ -1043,9 +1069,6 @@ namespace LEDecoder
         }
         private void AutoNotate()
         {
-
-            //Autonotator An = new Autonotator(this);
-            //An.Show(); //Set initial register values
 
             JalFind();
             //get reference files
@@ -1128,11 +1151,21 @@ namespace LEDecoder
             #region Main Autonotator Function
             if (txt_OutputFile.Text != "")
             {
-                using (StreamWriter sw = File.CreateText(txt_OutputFile.Text))
+                StreamWriter sw;
+                if (checkBox1.Checked)
+                {
+                    sw = File.CreateText(txt_OutputFile.Text);
+                }
+                else
+                {
+                    sw = File.AppendText(txt_OutputFile.Text);
+                }
+
+                using (sw)
                 {
                     string tempstring = "";
                     sw.WriteLine(txt_StartingAddress.Text +": " + Indent(3) + GetRoutineDescription(txt_StartingAddress.Text) + "\n");
-                    InitializeRegisters();
+                    //InitializeRegisters();
                     PrintRegisterDescriptions(sw);
                   
 
@@ -1189,6 +1222,7 @@ namespace LEDecoder
                 }
                 Process process = new Process();
                 Process.Start("notepad.exe", txt_OutputFile.Text);
+                InitializeRegisters();
             }
             #endregion
         }
@@ -1253,6 +1287,1131 @@ namespace LEDecoder
             #endregion
             return tempstring;
         }
+        public void GetDataNotes()
+        {
+            if (File.Exists(Application.StartupPath + "\\UnitDataResource.txt"))
+            {
+                using (StreamReader sr = new StreamReader(Application.StartupPath + "\\UnitDataResource.txt"))
+                {
+                    string file = sr.ReadToEnd();
+                    string[] fileLines = ToLines(file);
+
+                    //For each line in the data file
+                    for (int i = 0; i < fileLines.Length; i++)
+                    {
+                        string line = fileLines[i];
+                        string[] linesplit = fileLines[i].Split(' ');
+                        //If MainAddress Found
+                        if (linesplit[0].StartsWith("80") && linesplit[0].Length == 8)
+                        {
+                            MainAddresses = Add(linesplit[0], MainAddresses);
+                            int current = MainAddresses.Length - 1;
+                            MainAddresses[current].Description = line.Substring(line.IndexOf("-") + 2);
+                            if (MainAddresses[current].Description.Contains("|"))
+                                MainAddresses[current].Description = MainAddresses[current].Description.Remove(MainAddresses[current].Description.IndexOf("|"));
+
+                            foreach (string s in linesplit) //linesplit = MainAddress line
+                            {
+
+                                if (s.Contains("frame=0x"))
+                                {
+                                    MainAddresses[current].AddFrame(StringToAddress(s.Replace("frame=", "")));
+                                }
+                                else if (s.Contains("frame="))
+                                {
+                                    MainAddresses[current].AddFrame(Convert.ToInt32(s.Replace("frame=", "")));
+                                }
+                                if (s.Contains("sections=0x"))
+                                {
+                                    MainAddresses[current].NumberofSections = (int)StringToAddress(s.Replace("sections=", ""));
+                                }
+                                else if (s.Contains("sections="))
+                                {
+                                    MainAddresses[current].NumberofSections = Convert.ToInt32(s.Replace("sections=", ""));
+                                }
+                                else if (s.Contains("pointedaddress="))
+                                {
+                                    MainAddresses[current].PointedAddress = StringToAddress(s.Substring(s.IndexOf("pointedaddress=") + 15));
+                                }
+
+
+                            }
+                            i++;
+
+                            //Begin looking for data
+                            while (!fileLines[i].StartsWith("80") && fileLines[i] != "")
+                            {
+                                line = fileLines[i].Replace("\t", "");   // line = subdata line
+                                linesplit = fileLines[i].Split(' ');
+
+                                //If Subdata Found
+                                if (line.Contains(":"))
+                                {
+
+                                    int currentindex = (int)StringToAddress(line.Remove(line.IndexOf(":")));
+                                    MainAddresses[current].Frame[currentindex] = new SubData();
+                                    MainAddresses[current].Frame[currentindex].offsetaddress = currentindex;
+                                    //MainAddresses[current].Frame[currentindex].description = line.Substring(line.IndexOf(":") + 2);
+
+                                    //Set Description
+                                    if (line.Length > line.IndexOf(":") + 2)
+                                        MainAddresses[current].Frame[currentindex].description =
+                                            line.Substring(line.IndexOf(":") + 2);
+                                    else
+                                    {
+                                        MainAddresses[current].Frame[currentindex].description = "";
+                                    }
+                                    //Remove tags if present
+                                    if (line.Contains("|"))
+                                    {
+                                        MainAddresses[current].Frame[currentindex].description = MainAddresses[current].Frame[currentindex].description.Remove(MainAddresses[current].Frame[currentindex].description.IndexOf("|"));
+                                    }
+                                    //Look for size, list, and subset
+                                    foreach (string s in linesplit)
+                                    {
+                                        if (s.Contains("size"))
+                                        {
+                                            int numberindex = s.IndexOf("size") + 4;
+                                            MainAddresses[current].Frame[currentindex].size = Convert.ToInt32(s.Substring(numberindex));
+                                        }
+                                        if (s.Contains("list="))
+                                        {
+                                            MainAddresses[current].Frame[currentindex].GetList(s.Substring(s.IndexOf("list=") + 5));
+                                        }
+
+                                        if (fileLines[i].Contains("subset="))
+                                        {
+                                            MainAddresses[current].Frame[currentindex].IsSubset = true;
+                                            MainAddresses[current].Frame[currentindex].SubsetDescription = fileLines[i].Substring(fileLines[i].IndexOf("subset=") + 7);
+                                        }
+                                    }
+                                    i++;                                    //Move to value lines
+
+                                    if (!fileLines[i].Contains("list"))             //if list tag is found, goto next SubData
+                                    {
+                                        while (!fileLines[i].Contains(":") && i < fileLines.Length && fileLines[i] != "" && !fileLines[i].Replace("\t", "").StartsWith("80"))
+                                        {
+                                            line = fileLines[i].Replace("\t", "");
+                                            linesplit = fileLines[i].Split(' ');
+
+                                            if (line.Contains("value="))
+                                            {
+                                                if (MainAddresses[current].Frame[currentindex].Values == null)
+                                                {
+                                                    MainAddresses[current].Frame[currentindex].Values = new SubData.Value[1];
+                                                }
+                                                MainAddresses[current].Frame[currentindex].AddValue();
+                                                foreach (string s in linesplit)
+                                                {
+                                                    if (s.Contains("0x"))
+                                                    {
+                                                        MainAddresses[current].Frame[currentindex].Values[MainAddresses[current].Frame[currentindex].Values.Length - 1].value
+                                                          = (int)StringToAddress(s.Replace("\t", ""));
+                                                    }
+                                                    if (s.Contains("value="))
+                                                    {
+                                                        string tempstring = s.Substring(s.IndexOf("value=") + 6);
+                                                    }
+
+                                                }
+                                            }
+                                            //Set default value
+
+                                            i++;
+                                        }
+                                    }
+                                    i--;
+
+                                }//SubData Found
+                                i++;
+                                if (i == fileLines.Length)
+                                {
+                                    break;
+                                }
+
+                            }
+                            i--;
+
+                        }//Mainaddress found
+
+                    }
+
+                }
+
+            }
+        }
+        public string Notate(string line, int lineindex)
+        {
+            try
+            {
+
+
+                string Notation = "";
+                string[] linesplit = line.Split(' ', ',');
+
+                int sourceregister = 0;
+                int targetregister = 0;
+                int comparedregister = 0;
+                long immediate = 0;
+                string command = ExtractCommand(line);
+                string description = "";
+                long address = 0;
+
+                Notation = Indent(3);
+
+                switch (command)
+                {
+                    #region Jump/Branch Commands
+                    case "jal":
+                        Notation += GetRoutineDescription(line.Substring(23));
+                        linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
+                        Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
+                        GetReturnValue(StringToAddress(linesplit[3]));
+                        break;
+                    case "jalr":
+                        Notation += "Jump and Link";
+
+                        linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
+                        Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
+                        break;
+                    case "j":
+                        linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
+                        Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
+                        break;
+                    case "jr r31":
+                        Notation += "Jump to Return Address";
+                        break;
+                    case "jr":
+                        Notation += "Jump to Address";
+                        break;
+                    #region bne
+                    case "bne":
+                        sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        immediate = StringToAddress(linesplit[5]);
+
+                        #region special notations
+                        if (Registers[sourceregister].SpecialCommand == "slt" && comparedregister == 0)
+                        {
+                            Notation += "Branch if so";
+                            Registers[sourceregister].SpecialCommand = "";
+                        }
+                        else if (Registers[sourceregister].SpecialCommand == "and" && comparedregister == 0)
+                        {
+                            Notation += "Branch if " + Registers[sourceregister].Description;
+                            Registers[sourceregister].SpecialCommand = "";
+                        }
+                        #endregion
+                        else
+                        {
+                            Notation += "Branch if " + Registers[sourceregister].Description + " != " +
+                                               Registers[comparedregister].Description;
+                        }
+
+                        linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
+                        Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
+                        break;
+                    #endregion
+                    #region beq
+                    case "beq":
+                        sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        immediate = StringToAddress(linesplit[5]);
+
+                        #region special notations
+                        if (Registers[sourceregister].SpecialCommand == "slt" && comparedregister == 0)
+                        {
+                            Notation += "Branch if not";
+                            Registers[sourceregister].SpecialCommand = "";
+                        }
+                        else if (Registers[sourceregister].SpecialCommand == "and" && comparedregister == 0)
+                        {
+                            Notation += "Branch if " + Registers[sourceregister].Description;
+                            Registers[sourceregister].SpecialCommand = "";
+                        }
+                        #endregion
+
+                        else
+                        {
+                            Notation += "Branch if " + Registers[sourceregister].Description + " == " +
+                            Registers[comparedregister].Description;
+                        }
+
+
+                        linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
+                        Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
+                        break;
+                    #endregion
+
+                    #endregion
+
+                    #region slt Commands
+                    #region slt
+                    case "slt":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
+
+                        Notation += "Set if " + Registers[sourceregister].Description + " < " +
+                            Registers[comparedregister].Description;
+
+                        if (Registers[sourceregister].Value < Registers[comparedregister].Value)
+                        {
+                            Registers[targetregister].Value = 1;
+                        }
+                        else
+                        {
+                            Registers[targetregister].Value = 0;
+                        }
+
+                        Registers[targetregister].SpecialCommand = "slt";
+                        Registers[targetregister].originalvalue = false;
+
+                        Registers[targetregister].Description = "Result";
+
+                        break;
+                    #endregion
+                    #region slti
+                    case "slti":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        immediate = (int)StringToAddress(linesplit[5]);
+
+                        Notation += "Set if " + Registers[sourceregister].Description + " < " +
+                            immediate.ToString();
+
+                        if (Registers[sourceregister].Value < immediate)
+                        {
+                            Registers[targetregister].Value = 1;
+                        }
+                        else
+                        {
+                            Registers[targetregister].Value = 0;
+                        }
+
+                        Registers[targetregister].SpecialCommand = "slt";
+                        Registers[targetregister].originalvalue = false;
+
+                        Registers[targetregister].Description = "(bool)" + Registers[sourceregister].Description +
+                                                " < 0x" + immediate.ToString("X") + "(" + immediate.ToString() + ")";
+                        break;
+                    #endregion
+                    #region sltiu
+                    case "sltiu":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        immediate = (int)StringToAddress(linesplit[5]);
+
+                        if (Registers[sourceregister].Value < immediate)
+                        {
+                            Registers[targetregister].Value = 1;
+                        }
+                        else
+                        {
+                            Registers[targetregister].Value = 0;
+                        }
+
+                        Registers[targetregister].Description = "Result";
+
+                        Registers[targetregister].SpecialCommand = "slt";
+                        Registers[targetregister].originalvalue = false;
+
+                        Notation += "Set if " + Registers[sourceregister].Description + " < " +
+                            immediate.ToString();
+                        break;
+                    #endregion
+                    #endregion
+
+                    #region Load Commands
+                    #region lui
+                    case "lui":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        immediate = StringToAddress(linesplit[4]);
+
+                        //Notation += "r" + targetregister.ToString() + " = 0x" +
+                        //    immediate.ToString("X") + "0000";
+                        Registers[targetregister].Description = "0x" + immediate.ToString("X");
+                        Registers[targetregister].Value = immediate * 65536;
+                        Registers[targetregister].originalvalue = false;
+                        Registers[targetregister].multiplier = 0;
+
+                        break;
+                    #endregion
+                    #region lw
+                    case "lw":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
+                        immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
+                        address = Registers[sourceregister].Value + immediate;
+
+                        description = GetDescription(Registers[sourceregister], immediate);
+                        if (sourceregister == 29)
+                        {
+                            description = "Stack Pointer" + immediate.ToString("X");
+                        }
+
+                        if (description != "")
+                        {
+                            if (Registers[sourceregister].Mainaddress != null)
+                            {
+                                if (Registers[sourceregister].Mainaddress.PointedAddress != 0)
+                                {
+                                    Registers[targetregister].Value = Registers[sourceregister].Mainaddress.PointedAddress;
+                                    if (GetMainAddressDescription(Registers[targetregister].Value) != "")
+                                    {
+                                        description = GetMainAddressDescription(Registers[targetregister].Value);
+                                    }
+                                    else
+                                    {
+                                        Registers[targetregister].SeeifIsSubsetbyAddress(Registers[targetregister].Value, this);
+                                    }
+
+                                }
+                            }
+
+                            Notation += "Load " + description;
+                            Registers[targetregister].Description = description;
+                        }
+                        else
+                        {
+                            Notation += "Load word " + " from " + address.ToString("X");
+                            Registers[targetregister].Description = "??";
+                        }
+
+                        Registers[targetregister].originalvalue = true;
+                        Registers[targetregister].multiplier = 0;
+
+                        //Notation += "r" + targetregister.ToString() + " = " +
+                        //     (immediate * 256 * 256).ToString("X").Remove(4);
+                        //look up new data location
+                        break;
+                    #endregion
+                    #region lh
+                    case "lh":
+                    case "lhu":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
+                        immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
+
+                        address = Registers[sourceregister].Value + immediate;
+
+                        description = GetDescription(Registers[sourceregister], immediate);
+                        if (sourceregister == 29)
+                        {
+                            description = "Stack Pointer" + " + " + immediate.ToString("X");
+                        }
+                        if (description != "")
+                        {
+                            Notation += "Load " + description;
+                            Registers[targetregister].Description = description;
+                        }
+                        else
+                        {
+                            Notation += "Load half " + " from " + address.ToString("X");
+                            Registers[targetregister].Description = "??";
+                        }
+
+                        Registers[targetregister].originalvalue = true;
+                        Registers[targetregister].multiplier = 0;
+
+                        //Notation += "r" + targetregister.ToString() + " = " +
+                        //    (immediate * 256 * 256).ToString("X");
+                        break;
+                    #endregion
+                    #region lb
+                    case "lb":
+                    case "lbu":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
+                        immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
+
+                        address = Registers[sourceregister].Value + immediate;
+
+                        description = GetDescription(Registers[sourceregister], immediate);
+                        if (sourceregister == 29)
+                        {
+                            description = "Stack" + " + " + immediate.ToString("X");
+                        }
+                        if (description != "")
+                        {
+                            Notation += "Load " + description;
+                            Registers[targetregister].Description = description;
+                        }
+                        else if ((Registers[sourceregister].Value & 0x0000FFFF) == 0)
+                        {
+                            Notation += "Load byte from " + address.ToString("X");
+                            Registers[targetregister].Description = "??";
+                        }
+                        else
+                        {
+                            Notation += "Load byte " + ((Int16)immediate).ToString("X") + " from " + address.ToString("X");
+                            Registers[targetregister].Description = "??";
+                        }
+
+                        Registers[targetregister].multiplier = 0;
+
+                        Registers[targetregister].originalvalue = true;
+                        //    Notation += "Load " + SubDataDescription + " from " +  MainAddressDescription;
+                        //Notation += "Load byte " + ((Int16)immediate).ToString("X") + " from " + Registers[targetregister].Description;
+
+                        //look up new data location
+                        break;
+                    #endregion
+
+                    #endregion
+
+                    #region lwl/lwr/swl/swr
+                    case "lwl":
+                        break;
+                    case "lwr":
+                        break;
+                    case "swr":
+                        break;
+                    case "swl":
+                        break;
+                    #endregion
+
+                    #region Store Commands
+                    #region sw
+                    case "sw":
+                        sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[4].Substring(linesplit[4].IndexOf("r") + 1).Replace(")", ""));
+                        immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
+
+                        address = Registers[targetregister].Value + immediate;
+                        if (GetDescription(Registers[targetregister], immediate) != "")
+                        {
+                            description = GetDescription(Registers[targetregister], immediate);
+                        }
+                        else
+                        {
+                            description = address.ToString("X");
+                        }
+
+
+                        if (targetregister == 29)
+                        {
+                            Notation += "Store " + Registers[sourceregister].Description + " into "
+                 + Registers[targetregister].Description;
+                        }
+                        else
+                        {
+                            Notation += "Store " + description;
+                        }
+
+                        break;
+                    #endregion
+                    #region sh
+                    case "sh":
+                        sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[4].Substring(linesplit[4].IndexOf("r") + 1).Replace(")", ""));
+                        immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
+
+                        address = Registers[targetregister].Value + immediate;
+                        if (GetDescription(Registers[targetregister], immediate) != "")
+                        {
+                            description = GetDescription(Registers[targetregister], immediate);
+                        }
+                        else
+                        {
+                            description = address.ToString("X");
+                        }
+
+
+                        if (targetregister == 29)
+                        {
+                            Notation += "Store " + Registers[sourceregister].Description + " into "
+                 + Registers[targetregister].Description;
+                        }
+                        else
+                        {
+                            Notation += "Store " + description;
+                        }
+
+                        break;
+                    #endregion
+                    #region sb
+                    case "sb":
+                        sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[4].Substring(linesplit[4].IndexOf("r") + 1).Replace(")", ""));
+                        immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
+
+                        address = Registers[targetregister].Value + immediate;
+                        if (Registers[targetregister].SubsetOffset != 0)
+                        {
+                            immediate += Registers[targetregister].SubsetOffset;
+                        }
+                        if (GetDescription(Registers[targetregister], immediate) != "")
+                        {
+                            description = GetDescription(Registers[targetregister], immediate);
+                        }
+                        else
+                        {
+                            description = address.ToString("X");
+                        }
+
+
+                        if (targetregister == 29)
+                        {
+                            Notation += "Store " + Registers[sourceregister].Description + " into "
+                 + Registers[targetregister].Description;
+                        }
+                        else
+                        {
+                            Notation += "Store " + description;
+                        }
+
+                        break;
+                    #endregion
+                    #endregion
+
+                    #region Arithmatic Commands
+                    #region addu
+                    case "addu":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
+
+                        Notation += "r" + targetregister.ToString() + " = ";
+                        #region Special cases
+                        //addu r2, r2, r0
+                        if ((sourceregister != 0 && comparedregister == 0))
+                        {
+                            Notation += Registers[sourceregister].Description;
+                            Registers[targetregister].Description = Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[sourceregister].Value;
+                            Registers[targetregister].originalvalue = Registers[sourceregister].originalvalue;
+                        }
+                        //addu r2, r0, r2
+                        else if (comparedregister != 0 && sourceregister == 0)
+                        {
+                            Notation += Registers[comparedregister].Description;
+                            Registers[targetregister].Description = Registers[comparedregister].Description;
+                            Registers[targetregister].Value = Registers[comparedregister].Value;
+                            Registers[targetregister].originalvalue = Registers[comparedregister].originalvalue;
+                        }
+                        // addu r2, r0, r0
+                        else if (sourceregister == 0 && comparedregister == 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Description = "";
+                            Registers[targetregister].Value = 0;
+                        }
+                        //Calculating frame pointer
+                        else if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].originalvalue)
+                        {
+                            Registers[sourceregister].multiplier += 1;
+                            Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
+                        }
+                        //adding frame pointer to base address
+                        else if (Registers[sourceregister].multiplier > 0 && GetDescription(Registers[comparedregister], 0) != "")
+                        {
+                            Registers[targetregister].Value = Registers[comparedregister].Value;
+
+                            Notation += GetDescription(Registers[targetregister], Registers[sourceregister].multiplier);
+
+                            Registers[targetregister].Description = Registers[targetregister].Mainaddress.Description;
+
+                            if (Registers[sourceregister].Description.Contains("Input"))
+                            {
+                                SetInput(Registers[sourceregister].Description, GetDescription(Registers[comparedregister], 0));
+                                //Set Input Value based on what we found in routine.
+                            }
+                            // Registers[sourceregister].Description.Remove(Registers[sourceregister].Description.IndexOf("*");
+                        }
+                        else if (comparedregister != 0 && sourceregister != 0)
+                        {
+                            Notation += Registers[comparedregister].Description + " + " + Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[sourceregister].Value + Registers[comparedregister].Value;
+
+                            if (Registers[sourceregister].Description.StartsWith("0x") && Registers[comparedregister].Description.StartsWith("0x"))
+                            {
+                                Registers[targetregister].Description = Registers[targetregister].Value.ToString("X");
+                            }
+
+                            else
+                            {
+                                Registers[targetregister].Description = Registers[comparedregister].Description + " + " + Registers[sourceregister].Description; ;
+                            }
+                            Registers[targetregister].originalvalue = false;
+                        }
+
+                        #endregion
+                        break;
+                    #endregion
+                    #region addiu
+                    case "addiu":    //printing too many leading ff's
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        //comparedregister = 0;
+                        immediate = StringToAddress(linesplit[5]);
+
+
+
+                        #region Stack Adjustment
+                        if (sourceregister == 29 && targetregister == 29)
+                        {
+                            if (immediate >= 0x8000)
+                            {
+                                Notation += "Make space on stack";
+                                //Registers[29].Value += immediate;
+                                Registers[29].Description = "Stack";
+                                break;
+                            }
+                            else
+                            {
+                                Notation += "Restore stack pointer";
+                                //Registers[29].Value -= immediate;
+                                Registers[29].Description = "Stack";
+                                break;
+                            }
+                        }
+                        #endregion
+
+                        if (immediate > 0x7FFF)
+                        {
+                            Registers[sourceregister].Value -= 0x10000;
+                            // immediate -= 0x8000;
+                        }
+
+                        Registers[targetregister].Value = Registers[sourceregister].Value + immediate;
+
+                        if (SeeifIsSubset(Registers[sourceregister].Value, immediate) != "")
+                        {
+                            Registers[targetregister].Description = SeeifIsSubset(Registers[sourceregister].Value, immediate);
+                        }
+                        else if (GetDescription(Registers[targetregister], 0) != "")
+                        {
+                            Registers[targetregister].Description = GetDescription(Registers[targetregister], immediate);
+                        }
+                        else if (Registers[sourceregister].Description.StartsWith("0x"))
+                        {
+                            Registers[targetregister].Description = ((Int32)Registers[targetregister].Value).ToString("X");
+                        }
+                        else
+                        {
+                            Registers[targetregister].Description = "0x" + ((Int32)Registers[targetregister].Value).ToString("X");
+                        }
+
+
+                        Registers[targetregister].originalvalue = false;
+
+                        Notation += Registers[targetregister].Description;
+
+
+                        //Registers[targetregister].Description = Registers[sourceregister].Description + zeromod + immediate.ToString("X");
+
+                        break;
+                    #endregion
+                    #region subu
+                    case "subu":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        //comparedregister = 0;
+                        comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
+
+                        if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].originalvalue)
+                        {
+                            Registers[targetregister].multiplier -= 1;
+                            Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
+                            Registers[targetregister].Description = Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
+                        }
+                        else if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].multiplier > 0)
+                        {
+                            Registers[sourceregister].multiplier -= 1;
+                            Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
+                            Registers[targetregister].Description = Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
+                        }
+                        else if (Registers[sourceregister].multiplier == 0)
+                        {
+                            Notation += "r" + targetregister.ToString() + " = " +
+                            Registers[sourceregister].Description + " - " + Registers[comparedregister].Description;
+                            Registers[targetregister].Description = Registers[sourceregister].Description + " - " + Registers[comparedregister].Description;
+                        }
+
+                        Registers[targetregister].originalvalue = false;
+                        Registers[targetregister].Value = Registers[sourceregister].Value - Registers[comparedregister].Value;
+                        break;
+                    #endregion
+                    #region sll
+                    case "sllv":
+                    case "sll":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        //comparedregister = 0;
+                        immediate = StringToAddress(linesplit[5]);
+
+                        Registers[targetregister].Value = Registers[sourceregister].Value * Exponent(2, immediate);
+                        //If it's the first shift
+                        if (Registers[targetregister].multiplier == 0)
+                        {
+                            if (immediate % 0x08 == 0)
+                            {
+                                Notation += "Shift left " + (immediate / 0x08).ToString() + " bytes(*0x" + Exponent(2, immediate).ToString("X") + ")" + " (*" + Exponent(2, immediate).ToString() + ")";
+                                Registers[targetregister].Description = Registers[sourceregister].Description;
+                            }
+                            else
+                            {
+                                Notation += "Shift left " + (immediate).ToString() + " bits (*0x" + Exponent(2, immediate).ToString("X") + ")" + " (*" + Exponent(2, immediate).ToString() + ")"; ;
+                                Registers[targetregister].Description = Registers[sourceregister].Description;
+                            }
+                            Registers[targetregister].multiplier = (int)Exponent(2, immediate);
+                        }
+                        //if it's not the first shift
+                        else if (Registers[targetregister].multiplier != 0)
+                        {
+                            Registers[targetregister].multiplier *= (int)Exponent(2, immediate);
+                            if (Registers[targetregister].Description.Contains("*"))
+                            {
+                                Registers[targetregister].Description = Registers[targetregister].Description.Remove(Registers[targetregister].Description.IndexOf('*'));
+                                Registers[targetregister].Description += "* 0x" + Registers[targetregister].multiplier.ToString("X") + " (* " + Registers[targetregister].multiplier.ToString() + ")";
+                                Notation += Registers[targetregister].Description; //+"* 0x" + Registers[targetregister].multiplier.ToString("X") + " (*" + Registers[targetregister].multiplier.ToString() + ")";
+                            }
+                            else
+                            {
+                                Notation += Registers[targetregister].Description + "* 0x" + Registers[targetregister].multiplier.ToString("X") + " (* " + Registers[targetregister].multiplier.ToString() + ")";
+                                Registers[targetregister].Description = "* 0x" + Registers[targetregister].multiplier.ToString("X") + " (* " + Registers[targetregister].multiplier.ToString() + ")";
+
+                            }
+                        }
+
+                        Registers[targetregister].originalvalue = false;
+                        //Notation += "r" + targetregister.ToString() + " = " + 
+                        //    Registers[sourceregister].Description + " / 0x" + immediate.ToString("X") +
+                        //                                                    " (" + immediate.ToString() + ")";
+                        break;
+                    #endregion
+                    #region sr
+                    case "sra":
+                    case "srav":
+                    case "srlv":
+                    case "srl":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        //comparedregister = 0;
+                        immediate = StringToAddress(linesplit[5]);
+
+                        Registers[targetregister].Value = Registers[sourceregister].Value / Exponent(2, immediate);
+
+                        if (Registers[targetregister].multiplier == 0)
+                        {
+                            if (immediate % 0x08 == 0)
+                            {
+                                Notation += "Shift right " + (immediate / 0x08).ToString() + " bytes(/0x" + Exponent(2, immediate).ToString("X") + ")" + " (/" + Exponent(2, immediate).ToString() + ")"; ;
+                                Registers[targetregister].Description = Registers[sourceregister].Description + " >> " + immediate.ToString("X");
+                            }
+                            else
+                            {
+                                Notation += "Shift right " + (immediate).ToString() + " bits (/0x" + Exponent(2, immediate).ToString("X") + ")" + " (/" + Exponent(2, immediate).ToString() + ")"; ;
+                                Registers[targetregister].Description = Registers[sourceregister].Description + " >> " + immediate.ToString("X");
+                            }
+                            // Registers[targetregister].multiplier = (int)Exponent(2, immediate);
+                        }
+                        else if (Registers[targetregister].multiplier != 0)
+                        {
+                            Registers[targetregister].multiplier /= (int)Exponent(2, immediate);
+                        }
+
+                        Registers[targetregister].originalvalue = false;
+                        Notation += "r" + targetregister.ToString() + " = " +
+                        Registers[sourceregister].Description + " * 0x" + immediate.ToString("X") +
+                                                                            " (" + immediate.ToString() + ")";
+                        break;
+                    #endregion
+                    #region mult
+                    case "mult":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+
+                        //Store Lower 32 bits in Lo
+                        //Registers[32].Value = Registers[comparedregister].Value * Registers[targetregister].Value;
+                        Registers[31].Description = Registers[comparedregister].Description + " *  " + Registers[targetregister].Description;
+
+                        //Store upper 32 bits in Hi
+
+                        Notation += Registers[targetregister].Description + " * " + Registers[comparedregister].Description;
+                        break;
+                    case "multu":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+
+                        //Store Lower 32 bits in Lo
+                        Registers[31].Value = Registers[comparedregister].Value * Registers[targetregister].Value;
+                        Registers[31].Description = Registers[comparedregister].Description + " *  " + Registers[targetregister].Description;
+
+                        //Store upper 32 bits in Hi
+
+
+                        Notation += Registers[targetregister].Description + " * " + Registers[comparedregister].Description;
+
+                        break;
+                    #endregion
+                    #region div
+                    case "div":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+
+                        Registers[32].Value = Registers[comparedregister].Value / Registers[targetregister].Value;
+                        Registers[32].Description = Registers[comparedregister].Description + " / " + Registers[targetregister].Description;
+
+                        Registers[33].Value = Registers[comparedregister].Value % Registers[targetregister].Value;
+                        Registers[33].Description = Registers[comparedregister].Description + " % " + Registers[targetregister].Description;
+
+
+                        Notation += Registers[targetregister].Description + " / " + Registers[comparedregister].Description;
+
+                        break;
+                    case "divu":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+
+                        Registers[32].Value = Registers[comparedregister].Value / Registers[targetregister].Value;
+                        Registers[32].Description = Registers[comparedregister].Description + " /  " + Registers[targetregister].Description;
+
+                        Registers[33].Value = Registers[comparedregister].Value % Registers[targetregister].Value;
+                        Registers[33].Description = Registers[comparedregister].Description + " % " + Registers[targetregister].Description;
+
+                        Notation += Registers[targetregister].Description + " / " + Registers[comparedregister].Description;
+
+                        break;
+                    #endregion
+                    #region mflo/mfhi
+                    case "mflo":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+
+                        Registers[targetregister].Value = Registers[32].Value;
+                        Registers[targetregister].Description = Registers[32].Description;
+                        Notation += Registers[32].Description;
+                        Registers[targetregister].originalvalue = false;
+                        break;
+                    case "mfhi":
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+
+                        Registers[targetregister].Value = Registers[32].Value;
+                        Registers[targetregister].Description = Registers[32].Description;
+                        Notation += Registers[32].Description;
+                        Registers[targetregister].originalvalue = false;
+                        break;
+                    #endregion
+                    #endregion
+
+                    #region Logic Commands
+                    #region or
+                    case "or":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
+
+                        Notation += "r" + targetregister.ToString() + " = ";
+                        if ((sourceregister != 0 && comparedregister == 0))
+                        {
+                            Notation += Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[sourceregister].Value;
+                            Registers[targetregister].Description = Registers[sourceregister].Description;
+                        }
+                        else if (comparedregister != 0 && sourceregister == 0)
+                        {
+                            Notation += Registers[comparedregister].Description;
+                            Registers[targetregister].Value = Registers[comparedregister].Value;
+                            Registers[targetregister].Description = Registers[comparedregister].Description;
+                        }
+                        else if (sourceregister == 0 && comparedregister == 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (comparedregister != 0 && sourceregister != 0)
+                        {
+                            Notation += Registers[comparedregister].Description + Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[comparedregister].Value | Registers[sourceregister].Value;
+                            Registers[targetregister].Description = Registers[comparedregister].Description + " | " + Registers[sourceregister].Description;
+                        }
+
+
+
+                        //look up new data location
+                        break;
+                    case "ori":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        immediate = StringToAddress(linesplit[5].Replace("r", ""));
+
+                        Notation += "r" + targetregister.ToString() + " = ";
+
+                        if ((sourceregister != 0 && immediate == 0))
+                        {
+                            Notation += Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[sourceregister].Value;
+                            Registers[targetregister].Description = Registers[sourceregister].Description;
+                        }
+                        else if (sourceregister == 0 && immediate != 0)
+                        {
+                            Notation += immediate.ToString();
+                            Registers[targetregister].Value = immediate;
+                            Registers[targetregister].Description = immediate.ToString("X") + " (" + immediate.ToString() + ")";
+                        }
+                        else if (sourceregister == 0 && immediate == 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (sourceregister != 0 && immediate != 0)
+                        {
+                            if (sourceregister == targetregister)
+                            {
+                                Notation += "Add " + immediate.ToString("X") + " to " + Registers[targetregister].Description;
+                            }
+                            else
+                            {
+                                Notation += Registers[sourceregister].Description + " | 0x" + immediate.ToString("X");
+                                Registers[targetregister].Description = Registers[sourceregister].Description + " | 0x" + immediate.ToString("X");
+                            }
+                            Registers[targetregister].Value = Registers[sourceregister].Value | immediate;
+
+                        }
+
+                        //look up new data location
+                        break;
+                    #endregion
+                    #region and
+                    case "and":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
+                        // immediate = StringToAddress(linesplit[5]);
+                        //look up new data location
+                        #region special conditions
+                        if ((sourceregister != 0 && comparedregister == 0))
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (comparedregister != 0 && sourceregister == 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (sourceregister == 0 && comparedregister == 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        #endregion
+                        else if (comparedregister != 0 && sourceregister != 0)
+                        {
+                            Notation += Registers[comparedregister].Description + " & " + Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[sourceregister].Value & Registers[comparedregister].Value;
+                            Registers[targetregister].Description = Registers[comparedregister].Description + " & " + Registers[sourceregister].Description;
+                        }
+
+                        //Notation += "r" + targetregister.ToString() + " = " +
+                        //    Registers[sourceregister].Description + " *AND* " + immediate.ToString("X");
+
+                        break;
+                    case "andi":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        //comparedregister = 0;
+                        immediate = StringToAddress(linesplit[5]);
+
+                        #region Special Conditions
+                        if ((sourceregister != 0 && immediate == 0))
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (sourceregister == 0 && immediate != 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (sourceregister == 0 && immediate == 0)
+                        {
+                            Notation += "0";
+                            Registers[targetregister].Value = 0;
+                            Registers[targetregister].Description = "0";
+                        }
+                        else if (immediate == 0xffff)
+                        {
+                            Notation += "r" + targetregister.ToString() + " = " + Registers[sourceregister].Description;
+                            Registers[targetregister].Value = Registers[sourceregister].Value;
+                            Registers[targetregister].Description = Registers[sourceregister].Description;
+
+                        }
+                        else if (immediate == 0x00ff)
+                        {
+                            Notation += "Mask second byte";
+                            Registers[targetregister].Value = Registers[sourceregister].Value & 0x00FF;
+                            Registers[targetregister].Description = Registers[sourceregister].Description;
+                        }
+                        #endregion
+                        else if (sourceregister != 0 && immediate != 0)
+                        {
+                            Notation += Registers[sourceregister].Description + " & 0x" + immediate.ToString("X");
+                            Registers[targetregister].Value = Registers[sourceregister].Value & immediate;
+                            Registers[targetregister].Description = Registers[sourceregister].Description + " & 0x" + immediate.ToString("X");
+                        }
+
+
+                        //look up new data location
+                        //Notation += "r" + targetregister.ToString() + " = " + 
+                        //    Registers[sourceregister].Description + " *AND* " + immediate.ToString("X");
+                        //look up new data location
+                        break;
+                    #endregion
+                    #region xor/nor
+                    case "xor":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
+                        //immediate = StringToAddress(linesplit[5]);
+
+                        Notation += Registers[sourceregister].Description + " xor " + Registers[comparedregister].Description;
+                        Registers[targetregister].Value = Registers[sourceregister].Value ^ Registers[comparedregister].Value;
+                        Registers[targetregister].Description = Registers[sourceregister].Description + " xor " + Registers[comparedregister].Description;
+
+                        // ^ operator
+                        //look up new data location
+                        break;
+                    case "xori":
+                        sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
+                        //comparedregister = 0;
+                        immediate = StringToAddress(linesplit[5]);
+
+                        Notation += Registers[sourceregister].Description + " xor 0x" + immediate.ToString("X");
+                        Registers[targetregister].Value = Registers[sourceregister].Value ^ immediate;
+                        Registers[targetregister].Description = Registers[sourceregister].Description + " xor 0x" + immediate.ToString("X");
+
+                        //look up new data location
+                        break;
+                    case "nor":
+                        // !& = |
+                        //look up new data location
+                        break;
+                    #endregion
+                    #endregion
+
+                    case "":
+                        break;
+                }
+
+                return Notation;
+            }
+            catch (Exception Ex)
+            {
+                return "Exception";
+            }
+            return "";
+        }
+
         public string[] Insert(string[] Source, int lineindex)
         {
             string[] newSource = new string[Source.Length + 1];
@@ -1481,6 +2640,8 @@ namespace LEDecoder
                 if (Main.Address == MainAddress || Main.Address == wholeaddress)
                 {
                     Reg.Mainaddress = Main;
+                    Reg.AttachAddresstoRegister(Main.Address, this);
+
                     if(Main.Frame != null)
                     {
                         if (Main.Frame.Length == Offset)
@@ -1490,12 +2651,16 @@ namespace LEDecoder
                         else
                         {
                             result = GetSubDataDescription(MainAddress, Offset);
-                            Reg.AttachDatatoRegister(MainAddress, Offset, this);
+                           
+                            if (result == "")
+                            {
+                                result = "?? from " + Main.Description;
+                            }
+                            else
+                            {
+                                Reg.AttachDatatoRegister(MainAddress, Offset, this);
+                            }
                         }
-                    }
-                    if(result == "")
-                    {
-                        result = Main.Description;
                     }
                 }
             }
@@ -1582,1116 +2747,6 @@ namespace LEDecoder
         {
          
         }
-
-        public void GetDataNotes()
-        {
-            if(File.Exists(Application.StartupPath + "\\UnitDataResource.txt"))
-            {
-                using (StreamReader sr = new StreamReader(Application.StartupPath + "\\UnitDataResource.txt"))
-                {
-                    string file = sr.ReadToEnd();
-                    string[] fileLines = ToLines(file);
-
-                    //For each line in the data file
-                    for(int i = 0;i < fileLines.Length;i++)
-                    {
-                        string line = fileLines[i];
-                        string[] linesplit = fileLines[i].Split(' ');
-                        //If MainAddress Found
-                        if(linesplit[0].StartsWith("80") && linesplit[0].Length == 8)
-                        {
-                            MainAddresses = Add(linesplit[0], MainAddresses);
-                             int current = MainAddresses.Length - 1;
-                             MainAddresses[current].Description = line.Substring(line.IndexOf("-") + 2);
-                            if(MainAddresses[current].Description.Contains("|"))
-                             MainAddresses[current].Description = MainAddresses[current].Description.Remove(MainAddresses[current].Description.IndexOf("|"));
-
-                            foreach(string s in linesplit) //linesplit = MainAddress line
-                            {
-                               
-                                if(s.Contains("frame=0x"))
-                                {
-  MainAddresses[current].AddFrame(StringToAddress(s.Replace("frame=","")));
-                                }
-                                else if(s.Contains("frame="))
-                                {
-                                    MainAddresses[current].AddFrame(Convert.ToInt32(s.Replace("frame=", "")));
-                                }
-                                if (s.Contains("sections=0x"))
-                                {
-                                    MainAddresses[current].NumberofSections = (int)StringToAddress(s.Replace("sections=", ""));
-                                }
-                                else if(s.Contains("sections="))
-                                {
-                                    MainAddresses[current].NumberofSections = Convert.ToInt32(s.Replace("sections=", ""));
-                                }
-                                else if(s.Contains("pointedaddress="))
-                                {
-                                    MainAddresses[current].PointedAddress = StringToAddress(s.Substring(s.IndexOf("pointedaddress=") + 15));
-                                }
-                               
-
-                            }
-                           i++;
-                       
-                            //Begin looking for data
-                           while (!fileLines[i].StartsWith("80") && fileLines[i] != "")
-                            {
-                                line = fileLines[i].Replace("\t", "");   // line = subdata line
-                                linesplit = fileLines[i].Split(' ');     
-
-                               //If Subdata Found
-                                if(line.Contains(":"))
-                                {
-
-                                    int currentindex = (int)StringToAddress(line.Remove(line.IndexOf(":")));
-                                    MainAddresses[current].Frame[currentindex] = new SubData();
-                                    MainAddresses[current].Frame[currentindex].offsetaddress = currentindex;
-                                    //MainAddresses[current].Frame[currentindex].description = line.Substring(line.IndexOf(":") + 2);
-
-                                    //Set Description
-                                    if (line.Length > line.IndexOf(":") + 2)
-                                        MainAddresses[current].Frame[currentindex].description =
-                                            line.Substring(line.IndexOf(":") + 2);
-                                    else
-                                    {
-                                        MainAddresses[current].Frame[currentindex].description = "";
-                                    }
-                                    //Remove tags if present
-                                    if(line.Contains("|"))
-                                    {
-                                        MainAddresses[current].Frame[currentindex].description = MainAddresses[current].Frame[currentindex].description.Remove(MainAddresses[current].Frame[currentindex].description.IndexOf("|"));
-                                    }
-                                    //Look for size, list, and subset
-                                    foreach(string s in linesplit)
-                                    {
-                                        if (s.Contains("size"))
-                                        {
-                                            int numberindex = s.IndexOf("size") + 4;
-                                            MainAddresses[current].Frame[currentindex].size = Convert.ToInt32(s.Substring(numberindex));
-                                        }
-                                        if (s.Contains("list="))
-                                        {
-                                             MainAddresses[current].Frame[currentindex].GetList(s.Substring(s.IndexOf("list=") + 5));
-                                        }
-                                       
-                                        if (fileLines[i].Contains("subset="))
-                                        {
-                                            MainAddresses[current].Frame[currentindex].IsSubset = true;
-                                            MainAddresses[current].Frame[currentindex].SubsetDescription = fileLines[i].Substring(fileLines[i].IndexOf("subset=") + 7);
-                                        }
-                                    }
-                                    i++;                                    //Move to value lines
-
-                                    if (!fileLines[i].Contains("list"))             //if list tag is found, goto next SubData
-                                    {
-                                        while (!fileLines[i].Contains(":") && i < fileLines.Length && fileLines[i] != "" && !fileLines[i].Replace("\t","").StartsWith("80"))
-                                        {
-                                            line = fileLines[i].Replace("\t","");
-                                            linesplit = fileLines[i].Split(' ');
-
-                                            if(line.Contains("value="))
-                                            {
-                                                if(MainAddresses[current].Frame[currentindex].Values == null)
-                                                {
-                                                    MainAddresses[current].Frame[currentindex].Values = new SubData.Value[1];
-                                                }
-                                                MainAddresses[current].Frame[currentindex].AddValue();
-                                                foreach(string s in linesplit)
-                                                {
-                                                    if (s.Contains("0x"))
-                                                    {
-                                                        MainAddresses[current].Frame[currentindex].Values[MainAddresses[current].Frame[currentindex].Values.Length - 1].value
-                                                          = (int)StringToAddress(s.Replace("\t",""));
-                                                    }
-                                                    if(s.Contains("value="))
-                                                    {
-                                                        string tempstring = s.Substring(s.IndexOf("value=") + 6);
-                                                    }
-                                                   
-                                                }
-                                            }
-                                            //Set default value
-
-                                            i++;
-                                        }
-                                    }
-                                    i--;
-
-                                }//SubData Found
-                                i++;
-                                if(i == fileLines.Length)
-                                {
-                                    break;
-                                }
-
-                           }
-                           i--;
-
-                        }//Mainaddress found
-
-                    }
-
-                }
-               
-            }
-        }
-        public string Notate(string line, int lineindex)
-        {
-            string Notation = "";
-            string[] linesplit = line.Split(' ', ',');
-
-            int sourceregister = 0;
-            int targetregister = 0;
-            int comparedregister = 0;
-            long immediate = 0;
-            string command = ExtractCommand(line);
-            string description = "";
-            long address = 0;
-
-            Notation = Indent(3);
-
-            switch (command)
-            {
-                #region Jump/Branch Commands
-                case "jal":
-                    Notation += GetRoutineDescription(line.Substring(23));
-                    linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
-                    Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
-                    GetReturnValue(StringToAddress(linesplit[3]));
-                    break;
-                case "jalr":
-                    Notation += "Jump and Link";
-
-                    linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
-                    Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
-                    break;
-                case "j":
-                    linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
-                    Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
-                    break;
-                case "jr r31":
-                    Notation += "Jump to Return Address";
-                    break;
-                case "jr":
-                    Notation += "Jump to Address";
-                    break;
-                #region bne
-                case "bne":
-                    sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    immediate = StringToAddress(linesplit[5]);
-
-                    #region special notations
-                    if (Registers[sourceregister].SpecialCommand == "slt" && comparedregister == 0)
-                    {
-                        Notation += "Branch if so";
-                        Registers[sourceregister].SpecialCommand = "";
-                    }
-                    else if (Registers[sourceregister].SpecialCommand == "and" && comparedregister == 0)
-                    {
-                        Notation += "Branch if " + Registers[sourceregister].Description;
-                        Registers[sourceregister].SpecialCommand = "";
-                    }
-                    #endregion
-                    else
-                    {
-                        Notation += "Branch if " + Registers[sourceregister].Description + " != " +
-                                           Registers[comparedregister].Description;
-                    }
-
-                    linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
-                    Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
-                    break;
-                #endregion
-                #region beq
-                case "beq":
-                    sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    immediate = StringToAddress(linesplit[5]);
-
-                    #region special notations
-                    if (Registers[sourceregister].SpecialCommand == "slt" && comparedregister == 0)
-                    {
-                        Notation += "Branch if not";
-                        Registers[sourceregister].SpecialCommand = "";
-                    }
-                    else if (Registers[sourceregister].SpecialCommand == "and" && comparedregister == 0)
-                    {
-                        Notation += "Branch if " + Registers[sourceregister].Description;
-                        Registers[sourceregister].SpecialCommand = "";
-                    }
-                    #endregion
-
-                    else
-                    {
-                        Notation += "Branch if " + Registers[sourceregister].Description + " == " +
-                        Registers[comparedregister].Description;
-                    }
-
-
-                    linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
-                    Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
-                    break;
-                #endregion
-
-                #endregion
-
-                #region slt Commands
-                #region slt
-                case "slt":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
-
-                    Notation += "Set if " + Registers[sourceregister].Description + " < " +
-                        Registers[comparedregister].Description;
-
-                    if (Registers[sourceregister].Value < Registers[comparedregister].Value)
-                    {
-                        Registers[targetregister].Value = 1;
-                    }
-                    else
-                    {
-                        Registers[targetregister].Value = 0;
-                    }
-
-                    Registers[targetregister].SpecialCommand = "slt";
-                    Registers[targetregister].originalvalue = false;
-
-                    Registers[targetregister].Description = "Result";
-
-                    break;
-                #endregion
-                #region slti
-                case "slti":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    immediate = (int)StringToAddress(linesplit[5]);
-
-                    Notation += "Set if " + Registers[sourceregister].Description + " < " +
-                        immediate.ToString();
-
-                    if (Registers[sourceregister].Value < immediate)
-                    {
-                        Registers[targetregister].Value = 1;
-                    }
-                    else
-                    {
-                        Registers[targetregister].Value = 0;
-                    }
-
-                    Registers[targetregister].SpecialCommand = "slt";
-                    Registers[targetregister].originalvalue = false;
-
-                    Registers[targetregister].Description = "(bool)" + Registers[sourceregister].Description +
-                                            " < 0x" + immediate.ToString("X") + "(" + immediate.ToString() + ")";
-                    break;
-                #endregion
-                #region sltiu
-                case "sltiu":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    immediate = (int)StringToAddress(linesplit[5]);
-
-                    if (Registers[sourceregister].Value < immediate)
-                    {
-                        Registers[targetregister].Value = 1;
-                    }
-                    else
-                    {
-                        Registers[targetregister].Value = 0;
-                    }
-
-                    Registers[targetregister].Description = "Result";
-
-                    Registers[targetregister].SpecialCommand = "slt";
-                    Registers[targetregister].originalvalue = false;
-
-                    Notation += "Set if " + Registers[sourceregister].Description + " < " +
-                        immediate.ToString();
-                    break;
-                #endregion
-                #endregion
-
-                #region Load Commands
-                #region lui
-                case "lui":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    immediate = StringToAddress(linesplit[4]);
-
-                    //Notation += "r" + targetregister.ToString() + " = 0x" +
-                    //    immediate.ToString("X") + "0000";
-                    Registers[targetregister].Description = "0x" + immediate.ToString("X");
-                    Registers[targetregister].Value = immediate * 65536;
-                    Registers[targetregister].originalvalue = false;
-                    Registers[targetregister].multiplier = 0;
-
-                    break;
-                #endregion
-                #region lw
-                case "lw":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
-                    immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-                    address = Registers[sourceregister].Value + immediate;
-
-                    description = GetDescription(Registers[sourceregister], immediate);
-                    if (sourceregister == 29)
-                    {
-                        description = "Stack Pointer" + immediate.ToString("X");
-                    }
-                    
-                    if (description != "")
-                    {
-                        if (Registers[sourceregister].Mainaddress != null)
-                        {
-                            if (Registers[sourceregister].Mainaddress.PointedAddress != 0)
-                            {
-                                Registers[targetregister].Value = Registers[sourceregister].Mainaddress.PointedAddress;
-                                if(GetMainAddressDescription(Registers[targetregister].Value) != "")
-                                {
-                                    description = GetMainAddressDescription(Registers[targetregister].Value);
-                                }
-                                else
-                                {
-                                    Registers[targetregister].SeeifIsSubsetbyAddress(Registers[targetregister].Value,this);
-                                }
-                                
-                            }
-                        }
-                     
-                        Notation += "Load " + description;
-                        Registers[targetregister].Description = description;
-                    }
-                    else
-                    {
-                        Notation += "Load word " + " from ????"; //+ address.ToString("X");
-                        Registers[targetregister].Description = "??";
-                    }
-
-                    Registers[targetregister].originalvalue = true;
-                    Registers[targetregister].multiplier = 0;
-
-                    //Notation += "r" + targetregister.ToString() + " = " +
-                    //     (immediate * 256 * 256).ToString("X").Remove(4);
-                    //look up new data location
-                    break;
-                #endregion
-                #region lh
-                case "lh":
-                case "lhu":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
-                    immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
-                    address = Registers[sourceregister].Value + immediate;
-
-                    description = GetDescription(Registers[sourceregister], immediate);
-                    if (sourceregister == 29)
-                    {
-                        description = "Stack Pointer" + " + " + immediate.ToString("X");
-                    }
-                    if (description != "")
-                    {
-                        Notation += "Load " + description;
-                        Registers[targetregister].Description = description;
-                    }
-                    else
-                    {
-                        Notation += "Load half " + ((Int16)immediate).ToString("X") + " from " + address.ToString("X");
-                        Registers[targetregister].Description = "??";
-                    }
-
-                    Registers[targetregister].originalvalue = true;
-                    Registers[targetregister].multiplier = 0;
-
-                    //Notation += "r" + targetregister.ToString() + " = " +
-                    //    (immediate * 256 * 256).ToString("X");
-                    break;
-                #endregion
-                #region lb
-                case "lb":
-                case "lbu":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
-                    immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
-
-
-                    address = Registers[sourceregister].Value + immediate;
-
-                    description = GetDescription(Registers[sourceregister], immediate);
-                    if (sourceregister == 29)
-                    {
-                        description = "Stack" + " + " + immediate.ToString("X");
-                    }
-                    if (description != "")
-                    {
-                        Notation += "Load " + description;
-                        Registers[targetregister].Description = description;
-                    }
-                    else
-                    {
-                        Notation += "Load byte " + ((Int16)immediate).ToString("X") + " from " + address.ToString("X");
-                        Registers[targetregister].Description = "??";
-                    }
-
-                    Registers[targetregister].multiplier = 0;
-
-                    Registers[targetregister].originalvalue = true;
-                    //    Notation += "Load " + SubDataDescription + " from " +  MainAddressDescription;
-                    //Notation += "Load byte " + ((Int16)immediate).ToString("X") + " from " + Registers[targetregister].Description;
-
-                    //look up new data location
-                    break;
-                #endregion
-
-                #endregion
-
-                #region lwl/lwr/swl/swr
-                case "lwl":
-                    break;
-                case "lwr":
-                    break;
-                case "swr":
-                    break;
-                case "swl":
-                    break;
-                #endregion
-
-                #region Store Commands
-                #region sw
-                case "sw":
-                    sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[4].Substring(8).Replace(")", ""));
-                    immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
-                    address = Registers[targetregister].Value + immediate;
-                    if (GetDescription(Registers[targetregister], immediate) != "")
-                    {
-                        description = GetDescription(Registers[targetregister], immediate);
-                    }
-                    else
-                    {
-                        description = address.ToString("X");
-                    }
-
-
-                    if (targetregister == 29)
-                    {
-                        Notation += "Store " + Registers[sourceregister].Description + " into "
-             + Registers[targetregister].Description;
-                    }
-                    else
-                    {
-                        Notation += "Store " + description;
-                    }
-
-                    break;
-                #endregion
-                #region sh
-                case "sh":
-                    sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[4].Substring(8).Replace(")", ""));
-                    immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
-                    address = Registers[targetregister].Value + immediate;
-                    if (GetDescription(Registers[targetregister], immediate) != "")
-                    {
-                        description = GetDescription(Registers[targetregister], immediate);
-                    }
-                    else
-                    {
-                        description = address.ToString("X");
-                    }
-
-
-                    if (targetregister == 29)
-                    {
-                        Notation += "Store " + Registers[sourceregister].Description + " into "
-             + Registers[targetregister].Description;
-                    }
-                    else
-                    {
-                        Notation += "Store " + description;
-                    }
-
-                    break;
-                #endregion
-                #region sb
-                case "sb":
-                    sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[4].Substring(8).Replace(")", ""));
-                    immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
-                    address = Registers[targetregister].Value + immediate;
-                    if(Registers[targetregister].SubsetOffset != 0)
-                    {
-                        immediate += Registers[targetregister].SubsetOffset;
-                    }
-                    if (GetDescription(Registers[targetregister], immediate) != "")
-                    {
-                        description = GetDescription(Registers[targetregister], immediate);
-                    }
-                    else
-                    {
-                        description = address.ToString("X");
-                    }
-
-
-                    if (targetregister == 29)
-                    {
-                        Notation += "Store " + Registers[sourceregister].Description + " into "
-             + Registers[targetregister].Description;
-                    }
-                    else
-                    {
-                        Notation += "Store " + description;
-                    }
-
-                    break;
-                #endregion
-                #endregion
-
-                #region Arithmatic Commands
-                #region addu
-                case "addu":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
-
-                    Notation += "r" + targetregister.ToString() + " = ";
-                    #region Special cases
-                    //addu r2, r2, r0
-                    if ((sourceregister != 0 && comparedregister == 0))
-                    {
-                        Notation += Registers[sourceregister].Description;
-                        Registers[targetregister].Description = Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[sourceregister].Value;
-                        Registers[targetregister].originalvalue = Registers[sourceregister].originalvalue;
-                    }
-                    //addu r2, r0, r2
-                    else if (comparedregister != 0 && sourceregister == 0)
-                    {
-                        Notation += Registers[comparedregister].Description;
-                        Registers[targetregister].Description = Registers[comparedregister].Description;
-                        Registers[targetregister].Value = Registers[comparedregister].Value;
-                        Registers[targetregister].originalvalue = Registers[comparedregister].originalvalue;
-                    }
-                    // addu r2, r0, r0
-                    else if (sourceregister == 0 && comparedregister == 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Description = "";
-                        Registers[targetregister].Value = 0;
-                    }
-                    //Calculating frame pointer
-                    else if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].originalvalue)
-                    {
-                        Registers[sourceregister].multiplier += 1;
-                        Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
-                    }
-                    //adding frame pointer to base address
-                    else if (Registers[sourceregister].multiplier > 0 && GetDescription(Registers[comparedregister], 0) != "")
-                    {
-                        Registers[targetregister].Value = Registers[comparedregister].Value;
-
-                        Notation += GetDescription(Registers[targetregister], Registers[sourceregister].multiplier);
-
-                        Registers[targetregister].Description = Registers[targetregister].Mainaddress.Description;
-
-                        if (Registers[sourceregister].Description.Contains("Input"))
-                        {
-                            SetInput(Registers[sourceregister].Description, GetDescription(Registers[comparedregister], 0));
-                            //Set Input Value based on what we found in routine.
-                        }
-                        // Registers[sourceregister].Description.Remove(Registers[sourceregister].Description.IndexOf("*");
-                    }
-                    else if (comparedregister != 0 && sourceregister != 0)
-                    {
-                        Notation += Registers[comparedregister].Description + " + " + Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[sourceregister].Value + Registers[comparedregister].Value;
-
-                        if (Registers[sourceregister].Description.StartsWith("0x") && Registers[comparedregister].Description.StartsWith("0x"))
-                        {
-                            Registers[targetregister].Description = Registers[targetregister].Value.ToString("X");
-                        }
-
-                        else
-                        {
-                            Registers[targetregister].Description = Registers[comparedregister].Description + " + " + Registers[sourceregister].Description; ;
-                        }
-                        Registers[targetregister].originalvalue = false;
-                    }
-
-                    #endregion
-                    break;
-                #endregion
-                #region addiu
-                case "addiu":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    //comparedregister = 0;
-                    immediate = StringToAddress(linesplit[5]);
-
-
-
-                    #region Stack Adjustment
-                    if (sourceregister == 29 && targetregister == 29)
-                    {
-                        if (immediate >= 0x8000)
-                        {
-                            Notation += "Make space on stack";
-                            //Registers[29].Value += immediate;
-                            Registers[29].Description = "Stack";
-                            break;
-                        }
-                        else
-                        {
-                            Notation += "Restore stack pointer";
-                            //Registers[29].Value -= immediate;
-                            Registers[29].Description = "Stack";
-                            break;
-                        }
-                    }
-                    #endregion
-
-                    if (immediate > 0x7FFF)
-                    {
-                        Registers[sourceregister].Value -= 0x10000;
-                        // immediate -= 0x8000;
-                    }
-
-                    Registers[targetregister].Value = Registers[sourceregister].Value + immediate;
-
-                    if (SeeifIsSubset(Registers[sourceregister].Value, immediate) != "")
-                    {
-                        Registers[targetregister].Description = SeeifIsSubset(Registers[sourceregister].Value, immediate);
-                    }
-                    else if (GetDescription(Registers[targetregister], 0) != "")
-                    {
-                        Registers[targetregister].Description = GetDescription(Registers[targetregister], immediate);
-                    }
-                    else if (Registers[sourceregister].Description.StartsWith("0x"))
-                    {
-                        Registers[targetregister].Description = Registers[targetregister].Value.ToString("X");
-                    }
-
-
-
-                    Registers[targetregister].originalvalue = false;
-
-                    Notation += Registers[targetregister].Description;
-
-                    Registers[targetregister].Description = "0x" + Registers[targetregister].Value.ToString("X");
-
-                    //Registers[targetregister].Description = Registers[sourceregister].Description + zeromod + immediate.ToString("X");
-
-                    break;
-                #endregion
-                #region subu
-                case "subu":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    //comparedregister = 0;
-                    comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
-
-                    if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].originalvalue)
-                    {
-                        Registers[targetregister].multiplier -= 1;
-                        Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
-                        Registers[targetregister].Description = Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
-                    }
-                    else if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].multiplier > 0)
-                    {
-                        Registers[sourceregister].multiplier -= 1;
-                        Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
-                        Registers[targetregister].Description = Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
-                    }
-                    else if (Registers[sourceregister].multiplier == 0)
-                    {
-                        Notation += "r" + targetregister.ToString() + " = " +
-                        Registers[sourceregister].Description + " - " + Registers[comparedregister].Description;
-                        Registers[targetregister].Description = Registers[sourceregister].Description + " - " + Registers[comparedregister].Description;
-                    }
-
-                    Registers[targetregister].originalvalue = false;
-                    Registers[targetregister].Value = Registers[sourceregister].Value - Registers[comparedregister].Value;
-                    break;
-                #endregion
-                #region sll
-                case "sllv":
-                case "sll":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    //comparedregister = 0;
-                    immediate = StringToAddress(linesplit[5]);
-
-                    Registers[targetregister].Value = Registers[sourceregister].Value * Exponent(2, immediate);
-                    //If it's the first shift
-                    if (Registers[targetregister].multiplier == 0)
-                    {
-                        if (immediate % 0x08 == 0)
-                        {
-                            Notation += "Shift left " + (immediate / 0x08).ToString() + " bytes(*0x" + Exponent(2, immediate).ToString("X") + ")" + " (*" + Exponent(2, immediate).ToString() + ")";
-                            Registers[targetregister].Description = Registers[sourceregister].Description;
-                        }
-                        else
-                        {
-                            Notation += "Shift left " + (immediate).ToString() + " bits (*0x" + Exponent(2, immediate).ToString("X") + ")" + " (*" + Exponent(2, immediate).ToString() + ")"; ;
-                            Registers[targetregister].Description = Registers[sourceregister].Description;
-                        }
-                        Registers[targetregister].multiplier = (int)Exponent(2, immediate);
-                    }
-                    //if it's not the first shift
-                    else if (Registers[targetregister].multiplier != 0)
-                    {
-                        Registers[targetregister].multiplier *= (int)Exponent(2, immediate);
-                        if (Registers[targetregister].Description.Contains("*"))
-                        {
-                            Registers[targetregister].Description = Registers[targetregister].Description.Remove(Registers[targetregister].Description.IndexOf('*'));
-                            Registers[targetregister].Description += "* 0x" + Registers[targetregister].multiplier.ToString("X") + " (* " + Registers[targetregister].multiplier.ToString() + ")";
-                            Notation += Registers[targetregister].Description; //+"* 0x" + Registers[targetregister].multiplier.ToString("X") + " (*" + Registers[targetregister].multiplier.ToString() + ")";
-                        }
-                        else
-                        {
-                            Notation += Registers[targetregister].Description + "* 0x" + Registers[targetregister].multiplier.ToString("X") + " (* " + Registers[targetregister].multiplier.ToString() + ")";
-                            Registers[targetregister].Description = "* 0x" + Registers[targetregister].multiplier.ToString("X") + " (* " + Registers[targetregister].multiplier.ToString() + ")";
-
-                        }
-                    }
-
-                    Registers[targetregister].originalvalue = false;
-                    //Notation += "r" + targetregister.ToString() + " = " + 
-                    //    Registers[sourceregister].Description + " / 0x" + immediate.ToString("X") +
-                    //                                                    " (" + immediate.ToString() + ")";
-                    break;
-                #endregion
-                #region sr
-                case "sra":
-                case "srav":
-                case "srlv":
-                case "srl":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    //comparedregister = 0;
-                    immediate = StringToAddress(linesplit[5]);
-
-                    Registers[targetregister].Value = Registers[sourceregister].Value / Exponent(2, immediate);
-
-                    if (Registers[targetregister].multiplier == 0)
-                    {
-                        if (immediate % 0x08 == 0)
-                        {
-                            Notation += "Shift right " + (immediate / 0x08).ToString() + " bytes(/0x" + Exponent(2, immediate).ToString("X") + ")" + " (/" + Exponent(2, immediate).ToString() + ")"; ;
-                            Registers[targetregister].Description = Registers[sourceregister].Description + " >> " + immediate.ToString("X");
-                        }
-                        else
-                        {
-                            Notation += "Shift right " + (immediate).ToString() + " bits (/0x" + Exponent(2, immediate).ToString("X") + ")" + " (/" + Exponent(2, immediate).ToString() + ")"; ;
-                            Registers[targetregister].Description = Registers[sourceregister].Description + " >> " + immediate.ToString("X");
-                        }
-                        // Registers[targetregister].multiplier = (int)Exponent(2, immediate);
-                    }
-                    else if (Registers[targetregister].multiplier != 0)
-                    {
-                        Registers[targetregister].multiplier /= (int)Exponent(2, immediate);
-                    }
-
-                    Registers[targetregister].originalvalue = false;
-                    Notation += "r" + targetregister.ToString() + " = " +
-                    Registers[sourceregister].Description + " * 0x" + immediate.ToString("X") +
-                                                                        " (" + immediate.ToString() + ")";
-                    break;
-                #endregion
-                #region mult
-                case "mult":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-
-                    //Store Lower 32 bits in Lo
-                    Registers[32].Value = Registers[comparedregister].Value * Registers[targetregister].Value;
-                    Registers[32].Description = Registers[comparedregister].Description + " *  " + Registers[targetregister].Description;
-
-                    //Store upper 32 bits in Hi
-
-                    Notation += Registers[targetregister].Description + " * " + Registers[comparedregister].Description;
-                    break;
-                case "multu":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-
-                    //Store Lower 32 bits in Lo
-                    Registers[32].Value = Registers[comparedregister].Value * Registers[targetregister].Value;
-                    Registers[32].Description = Registers[comparedregister].Description + " *  " + Registers[targetregister].Description;
-
-                    //Store upper 32 bits in Hi
-
-
-                    Notation += Registers[targetregister].Description + " * " + Registers[comparedregister].Description;
-
-                    break;
-                #endregion
-                #region div
-                case "div":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-
-                    Registers[32].Value = Registers[comparedregister].Value / Registers[targetregister].Value;
-                    Registers[32].Description = Registers[comparedregister].Description + " / " + Registers[targetregister].Description;
-
-                    Registers[33].Value = Registers[comparedregister].Value % Registers[targetregister].Value;
-                    Registers[33].Description = Registers[comparedregister].Description + " % " + Registers[targetregister].Description;
-
-
-                    Notation += Registers[targetregister].Description + " / " + Registers[comparedregister].Description;
-
-                    break;
-                case "divu":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-
-                    Registers[32].Value = Registers[comparedregister].Value / Registers[targetregister].Value;
-                    Registers[32].Description = Registers[comparedregister].Description + " /  " + Registers[targetregister].Description;
-
-                    Registers[33].Value = Registers[comparedregister].Value % Registers[targetregister].Value;
-                    Registers[33].Description = Registers[comparedregister].Description + " % " + Registers[targetregister].Description;
-
-                    Notation += Registers[targetregister].Description + " / " + Registers[comparedregister].Description;
-
-                    break;
-                #endregion
-                #region mflo/mfhi
-                case "mflo":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-
-                    Registers[targetregister].Value = Registers[32].Value;
-                    Registers[targetregister].Description = Registers[32].Description;
-                    Notation += Registers[32].Description;
-                    Registers[targetregister].originalvalue = false;
-                    break;
-                case "mfhi":
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-
-                    Registers[targetregister].Value = Registers[33].Value;
-                    Registers[targetregister].Description = Registers[33].Description;
-                    Notation += Registers[33].Description;
-                    Registers[targetregister].originalvalue = false;
-                    break;
-                #endregion
-                #endregion
-
-                #region Logic Commands
-                #region or
-                case "or":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
-
-                    Notation += "r" + targetregister.ToString() + " = ";
-                    if ((sourceregister != 0 && comparedregister == 0))
-                    {
-                        Notation += Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[sourceregister].Value;
-                        Registers[targetregister].Description = Registers[sourceregister].Description;
-                    }
-                    else if (comparedregister != 0 && sourceregister == 0)
-                    {
-                        Notation += Registers[comparedregister].Description;
-                        Registers[targetregister].Value = Registers[comparedregister].Value;
-                        Registers[targetregister].Description = Registers[comparedregister].Description;
-                    }
-                    else if (sourceregister == 0 && comparedregister == 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (comparedregister != 0 && sourceregister != 0)
-                    {
-                        Notation += Registers[comparedregister].Description + Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[comparedregister].Value | Registers[sourceregister].Value;
-                        Registers[targetregister].Description = Registers[comparedregister].Description + " | " + Registers[sourceregister].Description;
-                    }
-
-
-
-                    //look up new data location
-                    break;
-                case "ori":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    immediate = StringToAddress(linesplit[5].Replace("r", ""));
-
-                    Notation += "r" + targetregister.ToString() + " = ";
-
-                    if ((sourceregister != 0 && immediate == 0))
-                    {
-                        Notation += Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[sourceregister].Value;
-                        Registers[targetregister].Description = Registers[sourceregister].Description;
-                    }
-                    else if (sourceregister == 0 && immediate != 0)
-                    {
-                        Notation += immediate.ToString();
-                        Registers[targetregister].Value = immediate;
-                        Registers[targetregister].Description = immediate.ToString();
-                    }
-                    else if (sourceregister == 0 && immediate == 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (sourceregister != 0 && immediate != 0)
-                    {
-                        if (sourceregister == targetregister)
-                        {
-                            Notation += "Add " + immediate.ToString("X") + " to " + Registers[targetregister].Description;
-                        }
-                        else
-                        {
-                            Notation += Registers[sourceregister].Description + " | 0x" + immediate.ToString("X");
-                            Registers[targetregister].Description = Registers[sourceregister].Description + " | 0x" + immediate.ToString("X");
-                        }
-                        Registers[targetregister].Value = Registers[sourceregister].Value | immediate;
-
-                    }
-
-                    //look up new data location
-                    break;
-                #endregion
-                #region and
-                case "and":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
-                    // immediate = StringToAddress(linesplit[5]);
-                    //look up new data location
-                    #region special conditions
-                    if ((sourceregister != 0 && comparedregister == 0))
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (comparedregister != 0 && sourceregister == 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (sourceregister == 0 && comparedregister == 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    #endregion
-                    else if (comparedregister != 0 && sourceregister != 0)
-                    {
-                        Notation += Registers[comparedregister].Description + " & " + Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[sourceregister].Value & Registers[comparedregister].Value;
-                        Registers[targetregister].Description = Registers[comparedregister].Description + " & " + Registers[sourceregister].Description;
-                    }
-
-                    //Notation += "r" + targetregister.ToString() + " = " +
-                    //    Registers[sourceregister].Description + " *AND* " + immediate.ToString("X");
-
-                    break;
-                case "andi":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    //comparedregister = 0;
-                    immediate = StringToAddress(linesplit[5]);
-
-                    #region Special Conditions
-                    if ((sourceregister != 0 && immediate == 0))
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (sourceregister == 0 && immediate != 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (sourceregister == 0 && immediate == 0)
-                    {
-                        Notation += "0";
-                        Registers[targetregister].Value = 0;
-                        Registers[targetregister].Description = "0";
-                    }
-                    else if (immediate == 0xffff)
-                    {
-                        Notation += "r" + targetregister.ToString() + " = " + Registers[sourceregister].Description;
-                        Registers[targetregister].Value = Registers[sourceregister].Value;
-                        Registers[targetregister].Description = Registers[sourceregister].Description;
-
-                    }
-                    else if (immediate == 0x00ff)
-                    {
-                        Notation += "Mask second byte";
-                        Registers[targetregister].Value = Registers[sourceregister].Value & 0x00FF;
-                        Registers[targetregister].Description = Registers[sourceregister].Description;
-                    }
-                    #endregion
-                    else if (sourceregister != 0 && immediate != 0)
-                    {
-                        Notation += Registers[sourceregister].Description + " & 0x" + immediate.ToString("X");
-                        Registers[targetregister].Value = Registers[sourceregister].Value & immediate;
-                        Registers[targetregister].Description = Registers[sourceregister].Description + " & 0x" + immediate.ToString("X");
-                    }
-
-
-                    //look up new data location
-                    //Notation += "r" + targetregister.ToString() + " = " + 
-                    //    Registers[sourceregister].Description + " *AND* " + immediate.ToString("X");
-                    //look up new data location
-                    break;
-                #endregion
-                #region xor/nor
-                case "xor":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
-                    //immediate = StringToAddress(linesplit[5]);
-
-                    Notation += Registers[sourceregister].Description + " xor " + Registers[comparedregister].Description;
-                    Registers[targetregister].Value = Registers[sourceregister].Value ^ Registers[comparedregister].Value;
-                    Registers[targetregister].Description = Registers[sourceregister].Description + " xor " + Registers[comparedregister].Description;
-
-                    // ^ operator
-                    //look up new data location
-                    break;
-                case "xori":
-                    sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
-                    targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-                    //comparedregister = 0;
-                    immediate = StringToAddress(linesplit[5]);
-
-                    Notation += Registers[sourceregister].Description + " xor 0x" + immediate.ToString("X");
-                    Registers[targetregister].Value = Registers[sourceregister].Value ^ immediate;
-                    Registers[targetregister].Description = Registers[sourceregister].Description + " xor 0x" + immediate.ToString("X");
-
-                    //look up new data location
-                    break;
-                case "nor":
-                    // !& = |
-                    //look up new data location
-                    break;
-                #endregion
-                #endregion
-
-                case "":
-                    break;
-            }
-
-            return Notation;
-        }
        
         public MainAddress[] Add(string instring, MainAddress[] MainAddresses)
         {
@@ -2745,7 +2800,7 @@ namespace LEDecoder
         {
             foreach (Register reg in Registers)
             {
-                if (reg.Description != reg.Name + "Input")
+                if (reg.Description != reg.Name + " Input")
                 {
                     sw.WriteLine(reg.Name + " = " + reg.Description + "\n");
                 }
@@ -2763,5 +2818,13 @@ namespace LEDecoder
         }
         #endregion
 
+        private void btn_AutoNotateForm_Click(object sender, EventArgs e)
+        {
+            Autonotator An2 = new Autonotator(this);
+            An = An2;
+            An.Show(); //Set initial register values
+        }
+
+     
     }
 }

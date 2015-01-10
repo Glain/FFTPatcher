@@ -16,6 +16,38 @@ namespace LEDecoder
         {
             InitializeComponent();
             Mainform = LEDecoderForm;
+            txt_Register1.Text = Mainform.Registers[1].Value.ToString("X");
+            txt_Register2.Text = Mainform.Registers[2].Value.ToString("X");
+            txt_Register3.Text = Mainform.Registers[3].Value.ToString("X");
+            txt_Register4.Text = Mainform.Registers[4].Value.ToString("X");
+            txt_Register5.Text = Mainform.Registers[5].Value.ToString("X");
+            txt_Register6.Text = Mainform.Registers[6].Value.ToString("X");
+            txt_Register7.Text = Mainform.Registers[7].Value.ToString("X");
+            txt_Register8.Text = Mainform.Registers[8].Value.ToString("X");
+            txt_Register9.Text = Mainform.Registers[9].Value.ToString("X");
+            txt_Register10.Text = Mainform.Registers[10].Value.ToString("X");
+            txt_Register11.Text = Mainform.Registers[11].Value.ToString("X");
+            txt_Register12.Text = Mainform.Registers[12].Value.ToString("X");
+            txt_Register13.Text = Mainform.Registers[13].Value.ToString("X");
+            txt_Register14.Text = Mainform.Registers[14].Value.ToString("X");
+            txt_Register15.Text = Mainform.Registers[15].Value.ToString("X");
+            txt_Register16.Text = Mainform.Registers[16].Value.ToString("X");
+            txt_Register17.Text = Mainform.Registers[17].Value.ToString("X");
+            txt_Register18.Text = Mainform.Registers[18].Value.ToString("X");
+            txt_Register19.Text = Mainform.Registers[19].Value.ToString("X");
+            txt_Register20.Text = Mainform.Registers[20].Value.ToString("X");
+            txt_Register21.Text = Mainform.Registers[21].Value.ToString("X");
+            txt_Register22.Text = Mainform.Registers[22].Value.ToString("X");
+            txt_Register23.Text = Mainform.Registers[23].Value.ToString("X");
+            txt_Register24.Text = Mainform.Registers[24].Value.ToString("X");
+            txt_Register25.Text = Mainform.Registers[25].Value.ToString("X");
+            txt_Register26.Text = Mainform.Registers[26].Value.ToString("X");
+            txt_Register27.Text = Mainform.Registers[27].Value.ToString("X");
+            txt_Register28.Text = Mainform.Registers[28].Value.ToString("X");
+        }
+        public Autonotator()
+        {
+            InitializeComponent();
         }
 
         public static long StringToAddress(string InString)
@@ -98,44 +130,71 @@ namespace LEDecoder
         
         public void GetRegisterDescriptions()
         {
-            //foreach(Register reg in Mainform.Registers)
-            //{
-            //    reg.GetDescription(Mainform);
-            //}
+            foreach (Register reg in Mainform.Registers)
+            {
+                reg.GetDescription(reg.Value,Mainform);
+            }
         }
         public void GetRegisterValues()
         {
-            Mainform.Registers[1].Value = (int)StringToAddress(txt_Register1.Text);
-            Mainform.Registers[2].Value = (int)StringToAddress(txt_Register2.Text);
-            Mainform.Registers[3].Value = (int)StringToAddress(txt_Register3.Text);
-            Mainform.Registers[4].Value = (int)StringToAddress(txt_Register4.Text);
-            Mainform.Registers[5].Value = (int)StringToAddress(txt_Register5.Text);
-            Mainform.Registers[6].Value = (int)StringToAddress(txt_Register6.Text);
-            Mainform.Registers[7].Value = (int)StringToAddress(txt_Register7.Text);
-            Mainform.Registers[8].Value = (int)StringToAddress(txt_Register8.Text);
-            Mainform.Registers[9].Value = (int)StringToAddress(txt_Register9.Text);
-            Mainform.Registers[10].Value = (int)StringToAddress(txt_Register10.Text);
-            Mainform.Registers[11].Value = (int)StringToAddress(txt_Register11.Text);
-            Mainform.Registers[12].Value = (int)StringToAddress(txt_Register12.Text);
-            Mainform.Registers[13].Value = (int)StringToAddress(txt_Register13.Text);
-            Mainform.Registers[14].Value = (int)StringToAddress(txt_Register14.Text);
-            Mainform.Registers[15].Value = (int)StringToAddress(txt_Register15.Text);
-            Mainform.Registers[16].Value = (int)StringToAddress(txt_Register16.Text);
-            Mainform.Registers[17].Value = (int)StringToAddress(txt_Register17.Text);
-            Mainform.Registers[18].Value = (int)StringToAddress(txt_Register18.Text);
-            Mainform.Registers[19].Value = (int)StringToAddress(txt_Register19.Text);
-            Mainform.Registers[20].Value = (int)StringToAddress(txt_Register20.Text);
-            Mainform.Registers[21].Value = (int)StringToAddress(txt_Register21.Text);
-            Mainform.Registers[22].Value = (int)StringToAddress(txt_Register22.Text);
-            Mainform.Registers[23].Value = (int)StringToAddress(txt_Register23.Text);
-            Mainform.Registers[24].Value = (int)StringToAddress(txt_Register24.Text);
-            Mainform.Registers[25].Value = (int)StringToAddress(txt_Register25.Text);
-            Mainform.Registers[26].Value = (int)StringToAddress(txt_Register26.Text);
-            Mainform.Registers[27].Value = (int)StringToAddress(txt_Register27.Text);
-            Mainform.Registers[28].Value = (int)StringToAddress(txt_Register28.Text);
-            Mainform.Registers[29].Value = (int)StringToAddress(txt_Register29.Text);
-            Mainform.Registers[30].Value = (int)StringToAddress(txt_Register30.Text);
-            Mainform.Registers[31].Value = (int)StringToAddress(txt_Register31.Text);
+            if(Mainform.Registers[1].Value == 0)
+                Mainform.Registers[1].Value = (int)StringToAddress(txt_Register1.Text);
+            if (Mainform.Registers[2].Value == 0)
+                Mainform.Registers[2].Value = (int)StringToAddress(txt_Register2.Text);
+            if (Mainform.Registers[3].Value == 0)
+                Mainform.Registers[3].Value = (int)StringToAddress(txt_Register3.Text);
+            if (Mainform.Registers[4].Value == 0)
+                Mainform.Registers[4].Value = (int)StringToAddress(txt_Register4.Text);
+            if (Mainform.Registers[5].Value == 0)
+                Mainform.Registers[5].Value = (int)StringToAddress(txt_Register5.Text);
+            if (Mainform.Registers[6].Value == 0)
+                Mainform.Registers[6].Value = (int)StringToAddress(txt_Register6.Text);
+            if (Mainform.Registers[7].Value == 0)
+                Mainform.Registers[7].Value = (int)StringToAddress(txt_Register7.Text);
+            if (Mainform.Registers[8].Value == 0)
+                Mainform.Registers[8].Value = (int)StringToAddress(txt_Register8.Text);
+            if (Mainform.Registers[9].Value == 0)
+                Mainform.Registers[9].Value = (int)StringToAddress(txt_Register9.Text);
+            if (Mainform.Registers[10].Value == 0)
+                Mainform.Registers[10].Value = (int)StringToAddress(txt_Register10.Text);
+            if (Mainform.Registers[11].Value == 0)
+                Mainform.Registers[11].Value = (int)StringToAddress(txt_Register11.Text);
+            if (Mainform.Registers[12].Value == 0)
+                Mainform.Registers[12].Value = (int)StringToAddress(txt_Register12.Text);
+            if (Mainform.Registers[13].Value == 0)
+                Mainform.Registers[13].Value = (int)StringToAddress(txt_Register13.Text);
+            if (Mainform.Registers[14].Value == 0)
+                Mainform.Registers[14].Value = (int)StringToAddress(txt_Register14.Text);
+            if (Mainform.Registers[15].Value == 0)
+                Mainform.Registers[15].Value = (int)StringToAddress(txt_Register15.Text);
+            if (Mainform.Registers[16].Value == 0)
+                Mainform.Registers[16].Value = (int)StringToAddress(txt_Register16.Text);
+            if (Mainform.Registers[17].Value == 0)
+                Mainform.Registers[17].Value = (int)StringToAddress(txt_Register17.Text);
+            if (Mainform.Registers[18].Value == 0)
+                Mainform.Registers[18].Value = (int)StringToAddress(txt_Register18.Text);
+            if (Mainform.Registers[19].Value == 0)
+                Mainform.Registers[19].Value = (int)StringToAddress(txt_Register19.Text);
+            if (Mainform.Registers[20].Value == 0)
+                Mainform.Registers[20].Value = (int)StringToAddress(txt_Register20.Text);
+            if (Mainform.Registers[21].Value == 0)
+                Mainform.Registers[21].Value = (int)StringToAddress(txt_Register21.Text);
+            if (Mainform.Registers[22].Value == 0)
+                Mainform.Registers[22].Value = (int)StringToAddress(txt_Register22.Text);
+            if (Mainform.Registers[23].Value == 0)
+                Mainform.Registers[23].Value = (int)StringToAddress(txt_Register23.Text);
+            if (Mainform.Registers[24].Value == 0)
+                Mainform.Registers[24].Value = (int)StringToAddress(txt_Register24.Text);
+            if (Mainform.Registers[25].Value == 0)
+                Mainform.Registers[25].Value = (int)StringToAddress(txt_Register25.Text);
+            if (Mainform.Registers[26].Value == 0)
+                Mainform.Registers[26].Value = (int)StringToAddress(txt_Register26.Text);
+            if (Mainform.Registers[27].Value == 0)
+                Mainform.Registers[27].Value = (int)StringToAddress(txt_Register27.Text);
+            if (Mainform.Registers[28].Value == 0)
+                Mainform.Registers[28].Value = (int)StringToAddress(txt_Register28.Text);
+            if (Mainform.Registers[30].Value == 0)
+                Mainform.Registers[30].Value = (int)StringToAddress(txt_Register30.Text);
         }
 
         private void richTextBox_Enter(object sender, EventArgs e)
@@ -143,7 +202,7 @@ namespace LEDecoder
             RichTextBox box = sender as RichTextBox;
             if (box.Text == "0x00000000")
             {
-                box.Text = "0x";
+                box.Text = "";
             }
 
             
