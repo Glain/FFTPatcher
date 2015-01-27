@@ -13,6 +13,7 @@ namespace LEDecoder
         public int FrameSize;
         public int NumberofSections = 1;
         public SubData[] Frame;
+        public Value AttachedValue;
 
 
         public MainAddress()

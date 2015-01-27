@@ -132,7 +132,7 @@ namespace LEDecoder
         {
             foreach (Register reg in Mainform.Registers)
             {
-                reg.GetDescription(reg.Value,Mainform);
+                reg.GetDescription(Mainform);
             }
         }
         public void GetRegisterValues()

@@ -42,36 +42,39 @@ namespace LEDecoder
 
         #region JalFinder Variables
 
-        public string CurrentFile = "";
-        public string SCUSWiki = "";
-        public string BATTLEWiki = "";
-        public string WORLDWiki = "";
-        public string WLDCOREWiki = "";
-        public string EQUIPWiki = "";
-        public string REQUIREWiki = "";
+        //public string CurrentFile = "";
+        //public string SCUSWiki = "";
+        //public string BATTLEWiki = "";
+        //public string WORLDWiki = "";
+        //public string WLDCOREWiki = "";
+        //public string EQUIPWiki = "";
+        //public string REQUIREWiki = "";
 
-        public string SCUSDisassembly = "";
-        public string BATTLEDisassembly = "";
-        public string WORLDDisassembly = "";
-        public string WLDCOREDisassembly = "";
-        public string EQUIPDisassembly = "";
-        public string REQUIREDisassembly = "";
+        //public string SCUSDisassembly = "";
+        //public string BATTLEDisassembly = "";
+        //public string WORLDDisassembly = "";
+        //public string WLDCOREDisassembly = "";
+        //public string EQUIPDisassembly = "";
+        //public string REQUIREDisassembly = "";
 
-        public string[] SCUSLines;
-        public string[] BATTLELines;
-        public string[] WORLDLines;
-        public string[] WLDCORELines;
-        public string[] REQUIRELines;
-        public string[] EQUIPLines;
+        //public string[] SCUSLines;
+        //public string[] BATTLELines;
+        //public string[] WORLDLines;
+        //public string[] WLDCORELines;
+        //public string[] REQUIRELines;
+        //public string[] EQUIPLines;
         #endregion
 
         #region Autonotator Variables
         public Autonotator An = new Autonotator();
-        public Register[] Registers = new Register[33];
+        public Register[] Registers = new Register[34];
+        public RegisterState[] States = new RegisterState[1];
         public MainAddress[] MainAddresses;
+        public UnknownData[] Unknowns = new UnknownData[1];
         public bool settingregisters = false;
         int[] linestoinsert = new int[1];
         public int jalcommandcounter = 0;
+        public int jrr31 = 0;
        
 
         #region Lists
@@ -104,6 +107,12 @@ namespace LEDecoder
 
 
         #endregion
+
+        #region CollapseRoutines Variables
+        public LEDecoder.CollapseRoutines.Routine[] Routines = new LEDecoder.CollapseRoutines.Routine[1];
+        
+        #endregion
+
         #endregion
 
         #region Form Initialization
@@ -112,7 +121,7 @@ namespace LEDecoder
 			InitializeComponent();
 			DoProcess();
              #region Autonotator
-            for (int i = 0; i < 33; i++)
+            for (int i = 0; i < 34; i++)
             {
                 Registers[i] = new Register(i);
             }
@@ -188,24 +197,29 @@ namespace LEDecoder
                     break;
                 case "Collapse Routines":
                     CollapseRoutines();
+                    //UpdateWikiFile();
                     break;
                 case "AutoNotate":
                     AutoNotate();
+                    break;
+                case "UpdateWikiFile":
+                    UpdateWikiFile();
                     break;
             }
 		}
 
         private void btn_UpdateWiki_Click(object sender, EventArgs e)
         {
-            using (StreamWriter sw = File.CreateText(Application.StartupPath + "\\SCUSWIKI.txt"))
+            string path = Application.StartupPath.Remove(Application.StartupPath.LastIndexOf("\\")) + "\\SCUSWIKI.txt";
+            using (StreamWriter sw = File.CreateText(Application.StartupPath.Remove(Application.StartupPath.LastIndexOf("\\")) + "\\SCUSWIKI.txt"))
             {
                 WebClient client = new WebClient();
                 string reply = "";
 
                 reply = client.DownloadString("http://ffhacktics.com/wiki/SCUS_942.21");
-                SCUSWiki = reply;
+                
 
-                sw.Write(SCUSWiki);
+                //sw.Write(SCUSWiki);
 
             }
             using (StreamWriter sw = File.CreateText(Application.StartupPath + "\\BATTLEWIKI.txt"))
@@ -214,9 +228,9 @@ namespace LEDecoder
                 string reply = "";
 
                 reply = client.DownloadString("http://ffhacktics.com/wiki/BATTLE.BIN");
-                BATTLEWiki = reply;
+                //BATTLEWiki = reply;
 
-                sw.Write(BATTLEWiki);
+                //sw.Write(BATTLEWiki);
 
             }
             using (StreamWriter sw = File.CreateText(Application.StartupPath + "\\WORLDWIKI.txt"))
@@ -225,9 +239,9 @@ namespace LEDecoder
                 string reply = "";
 
                 reply = client.DownloadString("http://ffhacktics.com/wiki/WORLD.BIN");
-                WORLDWiki = reply;
+                //WORLDWiki = reply;
 
-                sw.Write(WORLDWiki);
+                //sw.Write(WORLDWiki);
 
             }
             using (StreamWriter sw = File.CreateText(Application.StartupPath + "\\WLDCOREWIKI.txt"))
@@ -236,9 +250,9 @@ namespace LEDecoder
                 string reply = "";
 
                 reply = client.DownloadString("http://ffhacktics.com/wiki/WLDCORE.BIN");
-                WLDCOREWiki = reply;
+                //WLDCOREWiki = reply;
 
-                sw.Write(WLDCOREWiki);
+                //sw.Write(WLDCOREWiki);
 
             }
             using (StreamWriter sw = File.CreateText(Application.StartupPath + "\\REQUIREWIKI.txt"))
@@ -247,9 +261,9 @@ namespace LEDecoder
                 string reply = "";
 
                 reply = client.DownloadString("http://ffhacktics.com/wiki/REQUIRE.OUT");
-                REQUIREWiki = reply;
+                //REQUIREWiki = reply;
 
-                sw.Write(REQUIREWiki);
+                //sw.Write(REQUIREWiki);
 
             }
             using (StreamWriter sw = File.CreateText(Application.StartupPath + "\\EQUIPWIKI.txt"))
@@ -258,9 +272,9 @@ namespace LEDecoder
                 string reply = "";
 
                 reply = client.DownloadString("http://ffhacktics.com/wiki/EQUIP.OUT");
-                EQUIPWiki = reply;
+                //EQUIPWiki = reply;
 
-                sw.Write(EQUIPWiki);
+                //sw.Write(EQUIPWiki);
             }
         }
 
@@ -382,6 +396,30 @@ namespace LEDecoder
                 Function = "Collapse Routines";
             }
         }
+        private void rad_UpdateWikiFile_CheckedChanged(object sender, EventArgs e)
+        {
+            txt_StartingAddress.Visible = false;
+            txt_Length.Visible = false;
+            txt_BPLbox.Visible = false;
+            lab_PSX.Visible = true;
+            cb_Mode.Visible = false;
+            lab_BPL.Visible = false;
+            lab_Length.Visible = false;
+            lbl_StartingAddress.Visible = false;
+            chk_SpaceBox.Visible = false;
+            cmb_FileofRoutine.Visible = false;
+            lbl_FileofRoutine.Visible = false;
+            txt_InputFile.Enabled = true;
+            btn_InputFile.Enabled = true;
+            btn_UpdateWiki.Visible = false;
+            btn_AutoNotateForm.Visible = false;
+
+            if (DecodeASMButton.Checked)
+            {
+                Function = "UpdateWikiFile";
+            }
+        }
+        //overwrite box
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -494,11 +532,6 @@ namespace LEDecoder
 
             return result;
         }
-        public static string[] ToLines(string wholestring)
-        {
-            string[] result = wholestring.Replace("\r", "").Split('\n');
-            return result;
-        }
         public string scanfile(string Path)
         {
             string result = "";
@@ -514,49 +547,50 @@ namespace LEDecoder
         {
             string result = "";
             string filewiki = "";
+
             switch (cmb_FileofRoutine.SelectedIndex)
             {
                 case -1:
                 case 0: //Battle and Require
                     if(StringToAddress(address) < 0x67000)
                     {
-                        filewiki = SCUSWiki;
+                        filewiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt");
                     }
                     else if (StringToAddress(address) > 0x67000 && StringToAddress(address) < 0x1bf000)
                     {
-                        filewiki = BATTLEWiki;
+                        filewiki = scanresource("LEDecoder.Resources.BATTLEWIKI.txt"); ;
                     }
                     else if (StringToAddress(address) > 0x1bf000)
                     {
-                        filewiki = REQUIREWiki;
+                        filewiki = scanresource("LEDecoder.Resources.REQUIREWIKI.txt"); ;
                     }
                     break;
                 case 1: //Battle and Equip
                     if (StringToAddress(address) < 0x67000)
                     {
-                        filewiki = SCUSWiki;
+                        filewiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt");
                     }
                     else if (StringToAddress(address) > 0x67000 && StringToAddress(address) < 0x1bf000)
                     {
-                        filewiki = BATTLEWiki;
+                        filewiki = scanresource("LEDecoder.Resources.BATTLEWIKI.txt"); ;
                     }
                     else if (StringToAddress(address) > 0x1bf000)
                     {
-                        filewiki = EQUIPWiki;
+                        filewiki = scanresource("LEDecoder.Resources.EQUIPWIKI.txt"); ;
                     }
                     break;
                 case 2:
                     if (StringToAddress(address) < 0x67000)
                     {
-                        filewiki = SCUSWiki;
+                        filewiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt"); ;
                     }
                     else if (StringToAddress(address) > 0x67000 && StringToAddress(address) < 0xE0000)
                     {
-                        filewiki = BATTLEWiki;
+                        filewiki = scanresource("LEDecoder.Resources.WLDCOREWIKI.txt"); ;
                     }
                     else if (StringToAddress(address) > 0xE0000)
                     {
-                        filewiki = WORLDWiki;
+                        filewiki = scanresource("LEDecoder.Resources.WORLDWIKI.txt"); ;
                     }
                     break;
             }
@@ -594,6 +628,7 @@ namespace LEDecoder
             string result = "";
             return result;
         }
+
         public static long StringToAddress(string InString)
         {
             InString = InString.Replace(" ", "");
@@ -698,6 +733,12 @@ namespace LEDecoder
 
             return intout;
         }
+        public static string[] ToLines(string wholestring)
+        {
+            string[] result = wholestring.Replace("\r", "").Split('\n');
+            return result;
+        }
+
         public string Indent(int amount)
         {
             string result = "";
@@ -720,536 +761,30 @@ namespace LEDecoder
         }
         #endregion
 
-        #endregion
-
-        #region Main Functions
-        private void DecodeASM()
-        {
-            DrawLED(Color.Orange);
-            pic_LED.Refresh();
-
-            string strStartPC = txt_StartingAddress.Text;
-
-            int decodeResult = _asmUtility.DecodeASMToFile(txt_InputFile.Text, txt_OutputFile.Text, chk_LittleEndian.Checked, chk_NameRegisters.Checked, strStartPC);
-            switch (decodeResult)
-            {
-                case ASMFileDecoderResult.Success: DrawLED(Color.Green); break;
-                case ASMFileDecoderResult.FileOpenError: DrawLED(Color.Red); break;
-                case ASMFileDecoderResult.ASMDecodeError: DrawLED(Color.Red); break;
-                default: break;
-            }
-        }
-        private void JalFind()
-        {
-            DrawLED(Color.Orange);
-            pic_LED.Refresh();
-
-            #region Get Disassemblies
-            SCUSDisassembly = scanresource("LEDecoder.Resources.SCUS Disassembly.txt");
-            SCUSLines = ToLines(SCUSDisassembly);
-
-            BATTLEDisassembly = scanresource("LEDecoder.Resources.BATTLE Disassembly.txt");
-            BATTLELines = ToLines(BATTLEDisassembly);
-
-            WORLDDisassembly = scanresource("LEDecoder.Resources.WORLD Disassembly.txt");
-            WORLDLines = ToLines(WORLDDisassembly);
-
-            WLDCOREDisassembly = scanresource("LEDecoder.Resources.WLDCORE Disassembly.txt");
-            WLDCORELines = ToLines(WLDCOREDisassembly);
-
-            REQUIREDisassembly = scanresource("LEDecoder.Resources.REQUIRE Disassembly.txt");
-            REQUIRELines = ToLines(REQUIREDisassembly);
-
-            EQUIPDisassembly = scanresource("LEDecoder.Resources.EQUIP Disassembly.txt");
-            EQUIPLines = ToLines(EQUIPDisassembly);
-            #endregion
-
-            #region Get WIKI resources
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\SCUSWIKI.txt"))
-            {
-                SCUSWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\SCUSWIKI.txt");
-            }
-            else
-            {
-                SCUSWiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\BATTLEWIKI.txt"))
-            {
-                BATTLEWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\BATTLEWIKI.txt");
-            }
-            else
-            {
-                BATTLEWiki = scanresource("LEDecoder.Resources.BATTLEWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\WORLDWIKI.txt"))
-            {
-                WORLDWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\WORLDWIKI.txt");
-            }
-            else
-            {
-                WORLDWiki = scanresource("LEDecoder.Resources.WORLDWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\WLDCOREWIKI.txt"))
-            {
-                WLDCOREWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\WLDCOREWIKI.txt");
-            }
-            else
-            {
-                WLDCOREWiki = scanresource("LEDecoder.Resources.WLDCOREWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\REQUIREWIKI.txt"))
-            {
-                REQUIREWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\REQUIREWIKI.txt");
-            }
-            else
-            {
-                REQUIREWiki = scanresource("LEDecoder.Resources.REQUIREWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\EQUIPWIKI.txt"))
-            {
-                EQUIPWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\EQUIPWIKI.txt");
-            }
-            else
-            {
-                EQUIPWiki = scanresource("LEDecoder.Resources.EQUIPWIKI.txt");
-            }
-            #endregion
-
-            #region Main Jalfinder Function
-            if (txt_OutputFile.Text != "")
-            {
-                StreamWriter sw;
-                if(checkBox1.Checked)
-                {
-                    sw = File.CreateText(txt_OutputFile.Text);
-                }
-                else
-                {
-                    sw = File.AppendText(txt_OutputFile.Text);
-                }
-
-                using (sw)
-                {
-                    long address = StringToAddress(txt_StartingAddress.Text);
-                    CurrentFile = SCUSDisassembly;
-
-                    #region Determine Loaded Files
-                    if (cmb_FileofRoutine.SelectedIndex < 2)
-                    {
-                        CurrentFile += BATTLEDisassembly;
-                        if(cmb_FileofRoutine.SelectedIndex == 0)
-                        {
-                            CurrentFile += REQUIREDisassembly;
-                        }
-                        else
-                        {
-                            CurrentFile += EQUIPDisassembly;
-                        }
-                    }
-                    else if (cmb_FileofRoutine.SelectedIndex >= 3)
-                    {
-                        CurrentFile = WORLDDisassembly;
-                    }
-
-                    #endregion
-
-                    #region Find routine address in File
-                    string[] CurrentFileLines = ToLines(CurrentFile);
-                    string tempstring = "";
-                    int lineindex = 0;
-                    string startaddress = ReformatAddress(txt_StartingAddress.Text);
-
-                    foreach (string line in CurrentFileLines)
-                    {
-                        if (line.Contains(startaddress + ":"))
-                        {
-                            tempstring = line;
-                            break;
-                        }
-                        lineindex++;
-                    }
-
-                    if (tempstring == "")
-                    {
-                        MessageBox.Show("Could not find Base Address");
-                        goto fail;
-                    }
-                    #endregion
-
-                    sw.Write(txt_StartingAddress.Text + ":" + Indent(2)  + GetRoutineDescription(txt_StartingAddress.Text));
-
-                    sw.WriteLine("\r");
-
-                    string description = "";
-                    string jaladdress = "";
-                    int index = lineindex;
-                    for (index = lineindex; index < CurrentFileLines.Length;index++ )
-                    {
-                        tempstring = CurrentFileLines[index];
-                        if(tempstring.Contains("jal"))
-                        {
-                            if(tempstring.Contains("jalr"))
-                            {
-                                sw.WriteLine(Indent(1) + "jalr");
-                            }
-                            else
-                            {
-                                    jaladdress = tempstring.Substring(25, 8);
-                                    description = GetRoutineDescription(jaladdress);
-                                    jaladdress = Indent(1) + jaladdress;
-                                   
-                                    //jaladdress = jaladdress.Replace(" ", "");
-
-
-                                    sw.WriteLine(jaladdress + ": " + description + "\r");
-                            }
-                         }
-                        else if (tempstring.Contains("jr r31"))
-                        {
-                            break;
-                        }
-                    }
-                    sw.WriteLine("\r\n");
-                }
-                if(JalFindButton.Checked)
-                {
-                    Process[] processes = Process.GetProcesses();
-                    foreach (Process p in Process.GetProcesses())
-                    {
-                        if (p.ProcessName == "notepad")
-                        {
-                            string title = txt_OutputFile.Text.Substring(txt_OutputFile.Text.LastIndexOf("\\") + 1).Replace(".txt", "");
-                            if (p.MainWindowTitle.Contains(title))
-                            {
-                                p.Kill();
-                            }
-                        }
-                    }
-                    Process process = new Process();
-                    Process.Start("notepad.exe", txt_OutputFile.Text);
-                }
-              
-            fail: ;
-            }
-            #endregion
-
-            DrawLED(Color.Green);
-        }
-        private void PrintHex()
-        {
-            DrawLED(Color.Orange);
-            pic_LED.Refresh();
-
-            try
-            {
-                using (BinaryReader b = new BinaryReader(File.Open(txt_InputFile.Text, FileMode.Open)))
-                {
-                    BinaryWriter bw = new BinaryWriter(File.Open(txt_OutputFile.Text, FileMode.OpenOrCreate));
-                    string[] output = new string[1];
-                    long length = ReadHexOrDec(txt_Length.Text);
-                    b.BaseStream.Position = StringToAddress(txt_StartingAddress.Text);
-                    for (long i = b.BaseStream.Position; i < StringToAddress(txt_StartingAddress.Text) + length; i++)
-                    {
-                        byte[] Word = b.ReadBytes((int)ReadHexOrDec(txt_BPLbox.Text));
-
-                        string WordtoPrint = "";
-
-                        if (chk_SpaceBox.Checked)
-                        {
-                            WordtoPrint = BitConverter.ToString(Word).Replace("-", " ");
-                        }
-                        else
-                        {
-                            WordtoPrint = BitConverter.ToString(Word).Replace("-", "");
-                        }
-
-
-                        output[output.Length - 1] = WordtoPrint;
-                        Array.Resize(ref output, output.Length + 1);
-
-
-                    }
-                    File.WriteAllLines(txt_OutputFile.Text + ".txt", output);
-                    //Use BIN file. derp
-
-                    //string[] Output = new string[Convert.ToInt32(txt_Length.Text) / 4];
-                    //int startingaddress = Convert.ToInt32(txt_StartingAddress.Text) / 4;
-
-
-                    //string line = "";
-                    //long address = 0;
-                    //for (int j = 0; j < AllLines.Length; j++)
-                    //{
-                    //    line = AllLines[j].Remove(8);
-                    //    address = Convert.ToInt32(line);
-                    //    startingaddress = j;
-                    //}
-
-
-                    //for (int i = startingaddress; i < startingaddress + length; i++)
-                    //{
-                    //    Output[i - startingaddress] = AllLines[i].Substring(10).Remove(18);
-                    //    if (chk_LittleEndian.Checked)
-                    //    {
-                    //        Output[i - startingaddress] = ReverseBytes(Output[i - startingaddress]);
-                    //    }
-                    //}
-
-                    //File.WriteAllLines(txt_OutputFile.Text + ".txt", Output);
-                    bw.Close();
-                    b.Close();
-                }
-
-                DrawLED(Color.Green);
-            }
-            catch (Exception ex)
-            {
-                DrawLED(Color.Red);
-                MessageBox.Show(ex.ToString());
-            }
-        }
-        private void CollapseRoutines()
-        {
-            DrawLED(Color.Orange);
-            pic_LED.Refresh();
-
-            bool started = false;
-            string[] AllLines = File.ReadAllLines(txt_InputFile.Text);
-
-            int i = 0;
-            int count = 0;
-
-            while (AllLines[i] != null)
-            {
-                string line = AllLines[i];
-                if (line.IndexOf(":") > 0)
-                {
-                    if (started && line.Contains("jr r31") && AllLines[i + 2] == "")
-                    {
-                        started = false;
-                        AllLines = Delete(AllLines, i);
-                        AllLines[i - 1] += line.Remove(9);
-                        AllLines = Delete(AllLines, i);
-                        goto end;
-                    }
-                    if (started)
-                    {
-                        AllLines = Delete(AllLines, i);
-                    }
-                    if (!started)
-                    {
-                        if (line[0] == '0')
-                        {
-                            started = true;
-                            AllLines[i] = line.Remove(8) + " - ";
-                        }
-                        i++;
-                    }
-                end: ;
-                }
-                else if (started)
-                {
-                    AllLines = Delete(AllLines, i);
-                }
-                else
-                {
-                    started = false;
-                    i++;
-                }
-            }
-            string[] NewAllLines = AllLines;
-            File.WriteAllLines(txt_OutputFile.Text + ".txt", AllLines);
-            //AllLines.RemoveEmptyLines();
-            DrawLED(Color.Green);
-        }
-        private void AutoNotate()
-        {
-
-            JalFind();
-            //get reference files
-            #region Get Disassemblies
-            SCUSDisassembly = scanresource("LEDecoder.Resources.SCUS Disassembly.txt");
-            SCUSLines = ToLines(SCUSDisassembly);
-
-            BATTLEDisassembly = scanresource("LEDecoder.Resources.BATTLE Disassembly.txt");
-            BATTLELines = ToLines(BATTLEDisassembly);
-
-            WORLDDisassembly = scanresource("LEDecoder.Resources.WORLD Disassembly.txt");
-            WORLDLines = ToLines(WORLDDisassembly);
-
-            WLDCOREDisassembly = scanresource("LEDecoder.Resources.WLDCORE Disassembly.txt");
-            WLDCORELines = ToLines(WLDCOREDisassembly);
-
-            REQUIREDisassembly = scanresource("LEDecoder.Resources.REQUIRE Disassembly.txt");
-            REQUIRELines = ToLines(REQUIREDisassembly);
-
-            EQUIPDisassembly = scanresource("LEDecoder.Resources.EQUIP Disassembly.txt");
-            EQUIPLines = ToLines(EQUIPDisassembly);
-            #endregion
-
-            #region Get WIKI resources
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\SCUSWIKI.txt"))
-            {
-                SCUSWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\SCUSWIKI.txt");
-            }
-            else
-            {
-                SCUSWiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\BATTLEWIKI.txt"))
-            {
-                BATTLEWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\BATTLEWIKI.txt");
-            }
-            else
-            {
-                BATTLEWiki = scanresource("LEDecoder.Resources.BATTLEWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\WORLDWIKI.txt"))
-            {
-                WORLDWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\WORLDWIKI.txt");
-            }
-            else
-            {
-                WORLDWiki = scanresource("LEDecoder.Resources.WORLDWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\WLDCOREWIKI.txt"))
-            {
-                WLDCOREWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\WLDCOREWIKI.txt");
-            }
-            else
-            {
-                WLDCOREWiki = scanresource("LEDecoder.Resources.WLDCOREWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\REQUIREWIKI.txt"))
-            {
-                REQUIREWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\REQUIREWIKI.txt");
-            }
-            else
-            {
-                REQUIREWiki = scanresource("LEDecoder.Resources.REQUIREWIKI.txt");
-            }
-
-            if (File.Exists(Application.StartupPath + "\\JalFinder Resources\\EQUIPWIKI.txt"))
-            {
-                EQUIPWiki = scanfile(Application.StartupPath + "\\JalFinder Resources\\EQUIPWIKI.txt");
-            }
-            else
-            {
-                EQUIPWiki = scanresource("LEDecoder.Resources.EQUIPWIKI.txt");
-            }
-            #endregion
-
-            #region Main Autonotator Function
-            if (txt_OutputFile.Text != "")
-            {
-                StreamWriter sw;
-                if (checkBox1.Checked)
-                {
-                    sw = File.CreateText(txt_OutputFile.Text);
-                }
-                else
-                {
-                    sw = File.AppendText(txt_OutputFile.Text);
-                }
-
-                using (sw)
-                {
-                    string tempstring = "";
-                    sw.WriteLine(txt_StartingAddress.Text +": " + Indent(3) + GetRoutineDescription(txt_StartingAddress.Text) + "\n");
-                    //InitializeRegisters();
-                    PrintRegisterDescriptions(sw);
-                  
-
-                    string RoutineDisassembly = GetRoutineFromDisassembly();
-                    string[] RoutineLines = ToLines(RoutineDisassembly);
-
-                    int i = 0;
-
-                    //For each Command
-                    foreach(string line in RoutineLines)
-                    {
-                        if(jalcommandcounter != 0)
-                        {
-                            jalcommandcounter++;
-                            if(jalcommandcounter == 2)
-                            {
-                                Registers[2].Description = "ReturnValue";
-                                jalcommandcounter = 0;
-                            }
-                        }
-
-                        tempstring = Notate(line,i);
-                        sw.WriteLine(line + tempstring + "\n");
-                    }
-                    int count = 0;
-                    //insert spaces after jump and branch commands
-                    for(i=0;i < RoutineLines.Length + count;i++)
-                    {
-                        foreach(int index in linestoinsert)
-                        {
-                            if (i + count == index + count)
-                            {
-                                RoutineLines = Insert(RoutineLines, i + count);
-                                count++;
-                            }
-                        }
-                    }
-
-                    //Change Input values that were figured out during routine
-
-                }
-
-                Process[] processes = Process.GetProcesses();
-                foreach (Process p in Process.GetProcesses())
-                {
-                    if (p.ProcessName == "notepad")
-                    {
-                        string title = txt_OutputFile.Text.Substring(txt_OutputFile.Text.LastIndexOf("\\") + 1).Replace(".txt", "");
-                        if (p.MainWindowTitle.Contains(title))
-                        {
-                            p.Kill();
-                        }
-                    }
-                }
-                Process process = new Process();
-                Process.Start("notepad.exe", txt_OutputFile.Text);
-                InitializeRegisters();
-            }
-            #endregion
-        }
-        #endregion
-
         #region Autonotator Routines
+
         public string GetRoutineFromDisassembly()
         {
             long address = StringToAddress(txt_StartingAddress.Text);
-            CurrentFile = SCUSDisassembly;
+            string CurrentFile = scanresource("LEDecoder.Resources.SCUS Disassembly.txt");
 
             #region Determine Loaded Files
             if (cmb_FileofRoutine.SelectedIndex < 2)
             {
-                CurrentFile += BATTLEDisassembly;
+                CurrentFile += scanresource("LEDecoder.Resources.BATTLE Disassembly.txt");
                 if (cmb_FileofRoutine.SelectedIndex == 0)
                 {
-                    CurrentFile += REQUIREDisassembly;
+                    CurrentFile += scanresource("LEDecoder.Resources.REQUIRE Disassembly.txt");
                 }
                 else
                 {
-                    CurrentFile += EQUIPDisassembly;
+                    CurrentFile += scanresource("LEDecoder.Resources.EQUIP Disassembly.txt");
                 }
             }
             else if (cmb_FileofRoutine.SelectedIndex >= 3)
             {
-                CurrentFile = WORLDDisassembly;
+                CurrentFile += scanresource("LEDecoder.Resources.WLDCORE Disassembly.txt");
+                CurrentFile += scanresource("LEDecoder.Resources.WORLD Disassembly.txt");
             }
 
             #endregion
@@ -1267,7 +802,7 @@ namespace LEDecoder
                 if (foundstart)
                 {
                     tempstring += line + "\n";
-                    if(line.Contains("jr r31"))
+                    if (line.Contains("jr r31"))
                     {
                         break;
                     }
@@ -1287,7 +822,7 @@ namespace LEDecoder
             #endregion
             return tempstring;
         }
-        public void GetDataNotes()
+        public void GetDataNotes() //add Values
         {
             if (File.Exists(Application.StartupPath + "\\UnitDataResource.txt"))
             {
@@ -1301,135 +836,83 @@ namespace LEDecoder
                     {
                         string line = fileLines[i];
                         string[] linesplit = fileLines[i].Split(' ');
+
                         //If MainAddress Found
                         if (linesplit[0].StartsWith("80") && linesplit[0].Length == 8)
                         {
-                            MainAddresses = Add(linesplit[0], MainAddresses);
+
+                            AddMainAddress(line);
                             int current = MainAddresses.Length - 1;
-                            MainAddresses[current].Description = line.Substring(line.IndexOf("-") + 2);
-                            if (MainAddresses[current].Description.Contains("|"))
-                                MainAddresses[current].Description = MainAddresses[current].Description.Remove(MainAddresses[current].Description.IndexOf("|"));
-
-                            foreach (string s in linesplit) //linesplit = MainAddress line
-                            {
-
-                                if (s.Contains("frame=0x"))
-                                {
-                                    MainAddresses[current].AddFrame(StringToAddress(s.Replace("frame=", "")));
-                                }
-                                else if (s.Contains("frame="))
-                                {
-                                    MainAddresses[current].AddFrame(Convert.ToInt32(s.Replace("frame=", "")));
-                                }
-                                if (s.Contains("sections=0x"))
-                                {
-                                    MainAddresses[current].NumberofSections = (int)StringToAddress(s.Replace("sections=", ""));
-                                }
-                                else if (s.Contains("sections="))
-                                {
-                                    MainAddresses[current].NumberofSections = Convert.ToInt32(s.Replace("sections=", ""));
-                                }
-                                else if (s.Contains("pointedaddress="))
-                                {
-                                    MainAddresses[current].PointedAddress = StringToAddress(s.Substring(s.IndexOf("pointedaddress=") + 15));
-                                }
-
-
-                            }
                             i++;
 
                             //Begin looking for data
                             while (!fileLines[i].StartsWith("80") && fileLines[i] != "")
                             {
                                 line = fileLines[i].Replace("\t", "");   // line = subdata line
-                                linesplit = fileLines[i].Split(' ');
+                                linesplit = line.Split(' ');
 
-                                //If Subdata Found
-                                if (line.Contains(":"))
+                                //if MainAddress Doesn't have a frame, use attachedValue
+                                if(MainAddresses[current].AttachedValue != null)
                                 {
-
-                                    int currentindex = (int)StringToAddress(line.Remove(line.IndexOf(":")));
-                                    MainAddresses[current].Frame[currentindex] = new SubData();
-                                    MainAddresses[current].Frame[currentindex].offsetaddress = currentindex;
-                                    //MainAddresses[current].Frame[currentindex].description = line.Substring(line.IndexOf(":") + 2);
-
-                                    //Set Description
-                                    if (line.Length > line.IndexOf(":") + 2)
-                                        MainAddresses[current].Frame[currentindex].description =
-                                            line.Substring(line.IndexOf(":") + 2);
-                                    else
+                                    if (line.Contains(" - "))
                                     {
-                                        MainAddresses[current].Frame[currentindex].description = "";
+                                        int valueindex = (int)StringToAddress(line.Remove(line.IndexOf(" - ")));
+                                        MainAddresses[current].AttachedValue.ValueDescriptions[valueindex] = line.Substring(line.IndexOf(" - ") + 3);
                                     }
-                                    //Remove tags if present
-                                    if (line.Contains("|"))
+                                }
+                                else if (MainAddresses[current].Frame != null)
+                                {
+                                    //if data line is found
+                                    #region Data Lines (":")
+                                    if (line.Contains(":"))
                                     {
-                                        MainAddresses[current].Frame[currentindex].description = MainAddresses[current].Frame[currentindex].description.Remove(MainAddresses[current].Frame[currentindex].description.IndexOf("|"));
-                                    }
-                                    //Look for size, list, and subset
-                                    foreach (string s in linesplit)
-                                    {
-                                        if (s.Contains("size"))
+                                        int currentindex = (int)StringToAddress(line.Remove(line.IndexOf(":")));
+                                        AddFrameData(current, currentindex, line,fileLines, i);
+                                      
+                                    #endregion
+
+                                        //Move to value lines
+                                        i++;
+                                        if (i == fileLines.Length)
                                         {
-                                            int numberindex = s.IndexOf("size") + 4;
-                                            MainAddresses[current].Frame[currentindex].size = Convert.ToInt32(s.Substring(numberindex));
-                                        }
-                                        if (s.Contains("list="))
-                                        {
-                                            MainAddresses[current].Frame[currentindex].GetList(s.Substring(s.IndexOf("list=") + 5));
+                                            goto end;
                                         }
 
-                                        if (fileLines[i].Contains("subset="))
+                                        #region Value Lines
+                                        while (!fileLines[i].Contains(":") && !fileLines[i].Replace("\t", "").StartsWith("80"))
                                         {
-                                            MainAddresses[current].Frame[currentindex].IsSubset = true;
-                                            MainAddresses[current].Frame[currentindex].SubsetDescription = fileLines[i].Substring(fileLines[i].IndexOf("subset=") + 7);
-                                        }
-                                    }
-                                    i++;                                    //Move to value lines
 
-                                    if (!fileLines[i].Contains("list"))             //if list tag is found, goto next SubData
-                                    {
-                                        while (!fileLines[i].Contains(":") && i < fileLines.Length && fileLines[i] != "" && !fileLines[i].Replace("\t", "").StartsWith("80"))
-                                        {
-                                            line = fileLines[i].Replace("\t", "");
-                                            linesplit = fileLines[i].Split(' ');
+                                            AddValueDescription(current,currentindex,fileLines,i);
 
-                                            if (line.Contains("value="))
-                                            {
-                                                if (MainAddresses[current].Frame[currentindex].Values == null)
-                                                {
-                                                    MainAddresses[current].Frame[currentindex].Values = new SubData.Value[1];
-                                                }
-                                                MainAddresses[current].Frame[currentindex].AddValue();
-                                                foreach (string s in linesplit)
-                                                {
-                                                    if (s.Contains("0x"))
-                                                    {
-                                                        MainAddresses[current].Frame[currentindex].Values[MainAddresses[current].Frame[currentindex].Values.Length - 1].value
-                                                          = (int)StringToAddress(s.Replace("\t", ""));
-                                                    }
-                                                    if (s.Contains("value="))
-                                                    {
-                                                        string tempstring = s.Substring(s.IndexOf("value=") + 6);
-                                                    }
-
-                                                }
-                                            }
-                                            //Set default value
+                                           
+                                            
 
                                             i++;
-                                        }
-                                    }
-                                    i--;
+                                            if (i == fileLines.Length)
+                                            {
+                                                goto end;
+                                            }
 
-                                }//SubData Found
+                                        }
+
+                                        #endregion //Edit
+
+                                        i--;
+
+                                    }//SubData Found
+                                }
+
+                                //move to next fileLine
                                 i++;
+
                                 if (i == fileLines.Length)
                                 {
-                                    break;
+                                    goto end;
                                 }
 
                             }
+
+                            //Move to next MainAddress
                             i--;
 
                         }//Mainaddress found
@@ -1439,12 +922,35 @@ namespace LEDecoder
                 }
 
             }
+
+            end: ;
+
+            //foreach(MainAddress Main in MainAddresses)
+            //{
+            //    if(Main.AttachedValue != null)
+            //    Main.AttachedValue.SetAllValueDescriptions();
+            //    else if(Main.Frame != null)
+            //    {
+            //        foreach (SubData Data in Main.Frame)
+            //        {
+            //            if (Data != null && Data.value != null)
+            //            {
+            //                Data.value.SetAllValueDescriptions();
+            //            }
+            //        }
+            //    }
+            //}
         }
         public string Notate(string line, int lineindex)
         {
             try
             {
 
+                if (jrr31 == 1)
+                {
+                    jrr31 = 2;
+                }
+                FindRegisterState(States, line.Remove(8));
 
                 string Notation = "";
                 string[] linesplit = line.Split(' ', ',');
@@ -1456,7 +962,6 @@ namespace LEDecoder
                 string command = ExtractCommand(line);
                 string description = "";
                 long address = 0;
-
                 Notation = Indent(3);
 
                 switch (command)
@@ -1477,9 +982,17 @@ namespace LEDecoder
                     case "j":
                         linestoinsert[linestoinsert.Length - 1] = lineindex + 2;
                         Array.Resize(ref linestoinsert, linestoinsert.Length + 1);
+
+                        if (line.Length > 39)
+                            States[States.Length - 1] = new RegisterState(Registers, line.Substring(23).Remove(8));
+                        else
+                            States[States.Length - 1] = new RegisterState(Registers, line.Substring(23));
+
+                        Array.Resize(ref States, States.Length + 1);
                         break;
                     case "jr r31":
-                        Notation += "Jump to Return Address";
+                        //Notation += "Jump to Return Address";
+                        jrr31 = 1;
                         break;
                     case "jr":
                         Notation += "Jump to Address";
@@ -1489,6 +1002,13 @@ namespace LEDecoder
                         sourceregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
                         immediate = StringToAddress(linesplit[5]);
+
+
+                        if (line.Length > 39)
+                            States[States.Length - 1] = new RegisterState(Registers, line.Substring(31).Remove(8));
+                        else
+                            States[States.Length - 1] = new RegisterState(Registers, line.Substring(31));
+                        Array.Resize(ref States, States.Length + 1);
 
                         #region special notations
                         if (Registers[sourceregister].SpecialCommand == "slt" && comparedregister == 0)
@@ -1518,6 +1038,13 @@ namespace LEDecoder
                         comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
                         immediate = StringToAddress(linesplit[5]);
 
+                        if (line.Length > 39)
+                            States[States.Length - 1] = new RegisterState(Registers, line.Substring(31).Remove(8));
+                        else
+                            States[States.Length - 1] = new RegisterState(Registers, line.Substring(31));
+
+                        Array.Resize(ref States, States.Length + 1);
+
                         #region special notations
                         if (Registers[sourceregister].SpecialCommand == "slt" && comparedregister == 0)
                         {
@@ -1544,6 +1071,7 @@ namespace LEDecoder
                     #endregion
 
                     #endregion
+                    //Need to add lines after j commands
 
                     #region slt Commands
                     #region slt
@@ -1552,8 +1080,14 @@ namespace LEDecoder
                         sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
                         comparedregister = Convert.ToInt32(linesplit[5].Replace("r", ""));
 
+                        Registers[targetregister].ClearDataAttachment();
+                        Registers[targetregister].multiplier = 0;
+
                         Notation += "Set if " + Registers[sourceregister].Description + " < " +
                             Registers[comparedregister].Description;
+
+                        if (Registers[comparedregister].Description == "")
+                            Notation += "???";
 
                         if (Registers[sourceregister].Value < Registers[comparedregister].Value)
                         {
@@ -1576,6 +1110,9 @@ namespace LEDecoder
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
                         immediate = (int)StringToAddress(linesplit[5]);
+
+                        Registers[targetregister].ClearDataAttachment();
+                        Registers[targetregister].multiplier = 0;
 
                         Notation += "Set if " + Registers[sourceregister].Description + " < " +
                             immediate.ToString();
@@ -1602,6 +1139,9 @@ namespace LEDecoder
                         sourceregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
                         immediate = (int)StringToAddress(linesplit[5]);
 
+                        Registers[targetregister].ClearDataAttachment();
+                        Registers[targetregister].multiplier = 0;
+
                         if (Registers[sourceregister].Value < immediate)
                         {
                             Registers[targetregister].Value = 1;
@@ -1621,12 +1161,16 @@ namespace LEDecoder
                         break;
                     #endregion
                     #endregion
+                    //Check "Branch if so" "Branch if not" output
 
                     #region Load Commands
                     #region lui
                     case "lui":
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         immediate = StringToAddress(linesplit[4]);
+
+                        Registers[targetregister].ClearDataAttachment();
+                        Registers[targetregister].multiplier = 0;
 
                         //Notation += "r" + targetregister.ToString() + " = 0x" +
                         //    immediate.ToString("X") + "0000";
@@ -1644,46 +1188,41 @@ namespace LEDecoder
                         immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
                         address = Registers[sourceregister].Value + immediate;
 
-                        description = GetDescription(Registers[sourceregister], immediate);
+                        Registers[targetregister].multiplier = 0;
+                        Registers[targetregister].originalvalue = true;
+
+                        Registers[targetregister].AttachDataToRegister(Registers[sourceregister].Value, immediate, 4, this);
+
                         if (sourceregister == 29)
                         {
-                            description = "Stack Pointer" + immediate.ToString("X");
+                            description = "Stack" + " + 0x" + immediate.ToString("X");
                         }
-
-                        if (description != "")
+                        else if (Registers[targetregister].Subdata != null)
                         {
-                            if (Registers[sourceregister].Mainaddress != null)
-                            {
-                                if (Registers[sourceregister].Mainaddress.PointedAddress != 0)
-                                {
-                                    Registers[targetregister].Value = Registers[sourceregister].Mainaddress.PointedAddress;
-                                    if (GetMainAddressDescription(Registers[targetregister].Value) != "")
-                                    {
-                                        description = GetMainAddressDescription(Registers[targetregister].Value);
-                                    }
-                                    else
-                                    {
-                                        Registers[targetregister].SeeifIsSubsetbyAddress(Registers[targetregister].Value, this);
-                                    }
+                            if (Registers[targetregister].Subdata[0] != null)
+                                description += Registers[targetregister].Subdata[0].description;
 
-                                }
-                            }
+                            else if (Registers[targetregister].Subdata[1] != null)
+                                description += Registers[targetregister].Subdata[0].description;
 
-                            Notation += "Load " + description;
-                            Registers[targetregister].Description = description;
+                            else if (Registers[targetregister].Subdata[2] != null)
+                                description += Registers[targetregister].Subdata[0].description;
+
+                            else if (Registers[targetregister].Subdata[3] != null)
+                                description += Registers[targetregister].Subdata[0].description;
+
+                        }
+                        else if (Registers[targetregister].Mainaddress != null)
+                        {
+                            description += Registers[targetregister].Description;
                         }
                         else
                         {
-                            Notation += "Load word " + " from " + address.ToString("X");
-                            Registers[targetregister].Description = "??";
+                            description = "??" + Unknowns.Length.ToString();
                         }
+                        Notation += "Load " + description;
 
-                        Registers[targetregister].originalvalue = true;
-                        Registers[targetregister].multiplier = 0;
 
-                        //Notation += "r" + targetregister.ToString() + " = " +
-                        //     (immediate * 256 * 256).ToString("X").Remove(4);
-                        //look up new data location
                         break;
                     #endregion
                     #region lh
@@ -1692,30 +1231,37 @@ namespace LEDecoder
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
                         immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
                         address = Registers[sourceregister].Value + immediate;
 
-                        description = GetDescription(Registers[sourceregister], immediate);
+                        Registers[targetregister].multiplier = 0;
+                        Registers[targetregister].originalvalue = true;
+
+                        Registers[targetregister].AttachDataToRegister(Registers[sourceregister].Value, immediate, 2, this);
+
                         if (sourceregister == 29)
                         {
-                            description = "Stack Pointer" + " + " + immediate.ToString("X");
+                            description = "Stack" + " + 0x" + immediate.ToString("X");
                         }
-                        if (description != "")
+                       
+                        else if (Registers[targetregister].Subdata != null)
                         {
-                            Notation += "Load " + description;
-                            Registers[targetregister].Description = description;
+                            if (Registers[targetregister].Subdata[0] != null)
+                                description += Registers[targetregister].Subdata[0].description;
+
+                            else if (Registers[targetregister].Subdata[1] != null)
+                                description += Registers[targetregister].Subdata[0].description;
+
+                        }
+                        else if (Registers[targetregister].Mainaddress != null)
+                        {
+                            description += Registers[targetregister].Description;
                         }
                         else
                         {
-                            Notation += "Load half " + " from " + address.ToString("X");
-                            Registers[targetregister].Description = "??";
+                            description = "??" + Unknowns.Length.ToString();
                         }
+                        Notation += "Load " + description;
 
-                        Registers[targetregister].originalvalue = true;
-                        Registers[targetregister].multiplier = 0;
-
-                        //Notation += "r" + targetregister.ToString() + " = " +
-                        //    (immediate * 256 * 256).ToString("X");
                         break;
                     #endregion
                     #region lb
@@ -1724,18 +1270,21 @@ namespace LEDecoder
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         sourceregister = Convert.ToInt32(linesplit[4].Substring(7).Replace(")", "").Replace("(", "").Replace("r", ""));
                         immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
-
                         address = Registers[sourceregister].Value + immediate;
 
-                        description = GetDescription(Registers[sourceregister], immediate);
+                        Registers[targetregister].multiplier = 0;
+                        Registers[targetregister].originalvalue = true;
+
+                        Registers[targetregister].AttachDataToRegister(Registers[sourceregister].Value, immediate, 1, this);
+
+                        //description = GetDescription(Registers[sourceregister], immediate);
                         if (sourceregister == 29)
                         {
-                            description = "Stack" + " + " + immediate.ToString("X");
+                            description = "Stack" + " + 0x" + immediate.ToString("X");
                         }
-                        if (description != "")
+                        else if (Registers[targetregister].Description != "")
                         {
-                            Notation += "Load " + description;
-                            Registers[targetregister].Description = description;
+                            Notation += "Load " + Registers[targetregister].Description;
                         }
                         else if ((Registers[sourceregister].Value & 0x0000FFFF) == 0)
                         {
@@ -1748,17 +1297,14 @@ namespace LEDecoder
                             Registers[targetregister].Description = "??";
                         }
 
-                        Registers[targetregister].multiplier = 0;
 
-                        Registers[targetregister].originalvalue = true;
                         //    Notation += "Load " + SubDataDescription + " from " +  MainAddressDescription;
                         //Notation += "Load byte " + ((Int16)immediate).ToString("X") + " from " + Registers[targetregister].Description;
-
-                        //look up new data location
                         break;
                     #endregion
 
                     #endregion
+                    //Clear Multipliers
 
                     #region lwl/lwr/swl/swr
                     case "lwl":
@@ -1770,6 +1316,7 @@ namespace LEDecoder
                     case "swl":
                         break;
                     #endregion
+                    //null
 
                     #region Store Commands
                     #region sw
@@ -1779,25 +1326,39 @@ namespace LEDecoder
                         immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
 
                         address = Registers[targetregister].Value + immediate;
-                        if (GetDescription(Registers[targetregister], immediate) != "")
+
+                        //if(targetregister == 29)
+                        //{
+                        //    Notation += "Store on stack";
+                        //}
+
+                        if (Registers[targetregister].Mainaddress != null)
                         {
-                            description = GetDescription(Registers[targetregister], immediate);
+                           if(Registers[targetregister].Mainaddress.Frame != null)
+                           {
+
+                           }
+                           else if (Registers[targetregister].Mainaddress.AttachedValue != null)
+                           {
+                               Notation += "Store as " + Registers[targetregister].Mainaddress.Description + " = " + Registers[sourceregister].Description;
+                               //set value descriptions here
+                           }
+                        }
+                        else if (targetregister == 29)
+                        {
+                            Notation += "Store " + Registers[sourceregister].Description + " onto Stack";
+                        }
+                        else if (GetDescriptionByAddress(address) != "")
+                        {
+                            Notation += "Store " + GetDescriptionByAddress(address);
                         }
                         else
                         {
-                            description = address.ToString("X");
+                            Notation += "Store " + Registers[sourceregister].Description + " into 0x" + address.ToString("X");
                         }
 
 
-                        if (targetregister == 29)
-                        {
-                            Notation += "Store " + Registers[sourceregister].Description + " into "
-                 + Registers[targetregister].Description;
-                        }
-                        else
-                        {
-                            Notation += "Store " + description;
-                        }
+                        
 
                         break;
                     #endregion
@@ -1808,25 +1369,38 @@ namespace LEDecoder
                         immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
 
                         address = Registers[targetregister].Value + immediate;
-                        if (GetDescription(Registers[targetregister], immediate) != "")
+                   //if(targetregister == 29)
+                   //     {
+                   //         Notation += "Store on stack";
+                   //     }
+
+                        if (Registers[targetregister].Mainaddress != null)
                         {
-                            description = GetDescription(Registers[targetregister], immediate);
+                           if(Registers[targetregister].Mainaddress.Frame != null)
+                           {
+
+                           }
+                           else if (Registers[targetregister].Mainaddress.AttachedValue != null)
+                           {
+                               Notation += "Store as " + Registers[targetregister].Mainaddress.Description + " = " + Registers[sourceregister].Description;
+                               //set value descriptions here
+                           }
+                        }
+                        else if (GetDescriptionByAddress(address) != "")
+                        {
+                            Notation += "Store " + GetDescriptionByAddress(address);
                         }
                         else
                         {
-                            description = address.ToString("X");
+                            Notation += "Store " + Registers[sourceregister].Description + " into 0x" + address.ToString("X");
                         }
 
 
                         if (targetregister == 29)
                         {
-                            Notation += "Store " + Registers[sourceregister].Description + " into "
-                 + Registers[targetregister].Description;
+                            Notation += "Store " + Registers[sourceregister].Description + " onto Stack";
                         }
-                        else
-                        {
-                            Notation += "Store " + description;
-                        }
+
 
                         break;
                     #endregion
@@ -1837,33 +1411,51 @@ namespace LEDecoder
                         immediate = StringToAddress(linesplit[4].Remove(linesplit[4].IndexOf("(")));
 
                         address = Registers[targetregister].Value + immediate;
-                        if (Registers[targetregister].SubsetOffset != 0)
+
+                        //if (Registers[targetregister].SubsetOffset != 0)
+                        //{
+                        //    immediate += Registers[targetregister].SubsetOffset;
+                        //}
+
+
+                      //if(targetregister == 29)
+                      //  {
+                      //      Notation += "Store on stack";
+                      //  }
+                        
+
+                        if (Registers[targetregister].Mainaddress != null)
                         {
-                            immediate += Registers[targetregister].SubsetOffset;
+                           if(Registers[targetregister].Mainaddress.Frame != null)
+                           {
+
+                           }
+                           else if (Registers[targetregister].Mainaddress.AttachedValue != null)
+                           {
+                               Notation += "Store as " + Registers[targetregister].Mainaddress.Description + " = " + Registers[sourceregister].Description;
+                               //set value descriptions here
+                           }
                         }
-                        if (GetDescription(Registers[targetregister], immediate) != "")
+                        else if (GetDescriptionByAddress(address) != "")
                         {
-                            description = GetDescription(Registers[targetregister], immediate);
+                            Notation += "Store " + GetDescriptionByAddress(address);
                         }
                         else
                         {
-                            description = address.ToString("X");
+                            Notation += "Store " + Registers[sourceregister].Description + " into 0x" + address.ToString("X");
                         }
 
 
                         if (targetregister == 29)
                         {
-                            Notation += "Store " + Registers[sourceregister].Description + " into "
-                 + Registers[targetregister].Description;
+                            Notation += "Store " + Registers[sourceregister].Description + " onto Stack";
                         }
-                        else
-                        {
-                            Notation += "Store " + description;
-                        }
+
 
                         break;
                     #endregion
                     #endregion
+                    //Add backchecking for ???# and rX input
 
                     #region Arithmatic Commands
                     #region addu
@@ -1904,17 +1496,17 @@ namespace LEDecoder
                             Notation += Registers[sourceregister].Description + " * 0x" + Registers[sourceregister].multiplier.ToString("X") + " (" + Registers[sourceregister].multiplier.ToString() + ")";
                         }
                         //adding frame pointer to base address
-                        else if (Registers[sourceregister].multiplier > 0 && GetDescription(Registers[comparedregister], 0) != "")
+                        else if (Registers[sourceregister].multiplier > 0 && Registers[comparedregister].GetDescription(this) != "")
                         {
                             Registers[targetregister].Value = Registers[comparedregister].Value;
 
-                            Notation += GetDescription(Registers[targetregister], Registers[sourceregister].multiplier);
+                            Notation += Registers[comparedregister].Description;
 
-                            Registers[targetregister].Description = Registers[targetregister].Mainaddress.Description;
+                            Registers[targetregister].Description = Registers[comparedregister].Description;
 
                             if (Registers[sourceregister].Description.Contains("Input"))
                             {
-                                SetInput(Registers[sourceregister].Description, GetDescription(Registers[comparedregister], 0));
+                                //SetInput(Registers[sourceregister].Description, GetDescription(Registers[comparedregister], 0));
                                 //Set Input Value based on what we found in routine.
                             }
                             // Registers[sourceregister].Description.Remove(Registers[sourceregister].Description.IndexOf("*");
@@ -1946,8 +1538,6 @@ namespace LEDecoder
                         //comparedregister = 0;
                         immediate = StringToAddress(linesplit[5]);
 
-
-
                         #region Stack Adjustment
                         if (sourceregister == 29 && targetregister == 29)
                         {
@@ -1974,29 +1564,36 @@ namespace LEDecoder
                             // immediate -= 0x8000;
                         }
 
-                        Registers[targetregister].Value = Registers[sourceregister].Value + immediate;
+                         Registers[targetregister].Value = Registers[sourceregister].Value + immediate;
+                         Registers[targetregister].GetDescription(this);
 
-                        if (SeeifIsSubset(Registers[sourceregister].Value, immediate) != "")
+                        if (sourceregister == 29 && targetregister != 29)
+                        {
+                            Notation += "Load ??? from stack";
+                        }
+                        else if (Registers[targetregister].Mainaddress != null)
+                        {
+                            Notation += Registers[targetregister].Description;
+                        }
+                        else if (SeeifIsSubset(Registers[sourceregister].Value, immediate) != "")
                         {
                             Registers[targetregister].Description = SeeifIsSubset(Registers[sourceregister].Value, immediate);
-                        }
-                        else if (GetDescription(Registers[targetregister], 0) != "")
-                        {
-                            Registers[targetregister].Description = GetDescription(Registers[targetregister], immediate);
+                            Notation += Registers[targetregister].Description;
                         }
                         else if (Registers[sourceregister].Description.StartsWith("0x"))
                         {
-                            Registers[targetregister].Description = ((Int32)Registers[targetregister].Value).ToString("X");
+                            Registers[targetregister].Description = Registers[targetregister].Value.ToString("X");
+                            Notation += Registers[targetregister].Description;
                         }
                         else
                         {
                             Registers[targetregister].Description = "0x" + ((Int32)Registers[targetregister].Value).ToString("X");
+                            Notation += Registers[targetregister].Description;
                         }
 
-
                         Registers[targetregister].originalvalue = false;
+                        Registers[targetregister].multiplier = 0;
 
-                        Notation += Registers[targetregister].Description;
 
 
                         //Registers[targetregister].Description = Registers[sourceregister].Description + zeromod + immediate.ToString("X");
@@ -2128,13 +1725,14 @@ namespace LEDecoder
                         Registers[31].Description = Registers[comparedregister].Description + " *  " + Registers[targetregister].Description;
 
                         //Store upper 32 bits in Hi
-
+                        Notation += "\t";
                         Notation += Registers[targetregister].Description + " * " + Registers[comparedregister].Description;
                         break;
                     case "multu":
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
 
+                        Notation += "\t";
                         //Store Lower 32 bits in Lo
                         Registers[31].Value = Registers[comparedregister].Value * Registers[targetregister].Value;
                         Registers[31].Description = Registers[comparedregister].Description + " *  " + Registers[targetregister].Description;
@@ -2150,6 +1748,7 @@ namespace LEDecoder
                     case "div":
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        Notation += "\t";
 
                         Registers[32].Value = Registers[comparedregister].Value / Registers[targetregister].Value;
                         Registers[32].Description = Registers[comparedregister].Description + " / " + Registers[targetregister].Description;
@@ -2164,6 +1763,7 @@ namespace LEDecoder
                     case "divu":
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
                         comparedregister = Convert.ToInt32(linesplit[4].Replace("r", ""));
+                        Notation += "\t";
 
                         Registers[32].Value = Registers[comparedregister].Value / Registers[targetregister].Value;
                         Registers[32].Description = Registers[comparedregister].Description + " /  " + Registers[targetregister].Description;
@@ -2178,7 +1778,7 @@ namespace LEDecoder
                     #region mflo/mfhi
                     case "mflo":
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-
+                        Notation += "\t";
                         Registers[targetregister].Value = Registers[32].Value;
                         Registers[targetregister].Description = Registers[32].Description;
                         Notation += Registers[32].Description;
@@ -2186,7 +1786,7 @@ namespace LEDecoder
                         break;
                     case "mfhi":
                         targetregister = Convert.ToInt32(linesplit[3].Replace("r", ""));
-
+                        Notation += "\t";
                         Registers[targetregister].Value = Registers[32].Value;
                         Registers[targetregister].Description = Registers[32].Description;
                         Notation += Registers[32].Description;
@@ -2194,6 +1794,7 @@ namespace LEDecoder
                         break;
                     #endregion
                     #endregion
+                    //Clearing Data/Multipliers?
 
                     #region Logic Commands
                     #region or
@@ -2398,27 +1999,238 @@ namespace LEDecoder
                         break;
                     #endregion
                     #endregion
+                    //Clearing Data/Multipliers?
+                    //Value Removing/Adding for andi and ori
+
 
                     case "":
                         break;
                 }
-
                 return Notation;
             }
             catch (Exception Ex)
             {
-                return "Exception";
+                return "\t\t\tException";
+            }
+        }
+
+       
+        private void AddFrameData(int current, int currentindex, string line, string[] fileLines, int i)
+        {
+            string[] linesplit = line.Split(' ');
+            MainAddresses[current].Frame[currentindex] = new SubData();
+            MainAddresses[current].Frame[currentindex].offsetaddress = currentindex;
+            MainAddresses[current].Frame[currentindex].value = new Value();
+
+            //Set Description
+            if (line.Length > line.IndexOf(":") + 2)
+                MainAddresses[current].Frame[currentindex].description =
+                    line.Substring(line.IndexOf(":") + 2);
+            else
+            {
+                MainAddresses[current].Frame[currentindex].description = "??";
+            }
+
+            //Remove tags if present
+            if (line.Contains("|"))
+            {
+                MainAddresses[current].Frame[currentindex].description = MainAddresses[current].Frame[currentindex].description.Remove(MainAddresses[current].Frame[currentindex].description.IndexOf("|"));
+            }
+
+            //Look for size, list, and subset
+            foreach (string s in linesplit)
+            {
+                //if (s.Contains("size"))
+                //{
+                //    int numberindex = s.IndexOf("size") + 4;
+                //    MainAddresses[current].Frame[currentindex].size = Convert.ToInt32(s.Substring(numberindex));
+                //}
+                if (s.Contains("list="))
+                {
+                    string type = s.Substring(s.IndexOf("list=") + 5);
+                    long startindex = 0;
+                    long endindex = 0;
+                    if(type.Contains("("))
+                    {
+                        type = s.Substring(s.IndexOf("list=") + 5).Remove(s.IndexOf("(")-5);
+
+                        string temp = s.Substring(s.IndexOf("(") + 1);
+                        temp = temp.Remove(temp.IndexOf("-"));
+                        startindex = StringToAddress("0x" + temp);
+
+                        temp = s.Substring(s.IndexOf("-") + 1);
+                        temp = temp.Remove(temp.IndexOf(")"));
+                        endindex = StringToAddress("0x" + temp);
+                    }
+                    else
+                    {
+                        type = s.Substring(s.IndexOf("list=") + 5);
+                    }
+
+                    MainAddresses[current].Frame[currentindex].value.SetValueDescriptions(type,startindex,endindex);
+                    MainAddresses[current].Frame[currentindex].value.GetList(s.Substring(s.IndexOf("list=") + 5));
+                }
+
+
+                if (fileLines[i].Contains("subset="))
+                {
+                    MainAddresses[current].Frame[currentindex].IsSubset = true;
+                    MainAddresses[current].Frame[currentindex].SubsetDescription = fileLines[i].Substring(fileLines[i].IndexOf("subset=") + 7);
+                }
+
+            }
+        }
+        public void AddMainAddress(string line)
+        {
+
+            string[] linesplit = line.Split(' ');
+
+            MainAddresses = Add(linesplit[0], MainAddresses);
+            int current = MainAddresses.Length - 1;
+            MainAddresses[current].Description = line.Substring(line.IndexOf("-") + 2);
+
+            if (MainAddresses[current].Description.Contains("|"))
+                MainAddresses[current].Description = MainAddresses[current].Description.Remove(MainAddresses[current].Description.IndexOf("|"));
+
+            MainAddresses[current].AttachedValue = new Value();
+
+            foreach (string s in linesplit) //linesplit = MainAddress line
+            {
+
+                if (s.Contains("pointedaddress="))
+                {
+                    MainAddresses[current].PointedAddress = StringToAddress(s.Substring(s.IndexOf("pointedaddress=") + 15));
+                    MainAddresses[current].AttachedValue = null;
+                    MainAddresses[current].Frame = null;
+                }
+
+                else if (s.Contains("frame=0x")) // If frame exists
+                {
+                    MainAddresses[current].AddFrame(StringToAddress(s.Replace("frame=", "")));
+                    MainAddresses[current].AttachedValue = null;
+                }
+                else if (s.Contains("frame="))
+                {
+                    MainAddresses[current].AddFrame(Convert.ToInt32(s.Replace("frame=", "")));
+                    MainAddresses[current].AttachedValue = null;
+                }
+
+                //if (s.Contains("sections=0x"))
+                //{
+                //    MainAddresses[current].NumberofSections = (int)StringToAddress(s.Replace("sections=", ""));
+                //}
+                //else if (s.Contains("sections="))
+                //{
+                //    MainAddresses[current].NumberofSections = Convert.ToInt32(s.Replace("sections=", ""));
+                //}
+                    
+                else if (s.Contains("list="))
+                {
+                    MainAddresses[current].AttachedValue = new Value();
+
+                    string type;
+                    long startindex;
+                    long endindex;
+
+                    if(s.Contains("("))
+                    {
+                         type = s.Substring(s.IndexOf("list=") + 5).Remove(s.IndexOf("("));
+                         startindex = StringToAddress("0x" + s.Substring(s.IndexOf("(") + 5).Remove(s.IndexOf("-")));
+                         endindex = StringToAddress("0x" + s.Substring(s.IndexOf("-") + 1).Remove(s.IndexOf(")")));
+                    }
+                    else
+                    {
+                         type = s.Substring(s.IndexOf("list=") + 5);
+                         startindex = 0;
+                         endindex = 0;
+                    }
+
+                    MainAddresses[current].AttachedValue.SetValueDescriptions(type, (int)startindex, (int)endindex);
+                    MainAddresses[current].Frame = null;
+
+                }
+                //else if (s.Contains("S="))
+                //{
+                //    MainAddresses[current].AttachedValue.size = Convert.ToInt32(s.Substring(s.IndexOf("S=") + 2));
+                //}
+                //else
+                //{
+                //    MainAddresses[current].AttachedValue.size = 1;
+                //}
+
+
+            }
+        }
+            //sets values for mainaddress only stuff
+        private void AddValueDescription(int current, int currentindex, string[] fileLines, int i)
+        {
+            string line = fileLines[i].Replace("\t", "");
+            string[] linesplit = fileLines[i].Split(' ');
+            long valueindex = 0;
+            foreach (string s in linesplit)
+            {
+                if (s.Contains("0x"))
+                {
+                    valueindex = StringToAddress(s);
+                }
+            }
+
+            if(MainAddresses[current].Frame[currentindex].value == null)
+            {
+                MainAddresses[current].Frame[currentindex].value = new Value();
+            }
+
+            if (line.Length > line.IndexOf("-") + 2)
+            {
+                MainAddresses[current].Frame[currentindex].value.ValueDescriptions[(int)valueindex] = line.Remove(line.IndexOf("-") + 2);
+            }
+            else
+            {
+                MainAddresses[current].Frame[currentindex].value.ValueDescriptions[(int)valueindex] = "??";
+            }
+
+        }
+        private string GetDescriptionByAddress(long Address)
+        {
+            Address = Address & 0x7FFFFFFF;
+            foreach(MainAddress Main in MainAddresses)
+            {
+                if (Main.Address == Address)
+                {
+                    return Main.Description;
+                }
             }
             return "";
         }
-
+        
+        public void GetReturnValue(long JalAddress)
+        {
+            switch (JalAddress)
+            {
+                case 0x001810a0: // Get Map Tile Data
+                    Registers[2].AttachDescriptiontoRegister("Map Location Tile ID");
+                    Registers[2].Value = 0;
+                    break;
+            }
+        }
+        public void SetInput(string register, string maindata)
+        {
+            for (int i = 0; i < Registers.Length; i++)
+            {
+                if (Registers[i].Name == register.Remove(register.IndexOf("Input") - 1))
+                {
+                    Registers[i].Inputis = maindata + "ID";
+                }
+            }
+        }
+        
         public string[] Insert(string[] Source, int lineindex)
         {
             string[] newSource = new string[Source.Length + 1];
             int indexfound = 0;
-            for(int j = 0;j < newSource.Length;j++)
+            for (int j = 0; j < newSource.Length; j++)
             {
-                if(j != lineindex)
+                if (j != lineindex)
                 {
                     newSource[j] = Source[j - indexfound];
                 }
@@ -2430,6 +2242,18 @@ namespace LEDecoder
             }
             return newSource;
         }
+        public string[] AddLine(string[] Source, string line)
+        {
+            string[] NewSource = new string[Source.Length + 1];
+            for (int i = 0; i < Source.Length; i++)
+            {
+                NewSource[i] = Source[i];
+            }
+
+            NewSource[NewSource.Length - 1] = line;
+            return NewSource;
+
+        }
         public string ExtractCommand(string command)
         {
             #region Get command
@@ -2437,7 +2261,7 @@ namespace LEDecoder
             {
                 command = "j";
             }
-            else if(command.Contains("jal 0x"))
+            else if (command.Contains("jal 0x"))
             {
                 command = "jal";
             }
@@ -2608,63 +2432,28 @@ namespace LEDecoder
             return command;
             #endregion
         }
-        public void SetInput(string register, string maindata)
+        
+        public string SeeifIsSubset(long MainAddress, long Offset)
         {
-            for(int i = 0;i < Registers.Length;i++)
-            {
-                if(Registers[i].Name == register.Remove(register.IndexOf("Input") - 1))
-                {
-                    Registers[i].Inputis = maindata + "ID";
-                }
-            }
-        }
-        public void GetReturnValue(long JalAddress)
-        {
-            switch(JalAddress)
-            {
-                case 0x001810a0: // Get Map Tile Data
-                    Registers[2].AttachDescriptiontoRegister("Map Location Tile ID");
-                    Registers[2].Value = 0;
-                    break;
-            }
-        }
-       
-        public string GetDescription(Register Reg, long Offset)
-        {
-            long MainAddress = Reg.Value;
-            MainAddress = MainAddress & 0x7FFFFFFF;
-            string result = "";
-            long wholeaddress = MainAddress + Offset;
             foreach (MainAddress Main in MainAddresses)
             {
-                if (Main.Address == MainAddress || Main.Address == wholeaddress)
+                MainAddress &= 0x7fffffff;
+                if (Main.Frame != null)
                 {
-                    Reg.Mainaddress = Main;
-                    Reg.AttachAddresstoRegister(Main.Address, this);
-
-                    if(Main.Frame != null)
+                    if (Main.Address == MainAddress && Main.Frame.Length >= Offset)
                     {
-                        if (Main.Frame.Length == Offset)
+                        if (Main.Frame[Offset] != null)
                         {
-                            result = "this " + Main.Description;
-                        }
-                        else
-                        {
-                            result = GetSubDataDescription(MainAddress, Offset);
-                           
-                            if (result == "")
+                            if (Main.Frame[Offset].IsSubset)
                             {
-                                result = "?? from " + Main.Description;
-                            }
-                            else
-                            {
-                                Reg.AttachDatatoRegister(MainAddress, Offset, this);
+
+                                return Main.Frame[Offset].SubsetDescription;
                             }
                         }
                     }
                 }
             }
-            return result;
+            return "";
         }
         public long GetFrameSize(long MainAddress)
         {
@@ -2674,7 +2463,7 @@ namespace LEDecoder
             {
                 if (Main.Address == MainAddress)
                 {
-                   
+
                     if (Main.Frame != null)
                     {
                         result = Main.Frame.Length;
@@ -2685,72 +2474,10 @@ namespace LEDecoder
             }
             return result;
         }
-        public string GetSubDataDescription(long MainAddress, long Offset)
-        {
-            string result = "";
-            foreach(MainAddress Main in MainAddresses)
-            {
-                if (Main.Address == MainAddress)
-                {
-                    foreach(SubData Data in Main.Frame)
-                    {
-                        if(Data != null)
-                        {
-                            if (Data.offsetaddress == Offset)
-                            {
-                                result = Data.description;
-                            }
-                        }
-                        
-                    }
-                }
-                
-            }
-            return result;
-        }
-        public string GetMainAddressDescription(long MainAddress)
-        {
-            string result = "";
-            foreach (MainAddress Main in MainAddresses)
-            {
-                if (Main.Address == MainAddress)
-                {
-                    result = Main.Description;
-                }
-            }
-            return result;
-        }
-        public string SeeifIsSubset(long MainAddress, long Offset)
-        {
-            foreach(MainAddress Main in MainAddresses)
-            {
-                MainAddress &= 0x7fffffff;
-                if(Main.Frame != null)
-                {
-                    if (Main.Address == MainAddress && Main.Frame.Length >= Offset)
-                    {
 
-                        if(Main.Frame[Offset] != null)
-                        {
-                            if(Main.Frame[Offset].IsSubset)
-                            {
-                                return Main.Frame[Offset].SubsetDescription;
-                            }
-                        }
-                    }
-                }
-            }
-            return "";
-        }
-        
-        public void StoreValueinMainAddress(long address, long value)
-        {
-         
-        }
-       
         public MainAddress[] Add(string instring, MainAddress[] MainAddresses)
         {
-            if(MainAddresses == null)
+            if (MainAddresses == null)
             {
                 MainAddresses = new MainAddress[1];
                 MainAddresses[MainAddresses.Length - 1] = new MainAddress(instring);
@@ -2760,9 +2487,10 @@ namespace LEDecoder
                 Array.Resize(ref MainAddresses, MainAddresses.Length + 1);
                 MainAddresses[MainAddresses.Length - 1] = new MainAddress(instring);
             }
-          
+
             return MainAddresses;
         }
+
         public void InitializeRegisters()
         {
             foreach (Register reg in Registers)
@@ -2784,7 +2512,7 @@ namespace LEDecoder
                 }
                 if (reg.Name == "r29")
                 {
-                    reg.Description = "Stack Pointer";
+                    reg.Description = "Stack";
                 }
                 if (reg.Name == "r32")
                 {
@@ -2806,18 +2534,453 @@ namespace LEDecoder
                 }
             }
         }
-        
+        public void FindRegisterState(RegisterState[] RegisterStates, string Address)
+        {
+            if(RegisterStates[0] != null)
+            {
+                for (int i = 0; i < RegisterStates.Length - 1; i++)
+                {
+                    if (Address == RegisterStates[i].destinationaddress)
+                    {
+                        RegisterStates[i].Set(this);
+                        RegisterStates[i].destinationaddress = "Done";
+                    }
+                }
+            }
+         
+        }
+
         public long Exponent(long basenumber, long exponent)
         {
             long result = 1;
-            for (int i = 0;i < exponent;i++)
+            for (int i = 0; i < exponent; i++)
             {
-                 result = result * basenumber;
+                result = result * basenumber;
             }
             return result;
         }
         #endregion
 
+        #endregion
+
+        #region Main Functions
+        private void DecodeASM()
+        {
+            DrawLED(Color.Orange);
+            pic_LED.Refresh();
+
+            string strStartPC = txt_StartingAddress.Text;
+
+            int decodeResult = _asmUtility.DecodeASMToFile(txt_InputFile.Text, txt_OutputFile.Text, chk_LittleEndian.Checked, chk_NameRegisters.Checked, strStartPC);
+            switch (decodeResult)
+            {
+                case ASMFileDecoderResult.Success: DrawLED(Color.Green); break;
+                case ASMFileDecoderResult.FileOpenError: DrawLED(Color.Red); break;
+                case ASMFileDecoderResult.ASMDecodeError: DrawLED(Color.Red); break;
+                default: break;
+            }
+        }
+        private void JalFind()
+        {
+            DrawLED(Color.Orange);
+            pic_LED.Refresh();
+
+            string SCUSWiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt");
+            string BATTLEWiki = scanresource("LEDecoder.Resources.BATTLEWIKI.txt");
+            string WORLDWiki = scanresource("LEDecoder.Resources.WORLDWIKI.txt");
+            string WLDCOREWiki = scanresource("LEDecoder.Resources.WLDCOREWIKI.txt");
+            string REQUIREWiki = scanresource("LEDecoder.Resources.REQUIREWIKI.txt");
+            string EQUIPWiki = scanresource("LEDecoder.Resources.EQUIPWIKI.txt");
+            
+            #region Main Jalfinder Function
+            if (txt_OutputFile.Text != "")
+            {
+                StreamWriter sw;
+                if(checkBox1.Checked)
+                {
+                    sw = File.CreateText(txt_OutputFile.Text);
+                }
+                else
+                {
+                    sw = File.AppendText(txt_OutputFile.Text);
+                }
+
+                using (sw)
+                {
+                    long address = StringToAddress(txt_StartingAddress.Text);
+                    string routine = GetRoutineFromDisassembly();
+
+                    string[] RoutineLines = ToLines(routine);
+                    string tempstring = "";
+                    int lineindex = 0;
+                    string startaddress = ReformatAddress(txt_StartingAddress.Text);
+
+                    sw.Write(txt_StartingAddress.Text + ":" + Indent(2)  + GetRoutineDescription(txt_StartingAddress.Text));
+
+                    sw.WriteLine("\r");
+
+                    string description = "";
+                    string jaladdress = "";
+                    int index = lineindex;
+                    for (index = lineindex; index < RoutineLines.Length; index++)
+                    {
+                        tempstring = RoutineLines[index];
+                        if(tempstring.Contains("jal"))
+                        {
+                            if(tempstring.Contains("jalr"))
+                            {
+                                sw.WriteLine(Indent(1) + "jalr");
+                            }
+                            else
+                            {
+                                    jaladdress = tempstring.Substring(25, 8);
+                                    description = GetRoutineDescription(jaladdress);
+                                    jaladdress = Indent(1) + jaladdress;
+                                   
+                                    //jaladdress = jaladdress.Replace(" ", "");
+
+
+                                    sw.WriteLine(jaladdress + ": " + description + "\r");
+                            }
+                         }
+                        else if (tempstring.Contains("jr r31"))
+                        {
+                            break;
+                        }
+                    }
+                    sw.WriteLine("\r\n");
+                }
+                if(JalFindButton.Checked)
+                {
+                    Process[] processes = Process.GetProcesses();
+                    foreach (Process p in Process.GetProcesses())
+                    {
+                        if (p.ProcessName == "notepad")
+                        {
+                            string title = txt_OutputFile.Text.Substring(txt_OutputFile.Text.LastIndexOf("\\") + 1).Replace(".txt", "");
+                            if (p.MainWindowTitle.Contains(title))
+                            {
+                                p.Kill();
+                            }
+                        }
+                    }
+                    Process process = new Process();
+                    Process.Start("notepad.exe", txt_OutputFile.Text);
+                }
+              
+            fail: ;
+            }
+            #endregion
+
+            DrawLED(Color.Green);
+        }
+        private void PrintHex()
+        {
+            DrawLED(Color.Orange);
+            pic_LED.Refresh();
+
+            try
+            {
+                using (BinaryReader b = new BinaryReader(File.Open(txt_InputFile.Text, FileMode.Open)))
+                {
+                    BinaryWriter bw = new BinaryWriter(File.Open(txt_OutputFile.Text, FileMode.OpenOrCreate));
+                    string[] output = new string[1];
+                    long length = ReadHexOrDec(txt_Length.Text);
+                    b.BaseStream.Position = StringToAddress(txt_StartingAddress.Text);
+                    for (long i = b.BaseStream.Position; i < StringToAddress(txt_StartingAddress.Text) + length; i++)
+                    {
+                        byte[] Word = b.ReadBytes((int)ReadHexOrDec(txt_BPLbox.Text));
+
+                        string WordtoPrint = "";
+
+                        if (chk_SpaceBox.Checked)
+                        {
+                            WordtoPrint = BitConverter.ToString(Word).Replace("-", " ");
+                        }
+                        else
+                        {
+                            WordtoPrint = BitConverter.ToString(Word).Replace("-", "");
+                        }
+
+
+                        output[output.Length - 1] = WordtoPrint;
+                        Array.Resize(ref output, output.Length + 1);
+
+
+                    }
+                    File.WriteAllLines(txt_OutputFile.Text + ".txt", output);
+                    //Use BIN file. derp
+
+                    //string[] Output = new string[Convert.ToInt32(txt_Length.Text) / 4];
+                    //int startingaddress = Convert.ToInt32(txt_StartingAddress.Text) / 4;
+
+
+                    //string line = "";
+                    //long address = 0;
+                    //for (int j = 0; j < AllLines.Length; j++)
+                    //{
+                    //    line = AllLines[j].Remove(8);
+                    //    address = Convert.ToInt32(line);
+                    //    startingaddress = j;
+                    //}
+
+
+                    //for (int i = startingaddress; i < startingaddress + length; i++)
+                    //{
+                    //    Output[i - startingaddress] = AllLines[i].Substring(10).Remove(18);
+                    //    if (chk_LittleEndian.Checked)
+                    //    {
+                    //        Output[i - startingaddress] = ReverseBytes(Output[i - startingaddress]);
+                    //    }
+                    //}
+
+                    //File.WriteAllLines(txt_OutputFile.Text + ".txt", Output);
+                    bw.Close();
+                    b.Close();
+                }
+
+                DrawLED(Color.Green);
+            }
+            catch (Exception ex)
+            {
+                DrawLED(Color.Red);
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        private void CollapseRoutines()
+        {
+            DrawLED(Color.Orange);
+            pic_LED.Refresh();
+
+            bool started = false;
+            string[] AllLines = File.ReadAllLines(txt_InputFile.Text);
+
+            int i = 0;
+            int count = 0;
+
+            while (AllLines[i] != null)
+            {
+                string line = AllLines[i];
+                if (line.IndexOf(":") > 0)
+                {
+                    if (started && line.Contains("jr r31") && AllLines[i + 2] == "")
+                    {
+                        started = false;
+                        AllLines = Delete(AllLines, i);
+                        AllLines[i - 1] += line.Remove(9);
+                        AllLines = Delete(AllLines, i);
+                        goto end;
+                    }
+                    if (started)
+                    {
+                        AllLines = Delete(AllLines, i);
+                    }
+                    if (!started)
+                    {
+                        if (line[0] == '0')
+                        {
+                            started = true;
+                            AllLines[i] = line.Remove(8) + " - ";
+                        }
+                        i++;
+                    }
+                end: ;
+                }
+                else if (started)
+                {
+                    AllLines = Delete(AllLines, i);
+                }
+                else
+                {
+                    started = false;
+                    i++;
+                }
+            }
+            string[] NewAllLines = AllLines;
+            File.WriteAllLines(txt_OutputFile.Text + ".txt", AllLines);
+            //AllLines.RemoveEmptyLines();
+            DrawLED(Color.Green);
+        }
+        private void UpdateWikiFile()
+        {
+            DrawLED(Color.Orange);
+            pic_LED.Refresh();
+
+            bool started = false;
+            bool begin = false; 
+
+            string[] AllLines = File.ReadAllLines(txt_InputFile.Text);
+            string[] routinelines = new string[1];
+            routinelines[0] = "";
+
+            int i = 0;
+            int count = 0;
+
+            while (AllLines[i] != null)
+            {
+                string line = AllLines[i];
+                if (line == "")
+                goto skip;
+                
+                if (!started && line[0] == '`')
+                {
+                        begin = true;
+                        started = true;
+                        line = line.Substring(1);
+                        Routines[0] = new LEDecoder.CollapseRoutines.Routine(line);
+
+                        Routines[0].TitleLine = line.Remove(8) + " - ";
+                        //AllLines[i] = line.Remove(8) + " - ";
+                       
+                        
+                }
+                else if(!started && begin)
+                {
+                    started = true;
+                    Routines[Routines.Length - 1] = new LEDecoder.CollapseRoutines.Routine(line);
+
+                    Routines[Routines.Length - 1].TitleLine = line.Remove(8) + " - ";
+                    //Array.Resize(ref Routines, Routines.Length + 1);
+                    
+                }
+
+                else if (started && line.Contains("jr r31"))
+                {
+                    started = false;
+
+                    Routines[Routines.Length - 1].Add(AllLines[i]);
+                    Routines[Routines.Length - 1].Add(AllLines[i + 1]);
+                    Routines[Routines.Length - 1].TitleLine += AllLines[i + 1].Remove(9);
+                    Array.Resize(ref Routines, Routines.Length + 1);
+                    i++;
+                }
+                else if (started)
+                {
+                    Routines[Routines.Length - 1].Add(AllLines[i]);
+                    
+                }
+            skip: ;
+                i++;
+
+                if(AllLines.Length == i)
+                    break;
+            }
+
+            //Arrive here with Routine disassembly in Routines array
+            //Title in Routine class is just the start and end address so far.
+
+            LEDecoder.CollapseRoutines.Browser Browserform = new LEDecoder.CollapseRoutines.Browser(this);
+            Browserform.Show();
+            //AllLines.RemoveEmptyLines();
+            DrawLED(Color.Green);
+        }
+        private void AutoNotate()
+        {
+            JalFind();
+
+            #region Get Disassemblies and wiki files
+            string SCUSDisassembly = scanresource("LEDecoder.Resources.SCUS Disassembly.txt");
+            string[] SCUSLines = ToLines(SCUSDisassembly);
+
+            string BATTLEDisassembly = scanresource("LEDecoder.Resources.BATTLE Disassembly.txt");
+            string[] BATTLELines = ToLines(BATTLEDisassembly);
+
+            string WORLDDisassembly = scanresource("LEDecoder.Resources.WORLD Disassembly.txt");
+            string[] WORLDLines = ToLines(WORLDDisassembly);
+
+            string WLDCOREDisassembly = scanresource("LEDecoder.Resources.WLDCORE Disassembly.txt");
+            string[] WLDCORELines = ToLines(WLDCOREDisassembly);
+
+            string REQUIREDisassembly = scanresource("LEDecoder.Resources.REQUIRE Disassembly.txt");
+            string[] REQUIRELines = ToLines(REQUIREDisassembly);
+
+            string EQUIPDisassembly = scanresource("LEDecoder.Resources.EQUIP Disassembly.txt");
+            string[] EQUIPLines = ToLines(EQUIPDisassembly);
+            string SCUSWiki = scanresource("LEDecoder.Resources.SCUSWIKI.txt");
+            string BATTLEWiki = scanresource("LEDecoder.Resources.BATTLEWIKI.txt");
+            string WORLDWiki = scanresource("LEDecoder.Resources.WORLDWIKI.txt");
+            string WLDCOREWiki = scanresource("LEDecoder.Resources.WLDCOREWIKI.txt");
+            string REQUIREWiki = scanresource("LEDecoder.Resources.REQUIREWIKI.txt");
+            string EQUIPWiki = scanresource("LEDecoder.Resources.EQUIPWIKI.txt");
+            
+            #endregion
+
+            #region Main Autonotator Function
+            if (txt_OutputFile.Text != "")
+            {
+                StreamWriter sw;
+                sw = File.AppendText(txt_OutputFile.Text);
+              
+                using (sw)
+                {
+                    string tempstring = "";
+                    sw.WriteLine(txt_StartingAddress.Text +": " + Indent(3) + GetRoutineDescription(txt_StartingAddress.Text) + "\n");
+                    //InitializeRegisters();
+                    PrintRegisterDescriptions(sw);
+                  
+                    string RoutineDisassembly = GetRoutineFromDisassembly();
+                    string[] RoutineLines = ToLines(RoutineDisassembly);
+
+                    int i = 0;
+
+                    //For each Command
+                    foreach(string line in RoutineLines)
+                    {
+                        if(jrr31 == 2)
+                        {
+                            break;
+                        }
+                        if(jalcommandcounter != 0)
+                        {
+                            jalcommandcounter++;
+                            if(jalcommandcounter == 2)
+                            {
+                                Registers[2].Description = "ReturnValue";
+                                jalcommandcounter = 0;
+                            }
+                        }
+
+                        tempstring = Notate(line,i);
+                        sw.WriteLine(line + tempstring + "\n");
+                    }
+                    int count = 0;
+                    //insert spaces after jump and branch commands
+                    for(i=0;i < RoutineLines.Length + count;i++)
+                    {
+                        foreach(int index in linestoinsert)
+                        {
+                            if (i + count == index + count)
+                            {
+                                RoutineLines = Insert(RoutineLines, i + count);
+                                count++;
+                            }
+                        }
+                    }
+
+                    //Change Input values that were figured out during routine
+
+                }
+
+                Process[] processes = Process.GetProcesses();
+                foreach (Process p in Process.GetProcesses())
+                {
+                    if (p.ProcessName == "notepad")
+                    {
+                        string title = txt_OutputFile.Text.Substring(txt_OutputFile.Text.LastIndexOf("\\") + 1).Replace(".txt", "");
+                        if (p.MainWindowTitle.Contains(title))
+                        {
+                            p.Kill();
+                        }
+                    }
+                }
+                Process process = new Process();
+                Process.Start("notepad.exe", txt_OutputFile.Text);
+                InitializeRegisters();
+            }
+            #endregion
+        }
+        #endregion
+       
         private void btn_AutoNotateForm_Click(object sender, EventArgs e)
         {
             Autonotator An2 = new Autonotator(this);
@@ -2825,6 +2988,12 @@ namespace LEDecoder
             An.Show(); //Set initial register values
         }
 
-     
+        private void button1_Click(object sender, EventArgs e)
+        {
+            txt_OutputFile.Text = "E:\\fft\\ASM\\debugging\\Disassembly\\18b34c";
+            cmb_FileofRoutine.SelectedIndex = 1;
+            txt_StartingAddress.Text = "18b34c";
+        }
+
     }
 }

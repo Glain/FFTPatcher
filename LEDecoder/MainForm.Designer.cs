@@ -52,6 +52,7 @@ namespace LEDecoder
             this.cb_Mode = new System.Windows.Forms.ComboBox();
             this.lbl_Mode = new System.Windows.Forms.Label();
             this.Functionpanel = new System.Windows.Forms.Panel();
+            this.rad_UpdateWikiFile = new System.Windows.Forms.RadioButton();
             this.CollapseRoutinesButton = new System.Windows.Forms.RadioButton();
             this.AutoNotateButton = new System.Windows.Forms.RadioButton();
             this.JalFindButton = new System.Windows.Forms.RadioButton();
@@ -68,6 +69,7 @@ namespace LEDecoder
             this.lbl_FileofRoutine = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.btn_AutoNotateForm = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pic_LED)).BeginInit();
             this.Functionpanel.SuspendLayout();
             this.SuspendLayout();
@@ -206,6 +208,7 @@ namespace LEDecoder
             // 
             // Functionpanel
             // 
+            this.Functionpanel.Controls.Add(this.rad_UpdateWikiFile);
             this.Functionpanel.Controls.Add(this.CollapseRoutinesButton);
             this.Functionpanel.Controls.Add(this.AutoNotateButton);
             this.Functionpanel.Controls.Add(this.JalFindButton);
@@ -213,8 +216,19 @@ namespace LEDecoder
             this.Functionpanel.Controls.Add(this.DecodeASMButton);
             this.Functionpanel.Location = new System.Drawing.Point(12, 3);
             this.Functionpanel.Name = "Functionpanel";
-            this.Functionpanel.Size = new System.Drawing.Size(556, 38);
+            this.Functionpanel.Size = new System.Drawing.Size(556, 52);
             this.Functionpanel.TabIndex = 15;
+            // 
+            // rad_UpdateWikiFile
+            // 
+            this.rad_UpdateWikiFile.AutoSize = true;
+            this.rad_UpdateWikiFile.Location = new System.Drawing.Point(442, 32);
+            this.rad_UpdateWikiFile.Name = "rad_UpdateWikiFile";
+            this.rad_UpdateWikiFile.Size = new System.Drawing.Size(103, 17);
+            this.rad_UpdateWikiFile.TabIndex = 2;
+            this.rad_UpdateWikiFile.Text = "Update Wiki File";
+            this.rad_UpdateWikiFile.UseVisualStyleBackColor = true;
+            this.rad_UpdateWikiFile.CheckedChanged += new System.EventHandler(this.rad_UpdateWikiFile_CheckedChanged);
             // 
             // CollapseRoutinesButton
             // 
@@ -223,7 +237,6 @@ namespace LEDecoder
             this.CollapseRoutinesButton.Name = "CollapseRoutinesButton";
             this.CollapseRoutinesButton.Size = new System.Drawing.Size(110, 17);
             this.CollapseRoutinesButton.TabIndex = 2;
-            this.CollapseRoutinesButton.TabStop = true;
             this.CollapseRoutinesButton.Text = "Collapse Routines";
             this.CollapseRoutinesButton.UseVisualStyleBackColor = true;
             this.CollapseRoutinesButton.CheckedChanged += new System.EventHandler(this.CollapseRoutinesButton_CheckedChanged);
@@ -235,7 +248,6 @@ namespace LEDecoder
             this.AutoNotateButton.Name = "AutoNotateButton";
             this.AutoNotateButton.Size = new System.Drawing.Size(79, 17);
             this.AutoNotateButton.TabIndex = 1;
-            this.AutoNotateButton.TabStop = true;
             this.AutoNotateButton.Text = "AutoNotate";
             this.AutoNotateButton.UseVisualStyleBackColor = true;
             this.AutoNotateButton.CheckedChanged += new System.EventHandler(this.AutoNotateButton_CheckedChanged);
@@ -265,12 +277,10 @@ namespace LEDecoder
             // DecodeASMButton
             // 
             this.DecodeASMButton.AutoSize = true;
-            this.DecodeASMButton.Checked = true;
             this.DecodeASMButton.Location = new System.Drawing.Point(16, 9);
             this.DecodeASMButton.Name = "DecodeASMButton";
             this.DecodeASMButton.Size = new System.Drawing.Size(89, 17);
             this.DecodeASMButton.TabIndex = 0;
-            this.DecodeASMButton.TabStop = true;
             this.DecodeASMButton.Text = "Decode ASM";
             this.DecodeASMButton.UseVisualStyleBackColor = true;
             this.DecodeASMButton.CheckedChanged += new System.EventHandler(this.DecodeASMButton_CheckedChanged);
@@ -369,6 +379,8 @@ namespace LEDecoder
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Location = new System.Drawing.Point(310, 143);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(90, 17);
@@ -388,11 +400,22 @@ namespace LEDecoder
             this.btn_AutoNotateForm.Visible = false;
             this.btn_AutoNotateForm.Click += new System.EventHandler(this.btn_AutoNotateForm_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(305, 167);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "SetTest";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 324);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_AutoNotateForm);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.cmb_FileofRoutine);
@@ -437,8 +460,7 @@ namespace LEDecoder
 		private System.Windows.Forms.Button btn_Process;
 		private System.Windows.Forms.Button btn_OutputFile;
 		private System.Windows.Forms.Button btn_InputFile;
-		private System.Windows.Forms.TextBox txt_OutputFile;
-		private System.Windows.Forms.TextBox txt_InputFile;
+        private System.Windows.Forms.TextBox txt_OutputFile;
 		private System.Windows.Forms.Label lbl_OutputFile;
 		private System.Windows.Forms.Label lbl_InputFile;
         private System.Windows.Forms.TextBox txt_StartingAddress;
@@ -463,5 +485,8 @@ namespace LEDecoder
         private System.Windows.Forms.Label lbl_FileofRoutine;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button btn_AutoNotateForm;
+        public System.Windows.Forms.TextBox txt_InputFile;
+        private System.Windows.Forms.RadioButton rad_UpdateWikiFile;
+        private System.Windows.Forms.Button button1;
 	}
 }

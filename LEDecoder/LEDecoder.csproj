@@ -54,15 +54,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autonotator\Autonotator.cs">
+    <Compile Include="Autonotate\Autonotator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Autonotator\Autonotator.Designer.cs">
+    <Compile Include="Autonotate\Autonotator.Designer.cs">
       <DependentUpon>Autonotator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Autonotator\MainAddress.cs" />
-    <Compile Include="Autonotator\Register.cs" />
-    <Compile Include="Autonotator\SubData.cs" />
+    <Compile Include="Autonotate\MainAddress.cs" />
+    <Compile Include="Autonotate\Register.cs" />
+    <Compile Include="Autonotate\RegisterState.cs" />
+    <Compile Include="Autonotate\SubData.cs" />
+    <Compile Include="Autonotate\UnknownData.cs" />
+    <Compile Include="Autonotate\Value.cs" />
+    <Compile Include="CollapseRoutines\Browser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CollapseRoutines\Browser.Designer.cs">
+      <DependentUpon>Browser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CollapseRoutines\Routine.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,8 +88,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Autonotator\Autonotator.resx">
+    <EmbeddedResource Include="Autonotate\Autonotator.resx">
       <DependentUpon>Autonotator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CollapseRoutines\Browser.resx">
+      <DependentUpon>Browser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

@@ -739,9 +739,9 @@
             this.checkBox9.AutoSize = true;
             this.checkBox9.Location = new System.Drawing.Point(308, 246);
             this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(80, 17);
+            this.checkBox9.Size = new System.Drawing.Size(54, 17);
             this.checkBox9.TabIndex = 2;
-            this.checkBox9.Text = "checkBox1";
+            this.checkBox9.Text = "Stack";
             this.checkBox9.UseVisualStyleBackColor = true;
             // 
             // checkBox10
@@ -759,9 +759,9 @@
             this.checkBox11.AutoSize = true;
             this.checkBox11.Location = new System.Drawing.Point(308, 272);
             this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(80, 17);
+            this.checkBox11.Size = new System.Drawing.Size(44, 17);
             this.checkBox11.TabIndex = 2;
-            this.checkBox11.Text = "checkBox1";
+            this.checkBox11.Text = "add";
             this.checkBox11.UseVisualStyleBackColor = true;
             // 
             // checkBox12
@@ -769,9 +769,9 @@
             this.checkBox12.AutoSize = true;
             this.checkBox12.Location = new System.Drawing.Point(308, 297);
             this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(80, 17);
+            this.checkBox12.Size = new System.Drawing.Size(36, 17);
             this.checkBox12.TabIndex = 2;
-            this.checkBox12.Text = "checkBox1";
+            this.checkBox12.Text = "lui";
             this.checkBox12.UseVisualStyleBackColor = true;
             // 
             // Autonotator
