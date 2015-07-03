@@ -185,6 +185,7 @@ namespace PatcherLib.Iso
                             checkbyte[3] = 0x44;
                             position = 0x1bf000;
                             break;
+                 
                     }
                 #endregion
                 b.BaseStream.Position = position;
@@ -213,7 +214,7 @@ namespace PatcherLib.Iso
                                 LoadedFiles[2] = true;
                                 break;
                             case 4:
-                                ScusOffset = b.BaseStream.Position - 4;
+                                ScusOffset = b.BaseStream.Position - 0x804;
                                 LoadedFiles[3] = true;
                                 break;
                             case 5:

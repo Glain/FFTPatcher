@@ -59,7 +59,7 @@ namespace FFTorgASM
         	AsmPatch patch = (checkedListBox1.SelectedItem as AsmPatch);
             if ( !ignoreChanges )
             {
-            	UInt32 def = (UInt32)variableSpinner.Value;
+                UInt32 def = (UInt32)variableSpinner.Value;
                 for (int i=0; i < patch.Variables[variableComboBox.SelectedIndex].bytes; i++)
                 {
                 	patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
@@ -80,18 +80,18 @@ namespace FFTorgASM
                 
                 //variableSpinner.Value = p.Variables[0].content.Value.GetBytes()[0];
                 Byte[] byteArray = p.Variables[0].content.Value.GetBytes();
-                variableSpinner.Maximum = (decimal)Math.Pow(256,p.Variables[0].bytes) - 1;
-            	variableSpinner.Value = p.GetUnsignedByteArrayValue_LittleEndian(byteArray);
-                
-                ignoreChanges = false;
+                variableSpinner.Maximum = (decimal)Math.Pow(256, p.Variables[0].bytes) - 1;
+                variableSpinner.Value = p.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+
                 variableSpinner.Visible = true;
+                ignoreChanges = false;
                 variableComboBox.Visible = true;
             }
             else
             {
+                variableSpinner.Visible = false;
                 ignoreChanges = true;
                 variableComboBox.Visible = false;
-                variableSpinner.Visible = false;
             }
         }
 

@@ -37,8 +37,8 @@
             this.versionLabel = new System.Windows.Forms.Label();
             this.toggleButton = new System.Windows.Forms.Button();
             this.checkAllButton = new System.Windows.Forms.Button();
-            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.PatchSaveStbutton = new System.Windows.Forms.Button();
+            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,7 +85,7 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(12, 366);
+            this.textBox1.Location = new System.Drawing.Point(12, 371);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -97,11 +97,10 @@
             this.variableComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.variableComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.variableComboBox.FormattingEnabled = true;
-            this.variableComboBox.Location = new System.Drawing.Point(12, 450);
+            this.variableComboBox.Location = new System.Drawing.Point(12, 452);
             this.variableComboBox.Name = "variableComboBox";
             this.variableComboBox.Size = new System.Drawing.Size(161, 21);
             this.variableComboBox.TabIndex = 6;
-            this.variableComboBox.Visible = false;
             // 
             // versionLabel
             // 
@@ -133,16 +132,6 @@
             this.checkAllButton.UseVisualStyleBackColor = true;
             this.checkAllButton.Click += new System.EventHandler(this.checkAllButton_Click);
             // 
-            // variableSpinner
-            // 
-            this.variableSpinner.Hexadecimal = true;
-            this.variableSpinner.Location = new System.Drawing.Point(179, 450);
-            this.variableSpinner.Name = "variableSpinner";
-            this.variableSpinner.Size = new System.Drawing.Size(102, 20);
-            this.variableSpinner.TabIndex = 5;
-            this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.variableSpinner.Visible = false;
-            // 
             // PatchSaveStbutton
             // 
             this.PatchSaveStbutton.Location = new System.Drawing.Point(230, 479);
@@ -153,11 +142,21 @@
             this.PatchSaveStbutton.UseVisualStyleBackColor = true;
             this.PatchSaveStbutton.Click += new System.EventHandler(this.PatchSaveStbutton_Click);
             // 
+            // variableSpinner
+            // 
+            this.variableSpinner.Hexadecimal = true;
+            this.variableSpinner.Location = new System.Drawing.Point(179, 453);
+            this.variableSpinner.Name = "variableSpinner";
+            this.variableSpinner.Size = new System.Drawing.Size(102, 20);
+            this.variableSpinner.TabIndex = 5;
+            this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(465, 514);
+            this.Controls.Add(this.variableSpinner);
             this.Controls.Add(this.PatchSaveStbutton);
             this.Controls.Add(this.checkAllButton);
             this.Controls.Add(this.toggleButton);
