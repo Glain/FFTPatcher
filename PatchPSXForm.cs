@@ -186,6 +186,8 @@ namespace FFTPatcher
             set { scusPatchable[(int)SCUSPatchable.StatusAttributes] = value; }
         }
 
+        public string FilePath = "";
+
 		#endregion Public Properties 
 
 		#region Constructors (1) 
@@ -316,6 +318,7 @@ namespace FFTPatcher
                 !ValidateISO( patchIsoDialog.FileName ) )
                 ;
             isoPathTextBox.Text = patchIsoDialog.FileName;
+            FilePath = patchIsoDialog.FileName;
             UpdateNextEnabled();
         }
 

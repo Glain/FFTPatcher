@@ -126,6 +126,8 @@ namespace PatcherLib.Iso
 
         public static void PatchPsxSaveState(BinaryReader b, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches, byte[] filecopy)
         {
+            bool[] FailedFiles = new bool[6]{false,false,false,false,false,false};
+
             byte[] data = new byte[4];
             byte[] checkbyte = new byte[4];
             long position = 0;
@@ -274,7 +276,40 @@ namespace PatcherLib.Iso
                     }
                     else
                     {
-                        MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                        switch(patch.Sector.ToString())
+                        {
+                            case "BATTLE_BIN":
+                                if(!FailedFiles[0])
+                                    MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                                FailedFiles[0] = true;
+                                
+                                break;
+                            case "WORLD_WLDCORE_BIN":
+                                if (!FailedFiles[1])
+                                    MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                                FailedFiles[1] = true;
+                                break;
+                            case "WORLD_WORLD_BIN":
+                                if (!FailedFiles[2])
+                                    MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                                FailedFiles[2] = true;
+                                break;
+                            case "SCUS_942_21":
+                                if (!FailedFiles[3])
+                                    MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                                FailedFiles[3] = true;
+                                break;
+                            case "EVENT_REQUIRE_OUT":
+                                if (!FailedFiles[4])
+                                    MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                                FailedFiles[4] = true;
+                                break;
+                            case "EVENT_EQUIP_OUT":
+                                if (!FailedFiles[5])
+                                    MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
+                                FailedFiles[5] = true;
+                                break;
+                        }
                     }
                 }
                 catch(Exception ex)

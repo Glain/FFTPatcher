@@ -38,6 +38,8 @@
             this.toggleButton = new System.Windows.Forms.Button();
             this.checkAllButton = new System.Windows.Forms.Button();
             this.PatchSaveStbutton = new System.Windows.Forms.Button();
+            this.lsb_FilesList = new System.Windows.Forms.ListBox();
+            this.chk_LoadAll = new System.Windows.Forms.CheckBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
@@ -45,13 +47,10 @@
             // checkedListBox1
             // 
             this.checkedListBox1.AllowDrop = true;
-            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 12);
+            this.checkedListBox1.Location = new System.Drawing.Point(159, 12);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(441, 319);
+            this.checkedListBox1.Size = new System.Drawing.Size(294, 319);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.checkedListBox1_DragDrop);
             this.checkedListBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.checkedListBox1_DragEnter);
@@ -142,6 +141,26 @@
             this.PatchSaveStbutton.UseVisualStyleBackColor = true;
             this.PatchSaveStbutton.Click += new System.EventHandler(this.PatchSaveStbutton_Click);
             // 
+            // lsb_FilesList
+            // 
+            this.lsb_FilesList.FormattingEnabled = true;
+            this.lsb_FilesList.IntegralHeight = false;
+            this.lsb_FilesList.Location = new System.Drawing.Point(12, 12);
+            this.lsb_FilesList.Name = "lsb_FilesList";
+            this.lsb_FilesList.Size = new System.Drawing.Size(141, 319);
+            this.lsb_FilesList.TabIndex = 11;
+            this.lsb_FilesList.SelectedIndexChanged += new System.EventHandler(this.lsb_FilesList_SelectedIndexChanged);
+            // 
+            // chk_LoadAll
+            // 
+            this.chk_LoadAll.AutoSize = true;
+            this.chk_LoadAll.Location = new System.Drawing.Point(23, 341);
+            this.chk_LoadAll.Name = "chk_LoadAll";
+            this.chk_LoadAll.Size = new System.Drawing.Size(98, 17);
+            this.chk_LoadAll.TabIndex = 12;
+            this.chk_LoadAll.Text = "Load All Hacks";
+            this.chk_LoadAll.UseVisualStyleBackColor = true;
+            // 
             // variableSpinner
             // 
             this.variableSpinner.Hexadecimal = true;
@@ -156,6 +175,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(465, 514);
+            this.Controls.Add(this.chk_LoadAll);
+            this.Controls.Add(this.lsb_FilesList);
             this.Controls.Add(this.variableSpinner);
             this.Controls.Add(this.PatchSaveStbutton);
             this.Controls.Add(this.checkAllButton);
@@ -187,6 +208,8 @@
         private System.Windows.Forms.Button toggleButton;
         private System.Windows.Forms.Button checkAllButton;
         private System.Windows.Forms.Button PatchSaveStbutton;
+        private System.Windows.Forms.ListBox lsb_FilesList;
+        private System.Windows.Forms.CheckBox chk_LoadAll;
     }
 }
 

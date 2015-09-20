@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patches>  
-  <Patch name="No Zodiac Compatibility"> 
+  <Patch name="No Zodiac Compatibility" >
     <Description> 
       This removes zodiac compatibility damage calculations 
     </Description>  
@@ -11,8 +11,129 @@
     </Location>
   </Patch>
   
+  <Patch name="JP gain hack *Fixed">
+    <Description>
+      JP gain is: (10 + (CasLVL/3) + (TarLVL-CasLVL))
+    </Description>
+    <Location file="BATTLE_BIN" offset="1178d0">
+      1980013C
+      00000000
+      0C392290
+    </Location>
+    <Location file="BATTLE_BIN" offset="117920">
+      03005692
+      1000A627
+      8AFA050C
+      2128C002
+      21B84000
+      00000492
+      68382290
+      03001034
+      C0180200
+      23186200
+      80110300
+      CC082124
+      21084100
+      22002190
+      1A003002
+      12100000
+      0A004224
+      23183100
+      21884300
+      0200201E
+      21800000
+      01001134
+      02008014
+      05004292
+      25880000
+      30005330
+      08001512
+      21200002
+      02002106
+      21282002
+      03002526
+      83280500
+      1000A78F
+      A0FA050C
+      FF006632
+      01001026
+      1500022A
+      F4FF4014
+      00000000
+      21201500
+
+    </Location>
+  </Patch>
   
- <Patch name="Equip change only for helmet, armor, accessory ">
+  <Patch name="Evade Boost - 0x1FC">
+<Description>
+Accessory Evade is boosted by 10 (magic and physical)
+</Description> 
+<Location file="BATTLE_BIN" offset="11E248">
+F0FFBD27
+6448050C
+0400BFAF
+0400BF8F
+1000BD27
+</Location>
+<Location file="BATTLE_BIN" offset="11E060">
+6448050C
+583F2190
+</Location>
+<Location file="BATTLE_BIN" offset="eb190">
+  0680013C
+  21082200
+  593F2190
+  95008290
+  00000000
+  02004010
+  00000000
+  0A002224
+  1980013C
+  0800E003
+  DE3822A0
+</Location>
+</Patch>
+  
+  <Patch name="Experience gain hack *Fixed">
+    <Description>
+      Experience gain is: (10 + (TarLVL - CasLVL))
+    </Description>
+    <Location file="BATTLE_BIN" offset="126634">
+      1980013C
+      F0F5228C
+      00000000
+      30004014
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      0A000434
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      982D228C
+    </Location>
+    <Location file="BATTLE_BIN" offset="1266b0">
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+  </Patch>
+
+
+
+  <Patch name="Equip change only for helmet, armor, accessory ">
     <Description>
       Disables the ability to change weapons with equip change.
     </Description>
@@ -581,7 +702,7 @@ D63843A0
       b0201580
     </Location>
   </Patch>
-  <Patch name="Weapon strike rewrite">
+  <Patch name="Weapon strike rewrite v2">
     <Location file="BATTLE_BIN" offset="124274">
       1980013C
       C4382594
@@ -728,8 +849,7 @@ D63843A0
   
 <Patch name="Unit Dismissal Hack">
 <Description>
-        You can have up to 12 units that are not dismissable. Enter their Sprite ID and it will be so. Default: 01, 04, 07, 0c, 
-32.
+        You can have up to 12 units that are not dismissable. Enter their Sprite ID and it will be so. Default: 01, 04, 07, 0c, 32.
     </Description>
  
 

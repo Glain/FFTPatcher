@@ -81,6 +81,8 @@ namespace FFTPatcher
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.fftPatchEditor1 = new FFTPatcher.Editors.FFTPatchEditor();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.men_PatchPSXSavestate = new System.Windows.Forms.MenuItem();
             separator1 = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
@@ -205,7 +207,9 @@ namespace FFTPatcher
             this.psxMenu.Index = 1;
             this.psxMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.patchPsxIsoMenuItem,
-            this.openPatchedPsxIso});
+            this.openPatchedPsxIso,
+            this.menuItem1,
+            this.men_PatchPSXSavestate});
             this.psxMenu.Text = "PS&X";
             // 
             // patchPsxIsoMenuItem
@@ -295,6 +299,17 @@ namespace FFTPatcher
             this.fftPatchEditor1.Size = new System.Drawing.Size(910, 557);
             this.fftPatchEditor1.TabIndex = 0;
             // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 2;
+            this.menuItem1.Text = " ";
+            // 
+            // men_PatchPSXSavestate
+            // 
+            this.men_PatchPSXSavestate.Index = 3;
+            this.men_PatchPSXSavestate.Text = "Patch PSX Savestate";
+            this.men_PatchPSXSavestate.Click += new System.EventHandler(this.men_PatchPSXSavestate_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -338,6 +353,8 @@ namespace FFTPatcher
         private System.Windows.Forms.MenuItem psxMenu;
         private System.Windows.Forms.MenuItem pspMenu;
         private System.Windows.Forms.MenuItem openPatchedPspItem;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem men_PatchPSXSavestate;
 
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="About.designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="AsmPatch.cs" />
     <Compile Include="Controls\CheckedListBoxNoHighlightWithDefault.cs">
       <SubType>Component</SubType>
     </Compile>

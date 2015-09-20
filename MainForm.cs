@@ -543,6 +543,68 @@ namespace FFTPatcher
             }
         }
 
+        private void men_PatchPSXSavestate_Click(object sender, EventArgs e)
+        {
+
+             DoWorkEventHandler doWork =
+                delegate( object sender1, DoWorkEventArgs args )
+                {
+                    PsxIso.PatchPsxSavestate( sender1 as BackgroundWorker, args, PatchPSXForm );
+                };
+            ProgressChangedEventHandler progress =
+                delegate( object sender2, ProgressChangedEventArgs args )
+                {
+                    progressBar.Visible = true;
+                    progressBar.Value = Math.Max( progressBar.Minimum, Math.Min( args.ProgressPercentage, progressBar.Maximum ) );
+                };
+            RunWorkerCompletedEventHandler completed = null;
+            completed =
+                delegate( object sender3, RunWorkerCompletedEventArgs args )
+                {
+                    progressBar.Visible = false;
+                    Enabled = true;
+                    patchPsxBackgroundWorker.ProgressChanged -= progress;
+                    patchPsxBackgroundWorker.RunWorkerCompleted -= completed;
+                    patchPsxBackgroundWorker.DoWork -= doWork;
+
+                    if (args.Error != null)
+                    {
+                        HandleException( args.Error );
+                    }
+                };
+
+
+            if (PatchPSXForm.CustomShowDialog( this ) == DialogResult.OK)
+            {
+                patchPsxBackgroundWorker.ProgressChanged += progress;
+                patchPsxBackgroundWorker.RunWorkerCompleted += completed;
+                patchPsxBackgroundWorker.DoWork += doWork;
+
+                Enabled = false;
+
+                progressBar.Value = 0;
+                progressBar.Visible = true;
+
+                patchPsxBackgroundWorker.RunWorkerAsync();
+            }
+        
+            //SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            ////Patchbutton copy. Modify to patch byte array right to savestate.
+            //saveFileDialog1.Filter = "PSV files (*.psv)|*.psv;*";
+            //saveFileDialog1.FileName = string.Empty;
+            //if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            //{
+            //    byte[] filecopy = File.ReadAllBytes(saveFileDialog1.FileName);
+            //    using (BinaryReader b = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
+            //    {
+            //        foreach (AsmPatch patch in checkedListBox1.CheckedItems)
+            //        {
+            //            PatcherLib.Iso.PsxIso.PatchPsxSaveState(b, patch, filecopy);
+            //        }
+            //    }
+            //}
+        }
+
 
     }
 }

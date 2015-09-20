@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+
+  <Patch name="1AC Brave Up becomes Add: Protect">
+    <Location file="BATTLE_BIN" offset="124090">
+      20000234
+      1c2C0608
+      1E0062A0
+    </Location>
+  </Patch>
+
+
+  <Patch name="1AD Faith Up becomes Add: Shell">
+    <Location file="BATTLE_BIN" offset="1240A4">
+      10000234
+      1c2C0608
+      1E0062A0
+    </Location>
+  </Patch>
+
+
+  <Patch name="1C7 Monkey Grip and Equip Shield">
+    <Description>
+      Equip Shield Regardless of Job and 2 hand weapons 1 handed.
+    </Description>
+    <Location file="WORLD_WORLD_BIN" offset="69890">
+      1D80023C
+      7c9E4290
+      01006130
+      40004230
+      02004014
+      25180000
+      25182000
+      D8820408
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40b58">
+      24260508
+      B93A2390
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="698c0">
+      1D80033C
+      7c9E6390
+      01004130
+      40006330
+      02006014
+      25100000
+      25102000
+      CD910408
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="4472c">
+      30260508
+      B93A2290
+    </Location>
+    <Location file="EVENT_EQUIP_OUT" offset="3CF4">
+      30480508
+      B93A2390
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB0C0">
+      8F008292
+      01006130
+      40004230
+      EFFF4014
+      25180000
+      25182000
+      3F0B0708
+      00000000
+    </Location>
+    <Location file="EVENT_EQUIP_OUT" offset="6D7C">
+      38480508
+      B93A2390
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB0E0">
+      8F006292
+      01006130
+      40004230
+      E7FF4014
+      25180000
+      25182000
+      61170708
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="1E1 Unused becomes Bandit's Eye removes 20% Evade">
+    <Description>
+      Evades are removed in this order:
+      A-Ev, W/S Ev, C-Ev
+    </Description>
+    <Location file="BATTLE_BIN" offset="11e828">
+      00000000
+      1000B0AF
+      1980023C
+      F6384290
+      1980013C
+      942D308C
+      02004230
+      92001092
+      8E004010
+      00000000
+      10001032
+      05000012
+      14001024
+      FC470508
+      21280000
+      00000000
+      00000000
+      DC382890
+      E1382790
+      DE382390
+      DF382490
+      E0382690
+      21280001
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      2B106800
+      04004010
+      2B108800
+      02004010
+      2B10C800
+      00004010
+      2B10E800
+      06004014
+      23100301
+      902D428C
+      00000000
+      000040A0
+      74160608
+      2A0040A4
+    </Location>
+    <Location file="BATTLE_BIN" offset="EAFF0">
+      DE382424
+      00008390
+      00000000
+      2B107000
+      04004014
+      00000000
+      23187000
+      0B480508
+      000083A0
+      23800302
+      000080A0
+      0300A22C
+      0100A524
+      F3FF4014
+      01008424
+      1B160608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="1E4 and 1E5 become Adeptness and Sturdy">
+    <Description>
+      1E4 Adeptness increases damage and healing by X%. 1E5 Sturdy reduces damage/healing by 20%.
+    </Description>
+    <Location file="BATTLE_BIN" offset="11F580">
+      ba600508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F12E8">
+      64000324
+      1980043C
+      942D848C
+      00000000
+      92008490
+      00000000
+      02008430
+      02000410
+      00000000
+    </Location>
+    <Variable file="BATTLE_BIN" offset="f130c" default="14" name="X"/>
+    <Location file="BATTLE_BIN" offset="F130d">
+      006324
+      1980043C
+      982D848C
+      00000000
+      92008490
+      00000000
+      01008430
+      02000410
+      14000234
+      23186200
+      12200000
+      00000000
+      00000000
+      18006400
+      12180000
+      00000000
+      64000424
+      1A006400
+      1980033C
+      902D638C
+      62190608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="1E5 Sturdy Healing Addend">
+    <Description>
+      This removes the decrease in healing for the 2nd blank support under Non-Charge.
+    </Description>
+    <Location file="BATTLE_BIN" offset="1203bc">
+      DB470508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EAF6C">
+      1980013C
+      E5382390
+      13000134
+      19006110
+      1980033C
+      982D638C
+      00000000
+      92006390
+      00000000
+      01006330
+      12000310
+      00000000
+      1980033C
+      D8386390
+      00000000
+      04006010
+      00000000
+      F0006328
+      0A006010
+      00000000
+      64000324
+      19006324
+      18004300
+      12100000
+      00000000
+      64000324
+      1A004300
+      12100000
+      00000000
+      060082A4
+      25008290
+      F11C0608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="1CF Gained JP Up becomes Turbo MP">
+    <Description>
+      MP Costs are 1.5x.
+      Any MP-Costed ability gains XA1 x 1.5
+    </Description>
+    <Location file="BATTLE_BIN" offset="11aa38">
+      <!--Skillset Display-->
+      Eb480508
+      0D009190
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB3b0">
+      <!--Skillset Display-->
+      b000af8f
+      02000011
+      21102002
+      43880200
+      1980013C
+      C0010334
+      18006F00
+      12180000
+      21182300
+      CC086324
+      90006390
+      00000000
+      40006330
+      02006010
+      05008390
+      40880200
+      92060608
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="116b60">
+      <!--MP Cost Functionality-->
+      25490508
+      80004130
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB494">
+      <!--MP Cost Functionality-->
+      02002010
+      00000000
+      42200400
+      40004130
+      02002010
+      00000000
+      40200400
+      DCF60508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="12497c">
+      <!--Damage/Healing Modification-->
+      00490508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB400">
+      <!--Damage/Healing Modification-->
+      1980013C
+      FD382290
+      942D238C
+      1A004010
+      90006390
+      982D228C
+      40006330
+      16006010
+      90014194
+      00000000
+      40180100
+      42080100
+      23186100
+      92014194
+      900143A4
+      40180100
+      42080100
+      23186100
+      94014194
+      920143A4
+      40180100
+      42080100
+      23186100
+      96014194
+      940143A4
+      40180100
+      42080100
+      23186100
+      960143A4
+      00000000
+      0700222E
+      03004010
+      64000234
+      612E0608
+      00000000
+      642E0608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="1D0 Gained Exp Up becomes Long Charge">
+    <Location file="BATTLE_BIN" offset="11aa48">
+      <!--Skillset Display-->
+      B0480508
+      1980013C
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB2c0">
+      <!--Skillset Display-->
+      C0010234
+      18004F00
+      12100000
+      21102200
+      CC084224
+      90004390
+      03008290
+      20006330
+      20004230
+      04004014
+      0C008290
+      02006010
+      00000000
+      01004224
+      94060608
+      05008390
+    </Location>
+    <Location file="BATTLE_BIN" offset="115880">
+      <!--CT increase Functionality-->
+      C0480508
+      90006392
+    </Location>
+    <Location file="BATTLE_BIN" offset="1157e4">
+      <!--CT increase Functionality-->
+      C5480508
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB300">
+      <!--CT increase Functionality-->
+      04004012
+      20006330
+      02006010
+      00000000
+      01005226
+      03008012
+      01008232
+      22F20508
+      00000000
+      35F20508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1148dc">
+      <!--AoE increase Functionality-->
+      A4480508
+      21804500
+      20008430
+      02008010
+      00000000
+      20002935
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB290">
+      <!--AoE increase Functionality-->
+      01007390
+      90000292
+      02007590
+      0C006390
+      00000000
+      04006010
+      20004330
+      02006010
+      00000000
+      01007326
+      39EE0508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="124528">
+      <!--CT increase Functionality-->
+      D248050C
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB348">
+      <!--CT increase Functionality-->
+      F0FFBD27
+      0800BFAF
+      9578010C
+      00000000
+      90006292
+      F3FFA524
+      20004230
+      08004010
+      0C00A290
+      0300A290
+      00000000
+      20004230
+      03004014
+      0C00A290
+      00000000
+      01004224
+      0800BF8F
+      1000BD27
+      0800E003
+      0000A2A0
+    </Location>
+    <Location file="BATTLE_BIN" offset="124720">
+      <!--CT increase Functionality-->
+      D248050C
+    </Location>
+  </Patch>
+
+
+  <Patch name="1DE Monster Skill becomes Blood Price">
+    <Description>
+      MP Costs use HP.
+    </Description>
+    <Location file="BATTLE_BIN" offset="116b58">
+      0D008490
+      1980013C
+      EB3824A0
+      00000000
+      204C050C
+      00000000
+      00000000
+      EB382490
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC080">
+      90000292
+      EB382490
+      80004330
+      03F86010
+      40004330
+      42200400
+      EB3824A0
+      07F86010
+      00000000
+      EB382390
+      80000234
+      B10102A2
+      900103A6
+      EB3823A0
+      FCFF1022
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11a850">
+      90000292
+      F800A0AF
+      00000000
+      384C050C
+      00000000
+      F800A8AF
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC0E0">
+      80004330
+      09006010
+      00000000
+      01000834
+      F800A8AF
+      40004330
+      04006010
+      00000000
+      F800A88F
+      00000000
+      02000835
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11aa34">
+      0D009190
+      F800A88F
+      000091A2
+      4844050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC120">
+      01000231
+      03004010
+      00000000
+      01002226
+      43880200
+      000091A2
+      02000231
+      05004010
+      00000000
+      00009192
+      00000000
+      40881100
+      000091A2
+      00000000
+      00009192
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="D909c">
+      604C050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC180">
+      9000C292
+      EC018390
+      40004230
+      04004010
+      00000000
+      2800C296
+      34460508
+      00000000
+      2C00C296
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="D9f64">
+      7044050C
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC1C0">
+      90008290
+      00000000
+      40004230
+      04004010
+      00000000
+      28008294
+      3F460508
+      00000000
+      2C008294
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="12ec88">
+      804C050C
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC200">
+      90004492
+      00000000
+      80008230
+      05004010
+      00000000
+      11000292
+      00000000
+      42100200
+      110002A2
+      40008230
+      05004010
+      00000000
+      11000292
+      00000000
+      40100200
+      110002A2
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="12e02c">
+      944C050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC250">
+      90008392
+      00000000
+      40006330
+      04006010
+      00000000
+      28008296
+      5C460508
+      00000000
+      2C008296
+      1100C392
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="1FC Silent Walk becomes Magic Guard">
+    <Location file="BATTLE_BIN" offset="11E2dc">
+      40480508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB100">
+      95008290
+      1D008390
+      02004230
+      12004010
+      0680053C
+      B83AA524
+      7A00622C
+      05004010
+      C0100300
+      21104500
+      05004290
+      1980013C
+      DF3822A0
+      1F008390
+      00000000
+      7A00622C
+      05004010
+      C0100300
+      21104500
+      05004290
+      1980013C
+      E03822A0
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11dfb8">
+      04004014
+    </Location>
+  </Patch>
+
+
+  <Patch name="Reactions don't use MP">
+    <Description>
+    </Description>
+    <Location file="BATTLE_BIN" offset="116b68">
+      1980013c
+      42200400
+      f0f5238c
+    </Location>
+    <Location file="BATTLE_BIN" offset="116b7c">
+      0a006014
+    </Location>
+  </Patch>
+
+
+  <Patch name="Drains work with AoE">
+    <Description>
+      All your HP's are belong to me.
+    </Description>
+    <Location file="BATTLE_BIN" offset="12030c">
+      A44C0508
+      04008294
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC290">
+      1580013C
+      8C322494
+      21108200
+      C51C0608
+      8C3222A4
+    </Location>
+    <Location file="BATTLE_BIN" offset="115e44">
+      A94C0508
+      B0FFBD27
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC2a4">
+      1580013C
+      8C3220AC
+      93F30508
+      4000B4AF
+    </Location>
+  </Patch>
+
+
+  <Patch name="Geomancy formula(24) drains HP if (X != 0)">
+    <Location file="BATTLE_BIN" offset="1896dc">
+      C84C0508
+      1980013C
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec320">
+      F9382190
+      00000000
+      039C2010
+      00000000
+      921C060C
+      00000000
+      1000BF8F
+      691B0608
+      1800BD27
+    </Location>
+  </Patch>
+
+
+  <Patch name="Work Recoil works with AoE">
+    <Location file="BATTLE_BIN" offset="1231e4">
+      D44C0508
+      04008190
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec350">
+      00000000
+      21082200
+      040081A4
+      7B280608
+      1980023C
+    </Location>
+  </Patch>
+
+
+  <Patch name="Formula 1F uses MA*Y">
+    <Location file="BATTLE_BIN" offset="12247C">
+      5922060C
+    </Location>
+  </Patch>
+
+
+  <Patch name="??? stats percent damage/healing modification">
+    <Location file="BATTLE_BIN" offset="11F67c ">
+      <!--% Damage jump-->
+      C04B0508
+    </Location>
+    <Location file="BATTLE_BIN" offset="EBf00">
+      <!--% Damage-->
+      1980013C
+      982D218C
+      00000000
+      06002190
+      00000000
+      04002130
+      06002010
+      00000000
+      C2100200
+      F401412C
+      02004014
+      00000000
+      F4010234
+      A1190608
+      040062A4
+    </Location>
+    <Location file="BATTLE_BIN" offset="126854">
+      <!--Poison + Regen Jump-->
+      D84B0508
+      1400BF8F
+    </Location>
+    <Location file="BATTLE_BIN" offset="EBF60">
+      <!--Poison + Regen-->
+      1980013C
+      902D308C
+      982D218C
+      06002190
+      00000000
+      04002130
+      17002010
+      00000000
+      80004130
+      09002010
+      00000000
+      04000196
+      00000000
+      C2180100
+      F401612C
+      02002014
+      00000000
+      F4010334
+      040003A6
+      40004130
+      05002010
+      00000000
+      06000196
+      00000000
+      C2180100
+      F401612C
+      02002014
+      00000000
+      F4010334
+      060003A6
+      17360608
+      1000B08F
+    </Location>
+    <Location file="BATTLE_BIN" offset="126f04">
+      004C0508
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC000">
+      1980013C
+      982D238C
+      00000000
+      06006190
+      00000000
+      04002130
+      21002010
+      00000000
+      25006190
+      00000000
+      40002130
+      0C002010
+      00000000
+      06006394
+      00000000
+      C2080300
+      F401232C
+      02006014
+      00000000
+      F4010134
+      1980033C
+      902D638C
+      00000000
+      060061A4
+      25006190
+      00000000
+      10002130
+      0C002010
+      00000000
+      0A006394
+      00000000
+      C2080300
+      F401232C
+      02006014
+      00000000
+      F4010134
+      1980033C
+      902D638C
+      00000000
+      0A0061A4
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Casting a skill with CT + Weapon Range seals Move.">
+    <Location file="BATTLE_BIN" offset="11Cbb4">
+      B04C050C
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec2c0">
+      E0FFBD27
+      0400BFAF
+      1980013C
+      D6382594
+      0680033C
+      F0FB6324
+      C0080500
+      23082500
+      40080100
+      00000534
+      21186100
+      03006190
+      0C006390
+      20002130
+      07002010
+      0F006330
+      05006010
+      00000000
+      01000534
+      FC0E060C
+      00000000
+      0400BF8F
+      2000BD27
+      0800E003
+      00000000
+
+    </Location>
+  </Patch>
+</Patches>
