@@ -38,6 +38,8 @@ namespace FFTPatcher
         private Bitmap sceapPreview = new Bitmap( 320, 32 );
         private bool[] scusPatchable = new bool[Enum.GetValues( typeof( SCUSPatchable ) ).Length];
 
+        public bool patchISO = true;        //used to tell wether patching to savestate or ISO
+
 		#endregion Instance Variables 
 
 		#region Public Properties (26) 
@@ -312,6 +314,11 @@ namespace FFTPatcher
 
         private void isoBrowseButton_Click( object sender, EventArgs e )
         {
+            if (patchISO)
+                patchIsoDialog.Filter = "ISO images (*.iso, *.bin, *.img)|*.iso;*.bin;*.img|All files|*.*";
+            else
+                patchIsoDialog.Filter = "PSV images (*.psv)|*.psv|All files|*.*";
+
             patchIsoDialog.FileName = isoPathTextBox.Text;
             while (
                 patchIsoDialog.ShowDialog( this ) == DialogResult.OK &&

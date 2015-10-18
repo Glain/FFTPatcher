@@ -69,6 +69,8 @@ namespace FFTPatcher
             this.psxMenu = new System.Windows.Forms.MenuItem();
             this.patchPsxIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.openPatchedPsxIso = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.men_PatchPSXSavestate = new System.Windows.Forms.MenuItem();
             this.pspMenu = new System.Windows.Forms.MenuItem();
             this.patchPspIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.cheatdbMenuItem = new System.Windows.Forms.MenuItem();
@@ -81,8 +83,6 @@ namespace FFTPatcher
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.fftPatchEditor1 = new FFTPatcher.Editors.FFTPatchEditor();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.men_PatchPSXSavestate = new System.Windows.Forms.MenuItem();
             separator1 = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
@@ -223,6 +223,17 @@ namespace FFTPatcher
             this.openPatchedPsxIso.Index = 1;
             this.openPatchedPsxIso.Text = "Open patched ISO...";
             // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 2;
+            this.menuItem1.Text = " ";
+            // 
+            // men_PatchPSXSavestate
+            // 
+            this.men_PatchPSXSavestate.Index = 3;
+            this.men_PatchPSXSavestate.Text = "Patch PSX Savestate";
+            this.men_PatchPSXSavestate.Click += new System.EventHandler(this.men_PatchPSXSavestate_Click);
+            // 
             // pspMenu
             // 
             this.pspMenu.Index = 2;
@@ -298,17 +309,6 @@ namespace FFTPatcher
             this.fftPatchEditor1.Name = "fftPatchEditor1";
             this.fftPatchEditor1.Size = new System.Drawing.Size(910, 557);
             this.fftPatchEditor1.TabIndex = 0;
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.Index = 2;
-            this.menuItem1.Text = " ";
-            // 
-            // men_PatchPSXSavestate
-            // 
-            this.men_PatchPSXSavestate.Index = 3;
-            this.men_PatchPSXSavestate.Text = "Patch PSX Savestate";
-            this.men_PatchPSXSavestate.Click += new System.EventHandler(this.men_PatchPSXSavestate_Click);
             // 
             // MainForm
             // 

@@ -1,5 +1,79 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patches>
+  <Patch name="DEBUG World: Activate">
+		<Location file="WORLD_WORLD_BIN" offset="8EA02">A000</Location>
+		<Location file="WORLD_WORLD_BIN" offset="8EA0A">A000</Location>
+		<Location file="WORLD_WORLD_BIN" offset="8EA12">A000</Location>
+		<Location file="WORLD_WORLD_BIN" offset="8EA18">0FA0</Location>
+		<Location file="WORLD_WORLD_BIN" offset="8EA1A">0800</Location>
+		</Patch>
+	<Patch name="DEBUG Battle: Activate">
+		<Location file="BATTLE_BIN" offset="FFD6E">5000</Location>
+		<Location file="BATTLE_BIN" offset="FFD76">5000</Location>
+		<Location file="BATTLE_BIN" offset="FFD7E">5000</Location>
+		<Location file="BATTLE_BIN" offset="FFD84">2C50</Location>
+		<Location file="BATTLE_BIN" offset="FFD86">0300</Location>
+	</Patch>
+  <Patch name="Move / Jump + X RSM edits">
+    <Description>
+      Can edit jump and move bonuses for each Move/Jump + X RSM
+    </Description>
+    <Location file="BATTLE_BIN" offset="EB270">
+      93008690
+      3B008390
+      8000C230
+      03004010
+      4000C230
+      0100A524
+      00006324
+      03004010
+      2000C230
+      0200A524
+      00006324
+      03004010
+      1000C230
+      0100A524
+      02006324
+      03004010
+      0800C230
+      00006324
+      0000A524
+      03004010
+      0400C230
+      02006324
+      0000A524
+      03004010
+      FFFFA230
+      03006324
+      0000A524
+      44720108
+      00000000
+    </Location>
+    <Location file="SCUS_942_21" offset="4d108">
+      <!-- Jump -->
+      9C480508
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+  </Patch>
 
   <Patch name="1AC Brave Up becomes Add: Protect">
     <Location file="BATTLE_BIN" offset="124090">
@@ -17,8 +91,135 @@
       1E0062A0
     </Location>
   </Patch>
-
-
+  
+  <Patch name="Derp - Move+1, Jump+2 (0x1E6)">
+    <Description>
+      Anyone can be a ninja
+    </Description>
+    <Location file="BATTLE_BIN" offset="4d13C">
+      80
+    </Location>
+  </Patch>
+  <Patch name="Float lets you walk over enemies">
+    <Description>
+    </Description>
+    <Location file="BATTLE_BIN" offset="10d9d0">
+      744D0508
+      30004230
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec5d0">
+      5A002392
+      00000000
+      40006330
+      03006010
+      00000000
+      78D20508
+      00000000
+      FDFF4010
+      00000000
+      77D20508
+      00000000
+    </Location>
+  </Patch>
+  
+  <Patch name="Keen Senses ASM - 0x1F5 ">
+    <Description>
+      (With Correct Reaction, W-EVD/C-EVD/S-EVD applies to back and sides) Overwrites Any Ground (0x1F5)
+    </Description>
+    <Location file="BATTLE_BIN" offset="11E6F4">
+      d9600508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1364">
+      9400A290
+      00000000
+      01004230
+      02000210
+      00000000
+      2330C600
+      000066A0
+      C0150608
+      2110C000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E43c">
+      144C0508
+      9000A290
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC050">
+      FF004230
+      02004014
+      25100000
+      5800A290
+      11150608
+      00000000
+    </Location>
+  </Patch>
+  
+  <Patch name="Speed Boost - (0x1E9)">
+    <Description>
+      Boosts Speed by 1
+    </Description>
+    <Location file="BATTLE_BIN" offset="4d0a8">
+      004C0508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC000">
+      93002292
+      00000000
+      10004230
+      02004010
+      FFFF6230
+      01006324
+      00006224
+      2C720108
+      3300422C
+    </Location>
+  </Patch>
+  
+  <Patch name="Equip X Edits">
+<Description>
+Jot5 Default Equips
+</Description>
+<Location file="SCUS_942_21" offset="4CA7C">
+8F008390
+4A008194
+4C008594
+80006230
+02004010
+40006230
+0900A534
+02004010
+20006230
+1000A534
+02004010
+10006230
+70002134
+02004010
+08006230
+0E402134
+02004010
+04006230
+00382134
+03004010
+02006230
+00012134
+8000A534
+02004010
+01006230
+0400A534
+02004010
+06008390
+01862134
+00000000
+40006230
+02004010
+00000000
+4201A534
+4A0081A4
+0800E003
+4C0085A4
+</Location>
+</Patch>
   <Patch name="1C7 Monkey Grip and Equip Shield">
     <Description>
       Equip Shield Regardless of Job and 2 hand weapons 1 handed.
@@ -54,33 +255,35 @@
       B93A2290
     </Location>
     <Location file="EVENT_EQUIP_OUT" offset="3CF4">
-      30480508
+      00480508
       B93A2390
     </Location>
-    <Location file="BATTLE_BIN" offset="EB0C0">
-      8F008292
+    <Location file="BATTLE_BIN" offset="EB000">
+      1F80013C
+      BE8D2190
       01006130
-      40004230
-      EFFF4014
+      40002230
+      02004014
       25180000
       25182000
       3F0B0708
       00000000
     </Location>
-    <Location file="EVENT_EQUIP_OUT" offset="6D7C">
-      38480508
+    <!--<Location file="EVENT_EQUIP_OUT" offset="6D7C">
+      10480508
       B93A2390
     </Location>
-    <Location file="BATTLE_BIN" offset="EB0E0">
-      8F006292
+    <Location file="BATTLE_BIN" offset="EB040">
+    1F80013C
+      BE8D2190
       01006130
-      40004230
-      E7FF4014
+      40002230
+      02004014
       25180000
       25182000
       61170708
       00000000
-    </Location>
+    </Location>-->
   </Patch>
 
 
@@ -345,6 +548,24 @@
 
 
   <Patch name="1D0 Gained Exp Up becomes Long Charge">
+
+    <Location file="BATTLE_BIN" offset="11a86c">
+      <!--Skillset Display-->
+      E8480508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="eb3a0">
+      <!--Skillset Display-->
+      90000292
+      00000000
+      20004230
+      02004010
+      00000000
+      04000835
+      92000292
+      1D060608
+      F800A8AF
+    </Location>
     <Location file="BATTLE_BIN" offset="11aa48">
       <!--Skillset Display-->
       B0480508
@@ -352,20 +573,16 @@
     </Location>
     <Location file="BATTLE_BIN" offset="EB2c0">
       <!--Skillset Display-->
-      C0010234
-      18004F00
-      12100000
-      21102200
-      CC084224
-      90004390
+      F800A88F
       03008290
-      20006330
+      04000331
       20004230
       04004014
       0C008290
       02006010
       00000000
       01004224
+      0000A2A2
       94060608
       05008390
     </Location>
@@ -468,11 +685,11 @@
       90000292
       EB382490
       80004330
-      03F86010
+      03006010
       40004330
       42200400
       EB3824A0
-      07F86010
+      07006010
       00000000
       EB382390
       80000234
@@ -488,13 +705,13 @@
       F800A0AF
       00000000
       384C050C
-      00000000
+      00000834
       F800A8AF
       00000000
     </Location>
     <Location file="BATTLE_BIN" offset="EC0E0">
       80004330
-      09006010
+      03006010
       00000000
       01000834
       F800A8AF
@@ -511,7 +728,7 @@
       0D009190
       F800A88F
       000091A2
-      4844050C
+      484C050C
       00000000
     </Location>
     <Location file="BATTLE_BIN" offset="EC120">
@@ -533,34 +750,35 @@
       0800E003
       00000000
     </Location>
-    <Location file="BATTLE_BIN" offset="D909c">
+    <Location file="BATTLE_BIN" offset="D909c"><!--Menu Stuff-->
       604C050C
       00000000
     </Location>
-    <Location file="BATTLE_BIN" offset="EC180">
+    <Location file="BATTLE_BIN" offset="EC180"><!--Menu Stuff-->
       9000C292
       EC018390
       40004230
       04004010
       00000000
       2800C296
-      34460508
+      694C0508
       00000000
       2C00C296
       0800E003
       00000000
     </Location>
-    <Location file="BATTLE_BIN" offset="D9f64">
-      7044050C
+    <Location file="BATTLE_BIN" offset="D9f64"><!--Menu Stuff-->
+      704C050C
     </Location>
-    <Location file="BATTLE_BIN" offset="EC1C0">
+    <Location file="BATTLE_BIN" offset="EC1C0"> <!--Menu Stuff-->
+
       90008290
       00000000
       40004230
       04004010
       00000000
       28008294
-      3F460508
+      794C0508
       00000000
       2C008294
       0800E003
@@ -608,7 +826,7 @@
       04006010
       00000000
       28008296
-      5C460508
+      9E4C0508
       00000000
       2C008296
       1100C392
@@ -673,45 +891,65 @@
     <Description>
       All your HP's are belong to me.
     </Description>
-    <Location file="BATTLE_BIN" offset="12030c">
+    <Location file="BATTLE_BIN" offset="12030c"><!--Abosrb HP Section-->
       A44C0508
       04008294
     </Location>
     <Location file="BATTLE_BIN" offset="EC290">
       1580013C
       8C322494
+      00000000
       21108200
       C51C0608
       8C3222A4
     </Location>
-    <Location file="BATTLE_BIN" offset="115e44">
-      A94C0508
+    <Location file="BATTLE_BIN" offset="1204b8"><!--Absorb MP Section-->
+      C04C0508
+      08008294
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC300">
+      1580013C
+      8E322494
+      00000000
+      21108200
+      301D0608
+      8E3222A4
+    </Location>
+    <Location file="BATTLE_BIN" offset="115e44"><!--Clear Stored Data-->
+      AC4C0508
       B0FFBD27
     </Location>
-    <Location file="BATTLE_BIN" offset="EC2a4">
+    <Location file="BATTLE_BIN" offset="EC2b0">
       1580013C
       8C3220AC
+      883220AC
       93F30508
       4000B4AF
     </Location>
   </Patch>
 
 
-  <Patch name="Geomancy formula(24) drains HP if (X != 0)">
-    <Location file="BATTLE_BIN" offset="1896dc">
+  <Patch name="Geomancy formula(24) drains HP if ability X = 1, drains MP if ability X = 2">
+    <Location file="BATTLE_BIN" offset="1226dc">
       C84C0508
       1980013C
     </Location>
     <Location file="BATTLE_BIN" offset="ec320">
       F9382190
-      00000000
-      039C2010
+      01000234
+      03002214
       00000000
       921C060C
       00000000
+      02000234
+      03002214
+      00000000
+      1B1D060C
+      00000000
       1000BF8F
-      691B0608
+      B9250608
       1800BD27
+
     </Location>
   </Patch>
 
@@ -719,12 +957,14 @@
   <Patch name="Work Recoil works with AoE">
     <Location file="BATTLE_BIN" offset="1231e4">
       D44C0508
-      04008190
+      1580033C
     </Location>
     <Location file="BATTLE_BIN" offset="ec350">
+      88326194
       00000000
       21082200
       040081A4
+      883261A4
       7B280608
       1980023C
     </Location>
@@ -737,14 +977,23 @@
     </Location>
   </Patch>
 
+<Patch name="Any weather combines any weather and any ground">
+<Description>
 
+</Description>
+<Location file="BATTLE_BIN" offset="10d748">
+02006530
+</Location>
+
+</Patch>
+  
   <Patch name="??? stats percent damage/healing modification">
     <Location file="BATTLE_BIN" offset="11F67c ">
-      <!--% Damage jump-->
+      <!--% HP Damage jump-->
       C04B0508
     </Location>
     <Location file="BATTLE_BIN" offset="EBf00">
-      <!--% Damage-->
+      <!--% HP Damage-->
       1980013C
       982D218C
       00000000
@@ -755,11 +1004,33 @@
       00000000
       C2100200
       F401412C
-      02004014
+      02002014
       00000000
       F4010234
       A1190608
       040062A4
+    </Location>
+    <Location file="BATTLE_BIN" offset="11F6dc ">
+      <!--% MP Damage jump-->
+      404C0508
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC100">
+      <!--% MP Damage-->
+      1980013C
+      982D218C
+      00000000
+      06002190
+      00000000
+      04002130
+      06002010
+      00000000
+      C2100200
+      F401412C
+      02002014
+      00000000
+      F4010234
+      B9190608
+      080062A4
     </Location>
     <Location file="BATTLE_BIN" offset="126854">
       <!--Poison + Regen Jump-->
@@ -884,4 +1155,6 @@
 
     </Location>
   </Patch>
+ 
+
 </Patches>

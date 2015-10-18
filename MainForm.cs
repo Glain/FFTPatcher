@@ -338,6 +338,7 @@ namespace FFTPatcher
 
         private void patchPsxIsoMenuItem_Click( object sender, EventArgs e )
         {
+            PatchPSXForm.patchISO = true;
             DoWorkEventHandler doWork =
                 delegate( object sender1, DoWorkEventArgs args )
                 {
@@ -545,10 +546,11 @@ namespace FFTPatcher
 
         private void men_PatchPSXSavestate_Click(object sender, EventArgs e)
         {
-
+            PatchPSXForm.patchISO = false;
              DoWorkEventHandler doWork =
                 delegate( object sender1, DoWorkEventArgs args )
                 {
+                    
                     PsxIso.PatchPsxSavestate( sender1 as BackgroundWorker, args, PatchPSXForm );
                 };
             ProgressChangedEventHandler progress =

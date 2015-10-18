@@ -111,18 +111,26 @@ namespace FFTPatcher.SpriteEditor
 
         public System.Drawing.Bitmap GetImageFromIso( System.IO.Stream iso )
         {
-            if (cachedImageDirty && cachedImage != null)
+            try
             {
-                cachedImage.Dispose();
-                cachedImage = null;
-            }
+                if (cachedImageDirty && cachedImage != null)
+                {
+                    cachedImage.Dispose();
+                    cachedImage = null;
+                }
 
-            if ( cachedImage == null )
-            {
-                cachedImage = GetImageFromIsoInner( iso );
-                cachedImageDirty = false;
+                if (cachedImage == null)
+                {
+                    cachedImage = GetImageFromIsoInner(iso);
+                    cachedImageDirty = false;
+                }
+                return cachedImage;
             }
-            return cachedImage;
+            catch
+            {
+                return cachedImage;
+            }
+         
         }
 
         protected IList<byte> GetPaletteBytes( Set<Color> colors, Palette.ColorDepth depth )

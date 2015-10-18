@@ -45,7 +45,6 @@ namespace LEDecoder
             this.btn_Process = new System.Windows.Forms.Button();
             this.chk_LittleEndian = new System.Windows.Forms.CheckBox();
             this.pic_LED = new System.Windows.Forms.PictureBox();
-            this.lbl_Overwrite = new System.Windows.Forms.Label();
             this.txt_StartingAddress = new System.Windows.Forms.TextBox();
             this.lbl_StartingAddress = new System.Windows.Forms.Label();
             this.chk_NameRegisters = new System.Windows.Forms.CheckBox();
@@ -152,21 +151,13 @@ namespace LEDecoder
             this.pic_LED.TabStop = false;
             this.pic_LED.Paint += new System.Windows.Forms.PaintEventHandler(this.pic_LEDPaint);
             // 
-            // lbl_Overwrite
-            // 
-            this.lbl_Overwrite.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Overwrite.Location = new System.Drawing.Point(120, 144);
-            this.lbl_Overwrite.Name = "lbl_Overwrite";
-            this.lbl_Overwrite.Size = new System.Drawing.Size(233, 24);
-            this.lbl_Overwrite.TabIndex = 9;
-            this.lbl_Overwrite.Text = "(Output file will be overwritten)";
-            // 
             // txt_StartingAddress
             // 
             this.txt_StartingAddress.Location = new System.Drawing.Point(120, 199);
             this.txt_StartingAddress.Name = "txt_StartingAddress";
             this.txt_StartingAddress.Size = new System.Drawing.Size(97, 20);
             this.txt_StartingAddress.TabIndex = 10;
+            this.txt_StartingAddress.Visible = false;
             // 
             // lbl_StartingAddress
             // 
@@ -176,6 +167,7 @@ namespace LEDecoder
             this.lbl_StartingAddress.Size = new System.Drawing.Size(87, 13);
             this.lbl_StartingAddress.TabIndex = 11;
             this.lbl_StartingAddress.Text = "Starting Address:";
+            this.lbl_StartingAddress.Visible = false;
             // 
             // chk_NameRegisters
             // 
@@ -228,6 +220,7 @@ namespace LEDecoder
             this.rad_UpdateWikiFile.TabIndex = 2;
             this.rad_UpdateWikiFile.Text = "Update Wiki File";
             this.rad_UpdateWikiFile.UseVisualStyleBackColor = true;
+            this.rad_UpdateWikiFile.Visible = false;
             this.rad_UpdateWikiFile.CheckedChanged += new System.EventHandler(this.rad_UpdateWikiFile_CheckedChanged);
             // 
             // CollapseRoutinesButton
@@ -239,6 +232,7 @@ namespace LEDecoder
             this.CollapseRoutinesButton.TabIndex = 2;
             this.CollapseRoutinesButton.Text = "Collapse Routines";
             this.CollapseRoutinesButton.UseVisualStyleBackColor = true;
+            this.CollapseRoutinesButton.Visible = false;
             this.CollapseRoutinesButton.CheckedChanged += new System.EventHandler(this.CollapseRoutinesButton_CheckedChanged);
             // 
             // AutoNotateButton
@@ -250,6 +244,7 @@ namespace LEDecoder
             this.AutoNotateButton.TabIndex = 1;
             this.AutoNotateButton.Text = "AutoNotate";
             this.AutoNotateButton.UseVisualStyleBackColor = true;
+            this.AutoNotateButton.Visible = false;
             this.AutoNotateButton.CheckedChanged += new System.EventHandler(this.AutoNotateButton_CheckedChanged);
             // 
             // JalFindButton
@@ -257,9 +252,9 @@ namespace LEDecoder
             this.JalFindButton.AutoSize = true;
             this.JalFindButton.Location = new System.Drawing.Point(219, 9);
             this.JalFindButton.Name = "JalFindButton";
-            this.JalFindButton.Size = new System.Drawing.Size(107, 17);
+            this.JalFindButton.Size = new System.Drawing.Size(114, 17);
             this.JalFindButton.TabIndex = 0;
-            this.JalFindButton.Text = "Find Jal Structure";
+            this.JalFindButton.Text = "Print jal Commands";
             this.JalFindButton.UseVisualStyleBackColor = true;
             this.JalFindButton.CheckedChanged += new System.EventHandler(this.JalFindButton_CheckedChanged);
             // 
@@ -272,15 +267,18 @@ namespace LEDecoder
             this.PrintHexButton.TabIndex = 0;
             this.PrintHexButton.Text = "Print Hex";
             this.PrintHexButton.UseVisualStyleBackColor = true;
+            this.PrintHexButton.Visible = false;
             this.PrintHexButton.CheckedChanged += new System.EventHandler(this.PrintHexButton_CheckedChanged);
             // 
             // DecodeASMButton
             // 
             this.DecodeASMButton.AutoSize = true;
+            this.DecodeASMButton.Checked = true;
             this.DecodeASMButton.Location = new System.Drawing.Point(16, 9);
             this.DecodeASMButton.Name = "DecodeASMButton";
             this.DecodeASMButton.Size = new System.Drawing.Size(89, 17);
             this.DecodeASMButton.TabIndex = 0;
+            this.DecodeASMButton.TabStop = true;
             this.DecodeASMButton.Text = "Decode ASM";
             this.DecodeASMButton.UseVisualStyleBackColor = true;
             this.DecodeASMButton.CheckedChanged += new System.EventHandler(this.DecodeASMButton_CheckedChanged);
@@ -344,6 +342,7 @@ namespace LEDecoder
             // 
             // btn_UpdateWiki
             // 
+            this.btn_UpdateWiki.Enabled = false;
             this.btn_UpdateWiki.Location = new System.Drawing.Point(12, 282);
             this.btn_UpdateWiki.Name = "btn_UpdateWiki";
             this.btn_UpdateWiki.Size = new System.Drawing.Size(130, 30);
@@ -432,7 +431,6 @@ namespace LEDecoder
             this.Controls.Add(this.lbl_FileofRoutine);
             this.Controls.Add(this.lbl_StartingAddress);
             this.Controls.Add(this.txt_StartingAddress);
-            this.Controls.Add(this.lbl_Overwrite);
             this.Controls.Add(this.pic_LED);
             this.Controls.Add(this.chk_LittleEndian);
             this.Controls.Add(this.btn_Process);
@@ -453,8 +451,7 @@ namespace LEDecoder
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
-		private System.Windows.Forms.Label lbl_Overwrite;
+        }
 		private System.Windows.Forms.PictureBox pic_LED;
 		private System.Windows.Forms.CheckBox chk_LittleEndian;
 		private System.Windows.Forms.Button btn_Process;

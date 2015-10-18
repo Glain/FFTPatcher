@@ -393,7 +393,7 @@ namespace FFTPatcher
             // patchIsoDialog
             // 
             this.patchIsoDialog.CheckFileExists = true;
-            this.patchIsoDialog.Filter = "ISO images (*.iso,*psv, *.bin, *.img)|*.iso;*.bin;*.img|All files|*.*";
+            this.patchIsoDialog.Filter = "ISO images (*.iso,*.psv, *.bin, *.img)|*.iso;*.bin;*.img|All files|*.*";
             this.patchIsoDialog.OverwritePrompt = false;
             // 
             // isoPathTextBox

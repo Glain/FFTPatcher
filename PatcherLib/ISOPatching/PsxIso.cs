@@ -140,7 +140,7 @@ namespace PatcherLib.Iso
             long ScusOffset = 0;
             bool[] LoadedFiles = new bool[6] {false,false,false,false,false,false};
 
-            for (int j = 1; j < 6; j++ )
+            for (int j = 1; j < 7; j++ )
             {
                 #region Set Checkbytes and position
                 switch (j)
