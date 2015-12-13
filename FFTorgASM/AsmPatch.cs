@@ -76,13 +76,13 @@ namespace FFTorgASM
 
     }
 
-    struct VariableType
+    public struct VariableType
     {
     	public KeyValuePair<string,PatchedByteArray> content;
     	public char bytes;
     }
     
-    class AsmPatch : IList<PatchedByteArray>
+    public class AsmPatch : IList<PatchedByteArray>
     {
         List<PatchedByteArray> innerList;
         public string Name { get; private set; }

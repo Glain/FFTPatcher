@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Drawing;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using PatcherLib.Utilities;
@@ -21,24 +24,21 @@ namespace FFTorgASM
 
         public bool skipchecked;
 
+        //string[] PatchFiles;
+
         public MainForm()
         {
             InitializeComponent();
+            asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
+
             string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
 
-            Patchlist = new PatchList(files);
-            Patchlist.AllCheckedPatches = checkedListBox1.CheckedItems;
-
-            lsb_FilesList.Items.Add("All");
-
-            asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
-            InitializePatchList();
-           
-
+          
+                       
             versionLabel.Text = string.Format( "v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString() );
             XmlDocument doc = new XmlDocument();
 
-            lsb_FilesList.SelectedIndex = 0;
+            
             reloadButton_Click( reloadButton, EventArgs.Empty );
 
             patchButton.Click += new EventHandler( patchButton_Click );
@@ -74,6 +74,119 @@ namespace FFTorgASM
             }
         }
 
+        void reloadButton_Click(object sender, EventArgs e)
+        {
+            string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
+
+            lsb_FilesList.SelectedIndices.Clear();
+
+            Patchlist = new PatchList(files, asmUtility);
+            Patchlist.AllCheckedPatches = checkedListBox1.CheckedItems;
+
+            lsb_FilesList.Items.Clear();
+            lsb_FilesList.Items.Add("All");
+            lsb_FilesList.SelectedIndices.Clear();
+            //LoadFile(files[lsb_FilesList.FocusedItem.Index]);
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1);
+                lsb_FilesList.Items.Add(files[i]);
+
+                if(!Patchlist.LoadedCorrectly[i])
+                    lsb_FilesList.Items[i + 1].BackColor = Color.Red;
+            }
+            //LoadFiles( files );
+            
+            numberoffiles = files.Length;
+
+            //lsb_FilesList.SelectedIndices.Add(0);
+           
+
+        }
+        private void lsb_FilesList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            skipchecked = true;
+            checkedListBox1.ItemCheck -= new ItemCheckEventHandler(checkedListBox1_ItemCheck);
+
+            bool somethingchecked = false;
+
+            if (lsb_FilesList.FocusedItem == null)
+                return;
+            //if ALL
+            if (lsb_FilesList.FocusedItem.Index == 0)
+            {
+                LoadPatches(Patchlist.AllPatches);
+
+                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                {
+                    if (lsb_FilesList.FocusedItem.Index == 0)
+                    {
+
+                        if (Patchlist.AllCheckStates[i] == CheckState.Checked)
+                        {
+                            checkedListBox1.SetItemChecked(i, true);
+                            somethingchecked = true;
+                        }
+
+                    }
+                    else
+                    {
+                        if (Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index].PatchCheckStates[i] == CheckState.Checked)
+                        {
+                            checkedListBox1.SetItemChecked(i, true);
+                            somethingchecked = true;
+                        }
+
+                    }
+                }
+            }
+            else //if NOT ALL
+            {
+
+                if (Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1] != null)
+                {
+                    LoadPatches(Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].Patches);
+
+
+                    for (int i = 0; i < Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].PatchCheckStates.Length; i++)
+                    {
+                        if (checkedListBox1.Items.Count > i)
+                        {
+                            if (Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].PatchCheckStates[i] == CheckState.Checked)
+                            {
+                                checkedListBox1.SetItemChecked(i, true);
+                                somethingchecked = true;
+                            }
+                            else
+                            {
+                                checkedListBox1.SetItemChecked(i, false);
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    checkedListBox1.Items.Clear();
+                    MessageBox.Show(lsb_FilesList.FocusedItem.Text + " did not load correctly!");
+                    
+                }
+            }
+            checkedListBox1.ItemCheck += new ItemCheckEventHandler(checkedListBox1_ItemCheck);
+            skipchecked = false;
+            if (somethingchecked)
+            {
+                PatchSaveStbutton.Enabled = true;
+                patchButton.Enabled = true;
+            }
+            else
+            {
+                PatchSaveStbutton.Enabled = false;
+                patchButton.Enabled = false;
+            }
+            
+        }
+
         void checkedListBox1_SelectedIndexChanged( object sender, EventArgs e )
         {
             AsmPatch p = checkedListBox1.SelectedItem as AsmPatch;
@@ -101,13 +214,54 @@ namespace FFTorgASM
                 variableComboBox.Visible = false;
             }
         }
+        void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (skipchecked)
+                goto end;
+            if (e.CurrentValue == CheckState.Unchecked && e.NewValue == CheckState.Checked &&
+                !(checkedListBox1.Items[e.Index] as AsmPatch).ValidatePatch())
+            {
+                e.NewValue = CheckState.Unchecked;
+            }
+
+            patchButton.Enabled = (checkedListBox1.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked) &&
+                                  !(checkedListBox1.CheckedItems.Count == 1 && e.NewValue == CheckState.Unchecked);
+
+            PatchSaveStbutton.Enabled = (checkedListBox1.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked) &&
+                                 !(checkedListBox1.CheckedItems.Count == 1 && e.NewValue == CheckState.Unchecked);
+
+
+            //if NOT ALL
+            if (lsb_FilesList.FocusedItem.Index != 0)
+            {
+                //Set indiivdual list
+                Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].PatchCheckStates[e.Index] = e.NewValue;
+                //Set Master List
+                Patchlist.SetMasterListCheckState(lsb_FilesList.FocusedItem.Index - 1, e.Index, e.NewValue);
+                //Patchlist.Files[lsb_FilesList.SelectedIndex - 1].CheckedPatches = checkedListBox1.CheckedItems;
+            }
+            else //If ALL
+            {
+                int ALLindex = e.Index;
+                int patchindex = ALLindex;
+
+                Patchlist.SetPatchCheckState(ALLindex, e.NewValue);
+                Patchlist.AllCheckStates[e.Index] = e.NewValue;
+            }
+        end: ;
+        }
 
         private void LoadPatches( IList<AsmPatch> patches )
         {
-            this.patches = patches.ToArray();
             checkedListBox1.Items.Clear();
-            checkedListBox1.Items.AddRange( this.patches );
-            patchButton.Enabled = false;
+            if (patches != null)
+            {
+                this.patches = patches.ToArray();
+               
+                checkedListBox1.Items.AddRange(this.patches);
+                //patchButton.Enabled = false;
+            }
+           
         }
         private void LoadFiles( IList<string> files )
         {
@@ -121,7 +275,7 @@ namespace FFTorgASM
                 }
                 else
                 {
-                    MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
+                   // MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
                 }
             }
             LoadPatches( result );
@@ -142,59 +296,6 @@ namespace FFTorgASM
             
         }
 
-        void reloadButton_Click( object sender, EventArgs e )
-        {
-            string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
-           
-            LoadFile(files[lsb_FilesList.SelectedIndex]);
-            for (int i = 0; i < files.Length; i++)
-            {
-                files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1);
-            }
-            //LoadFiles( files );
-            lsb_FilesList.Items.Clear();
-            lsb_FilesList.Items.Add("All");
-            lsb_FilesList.Items.AddRange(files);
-            lsb_FilesList.SelectedIndex = 0;
-            numberoffiles = files.Length;
-
-        }
-
-        void checkedListBox1_ItemCheck( object sender, ItemCheckEventArgs e )
-        {
-            if (skipchecked)
-                goto end;
-            if ( e.CurrentValue == CheckState.Unchecked && e.NewValue == CheckState.Checked &&
-                !( checkedListBox1.Items[e.Index] as AsmPatch ).ValidatePatch() )
-            {
-                e.NewValue = CheckState.Unchecked;
-            }
-
-            patchButton.Enabled = ( checkedListBox1.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked ) &&
-                                  !( checkedListBox1.CheckedItems.Count == 1 && e.NewValue == CheckState.Unchecked );
-
-            //if NOT ALL
-            if(lsb_FilesList.SelectedIndex != 0)
-            {
-                //Set indiivdual list
-                Patchlist.Files[lsb_FilesList.SelectedIndex - 1].Patches[e.Index] = e.NewValue;
-                //Set Master List
-                Patchlist.SetMasterListCheckState(lsb_FilesList.SelectedIndex - 1,e.Index,e.NewValue);
-                //Patchlist.Files[lsb_FilesList.SelectedIndex - 1].CheckedPatches = checkedListBox1.CheckedItems;
-            }
-            else //If ALL
-            {
-                int FileIndex = 0;
-                int ALLindex = e.Index;
-                int patchindex = ALLindex;
-                bool done = false;
-
-                Patchlist.SetPatchCheckState(ALLindex, e.NewValue);
-                Patchlist.AllCheckStates[e.Index] = e.NewValue;              
-            }
-        end: ;
-        }
-
         void patchButton_Click( object sender, EventArgs e )
         {
             saveFileDialog1.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
@@ -210,7 +311,6 @@ namespace FFTorgASM
                 }
             }
         }
-
         private void PatchSaveStbutton_Click(object sender, EventArgs e)
         {
             //Patchbutton copy. Modify to patch byte array right to savestate.
@@ -245,7 +345,6 @@ namespace FFTorgASM
                 e.Effect = DragDropEffects.None;
             }
         }
-
         private void checkedListBox1_DragDrop( object sender, DragEventArgs e )
         {
             if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
@@ -265,7 +364,6 @@ namespace FFTorgASM
                     checkedListBox1.SetItemChecked( i, true );
             }
         }
-
         private void toggleButton_Click( object sender, EventArgs e )
         {
             for ( int i = 0; i < checkedListBox1.Items.Count; i++ )
@@ -276,159 +374,84 @@ namespace FFTorgASM
             }
         }
 
-        private void lsb_FilesList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            skipchecked = true;
-            checkedListBox1.ItemCheck -= new ItemCheckEventHandler(checkedListBox1_ItemCheck);
-            List<AsmPatch> result = new List<AsmPatch>();
-            IList<AsmPatch> tryPatches;
-
-            string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
-
-            //if ALL
-            if(lsb_FilesList.SelectedIndex == 0)
-            {
-                
-                LoadFiles(files);
-                foreach(string file in files)
-                {
-                    if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
-                    {
-                        result.AddRange(tryPatches);
-                      
-                    }
-                    else
-                    {
-                        MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
-                    }
-                }
-                LoadPatches(result);
-
-
-                for (int i = 0; i < checkedListBox1.Items.Count;i++ )
-                {
-                    if (lsb_FilesList.SelectedIndex == 0)
-                    {
-                       int F = 0;
-                     
-                       if( Patchlist.AllCheckStates[i] == CheckState.Checked)
-                       {
-                           checkedListBox1.SetItemChecked(i, true);
-                       }
-                        
-                    }
-                    else
-                    {
-                        if (Patchlist.Files[lsb_FilesList.SelectedIndex].Patches[i] == CheckState.Checked)
-                        {
-                            checkedListBox1.SetItemChecked(i, true);
-                        }
-
-                    }
-                }
-            }
-            else //if NOT ALL
-            {
-                string file = files[lsb_FilesList.SelectedIndex - 1];
-                LoadFile(files[lsb_FilesList.SelectedIndex - 1]);
-                if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
-                {
-                    result.AddRange(tryPatches);
-                }
-                else
-                {
-                    MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
-                }
-                LoadPatches(result);
-
-                for(int i = 0;i < Patchlist.Files[lsb_FilesList.SelectedIndex - 1].Patches.Length;i++)
-                {
-                    if(Patchlist.Files[lsb_FilesList.SelectedIndex - 1].Patches[i] == CheckState.Checked)
-                    {
-                         checkedListBox1.SetItemChecked(i,true );
-                    }
-                    else
-                    {
-                         checkedListBox1.SetItemChecked(i,false );
-                    }
-                }
-                
-            }
-            checkedListBox1.ItemCheck += new ItemCheckEventHandler(checkedListBox1_ItemCheck);
-            skipchecked = false;
-        }
-
-        //remember which things are checked
-      
-
-        private void InitializePatchList()
-        {
-           string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
-
-            IList<AsmPatch> tryPatches;
-
-            LoadFiles(files);
-            int i = 0;
-            int totalcount = 0;
-            foreach (string file in files)
-            {
-                if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
-                {
-                    int count = tryPatches.Count;
-                    totalcount += tryPatches.Count;
-                    Patchlist.Files[i] = new PatchList.PatchFile(count);
-                    //Patchlist.Files[i].CheckedPatches = checkedListBox1.CheckedItems;
-                    i++;
-                }
-                else
-                {
-                    MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
-                }
-                
-            }
-
-            Patchlist.AllCheckStates = new CheckState[totalcount];
-            Patchlist.SetAllCheckStates();
-            
-        }
-
         public class PatchList
         {
-            public PatchFile[] Files;
+            public PatchFile[] FilePatches;
+            public List<AsmPatch> AllPatches = new List<AsmPatch>();
             public CheckState[] AllCheckStates;
             public CheckedListBox.CheckedItemCollection AllCheckedPatches;
-
-            public PatchList(string[] files)
+            public bool[] LoadedCorrectly;
+           
+            public PatchList(string[] files, ASMEncodingUtility asmUtility)
             {
-                Files = new PatchFile[files.Length];
-                AllCheckStates = new CheckState[1];
+                FilePatches = new PatchFile[files.Length];
+                LoadedCorrectly = new bool[files.Length];
+                IList<AsmPatch> tryPatches;
+
+                int i = 0;
+                foreach (string file in files)
+                {
+                    if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file,asmUtility , out tryPatches))
+                    {
+
+                            AllPatches.AddRange(tryPatches);
+
+                            FilePatches[i] = new PatchFile(tryPatches.Count);
+                            FilePatches[i].filename = file;
+                            FilePatches[i].Patches.AddRange(tryPatches);
+                            LoadedCorrectly[i] = true; 
+                    }
+                    else
+                    {
+                        LoadedCorrectly[i] = false; 
+                        //MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
+                    }
+                    i++;
+                }
+
+                AllCheckStates = new CheckState[AllPatches.Count];
+                for(int j = 0;j < AllCheckStates.Length;j++)
+                {
+                    AllCheckStates[j] = new CheckState();
+                    AllCheckStates[j] = CheckState.Unchecked;
+                }
             }
+
+
+
             public void SetAllCheckStates()
             {
                 int i = 0;
-                foreach(PatchFile file in Files)
+                foreach (PatchFile file in FilePatches)
                 {
-                    foreach(CheckState check in file.Patches)
+                    if(file != null)
                     {
-                        AllCheckStates[i] = check;
-                        i++;
+                        foreach (CheckState check in file.PatchCheckStates)
+                        {
+                            AllCheckStates[i] = check;
+                            i++;
+                        }
                     }
+                 
                 }
             }
             //saves in allcheckstates array
             public void SetMasterListCheckState(int FileIndex,int patchindex, CheckState check)
             {
-                
-                for (int i = 0; i < Files.Length; i++)
+
+                for (int i = 0; i < AllCheckStates.Length; i++)
                 {
-                    if (FileIndex > i)
+                    if(FilePatches[i] != null)
                     {
-                        patchindex += Files[i].Patches.Length;
-                    }
-                    else
-                    {
-                        AllCheckStates[patchindex] = check;
-                        return;
+                        if (FileIndex > i)
+                        {
+                            patchindex += FilePatches[i].PatchCheckStates.Length;
+                        }
+                        else
+                        {
+                            AllCheckStates[patchindex] = check;
+                            return;
+                        }
                     }
                 }
 
@@ -438,18 +461,22 @@ namespace FFTorgASM
             //saves in the individual files array of patch states
             public void SetPatchCheckState(int index, CheckState check)
             {
-                for(int i = 0;i < Files.Length;i++)
+                for(int i = 0;i < FilePatches.Length;i++)
                 {
-                    if (Files[i].Patches.Length - 1 < index)
+                    if(FilePatches[i] != null)
                     {
-                        
-                        index -= Files[i].Patches.Length;
+                            if (FilePatches[i].PatchCheckStates.Length - 1 < index)
+                    {
+
+                        index -= FilePatches[i].PatchCheckStates.Length;
                     }
                     else
                     {
-                        Files[i].Patches[index] = check;
+                        FilePatches[i].PatchCheckStates[index] = check;
                         return;
                     }
+                    }
+                
                 }
 
 
@@ -457,21 +484,32 @@ namespace FFTorgASM
 
             public class PatchFile
             {
-                public CheckedListBox.CheckedItemCollection CheckedPatches;
-                public CheckState[] Patches;
-
+                public string filename;
+                public CheckedListBox.CheckedItemCollection FileCheckedPatches;
+                public CheckState[] PatchCheckStates;
+                public List<AsmPatch> Patches = new List<AsmPatch>();
+               
                 public PatchFile(int count)
                 {
-                    Patches = new CheckState[count];
+                    PatchCheckStates = new CheckState[count];
 
-                    for(int i = 0; i < Patches.Length;i++)
+                    for (int i = 0; i < PatchCheckStates.Length; i++)
                     {
-                        Patches[i] = CheckState.Unchecked;
+                        PatchCheckStates[i] = CheckState.Unchecked;
                     }
                 }
 
 
             }
         }
+
+        private void btn_OpenConflictChecker_Click(object sender, EventArgs e)
+        {
+
+                ConflictChecker C = new ConflictChecker();
+                C.ShowDialog();
+
+        }
+
     }
 }
