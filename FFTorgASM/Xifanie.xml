@@ -1,0 +1,1456 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+
+  <Patch name="Fur Shop Town Availability">
+    <Description>
+      Enables the Fur Shop option in specified towns. (Default: Dorter, Warjilis, Zarghidas)
+
+      X:
+      0x01: Lesalia Imperial Capital
+      0x02: Riovanes Castle
+      0x04: Igros Castle
+      0x08: Lionel Castle
+      0x10: Limberry Castle
+      0x20: Zeltennia Castle
+      0x40: Magic City Gariland
+      0x80: Yardow Fort City
+
+      Y:
+      0x01: Goland Coal City
+      0x02: Dorter Trade City
+      0x04: Zaland Fort City
+      0x08: Goug Machine City
+      0x10: Warjilis Trade City
+      0x20: Bervenia Free City
+      0x40: Zarghidas Trade City
+      0x80: Fort Zeakden
+
+      Z:
+      0x01: Murond Holy Place
+      0x02: Thieves Fort
+      0x04: Orbonne Monastery
+      0x08: Golgorand Execution Site
+      0x10: Murond Death City
+      0x20: Bethla Garrison
+      0x40: Deep Dungeon
+      0x80: Nelveska Temple
+    </Description>
+    <Variable name="X" file="WORLD_WLDCORE_BIN" default="00" offset="26378"/>
+    <Variable name="Y" file="WORLD_WLDCORE_BIN" default="52" offset="26379"/>
+    <Variable name="Z" file="WORLD_WLDCORE_BIN" default="00" offset="26374"/>
+    <Location file="WORLD_WLDCORE_BIN" offset="2636C">
+      01000334
+      04182302
+    </Location>
+    <Location file="WORLD_WLDCORE_BIN" offset="26375">
+      00023C
+    </Location>
+    <Location file="WORLD_WLDCORE_BIN" offset="2637A">
+      4234
+      24184300
+      07006010
+      00000000
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Undead Revival Chance">
+    <Description>
+      Chance that undead units will revive once their death counter reaches 0 and 100CT. The chance formula is: (X - 32768) / 32767; meaning that the range is from 0x0000 (0 or 0%) down to 0x8000 (-32768 or 100%). In vanilla, the undead have 50% chance to revive. This hack's default value is 100% revival rate.
+
+      Examples:
+      0% revive: 0000
+      5% revive: F999
+      10% revive: F333
+      25% revive: E000
+      33.3% revive: D555
+      50% revive: C000
+      75% revive: A000
+      100% revive: 8000
+    </Description>
+    <Variable name="Revival Chance" file="BATTLE_BIN" offset="11C178" bytes="2" default="8000" />
+    <Location file="BATTLE_BIN" offset="11C17A">
+      C224
+      10004104
+    </Location>
+  </Patch>
+
+  <Patch name="Can view ??? units' stats">
+    <Description>Allows viewing the stats of ??? units. Sadly, as the Unit List does not have a function to hide stats like the battle field does, you should not apply the Unit List portion of this hack if you want stats to remain completely hidden to the player. This means the ??? unit will not show up at all in the Unit List, just like in the original version. By default, this xml disables all stats hiding, so edit it as you see fit (there are plenty of comments).</Description>
+    <!-- For every section: 00 to disable and 04 to re-enable -->
+    <!-- Allow viewing ??? units' stats on the field -->
+    <Location file="BATTLE_BIN" offset="D5DF0">
+      00
+    </Location>
+    <!-- Allow viewing ??? units' stats in Unit List (THE GAME DOES NOT HIDE STATS) -->
+    <Location file="EVENT_BUNIT_OUT" offset="7E70">
+      00
+    </Location>
+    <!-- HP/MP/CT bars are coloured + filled and reveal the stats from the second window (SP/PA/MA/WP/etc.) of ??? units on the field -->
+    <Location file="BATTLE_BIN" offset="CF070">
+      00
+    </Location>
+    <!-- Reveal Brave/Faith of ??? units on the field -->
+    <Location file="BATTLE_BIN" offset="CF444">
+      00
+    </Location>
+    <!-- Reveal Lv/Exp/HP/MP/CT numbers of ??? units on the field (12042 HP will display as 042, you've been warned; only the last 2-3 digits are displayed for these numbers) -->
+    <Location file="BATTLE_BIN" offset="CE320">
+      00
+    </Location>
+  </Patch>
+
+  <Patch name="Smart Encounters">
+    <Description>100% random encounter on destination, 0% otherwise. So you ONLY get random encounters when you want them.</Description>
+    <Location file="WORLD_WLDCORE_BIN" offset="28188">
+      0D80033C
+      800B628C
+      00000000
+      7C0B638C
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      2D004314
+    </Location>
+  </Patch>
+
+  <Patch name="Move-Find Item is Player only">
+    <Description>Only a unit from the player's team can pick up items through Move-Find Item.</Description>
+    <Location file="BATTLE_BIN" offset="1190B8">
+      00004490
+      05004392
+      08001010
+      00000000
+      01008230
+      05004010
+      30006330
+      03006014
+      00000000
+      3D000608
+      04003136
+      02008230
+    </Location>
+  </Patch>
+
+  <Patch name="Monster Skill is disabled">
+    <Description>All monsters can use their 4 skills as if Monster Skill never existed. Also frees space from 0x80182438 to 0x80182660 (BATTLE.BIN).</Description>
+    <Location file="BATTLE_BIN" offset="135C00">
+      80000234
+    </Location>
+    <Location file="BATTLE_BIN" offset="1345D8">
+      80000234
+    </Location>
+    <Location file="BATTLE_BIN" offset="11B430">
+      0800E003
+      01000234
+    </Location>
+    <Location file="BATTLE_BIN" offset="133960">
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Frameskipper v1.1">
+    <Description>
+      When pressing the designed controller input combinations, the frame limiter will be switched on/off. (Default: L2+Square = on / R2+Square = off)
+      The last option is: "Turn off frameskip as soon as I stop holding the ON: Button Combination".
+
+      0x8000  Left
+      0x4000  Down
+      0x2000  Right
+      0x1000  Up
+      0x0800  Start
+      0x0400  R3
+      0x0200  L3
+      0x0100  Select
+      0x0080  Square
+      0x0040  Cross
+      0x0020  Circle
+      0x0010  Triangle
+      0x0008  R1
+      0x0004  L1
+      0x0002  R2
+      0x0001  L2
+    </Description>
+    <Location file="SCUS_942_21" offset="E564">
+      0680023C
+      00704294
+      A5A10008
+      88880534
+    </Location>
+    <Location file="SCUS_942_21" offset="18E94">
+      0C00A214
+      448A0534
+      0980053C
+      0861A58C
+      00000000
+      1F00A014
+      0580053C
+      AC78A58C
+      00000000
+      1B00A014
+      0480053C
+      B9A10008
+      4459A58C
+      1700A214
+      0380053C
+      BC28A58C
+      00000000
+      1300A014
+      1A80053C
+      04A2A58C
+      0380013C
+      82000334
+      24106500
+      02004314
+      01000334
+      3C8723AC
+      81000334
+      24106500
+      02004314
+      00000000
+      3C8720AC
+      3C87228C
+      00000000
+      03004014
+      00000000
+      5F770008
+      00000000
+      0380023C
+      B817428C
+      00000000
+      5D770008
+      2A104400
+      01000000
+    </Location>
+    <Variable name="ON: Button Combination" file="SCUS_942_21" offset="18EFC" bytes="2" default="0081" />
+    <Variable name="OFF: Button Combination" file="SCUS_942_21" offset="18EE8" bytes="2" default="0082" />
+    <Variable name="0 = Hold ON to Frameskip" file="SCUS_942_21" offset="18EF0" bytes="4" default="14430002" />
+  </Patch>
+
+  <Patch name="Cross Skip v3">
+    <Description>Holding X (Cross button), will fly you through dialog text as if you were mashing the button.</Description>
+    <Location file="BATTLE_BIN" offset="CA6C4">
+      1780023C
+      D097428C
+      004C0508
+      0480033C
+    </Location>
+    <Location file="BATTLE_BIN" offset="CA33C">
+      054C0508
+    </Location>
+    <Location file="BATTLE_BIN" offset="C8BC8">
+      1E4C0508
+      0480023C
+    </Location>
+    <Location file="BATTLE_BIN" offset="CB6F0">
+      0E4C0508
+      032C0500
+      40000831
+      02000015
+      25400000
+      A800A897
+      1780013C
+      D4DA37A4
+      D6DA3EA4
+      D8DA30A4
+      E0DA22A4
+      E2DA23A4
+    </Location>
+    <Location file="EVENT_ETC_OUT" offset="210">
+      124C050C
+      1780013C
+    </Location>
+    <Location file="EVENT_ETC_OUT" offset="258">
+      124C050C
+      1780013C
+    </Location>
+    <Location file="EVENT_ETC_OUT" offset="2A0">
+      124C050C
+      1780013C
+    </Location>
+    <Location file="EVENT_ETC_OUT" offset="2E4">
+      124C050C
+      1780013C
+    </Location>
+    <Location file="EVENT_ETC_OUT" offset="320">
+      124C050C
+      1780013C
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC000">
+      4459638C
+      20014230
+      40006330
+      B5C50408
+      25104300
+      0480023C
+      4459428C
+      6400278D
+      40004230
+      02004010
+      FC00E230
+      03004734
+      D1C40408
+      00000000
+      0480083C
+      4459088D
+      BEC90408
+      00000000
+      54E4238C
+      00000000
+      07006014
+      0480023C
+      4459428C
+      00000000
+      40004230
+      02004010
+      00000000
+      FF7F1026
+      0800E003
+      3840228C
+      4459428C
+      00000000
+      40004230
+      04004010
+      1680023C
+      25A80000
+      1780013C
+      04A420A4
+      F4BE0408
+      885F428C
+    </Location>
+  </Patch>
+
+  <Patch name="Bonus Money = (Level+X)*Y">
+    <Variable name="X (hexademical)" file="BATTLE_BIN" offset="119DE4" bytes="2" default="0000" />
+    <Location file="BATTLE_BIN" offset="119DE6">
+      4224
+    </Location>
+    <Location file="BATTLE_BIN" offset="119DEC">
+      443822A4
+    </Location>
+    <Variable name="Y (hexademical)" file="BATTLE_BIN" offset="119EDC" bytes="2" default="0064" />
+    <Location file="BATTLE_BIN" offset="119EDE">
+      0334
+      19004300
+      12180000
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="119EF4">
+      00000000
+    </Location>
+  </Patch>
+  
+  <Patch name="2nd Squad is not mandatory">
+    <Description>Allows starting a battle with an empty 2nd Squad, even if you have units available.</Description>
+    <Location file="EVENT_ATTACK_OUT" offset="5994">
+      1E80043C
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="59A0">
+      7CCC848C
+      58D0228C
+      00000000
+      21104400
+    </Location>
+  </Patch>
+  
+  <Patch name ="Stat Raise/Break cap">
+    <Description>
+      Stat gain/break cap + Maintenance prevents stat break
+
+      WW/XX = Lower Limit which the stat can be reduced.
+      YY/ZZ = Upper Limit which the stat can be raised.
+      For example, a lower limit of 1/3 and a upper limit of 1/4 for someone with 18PA, would be:
+      lower cap: 18PA - (18PA * 1/3) = 12PA
+      upper cap: 18PA + (18PA * 1/4) = 22PA
+      This hack takes full consideration of equipment.
+      Formula is: STAT - (STAT*WW/XX) = CAP
+      Formula is: STAT + (STAT*YY/ZZ) = CAP
+    </Description>
+    <Location file="BATTLE_BIN" offset="000EDB8C">
+      77777777
+      77777777
+      77777777
+      77777777
+      77777777
+      984B6DAC
+      9C4B6EAC
+      1980033C
+      CC086324
+      2218A300
+      C0010434
+      1A006400
+      10300000
+      D0FFC724
+      0300EA2C
+      2230A600
+      03000210
+      00000000
+      FC520508
+      21400901
+      9100CB90
+      04006B31
+      02000B14
+      00000000
+      22400901
+      3A000A10
+      00000000
+      2150C700
+      36004B91
+      30004A91
+      22706A01
+      0300CA90
+      30000D34
+      1800AA01
+      12500000
+      06800C3C
+      21604C01
+      03000714
+      01000D34
+      0300C624
+      02008C25
+      0300A715
+      00000000
+      0600C624
+      04008C25
+      CA108A91
+      7800CC90
+      7900CD90
+      006A0D00
+      2160AC01
+      7A00CD90
+      006C0D00
+      2160AC01
+      18004C01
+      12600000
+      19000B3C
+      1A008B01
+      12600000
+      2538C001
+      21708E01
+      <Variable file="BATTLE_BIN" offset="edc7C" name="WW"/>
+      000A34
+      <Variable file="BATTLE_BIN" offset="0edc80" name="XX"/>
+      000C34
+      18004E01
+      12500000
+      1A004C01
+      12500000
+      2250CA01
+      22504701
+      <Variable file="BATTLE_BIN" offset="edc9C" name="YY"/>
+      000B34
+      <Variable file="BATTLE_BIN" offset="edcA0" name="ZZ"/>
+      000C34
+      18006E01
+      12580000
+      1A006C01
+      12580000
+      2158CB01
+      22586701
+      2A680A01
+      02000D10
+      00000000
+      25404001
+      2A686801
+      02000D10
+      00000000
+      25406001
+      1580033C
+      8C4B6A8C
+      904B6B8C
+      944B6C8C
+      984B6D8C
+      9C4B6E8C
+      63000634
+      6B350608
+      01000734
+
+    </Location>
+    <Location file="BATTLE_BIN" offset="00126598">
+      1580033C
+      8C4B6AAC
+      904B6BAC
+      E8520508
+      944B6CAC
+    </Location>
+  </Patch>
+
+  <Patch name ="Mime functions as normal Job (v2)">
+    <Description>
+      Mime still can't learn abilities, but otherwise, they should be perfectly normal.  If you want mimes to still mimic, delete the last line (11BF44).
+    </Description>
+    <Location file="WORLD_WORLD_BIN" offset="00005014">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00005040">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000150C0">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00029110">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="0002913C">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00029290">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000292BC">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="0002CB00">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="0002CB2C">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00040E80">
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00042818">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00044834">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000448D0">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00044B00">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00045470">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000455B0">
+      FFFF0334
+    </Location>
+    <Location file="BATTLE_BIN" offset="00116BD8">
+      FFFF0234
+    </Location>
+    <Location file="BATTLE_BIN" offset="0011BF44">
+      FFFF0534
+    </Location>
+  </Patch>
+  <Patch name ="Blank support ability over Short Charge adds 25% bonus skill hit">
+    <Description>
+      Abilities like talk skill, spells, physical abilities gain 25% to hit unless they are 100% to hit to start with.
+    </Description>
+    <Location file="BATTLE_BIN" offset="0011F5D8">
+      1980013C
+      CE382294
+      942D248C
+      CE3830A4
+      92008490
+      D03822A4
+      10008430
+      03000410
+      21100202
+      82181000
+      21106200
+      902D248C
+      00000000
+    </Location>
+  </Patch>
+  <Patch name ="Sets the title screens default option from New Game to Continue">
+    <Location file="OPEN_OPEN_BIN" offset="00003490">
+      0880023C
+      40534124
+      21082300
+      01000434
+      000024AC
+      40534124
+    </Location>
+  </Patch>
+  <Patch name ="Ramza (unit ID 01, 02 and 03) can join as a guest.">
+    <Location file="EVENT_REQUIRE_OUT" offset="00005878">
+      0100422C
+    </Location>
+  </Patch>
+  <Patch name="Max num of palettes">
+    <Variable file="BATTLE_BIN" offset="00020B0C" name="X"/>
+  </Patch>
+  <Patch name="num of allowed spritesheets">
+    <Description>
+      This one is risky if you aren't aware of the consequences.
+      Normally the spritesheet limit is 9 and the game will always calculate that you bring 5 units in random battles, even if the squad allows less.
+      Therefore the game will calculate that only 4 enemy spritesheets are allowed to be loaded and will not even try to load any different spritesheet units after that.
+      By raising the limit to 13, it allows 8 enemy spritesheets.
+      Whoever you have to make sure the amount of units the player is allowed in the squad plus the the total spritesheets the ENTD can generate doesn't exceed 9.
+      Else you create the possibility that a graphical glitch will occur for some units just like in story battles or the Deep Dungeon.
+    </Description>
+    <Variable file="BATTLE_BIN" offset="00118910" name="X"/>
+  </Patch>
+  <Patch name="Sprite Hack">
+    <Description>
+      This hack is not fully safe.  Use it at your own risk.
+    </Description>
+    <Location file="BATTLE_BIN" offset="0001ADCC">
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="000E92E0">
+      0A00033C
+      00000F34
+      7CB260AC
+      04006324
+      1400E929
+      FCFF0914
+      0100EF25
+      31D10508
+      00000000
+      0500DE92
+      1900043C
+      CC088424
+      C0011034
+      18000702
+      12800000
+      21200402
+      5800848C
+      0300103C
+      40011026
+      24200402
+      9000352A
+      03001514
+      05001534
+      DD400508
+      00000000
+      02000410
+      1A00F502
+      10B80000
+      64070208
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="0010D4C0">
+      B8400508
+    </Location>
+    <Location file="BATTLE_BIN" offset="0001AD88">
+      C1400508
+    </Location>
+  </Patch>
+  <Patch name="Sprite Hack (special units &amp; generic humans)">
+    <Location file="BATTLE_BIN" offset="00020AE4">
+      00000000
+      26004228
+    </Location>
+  </Patch>
+  <Patch name="Sprite Hack (special units, generic humans and generic monsters)">
+    <Location file="BATTLE_BIN" offset="00020AE4">
+      FFFF4230
+      FFFF422C
+    </Location>
+  </Patch>
+  <Patch name="Disable game music">
+    <Description>
+      To finally play on turbo with your own songs while the sound effects are still enabled.
+    </Description>
+    <Location file="SCUS_942_21" offset="00033DF4">
+      01000234
+    </Location>
+    <Location file="SCUS_942_21" offset="00033E90">
+      01000234
+    </Location>
+    <Location file="SCUS_942_21" offset="00034010">
+      01000234
+    </Location>
+  </Patch>
+  <Patch name="Allow generics to join as guests (version 1)">
+    <Description>
+      The number of the guest is that of the roster number. For example, Sprite Set 0x10 (17) with Load Formation will load unit 17 in roster.
+    </Description>
+    <Location file="SCUS_942_21" offset="0004A3D0">
+      8300422C
+    </Location>
+    <Location file="SCUS_942_21" offset="0004A7BC">
+      06008510
+    </Location>
+  </Patch>
+  <Patch name="Spell quotes always pops up">
+    <Location file="BATTLE_BIN" offset="000E34C4">
+      00000234
+    </Location>
+    <Location file="BATTLE_BIN" offset="000DA82C">
+      00000334
+    </Location>
+  </Patch>
+  <Patch name="Skillset X innate all">
+    <Description>
+      For this hack to work, X must equal Y.
+      This also makes it so the AI controlled monsters can use secondary skillsets.  However, the AI can only consider up to 32 moves, so if the primary and secondary have too many moves, the innate skillset's moves will still be ignored by the AI.
+      A list of skillsets:
+      01 : Attack
+      02 : Defend
+      03 : Equip Change
+      04 :
+      05 : Basic Skill / Fundaments
+      06 : Item / Items
+      07 : Battle Skill / Arts of War
+      08 : Charge / Aim
+      09 : Punch Art / Martial Arts
+      0A : White Magic / White Magicks
+      0B : Black Magic / Black Magicks
+      0C : Time Magic / Time Magicks
+      0D : Summon Magic / Summon
+      0E : Steal
+      0F : Talk Skill / Speechcraft
+      10 : Yin Yang Magic / Mystic Arts
+      11 : Elemental / Geomancy
+      12 : Jump
+      13 : Draw Out / Iaido
+      14 : Throw
+      15 : Math Skill / Arithmeticks
+      16 : Sing / Bardsong
+      17 : Dance
+      18 : Mimic
+      19 : Guts / Mettle
+      1A : Guts / Mettle
+      1B : Guts / Mettle
+      1C : Guts / Mettle
+      1D : Holy Sword
+      1E : Mighty Sword / Unyielding Blade
+      1F : Basic Skill / Fundaments
+      20 : Dark Sword / Fell Sword
+      21 : Holy Sword
+      22 : Holy Sword
+      23 : Magic / Magicks
+      24 : Holy Magic / Holy Magicks
+      25 : Snipe / Aimed Shot
+      26 : Snipe / Aimed Shot
+      27 : Dark Sword / Fell Sword
+      28 : Holy Sword
+      29 : Limit
+      2A : White-aid / Priest Magicks
+      2B : Dragon
+      2C : Breath
+      2D : Truth / Sky Mantra
+      2E : Un-truth / Nether Mantra
+      2F : Starry Heaven / Astrology
+      30 : Holy Sword
+      31 : Holy Magic / Holy Magicks
+      32 : Truth / Sky Mantra
+      33 : Battle Skill / Arts of War
+      34 : Jump
+      35 : Punch Skill / Martial Arts
+      36 : Use Hand / Subdual Arts
+      37 : Use Hand / Subdual Arts
+      38 : Throw
+      39 : Throw
+      3A : Holy Sword
+      3B : Sword Spirit
+      3C : Mighty Sword / Unyielding Blade
+      3D : All Magic / Magicks
+      3E : Sword Spirit
+      3F : Blood Suck / Vampire
+      40 : Mighty Sword / Unyielding Blade
+      41 : All Magic / Magicks
+      42 : Mighty Sword / Unyielding Blade
+      43 : Mighty Sword / Unyielding Blade
+      44 : Snipe / Aimed Shot
+      45 : Magic Sword / Spellblade
+      46 : Sword Skill / Swordplay
+      47 : All Magic / Magicks
+      48 : All Magic / Magicks
+      49 : Phantom / Esper
+      4A : All Swordskill / Swordplay
+      4B : Destroy Sword / Blade of Ruin
+      4C : Holy Magic / Holy Magicks
+      4D :
+      4E :
+      4F :
+      50 :
+      51 :
+      52 :
+      53 :
+      54 :
+      55 :
+      56 :
+      57 :
+      58 :
+      59 :
+      5A :
+      5B :
+      5C :
+      5D :
+      5E :
+      5F :
+      60 :
+      61 :
+      62 :
+      63 :
+      64 :
+      65 :
+      66 :
+      67 : Fear / Dread
+      68 : Warlock Summon / Summon Gigas
+      69 :
+      6A :
+      6B : Fear / Dread
+      6C : Ja Magic/ Ja-Magicks
+      6D :
+      6E :
+      6F : Fear / Dread
+      70 : Dimension Magc / Planar Magicks
+      71 :
+      72 :
+      73 : Fear / Dread
+      74 : Impure / Befoul
+      75 :
+      76 :
+      77 : Fear / Dread
+      78 : All Magic / Magicks
+      79 :
+      7A :
+      7B : Ultimate Magic / Arcane Magicks
+      7C : Chaos
+      7D : Complete Magic / Divine Magicks
+      7E : Saturation / Divine Providence
+      7F :
+      80 :
+      81 :
+      82 :
+      83 :
+      84 :
+      85 :
+      86 :
+      87 :
+      88 :
+      89 :
+      8A :
+      8B :
+      8C :
+      8D :
+      8E :
+      8F :
+      90 :
+      91 :
+      92 :
+      93 :
+      94 :
+      95 :
+      96 :
+      97 :
+      98 :
+      99 :
+      9A :
+      9B : Sword Skill / Swordplay
+      9C : Charge / Aim
+      9D : Black Magic / Black Magicks
+      9E : Time Magic / Time Magicks
+      9F : Yin Yang Magic / Mystic Arts
+      A0 : Summon Magic / Summon
+      A1 : Item / Items
+      A2 : White Magic / White Magicks
+      A3 : Black Magic / Black Magicks
+      A4 : Yin Yang Magic / Mystic Arts
+      A5 :
+      A6 :
+      A7 :
+      A8 :
+      A9 :
+      AA : Byblos
+      AB : Work / Tasks
+      AC : Bio
+      AD : Dark Cloud / The Dark
+      AE : Dark Magic / Dark Arts
+      AF : Night Magic / Demon Magicks
+      E0 : PSP ONLY (Darkness)
+      E1 : PSP ONLY (Piracy)
+      E2 : PSP ONLY (Huntcraft)
+    </Description>
+    <Location file="BATTLE_BIN" offset="11a4f0">
+      374D0508
+      12006294
+    </Location>
+    <Variable file="BATTLE_BIN" offset="EC4DC" name="X"/>
+    <Location file="BATTLE_BIN" offset="EC4DD">
+      000134
+      05004110
+      02120200
+      03004110
+      21102000
+      000002A2
+      01001026
+      FF000234
+      3E050608
+      000002A2
+    </Location>
+    <Location file="BATTLE_BIN" offset="0013347C">
+      13004592
+      7E69060C
+      21302002
+    </Location>
+    <Variable file="BATTLE_BIN" offset="133488" name="Y"/>
+    <Location file="BATTLE_BIN" offset="133489">
+      000534
+      7E69060C
+      21302002
+      21884000
+      00000000
+      00000000
+      00000000
+    </Location>
+  </Patch>
+  <Patch name="Remove forced slowdown for Math Skill (Skillset ID 0x15)">
+    <Location file="BATTLE_BIN" offset="115F74">
+      00000000
+    </Location>
+  </Patch>
+  <Patch name="Forces any unit to automatically recover HP/MP when it steps on a crystal">
+    <Location file="BATTLE_BIN" offset="0000AFC8">
+      FCC70108
+    </Location>
+  </Patch>
+  <Patch name="Removes permanent brave alteration. (Version 2.0)">
+    <Location file="EVENT_REQUIRE_OUT" offset="5044">2300e490</Location>
+  </Patch>
+  <Patch name="Removes permanent faith alteration. (Version 2.0)">
+    <Location file="EVENT_REQUIRE_OUT" offset="5080">2500e490</Location>
+  </Patch>
+  <Patch name="Changes Brave into Fury. (Version 1.1)">
+    <Description>
+      Fury is essentially Brave, but with Faith's aspects. The higher your Fury, the higher damage you can deal and receive.
+      The formula added at the end of all calculations is: (X+Caster_Fury)*(Y+Target_Fury)*Total_Damage/10000
+      Fury still keeps Brave's normal effects such as Move-Find Item and chance to activate reaction abilities.
+      Bye Bye constant damage! Zodiac compatibility doesn't affect nearly as much as this anyway.
+    </Description>
+    <Location file="BATTLE_BIN" offset="E930C">
+      10200000
+      1980033C
+      942D628C
+      982D638C
+      24004290
+      24006390
+    </Location>
+    <Variable file="BATTLE_BIN" offset="E9324" name="X"/>
+    <Location file="BATTLE_BIN" offset="E9325">004224</Location>
+    <Variable file="BATTLE_BIN" offset="E9328" name="Y"/>
+    <Location file="BATTLE_BIN" offset="E9329">
+      006324
+      18004300
+      12100000
+      1500033C
+      0C0362AC
+      97180608
+      942D218C
+      12100000
+      1500043C
+      0C03848C
+      18004400
+      12100000
+      10270434
+      00000000
+      1A004400
+      1500023C
+      0C0344AC
+      12100000
+      65190608
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11f254">
+      C4400508
+      1900013C
+      00000000
+      5A00228C
+    </Location>
+    <Location file="BATTLE_BIN" offset="11f58c">
+      D1400508
+      250062A0
+    </Location>
+  </Patch>
+  <Patch name="Divide Gained Exp in 2">
+    <Description>Divide Gained Exp in 2 (also breaks minimal 1 Exp gain on success). NOTE: BUGGY; Exp gain works fine but amount gained with the Display Exp &amp; JP gain option, it calculates normally and doesn't halve.</Description>
+    <Location file="BATTLE_BIN" offset="1178AC">
+      42182300
+      21184300
+      00016228
+      00000000
+      00000000
+    </Location>
+  </Patch>
+  <Patch name="20 Bonus Money per level.">
+    <Location file="BATTLE_BIN" offset="119ee4">
+      21186200
+    </Location>
+  </Patch>
+  <Patch name="Divide Bonus Money by 2">
+    <Location file="BATTLE_BIN" offset="119ef4">
+      40180300
+    </Location>
+  </Patch>
+  <Patch name="Weapon Guard Innate all">
+    <Location file="BATTLE_BIN" offset="11e0c8">
+      00000000
+      00000000
+      00000000
+    </Location>
+  </Patch>
+  <Patch name="Change DMG_(MA+Y)/2 * MA to Dmg_(MA*Y) for formula 1E/1F/5E/5F/60">
+    <Location file="BATTLE_BIN" offset="11ECE8">
+      21106000
+      00000000
+    </Location>
+  </Patch>
+  <Patch name="Elemental Fix (v3) FIXES HOLY SWORD AND OIL">
+    <Description>
+      Strengthen is W / 128 * Damage
+      Absorb is X / 128 * Damage
+      Resist is Y / 128 * Damage
+      Weak is Z / 128 * Damage
+      NOTE: The above are to final damage.  This means the round-off errors are minimized compared to FFT.  A list of common percentages:
+      190% is F4
+      183% is EB
+      180% is E7
+      175% is E0
+      170% is DA
+      166% is D6
+      160% is CD
+      150% is C0
+      140% is B4
+      133% is AB
+      130% is A7
+      125% is A0
+      120% is 9A
+      117% is 96
+      110% is 8D
+      100% is 80
+      90% is 74
+      83% is 6B
+      80% is 67
+      75% is 60
+      70% is 5A
+      66% is 56
+      60% is 4D
+      50% is 40
+      40% is 34
+      33% is 2B
+      30% is 27
+      25% is 20
+      20% is 1A
+      17% is 16
+      10% is D
+      If the ability has "Weapon Strike", the ability will stack both the elementals from the weapons and from the ability.  A consequence of this is that the first attack in FFTP must now be flagged as weapon strike or elemental weapons will not work.
+      If you want to only use the ability elemental, unflag "Weapon Strike".
+      If you want to only use the weapon elemental, flag "Weapon Strike" and set the ability as non-elemental.
+      This hack also bundles the Float = Weak to Wind hack. If you don't want this feature, don't change 11FD48 or 11FD54.
+    </Description>
+    <Location file="BATTLE_BIN" offset="ec6dc">
+      1980053C
+      942DA58C
+      90014194
+      7100A590
+      00000000
+      24188500
+      04006010
+    </Location>
+    <Variable file="BATTLE_BIN" offset="EC6F8" default="A0" name="W"/>
+    <Location file="BATTLE_BIN" offset="ec6F9">
+      000334
+      19006100
+      12080000
+      C2090100
+      0800E003
+      900141A4
+    </Location>
+    <Location file="BATTLE_BIN" offset="11de98">
+      1980023C
+      F3384390
+      F7384490
+      04394590
+      04006330
+      02006010
+      E8FFBD27
+      25208500
+      982D428C
+      1000BFAF
+      B74D050C
+      00000000
+      6D004590
+      9C014194
+      24188500
+      08006010
+      00042334
+      90014194
+      9C0143A4
+    </Location>
+    <Variable file="BATTLE_BIN" offset="11DEE4" default="80" name="X"/>
+    <Location file="BATTLE_BIN" offset="11DEE5">
+      000334
+      19006100
+      12080000
+      C2090100
+      900141A4
+      6E004590
+      00000000
+      24188500
+      05006010
+      00000000
+      9013060C
+      00000000
+      E3130608
+      00000000
+      6F004590
+      90014194
+      24188500
+      05006010
+    </Location>
+    <Variable file="BATTLE_BIN" offset="11DF2C" default="40" name="Y"/>
+    <Location file="BATTLE_BIN" offset="11DF2D">
+      000334
+      19006100
+      12080000
+      C2090100
+      900141A4
+      5A004190
+      70004590
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DF48">
+      40002330
+      02006010
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DF50">
+      80002330
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DF54">
+      1000A534
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DF58">
+      02006010
+      90014194
+      8000A534
+      24188500
+      08006010
+    </Location>
+    <Variable file="BATTLE_BIN" offset="11DF6C" default="FF" name="Z"/>
+    <Location file="BATTLE_BIN" offset="11DF6D">
+      000334
+      19006100
+      12080000
+      C2090100
+      9C014394
+      900141A4
+      00086334
+      9C0143A4
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11EFC2">42</Location>
+    <Location file="BATTLE_BIN" offset="11F01A">42</Location>
+  </Patch>
+  <Patch name="Global C-Ev">
+    <Description>
+      All units will have 100% of their C-Ev. calculated for the front, 50% for the sides and 25% for the back.
+    </Description>
+    <Location file="BATTLE_BIN" offset="e92e0">
+      1980013C
+      E1382490
+      01001434
+      42200400
+      02005410
+      00000000
+      42200400
+      E13824A0
+      00001434
+      C4150608
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11e708">
+      B8400508
+      00000000
+    </Location>
+  </Patch>
+  <Patch name="X% chance of Critical Hit">
+    <Variable file="BATTLE_BIN" offset="11F508" default="04" name="X"/>
+  </Patch>
+  <Patch name="X% chance of Knockback for Dash/Throw Stone">
+    <Description>
+      NOTE: The chance of Knockback IS NOT 50%.  That's an error in the BMG.  The probability of knockback is actually (CasBr) / (CasBr + TarBr).
+    </Description>
+    <Location file="BATTLE_BIN" offset="11F9C0">64000434</Location>
+    <Variable file="BATTLE_BIN" offset="11F9C8" default="32" name="X"/>
+    <Location file="BATTLE_BIN" offset="11F9C9">000534</Location>
+  </Patch>
+  <Patch name="X% chance of Procs">
+    <Variable file="BATTLE_BIN" offset="001206AC" default="13" name="X"/>
+  </Patch>
+  <Patch name="Selling Items at 1/4 Price">
+    <Location file="WORLD_WORLD_BIN" offset="4374c">82100200</Location>
+  </Patch>
+  <Patch name="Maximum generated level in randoms">
+    <Variable file="SCUS_942_21" offset="4B670" default="63" name="X"/>
+  </Patch>
+  <Patch name="Maximum levelup">
+    <Variable file="SCUS_942_21" offset="4E0B0" default="63" name="X"/>
+  </Patch>
+  <Patch name="Require: Materia Blade = Require Item X">
+    <Description>
+      Item List:
+      01: Dagger
+      02 : Mythril Knife
+      03 : Blind Knife
+      04 : Mage Masher
+      05 : Platina Dagger / Platinum Dagger
+      06 : Main Gauche
+      07 : Orichalcum / Orichalcum Dirk
+      08 : Assassin Dagger / Assassin's Dagger
+      09 : Air Knife
+      0A : Zorlin Shape / Zwill Straightblade
+      0B : Hidden Knife / Ninja Blade
+      0C : Ninja Knife / Kunai
+      0D : Short Edge / Kodachi
+      0E : Ninja Edge / Ninja Longblade
+      0F : Spell Edge / Spellbinder
+      10 : Sasuke Knife / Sasuke's Blade
+      11 : Iga Knife / Iga Blade
+      12 : Koga Knife / Koga Blade
+      13 : Broad Sword / Broadsword
+      14 : Long Sword / Longsword
+      15 : Iron Sword
+      16 : Mythril Sword
+      17 : Blood Sword
+      18 : Coral Sword
+      19 : Ancient Sword
+      1A : Sleep Sword / Sleep Blade
+      1B : Platinum Sword
+      1C : Diamond Sword
+      1D : Ice Brand / Icebrand
+      1E : Rune Blade / Runeblade
+      1F : Nagrarock / Nagrarok
+      20 : Materia Blade
+      21 : Defender
+      22 : Save the Queen
+      23 : Excalibur
+      24 : Ragnarok
+      25 : Chaos Blade
+      26 : Asura Knife / Ashura
+      27 : Koutetsu Knife / Kotetsu
+      28 : Bizen Boat / Osafune
+      29 : Murasame
+      2A : Heaven's Cloud / Ama-no-Murakumo
+      2B : Kiyomori
+      2C : Muramasa
+      2D : Kikuichimoji / Kiku-ichimonji
+      2E : Masamune
+      2F : Chirijiraden
+      30 : Battle Axe
+      31 : Giant Axe / Giant's Axe
+      32 : Slasher
+      33 : Rod
+      34 : Thunder Rod
+      35 : Flame Rod
+      36 : Ice Rod
+      37 : Poison Rod
+      38 : Wizard Rod / Wizard's Rod
+      39 : Dragon Rod
+      3A : Faith Rod / Rod of Faith
+      3B : Oak Staff
+      3C : White Staff
+      3D : Healing Staff
+      3E : Rainbow Staff / Serpent Staff
+      3F : Wizard Staff / Mage's Staff
+      40 : Gold Staff / Golden Staff
+      41 : Mace of Zeus / Zeus Mace
+      42 : Sage Staff / Staff of the Magi
+      43 : Flail / Iron Flail
+      44 : Flame Whip / Flame Mace
+      45 : Morning Star
+      46 : Scorpion Tail
+      47 : Romanda Gun / Romandan Pistol
+      48 : Mythril Gun
+      49 : Stone Gun / Stoneshooter
+      4A : Blaze Gun / Glacial Gun
+      4B : Glacier Gun / Blaze Gun
+      4C : Blast Gun / Blaster
+      4D : Bow Gun / Bowgun
+      4E : Night Killer / Knightslayer
+      4F : Cross Bow / Crossbow
+      50 : Poison Bow
+      51 : Hunting Bow
+      52 : Gastrafitis / Gastrophetes
+      53 : Long Bow / Longbow
+      54 : Silver Bow
+      55 : Ice Bow
+      56 : Lightning Bow
+      57 : Windslash Bow
+      58 : Mythril Bow
+      59 : Ultimus Bow / Artemis Bow
+      5A : Yoichi Bow
+      5B : Perseus Bow
+      5C : Ramia Harp / Lamia's Harp
+      5D : Bloody Strings / Bloodstring Harp
+      5E : Fairy Harp / Faerie Harp
+      5F : Battle Dict / Battle Folio
+      60 : Monster Dict / Bestiary
+      61 : Papyrus Plate / Papyrus Codex
+      62 : Madlemgen / Omnilex
+      63 : Javelin
+      64 : Spear
+      65 : Mythril Spear
+      66 : Partisan
+      67 : Oberisk / Obelisk
+      68 : Holy Lance
+      69 : Dragon Whisker
+      6A : Javelin
+      6B : Cypress Rod / Cypress Pole
+      6C : Battle Bamboo
+      6D : Musk Rod / Musk Pole
+      6E : Iron Fan
+      6F : Gokuu Rod / Gokuu Pole
+      70 : Ivory Rod / Ivory Pole
+      71 : Octagon Rod / Eight-fluted Pole
+      72 : Whale Whisker
+      73 : C Bag / Croakadile Bag
+      74 : FS Bag / Fallingstar Bag
+      75 : P Bag / Pantherskin Bag
+      76 : H Bag / Hydrascale Bag
+      77 : Persia / Damask Cloth
+      78 : Cashmere
+      79 : Ryozan Silk / Wyrmweave Silk
+      7A : Shuriken
+      7B : Magic Shuriken / Fuma Shuriken
+      7C : Yagyu Darkness / Yagyu Darkrood
+      7D : Fire Ball / Flameburst Bomb
+      7E : Water Ball / Snowmelt Bomb
+      7F : Lightning Ball / Spark Bomb
+      80 : Escutcheon
+      81 : Buckler
+      82 : Bronze Shield
+      83 : Round Shield
+      84 : Mythril Shield
+      85 : Gold Shield / Golden Shield
+      86 : Ice Shield
+      87 : Flame Shield
+      88 : Aegis Shield
+      89 : Diamond Shield
+      8A : Platina Shield / Platinum Shield
+      8B : Crystal Shield
+      8C : Genji Shield
+      8D : Kaiser Plate / Kaiser Shield
+      8E : Venetian Shield
+      8F : Escutcheon
+      90 : Leather Helmet / Leather Helm
+      91 : Bronze Helmet / Bronze Helm
+      92 : Iron Helmet / Iron Helm
+      93 : Barbuta / Barbut
+      94 : Mythril Helmet / Mythril Helm
+      95 : Gold Helmet / Golden Helm
+      96 : Cross Helmet / Close Helm
+      97 : Diamond Helmet / Diamond Helm
+      98 : Platina Helmet / Platinum Helm
+      99 : Circlet
+      9A : Crystal Helmet / Crystal Helm
+      9B : Genji Helmet / Genji Helm
+      9C : Grand Helmet / Grand Helm
+      9D : Leather Hat / Leather Cap
+      9E : Feather Hat / Plumed Hat
+      9F : Red Hood
+      A0 : Headgear
+      A1 : Triangle Hat / Wizard's Hat
+      A2 : Green Beret
+      A3 : Twist Headband / Headband
+      A4 : Holy Miter / Celebrant's Miter
+      A5 : Black Hood / Black Cowl
+      A6 : Golden Hairpin / Gold Hairpin
+      A7 : Flash Hat / Lambent Hat
+      A8 : Thief Hat / Thief's Cap
+      A9 : Cachusha
+      AA : Barette
+      AB : Ribbon
+      AC : Leather Armor
+      AD : Linen Cuirass
+      AE : Bronze Armor
+      AF : Chain Mail / Chainmail
+      B0 : Mythril Armor
+      B1 : Plate Mail
+      B2 : Gold Armor / Golden Armor
+      B3 : Diamond Armor
+      B4 : Platina Armor / Platinum Armor
+      B5 : Carabini Mail / Carabineer Mail
+      B6 : Crystal Mail
+      B7 : Genji Armor
+      B8 : Reflect Mail / Mirror Mail
+      B9 : Maximillian
+      BA : Clothes / Clothing
+      BB : Leather Outfit / Leather Clothing
+      BC : Leather Vest / Leather Plate
+      BD : Chain Vest / Ringmail
+      BE : Mythril Vest
+      BF : Adaman Vest
+      C0 : Wizard Outfit / Wizard Clothing
+      C1 : Brigandine
+      C2 : Judo Outfit / Jujitsu Gi
+      C3 : Power Sleeve / Power Garb
+      C4 : Earth Clothes / Gaia Gear
+      C5 : Secret Clothes / Ninja Gear
+      C6 : Black Costume / Black Garb
+      C7 : Rubber Costume / Rubber Suit
+      C8 : Linen Robe / Hempen Robe
+      C9 : Silk Robe / Silken Robe
+      CA : Wizard Robe / Wizard's Robe
+      CB : Chameleon Robe
+      CC : White Robe
+      CD : Black Robe
+      CE : Light Robe / Luminous Robe
+      CF : Robe of Lords / Lordly Robe
+      D0 : Battle Boots
+      D1 : Spike Shoes / Spiked Boots
+      D2 : Germinas Boots
+      D3 : Rubber Shoes / Rubber Boots
+      D4 : Feather Boots / Winged Boots
+      D5 : Sprint Shoes / Hermes Shoes
+      D6 : Red Shoes
+      D7 : Power Wrist / Power Gauntlet
+      D8 : Genji Gauntlet / Genji Glove
+      D9 : Magic Gauntlet / Magepower Glove
+      DA : Bracer
+      DB : Reflect Ring
+      DC : Defense Ring / Protect Ring
+      DD : Magic Ring / Magick Ring
+      DE : Cursed Ring
+      DF : Angel Ring
+      E0 : Diamond Armlet / Diamond Bracelet
+      E1 : Jade Armlet
+      E2 : 108 Gems / Japa Mala
+      E3 : N-Kai Armlet / Nu Khai Armband
+      E4 : Defense Armlet / Guardian Bracelet
+      E5 : Small Mantle / Shoulder Cape
+      E6 : Leather Mantle / Leather Cloak
+      E7 : Wizard Mantle / Mage's Cloak
+      E8 : Elf Mantle / Elven Cloak
+      E9 : Dracula Mantle / Vampire Cape
+      EA : Feather Mantle / Featherweave Cape
+      EB : Vanish Mantle / Invisibility Cloak
+      EC : Chantage
+      ED : Cherche
+      EE : Setiemson / Septième
+      EF : Salty Rage / Sortilége
+      F0 : Potion
+      F1 : Hi-Potion
+      F2 : X-Potion
+      F3 : Ether
+      F4 : Hi-Ether
+      F5 : Elixir
+      F6 : Antidote
+      F7 : Eye Drop / Eye Drops
+      F8 : Echo Grass / Echo Herbs
+      F9 : Maiden's Kiss
+      FA : Soft / Gold Needle
+      FB : Holy Water
+      FC : Remedy
+      FD : Phoenix Down
+      FE :
+      FF :
+    </Description>
+    <Variable file="SCUS_942_21" offset="4CE24" default="20" name="X"/>
+  </Patch>
+  
+</Patches>

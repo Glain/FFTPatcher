@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+  <Patch name="Restore 5% of Max MP on turn start">
+    <Description>MP Restores by 5% on turn</Description>
+    <Location file="BATTLE_BIN" offset="F6EBC">
+      CCCC033C
+      2E000296
+      CDCC6334
+      19004300
+      10180000
+      02180300
+      960103A6
+      24000292
+      10000334
+      B10103A2
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11C280">
+      AF77050C
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Spillover JP = Regular">
+    <Description>Units gain FULL(?!) JP spillover, dunno why someone would want this but here it is</Description>
+    <Location file="BATTLE_BIN" offset="117978">
+      00000000
+    </Location>
+  </Patch>
+</Patches>

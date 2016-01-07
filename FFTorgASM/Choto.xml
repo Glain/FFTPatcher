@@ -10,6 +10,273 @@
       00000000    
     </Location>
   </Patch>
+
+  <Patch name="Alternate Death Hack">
+    <Description>
+      Instead of crystallizing or treasuring, at the end of the death countdown units will become "knocked out" like
+      guests normally do. *INCOMPLETE*
+    </Description>
+    <Location offset="37f90" file="WORLD_WORLD_BIN">
+      <!--Set Injured Display-->
+      00F50408
+      03000534
+      00000000
+    </Location>
+    <Location offset="5d400" file="WORLD_WORLD_BIN">
+      <!--Set Injured Display -->
+      0400A310
+      0C000534
+      02004314
+      0B000534
+      09000534
+      E65F0408
+      00000000
+    </Location>
+    <Location offset="38Ab4" file="WORLD_WORLD_BIN">
+      <!--Injured Location display? -->
+      C0F40408
+      0C006132
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      28002226
+      020002A6
+      21200000
+    </Location>
+    <Location offset="5d300" file="WORLD_WORLD_BIN">
+      <!--Injured Location Display? -->
+      16000012
+      00000000
+      1980103C
+      CCC71026
+      09003314
+      0B006132
+      1200A226
+      000002A2
+      1C002226
+      020002A2
+      C0000234
+      080002A2
+      B6620408
+      00000000
+      06003314
+      0F00A226
+      000002A2
+      28002226
+      020002A2
+      80000234
+      080002A2
+      B6620408
+      00000000
+      C2620408
+      00000000
+    </Location>
+  <Location offset="11C128" file="BATTLE_BIN">
+      <!--Death Counter Manipulation -->
+      03000392
+      2C00013C
+      121C2134
+      FF002230
+      06006210
+      020A0100
+      FF002230
+      03006210
+      020A0100
+      FF002230
+      03006214
+      FF000134
+      AD0C0608
+      070001A2
+      07000492
+      FF000234
+      C0500508
+      00000000
+      1000A230
+      4F004010
+      0100C230
+      4D004010
+    </Location>
+    <Location offset="ED300" file="BATTLE_BIN">
+      <!--Death Counter Manipulation  -->
+      09008210
+      21100000
+      FFFF8424
+      FF008330
+      FF000234
+      070003A2
+      03004314
+      25100000
+      5C0C0608
+      00000000
+      AD0C0608
+      25100000
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="5a90">
+      <!--Set units injured in party data  -->
+      00480508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB000">
+      <!-- Set units injured in party data -->
+      00001224
+      BF02060C
+      21204002
+      07005190
+      02005090
+      FF001334
+      07003316
+      0580013C
+      05001312
+      747F2124
+      00821000
+      21080102
+      03001034
+      D00030A0
+      01005226
+      08000234
+      1500422E
+      EFFF4014
+      01005226
+      2C00BF8F
+      A6120708
+      2800B48F
+    </Location>
+    <Location file="BATTLE_BIN" offset="11C1c0">
+      <!-- Set units injured in party data -->
+      AD0C0608
+      21100000
+    </Location>
+    <Location offset="ED300" file="BATTLE_BIN">
+      <!--Undead Revive after KO each turn -->
+      07
+    </Location>
+    <Location offset="ED318" file="BATTLE_BIN">
+      <!--Undead Revive EACH turn -->
+      01
+    </Location>
+	<Location offset="1249dc " file="BATTLE_BIN">
+      <!--disable revival -->
+      40510508
+      1980013C
+    </Location>
+    <Location offset="ED500 " file="BATTLE_BIN">
+      <!--disable revival -->
+      982D238C
+      FF000434
+      07006190
+      00000000
+      07008114
+      05000134
+      B60160A0
+      AC0160A0
+      8C0160A0
+      B10160A0
+      8E0161A0
+      900160AC
+      3400BF8F
+      792E0608
+      3000B28F
+    </Location>
+ <Location offset="ABBB0" file="WORLD_WORLD_BIN">
+      <!--"Injured" Display -->
+      11 01 00 11 01 00 00 00 00 00 00 11 01
+    </Location>
+  <Location offset="ABC30" file="WORLD_WORLD_BIN">
+      21 01 00 21 01 00 00 00 00 00 00 21 01
+    </Location>
+    <Location offset="ABCB0" file="WORLD_WORLD_BIN">
+      21 11 11 11 11 11 11 11 11 11 11 21 01
+    </Location>
+    <Location offset="ABD30" file="WORLD_WORLD_BIN">
+      21 21 52 21 21 21 21 52 51 52 51 22 01
+    </Location>
+    <Location offset="ABDB0" file="WORLD_WORLD_BIN">
+      21 21 23 21 21 21 21 21 21 21 21 21 01
+    </Location>
+   <Location offset="ABE30" file="WORLD_WORLD_BIN">
+      21 21 21 21 21 21 21 11 21 46 21 21 01
+    </Location>
+    <Location offset="ABEB0" file="WORLD_WORLD_BIN">
+      21 21 21 21 61 62 21 11 51 22 51 22 01
+    </Location>
+    <Location offset="ABF30" file="WORLD_WORLD_BIN">
+      11 11 11 23 11 11 11 11 11 11 11 11 01
+    </Location>
+    <Location offset="ABFB0" file="WORLD_WORLD_BIN">
+      00 00 41 52 01 00 00 00 00 00 00 00 00
+    </Location>
+    <Location offset="AC030" file="WORLD_WORLD_BIN">
+      00 00 11 11 00 00 00 00 00 00 00 00 00
+    </Location>
+<Location offset="5D4FC" file="WORLD_WORLD_BIN"><!--Allows 0xd0 = 3 units available for Inn -->
+00000000
+1480013C
+FCD4228C
+00000134
+06002214
+D000C290
+03000134
+07004114
+00000000
+2AD60108
+00000000
+03004014
+00000000
+01D60108
+00000000
+41D60108
+00000000
+</Location>
+<Location offset="E7FC " file="WORLD_WLDCORE_BIN"><!--Allows 0xd0 = 3 units available for Inn -->
+40F50408
+00000000
+</Location>
+<Location offset="C2c0" file="WORLD_WORLD_BIN"><!--Allows 0xd0 = 3 units available for Inn -->
+28F50408
+21888000
+</Location>
+<Location offset="5d4a0 " file="WORLD_WORLD_BIN"><!--Allows 0xd0 = 3 units available for Inn -->
+3000BFAF
+1580013C
+D83124AC
+1480013C
+B2CC0108
+FCD424AC
+</Location>
+<Location offset="CD60" file="WORLD_WLDCORE_BIN"><!--Allows 0xd0 = 3 units available for Inn -->
+54F50408
+1480013C
+</Location>
+<Location offset="5d550 " file="WORLD_WORLD_BIN"><!--Allows 0xd0 = 3 units available for Inn -->
+FCD4228C
+00000134
+08002214
+D0006290
+03000134
+03004110
+00000000
+6BCF0108
+00000000
+6ACF0108
+00000000
+5ACF0108
+00000000
+</Location>
+<Location file="WORLD_WLDCORE_BIN" offset="12078"><!--Allow Inn to be repeated -->
+80F50408
+00000000
+</Location>
+<Location file="WORLD_WORLD_BIN" offset="5d600"><!--Allow Inn to be repeated -->
+02006010
+00000000
+00004234
+000022A0
+20E40108
+0580023C
+</Location>
+  </Patch>
   
   <Patch name="JP gain hack *Fixed">
     <Description>
