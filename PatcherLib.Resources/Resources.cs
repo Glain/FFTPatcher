@@ -73,6 +73,9 @@ namespace PatcherLib
                    Type.GetType( typeName ), fieldName, false );
         }
 
+        // Glain - rewriting method to determine length from XML node length instead of using a fixed length.
+
+        /*
         internal static IList<string> GetStringsFromNumberedXmlNodes( ResourceListInfo info )
         {
             string[] result = new string[info.Length];
@@ -82,6 +85,41 @@ namespace PatcherLib
                 result[i - info.StartIndex] = node == null ? string.Empty : node.InnerText;
             }
 
+            return result;
+        }
+        */
+
+        internal static IList<string> GetStringsFromNumberedXmlNodes(ResourceListInfo info)
+        {
+            string newXPath = "";
+            bool ignore = false;
+
+            for (int i = 0; i < info.XPath.Length; i++)
+            {
+                if (info.XPath[i] == '[')
+                    ignore = true;
+
+                if (!ignore)
+                    newXPath += info.XPath[i];
+
+                if (info.XPath[i] == ']')
+                    ignore = false;
+            }
+
+            XmlNodeList nodeList = info.Doc.SelectNodes(string.Format(newXPath));
+            int resultCount = Math.Max(nodeList.Count, info.Length);
+            string[] result = new string[resultCount];
+
+            for (int i = info.StartIndex; i < (info.StartIndex + resultCount); i++)
+            {
+                XmlNode node = info.Doc.SelectSingleNode(string.Format(info.XPath, i));
+                result[i - info.StartIndex] = ((node == null) ? string.Empty : node.InnerText);
+            }
+            for (int i = 0; i < resultCount; i++)
+            {
+                result[i] = result[i] ?? string.Empty;
+            }
+            
             return result;
         }
 
