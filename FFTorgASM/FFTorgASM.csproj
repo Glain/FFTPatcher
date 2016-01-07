@@ -53,22 +53,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsmPatch.cs" />
-    <Compile Include="Conflict Checker\Conflict.cs" />
-    <Compile Include="Conflict Checker\ConflictChecker.cs">
+    <Compile Include="ConflictChecker\Conflict.cs" />
+    <Compile Include="ConflictChecker\ConflictChecker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Conflict Checker\ConflictChecker.Designer.cs" />
-    <Compile Include="Conflict Checker\ExtensionMethods.cs">
-      <SubType>Code</SubType>
+    <Compile Include="ConflictChecker\ConflictChecker.Designer.cs">
+      <DependentUpon>ConflictChecker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Conflict Checker\FileWrite.cs" />
-    <Compile Include="Conflict Checker\MessageForm.cs">
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="ConflictChecker\FileWrite.cs" />
+    <Compile Include="FreeSpace.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Conflict Checker\MessageForm.Designer.cs">
-      <DependentUpon>MessageForm.cs</DependentUpon>
+    <Compile Include="FreeSpace.Designer.cs">
+      <DependentUpon>FreeSpace.cs</DependentUpon>
     </Compile>
-    <Compile Include="Conflict Checker\Patch.cs" />
     <Compile Include="HexNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -78,14 +77,15 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConflictChecker\Patch.cs" />
     <Compile Include="PatchXmlReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Conflict Checker\ConflictChecker.resx">
+    <EmbeddedResource Include="ConflictChecker\ConflictChecker.resx">
       <DependentUpon>ConflictChecker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Conflict Checker\MessageForm.resx">
-      <DependentUpon>MessageForm.cs</DependentUpon>
+    <EmbeddedResource Include="FreeSpace.resx">
+      <DependentUpon>FreeSpace.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

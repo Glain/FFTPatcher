@@ -1,0 +1,87 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+# SharpDevelop 4.0.0.7070
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0762D3C8-AAD4-4EF3-AF00-F2A2B0AD964D}"
+	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+		changelog.txt = changelog.txt
+		COPYING = COPYING
+		gzip.exe = gzip.exe
+		readme.txt = readme.txt
+		resources.txt = resources.txt
+		sprites.txt = sprites.txt
+		tar.exe = tar.exe
+		text.txt = text.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fftpspext", "fftpspext", "{47407AA1-56F3-4400-942F-645239D286DD}"
+	ProjectSection(SolutionItems) = preProject
+		fftpspext\fftpspext.c = fftpspext\fftpspext.c
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFTPatcher", "FFTPatcher.csproj", "{48BE23D0-2943-44EF-A3A6-8537D7695B37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShishiSpriteEditor", "ShishiSpriteEditor\ShishiSpriteEditor.csproj", "{4017D65D-C72B-491E-B263-E12DB6537382}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFTactext", "FFTactext\FFTactext.csproj", "{210DDF20-2CEA-4A2C-B2C6-D2EB7938BEB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatcherLib", "PatcherLib\PatcherLib.csproj", "{BB7322AD-75D3-44AF-A0BF-76015C53998F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatcherLib.Resources", "PatcherLib.Resources\PatcherLib.Resources.csproj", "{E8B981CB-2A97-4901-9A04-E6E5D369F471}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFTorgASM", "FFTorgASM\FFTorgASM.csproj", "{2176002F-BDE2-491A-9502-110275008F42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASMEncoding", "ASMEncoding\ASMEncoding.csproj", "{4AB43571-545C-4F80-AFF1-F6E43DE31F47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassHexASM", "MassHexASM\MassHexASM.csproj", "{63CE41D1-0632-461C-9C53-BF60F2493D58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LEDecoder", "LEDecoder\LEDecoder.csproj", "{8CE4E992-1934-4E4E-99CC-2152F86E99B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48BE23D0-2943-44EF-A3A6-8537D7695B37}.Debug|x86.ActiveCfg = Debug|x86
+		{48BE23D0-2943-44EF-A3A6-8537D7695B37}.Debug|x86.Build.0 = Debug|x86
+		{48BE23D0-2943-44EF-A3A6-8537D7695B37}.Release|x86.ActiveCfg = Release|x86
+		{48BE23D0-2943-44EF-A3A6-8537D7695B37}.Release|x86.Build.0 = Release|x86
+		{4017D65D-C72B-491E-B263-E12DB6537382}.Debug|x86.ActiveCfg = Debug|x86
+		{4017D65D-C72B-491E-B263-E12DB6537382}.Debug|x86.Build.0 = Debug|x86
+		{4017D65D-C72B-491E-B263-E12DB6537382}.Release|x86.ActiveCfg = Release|x86
+		{4017D65D-C72B-491E-B263-E12DB6537382}.Release|x86.Build.0 = Release|x86
+		{210DDF20-2CEA-4A2C-B2C6-D2EB7938BEB2}.Debug|x86.ActiveCfg = Debug|x86
+		{210DDF20-2CEA-4A2C-B2C6-D2EB7938BEB2}.Debug|x86.Build.0 = Debug|x86
+		{210DDF20-2CEA-4A2C-B2C6-D2EB7938BEB2}.Release|x86.ActiveCfg = Release|x86
+		{210DDF20-2CEA-4A2C-B2C6-D2EB7938BEB2}.Release|x86.Build.0 = Release|x86
+		{BB7322AD-75D3-44AF-A0BF-76015C53998F}.Debug|x86.ActiveCfg = Debug|x86
+		{BB7322AD-75D3-44AF-A0BF-76015C53998F}.Debug|x86.Build.0 = Debug|x86
+		{BB7322AD-75D3-44AF-A0BF-76015C53998F}.Release|x86.ActiveCfg = Release|x86
+		{BB7322AD-75D3-44AF-A0BF-76015C53998F}.Release|x86.Build.0 = Release|x86
+		{E8B981CB-2A97-4901-9A04-E6E5D369F471}.Debug|x86.ActiveCfg = Debug|x86
+		{E8B981CB-2A97-4901-9A04-E6E5D369F471}.Debug|x86.Build.0 = Debug|x86
+		{E8B981CB-2A97-4901-9A04-E6E5D369F471}.Release|x86.ActiveCfg = Release|x86
+		{E8B981CB-2A97-4901-9A04-E6E5D369F471}.Release|x86.Build.0 = Release|x86
+		{2176002F-BDE2-491A-9502-110275008F42}.Debug|x86.ActiveCfg = Debug|x86
+		{2176002F-BDE2-491A-9502-110275008F42}.Debug|x86.Build.0 = Debug|x86
+		{2176002F-BDE2-491A-9502-110275008F42}.Release|x86.ActiveCfg = Release|x86
+		{2176002F-BDE2-491A-9502-110275008F42}.Release|x86.Build.0 = Release|x86
+		{4AB43571-545C-4F80-AFF1-F6E43DE31F47}.Debug|x86.Build.0 = Debug|x86
+		{4AB43571-545C-4F80-AFF1-F6E43DE31F47}.Debug|x86.ActiveCfg = Debug|x86
+		{4AB43571-545C-4F80-AFF1-F6E43DE31F47}.Release|x86.Build.0 = Release|x86
+		{4AB43571-545C-4F80-AFF1-F6E43DE31F47}.Release|x86.ActiveCfg = Release|x86
+		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Debug|x86.Build.0 = Debug|x86
+		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Debug|x86.ActiveCfg = Debug|x86
+		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Release|x86.Build.0 = Release|x86
+		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Release|x86.ActiveCfg = Release|x86
+		{8CE4E992-1934-4E4E-99CC-2152F86E99B3}.Debug|x86.Build.0 = Debug|x86
+		{8CE4E992-1934-4E4E-99CC-2152F86E99B3}.Debug|x86.ActiveCfg = Debug|x86
+		{8CE4E992-1934-4E4E-99CC-2152F86E99B3}.Release|x86.Build.0 = Release|x86
+		{8CE4E992-1934-4E4E-99CC-2152F86E99B3}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

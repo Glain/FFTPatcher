@@ -194,6 +194,8 @@ namespace PatcherLib.Iso
 
                 for (int i = 0; i < 0x1000; i++)
                 {
+                    //if (i == 0x2b0)
+                    //    break;
                     data = b.ReadBytes(4);
                     if (data[0] == checkbyte[0] &&
                        data[1] == checkbyte[1] &&
@@ -232,6 +234,7 @@ namespace PatcherLib.Iso
                         i = 0x1002;
                     }
                 }
+
             }
             long startoffset = 0;
             bool Valid = false;

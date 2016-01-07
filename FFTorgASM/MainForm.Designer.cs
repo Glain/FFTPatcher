@@ -42,6 +42,7 @@
             this.lsb_FilesList = new System.Windows.Forms.ListView();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
+            this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -190,11 +191,22 @@
             this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.variableSpinner.Visible = false;
             // 
+            // btn_ViewFreeSpace
+            // 
+            this.btn_ViewFreeSpace.Location = new System.Drawing.Point(152, 557);
+            this.btn_ViewFreeSpace.Name = "btn_ViewFreeSpace";
+            this.btn_ViewFreeSpace.Size = new System.Drawing.Size(153, 23);
+            this.btn_ViewFreeSpace.TabIndex = 14;
+            this.btn_ViewFreeSpace.Text = "View Free Space";
+            this.btn_ViewFreeSpace.UseVisualStyleBackColor = true;
+            this.btn_ViewFreeSpace.Click += new System.EventHandler(this.btn_ViewFreeSpace_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(465, 605);
+            this.Controls.Add(this.btn_ViewFreeSpace);
             this.Controls.Add(this.lsb_FilesList);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.variableSpinner);
@@ -232,6 +244,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListView lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
+        private System.Windows.Forms.Button btn_ViewFreeSpace;
     }
 }
 
