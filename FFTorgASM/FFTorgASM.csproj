@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DefaultHacks.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Example.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -116,6 +117,7 @@
     </Content>
     <Content Include="Pride.xml">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Xifanie.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
