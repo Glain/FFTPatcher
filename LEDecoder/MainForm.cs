@@ -1,6 +1,6 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: Jeremy
+ * User: Glain
  * Date: 9/17/2011
  */
 
