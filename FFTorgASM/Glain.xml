@@ -935,4 +935,88 @@ LCH:  sltiu   t6,v1,7
       sh      t4,6(t2)              # Save new returned HP healing
     </Location>
   </Patch>
+  <Patch name="Hide excessive HP/MP recovery">
+    <Description>
+      Excessive HP/MP recovery is not displayed.
+    </Description>
+    <Location file="BATTLE_BIN" offset="ED9C4" mode="ASM">
+      @hide_excessive_recovery:
+
+      addiu   sp, sp, -24
+      sw      ra, 4(sp)
+      sw      s0, 8(sp)
+      sw      s1, 12(sp)
+      sw      s2, 16(sp)
+      sw      s3, 20(sp)
+
+      lui     t0, 0x8019
+      lbu     t1, 0x38e8(t0)  # Active ability?
+      lw      s0, 0x2d90(t0)  # Action
+      lw      s1, 0x2d8c(t0)  # Return action
+      lw      s2, 0x2d98(t0)  # Action target
+      lw      s3, 0x2d94(t0)  # Return action target
+
+      # Skip if not a passive ability?
+      bne     t1, zero, hide_excessive_recovery_end
+      move    a0, s0
+
+      # Hide excessive recovery for action
+      jal     @hide_excessive_recovery_single
+      move    a1, s2
+
+      # Hide excessive recovery for return action
+      move    a0, s1
+      jal     @hide_excessive_recovery_single
+      move    a1, s3
+
+      hide_excessive_recovery_end:
+
+      lw      s3, 20(sp)
+      lw      s2, 16(sp)
+      lw      s1, 12(sp)
+      lw      s0, 8(sp)
+      lw      ra, 4(sp)
+      addiu   sp, sp, 24
+
+      jr      ra
+      nop
+
+      # a0 = Action, a1 = Target
+      @hide_excessive_recovery_single:
+
+      beq     a0, zero, hide_excessive_recovery_single_end
+      nop
+
+      lhu     t0, 0x28(a1)    # Target HP
+      lhu     t1, 0x2a(a1)    # Target Max HP
+      lhu     t2, 0x2c(a1)    # Target MP
+      lhu     t3, 0x2e(a1)    # Target Max MP
+      lbu     t4, 0x25(a0)    # Action display type
+
+      slt     t5, t0, t1      # 1 if HP not max
+      sltiu   t5, t5, 1       # 1 if HP IS max (boolean not)
+      sll     t5, t5, 6       # 0x40 if HP is max
+      not     t5, t5          # 0x40 flag is zeroed out if HP is max (binary not)
+
+      slt     t6, t2, t3      # 1 if MP not max
+      sltiu   t6, t6, 1       # 1 if MP IS max (boolean not)
+      sll     t6, t6, 4       # 0x10 if MP is max
+      not     t6, t6          # 0x10 flag is zeroed out if MP is max (binary not)
+
+      and     t4, t4, t5      # Action type: HP recovery flag zeroed out if HP is max
+      and     t4, t4, t6      # Action type: MP recovery flag zeroed out if MP is max
+
+      hide_excessive_recovery_single_end:
+
+      jr      ra
+      sb      t4, 0x25(a0)    # Save action display type
+    </Location>
+    <Location file="BATTLE_BIN" offset="18BFD0" mode="ASM" offsetMode="RAM">
+      lui     s1, 0x8019
+      jal     @hide_excessive_recovery
+      nop
+      lw      a1, 0x2d98(s1)
+      lw      a0, 0x2d90(s1)
+    </Location>
+  </Patch>
 </Patches>
