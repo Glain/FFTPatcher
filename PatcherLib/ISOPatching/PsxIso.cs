@@ -411,8 +411,11 @@ namespace PatcherLib.Iso
         public enum FileToRamOffsets
         {
         	OFFSET_SCUS_942_21 = 0xF800,
-        	OFFSET_BATTLE_BIN = 0x67000,
-        	OFFSET_WORLD_WORLD_BIN = 0xE0000
+            OFFSET_BATTLE_BIN = 0x67000,
+            OFFSET_WORLD_WLDCORE_BIN = 0x67000,
+        	OFFSET_WORLD_WORLD_BIN = 0xE0000,
+        	OFFSET_EVENT_REQUIRE_OUT = 0x1bf000,
+            OFFSET_EVENT_EQUIP_OUT = 0x1bf000
         }
         
         public enum Sectors
