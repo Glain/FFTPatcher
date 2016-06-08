@@ -40,7 +40,7 @@ namespace FFTorgASM
             string[] files = new string[1];
 
             files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
-
+            string patchname = "";
             foreach (string file in files)
             {
                 errorstring = file.Substring(file.LastIndexOf(@"\") + 1);
@@ -64,22 +64,26 @@ namespace FFTorgASM
                         XmlNodeList patchNodes = element.SelectNodes("Patch");
                         foreach (XmlNode Patch in patchNodes)           //For each Patch node
                         {
-                            string name = Patch.Attributes["name"].InnerText;
+                            patchname = Patch.Attributes["name"].InnerText;
+
+                            //if (patchname.Contains("Phoe"))
+                            //    break;
+                            
                             XmlAttribute ignoreNode = Patch.Attributes["ignore"];
                             if (!(ignoreNode != null && Boolean.Parse(ignoreNode.InnerText)))
                             {
                                 foreach (XmlNode Location in Patch)         //For each Description and Location
                                 {
-                                    if (Location.NodeType != XmlNodeType.Comment)
+                                    if (Location.NodeType != XmlNodeType.Comment && Location.NodeType != XmlNodeType.Text)
                                     {
-                                        if (Location.Attributes["offset"] != null)
+                                        if (Location.Attributes == null || Location.Attributes["offset"] != null)
                                         {
                                             UInt32 offset = UInt32.Parse(Location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber);
                                             
                                             string file2 = Location.Attributes["file"].InnerText;
 
-                                            if ((file2.Contains("BATTLE") && (offset < 0xE92AC || offset > 0xF929B || name.Contains("Kanji"))) ||
-                                                (file2.Contains("WORLD") && (offset < 0x0005D400 || offset > 0x0006B90F || name.Contains("Kanji"))))
+                                            if ((file2.Contains("BATTLE") && (offset < 0xE92AC || offset > 0xF929B || patchname.Contains("Kanji"))) ||
+                                                (file2.Contains("WORLD") && (offset < 0x0005D400 || offset > 0x0006B90F || patchname.Contains("Kanji"))))
                                                 goto next;
 
                                             string bytes = Location.InnerText;
@@ -99,10 +103,10 @@ namespace FFTorgASM
                                             switch (file2)
                                             {
                                                 case "BATTLE_BIN":
-                                                    BATTLEBIN.AddWrite(offset, bytes.Length / 2, name, shortfile);
+                                                    BATTLEBIN.AddWrite(offset, bytes.Length / 2, patchname, shortfile);
                                                     break;
                                                 case "WORLD_WORLD_BIN":
-                                                    WORLDBIN.AddWrite(offset, bytes.Length / 2, name, shortfile);
+                                                    WORLDBIN.AddWrite(offset, bytes.Length / 2, patchname, shortfile);
                                                     break;
                                             }
                                         }
@@ -115,7 +119,7 @@ namespace FFTorgASM
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error in format of " + errorstring + "\n" + ex);
+                    MessageBox.Show("Error in format of " + errorstring + "\n" + ex + "at patch: " + patchname);
                 }
             }
             
