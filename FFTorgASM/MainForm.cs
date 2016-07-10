@@ -507,14 +507,14 @@ namespace FFTorgASM
         {
 
                 ConflictChecker C = new ConflictChecker();
-                C.ShowDialog();
+                C.Show();
 
         }
 
         private void btn_ViewFreeSpace_Click(object sender, EventArgs e)
         {
             FreeSpace FS = new FreeSpace();
-            FS.ShowDialog();
+            FS.Show();
         }
 
     }

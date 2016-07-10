@@ -65,19 +65,21 @@ namespace FFTorgASM
                         XmlNodeList xmlnode;
                         xmlnode = Doc.GetElementsByTagName("Patches");
 
+                      
                         foreach (XmlElement element in xmlnode)         //for all patches
                         {
                             XmlAttributeCollection attributes = element.Attributes;
                             XmlNodeList patchNodes = element.SelectNodes("Patch");
                             foreach (XmlNode Patch in patchNodes)           //For each Patch node
                             {
+                             
                                 string name = Patch.Attributes["name"].InnerText;
                                 XmlAttribute ignoreNode = Patch.Attributes["ignore"];
                                 if (!(ignoreNode != null && Boolean.Parse(ignoreNode.InnerText)))
                                 {
                                     foreach (XmlNode Location in Patch)         //For each Description and Location
                                     {
-                                        if (Location.NodeType != XmlNodeType.Comment)
+                                        if (Location.NodeType != XmlNodeType.Comment && Location.NodeType != XmlNodeType.Text)
                                         {
                                             if (Location.Attributes["offset"] != null)
                                             {

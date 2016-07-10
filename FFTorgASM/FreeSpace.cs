@@ -163,27 +163,74 @@ namespace FFTorgASM
             //Patches = new Patch[patchnames.Length];
             int k = 0;
             long currentendaddress = 0;
-            foreach (long startaddress in File.startaddress)
+            //Array.Sort(File.startaddress);
+            for (k = 0; k < File.startaddress.Length;k++ )
             {
-                if(startaddress != 0)
+                if (File.startaddress[k] != 0)
                 {
-                    if(startaddress < currentaddress)
+                    //if(startaddress < currentaddress)
+                    //{
+                    //    if (File.endaddress[k] > currentendaddress) ;
+                    //        //currentaddress = File.endaddress[k];
+                    //}
+                    //else
+                    //{
+                    //currentFreeSpaceLength = startaddress - currentaddress;
+
+                    dgv_FreeSpace.Rows.Add(File.startaddress[k].ToString("X"), File.length[k].ToString("X"),"","",File.Patchname[k]);
+                    //currentaddress = File.endaddress[k];
+                    //}
+
+                    //if (k == 0x140)
+                    //    this.Focus();
+                }
+
+            }
+
+            dgv_FreeSpace.Sort(dgv_FreeSpace.Columns[0],ListSortDirection.Ascending);
+
+            for(int r = 0;r < dgv_FreeSpace.Rows.Count - 1; r++)
+            {
+                long start = Convert.ToInt64(dgv_FreeSpace.Rows[r].Cells[0].Value.ToString(),16);
+                long length = Convert.ToInt64(dgv_FreeSpace.Rows[r].Cells[1].Value.ToString(),16);
+
+                long nextstart;
+                if(r != dgv_FreeSpace.Rows.Count - 2 )
+                     nextstart = Convert.ToInt64(dgv_FreeSpace.Rows[r + 1].Cells[0].Value.ToString(),16);
+                else
+                {
+                    nextstart = 0xF929B;
+                }
+                if(nextstart > (start + 1))
+                {
+                    dgv_FreeSpace.Rows[r].Cells[2].Value = String.Format("{0:X}", start + length);
+                    
+                    short number = (short) (nextstart - (start + length));
+                    bool isnegative = false;
+
+                    if(nextstart - (start + length) < 0)
                     {
-                        if (File.endaddress[k] > currentendaddress) ;
-                            //currentaddress = File.endaddress[k];
+                        number = (short)( 0 - number);
+                        isnegative = true;
+                    }
+                    
+                    if(isnegative)
+                    {
+                        dgv_FreeSpace.Rows[r].Cells[3].Value = "-" +  String.Format("{0:X}", number);
+                        dgv_FreeSpace.Rows[r].Cells[3].Style.BackColor = Color.Red;
                     }
                     else
                     {
-                        currentFreeSpaceLength = startaddress - currentaddress;
-                        dgv_FreeSpace.Rows.Add(currentaddress.ToString("X"), currentFreeSpaceLength.ToString("X"));
-                        currentaddress = File.endaddress[k];
+                        dgv_FreeSpace.Rows[r].Cells[3].Value = String.Format("{0:X}", number);
                     }
-
-                   
+                    dgv_FreeSpace.Rows[r].Cells[5].Value = r.ToString();
                 }
-              
-                k++;
+
             }
+
+            lbl_NumberOfPatches.Text = File.ShortPatchnames.Length.ToString();
+            lbl_NumberOfWrites.Text = File.startaddress.Length.ToString();
+
         }
 
 
