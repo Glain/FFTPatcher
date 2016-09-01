@@ -254,10 +254,13 @@ namespace ASMEncoding.Helpers
 		}
         */
 				
-		public uint LabelToUnsigned(string label)
+		public uint LabelToUnsigned(string label, bool skipAssertion = false)
 		{
 			string newLabel = ASMStringHelper.RemoveSpaces(label).ToUpper();
-            ASMDebugHelper.assert(LabelDict.ContainsKey(newLabel), "Label not found: " + label);
+
+            if (!skipAssertion)
+                ASMDebugHelper.assert(LabelDict.ContainsKey(newLabel), "Label not found: " + label);
+
 			return (uint) (LabelDict.ContainsKey(newLabel) ? LabelDict[newLabel] : 0);
 		}
 	}

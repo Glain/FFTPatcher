@@ -142,8 +142,15 @@ namespace ASMEncoding.Helpers
 					else
 						strImmed = args[1];
 						
-					ivalue = ValueHelper.GetAnyUnsignedValue(strImmed);
-					if ((ivalue > 0xffff) && (strImmed[0] != '-'))
+					ivalue = ValueHelper.GetAnyUnsignedValue(strImmed, true);
+
+                    bool isLabel = !(
+                            ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
+                        || (ASMStringHelper.StringIsNumeric(strImmed))
+                        || ((strImmed.StartsWith("-")) && (strImmed.Length > 1))
+                    );
+
+					if (((ivalue > 0xffff) && (strImmed[0] != '-')) || isLabel)
 					{
 						ushortval = (ushort)(ivalue & 0xffff);
 						if (ushortval >= 0x8000)
@@ -178,14 +185,19 @@ namespace ASMEncoding.Helpers
 				case "li":
 					//ivalue = ValueHelper.GetAnyUnsignedValue(args[1]);
 
+                    /*
                     try
                     {
-                        ivalue = ValueHelper.FindUnsignedValue(args[1]);
+                        ivalue = ValueHelper.GetAnyUnsignedValue(args[1]);
+                        //ivalue = ValueHelper.FindUnsignedValue(args[1]);
                     }
                     catch
                     {
                         ivalue = 0;
                     }
+                    */
+
+                    ivalue = ValueHelper.GetAnyUnsignedValue(args[1], true);
 
                     bool isLA = encoding.Command.Equals("la");
 					
@@ -213,7 +225,7 @@ namespace ASMEncoding.Helpers
 					else
 					{
 						if (!((args[1].StartsWith("0x") || ASMStringHelper.StringIsNumeric(args[1]))))
-							parts[1] = args[0] + "," + ValueHelper.LabelHelper.LabelToUnsigned(args[1]);
+							parts[1] = args[0] + "," + ValueHelper.LabelHelper.LabelToUnsigned(args[1], true);
 						
 						result.Add(new EncodeLine(parts,index));
 					}

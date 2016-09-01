@@ -76,7 +76,7 @@ namespace ASMEncoding.Helpers
             }
         }
 
-		public uint GetAnyUnsignedValue(string val)
+		public uint GetAnyUnsignedValue(string val, bool skipLabelAssertion = false)
 		{
 			if ((val.StartsWith("0x")) || (val.StartsWith("-0x")))
 				return HexToUnsigned_AnySign(val,32);
@@ -97,7 +97,7 @@ namespace ASMEncoding.Helpers
 					return 0;
 			}
 			else
-				return LabelHelper.LabelToUnsigned(val);
+				return LabelHelper.LabelToUnsigned(val, skipLabelAssertion);
 		}
 
         public static string UnsignedToHex_WithLength(uint num, int reqLength)
