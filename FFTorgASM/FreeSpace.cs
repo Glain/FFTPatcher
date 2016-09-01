@@ -40,7 +40,7 @@ namespace FFTorgASM
             string[] files = new string[1];
 
             files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
-
+            string patchname = "";
             foreach (string file in files)
             {
                 errorstring = file.Substring(file.LastIndexOf(@"\") + 1);
@@ -64,22 +64,26 @@ namespace FFTorgASM
                         XmlNodeList patchNodes = element.SelectNodes("Patch");
                         foreach (XmlNode Patch in patchNodes)           //For each Patch node
                         {
-                            string name = Patch.Attributes["name"].InnerText;
+                            patchname = Patch.Attributes["name"].InnerText;
+
+                            //if (patchname.Contains("Phoe"))
+                            //    break;
+                            
                             XmlAttribute ignoreNode = Patch.Attributes["ignore"];
                             if (!(ignoreNode != null && Boolean.Parse(ignoreNode.InnerText)))
                             {
                                 foreach (XmlNode Location in Patch)         //For each Description and Location
                                 {
-                                    if (Location.NodeType != XmlNodeType.Comment)
+                                    if (Location.NodeType != XmlNodeType.Comment && Location.NodeType != XmlNodeType.Text)
                                     {
-                                        if (Location.Attributes["offset"] != null)
+                                        if (Location.Attributes == null || Location.Attributes["offset"] != null)
                                         {
                                             UInt32 offset = UInt32.Parse(Location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber);
                                             
                                             string file2 = Location.Attributes["file"].InnerText;
 
-                                            if ((file2.Contains("BATTLE") && (offset < 0xE92AC || offset > 0xF929B || name.Contains("Kanji"))) ||
-                                                (file2.Contains("WORLD") && (offset < 0x0005D400 || offset > 0x0006B90F || name.Contains("Kanji"))))
+                                            if ((file2.Contains("BATTLE") && (offset < 0xE92AC || offset > 0xF929B || patchname.Contains("Kanji"))) ||
+                                                (file2.Contains("WORLD") && (offset < 0x0005D400 || offset > 0x0006B90F || patchname.Contains("Kanji"))))
                                                 goto next;
 
                                             string bytes = Location.InnerText;
@@ -99,10 +103,10 @@ namespace FFTorgASM
                                             switch (file2)
                                             {
                                                 case "BATTLE_BIN":
-                                                    BATTLEBIN.AddWrite(offset, bytes.Length / 2, name, shortfile);
+                                                    BATTLEBIN.AddWrite(offset, bytes.Length / 2, patchname, shortfile);
                                                     break;
                                                 case "WORLD_WORLD_BIN":
-                                                    WORLDBIN.AddWrite(offset, bytes.Length / 2, name, shortfile);
+                                                    WORLDBIN.AddWrite(offset, bytes.Length / 2, patchname, shortfile);
                                                     break;
                                             }
                                         }
@@ -115,7 +119,7 @@ namespace FFTorgASM
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error in format of " + errorstring + "\n" + ex);
+                    MessageBox.Show("Error in format of " + errorstring + "\n" + ex + "at patch: " + patchname);
                 }
             }
             
@@ -159,27 +163,74 @@ namespace FFTorgASM
             //Patches = new Patch[patchnames.Length];
             int k = 0;
             long currentendaddress = 0;
-            foreach (long startaddress in File.startaddress)
+            //Array.Sort(File.startaddress);
+            for (k = 0; k < File.startaddress.Length;k++ )
             {
-                if(startaddress != 0)
+                if (File.startaddress[k] != 0)
                 {
-                    if(startaddress < currentaddress)
+                    //if(startaddress < currentaddress)
+                    //{
+                    //    if (File.endaddress[k] > currentendaddress) ;
+                    //        //currentaddress = File.endaddress[k];
+                    //}
+                    //else
+                    //{
+                    //currentFreeSpaceLength = startaddress - currentaddress;
+
+                    dgv_FreeSpace.Rows.Add(File.startaddress[k].ToString("X"), File.length[k].ToString("X"),"","",File.Patchname[k]);
+                    //currentaddress = File.endaddress[k];
+                    //}
+
+                    //if (k == 0x140)
+                    //    this.Focus();
+                }
+
+            }
+
+            dgv_FreeSpace.Sort(dgv_FreeSpace.Columns[0],ListSortDirection.Ascending);
+
+            for(int r = 0;r < dgv_FreeSpace.Rows.Count - 1; r++)
+            {
+                long start = Convert.ToInt64(dgv_FreeSpace.Rows[r].Cells[0].Value.ToString(),16);
+                long length = Convert.ToInt64(dgv_FreeSpace.Rows[r].Cells[1].Value.ToString(),16);
+
+                long nextstart;
+                if(r != dgv_FreeSpace.Rows.Count - 2 )
+                     nextstart = Convert.ToInt64(dgv_FreeSpace.Rows[r + 1].Cells[0].Value.ToString(),16);
+                else
+                {
+                    nextstart = 0xF929B;
+                }
+                if(nextstart > (start + 1))
+                {
+                    dgv_FreeSpace.Rows[r].Cells[2].Value = String.Format("{0:X}", start + length);
+                    
+                    short number = (short) (nextstart - (start + length));
+                    bool isnegative = false;
+
+                    if(nextstart - (start + length) < 0)
                     {
-                        if (File.endaddress[k] > currentendaddress) ;
-                            //currentaddress = File.endaddress[k];
+                        number = (short)( 0 - number);
+                        isnegative = true;
+                    }
+                    
+                    if(isnegative)
+                    {
+                        dgv_FreeSpace.Rows[r].Cells[3].Value = "-" +  String.Format("{0:X}", number);
+                        dgv_FreeSpace.Rows[r].Cells[3].Style.BackColor = Color.Red;
                     }
                     else
                     {
-                        currentFreeSpaceLength = startaddress - currentaddress;
-                        dgv_FreeSpace.Rows.Add(currentaddress.ToString("X"), currentFreeSpaceLength.ToString("X"));
-                        currentaddress = File.endaddress[k];
+                        dgv_FreeSpace.Rows[r].Cells[3].Value = String.Format("{0:X}", number);
                     }
-
-                   
+                    dgv_FreeSpace.Rows[r].Cells[5].Value = r.ToString();
                 }
-              
-                k++;
+
             }
+
+            lbl_NumberOfPatches.Text = File.ShortPatchnames.Length.ToString();
+            lbl_NumberOfWrites.Text = File.startaddress.Length.ToString();
+
         }
 
 

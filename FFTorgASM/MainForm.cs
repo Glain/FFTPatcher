@@ -507,14 +507,23 @@ namespace FFTorgASM
         {
 
                 ConflictChecker C = new ConflictChecker();
-                C.ShowDialog();
+                C.Show();
 
         }
 
         private void btn_ViewFreeSpace_Click(object sender, EventArgs e)
         {
             FreeSpace FS = new FreeSpace();
-            FS.ShowDialog();
+            FS.Show();
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            checkedListBox1.Width = 351 + (this.Width - 583);
+            checkedListBox1.Height = 319 + (this.Height - 643);
+
+            lsb_FilesList.Height = 319 + (this.Height - 643);
+
         }
 
     }

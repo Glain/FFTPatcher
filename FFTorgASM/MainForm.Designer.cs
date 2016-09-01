@@ -41,8 +41,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lsb_FilesList = new System.Windows.Forms.ListView();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
-            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
+            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,9 +50,9 @@
             // 
             this.checkedListBox1.AllowDrop = true;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(159, 30);
+            this.checkedListBox1.Location = new System.Drawing.Point(204, 30);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(294, 319);
+            this.checkedListBox1.Size = new System.Drawing.Size(351, 319);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.checkedListBox1_DragDrop);
             this.checkedListBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.checkedListBox1_DragEnter);
@@ -60,7 +60,7 @@
             // patchButton
             // 
             this.patchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.patchButton.Location = new System.Drawing.Point(378, 528);
+            this.patchButton.Location = new System.Drawing.Point(480, 528);
             this.patchButton.Name = "patchButton";
             this.patchButton.Size = new System.Drawing.Size(75, 23);
             this.patchButton.TabIndex = 1;
@@ -90,7 +90,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(441, 109);
+            this.textBox1.Size = new System.Drawing.Size(543, 109);
             this.textBox1.TabIndex = 3;
             // 
             // variableComboBox
@@ -108,7 +108,7 @@
             // 
             this.versionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.versionLabel.AutoSize = true;
-            this.versionLabel.Location = new System.Drawing.Point(418, 502);
+            this.versionLabel.Location = new System.Drawing.Point(520, 502);
             this.versionLabel.Name = "versionLabel";
             this.versionLabel.Size = new System.Drawing.Size(35, 13);
             this.versionLabel.TabIndex = 7;
@@ -116,7 +116,8 @@
             // 
             // toggleButton
             // 
-            this.toggleButton.Location = new System.Drawing.Point(378, 355);
+            this.toggleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.toggleButton.Location = new System.Drawing.Point(480, 355);
             this.toggleButton.Name = "toggleButton";
             this.toggleButton.Size = new System.Drawing.Size(75, 23);
             this.toggleButton.TabIndex = 8;
@@ -126,7 +127,8 @@
             // 
             // checkAllButton
             // 
-            this.checkAllButton.Location = new System.Drawing.Point(297, 355);
+            this.checkAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkAllButton.Location = new System.Drawing.Point(399, 355);
             this.checkAllButton.Name = "checkAllButton";
             this.checkAllButton.Size = new System.Drawing.Size(75, 23);
             this.checkAllButton.TabIndex = 9;
@@ -136,9 +138,9 @@
             // 
             // PatchSaveStbutton
             // 
-            this.PatchSaveStbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.PatchSaveStbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.PatchSaveStbutton.Enabled = false;
-            this.PatchSaveStbutton.Location = new System.Drawing.Point(230, 528);
+            this.PatchSaveStbutton.Location = new System.Drawing.Point(332, 528);
             this.PatchSaveStbutton.Name = "PatchSaveStbutton";
             this.PatchSaveStbutton.Size = new System.Drawing.Size(142, 23);
             this.PatchSaveStbutton.TabIndex = 10;
@@ -150,7 +152,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(194, 14);
+            this.label1.Location = new System.Drawing.Point(296, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(215, 13);
             this.label1.TabIndex = 12;
@@ -163,7 +165,7 @@
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
             this.lsb_FilesList.MultiSelect = false;
             this.lsb_FilesList.Name = "lsb_FilesList";
-            this.lsb_FilesList.Size = new System.Drawing.Size(141, 319);
+            this.lsb_FilesList.Size = new System.Drawing.Size(186, 319);
             this.lsb_FilesList.TabIndex = 13;
             this.lsb_FilesList.UseCompatibleStateImageBehavior = false;
             this.lsb_FilesList.View = System.Windows.Forms.View.List;
@@ -171,14 +173,25 @@
             // 
             // btn_OpenConflictChecker
             // 
-            this.btn_OpenConflictChecker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_OpenConflictChecker.Location = new System.Drawing.Point(311, 557);
+            this.btn_OpenConflictChecker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_OpenConflictChecker.Location = new System.Drawing.Point(413, 557);
             this.btn_OpenConflictChecker.Name = "btn_OpenConflictChecker";
             this.btn_OpenConflictChecker.Size = new System.Drawing.Size(142, 23);
             this.btn_OpenConflictChecker.TabIndex = 10;
             this.btn_OpenConflictChecker.Text = "Open Conflict Checker";
             this.btn_OpenConflictChecker.UseVisualStyleBackColor = true;
             this.btn_OpenConflictChecker.Click += new System.EventHandler(this.btn_OpenConflictChecker_Click);
+            // 
+            // btn_ViewFreeSpace
+            // 
+            this.btn_ViewFreeSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_ViewFreeSpace.Location = new System.Drawing.Point(254, 557);
+            this.btn_ViewFreeSpace.Name = "btn_ViewFreeSpace";
+            this.btn_ViewFreeSpace.Size = new System.Drawing.Size(153, 23);
+            this.btn_ViewFreeSpace.TabIndex = 14;
+            this.btn_ViewFreeSpace.Text = "View Free Space";
+            this.btn_ViewFreeSpace.UseVisualStyleBackColor = true;
+            this.btn_ViewFreeSpace.Click += new System.EventHandler(this.btn_ViewFreeSpace_Click);
             // 
             // variableSpinner
             // 
@@ -191,21 +204,11 @@
             this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.variableSpinner.Visible = false;
             // 
-            // btn_ViewFreeSpace
-            // 
-            this.btn_ViewFreeSpace.Location = new System.Drawing.Point(152, 557);
-            this.btn_ViewFreeSpace.Name = "btn_ViewFreeSpace";
-            this.btn_ViewFreeSpace.Size = new System.Drawing.Size(153, 23);
-            this.btn_ViewFreeSpace.TabIndex = 14;
-            this.btn_ViewFreeSpace.Text = "View Free Space";
-            this.btn_ViewFreeSpace.UseVisualStyleBackColor = true;
-            this.btn_ViewFreeSpace.Click += new System.EventHandler(this.btn_ViewFreeSpace_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(465, 605);
+            this.ClientSize = new System.Drawing.Size(567, 605);
             this.Controls.Add(this.btn_ViewFreeSpace);
             this.Controls.Add(this.lsb_FilesList);
             this.Controls.Add(this.label1);
@@ -220,8 +223,10 @@
             this.Controls.Add(this.reloadButton);
             this.Controls.Add(this.patchButton);
             this.Controls.Add(this.checkedListBox1);
+            this.MinimumSize = new System.Drawing.Size(583, 643);
             this.Name = "MainForm";
             this.Text = "FFTorgASM";
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
