@@ -1,8 +1,6 @@
 # Glain - FFTPatcher
 *.vshost.exe
 *.vshost.exe.config
-*.suo
-*.v11.suo
 bin/
 obj/
 bak/
