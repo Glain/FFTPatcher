@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ASMEncoding.Helpers
 {
-	public class ASMStringHelper
+	public static class ASMStringHelper
 	{
         internal class CharOffsets
         {

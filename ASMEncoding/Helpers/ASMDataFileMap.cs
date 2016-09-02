@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ASMEncoding.Helpers
 {
-    public class ASMDataFileMap
+    public static class ASMDataFileMap
     {
         public static string MIPS_Encoding = "ASMEncodingData/mips_encode.dat";
         public static string MIPS_COP2_Encoding = "ASMEncodingData/mips_cop2_encode.dat";

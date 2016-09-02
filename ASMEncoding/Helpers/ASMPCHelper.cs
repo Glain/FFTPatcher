@@ -21,7 +21,7 @@ namespace ASMEncoding.Helpers
         }
     }
 
-	public class ASMPCHelper
+	public static class ASMPCHelper
 	{
         public static ASMProcessPCResult ProcessPC(uint pc, string strPC, bool reportError = true, bool blankAsZero = false)
 		{

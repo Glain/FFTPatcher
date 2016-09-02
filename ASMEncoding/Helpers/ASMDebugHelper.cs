@@ -9,7 +9,7 @@ using System;
 
 namespace ASMEncoding.Helpers
 {
-	public class ASMDebugHelper
+	public static class ASMDebugHelper
 	{
 		public static void assert(bool condition, string message)
 		{

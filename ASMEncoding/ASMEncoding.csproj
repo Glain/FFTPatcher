@@ -51,6 +51,7 @@
     <Compile Include="Helpers\ASMDebugHelper.cs" />
     <Compile Include="Helpers\ASMDecoder.cs" />
     <Compile Include="Helpers\ASMEncoder.cs" />
+    <Compile Include="Helpers\ASMEquivalenceHelper.cs" />
     <Compile Include="Helpers\ASMFormatHelper.cs" />
     <Compile Include="Helpers\ASMLabelHelper.cs" />
     <Compile Include="Helpers\ASMPCHelper.cs" />

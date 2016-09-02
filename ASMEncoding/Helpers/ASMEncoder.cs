@@ -73,6 +73,12 @@ namespace ASMEncoding.Helpers
 
         public EncodeLine[] PreprocessLines(string[] lines, uint pc)
         {
+            ASMProcessEquivalencesResult processEquivalencesResult = ASMEquivalenceHelper.ProcessEquivalences(lines);
+            if (processEquivalencesResult.ErrorCode > 0)
+                _errorTextBuilder.Append(processEquivalencesResult.ErrorMessage);
+            else
+                lines = processEquivalencesResult.Lines;
+
             EncodeLine[] encodeLines = TranslatePseudo(lines, pc);
 
             ASMFindLabelsResult findLabelsResult = ValueHelper.LabelHelper.FindLabels(lines, encodeLines, pc);
@@ -206,7 +212,7 @@ namespace ASMEncoding.Helpers
                 else
                 {
                     if (!string.IsNullOrEmpty(parts[0]))
-                        if ((parts[0] != ".org") && (parts[0] != ".label") && (!parts[0].EndsWith(":")))
+                        if ((parts[0] != ".org") && (parts[0] != ".label") && (parts[0] != ".eqv") && (!parts[0].EndsWith(":")))
                             _errorTextBuilder.AppendLine("WARNING: Ignoring unknown command \"" + parts[0] + "\".");
                 }
 				
