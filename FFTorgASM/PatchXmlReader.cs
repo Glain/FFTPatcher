@@ -4,6 +4,8 @@ using System.Xml;
 using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 using ASMEncoding;
+using System.IO;
+using System.Text;
 
 namespace FFTorgASM
 {
@@ -54,6 +56,7 @@ namespace FFTorgASM
                 XmlAttribute sectorAttribute = location.Attributes["sector"];
                 XmlAttribute asmAttribute = location.Attributes["mode"];
                 XmlAttribute offsetModeAttribute = location.Attributes["offsetMode"];
+                XmlAttribute inputFileAttribute = location.Attributes["inputFile"];
                 
                 PsxIso.Sectors sector =  (PsxIso.Sectors)0;
                 if (fileAttribute != null)
@@ -98,14 +101,23 @@ namespace FFTorgASM
                 }
                 catch (Exception ex) { }
 
+                string content = location.InnerText;
+                if (inputFileAttribute != null)
+                {
+                    using (StreamReader streamReader = new StreamReader(inputFileAttribute.InnerText, Encoding.UTF8))
+                    {
+                        content = streamReader.ReadToEnd();
+                    }
+                }
+
                 byte[] bytes;
                 if (asmMode)
                 {
-	        		bytes = asmUtility.EncodeASM(location.InnerText, ramOffset).EncodedBytes;
+                    bytes = asmUtility.EncodeASM(content, ramOffset).EncodedBytes;
                 }
                 else
                 {
-                	bytes = GetBytes( location.InnerText );
+                	bytes = GetBytes( content );
                 }
                 
                 patches.Add( new PatchedByteArray( sector, fileOffset, bytes ) );
