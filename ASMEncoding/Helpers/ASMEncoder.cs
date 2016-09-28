@@ -528,7 +528,8 @@ namespace ASMEncoding.Helpers
 			//return EncodeJumpImmediate(hex);
 
             //return ((ValueHelper.FindUnsignedValue(input) >> 2) & ASMValueHelper.JumpImmediateMask) | (pc & 0xF0000000);
-            return ((ValueHelper.FindUnsignedValue(input) & ASMValueHelper.JumpImmediateMask) >> 2) | (pc & 0xF0000000);
+            //return ((ValueHelper.FindUnsignedValue(input) & ASMValueHelper.JumpImmediateMask) >> 2) | (pc & 0xF0000000);
+            return ((ValueHelper.FindUnsignedValue(input) & ASMValueHelper.JumpImmediateMask) >> 2);
 		}
 		
         /*
@@ -541,9 +542,9 @@ namespace ASMEncoding.Helpers
 		}
         */
 
-        private uint EncodeBranchImmediate(int val, uint pc, uint mask)
+        private uint EncodeBranchImmediate(uint val, uint pc, uint mask)
 		{
-			int difference = (int)((val - pc - 4) / 4);
+			int difference = unchecked((int)((val - pc - 4) / 4));
 			//string hexImmed = ASMValueHelper.SignedToHex_WithLength(difference, 4);
             //return ASMValueHelper.HexToBinary_WithLength(hexImmed, 16);
             return ASMValueHelper.SignedToUnsigned(difference) & mask;
@@ -551,7 +552,7 @@ namespace ASMEncoding.Helpers
 
         private uint EncodeBranchImmediate(string val, uint pc, uint mask)
 		{
-			return EncodeBranchImmediate((int)ValueHelper.FindUnsignedValue(val), pc, mask);
+			return EncodeBranchImmediate(ValueHelper.FindUnsignedValue(val), pc, mask);
 		}
 
         private uint EncodeDecrementedImmediate(string val, int length, uint mask)
