@@ -192,7 +192,7 @@ namespace ASMEncoding.Helpers
 				}
 			}
 
-            result.ErrorCode = 0;
+            //result.ErrorCode = 0;
             result.PC = pc;
 
             return result;
