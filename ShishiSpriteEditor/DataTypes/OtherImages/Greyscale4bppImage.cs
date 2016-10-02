@@ -60,7 +60,8 @@ namespace FFTPatcher.SpriteEditor
             var q = new ImageQuantization.PaletteQuantizer( colors );
             using (var newImage = q.Quantize( image ))
             {
-                var imageBytes = GetImageBytes( newImage, new Set<Color>( colors ) );
+                //var imageBytes = GetImageBytes( newImage, new Set<Color>( colors ) );
+                var imageBytes = GetImageBytes(newImage, colors);
                 position.PatchIso( iso, imageBytes );
             }
         }
@@ -84,6 +85,11 @@ namespace FFTPatcher.SpriteEditor
             public override int Length
             {
                 get { return 16 * 2; }
+            }
+
+            public override PatcherLib.Iso.KnownPosition AddOffset(int offset, int length)
+            {
+                throw new NotImplementedException();
             }
         }
     }

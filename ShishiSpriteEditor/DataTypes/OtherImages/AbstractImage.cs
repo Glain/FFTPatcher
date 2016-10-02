@@ -17,6 +17,10 @@ namespace FFTPatcher.SpriteEditor
             public int Width;
             public int Height;
             public Enum Sector;
+
+            public int PaletteCount;
+            public int CurrentPalette;
+            public int DefaultPalette;
         }
 
         public abstract string DescribeXml();
@@ -78,20 +82,32 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
+            XmlNode paletteCountNode = node["PaletteCount"];
+            XmlNode defaultPaletteNode = node["DefaultPalette"];
+
+            int paletteCount = ((paletteCountNode != null) && (paletteCountNode.InnerText != null)) ? int.Parse(paletteCountNode.InnerText) : 0;
+            int defaultPalette = ((defaultPaletteNode != null) && (defaultPaletteNode.InnerText != null)) ? int.Parse(defaultPaletteNode.InnerText) : 0;
+
             if ( sectorNode != null )
             {
                 return new ImageInfo { Name = name, Width = width, Height = height, 
-                    Sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorNode.InnerText) };
+                    Sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorNode.InnerText),
+                    PaletteCount = paletteCount, DefaultPalette = defaultPalette, CurrentPalette = defaultPalette
+                };
             }
             else if ( fftpackNode != null )
             {
                 return new ImageInfo { Name = name, Width = width, Height = height, 
-                    Sector = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), fftpackNode.InnerText) };
+                    Sector = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), fftpackNode.InnerText),
+                    PaletteCount = paletteCount, DefaultPalette = defaultPalette, CurrentPalette = defaultPalette
+                };
             }
             else if ( pspSector != null )
             {
                 return new ImageInfo { Name = name, Width = width, Height = height, 
-                    Sector = (PatcherLib.Iso.PspIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PspIso.Sectors), pspSector.InnerText) };
+                    Sector = (PatcherLib.Iso.PspIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PspIso.Sectors), pspSector.InnerText),
+                    PaletteCount = paletteCount, DefaultPalette = defaultPalette, CurrentPalette = defaultPalette
+                };
             }
             else
             {
@@ -104,16 +120,22 @@ namespace FFTPatcher.SpriteEditor
         protected abstract System.Drawing.Bitmap GetImageFromIsoInner( System.IO.Stream iso );
         public virtual string FilenameFilter { get { return "PNG image (*.png)|*.png"; } }
 
+        // Old property... possibly for loading/saving multiple palettes at once
         public int NumPalettes { get; private set; }
+
+        // For selecting one palette to load/save
+        public int PaletteCount { get; protected set; }
+        public int DefaultPalette { get; protected set; }
+        public int CurrentPalette { get; set; }
 
         System.Drawing.Bitmap cachedImage;
         bool cachedImageDirty = true;
 
-        public System.Drawing.Bitmap GetImageFromIso( System.IO.Stream iso )
+        public System.Drawing.Bitmap GetImageFromIso( System.IO.Stream iso, bool forceReload = false )
         {
             try
             {
-                if (cachedImageDirty && cachedImage != null)
+                if ((cachedImageDirty || forceReload) && cachedImage != null)
                 {
                     cachedImage.Dispose();
                     cachedImage = null;

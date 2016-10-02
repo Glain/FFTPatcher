@@ -29,7 +29,6 @@
       09 87 65 43 21
     </Location>
 
-    <!-- Variables are always 1 byte -->
     <Variable file="BATTLE_BIN" offset="11F468" name="X"/>
 
   </Patch>

@@ -47,6 +47,7 @@ namespace FFTPatcher.SpriteEditor
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.MainMenu mainMenu;
             System.Windows.Forms.MenuItem fileMenu;
             System.Windows.Forms.MenuItem openIsoMenuItem;
@@ -88,7 +89,7 @@ namespace FFTPatcher.SpriteEditor
             this.allOtherImagesEditor1 = new FFTPatcher.SpriteEditor.AllOtherImagesEditor();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.reimportButton = new System.Windows.Forms.Button();
-            mainMenu = new System.Windows.Forms.MainMenu();
+            mainMenu = new System.Windows.Forms.MainMenu(this.components);
             fileMenu = new System.Windows.Forms.MenuItem();
             openIsoMenuItem = new System.Windows.Forms.MenuItem();
             separator1 = new System.Windows.Forms.MenuItem();
@@ -352,7 +353,7 @@ namespace FFTPatcher.SpriteEditor
             this.tabControl1.Location = new System.Drawing.Point(2, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(643, 694);
+            this.tabControl1.Size = new System.Drawing.Size(643, 703);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -362,7 +363,7 @@ namespace FFTPatcher.SpriteEditor
             this.spriteTabPage.Location = new System.Drawing.Point(4, 22);
             this.spriteTabPage.Name = "spriteTabPage";
             this.spriteTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.spriteTabPage.Size = new System.Drawing.Size(635, 668);
+            this.spriteTabPage.Size = new System.Drawing.Size(635, 677);
             this.spriteTabPage.TabIndex = 0;
             this.spriteTabPage.Text = "Sprites";
             this.spriteTabPage.UseVisualStyleBackColor = true;
@@ -375,7 +376,7 @@ namespace FFTPatcher.SpriteEditor
             this.allSpritesEditor1.Enabled = false;
             this.allSpritesEditor1.Location = new System.Drawing.Point(0, 0);
             this.allSpritesEditor1.Name = "allSpritesEditor1";
-            this.allSpritesEditor1.Size = new System.Drawing.Size(635, 668);
+            this.allSpritesEditor1.Size = new System.Drawing.Size(635, 747);
             this.allSpritesEditor1.TabIndex = 0;
             // 
             // otherTabPage
@@ -384,7 +385,7 @@ namespace FFTPatcher.SpriteEditor
             this.otherTabPage.Location = new System.Drawing.Point(4, 22);
             this.otherTabPage.Name = "otherTabPage";
             this.otherTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.otherTabPage.Size = new System.Drawing.Size(635, 668);
+            this.otherTabPage.Size = new System.Drawing.Size(635, 564);
             this.otherTabPage.TabIndex = 1;
             this.otherTabPage.Text = "Other Images";
             this.otherTabPage.UseVisualStyleBackColor = true;
@@ -395,7 +396,7 @@ namespace FFTPatcher.SpriteEditor
             this.allOtherImagesEditor1.Enabled = false;
             this.allOtherImagesEditor1.Location = new System.Drawing.Point(3, 3);
             this.allOtherImagesEditor1.Name = "allOtherImagesEditor1";
-            this.allOtherImagesEditor1.Size = new System.Drawing.Size(629, 662);
+            this.allOtherImagesEditor1.Size = new System.Drawing.Size(629, 558);
             this.allOtherImagesEditor1.TabIndex = 0;
             // 
             // progressBar1
@@ -418,7 +419,7 @@ namespace FFTPatcher.SpriteEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(647, 744);
+            this.ClientSize = new System.Drawing.Size(647, 723);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

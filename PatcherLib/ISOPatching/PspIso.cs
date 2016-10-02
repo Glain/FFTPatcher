@@ -447,6 +447,11 @@ namespace PatcherLib.Iso
             {
                 PspIso.ApplyPatch( iso, PspIsoInfo.GetPspIsoInfo( iso ), GetPatchedByteArray( bytes.ToArray() ) );
             }
+
+            public override PatcherLib.Iso.KnownPosition AddOffset(int offset, int length)
+            {
+                return new PspIso.KnownPosition(Sector, StartLocation + offset, this.length + length);
+            }
         }
 
         public static IList<KnownPosition> Abilities { get; private set; }

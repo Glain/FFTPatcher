@@ -52,6 +52,7 @@ namespace FFTPatcher.SpriteEditor
 
             comboBox1.SelectedIndex = 0;
             RefreshPictureBox();
+            SetupPaletteDropdown();
         }
 
         public AbstractImage GetImageFromComboBoxItem()
@@ -121,17 +122,41 @@ namespace FFTPatcher.SpriteEditor
             panel1.ResumeLayout();
         }
 
-        private void RefreshPictureBox()
+        private void RefreshPictureBox(bool forceReload = false)
         {
             AbstractImage im = GetImageFromComboBoxItem();
-            AssignNewPictureBoxImage( im.GetImageFromIso( iso ) );
+            AssignNewPictureBoxImage( im.GetImageFromIso( iso, forceReload ) );
             imageSizeLabel.Text = string.Format( "Image dimensions: {0}x{1}", im.Width, im.Height );
         }
 
-        private void comboBox1_SelectedIndexChanged( object sender, EventArgs e )
+        private void SetupPaletteDropdown(AbstractImage im = null)
+        {
+            if (im == null)
+            {
+                im = GetImageFromComboBoxItem();
+            }
+
+            if (im.PaletteCount > 0)
+            {
+                ddl_Palette.Items.Clear();
+                for (int index = 0; index < im.PaletteCount; index++)
+                {
+                    ddl_Palette.Items.Add(index);
+                }
+                ddl_Palette.SelectedIndex = im.CurrentPalette;
+                pnl_Palette.Visible = true;
+            }
+            else
+            {
+                pnl_Palette.Visible = false;
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ( !ignoreChanges )
             {
+                SetupPaletteDropdown();
                 RefreshPictureBox();
             }
         }
@@ -162,6 +187,13 @@ namespace FFTPatcher.SpriteEditor
                     LoadToCurrentImage( paths[0] );
                 }
             }
+        }
+
+        private void ddl_Palette_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AbstractImage im = GetImageFromComboBoxItem();
+            im.CurrentPalette = (int)ddl_Palette.SelectedItem;
+            RefreshPictureBox(true);
         }
     }
 }

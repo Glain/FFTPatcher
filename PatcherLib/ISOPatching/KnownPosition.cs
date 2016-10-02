@@ -9,6 +9,9 @@ namespace PatcherLib.Iso
         public abstract void PatchIso(System.IO.Stream iso, IList<byte> bytes);
         public abstract IList<byte> ReadIso(System.IO.Stream iso);
         public abstract PatcherLib.Datatypes.PatchedByteArray GetPatchedByteArray(byte[] bytes);
+
+        public abstract KnownPosition AddOffset(int offset, int length);
+
         public abstract int Length { get; }
 
         public static KnownPosition ConstructKnownPosition( Enum sector, int startLoction, int length )
@@ -31,6 +34,5 @@ namespace PatcherLib.Iso
                 throw new ArgumentException( "sector" );
             }
         }
-
     }
 }
