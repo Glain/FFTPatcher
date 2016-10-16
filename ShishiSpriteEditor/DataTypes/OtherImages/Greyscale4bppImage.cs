@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PatcherLib.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
@@ -47,14 +48,46 @@ namespace FFTPatcher.SpriteEditor
         {
         }
 
+        public override string FilenameFilter
+        {
+            get
+            {
+                return "4bpp greyscale bitmap (*.bmp)|*.bmp";
+            }
+        }
+
         public static Greyscale4bppImage ConstructFromXml( XmlNode node )
         {
             ImageInfo info = GetImageInfo( node );
             var pos = GetPositionFromImageNode( info.Sector, node );
-            return new Greyscale4bppImage( info.Name, info.Width, info.Height, pos );
+            Greyscale4bppImage image = new Greyscale4bppImage( info.Name, info.Width, info.Height, pos );
+            image.OriginalFilename = info.OriginalFilename;
+            image.Filesize = info.Filesize;
+            image.Sector = info.Sector;
+            return image;
         }
 
+        protected override System.Drawing.Bitmap GetImageFromIsoInner(System.IO.Stream iso)
+        {
+            byte[] bytes = position.ReadIso(iso);
+            List<byte> splitBytes = new List<byte>(bytes.Length * 2);
+            foreach (byte b in bytes.Sub(0, Height * Width / 2 - 1))
+            {
+                splitBytes.Add(b.GetLowerNibble());
+                splitBytes.Add(b.GetUpperNibble());
+            }
 
+            Bitmap result = new Bitmap(Width, Height);
+
+            for (int i = 0; i < Width * Height; i++)
+            {
+                result.SetPixel(i % Width, i / Width, colors[splitBytes[i]]);
+            }
+
+            return result;
+        }
+
+        /*
         protected override void WriteImageToIsoInner( System.IO.Stream iso, Image image )
         {
             var q = new ImageQuantization.PaletteQuantizer( colors );
@@ -65,6 +98,16 @@ namespace FFTPatcher.SpriteEditor
                 position.PatchIso( iso, imageBytes );
             }
         }
+        */
+
+        protected override void WriteImageToIsoInner(System.IO.Stream iso, Image image)
+        {
+            using (Bitmap bmp = new Bitmap(image))
+            {
+                byte[] imageBytes = GetImageBytes(bmp);
+                position.PatchIso(iso, imageBytes);
+            }
+        }
 
         private class FakeGreyscalePalettePosition : PatcherLib.Iso.KnownPosition
         {
@@ -72,7 +115,7 @@ namespace FFTPatcher.SpriteEditor
             {
             }
 
-            public override IList<byte> ReadIso( System.IO.Stream iso )
+            public override byte[] ReadIso( System.IO.Stream iso )
             {
                 return new Palette( colors ).ToByteArray();
             }
@@ -89,7 +132,7 @@ namespace FFTPatcher.SpriteEditor
 
             public override PatcherLib.Iso.KnownPosition AddOffset(int offset, int length)
             {
-                throw new NotImplementedException();
+                return this;
             }
         }
     }

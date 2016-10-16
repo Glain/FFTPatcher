@@ -205,7 +205,7 @@ namespace FFTPatcher
             this.scusCheckedListBox.Size = new System.Drawing.Size(142, 169);
             this.scusCheckedListBox.TabIndex = 0;
             this.scusCheckedListBox.Tag = "SCUS_942.21";
-            this.scusCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
+            this.scusCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clb_Patches_ItemCheck);
             // 
             // battleBinGroupBox
             // 
@@ -231,7 +231,7 @@ namespace FFTPatcher
             this.battleCheckedListBox.Size = new System.Drawing.Size(120, 49);
             this.battleCheckedListBox.TabIndex = 0;
             this.battleCheckedListBox.Tag = "BATTLE.BIN";
-            this.battleCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
+            this.battleCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clb_Patches_ItemCheck);
             // 
             // cancelButton
             // 

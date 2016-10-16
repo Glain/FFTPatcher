@@ -326,7 +326,7 @@ namespace PatcherLib.Iso
             }
         }
 
-        public static IList<byte> GetFile( Stream stream, PspIsoInfo info, PspIso.Sectors sector, int start, int length )
+        public static byte[] GetFile( Stream stream, PspIsoInfo info, PspIso.Sectors sector, int start, int length )
         {
             byte[] result = new byte[length];
             stream.Seek( info[sector] * 2048 + start, SeekOrigin.Begin );
@@ -334,17 +334,17 @@ namespace PatcherLib.Iso
             return result;
         }
 
-        public static IList<byte> GetFile( Stream stream, PspIsoInfo info, FFTPack.Files file, int start, int length )
+        public static byte[] GetFile( Stream stream, PspIsoInfo info, FFTPack.Files file, int start, int length )
         {
             return FFTPack.GetFileFromIso( stream, info, file, start, length );
         }
 
-        public static IList<byte> GetFile( Stream stream, PspIsoInfo info, FFTPack.Files file )
+        public static byte[] GetFile( Stream stream, PspIsoInfo info, FFTPack.Files file )
         {
             return FFTPack.GetFileFromIso( stream, info, file );
         }
 
-        public static IList<byte> GetBlock( Stream iso, PspIsoInfo info, KnownPosition pos )
+        public static byte[] GetBlock( Stream iso, PspIsoInfo info, KnownPosition pos )
         {
             if (pos.FFTPack.HasValue)
             {
@@ -433,12 +433,12 @@ namespace PatcherLib.Iso
                 }
             }
 
-            public override IList<byte> ReadIso( Stream iso )
+            public override byte[] ReadIso( Stream iso )
             {
                 return ReadIso( iso, PspIsoInfo.GetPspIsoInfo( iso ) );
             }
 
-            public IList<byte> ReadIso( Stream iso, PspIsoInfo info )
+            public byte[] ReadIso( Stream iso, PspIsoInfo info )
             {
                 return PspIso.GetBlock( iso, info, this );
             }
@@ -450,7 +450,12 @@ namespace PatcherLib.Iso
 
             public override PatcherLib.Iso.KnownPosition AddOffset(int offset, int length)
             {
-                return new PspIso.KnownPosition(Sector, StartLocation + offset, this.length + length);
+                if (Sector.HasValue)
+                    return new PspIso.KnownPosition(Sector.Value, StartLocation + offset, this.length + length);
+                else if (FFTPack.HasValue)
+                    return new PspIso.KnownPosition(FFTPack.Value, StartLocation + offset, this.length + length);
+                else
+                    throw new Exception("Either Sector or FFTPack must have a value.");
             }
         }
 
@@ -508,9 +513,10 @@ namespace PatcherLib.Iso
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2E5688, 0xA7C),
             }.AsReadOnly();
 
+            // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
             AbilityAnimations = new KnownPosition[] { 
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x32394C, 0x600),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x32394C, 0x600) }.AsReadOnly();
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x32394C, 0x552),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x32394C, 0x552) }.AsReadOnly();
 
             Abilities = new KnownPosition[] { 
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x271514, 0x24C6),

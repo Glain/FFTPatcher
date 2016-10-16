@@ -22,8 +22,12 @@ namespace FFTPatcher.Datatypes
 
         private AllAnimations(IList<byte> bytes)
         {
-            animations = new Animation[512];
-            for (int i = 0; i < 512; i++)
+            // Support and Movement abilities not included
+            //animations = new Animation[512];
+            //for (int i = 0; i < 512; i++)
+
+            animations = new Animation[454];
+            for (int i = 0; i < 454; i++)
             {
                 animations[i] = new Animation(bytes.Sub(i * 3, i * 3 + 3 - 1));
             }
@@ -35,8 +39,12 @@ namespace FFTPatcher.Datatypes
             this.context = context;
             IList<string> names = context == Context.US_PSP ? AllAbilities.PSPNames : AllAbilities.PSXNames;
 
-            animations = new Animation[512];
-            for (int i = 0; i < 512; i++)
+            // Support and Movement abilities not included
+            //animations = new Animation[512];
+            //for (int i = 0; i < 512; i++)
+
+            animations = new Animation[454];
+            for (int i = 0; i < 454; i++)
             {
                 animations[i] = new Animation(
                     (ushort)i,
@@ -50,8 +58,11 @@ namespace FFTPatcher.Datatypes
 
         public byte[] ToByteArray()
         {
-            byte[] result = new byte[512 * 3];
-            for (int i = 0; i < 512; i++)
+            //byte[] result = new byte[512 * 3];
+            //for (int i = 0; i < 512; i++)
+            
+            byte[] result = new byte[454 * 3];
+            for (int i = 0; i < 454; i++)
             {
                 this[i].ToByteArray().CopyTo(result, i * 3);
             }

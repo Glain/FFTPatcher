@@ -7,7 +7,7 @@ namespace PatcherLib.Iso
     public abstract class KnownPosition
     {
         public abstract void PatchIso(System.IO.Stream iso, IList<byte> bytes);
-        public abstract IList<byte> ReadIso(System.IO.Stream iso);
+        public abstract byte[] ReadIso(System.IO.Stream iso);
         public abstract PatcherLib.Datatypes.PatchedByteArray GetPatchedByteArray(byte[] bytes);
 
         public abstract KnownPosition AddOffset(int offset, int length);

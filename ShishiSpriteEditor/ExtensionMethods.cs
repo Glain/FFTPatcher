@@ -242,6 +242,23 @@ namespace FFTPatcher.SpriteEditor
             return p[offset];
         }
 
+        /*
+         * Glain: Doesn't work because the standard Windows Image objects can't load in 4bpp paleted bitmaps correctly.  Bleh.
+         * I'm now handling this directly in the PalettedImage4bpp.GetImageBytes method, by loading in the bitmap as a binary file 
+         * and following the BMP format specifications to set the indexes correctly.
+         * 
+        public static unsafe int GetPixel4bpp(this BitmapData bmd, int x, int y)
+        {
+            byte* p = (byte*)bmd.Scan0.ToPointer();
+            int offset = y * bmd.Stride + x / 2;
+            byte currentByte = p[offset];
+            int byteIndex = y * bmd.Width + x;
+            int rawValue = (((byteIndex & 0x01) == 0) ? ((currentByte & 0xF0) >> 4) : (currentByte & 0x0F));
+
+            return rawValue;
+        }
+        */
+
         public static unsafe Color GetPixel32bpp( this BitmapData bmd, int x, int y )
         {
             byte* p = (byte*)bmd.Scan0.ToPointer();

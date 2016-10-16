@@ -103,7 +103,9 @@ namespace PatcherLib.Iso
             StoreInventories = new KnownPosition( Sectors.WORLD_WORLD_BIN, 0xAD844, 0x200 );
             NumberOfSectorsBigEndian = new KnownPosition( (Sectors)16, 0x54, 4 );
             NumberOfSectorsLittleEndian = new KnownPosition( (Sectors)16, 0x50, 4 );
-            AbilityAnimations = new KnownPosition( Sectors.BATTLE_BIN, 0x2CE10, 0x600 );
+
+            // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
+            AbilityAnimations = new KnownPosition( Sectors.BATTLE_BIN, 0x2CE10, 0x552 );
         }
 
         #endregion Constructors
@@ -3076,7 +3078,7 @@ namespace PatcherLib.Iso
                 return new PatcherLib.Datatypes.PatchedByteArray( Sector, StartLocation, bytes );
             }
 
-            public override IList<byte> ReadIso( Stream iso )
+            public override byte[] ReadIso( Stream iso )
             {
                 return PsxIso.ReadFile( iso, this );
             }

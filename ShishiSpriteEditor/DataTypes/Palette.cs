@@ -29,6 +29,8 @@ namespace FFTPatcher.SpriteEditor
     /// </summary>
     public class Palette
     {
+        public static Color RealTransparent = Color.FromArgb(0, 0, 0, 0);
+
         public static byte[] PalletesToPALFile( IList<Palette> palettes )
         {
             List<byte> result = new List<byte>( 0x418 );
@@ -106,12 +108,12 @@ namespace FFTPatcher.SpriteEditor
         }
 
 
-        public Palette( IList<byte> bytes, ColorDepth depth )
+        public Palette( IList<byte> bytes, ColorDepth depth, bool useRealTransparentColor = false )
         {
             switch (depth)
             {
                 case ColorDepth._16bit:
-                    Build16BitPalette( bytes );
+                    Build16BitPalette( bytes, useRealTransparentColor );
                     break;
                 case ColorDepth._32bit:
                     Build32BitPalette( bytes );
@@ -133,7 +135,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        private void Build16BitPalette( IList<byte> bytes )
+        private void Build16BitPalette( IList<byte> bytes, bool useRealTransparentColor = false )
         {
             int count = bytes.Count / 2;
             Colors = new Color[count];
@@ -144,7 +146,7 @@ namespace FFTPatcher.SpriteEditor
 
             if (Colors[0].ToArgb() == Color.Black.ToArgb())
             {
-                Colors[0] = Color.Transparent;
+                Colors[0] = useRealTransparentColor ? RealTransparent : Color.Transparent;
             }
         }
 
@@ -173,13 +175,14 @@ namespace FFTPatcher.SpriteEditor
 
         /// <summary>
         /// Converts two bytes into a FFT color.
+        /// Format is: [GGGRRRRR][ABBBBBGG]; Reversed byte order gives [ABBBBBGG][GGGRRRRR]
         /// </summary>
         public static Color BytesToColor( byte first, byte second )
         {
             int b = (second & 0x7C) << 1;
             int g = (second & 0x03) << 6 | (first & 0xE0) >> 2;
             int r = (first & 0x1F) << 3;
-            int a = (second & 0x80) >> 7;
+            //int a = (second & 0x80) >> 7;
 
             return Color.FromArgb( r, g, b );
         }
@@ -203,6 +206,35 @@ namespace FFTPatcher.SpriteEditor
             }
 
             return result;
+        }
+
+        public static byte[] ColorToBytes(Color c, byte alphaByte, ColorDepth depth = ColorDepth._16bit)
+        {
+            if (depth == ColorDepth._16bit)
+            {
+                byte r = (byte)((c.R & 0xF8) >> 3);
+                byte g = (byte)((c.G & 0xF8) >> 3);
+                byte b = (byte)((c.B & 0xF8) >> 3);
+
+                byte[] result = new byte[2];
+                result[0] = (byte)(((g & 0x07) << 5) | r);
+                result[1] = (byte)((b << 2) | ((g & 0x18) >> 3) | (alphaByte & 0x80));
+
+                return result;
+            }
+            else if (depth == ColorDepth._32bit)
+            {
+                return ColorToBytes_32Bit(c, alphaByte);
+            }
+            else
+            {
+                throw new System.ArgumentException("Color depth must be either 16 or 32 bit.");
+            }
+        }
+
+        public static byte[] ColorToBytes_32Bit(Color c, byte alphaByte)
+        {
+            return new byte[4] { c.R, c.G, c.B, alphaByte };
         }
 
         /// <summary>

@@ -264,7 +264,7 @@ namespace FFTPatcher
             return Color.FromArgb( r, g, b );
         }
 
-        private void checkedListBox1_ItemCheck( object sender, ItemCheckEventArgs e )
+        private void clb_Patches_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             CheckedListBox clb = (CheckedListBox)sender;
             if ( (string)clb.Tag == "SCUS_942.21" )

@@ -599,7 +599,7 @@ namespace FFTPatcher
             //    byte[] filecopy = File.ReadAllBytes(saveFileDialog1.FileName);
             //    using (BinaryReader b = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
             //    {
-            //        foreach (AsmPatch patch in checkedListBox1.CheckedItems)
+            //        foreach (AsmPatch patch in clb_Patches.CheckedItems)
             //        {
             //            PatcherLib.Iso.PsxIso.PatchPsxSaveState(b, patch, filecopy);
             //        }

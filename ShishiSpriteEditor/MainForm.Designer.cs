@@ -63,9 +63,14 @@ namespace FFTPatcher.SpriteEditor
             System.Windows.Forms.MenuItem separator4;
             System.Windows.Forms.MenuItem separator5;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.menuItem_ExpandIso = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.imageMenuItem = new System.Windows.Forms.MenuItem();
             this.importImageMenuItem = new System.Windows.Forms.MenuItem();
             this.exportImageMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem_ImportEntireFile = new System.Windows.Forms.MenuItem();
+            this.menuItem_ExportEntireFile = new System.Windows.Forms.MenuItem();
             this.importAllImagesMenuItem = new System.Windows.Forms.MenuItem();
             this.dumpAllImagesMenuItem = new System.Windows.Forms.MenuItem();
             this.spriteMenuItem = new System.Windows.Forms.MenuItem();
@@ -122,6 +127,8 @@ namespace FFTPatcher.SpriteEditor
             fileMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             openIsoMenuItem,
             separator1,
+            this.menuItem_ExpandIso,
+            this.menuItem3,
             exitMenuItem});
             fileMenu.Text = "&File";
             // 
@@ -136,9 +143,21 @@ namespace FFTPatcher.SpriteEditor
             separator1.Index = 1;
             separator1.Text = "-";
             // 
+            // menuItem_ExpandIso
+            // 
+            this.menuItem_ExpandIso.Enabled = false;
+            this.menuItem_ExpandIso.Index = 2;
+            this.menuItem_ExpandIso.Text = "Expand ISO";
+            this.menuItem_ExpandIso.Click += new System.EventHandler(this.menuItem_ExpandIso_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 3;
+            this.menuItem3.Text = "-";
+            // 
             // exitMenuItem
             // 
-            exitMenuItem.Index = 2;
+            exitMenuItem.Index = 4;
             exitMenuItem.Text = "E&xit";
             exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
             // 
@@ -148,6 +167,9 @@ namespace FFTPatcher.SpriteEditor
             this.imageMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.importImageMenuItem,
             this.exportImageMenuItem,
+            this.menuItem2,
+            this.menuItem_ImportEntireFile,
+            this.menuItem_ExportEntireFile,
             separator6,
             this.importAllImagesMenuItem,
             this.dumpAllImagesMenuItem});
@@ -166,20 +188,37 @@ namespace FFTPatcher.SpriteEditor
             this.exportImageMenuItem.Text = "Export...";
             this.exportImageMenuItem.Click += new System.EventHandler(this.exportImageMenuItem_Click);
             // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 2;
+            this.menuItem2.Text = "-";
+            // 
+            // menuItem_ImportEntireFile
+            // 
+            this.menuItem_ImportEntireFile.Index = 3;
+            this.menuItem_ImportEntireFile.Text = "Import entire file...";
+            this.menuItem_ImportEntireFile.Click += new System.EventHandler(this.menuItem_ImportEntireFile_Click);
+            // 
+            // menuItem_ExportEntireFile
+            // 
+            this.menuItem_ExportEntireFile.Index = 4;
+            this.menuItem_ExportEntireFile.Text = "Export entire file...";
+            this.menuItem_ExportEntireFile.Click += new System.EventHandler(this.menuItem_ExportEntireFile_Click);
+            // 
             // separator6
             // 
-            separator6.Index = 2;
+            separator6.Index = 5;
             separator6.Text = "-";
             // 
             // importAllImagesMenuItem
             // 
-            this.importAllImagesMenuItem.Index = 3;
+            this.importAllImagesMenuItem.Index = 6;
             this.importAllImagesMenuItem.Text = "Import all images...";
             this.importAllImagesMenuItem.Click += new System.EventHandler(this.importAllImagesMenuItem_Click);
             // 
             // dumpAllImagesMenuItem
             // 
-            this.dumpAllImagesMenuItem.Index = 4;
+            this.dumpAllImagesMenuItem.Index = 7;
             this.dumpAllImagesMenuItem.Text = "Dump all images...";
             this.dumpAllImagesMenuItem.Click += new System.EventHandler(this.dumpAllImagesMenuItem_Click);
             // 
@@ -385,7 +424,7 @@ namespace FFTPatcher.SpriteEditor
             this.otherTabPage.Location = new System.Drawing.Point(4, 22);
             this.otherTabPage.Name = "otherTabPage";
             this.otherTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.otherTabPage.Size = new System.Drawing.Size(635, 564);
+            this.otherTabPage.Size = new System.Drawing.Size(635, 677);
             this.otherTabPage.TabIndex = 1;
             this.otherTabPage.Text = "Other Images";
             this.otherTabPage.UseVisualStyleBackColor = true;
@@ -396,7 +435,7 @@ namespace FFTPatcher.SpriteEditor
             this.allOtherImagesEditor1.Enabled = false;
             this.allOtherImagesEditor1.Location = new System.Drawing.Point(3, 3);
             this.allOtherImagesEditor1.Name = "allOtherImagesEditor1";
-            this.allOtherImagesEditor1.Size = new System.Drawing.Size(629, 558);
+            this.allOtherImagesEditor1.Size = new System.Drawing.Size(629, 671);
             this.allOtherImagesEditor1.TabIndex = 0;
             // 
             // progressBar1
@@ -419,7 +458,7 @@ namespace FFTPatcher.SpriteEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(647, 723);
+            this.ClientSize = new System.Drawing.Size(647, 702);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -466,6 +505,11 @@ namespace FFTPatcher.SpriteEditor
 
 		private System.Windows.Forms.Button reimportButton; // R999
 		private System.Windows.Forms.MenuItem reimportMenuItem;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem_ImportEntireFile;
+        private System.Windows.Forms.MenuItem menuItem_ExportEntireFile;
+        private System.Windows.Forms.MenuItem menuItem_ExpandIso;
+        private System.Windows.Forms.MenuItem menuItem3;
     }
 }
 

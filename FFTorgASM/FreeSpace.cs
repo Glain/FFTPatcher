@@ -84,7 +84,7 @@ namespace FFTorgASM
 
                                             if ((file2.Contains("BATTLE") && (offset < 0xE92AC || offset > 0xF929B || patchname.Contains("Kanji"))) ||
                                                 (file2.Contains("WORLD") && (offset < 0x0005D400 || offset > 0x0006B90F || patchname.Contains("Kanji"))))
-                                                goto next;
+                                                continue;
 
                                             string bytes = Location.InnerText;
                                             if (Location.Name == "Variable")
@@ -111,7 +111,6 @@ namespace FFTorgASM
                                             }
                                         }
                                     }
-                                next: ;
                                 }
                             }
                         }

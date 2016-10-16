@@ -160,7 +160,6 @@
             // 
             // lsb_FilesList
             // 
-            this.lsb_FilesList.LabelEdit = true;
             this.lsb_FilesList.LabelWrap = false;
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
             this.lsb_FilesList.MultiSelect = false;

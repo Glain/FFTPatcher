@@ -10,13 +10,14 @@ namespace FFTPatcher.SpriteEditor
 {
     public abstract class AbstractImage : IDisposable
     {
-
         protected struct ImageInfo
         {
             public string Name;
             public int Width;
             public int Height;
             public Enum Sector;
+            public string OriginalFilename;
+            public int Filesize;
 
             public int PaletteCount;
             public int CurrentPalette;
@@ -56,6 +57,10 @@ namespace FFTPatcher.SpriteEditor
             XmlNode fftpackNode = node.SelectSingleNode( "FFTPack" );
             XmlNode pspSector = node.SelectSingleNode( "PSPSector" );
             string name = nameNode.InnerText;
+            XmlNode filenameNode = node.SelectSingleNode( "Filename" );
+            XmlNode filesizeNode = node.SelectSingleNode( "Filesize" );
+            string filename = (filenameNode == null) ? "" : filenameNode.InnerText;
+            int filesize = (filesizeNode == null) ? 0 : int.Parse(filesizeNode.InnerText);
 
             XmlNode nameResourceNode = nameNode.SelectSingleNode( "Resource" );
             if (nameResourceNode != null)
@@ -90,22 +95,34 @@ namespace FFTPatcher.SpriteEditor
 
             if ( sectorNode != null )
             {
-                return new ImageInfo { Name = name, Width = width, Height = height, 
-                    Sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorNode.InnerText),
+                PatcherLib.Iso.PsxIso.Sectors sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorNode.InnerText);
+                if (string.IsNullOrEmpty(filename))    
+                    filename = GetFilenameFromSectorName(Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), sector));
+                
+                return new ImageInfo { Name = name, Width = width, Height = height,
+                    Sector = sector, OriginalFilename = filename, Filesize = filesize,
                     PaletteCount = paletteCount, DefaultPalette = defaultPalette, CurrentPalette = defaultPalette
                 };
             }
             else if ( fftpackNode != null )
             {
+                PatcherLib.Iso.FFTPack.Files sector = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), fftpackNode.InnerText);
+                if (string.IsNullOrEmpty(filename))
+                    filename = GetFilenameFromSectorName(Enum.GetName(typeof(PatcherLib.Iso.FFTPack.Files), sector));
+
                 return new ImageInfo { Name = name, Width = width, Height = height, 
-                    Sector = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), fftpackNode.InnerText),
+                    Sector = sector, OriginalFilename = filename, Filesize = filesize,
                     PaletteCount = paletteCount, DefaultPalette = defaultPalette, CurrentPalette = defaultPalette
                 };
             }
             else if ( pspSector != null )
             {
-                return new ImageInfo { Name = name, Width = width, Height = height, 
-                    Sector = (PatcherLib.Iso.PspIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PspIso.Sectors), pspSector.InnerText),
+                PatcherLib.Iso.PspIso.Sectors sector = (PatcherLib.Iso.PspIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PspIso.Sectors), pspSector.InnerText);
+                if (string.IsNullOrEmpty(filename))
+                    filename = GetFilenameFromSectorName(Enum.GetName(typeof(PatcherLib.Iso.PspIso.Sectors), sector));
+
+                return new ImageInfo { Name = name, Width = width, Height = height,
+                    Sector = sector, OriginalFilename = filename, Filesize = filesize,
                     PaletteCount = paletteCount, DefaultPalette = defaultPalette, CurrentPalette = defaultPalette
                 };
             }
@@ -115,21 +132,43 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        public static string GetFilenameFromSectorName(string sectorName)
+        {
+            if (string.IsNullOrEmpty(sectorName))
+                return "";
+
+            int startIndex = sectorName.Substring(0, sectorName.LastIndexOf('_')).LastIndexOf('_') + 1;
+            string filePart = sectorName.Substring(startIndex, sectorName.Length - startIndex);
+            return filePart.Replace('_', '.');
+        }
+
         public int Width { get; private set; }
         public int Height { get; private set; }
         protected abstract System.Drawing.Bitmap GetImageFromIsoInner( System.IO.Stream iso );
-        public virtual string FilenameFilter { get { return "PNG image (*.png)|*.png"; } }
+
+        public virtual string InputFilenameFilter { get { return null; } }
+        public virtual string FilenameFilter { get { return "BMP image (*.bmp)|*.bmp"; } }
+
+        public string ImportFilename { get; set; }
+        public string OriginalFilename { get; set; }
+        public int Filesize { get; set; }
+        public Enum Sector { get; set; }
 
         // Old property... possibly for loading/saving multiple palettes at once
         public int NumPalettes { get; private set; }
 
         // For selecting one palette to load/save
-        public int PaletteCount { get; protected set; }
+        public int PaletteCount { get; set; }
         public int DefaultPalette { get; protected set; }
         public int CurrentPalette { get; set; }
 
         System.Drawing.Bitmap cachedImage;
         bool cachedImageDirty = true;
+
+        public int CalculateStride(int bpp)
+        {
+            return (((Width * bpp) + 31) / 32) * 4;
+        }
 
         public System.Drawing.Bitmap GetImageFromIso( System.IO.Stream iso, bool forceReload = false )
         {
@@ -148,7 +187,7 @@ namespace FFTPatcher.SpriteEditor
                 }
                 return cachedImage;
             }
-            catch
+            catch (Exception ex)
             {
                 return cachedImage;
             }
@@ -162,7 +201,7 @@ namespace FFTPatcher.SpriteEditor
             {
                 foreach ( Color c in colors )
                 {
-                    result.AddRange( Palette.ColorToBytes( c ) );
+                    result.AddRange(Palette.ColorToBytes(c));
                 }
             }
             else if ( depth == Palette.ColorDepth._32bit )
@@ -192,7 +231,7 @@ namespace FFTPatcher.SpriteEditor
         public virtual void SaveImage( System.IO.Stream iso, System.IO.Stream output )
         {
             System.Drawing.Bitmap bmp = GetImageFromIso( iso );
-            bmp.Save( output, System.Drawing.Imaging.ImageFormat.Png );
+            bmp.Save( output, System.Drawing.Imaging.ImageFormat.Bmp );
         }
 
         public void WriteImageToIso( System.IO.Stream iso, System.IO.Stream image )
@@ -205,6 +244,7 @@ namespace FFTPatcher.SpriteEditor
 
         public void WriteImageToIso( System.IO.Stream iso, string filename )
         {
+            ImportFilename = filename;
             using ( System.IO.Stream s = System.IO.File.OpenRead( filename ) )
             {
                 WriteImageToIso( iso, s );
@@ -220,6 +260,48 @@ namespace FFTPatcher.SpriteEditor
 
             WriteImageToIsoInner( iso, image );
             cachedImageDirty = true;
+        }
+
+        public bool ImportEntireFile(System.IO.Stream iso, string path)
+        {
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+            return ImportEntireFile(iso, bytes);
+        }
+
+        public bool ExportEntireFile(System.IO.Stream iso, string path, bool checkFilesize)
+        {
+            if ((checkFilesize) && (Filesize <= 0))
+                return false;
+            else
+                return ExportEntireFile(iso, path);
+        }
+
+        public bool ImportEntireFile(System.IO.Stream iso, byte[] bytes)
+        {
+            if (Sector == null)
+                return false;
+
+            PatcherLib.Iso.KnownPosition importPosition = PatcherLib.Iso.KnownPosition.ConstructKnownPosition(Sector, 0, bytes.Length);
+            importPosition.PatchIso(iso, bytes);
+            return true;
+        }
+
+        public bool ExportEntireFile(System.IO.Stream iso, string path)
+        {
+            if (Sector == null)
+                return false;
+
+            PatcherLib.Iso.KnownPosition exportPosition = PatcherLib.Iso.KnownPosition.ConstructKnownPosition(Sector, 0, Filesize);
+            byte[] bytes = exportPosition.ReadIso(iso);
+            System.IO.File.WriteAllBytes(path, bytes);
+            return true;
+        }
+
+        public bool CanSelectPalette(AbstractImage img = null)
+        {
+            img = img ?? this;
+            //return ((img is PalettedImage4bpp) || (img is PalettedImage4bppSectioned) || (img is StupidTM2Image4bpp));
+            return (img is ISelectablePalette4bppImage);
         }
 
         public string Name { get; private set; }

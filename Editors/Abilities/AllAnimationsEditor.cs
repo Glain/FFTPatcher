@@ -140,6 +140,7 @@ namespace FFTPatcher.Editors
 
         void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            /*
             if (e.ColumnIndex == Byte1Column.Index)
             {
                 dataGridView1.InvalidateCell(Column1.Index, e.RowIndex);
@@ -173,6 +174,7 @@ namespace FFTPatcher.Editors
                 dataGridView1.InvalidateCell(Column23.Index, e.RowIndex);
                 dataGridView1.InvalidateCell(Column24.Index, e.RowIndex);
             }
+            */
         }
 
         void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

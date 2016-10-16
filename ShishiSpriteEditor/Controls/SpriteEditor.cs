@@ -30,7 +30,7 @@ namespace FFTPatcher.SpriteEditor
                 StringBuilder sb = new StringBuilder("WARNING: This sprite shares an SPR with: ");
                 foreach (int i in sharedSPRs)
                 {
-                    sb.AppendFormat("{0:X2} ", i);
+                    sb.AppendFormat("0x{0:X2} ", i + 1);
                 }
                 sharedLabel.Text = sb.ToString();
                 sharedLabel.Visible = true;

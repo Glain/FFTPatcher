@@ -271,7 +271,7 @@ public string CustomICON0FileName
             return Color.FromArgb( r, g, b );
         }
 
-        private void checkedListBox1_ItemCheck( object sender, ItemCheckEventArgs e )
+        private void clb_Patches_ItemCheck( object sender, ItemCheckEventArgs e )
         {
             CheckedListBox clb = (CheckedListBox)sender;
             if ( (string)clb.Tag == "BOOT.BIN" )

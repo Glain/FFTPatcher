@@ -115,7 +115,7 @@ namespace FFTPatcher
             this.bootBinCheckedListBox.Size = new System.Drawing.Size( 142, 244 );
             this.bootBinCheckedListBox.TabIndex = 0;
             this.bootBinCheckedListBox.Tag = "BOOT.BIN";
-            this.bootBinCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler( this.checkedListBox1_ItemCheck );
+            this.bootBinCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clb_Patches_ItemCheck);
             // 
             // cancelButton
             // 

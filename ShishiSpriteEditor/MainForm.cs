@@ -54,20 +54,7 @@ namespace FFTPatcher.SpriteEditor
                     bool psp = openedStream.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode1] == 0;
                     if (psp || psx)
                     {
-                        DialogResult result = DialogResult.None;
                         bool expanded = psx && AllSprites.DetectExpansionOfPsxIso( openedStream );
-                        if (psx && !expanded &&
-                            (result = MyMessageBox.Show( this, "ISO needs to be restructured." + Environment.NewLine + "Restructure?", "Restructure ISO?", MessageBoxButtons.YesNoCancel ))
-                              == DialogResult.Yes)
-                        {
-                            AllSprites.ExpandPsxIso( openedStream );
-                        }
-                        else if (psx && !expanded && result == DialogResult.Cancel)
-                        {
-                            openedStream.Close();
-                            openedStream.Dispose();
-                            return;
-                        }
 
                         if (currentStream != null)
                         {
@@ -77,14 +64,14 @@ namespace FFTPatcher.SpriteEditor
                         }
                         currentStream = openedStream;
 
-                        bool userRequestedExpansion = psx && !expanded && result == DialogResult.Yes;
-                        AllSprites s = AllSprites.FromIso( currentStream, userRequestedExpansion );
+                        AllSprites s = AllSprites.FromIso( currentStream, false );
                         allSpritesEditor1.BindTo( s, currentStream );
                         tabControl1.Enabled = true;
                         spriteMenuItem.Enabled = true;
                         sp2Menu.Enabled = true;
+                        menuItem_ExpandIso.Enabled = psx && !expanded;
 
-                        var otherImages = AllOtherImages.FromIso( currentStream );
+                        AllOtherImages otherImages = AllOtherImages.FromIso(currentStream);
                         allOtherImagesEditor1.BindTo( otherImages, currentStream );
 
                         Text = string.Format( titleFormatString, Path.GetFileName( openFileDialog.FileName ) );
@@ -249,14 +236,17 @@ namespace FFTPatcher.SpriteEditor
                 mi.Enabled = false;
             }
 
-            MonsterSprite sprite = allSpritesEditor1.CurrentSprite.GetAbstractSpriteFromIso( currentStream ) as MonsterSprite;
-            if (sprite != null && allSpritesEditor1.CurrentSprite is CharacterSprite)
+            if (allSpritesEditor1.CurrentSprite != null)
             {
-                int numChildren = (allSpritesEditor1.CurrentSprite as CharacterSprite).NumChildren;
-                for (int i = 0; i < numChildren; i++)
+                MonsterSprite sprite = allSpritesEditor1.CurrentSprite.GetAbstractSpriteFromIso(currentStream) as MonsterSprite;
+                if (sprite != null && allSpritesEditor1.CurrentSprite is CharacterSprite)
                 {
-                    sp2Menu.MenuItems[i * 3].Enabled = true;
-                    sp2Menu.MenuItems[i * 3 + 1].Enabled = true;
+                    int numChildren = (allSpritesEditor1.CurrentSprite as CharacterSprite).NumChildren;
+                    for (int i = 0; i < numChildren; i++)
+                    {
+                        sp2Menu.MenuItems[i * 3].Enabled = true;
+                        sp2Menu.MenuItems[i * 3 + 1].Enabled = true;
+                    }
                 }
             }
         }
@@ -264,13 +254,19 @@ namespace FFTPatcher.SpriteEditor
         private void importImageMenuItem_Click( object sender, EventArgs e )
         {
             openFileDialog.FileName = string.Empty;
-            const string allImagesFilter = "All images (*.png, *.gif, *.jpg, *.bmp, *.tiff)|*.png;*.gif;*.jpg;*.jpeg;*.bmp;*.tiff;*.tif";
-            const string pngFilter = "PNG images (*.png)|*.png";
-            const string gifFilter = "GIF images (*.gif)|*.gif";
-            const string jpgFilter = "JPEG images (*.jpg)|*.jpg;*.jpeg";
-            const string bmpFilter = "Bitmap images (*.bmp)|*.bmp";
-            const string tifFilter = "TIFF images (*.tiff)|*.tif;*.tiff";
-            openFileDialog.Filter = string.Join( "|", new string[] { allImagesFilter, pngFilter, gifFilter, jpgFilter, bmpFilter, tifFilter } );
+
+            string fileFilter = allOtherImagesEditor1.GetCurrentImageInputFileFilter();
+            if (string.IsNullOrEmpty(fileFilter))
+            {
+                const string allImagesFilter = "All images (*.png, *.gif, *.jpg, *.bmp, *.tiff)|*.png;*.gif;*.jpg;*.jpeg;*.bmp;*.tiff;*.tif";
+                const string pngFilter = "PNG images (*.png)|*.png";
+                const string gifFilter = "GIF images (*.gif)|*.gif";
+                const string jpgFilter = "JPEG images (*.jpg)|*.jpg;*.jpeg";
+                const string bmpFilter = "Bitmap images (*.bmp)|*.bmp";
+                const string tifFilter = "TIFF images (*.tiff)|*.tif;*.tiff";
+                fileFilter = string.Join( "|", new string[] { allImagesFilter, pngFilter, gifFilter, jpgFilter, bmpFilter, tifFilter } );
+            }
+            openFileDialog.Filter = fileFilter;
 
             if (openFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
@@ -286,6 +282,47 @@ namespace FFTPatcher.SpriteEditor
             if (saveFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
                 allOtherImagesEditor1.SaveCurrentImage( saveFileDialog.FileName );
+            }
+        }
+
+        private void menuItem_ImportEntireFile_Click(object sender, EventArgs e)
+        {
+            openFileDialog.FileName = string.Empty;
+            string origFilename = allOtherImagesEditor1.GetCurrentOriginalFilename();
+            int startIndex = origFilename.LastIndexOf(".") + 1;
+            string extension = origFilename.Substring(startIndex, origFilename.Length - startIndex).ToUpper();
+            openFileDialog.Filter = origFilename + "|" + origFilename + "|" + extension + " files|*." + extension + "|All files|*.*";
+
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                bool didImport = allOtherImagesEditor1.ImportEntireFile(openFileDialog.FileName);
+                if (!didImport)
+                {
+                    MyMessageBox.Show(this, "Importing entire file is not implemented for this image type.", "Not Implemented", MessageBoxButtons.OK);
+                }
+            }
+        }
+
+        private void menuItem_ExportEntireFile_Click(object sender, EventArgs e)
+        {
+            saveFileDialog.FileName = string.Empty;
+            string origFilename = allOtherImagesEditor1.GetCurrentOriginalFilename();
+            int startIndex = origFilename.LastIndexOf(".") + 1;
+            string extension = origFilename.Substring(startIndex, origFilename.Length - startIndex).ToUpper();
+            saveFileDialog.Filter = origFilename + "|" + origFilename + "|" + extension + " files|" + "*." + extension + "|All files|*.*";
+
+            AbstractImage image = allOtherImagesEditor1.GetImageFromComboBoxItem();
+            if (image.Filesize == 0)
+            {
+                MyMessageBox.Show(this, "Exporting entire file is not implemented for this image.", "Not Implemented", MessageBoxButtons.OK);
+            }
+            else if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                bool didExport = allOtherImagesEditor1.ExportEntireFile(saveFileDialog.FileName);
+                if (!didExport)
+                {
+                    MyMessageBox.Show(this, "Exporting entire file is not implemented for this image.", "Not Implemented", MessageBoxButtons.OK);
+                }
             }
         }
 
@@ -412,6 +449,29 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-       
+        private void menuItem_ExpandIso_Click(object sender, EventArgs e)
+        {
+            bool isPsx = currentStream.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode2Form1] == 0;
+            if (isPsx)
+            {
+                DialogResult result = DialogResult.None;
+                bool expanded = AllSprites.DetectExpansionOfPsxIso(currentStream);
+                if (!expanded &&
+                    (result = MyMessageBox.Show(this, "Are you sure you want to Expand this ISO?", "Expand ISO?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
+                      == DialogResult.Yes)
+                {
+                    AllSprites.ExpandPsxIso(currentStream);
+
+                    AllSprites s = AllSprites.FromIso(currentStream, true);
+                    allSpritesEditor1.BindTo(s, currentStream);
+                    tabControl1.Enabled = true;
+                    spriteMenuItem.Enabled = true;
+                    sp2Menu.Enabled = true;
+
+                    AllOtherImages otherImages = AllOtherImages.FromIso(currentStream);
+                    allOtherImagesEditor1.BindTo(otherImages, currentStream);
+                }
+            }
+        }
     }
 }

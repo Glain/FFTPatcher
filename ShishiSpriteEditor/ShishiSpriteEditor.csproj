@@ -124,8 +124,12 @@
     <Compile Include="DataTypes\AllSprites.cs" />
     <Compile Include="DataTypes\CharacterSprite.cs" />
     <Compile Include="DataTypes\OtherImages\AbstractImage.cs" />
+    <Compile Include="DataTypes\OtherImages\AbstractImageList.cs" />
     <Compile Include="DataTypes\OtherImages\AllOtherImages.cs" />
     <Compile Include="DataTypes\OtherImages\Greyscale4bppImage.cs" />
+    <Compile Include="DataTypes\OtherImages\ISelectablePalette4bppImage.cs" />
+    <Compile Include="DataTypes\OtherImages\PalettedImage4bppSectioned.cs" />
+    <Compile Include="DataTypes\OtherImages\PalettedImage8bppSectioned.cs" />
     <Compile Include="DataTypes\OtherImages\PartiallyVisiblePalettedImage4bpp.cs" />
     <Compile Include="DataTypes\OtherImages\StupidTM2Image4bpp.cs" />
     <Compile Include="DataTypes\OtherImages\PalettedImage4bpp.cs" />
@@ -380,18 +384,14 @@
     <None Include="Resources\EVENT\END3.BIN" />
     <None Include="Resources\EVENT\END4.BIN" />
     <None Include="Resources\EVENT\END5.BIN" />
-    <None Include="Resources\EVENT\EVTCHR.BIN">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Resources\EVENT\EVTCHR.BIN" />
     <None Include="Resources\EVENT\EVTFACE.BIN" />
     <None Include="Resources\EVENT\FRAME.BIN" />
     <None Include="Resources\EVENT\GAMEOVER.BIN" />
     <None Include="Resources\EVENT\ITEM.BIN" />
     <None Include="Resources\EVENT\MAPTITLE.BIN" />
     <None Include="Resources\EVENT\UNIT.BIN" />
-    <None Include="Resources\EVENT\WLDFACE.BIN">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Resources\EVENT\WLDFACE.BIN" />
     <None Include="Resources\EVENT\WLDFACE4.BIN" />
     <None Include="Resources\KANZEN.SEQ" />
     <None Include="Resources\MENU\BK_FITR.TIM" />
@@ -477,7 +477,9 @@
   <ItemGroup>
     <Content Include="DataTypes\Sprites\MemoryLocs.txt" />
     <Content Include="Resources\PSPFiles.xml" />
-    <Content Include="Resources\PSXFiles.xml" />
+    <Content Include="Resources\PSXFiles.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\sprite.ico" />
     <Content Include="sprite.ico" />
   </ItemGroup>

@@ -49,7 +49,11 @@ namespace FFTPatcher.SpriteEditor
 
         public static PSXWorldMap ConstructFromXml( System.Xml.XmlNode node )
         {
-            return new PSXWorldMap();
+            PSXWorldMap result = new PSXWorldMap();
+            result.Sector = PatcherLib.Iso.PsxIso.Sectors.WORLD_WLDTEX_TM2;
+            result.OriginalFilename = "WLDTEX.TM2";
+            result.Filesize = 274432;
+            return result;
         }
 
         private static IList<PatcherLib.Iso.PsxIso.KnownPosition> palettePositions = new PatcherLib.Iso.PsxIso.KnownPosition[] {
@@ -341,7 +345,6 @@ namespace FFTPatcher.SpriteEditor
             { 188428, 192 },
             { 188628, 768 } };
 
-
         private static void WritePixelsToBitmap( Palette palette, IList<byte> pixels, System.Drawing.Bitmap destination )
         {
             int width = destination.Width;
@@ -378,6 +381,89 @@ namespace FFTPatcher.SpriteEditor
 
         private static IList<PatcherLib.Iso.PsxIso.KnownPosition>[] isoPositions;
 
+        protected override System.Drawing.Bitmap GetImageFromIsoInner(System.IO.Stream iso)
+        {
+            Palette palette = new Palette(palettePositions[0].ReadIso(iso), Palette.ColorDepth._16bit);
+
+            System.Drawing.Bitmap result = new System.Drawing.Bitmap(496, 368);
+
+            for (int i = 0; i < 4; i++)
+            {
+                using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(sizes[i].Width, sizes[i].Height))
+                {
+                    List<byte> bytes = new List<byte>();
+                    isoPositions[i].ForEach(kp => bytes.AddRange(kp.ReadIso(iso)));
+                    WritePixelsToBitmap(palette, bytes, bmp);
+                    CopyBitmapToBitmap(bmp, result, positions[i]);
+#if DEBUG
+                    bmp.Save(string.Format("worldmap{0}.bmp", i), System.Drawing.Imaging.ImageFormat.Bmp);
+#endif
+                }
+            }
+
+            return result;
+        }
+
+        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output)
+        {
+            List<List<byte>> quadrantBytes = new List<List<byte>>();
+            for (int i = 0; i < 4; i++)
+            {
+                quadrantBytes.Add(new List<byte>());
+                foreach (PatcherLib.Iso.PsxIso.KnownPosition pos in isoPositions[i])
+                {
+                    quadrantBytes[i].AddRange(pos.ReadIso(iso));
+                }
+            }
+
+            List<byte> totalBytes = new List<byte>();
+            for (int rowIndex = 0; rowIndex < 240; rowIndex++)
+            {
+                int byteIndex0 = rowIndex * 240;
+                int byteIndex1 = rowIndex * 256;
+                totalBytes.AddRange(quadrantBytes[0].Sub(byteIndex0, byteIndex0 + 239));
+                totalBytes.AddRange(quadrantBytes[1].Sub(byteIndex1, byteIndex1 + 255));
+            }
+            for (int rowIndex = 0; rowIndex < 128; rowIndex++)
+            {
+                int byteIndex2 = rowIndex * 240;
+                int byteIndex3 = rowIndex * 256;
+                totalBytes.AddRange(quadrantBytes[2].Sub(byteIndex2, byteIndex2 + 239));
+                totalBytes.AddRange(quadrantBytes[3].Sub(byteIndex3, byteIndex3 + 255));
+            }
+            byte[] imageBytes = totalBytes.ToArray();
+
+            // Get colors
+            Palette p = new Palette(palettePositions[0].ReadIso(iso), FFTPatcher.SpriteEditor.Palette.ColorDepth._16bit, true);
+
+            // Convert colors to indices
+            System.Drawing.Bitmap originalImage = GetImageFromIso(iso);
+
+            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed))
+            {
+                System.Drawing.Imaging.ColorPalette pal = bmp.Palette;
+                for (int i = 0; i < p.Colors.Length; i++)
+                {
+                    pal.Entries[i] = p.Colors[i];
+                }
+                bmp.Palette = pal;
+
+                var bmd = bmp.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        bmd.SetPixel8bpp(x, y, imageBytes[(y * Width) + x]);
+                    }
+                }
+                bmp.UnlockBits(bmd);
+
+                // Write that shit
+                //bmp.Save( output, System.Drawing.Imaging.ImageFormat.Gif );
+                bmp.Save(output, System.Drawing.Imaging.ImageFormat.Bmp);
+            }
+        }
+
         protected override void WriteImageToIsoInner( System.IO.Stream iso, System.Drawing.Image image )
         {
             using ( System.Drawing.Bitmap sourceBitmap = new System.Drawing.Bitmap( image ) )
@@ -393,53 +479,80 @@ namespace FFTPatcher.SpriteEditor
                 }
                 else
                 {
+                    byte[] totalBytes = GetImageBytes(sourceBitmap);
+                    List<List<byte>> quadrantBytes = new List<List<byte>>();
+                    for (int i = 0; i < 4; i++)
+                        quadrantBytes.Add(new List<byte>());
+
+                    for (int rowIndex = 0; rowIndex < 368; rowIndex++)
+                    {
+                        int byteIndex = rowIndex * 496;
+
+                        if (rowIndex < 240)
+                        {
+                            quadrantBytes[0].AddRange(totalBytes.Sub(byteIndex, byteIndex + 239));
+                            quadrantBytes[1].AddRange(totalBytes.Sub(byteIndex + 240, byteIndex + 495));
+                        }
+                        else
+                        {
+                            quadrantBytes[2].AddRange(totalBytes.Sub(byteIndex, byteIndex + 239));
+                            quadrantBytes[3].AddRange(totalBytes.Sub(byteIndex + 240, byteIndex + 495));
+                        }
+                    }
+
+                    //var palBytes = GetPaletteBytes( colors, Palette.ColorDepth._16bit );
+                    byte[] originalPaletteBytes = palettePositions[0].ReadIso(iso);
+                    List<byte> palBytes = GetPaletteBytes(image.Palette.Entries, originalPaletteBytes);
+                    palettePositions.ForEach(pp => pp.PatchIso(iso, palBytes));
+
                     for ( int i = 0; i < 4; i++ )
                     {
-                        int width = sizes[i].Width;
-                        int height = sizes[i].Height;
-                        int xOffset = positions[i].X;
-                        int yOffset = positions[i].Y;
-                        List<byte> bytes = new List<byte>( width * height );
-                        for ( int y = 0; y < height; y++ )
-                        {
-                            for ( int x = 0; x < width; x++ )
-                            {
-                                bytes.Add( (byte)colors.IndexOf( sourceBitmap.GetPixel( x + xOffset, y + yOffset ) ) );
-                            }
-                        }
+                        List<byte> bytes = quadrantBytes[i];
 
                         int currentIndex = 0;
-                        foreach ( var kp in isoPositions[i] )
+                        foreach ( PatcherLib.Iso.PsxIso.KnownPosition kp in isoPositions[i] )
                         {
                             kp.PatchIso( iso, bytes.Sub( currentIndex, currentIndex + kp.Length - 1 ) );
                             currentIndex += kp.Length;
                         }
                     }
-
-                    var palBytes = GetPaletteBytes( colors, Palette.ColorDepth._16bit );
-                    palettePositions.ForEach( pp => pp.PatchIso( iso, palBytes ) );
                 }
             }
         }
 
-        protected override System.Drawing.Bitmap GetImageFromIsoInner( System.IO.Stream iso )
+        protected byte[] GetImageBytes(System.Drawing.Bitmap image)
         {
-            Palette palette = new Palette( palettePositions[0].ReadIso( iso ), Palette.ColorDepth._16bit );
+            List<byte> result = new List<byte>(Width * Height);
 
-            System.Drawing.Bitmap result = new System.Drawing.Bitmap( 496, 368 );
+            byte[] fileBytes = System.IO.File.ReadAllBytes(ImportFilename);
+            int stride = CalculateStride(8);
+            int resultStride = CalculateStride(8);
+            byte[] resultData = new byte[image.Height * resultStride];
+            int imageDataOffset = fileBytes[10] | (fileBytes[11] << 8) | (fileBytes[12] << 16) | (fileBytes[13] << 24);
 
-            for ( int i = 0; i < 4; i++ )
+            for (int rowIndex = 0; rowIndex < image.Height; rowIndex++)
             {
-                using ( System.Drawing.Bitmap bmp = new System.Drawing.Bitmap( sizes[i].Width, sizes[i].Height ) )
+                for (int colIndex = 0; colIndex < image.Width; colIndex++)
                 {
-                    List<byte> bytes = new List<byte>();
-                    isoPositions[i].ForEach( kp => bytes.AddRange( kp.ReadIso( iso ) ) );
-                    WritePixelsToBitmap( palette, bytes, bmp );
-                    CopyBitmapToBitmap( bmp, result, positions[i] );
-#if DEBUG
-                    bmp.Save( string.Format( "worldmap{0}.png", i ), System.Drawing.Imaging.ImageFormat.Png );
-#endif
+                    int currentByteIndex = imageDataOffset + (rowIndex * stride) + colIndex;
+                    int resultByteIndex = ((image.Height - rowIndex - 1) * resultStride) + (colIndex);
+                    resultData[resultByteIndex] = fileBytes[currentByteIndex];
                 }
+            }
+
+            return resultData;
+        }
+
+        protected List<byte> GetPaletteBytes(IEnumerable<System.Drawing.Color> colors, IList<byte> originalPaletteBytes)
+        {
+            List<byte> result = new List<byte>();
+            int index = 0;
+
+            foreach (System.Drawing.Color c in colors)
+            {
+                byte alphaByte = originalPaletteBytes[index * 2 + 1];
+                result.AddRange(Palette.ColorToBytes(c, alphaByte, Palette.ColorDepth._16bit));
+                index++;
             }
 
             return result;
@@ -449,13 +562,21 @@ namespace FFTPatcher.SpriteEditor
         {
             get
             {
-                return "GIF image (*.gif)|*.gif";
+                return "8bpp paletted bitmap (*.bmp)|*.bmp";
+            }
+        }
+
+        public override string InputFilenameFilter
+        {
+            get
+            {
+                return FilenameFilter;
             }
         }
 
         protected override string SaveFileName
         {
-            get { return "WorldMap.png"; }
+            get { return "WorldMap.bmp"; }
         }
 
     }

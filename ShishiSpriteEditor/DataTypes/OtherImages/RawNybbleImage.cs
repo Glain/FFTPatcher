@@ -13,8 +13,13 @@ namespace FFTPatcher.SpriteEditor
         {
             ImageInfo info = GetImageInfo( node );
             var pos = GetPositionFromImageNode( info.Sector, node );
-            return new RawNybbleImage( info.Name, info.Width, info.Height, pos );
+            RawNybbleImage image = new RawNybbleImage( info.Name, info.Width, info.Height, pos );
+            image.OriginalFilename = info.OriginalFilename;
+            image.Filesize = info.Filesize;
+            image.Sector = info.Sector;
+            return image;
         }
+
         public override string DescribeXml()
         {
             string sectorType = this.position is PatcherLib.Iso.PsxIso.KnownPosition ? "Sector" :
@@ -49,12 +54,20 @@ namespace FFTPatcher.SpriteEditor
             if ( position is PatcherLib.Iso.PsxIso.KnownPosition )
             {
                 var pos = position as PatcherLib.Iso.PsxIso.KnownPosition;
-                saveFileName = string.Format( "{0}_{1}.png", pos.Sector, pos.StartLocation );
+                saveFileName = string.Format( "{0}_{1}_{2}.bmp", pos.Sector, pos.StartLocation, pos.Length );
             }
             else if ( position is PatcherLib.Iso.PspIso.KnownPosition )
             {
                 var pos = position as PatcherLib.Iso.PspIso.KnownPosition;
-                saveFileName = string.Format( "{0}_{1}.png", pos.SectorEnum, pos.StartLocation );
+                saveFileName = string.Format( "{0}_{1}_{2}.bmp", pos.SectorEnum, pos.StartLocation, pos.Length );
+            }
+        }
+
+        public override string FilenameFilter
+        {
+            get
+            {
+                return "Bitmap file (*.bmp)|*.bmp";
             }
         }
 
@@ -66,14 +79,14 @@ namespace FFTPatcher.SpriteEditor
 
         protected override System.Drawing.Bitmap GetImageFromIsoInner( System.IO.Stream iso )
         {
-            var bytes = position.ReadIso( iso );
-            var pixels = new List<byte>( bytes.Count * 2 );
+            byte[] bytes = position.ReadIso( iso );
+            var pixels = new List<byte>( bytes.Length * 2 );
             foreach (byte b in bytes)
             {
                 pixels.Add( b.GetLowerNibble() );
                 pixels.Add( b.GetUpperNibble() );
             }
-            System.Drawing.Bitmap result = new System.Drawing.Bitmap( Width,Height );
+            System.Drawing.Bitmap result = new System.Drawing.Bitmap( Width, Height );
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
