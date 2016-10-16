@@ -1129,7 +1129,7 @@
                 <Length>32768</Length>
             </Position>
         </PalettedImage4bpp>
-        <Repeat Number="16" Offset="47104" PaletteOffset="47104">
+        <Repeat Number="5" Offset="47104" PaletteOffset="47104">
             <PalettedImage8bpp>
                 <Width>256</Width>
                 <Height>180</Height>
@@ -1143,7 +1143,37 @@
                     <Offset>242208</Offset>
                     <Length>46080</Length>
                 </Position>
-            </PalettedImage8bpp>            
+            </PalettedImage8bpp>     
+        </Repeat>
+        <PalettedImage8bpp>
+            <Width>258</Width>
+            <Height>180</Height>
+            <Sector>OPEN_OPNTEX_BIN</Sector>
+            <ColorDepth>_16bit</ColorDepth>
+            <PalettePosition>
+                <Offset>477204</Offset>
+                <Length>512</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>477728</Offset>
+                <Length>46440</Length>
+            </Position>
+        </PalettedImage8bpp>
+        <Repeat Number="10" Offset="47104" PaletteOffset="47104">
+            <PalettedImage8bpp>
+                <Width>256</Width>
+                <Height>180</Height>
+                <Sector>OPEN_OPNTEX_BIN</Sector>
+                <ColorDepth>_16bit</ColorDepth>
+                <PalettePosition>
+                    <Offset>524308</Offset>
+                    <Length>512</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>524832</Offset>
+                    <Length>46080</Length>
+                </Position>
+            </PalettedImage8bpp>
         </Repeat>
     </Section>
     <Section Name="Chapter End Graphics" Filesize="131072">
@@ -1233,7 +1263,7 @@
                 <Length>122880</Length>
             </Position>
         </Raw16BitImage>
-        <Repeat Number="4" Offset="75600">
+        <Repeat Number="4" Offset="75776">
             <Raw16BitImage>
                 <Width>210</Width>
                 <Height>180</Height>
@@ -1250,7 +1280,7 @@
             <Height>240</Height>
             <Sector>OPEN_OPNBK_BIN</Sector>
             <Position>
-                <Offset>578880</Offset>
+                <Offset>579584</Offset>
                 <Length>245760</Length>
             </Position>
         </Raw16BitImage>
