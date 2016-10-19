@@ -861,7 +861,7 @@
         </Repeat>
     </Section>
     <Section Name="EVTCHR.BIN" Filename="EVTCHR.BIN" Filesize="4208640">
-        <Repeat Number="137" Offset="30720" PaletteOffset="30720">
+        <Repeat Number="143" Offset="30720" PaletteOffset="30720">
             <PalettedImage4bpp>
                 <Name>EVTCHR.BIN</Name>
                 <Width>256</Width>
