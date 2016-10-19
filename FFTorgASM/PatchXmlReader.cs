@@ -173,7 +173,26 @@ namespace FFTorgASM
                 	char bytes = (char)(UInt32.Parse(strBytes) & 0xff);
                 	
                     string varName = varNode.Attributes["name"].InnerText;
-                    PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
+
+                    XmlAttribute fileAttribute = varNode.Attributes["file"];
+                    XmlAttribute sectorAttribute = varNode.Attributes["sector"];
+
+                    PsxIso.Sectors varSec = (PsxIso.Sectors)0;
+                    if (fileAttribute != null)
+                    {
+                        varSec = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), fileAttribute.InnerText);
+                    }
+                    else if (sectorAttribute != null)
+                    {
+                        varSec = (PsxIso.Sectors)Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber);
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+
+                    //PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
+                    
                     UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
                     XmlAttribute defaultAttr = varNode.Attributes["default"];
                     
