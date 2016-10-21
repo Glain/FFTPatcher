@@ -500,6 +500,12 @@ SKP:  move    t4,v1
         
         # v0: [ HI RIGHT 16 | LO LEFT 16 ]
         or      v0, a1, a2
+        
+        # Cap value at 999
+        sltiu   v1, v0, 1000
+        bne     v1, zero, set_action_property_mod_end
+        nop
+        li      v0, 999
     
     set_action_property_mod_end:
         jr      ra
