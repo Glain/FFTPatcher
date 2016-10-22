@@ -129,8 +129,8 @@ namespace FFTPatcher.Editors
                         Ability a = ReflectionHelpers.GetFieldOrProperty<Ability>( skill.Default, dataGridView.Columns[e.ColumnIndex].DataPropertyName );
                         if( a != (e.Value as Ability) )
                         {
-                            e.CellStyle.BackColor = Color.Blue;
-                            e.CellStyle.ForeColor = Color.White;
+                            e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
+                            e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
                         }
                     }
                 }

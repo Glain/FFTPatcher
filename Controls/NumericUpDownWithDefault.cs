@@ -74,8 +74,8 @@ namespace FFTPatcher.Controls
         {
             if( Enabled && (Value != DefaultValue))
             {
-                BackColor = Color.Blue;
-                ForeColor = Color.White;
+                BackColor = Settings.ModifiedColor.BackgroundColor;
+                ForeColor = Settings.ModifiedColor.ForegroundColor;
             }
             else if( Enabled && (Value==DefaultValue) )
             {

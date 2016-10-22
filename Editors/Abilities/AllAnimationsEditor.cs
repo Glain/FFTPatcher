@@ -195,8 +195,8 @@ namespace FFTPatcher.Editors
                     ReflectionHelpers.GetFieldOrProperty<byte>(a, dataGridView1.Columns[e.ColumnIndex].DataPropertyName);
                 if (defaultValue != newValue)
                 {
-                    e.CellStyle.BackColor = Color.Blue;
-                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
+                    e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
                 }
                 e.FormattingApplied = true;
                 e.Value = ((byte)e.Value).ToString("X2");
@@ -210,8 +210,8 @@ namespace FFTPatcher.Editors
                     ReflectionHelpers.GetFieldOrProperty<bool>(a, dataGridView1.Columns[e.ColumnIndex].DataPropertyName);
                 if (defaultValue != newValue)
                 {
-                    e.CellStyle.BackColor = Color.Blue;
-                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
+                    e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
                 }
             }
         }

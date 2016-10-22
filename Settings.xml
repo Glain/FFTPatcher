@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+    <ModifiedColor>
+        <!-- Switch to false if you want no modified color -->
+        <UseModifiedColor Value="true" />
+        
+        <!-- Values are between 0 and 255 -->
+        <BackgroundColor Red="175" Green="175" Blue="255" />
+        <ForegroundColor Red="255" Green="255" Blue="255" />
+    </ModifiedColor>
+</Settings>

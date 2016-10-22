@@ -113,8 +113,8 @@ namespace FFTPatcher.Editors
                         Item i = ReflectionHelpers.GetFieldOrProperty<Item>( poach.Default, dataGridView.Columns[e.ColumnIndex].DataPropertyName );
                         if( i != (e.Value as Item) )
                         {
-                            e.CellStyle.BackColor = Color.Blue;
-                            e.CellStyle.ForeColor = Color.White;
+                            e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
+                            e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
                         }
                     }
                 }

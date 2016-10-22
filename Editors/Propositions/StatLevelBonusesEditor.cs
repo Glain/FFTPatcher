@@ -328,8 +328,8 @@ namespace FFTPatcher.Editors
                     GetBfnTypeDefaultValue( e.RowIndex, e.ColumnIndex );
                 if (byte.Parse( e.Value.ToString() ) != defaultValue)
                 {
-                    e.CellStyle.BackColor = Color.Blue;
-                    e.CellStyle.ForeColor = Color.White;
+                    e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
+                    e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
                 }
             }
         }

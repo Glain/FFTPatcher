@@ -96,8 +96,8 @@ namespace FFTPatcher.Controls
         {
             if( Enabled && !DroppedDown && (SelectedItem != null) && !SelectedItem.Equals( DefaultValue ) )
             {
-                BackColor = Color.Blue;
-                ForeColor = Color.White;
+                BackColor = Settings.ModifiedColor.BackgroundColor;
+                ForeColor = Settings.ModifiedColor.ForegroundColor;
             }
             else if( Enabled && !DroppedDown )
             {

@@ -88,6 +88,7 @@
     <Compile Include="Datatypes\Items\StoreInventory.cs" />
     <Compile Include="Datatypes\Propositions\AllPropositions.cs" />
     <Compile Include="Datatypes\Propositions\Proposition.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Editors\Abilities\AllAnimationsEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -592,6 +593,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Settings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

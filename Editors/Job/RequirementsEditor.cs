@@ -111,8 +111,8 @@ namespace FFTPatcher.Editors
                         int a = ReflectionHelpers.GetFieldOrProperty<int>( reqs.Default, dataGridView1.Columns[e.ColumnIndex].DataPropertyName );
                         if( (int)e.Value != a )
                         {
-                            e.CellStyle.BackColor = Color.Blue;
-                            e.CellStyle.ForeColor = Color.White;
+                            e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
+                            e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
                         }
                     }
                 }

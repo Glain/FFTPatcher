@@ -208,7 +208,7 @@ public bool[] Defaults { get; private set; }
                 
                 if( (Defaults != null) && (Defaults.Length > e.Index) && (Defaults[e.Index] != GetItemChecked( e.Index )) )
                 {
-                    using( Pen p = new Pen( Color.Blue, 1 ) )
+                    using (Pen p = new Pen(Settings.ModifiedColor.BackgroundColor, 1))
                     {
                         e.Graphics.DrawRectangle( p, new Rectangle( e.Bounds.X, e.Bounds.Y, e.Bounds.Width - 1, e.Bounds.Height - 1 ) );
                     }
