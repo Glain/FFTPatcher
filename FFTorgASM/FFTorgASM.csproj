@@ -103,23 +103,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DefaultHacks.xml">
+    <Content Include="XmlPatches\DefaultHacks.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Example.xml">
+    <Content Include="XmlPatches\Example.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="nates1984.xml">
+    <Content Include="XmlPatches\nates1984.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Razele.xml">
+    <Content Include="XmlPatches\Razele.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Pride.xml">
+    <Content Include="XmlPatches\Pride.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Xifanie.xml">
+    <Content Include="XmlPatches\Xifanie.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
@@ -140,19 +140,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Assorted.xml">
+    <None Include="XmlPatches\Assorted.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Choto.xml">
+    <None Include="XmlPatches\Choto.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Glain.xml">
+    <None Include="XmlPatches\Glain.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Pokeytax.xml">
+    <None Include="XmlPatches\Pokeytax.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

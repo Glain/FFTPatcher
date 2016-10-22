@@ -31,7 +31,6 @@ namespace FFTorgASM
             InitializeComponent();
 
             asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
-            string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
             versionLabel.Text = string.Format( "v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString() );
 
             ReloadFiles();
@@ -76,7 +75,7 @@ namespace FFTorgASM
 
         private void ReloadFiles()
         {
-            string[] files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly);
 
             lsb_FilesList.SelectedIndices.Clear();
 

@@ -59,7 +59,7 @@ SKP:  sltiu   t7,t6,1
     <Description>
         Random unit equipment will now be more selective
         of secondary item types. (You shouldn't see 
-        knights in Chapter 2 using linen robes)
+        knights in Chapters 2 to 4 using linen robes)
     </Description>
     <Location file="SCUS_942_21" offset="4D53C" mode="ASM">
       li      t7,0                  # ItemFound = false (initialize)
