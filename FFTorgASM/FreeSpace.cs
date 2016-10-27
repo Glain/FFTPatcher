@@ -39,7 +39,7 @@ namespace FFTorgASM
             string xmlstring = "";
             string[] files = new string[1];
 
-            files = Directory.GetFiles(Application.StartupPath, "*.xml", SearchOption.TopDirectoryOnly);
+            files = Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly);
             string patchname = "";
             foreach (string file in files)
             {
