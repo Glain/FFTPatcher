@@ -2460,7 +2460,25 @@
             </Position>
         </Greyscale4bppImage>
     </Section>
-    <Section Name="Memcard Images" Filename="CARD.OUT" Filesize="107260">
+    <Section Name="Memcard Images (WORLD.BIN)" Filename="WORLD.BIN" Filesize="973144">
+        <Repeat Number="15" Offset="160" PaletteOffset="160">
+            <PalettedImage4bpp>
+                <Name>Memcard Image</Name>
+                <Width>16</Width>
+                <Height>16</Height>
+                <Sector>WORLD_WORLD_BIN</Sector>
+                <PalettePosition>
+                    <Offset>738056</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>738088</Offset>
+                    <Length>128</Length>
+                </Position>
+            </PalettedImage4bpp>
+        </Repeat>
+    </Section>
+    <Section Name="Memcard Images (CARD.OUT)" Filename="CARD.OUT" Filesize="107260">
         <Repeat Number="15" Offset="160" PaletteOffset="160">
             <PalettedImage4bpp>
                 <Name>Memcard Image</Name>
