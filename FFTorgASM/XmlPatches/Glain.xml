@@ -118,8 +118,6 @@ SKP:  move    t4,v1
         sw      s0, 0x14(sp)
         sw      s1, 0x18(sp)
         
-        move    s0, a0                              # Element
-        
         lui     t0, 0x8019
         lw      t1, 0x2d90(t0)                 
         lw      s1, 0x2d98(t0)                      # Target
@@ -127,6 +125,7 @@ SKP:  move    t4,v1
         
     elem_absorb:
         lbu     t6, 0x6d(s1)                        # Target's elemental absorption flags
+        move    s0, a0                              # Element
         and     t6, t6, s0
         beq     t6, zero, elem_nullify          
         ori     t7, t4, 0x0400
