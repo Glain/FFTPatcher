@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.patchButton = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.reloadButton = new System.Windows.Forms.Button();
@@ -42,25 +41,16 @@
             this.lsb_FilesList = new System.Windows.Forms.ListView();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
             this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
+            this.txt_Messages = new System.Windows.Forms.TextBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
+            this.clb_Patches = new FFTorgASM.Controls.BGCheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
-            // 
-            // checkedListBox1
-            // 
-            this.checkedListBox1.AllowDrop = true;
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(204, 30);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(351, 319);
-            this.checkedListBox1.TabIndex = 0;
-            this.checkedListBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.checkedListBox1_DragDrop);
-            this.checkedListBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.checkedListBox1_DragEnter);
             // 
             // patchButton
             // 
             this.patchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.patchButton.Location = new System.Drawing.Point(480, 528);
+            this.patchButton.Location = new System.Drawing.Point(480, 628);
             this.patchButton.Name = "patchButton";
             this.patchButton.Size = new System.Drawing.Size(75, 23);
             this.patchButton.TabIndex = 1;
@@ -98,7 +88,7 @@
             this.variableComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.variableComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.variableComboBox.FormattingEnabled = true;
-            this.variableComboBox.Location = new System.Drawing.Point(12, 501);
+            this.variableComboBox.Location = new System.Drawing.Point(12, 601);
             this.variableComboBox.Name = "variableComboBox";
             this.variableComboBox.Size = new System.Drawing.Size(161, 21);
             this.variableComboBox.TabIndex = 6;
@@ -108,11 +98,11 @@
             // 
             this.versionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.versionLabel.AutoSize = true;
-            this.versionLabel.Location = new System.Drawing.Point(520, 502);
+            this.versionLabel.Location = new System.Drawing.Point(520, 602);
             this.versionLabel.Name = "versionLabel";
-            this.versionLabel.Size = new System.Drawing.Size(35, 13);
+            this.versionLabel.Size = new System.Drawing.Size(32, 13);
             this.versionLabel.TabIndex = 7;
-            this.versionLabel.Text = "label1";
+            this.versionLabel.Text = "[Ver.]";
             // 
             // toggleButton
             // 
@@ -140,7 +130,7 @@
             // 
             this.PatchSaveStbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.PatchSaveStbutton.Enabled = false;
-            this.PatchSaveStbutton.Location = new System.Drawing.Point(332, 528);
+            this.PatchSaveStbutton.Location = new System.Drawing.Point(332, 628);
             this.PatchSaveStbutton.Name = "PatchSaveStbutton";
             this.PatchSaveStbutton.Size = new System.Drawing.Size(142, 23);
             this.PatchSaveStbutton.TabIndex = 10;
@@ -160,6 +150,8 @@
             // 
             // lsb_FilesList
             // 
+            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lsb_FilesList.LabelWrap = false;
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
             this.lsb_FilesList.MultiSelect = false;
@@ -173,7 +165,7 @@
             // btn_OpenConflictChecker
             // 
             this.btn_OpenConflictChecker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_OpenConflictChecker.Location = new System.Drawing.Point(413, 557);
+            this.btn_OpenConflictChecker.Location = new System.Drawing.Point(413, 657);
             this.btn_OpenConflictChecker.Name = "btn_OpenConflictChecker";
             this.btn_OpenConflictChecker.Size = new System.Drawing.Size(142, 23);
             this.btn_OpenConflictChecker.TabIndex = 10;
@@ -184,7 +176,7 @@
             // btn_ViewFreeSpace
             // 
             this.btn_ViewFreeSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_ViewFreeSpace.Location = new System.Drawing.Point(254, 557);
+            this.btn_ViewFreeSpace.Location = new System.Drawing.Point(254, 657);
             this.btn_ViewFreeSpace.Name = "btn_ViewFreeSpace";
             this.btn_ViewFreeSpace.Size = new System.Drawing.Size(153, 23);
             this.btn_ViewFreeSpace.TabIndex = 14;
@@ -192,22 +184,53 @@
             this.btn_ViewFreeSpace.UseVisualStyleBackColor = true;
             this.btn_ViewFreeSpace.Click += new System.EventHandler(this.btn_ViewFreeSpace_Click);
             // 
+            // txt_Messages
+            // 
+            this.txt_Messages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_Messages.BackColor = System.Drawing.SystemColors.Control;
+            this.txt_Messages.ForeColor = System.Drawing.Color.Red;
+            this.txt_Messages.Location = new System.Drawing.Point(12, 499);
+            this.txt_Messages.Multiline = true;
+            this.txt_Messages.Name = "txt_Messages";
+            this.txt_Messages.ReadOnly = true;
+            this.txt_Messages.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_Messages.Size = new System.Drawing.Size(543, 96);
+            this.txt_Messages.TabIndex = 15;
+            // 
             // variableSpinner
             // 
             this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.variableSpinner.Hexadecimal = true;
-            this.variableSpinner.Location = new System.Drawing.Point(179, 502);
+            this.variableSpinner.Location = new System.Drawing.Point(179, 602);
             this.variableSpinner.Name = "variableSpinner";
             this.variableSpinner.Size = new System.Drawing.Size(102, 20);
             this.variableSpinner.TabIndex = 5;
             this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.variableSpinner.Visible = false;
             // 
+            // clb_Patches
+            // 
+            this.clb_Patches.AllowDrop = true;
+            this.clb_Patches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.clb_Patches.BackColors = null;
+            this.clb_Patches.FormattingEnabled = true;
+            this.clb_Patches.IntegralHeight = false;
+            this.clb_Patches.Location = new System.Drawing.Point(204, 30);
+            this.clb_Patches.Name = "clb_Patches";
+            this.clb_Patches.Size = new System.Drawing.Size(351, 319);
+            this.clb_Patches.TabIndex = 0;
+            this.clb_Patches.DragDrop += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragDrop);
+            this.clb_Patches.DragEnter += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragEnter);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(567, 605);
+            this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.txt_Messages);
             this.Controls.Add(this.btn_ViewFreeSpace);
             this.Controls.Add(this.lsb_FilesList);
             this.Controls.Add(this.label1);
@@ -221,11 +244,10 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.reloadButton);
             this.Controls.Add(this.patchButton);
-            this.Controls.Add(this.checkedListBox1);
-            this.MinimumSize = new System.Drawing.Size(583, 643);
+            this.Controls.Add(this.clb_Patches);
+            this.MinimumSize = new System.Drawing.Size(583, 743);
             this.Name = "MainForm";
             this.Text = "FFTorgASM";
-            this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -234,7 +256,7 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private FFTorgASM.Controls.BGCheckedListBox clb_Patches;
         private System.Windows.Forms.Button patchButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button reloadButton;
@@ -249,6 +271,7 @@
         private System.Windows.Forms.ListView lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
         private System.Windows.Forms.Button btn_ViewFreeSpace;
+        private System.Windows.Forms.TextBox txt_Messages;
     }
 }
 

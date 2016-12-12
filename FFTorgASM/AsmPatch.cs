@@ -30,7 +30,7 @@ namespace FFTorgASM
 
         private InputFilePatch patch;
         public FileAsmPatch( string name, string description, InputFilePatch patch )
-            : base( name, description, new PatchedByteArray[] { patch } )
+            : base( name, description, new PatchedByteArray[] { patch }, new bool[] { false } )
         {
             this.patch = patch;
         }
@@ -85,6 +85,8 @@ namespace FFTorgASM
     public class AsmPatch : IList<PatchedByteArray>
     {
         List<PatchedByteArray> innerList;
+        public List<bool> isDataSectionList;
+
         public string Name { get; private set; }
         public string Description { get; private set; }
         public IList<VariableType> Variables { get; private set; }
@@ -95,17 +97,18 @@ namespace FFTorgASM
             return true;
         }
 
-        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches )
+        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList )
         {
             enumerator = new AsmPatchEnumerator( this );
             this.Name = name;
             Description = description;
             innerList = new List<PatchedByteArray>( patches );
             Variables = new VariableType[0];
+            this.isDataSectionList = new List<bool>(isDataSectionList);
         }
 
-        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches, IList<VariableType> variables )
-            : this( name, description, patches )
+        public AsmPatch(string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList, IList<VariableType> variables)
+            : this( name, description, patches, isDataSectionList )
         {
         	VariableType[] myVars = new VariableType[variables.Count];
             variables.CopyTo( myVars, 0 );
@@ -183,11 +186,13 @@ namespace FFTorgASM
 
         public IEnumerator<PatchedByteArray> GetEnumerator()
         {
+            enumerator.Reset();
             return enumerator;
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
+            enumerator.Reset();
             return enumerator as System.Collections.IEnumerator;
         }
 

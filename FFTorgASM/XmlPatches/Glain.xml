@@ -20,7 +20,7 @@ SKP:  sltiu   t7,t6,1
     <Location file="SCUS_942_21" offset="4D49C" mode="ASM">
       sw      ra,0x94(sp)
       move    t5,a0
-      jal     0x15c9bc                  # Jump to new routine
+      jal     0x8015c9bc                # Jump to new routine
       li      v0,0x20
     </Location>
     <Location file="SCUS_942_21" offset="4D52C" mode="ASM">
@@ -45,7 +45,7 @@ SKP:  sltiu   t7,t6,1
     <Location file="SCUS_942_21" offset="4D49C" mode="ASM">
       sw      ra,0x94(sp)
       move    t5,a0
-      jal     0x15c9bc              # Jump to new routine
+      jal     0x8015c9bc            # Jump to new routine
       li      v0,0x20
     </Location>
     <Location file="SCUS_942_21" offset="4D52C" mode="ASM">
@@ -91,10 +91,10 @@ SKP:  move    t4,v1
         A multiplier of zero (default) will be ignored.
     </Description>
     <Location file="BATTLE_BIN" offset="F5D30" mode="ASM">
-.label  @elemental_nullify, 0x184e40
-.label  @apply_elemental, 0x186ffc
-.label  @address_damage_multiplier, 0x15cd20
-.label  @address_healing_multiplier, 0x15cd24
+.label  @elemental_nullify, 0x80184e40
+.label  @apply_elemental, 0x80186ffc
+.label  @address_damage_multiplier, 0x8015cd20
+.label  @address_healing_multiplier, 0x8015cd24
 
 # ROUTINE: Formula tail routine
 @formula_tail:
@@ -184,8 +184,9 @@ SKP:  move    t4,v1
 #   Determination of element, and elemental strengthen
 #   Specific to apply elemental routine - don't call from elsewhere
 @apply_elemental_pre_process:
-        addiu   sp, sp, -8
+        addiu   sp, sp, -16
         sw      ra, 4(sp)
+        sw      v1, 8(sp)
 
         jal     @elemental_determination
         nop
@@ -194,36 +195,52 @@ SKP:  move    t4,v1
         jal     @elemental_strengthen
         move    a0, v0
         
-        andi    v0, v1, 0x0080
-        
+        lw      v1, 8(sp)        
         lw      ra, 4(sp)
-        addiu   sp, sp, 8
+        addiu   sp, sp, 16
         jr      ra
-        nop
+        andi    v0, v1, 0x0080
        
        
 # ROUTINE: Determine element based on ability/weapon
 @elemental_determination:
+
+        addiu   sp, sp, -8
+        sw      ra, 4(sp)
+        
+        jal     @get_source_unit_misc_data_pointer
+        nop
+        lbu     t7, 0x15d(v0)                       #   Skillset ID
+        
         lui     t0, 0x8019                          
-        lbu     t1, 0x38f4(t0)                      # Load flags
+        lbu     t1, 0x38f4(t0)                      #   Load flags
         lbu     t2, 0x38f3(t0)
         sll     t1, t1, 8
         or      t1, t1, t2
-        lbu     v0, 0x38f7(t0)                      # Ability element
-        lbu     t4, 0x3904(t0)                      # Weapon element
-        lbu     t5, 0x38d6(t0)                      # Ability ID
+        lbu     v0, 0x38f7(t0)                      #   Ability element
+        lbu     t4, 0x3904(t0)                      #   Weapon element
+        lhu     t5, 0x38d6(t0)                      #   Ability ID
         li      t2, 0x2004        
         
-        and     t3, t1, t2                          # Check if "Weapon Strike" and flag under "Hit Allies" checked
-        xor     t3, t3, t2
-        sltiu   t3, t3, 1
-        sltiu   t6, t5, 1
-        or      t6, t6, t3
-        subu    t6, zero, t6
-        and     t6, t6, t4
+        and     t3, t1, t2                          #   Check if "Weapon Strike" and flag under "Hit Allies" checked
+        xor     t3, t3, t2                          #   Zero if both flags checked, non-zero otherwise
+        sltiu   t3, t3, 1                           #   1 if both flags checked, 0 otherwise
+        sltiu   t6, t5, 1                           #   Check if Ability ID = 0 (Attack)
+        or      t6, t6, t3                          #   1 if both flags checked or ability is Attack, 0 otherwise
+        li      t2, 0x14                            #   ID for Throw skillset
+        xor     t2, t7, t2                          #   Zero if Skillset ID = 0x14 (Throw), non-zero otherwise
+        sltiu   t2, t2, 1                           #   1 if Skillset ID = 0x14 (Throw), 0 otherwise
+        or      t6, t6, t2                          #   1 if both flags checked or ability is Attack or skillset is Throw, 0 otherwise
         
-        jr      ra                                  # Return element
-        or      v0, v0, t6                          
+        # subu    t6, zero, t6
+        sll     t6, t6, 31
+        sra     t6, t6, 31                          #   Bitmask: All ones if both flags checked or ability is Attack, 0 otherwise
+        and     t6, t6, t4                          #   (Elements to add) = Bitmask applied to (Weapon element)
+        
+        lw      ra, 4(sp)
+        addiu   sp, sp, 8
+        jr      ra                                  #   Return element
+        or      v0, v0, t6                          #   Add (Elements to add) to Element flags                          
 
 
 # ROUTINE: Apply elemental strengthen (a0 = Element)
@@ -472,8 +489,8 @@ SKP:  move    t4,v1
 
 @set_action_property_mod:
 
-        add     at, a1, a2
-        lhu     v0, 0(at)  
+        add     a3, a1, a2
+        lhu     v0, 0(a3)  
         nop
         
         beq     v0, zero, set_action_property_mod_end
@@ -508,7 +525,7 @@ SKP:  move    t4,v1
     
     set_action_property_mod_end:
         jr      ra
-        sh      v0, 0(at)
+        sh      v0, 0(a3)
         
         
 # ROUTINE: Set action types
@@ -591,7 +608,7 @@ SKP:  move    t4,v1
       jal     @elemental_inner      # Call inner elemental routine at new location
     </Location>
     <Location file="BATTLE_BIN" offset="120124" mode="ASM">
-      j       0x187140              # Jump over normal absorption block
+      j       0x80187140            # Jump over normal absorption block
     </Location>
     <Location file="BATTLE_BIN" offset="11EFA4" mode="ASM">
       jr      ra                    # Blank out routine (Weapon element strengthen)
@@ -649,19 +666,19 @@ SKP:  move    t4,v1
         sw      s1, 0x08(sp)
 
         move    s0, a0
-        jal     0x188510                            # Physical Evade
+        jal     0x80188510                          # Physical Evade
         nop
         bne     v0, zero, swordskill_end            # Branch to end if evaded
         nop
 
-        lbu     s1, 0x15cbcf                        # Load "Use MA?" option
+        lbu     s1, 0x8015cbcf                      # Load "Use MA?" option
         nop
 
         bne     s1, zero, swordskill_load_MA
         nop
       
     swordskill_load_PA:      
-        jal     0x185e5c                            # Load PA and (WP+Y)
+        jal     0x80185e5c                          # Load PA and (WP+Y)
         nop
         j       swordskill_past_load_XA
         nop
@@ -689,24 +706,24 @@ SKP:  move    t4,v1
         sb      a0, 0x3904(t0)                      # Save as weapon element
         sb      a0, 0x38f7(t0)                      # Save as ability element
 
-        jal     0x185fa4                            # Element Strengthen Calculation
+        jal     0x80185fa4                          # Element Strengthen Calculation
         nop
         
         bne    s1, zero, swordskill_load_MA_damage
         nop
 
     swordskill_load_PA_damage:
-        jal     0x1886a4                            # Physical Damage Calculation
+        jal     0x801886a4                          # Physical Damage Calculation
         nop
-        jal     0x186ff8                            # Elemental Damage Modification
+        jal     0x80186ff8                          # Elemental Damage Modification
         nop
         j       swordskill_past_XA_damage
         nop
 
     swordskill_load_MA_damage:
-        jal     0x188744                            # Magic XA Modification
+        jal     0x80188744                          # Magic XA Modification
         nop
-        jal     0x18877c                            # Magic Damage Calculation
+        jal     0x8018877c                          # Magic Damage Calculation
         nop
       
     swordskill_past_XA_damage:
@@ -718,7 +735,7 @@ SKP:  move    t4,v1
         beq     v0, zero, swordskill_drain          # If Missed, skip to Drain section
         nop
 
-        jal     0x1870fc                            # Elemental Absorption
+        jal     0x801870fc                          # Elemental Absorption
         nop
       
     swordskill_drain:  
@@ -730,7 +747,7 @@ SKP:  move    t4,v1
         nop
       
     swordskill_HP_drain:  
-        jal     0x187248                            # HP Drain
+        jal     0x80187248                          # HP Drain
         nop
         li      t0, 0x81
         bne     v0, t0, swordskill_end              # Skip to end if undead
@@ -740,11 +757,11 @@ SKP:  move    t4,v1
         nop
       
     swordskill_MP_drain:  
-        jal     0x18746c                            # MP Drain
+        jal     0x8018746c                          # MP Drain
         nop
       
     swordskill_status_proc:  
-        jal     0x187eb4                            # Status Proc
+        jal     0x80187eb4                          # Status Proc
         nop
       
     swordskill_end:  
@@ -790,7 +807,7 @@ SKP:  move    t4,v1
       (the sum of the two)!
     </Description>
     <Location file="BATTLE_BIN" offset="1249F0" mode="ASM">
-      j       0x15d230
+      j       0x8015d230
     </Location>
     <Location file="BATTLE_BIN" offset="F6230" mode="ASM">
         addiu   sp, sp, -8
@@ -799,13 +816,13 @@ SKP:  move    t4,v1
         jal     0x152300                # Call new defense routine
         nop
         
-        lhu     t0, 0x15cd30            # Check for "All formulas apply elemental (v2)" patch
+        lhu     t0, 0x8015cd30          # Check for "All formulas apply elemental (v2)" patch
         li      t1, 0xfff8
         
         bne     t0, t1, def_tail_end
         nop
         
-        jal     0x15cd30                # If using "All formulas apply elemental (v2)" patch, call appropriate routine
+        jal     0x8015cd30              # If using "All formulas apply elemental (v2)" patch, call appropriate routine
         nop
         
     def_tail_end:
@@ -893,10 +910,10 @@ LCH:  sltiu   t6,v1,7
       Crystals can contain abilities from special jobs regardless of the inheriting unit's base job. However, the inheriting unit's base job would have to include the ability AT THE SAME INDEX in order to learn it. (e.g. Ramza could learn Night Sword from Gafgarion's crystal if it was Gafgarion's 10th ability  and Ramza's 02 Squire class also contained Night Sword as the 10th ability.)
     </Description>
     <Location file="BATTLE_BIN" offset="1196E8" mode="ASM">
-      bne     t3,t3,0x180880        #   Wiped out base job check, so won't skip consideration
+      bne     t3,t3,0x80180880      #   Wiped out base job check, so won't skip consideration
     </Location>
     <Location file="BATTLE_BIN" offset="1197F4" mode="ASM">
-      j       0x15cb50              #   Jump to new code (replaces nop)
+      j       0x8015cb50            #   Jump to new code (replaces nop)
     </Location>
     <Location file="BATTLE_BIN" offset="F5B50" mode="ASM">
       bne     s5, zero, CON         #   If we're not considering the base job, skip this code
@@ -913,7 +930,7 @@ LCH:  sltiu   t6,v1,7
       addu    v0, v0, v1            #   Job data for crystal unit
       lbu     t1, 0(v0)
       move    a1, s1                #   Argument 2: Ability index
-      jal     0x05a568              #   Get ability ID
+      jal     0x8005a568            #   Get ability ID
       move    a0, t1                #   Argument 1: Skillset ID of crystal unit 
       move    t2, v0
       
@@ -921,10 +938,10 @@ LCH:  sltiu   t6,v1,7
       bne     t2, s4, SKP           #   IF (InheritingUnitAbility[index] != CrystalUnitAbility[index])
       nop                           #       Branch to SKP
       
-CON:  j       0x1807f8              #   Save this ability to the crystal
+CON:  j       0x801807f8            #   Save this ability to the crystal
       nop
       
-SKP:  j       0x180848              #   Skip this ability
+SKP:  j       0x80180848            #   Skip this ability
       nop
     </Location>
   </Patch>
@@ -1139,6 +1156,14 @@ SKP:  j       0x180848              #   Skip this ability
     </Location>
     <Variable name="X" file="SCUS_942_21" offset="4CE24" default="0F" />
   </Patch>
+  <Patch name="Fix Reraise Graphic Width">
+    <Description>
+        The pixel width of the "Reraise" graphic is set to the wrong value normally (26, when it should be 28).  This patch fixes that.
+    </Description>
+    <Location file="BATTLE_BIN" offset="14CF92" offsetMode="RAM">
+        1C
+    </Location>
+  </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
         Changes formula 3B to a mana burn/feedback ability 
@@ -1152,14 +1177,14 @@ SKP:  j       0x180848              #   Skip this ability
         addiu   sp, sp, -0x18
         sw      ra, 0x10(sp)
         
-        jal     0x188510                # Physical Evade Calculation
+        jal     0x80188510              # Physical Evade Calculation
         nop                             
         bne     v0, zero, feedback_end  # If Evaded, Skip           
         nop
         
-        jal     0x185c94                # Get Ability Power
+        jal     0x80185c94              # Get Ability Power
         nop
-        jal     0x188964                # Calculate MA * Y Damage
+        jal     0x80188964              # Calculate MA * Y Damage
         nop
         
         lui     t0, 0x8019 
@@ -1200,18 +1225,18 @@ SKP:  j       0x180848              #   Skip this ability
         a different formula, change the first offset.
     </Description>
     <Location file="BATTLE_BIN" offset="122124" mode="ASM">
-      j       0x15cb00              # Jump to new section
+      j       0x8015cb00            # Jump to new section
     </Location>
     <Location file="BATTLE_BIN" offset="F5B00" mode="ASM">
       addiu   sp,sp,-0x18
       sw      ra,0x0010(sp)
-      jal     0x188510              # Physical Evade
+      jal     0x80188510            # Physical Evade
       nop
       bne     v0,zero,END           # Branch to END if evaded
       nop
-      jal     0x15ca50              # Call new routine
+      jal     0x8015ca50            # Call new routine
       nop
-      jal     0x188964              # Calculate MA * Y Damage
+      jal     0x80188964            # Calculate MA * Y Damage
       nop
 END:  lw      ra,0x10(sp)
       addiu   sp,sp,0x18
@@ -1242,7 +1267,7 @@ END:  lw      ra,0x10(sp)
       lhu     a0,0x002c(v0)         # Target MP
       li      v0,0x80
       sb      v0,0x25(v1)           # Action type = HP Damage
-      j       0x186ff8              # Apply Elemental
+      j       0x80186ff8            # Apply Elemental
       sh      a0,0x04(v1)           # Action HP Damage = Target MP
     </Location>
     <Location file="BATTLE_BIN" offset="11F6EC" mode="ASM">
@@ -1257,7 +1282,7 @@ END:  lw      ra,0x10(sp)
       lw      v1,0x2d90(v1)
       addu    v0,v0,a1              
       sh      v0,0x04(v1)           # Action HP Damage = MAX(HP - 1, 0)
-      j       0x186ff8              # Apply Elemental
+      j       0x80186ff8            # Apply Elemental
       sb      a0,0x25(v1)           # Action type = HP Damage
     </Location>
   </Patch>
@@ -1282,7 +1307,7 @@ END:  lw      ra,0x10(sp)
       sb      a3,0x25(a2)           # Action type = MP Healing
     </Location>
     <Location file="BATTLE_BIN" offset="123668" mode="ASM">
-      j       0x151f1c              # Jump to new section
+      j       0x80151f1c            # Jump to new section
       nop
     </Location>
   </Patch>

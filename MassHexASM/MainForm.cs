@@ -51,10 +51,19 @@ namespace MassHexASM
 			txt_Messages.Text = "";
 			
 			ASMEncoderResult encodeResult = _asmUtility.EncodeASM(txt_ASM.Text, txt_StartPC.Text, GetSpacePadding(), chk_IncludeAddress.Checked, chk_littleEndian.Checked);
-			
+            
 			txt_Hex.Text = encodeResult.EncodedASMText;
 			txt_ASM.Text = encodeResult.ModifiedText;
-			txt_Messages.Text = encodeResult.ErrorText;
+
+            txt_Messages.ForeColor = Color.Red;
+            txt_Messages.Text = encodeResult.ErrorText;
+
+            if (string.IsNullOrEmpty(encodeResult.ErrorText))
+            {
+                uint pc = ASMEncodingUtility.ProcessStartPC(txt_ASM.Text, txt_StartPC.Text);
+                ASMCheckResult checkResult = _asmUtility.CheckASMFromHex(encodeResult.EncodedASMText, pc, chk_littleEndian.Checked, chk_NameRegs.Checked);
+                txt_Messages.Text = checkResult.ErrorText;
+            }
 		}
 		
 		void Btn_DecodeClick(object sender, EventArgs e)
@@ -63,10 +72,35 @@ namespace MassHexASM
 			txt_Messages.Text = "";
 			
 			ASMDecoderResult decodeResult = _asmUtility.DecodeASM(txt_Hex.Text, txt_StartPC.Text, GetSpacePadding(), chk_littleEndian.Checked, chk_IncludeAddress.Checked, chk_NameRegs.Checked);
-			
+
 			txt_ASM.Text = decodeResult.DecodedASM;
-			txt_Messages.Text = decodeResult.ErrorText;
+
+            txt_Messages.ForeColor = Color.Red;
+            txt_Messages.Text = decodeResult.ErrorText;
+
+            if (string.IsNullOrEmpty(decodeResult.ErrorText))
+            {
+                ASMCheckResult checkResult = _asmUtility.CheckASM(decodeResult.DecodedASM, txt_StartPC.Text, chk_littleEndian.Checked, chk_NameRegs.Checked, false);
+                txt_Messages.Text = checkResult.ErrorText;
+            }
 		}
+
+        private void btn_Check_Click(object sender, EventArgs e)
+        {
+            txt_Messages.Text = "";
+            ASMCheckResult checkResult = _asmUtility.CheckASM(txt_ASM.Text, txt_StartPC.Text, chk_littleEndian.Checked, chk_NameRegs.Checked, true);
+
+            if (string.IsNullOrEmpty(checkResult.ErrorText))
+            {
+                txt_Messages.ForeColor = Color.Green;
+                txt_Messages.Text = "No warnings.";
+            }
+            else
+            {
+                txt_Messages.ForeColor = Color.Red;
+                txt_Messages.Text = checkResult.ErrorText;
+            }
+        }
 		
 		void Chk_SpacePadCheckedChanged(object sender, EventArgs e)
 		{

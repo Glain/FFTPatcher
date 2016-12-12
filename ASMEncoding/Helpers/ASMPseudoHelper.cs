@@ -42,7 +42,7 @@ namespace ASMEncoding.Helpers
         }
 
 		// Translates a single pseudoinstruction
-		public EncodeLine[] TranslatePseudoSingle(EncodingFormat encoding, string[] parts, int index, uint pc)
+		public EncodeLine[] TranslatePseudoSingle(EncodingFormat encoding, string[] parts, int index, uint pc, bool skipLabelAssertion = false)
 		{
 			List<EncodeLine> result = new List<EncodeLine>();
 			
@@ -142,7 +142,7 @@ namespace ASMEncoding.Helpers
 					else
 						strImmed = args[1];
 						
-					ivalue = ValueHelper.GetAnyUnsignedValue(strImmed, true);
+					ivalue = ValueHelper.GetAnyUnsignedValue(strImmed, skipLabelAssertion);
 
                     bool isLabel = !(
                             ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
@@ -150,7 +150,7 @@ namespace ASMEncoding.Helpers
                         || ((strImmed.StartsWith("-")) && (strImmed.Length > 1))
                     );
 
-					if (((ivalue > 0xffff) && (strImmed[0] != '-')) || isLabel)
+					if (((ivalue > 0x7fff) && (strImmed[0] != '-')) || isLabel)
 					{
 						ushortval = (ushort)(ivalue & 0xffff);
 						if (ushortval >= 0x8000)
@@ -197,7 +197,7 @@ namespace ASMEncoding.Helpers
                     }
                     */
 
-                    ivalue = ValueHelper.GetAnyUnsignedValue(args[1], true);
+                    ivalue = ValueHelper.GetAnyUnsignedValue(args[1], skipLabelAssertion);
 
                     bool isLA = encoding.Command.Equals("la");
 					
@@ -225,7 +225,7 @@ namespace ASMEncoding.Helpers
 					else
 					{
 						if (!((args[1].StartsWith("0x") || ASMStringHelper.StringIsNumeric(args[1]))))
-							parts[1] = args[0] + "," + ValueHelper.LabelHelper.LabelToUnsigned(args[1], true);
+							parts[1] = args[0] + "," + ValueHelper.LabelHelper.LabelToUnsigned(args[1], skipLabelAssertion);
 						
 						result.Add(new EncodeLine(parts,index));
 					}
@@ -241,7 +241,7 @@ namespace ASMEncoding.Helpers
 		}
 		
 		// Translates pseudoinstructions
-		public ASMTranslatePseudoResult TranslatePseudo(string[] lines, uint startPC)
+		public ASMTranslatePseudoResult TranslatePseudo(string[] lines, uint startPC, bool skipLabelAssertion = false)
 		{
             _errorTextBuilder.Length = 0;
 
@@ -275,7 +275,7 @@ namespace ASMEncoding.Helpers
 					try
 					{
 						EncodingFormat encoding = encodingOrNull;
-						EncodeLine[] encodeLines = TranslatePseudoSingle(encoding, parts, index, pc);
+						EncodeLine[] encodeLines = TranslatePseudoSingle(encoding, parts, index, pc, skipLabelAssertion);
 						foreach (EncodeLine encodeLine in encodeLines)
 						{
 							resultLines.Add(encodeLine);
@@ -285,7 +285,7 @@ namespace ASMEncoding.Helpers
 					catch (Exception ex)
 					{
                         //result.errorMessage = "Error translating pseudoinstruction: " + line;
-                        _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + "\r\n");
+                        _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
 						//result.lines = null;
                         //return result;
 					}

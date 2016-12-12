@@ -9,8 +9,27 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
+namespace ASMEncoding
+{
+    public class ASMEncoderResult
+    {
+        public string EncodedASMText { get; set; }
+        public byte[] EncodedBytes { get; set; }
+        public string ModifiedText { get; set; }
+        public string ErrorText { get; set; }
+
+        public ASMEncoderResult(string encodedASMText, byte[] encodedBytes, string modifiedText, string errorText)
+        {
+            EncodedASMText = encodedASMText;
+            EncodedBytes = encodedBytes;
+            ModifiedText = modifiedText;
+            ErrorText = errorText;
+        }
+    }
+}
+
 namespace ASMEncoding.Helpers
-{	
+{
 	public class ASMSingleEncodeResult
 	{
 		public string ASMText { get; set; }
@@ -52,11 +71,11 @@ namespace ASMEncoding.Helpers
             _errorTextBuilder = new StringBuilder();
         }
 
-        public EncodeLine[] TranslatePseudo(string[] lines, uint pc)
+        public EncodeLine[] TranslatePseudo(string[] lines, uint pc, bool skipLabelAssertion = false)
         {
             EncodeLine[] encodeLines = null;
 
-            ASMTranslatePseudoResult translatePseudoResult = PseudoHelper.TranslatePseudo(lines, pc);
+            ASMTranslatePseudoResult translatePseudoResult = PseudoHelper.TranslatePseudo(lines, pc, skipLabelAssertion);
             
             /*
             if (translatePseudoResult.lines == null)
@@ -79,7 +98,7 @@ namespace ASMEncoding.Helpers
             else
                 lines = processEquivalencesResult.Lines;
 
-            EncodeLine[] encodeLines = TranslatePseudo(lines, pc);
+            EncodeLine[] encodeLines = TranslatePseudo(lines, pc, true);
 
             ASMFindLabelsResult findLabelsResult = ValueHelper.LabelHelper.FindLabels(lines, encodeLines, pc);
             if (findLabelsResult.ErrorCode > 0)
@@ -101,7 +120,9 @@ namespace ASMEncoding.Helpers
             {
                 string modLine = ASMStringHelper.RemoveLeadingBracketBlock(line);
 				string processLine = ASMStringHelper.RemoveLeadingSpaces(modLine);
-                if ((!processLine.StartsWith("#")) && (!processLine.StartsWith(";")))
+                processLine = ASMStringHelper.RemoveComment(processLine);
+                //if ((!processLine.StartsWith("#")) && (!processLine.StartsWith(";")))
+                if (processLine.Contains(":"))
                 {
                     string[] newResultLines = line.Split(':');
                     int newResultLinesLength = newResultLines.Length;
@@ -310,6 +331,18 @@ namespace ASMEncoding.Helpers
                         regValue[regIndex] = EncodeInvertedSingleBitVFPURegister(args[argsIndex], encodingFormat.VFPURegisterTypes[regIndex]);
                         regIndex++;
                         break;
+                    case ASMElementTypeCharacter.Cop0Register:
+                        regValue[regIndex] = EncodeCop0Register(args[argsIndex]);
+                        regIndex++;
+                        break;
+                    case ASMElementTypeCharacter.GTEControlRegister:
+                        regValue[regIndex] = EncodeGTEControlRegister(args[argsIndex]);
+                        regIndex++;
+                        break;
+                    case ASMElementTypeCharacter.GTEDataRegister:
+                        regValue[regIndex] = EncodeGTEDataRegister(args[argsIndex]);
+                        regIndex++;
+                        break;
                     case ASMElementTypeCharacter.SignedImmediate:
                     case ASMElementTypeCharacter.UnsignedImmediate:
                         immedValue[immedIndex] = EncodeImmediate(args[argsIndex], encodingFormat.ImmediateLengths[immedIndex], (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
@@ -389,16 +422,16 @@ namespace ASMEncoding.Helpers
             }
 
             //byte[] bytes = BitConverter.GetBytes(uEncodingValue);
-            byte[] bytes = ASMValueHelper.ConvertUIntToBytes(uEncodingValue);
+            byte[] bytes = ASMValueHelper.ConvertUIntToBytes(uEncodingValue, littleEndian);
 
             if (littleEndian)
             {
                 uEncodingValue = ASMValueHelper.ReverseBytes(uEncodingValue);
             }
-            else
-            {
-                Array.Reverse(bytes);
-            }
+            //else
+            //{
+            //    Array.Reverse(bytes);
+            //}
 
             string hex = ASMValueHelper.UnsignedToHex_WithLength(uEncodingValue, 8).ToUpper();
 			return new ASMSingleEncodeResult(hex, bytes);
@@ -472,6 +505,24 @@ namespace ASMEncoding.Helpers
             result[1] = (uint)(uValue & partialRegisterIncludeMasks[1]);
 
             return result;
+        }
+
+        private uint EncodeCop0Register(string register)
+        {
+            int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.Cop0Register, 0);
+            return (uint)regNum;
+        }
+
+        private uint EncodeGTEControlRegister(string register)
+        {
+            int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.GTEControlRegister, 0);
+            return (uint)regNum;
+        }
+
+        private uint EncodeGTEDataRegister(string register)
+        {
+            int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.GTEDataRegister, 0);
+            return (uint)regNum;
         }
 
 		// Accepts 0x[hex] or [dec] format
@@ -697,6 +748,11 @@ namespace ASMEncoding.Helpers
             //return result;
 
             return uValue;
+        }
+
+        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        {
+            return ValueHelper.LabelHelper.ReplaceLabelsInHex(hex, littleEndian);
         }
 
 		private void ClearErrorText()

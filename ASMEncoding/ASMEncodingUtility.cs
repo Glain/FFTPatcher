@@ -36,6 +36,17 @@ namespace ASMEncoding
             EncodingMode = encodingMode;
         }
 
+        public HashSet<ASMCheckCondition> GetCheckConditions()
+        {
+            HashSet<ASMCheckCondition> resultSet = ASMCheckHelper.GetAllCheckConditions();
+            if (EncodingMode == ASMEncodingMode.PSP)
+            {
+                resultSet.Remove(ASMCheckCondition.LoadDelay);
+                resultSet.Remove(ASMCheckCondition.LoadInBranchDelaySlot);
+            }
+            return resultSet;
+        }
+
         public ASMEncoderResult EncodeASM(string asm, string pcText, string spacePadding, bool includeAddress, bool littleEndian)
         {
             return _helper[EncodingMode].EncodeASM(asm, pcText, spacePadding, includeAddress, littleEndian);
@@ -69,6 +80,57 @@ namespace ASMEncoding
         public int DecodeASMToFile(string inputFilename, string outputFilename, bool littleEndian, bool useRegAliases, uint pc)
         {
             return _helper[EncodingMode].DecodeASMToFile(inputFilename, outputFilename, littleEndian, useRegAliases, pc);
+        }
+
+        public ASMCheckResult CheckASM(string asm, string pcText, bool littleEndian, bool useRegAliases, bool reEncode = true, ICollection<ASMCheckCondition> conditions = null)
+        {
+            conditions = conditions ?? GetCheckConditions();
+            return _helper[EncodingMode].CheckASM(asm, pcText, littleEndian, useRegAliases, reEncode, conditions);
+        }
+
+        public ASMCheckResult CheckASM(string asm, uint pc, bool littleEndian, bool useRegAliases, bool reEncode = true, ICollection<ASMCheckCondition> conditions = null)
+        {
+            conditions = conditions ?? GetCheckConditions();
+            return _helper[EncodingMode].CheckASM(asm, pc, littleEndian, useRegAliases, reEncode, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromHex(string hex, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            conditions = conditions ?? GetCheckConditions();
+            return _helper[EncodingMode].CheckASMFromHex(hex, pcText, littleEndian, useRegAliases, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromHex(string hex, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            conditions = conditions ?? GetCheckConditions();
+            return _helper[EncodingMode].CheckASMFromHex(hex, pc, littleEndian, useRegAliases, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            conditions = conditions ?? GetCheckConditions();
+            return _helper[EncodingMode].CheckASMFromBytes(bytes, pcText, littleEndian, useRegAliases, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            conditions = conditions ?? GetCheckConditions();
+            return _helper[EncodingMode].CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions);
+        }
+
+        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        {
+            return _helper[EncodingMode].ReplaceLabelsInHex(hex, littleEndian);
+        }
+
+        public static uint ProcessStartPC(string asm, string pcText)
+        {
+            return ASMEncodingUtilityHelper.ProcessStartPC(asm, pcText);
+        }
+
+        public static uint ProcessStartPC(string asm, uint pc)
+        {
+            return ASMEncodingUtilityHelper.ProcessStartPC(asm, pc);
         }
     }
 }

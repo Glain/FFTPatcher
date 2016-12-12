@@ -47,11 +47,22 @@ namespace ASMEncoding.Helpers
             List<string> newLines = new List<string>();
             foreach (string line in lines)
             {
+                string processLine = ASMStringHelper.RemoveLeadingBracketBlock(line);
+                processLine = ASMStringHelper.RemoveLeadingSpaces(processLine);
+                processLine = ASMStringHelper.RemoveComment(processLine).ToLower();
+                string[] parts = ASMStringHelper.SplitLine(processLine);
+                bool isEquivalence = ((!string.IsNullOrEmpty(parts[0])) && (parts[0].ToLower().Trim() == ".eqv"));
+
                 string newLine = (string)line.Clone();
-                foreach (KeyValuePair<string, string> eqv in eqvDict)
+
+                if (!isEquivalence)
                 {
-                    newLine = newLine.Replace(eqv.Key, eqv.Value);
+                    foreach (KeyValuePair<string, string> eqv in eqvDict)
+                    {
+                        newLine = newLine.Replace(eqv.Key, eqv.Value);
+                    }
                 }
+
                 newLines.Add(newLine);
             }
 

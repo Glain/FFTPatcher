@@ -83,5 +83,33 @@ namespace ASMEncoding.Helpers
 			//return pc;
             return new ASMProcessPCResult(pc, "");
 		}
+
+        public static uint ProcessStartPC(string asm, string pcText)
+        {
+            ASMProcessPCResult result = ASMPCHelper.ProcessPC(0, pcText, true, true);
+            uint pc = result.PC;
+            return ProcessStartPC(asm, pc);
+        }
+
+        public static uint ProcessStartPC(string asm, uint pc)
+        {
+            // If the ASM starts with a .org statement, use that address as the PC
+            string[] lines = asm.Split('\n');
+            lines = ASMStringHelper.RemoveFromLines(lines, "\r");
+
+            foreach (string line in lines)
+            {
+                if (!string.IsNullOrEmpty(line))
+                {
+                    string processLine = ASMStringHelper.RemoveComment(line).ToLower();
+                    string[] parts = ASMStringHelper.SplitLine(processLine);
+                    ASMProcessPCResult processPCResult = ASMPCHelper.ProcessOrg(pc, parts);
+                    pc = processPCResult.PC;
+                    break;
+                }
+            }
+
+            return pc;
+        }
 	}
 }

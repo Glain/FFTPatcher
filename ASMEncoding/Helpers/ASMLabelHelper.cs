@@ -263,5 +263,23 @@ namespace ASMEncoding.Helpers
 
 			return (uint) (LabelDict.ContainsKey(newLabel) ? LabelDict[newLabel] : 0);
 		}
+
+        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        {
+            string result = hex;
+
+            foreach (string label in LabelDict.Keys)
+            {
+                if (LabelDict.ContainsKey(label))
+                {
+                    uint labelValue = LabelToUnsigned(label);
+                    labelValue = littleEndian ? ASMValueHelper.ReverseBytes(labelValue) : labelValue;
+                    string labelHex = ASMValueHelper.UnsignedToHex_WithLength(labelValue, 8).ToUpper();
+                    result = result.Replace(label, labelHex);
+                }
+            }
+
+            return result;
+        }
 	}
 }

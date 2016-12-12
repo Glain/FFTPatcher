@@ -6,44 +6,10 @@
  */
 using System;
 using ASMEncoding.Helpers;
+using System.Collections.Generic;
 
 namespace ASMEncoding
-{	
-	public class ASMEncoderResult
-	{
-		public string EncodedASMText { get; set; }
-		public byte[] EncodedBytes { get; set; }
-		public string ModifiedText { get; set; }
-		public string ErrorText { get; set; }
-		
-		public ASMEncoderResult(string encodedASMText, byte[] encodedBytes, string modifiedText, string errorText)
-		{
-			EncodedASMText = encodedASMText;
-			EncodedBytes = encodedBytes;
-			ModifiedText = modifiedText;
-			ErrorText = errorText;
-		}
-	}
-	
-	public class ASMDecoderResult
-	{
-		public string DecodedASM { get; set; }
-		public string ErrorText { get; set; }
-		
-		public ASMDecoderResult(string decodedASM, string errorText)
-		{
-			DecodedASM = decodedASM;
-			ErrorText = errorText;
-		}
-	}
-	
-	public class ASMFileDecoderResult
-	{
-		public const int Success = 0;
-		public const int ASMDecodeError = -1;
-		public const int FileOpenError = -2;
-	}
-
+{		
     public class ASMEncodingMode
     {
         public const int NumModes = 3;
@@ -57,6 +23,8 @@ namespace ASMEncoding
 	{
 		private ASMEncoder _asmEncoder;
 		private ASMDecoder _asmDecoder;
+        
+        private ASMCheckHelper _asmCheckHelper;
 
         private ASMRegisterHelper _regHelper;
         private ASMLabelHelper _labelHelper;
@@ -77,10 +45,15 @@ namespace ASMEncoding
                 _formatHelper.ReadEncodeList(ASMDataFileMap.MIPS_Encoding);
                 _regHelper.ReadGPRegisterList();
                 _regHelper.ReadVFPURegisterAliasList();
+                _regHelper.ReadCop0RegisterList();
+                _regHelper.ReadGTEControlRegisterList();
+                _regHelper.ReadGTEDataRegisterList();
             }
 
 			_asmEncoder = new ASMEncoder(_pseudoHelper, _valueHelper, _formatHelper, _regHelper);
 			_asmDecoder = new ASMDecoder(_formatHelper, _regHelper);
+
+            _asmCheckHelper = new ASMCheckHelper(_asmEncoder, _asmDecoder);
 		}
 
         public ASMEncodingUtilityHelper(ASMEncodingUtilityHelper utilityHelper)
@@ -95,6 +68,8 @@ namespace ASMEncoding
             _regHelper = utilityHelper._regHelper;
 
             _asmDecoder = new ASMDecoder(_formatHelper, _regHelper);
+
+            _asmCheckHelper = new ASMCheckHelper(_asmEncoder, _asmDecoder);
         }
 
         public void LoadEncodingModeFile(int encodingMode)
@@ -124,6 +99,21 @@ namespace ASMEncoding
         public void LoadVFPURegisterAliasList()
         {
             _regHelper.ReadVFPURegisterAliasList();
+        }
+
+        public void LoadCop0RegisterFile()
+        {
+            _regHelper.ReadCop0RegisterList();
+        }
+
+        public void LoadGTEControlRegisterFile()
+        {
+            _regHelper.ReadGTEControlRegisterList();
+        }
+
+        public void LoadGTEDataRegisterFile()
+        {
+            _regHelper.ReadGTEDataRegisterList();
         }
 
 		public ASMEncoderResult EncodeASM(string asm, string pcText, string spacePadding, bool includeAddress, bool littleEndian)
@@ -163,5 +153,50 @@ namespace ASMEncoding
 		{
 			return _asmDecoder.DecodeASMToFile(inputFilename, outputFilename, littleEndian, useRegAliases, pc);
 		}
+
+        public ASMCheckResult CheckASM(string asm, string pcText, bool littleEndian, bool useRegAliases, bool reEncode = true, ICollection<ASMCheckCondition> conditions = null)
+        {
+            return _asmCheckHelper.CheckASM(asm, pcText, littleEndian, useRegAliases, reEncode, conditions);
+        }
+
+        public ASMCheckResult CheckASM(string asm, uint pc, bool littleEndian, bool useRegAliases, bool reEncode = true, ICollection<ASMCheckCondition> conditions = null)
+        {
+            return _asmCheckHelper.CheckASM(asm, pc, littleEndian, useRegAliases, reEncode, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromHex(string hex, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            return _asmCheckHelper.CheckASMFromHex(hex, pcText, littleEndian, useRegAliases, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromHex(string hex, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            return _asmCheckHelper.CheckASMFromHex(hex, pc, littleEndian, useRegAliases, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            return _asmCheckHelper.CheckASMFromBytes(bytes, pcText, littleEndian, useRegAliases, conditions);
+        }
+
+        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        {
+            return _asmCheckHelper.CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions);
+        }
+
+        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        {
+            return _asmEncoder.ReplaceLabelsInHex(hex, littleEndian);
+        }
+
+        public static uint ProcessStartPC(string asm, string pcText)
+        {
+            return ASMPCHelper.ProcessStartPC(asm, pcText);
+        }
+
+        public static uint ProcessStartPC(string asm, uint pc)
+        {
+            return ASMPCHelper.ProcessStartPC(asm, pc);
+        }
 	}
 }

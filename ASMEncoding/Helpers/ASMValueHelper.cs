@@ -202,9 +202,20 @@ namespace ASMEncoding.Helpers
         }
         */
 
-        public static byte[] ConvertUIntToBytes(uint value)
+        public static byte[] ConvertUIntToBytes(uint value, bool littleEndian)
         {
-            return BitConverter.GetBytes(value);
+            //return BitConverter.GetBytes(value);
+            byte[] result = { 
+                (byte)((value & 0xFF000000) >> 24),
+                (byte)((value & 0xFF0000) >> 16),
+                (byte)((value & 0xFF00) >> 8),
+                (byte)((value & 0xFF))
+            };
+
+            if (littleEndian)
+                Array.Reverse(result);
+
+            return result;
         }
 
         public static string AddLeadingZeroes(string str, int reqLength)
@@ -257,6 +268,28 @@ namespace ASMEncoding.Helpers
             }
 
             return result.ToArray();
+        }
+
+        public static uint[] GetUintArrayFromBytes(IEnumerable<byte> bytes, bool littleEndian = false)
+        {
+            List<uint> uintList = new List<uint>();
+
+            uint uintValue = 0;
+            int offset = 0;
+            foreach (byte b in bytes)
+            {
+                int shiftAmount = littleEndian ? (offset * 8) : (24 - (offset * 8));
+                uintValue |= (((uint)b) << shiftAmount);
+
+                offset = (offset + 1) % 4;
+                if (offset == 0)
+                {
+                    uintList.Add(uintValue);
+                    uintValue = 0;
+                }
+            }
+
+            return uintList.ToArray();
         }
 	}
 }

@@ -10,8 +10,30 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 
+namespace ASMEncoding
+{
+    public class ASMDecoderResult
+    {
+        public string DecodedASM { get; set; }
+        public string ErrorText { get; set; }
+
+        public ASMDecoderResult(string decodedASM, string errorText)
+        {
+            DecodedASM = decodedASM;
+            ErrorText = errorText;
+        }
+    }
+
+    public class ASMFileDecoderResult
+    {
+        public const int Success = 0;
+        public const int ASMDecodeError = -1;
+        public const int FileOpenError = -2;
+    }
+}
+
 namespace ASMEncoding.Helpers
-{	
+{
 	public class ASMDecoder
 	{
 		private StringBuilder _errorTextBuilder;
@@ -54,7 +76,7 @@ namespace ASMEncoding.Helpers
 			//string[] lines = hex.Split('\n');
 			//lines = ASMStringHelper.RemoveFromLines(lines, "\r");
 
-            string[] lines = ASMValueHelper.GetHexLines(hex);;            
+            string[] lines = ASMValueHelper.GetHexLines(hex);           
             StringBuilder sb = new StringBuilder();
 			
 			foreach (string line in lines)
@@ -89,6 +111,45 @@ namespace ASMEncoding.Helpers
 			return new ASMDecoderResult(sb.ToString(), _errorTextBuilder.ToString());
 		}
 
+        public ASMDecoderResult DecodeASM(IEnumerable<byte> bytes, uint pc, bool littleEndian = true, bool useRegAliases = false)
+        {
+            uint[] uintArray = ASMValueHelper.GetUintArrayFromBytes(bytes, littleEndian);
+            return DecodeASM(uintArray, pc, useRegAliases);
+        }
+
+        public ASMDecoderResult DecodeASM(IEnumerable<uint> uLines, uint pc, bool useRegAliases = false)
+        {
+            return DecodeASM(uLines, pc, "", false, useRegAliases, true);
+        }
+
+        public ASMDecoderResult DecodeASM(IEnumerable<uint> uLines, uint pc, string spacePadding, bool includeAddress, bool useRegAliases, bool clearErrorText)
+        {
+            if (clearErrorText)
+                ClearErrorText();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (uint uLine in uLines)
+            {
+                string strAddress = "[0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) + "] ";
+                string strPrefix = (includeAddress ? strAddress : "") + spacePadding;
+
+                try
+                {
+                    string decodedLine = TryDecodeSingle(uLine, pc, useRegAliases);
+                    sb.Append(strPrefix);
+                    sb.Append(decodedLine);
+                    sb.Append("\r\n");
+                    pc += 4;
+                }
+                catch (Exception ex)
+                {
+                    _errorTextBuilder.AppendLine("FAILED TO DECODE LINE: " + uLine.ToString("{0:X8}") + " (" + ex.Message + ")");
+                }
+            }
+
+            return new ASMDecoderResult(sb.ToString(), _errorTextBuilder.ToString());
+        }
 
         public int DecodeASMToFile(string inputFilename, string outputFilename, bool littleEndian, bool useRegAliases, string pcText)
         {

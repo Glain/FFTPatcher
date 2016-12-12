@@ -281,45 +281,54 @@ namespace PatcherLib.Iso
                     }
                     else
                     {
-                        switch(patch.Sector.ToString())
+                        //switch(patch.Sector.ToString())
+                        switch (patch.Sector)
                         {
-                            case "BATTLE_BIN":
+                            //case "BATTLE_BIN":
+                            case (int)PsxIso.Sectors.BATTLE_BIN:
                                 if(!FailedFiles[0])
                                     MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
                                 FailedFiles[0] = true;
                                 
                                 break;
-                            case "WORLD_WLDCORE_BIN":
+                            //case "WORLD_WLDCORE_BIN":
+                            case (int)PsxIso.Sectors.WORLD_WLDCORE_BIN:
                                 if (!FailedFiles[1])
                                     MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
                                 FailedFiles[1] = true;
                                 break;
-                            case "WORLD_WORLD_BIN":
+                            //case "WORLD_WORLD_BIN":
+                            case (int)PsxIso.Sectors.WORLD_WORLD_BIN:
                                 if (!FailedFiles[2])
                                     MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
                                 FailedFiles[2] = true;
                                 break;
-                            case "SCUS_942_21":
+                            //case "SCUS_942_21":
+                            case (int)PsxIso.Sectors.SCUS_942_21:
                                 if (!FailedFiles[3])
                                     MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
                                 FailedFiles[3] = true;
                                 break;
-                            case "EVENT_REQUIRE_OUT":
+                            //case "EVENT_REQUIRE_OUT":
+                            case (int)PsxIso.Sectors.EVENT_REQUIRE_OUT:
                                 if (!FailedFiles[4])
                                     MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
                                 FailedFiles[4] = true;
                                 break;
-                            case "EVENT_EQUIP_OUT":
+                            //case "EVENT_EQUIP_OUT":
+                            case (int)PsxIso.Sectors.EVENT_EQUIP_OUT:
                                 if (!FailedFiles[5])
                                     MessageBox.Show(patch.SectorEnum.ToString() + " is not present in savestate");
                                 FailedFiles[5] = true;
+                                break;
+                            default:
                                 break;
                         }
                     }
                 }
                 catch(Exception ex)
                 {
-                    
+                    throw ex;
                 }
             }
         }
@@ -416,8 +425,10 @@ namespace PatcherLib.Iso
             OFFSET_BATTLE_BIN = 0x67000,
             OFFSET_WORLD_WLDCORE_BIN = 0x67000,
         	OFFSET_WORLD_WORLD_BIN = 0xE0000,
-        	OFFSET_EVENT_REQUIRE_OUT = 0x1bf000,
-            OFFSET_EVENT_EQUIP_OUT = 0x1bf000
+        	OFFSET_EVENT_REQUIRE_OUT = 0x1BF000,
+            OFFSET_EVENT_EQUIP_OUT = 0x1BF000,
+            OFFSET_EVENT_OPTION_OUT = 0x1BF000,
+            OFFSET_EVENT_HELPMENU_OUT = 0x1DF000
         }
         
         public enum Sectors

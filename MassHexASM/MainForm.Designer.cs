@@ -56,6 +56,7 @@ namespace MassHexASM
             this.cb_Mode = new System.Windows.Forms.ComboBox();
             this.lbl_Mode = new System.Windows.Forms.Label();
             this.pnl_RightSide = new System.Windows.Forms.Panel();
+            this.btn_Check = new System.Windows.Forms.Button();
             this.pnl_BottomSection = new System.Windows.Forms.Panel();
             this.pnl_RightSide.SuspendLayout();
             this.pnl_BottomSection.SuspendLayout();
@@ -102,7 +103,7 @@ namespace MassHexASM
             // 
             // chk_littleEndian
             // 
-            this.chk_littleEndian.Location = new System.Drawing.Point(9, 155);
+            this.chk_littleEndian.Location = new System.Drawing.Point(8, 179);
             this.chk_littleEndian.Name = "chk_littleEndian";
             this.chk_littleEndian.Size = new System.Drawing.Size(94, 26);
             this.chk_littleEndian.TabIndex = 3;
@@ -148,7 +149,7 @@ namespace MassHexASM
             // 
             // btn_Decode
             // 
-            this.btn_Decode.Location = new System.Drawing.Point(14, 82);
+            this.btn_Decode.Location = new System.Drawing.Point(14, 72);
             this.btn_Decode.Name = "btn_Decode";
             this.btn_Decode.Size = new System.Drawing.Size(80, 31);
             this.btn_Decode.TabIndex = 8;
@@ -158,14 +159,14 @@ namespace MassHexASM
             // 
             // txt_StartPC
             // 
-            this.txt_StartPC.Location = new System.Drawing.Point(8, 211);
+            this.txt_StartPC.Location = new System.Drawing.Point(14, 211);
             this.txt_StartPC.Name = "txt_StartPC";
             this.txt_StartPC.Size = new System.Drawing.Size(94, 20);
             this.txt_StartPC.TabIndex = 9;
             // 
             // lbl_StartPC_Text
             // 
-            this.lbl_StartPC_Text.Location = new System.Drawing.Point(11, 234);
+            this.lbl_StartPC_Text.Location = new System.Drawing.Point(19, 234);
             this.lbl_StartPC_Text.Name = "lbl_StartPC_Text";
             this.lbl_StartPC_Text.Size = new System.Drawing.Size(89, 21);
             this.lbl_StartPC_Text.TabIndex = 10;
@@ -217,7 +218,7 @@ namespace MassHexASM
             // cb_Mode
             // 
             this.cb_Mode.FormattingEnabled = true;
-            this.cb_Mode.Location = new System.Drawing.Point(48, 128);
+            this.cb_Mode.Location = new System.Drawing.Point(46, 155);
             this.cb_Mode.Name = "cb_Mode";
             this.cb_Mode.Size = new System.Drawing.Size(57, 21);
             this.cb_Mode.TabIndex = 16;
@@ -226,7 +227,7 @@ namespace MassHexASM
             // lbl_Mode
             // 
             this.lbl_Mode.AutoSize = true;
-            this.lbl_Mode.Location = new System.Drawing.Point(5, 131);
+            this.lbl_Mode.Location = new System.Drawing.Point(3, 158);
             this.lbl_Mode.Name = "lbl_Mode";
             this.lbl_Mode.Size = new System.Drawing.Size(37, 13);
             this.lbl_Mode.TabIndex = 17;
@@ -236,6 +237,7 @@ namespace MassHexASM
             // 
             this.pnl_RightSide.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnl_RightSide.Controls.Add(this.btn_Check);
             this.pnl_RightSide.Controls.Add(this.lbl_Mode);
             this.pnl_RightSide.Controls.Add(this.cb_Mode);
             this.pnl_RightSide.Controls.Add(this.chk_NameRegs);
@@ -254,6 +256,17 @@ namespace MassHexASM
             this.pnl_RightSide.Name = "pnl_RightSide";
             this.pnl_RightSide.Size = new System.Drawing.Size(413, 397);
             this.pnl_RightSide.TabIndex = 18;
+            // 
+            // btn_Check
+            // 
+            this.btn_Check.Location = new System.Drawing.Point(14, 109);
+            this.btn_Check.Name = "btn_Check";
+            this.btn_Check.Size = new System.Drawing.Size(80, 31);
+            this.btn_Check.TabIndex = 18;
+            this.btn_Check.Text = "Check";
+            this.btn_Check.UseVisualStyleBackColor = true;
+            this.btn_Check.Visible = false;
+            this.btn_Check.Click += new System.EventHandler(this.btn_Check_Click);
             // 
             // pnl_BottomSection
             // 
@@ -305,5 +318,6 @@ namespace MassHexASM
         private System.Windows.Forms.Label lbl_Mode;
         private System.Windows.Forms.Panel pnl_RightSide;
         private System.Windows.Forms.Panel pnl_BottomSection;
+        private System.Windows.Forms.Button btn_Check;
 	}
 }

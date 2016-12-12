@@ -34,6 +34,7 @@ namespace ASMEncoding.Helpers
 			bool include = true;
 			bool pendingInclude = false;
             bool removedFirst = false;
+            bool removedLast = false;
 
 			foreach (char c in str)
 			{
@@ -42,9 +43,10 @@ namespace ASMEncoding.Helpers
                     include = false;
                     removedFirst = true;
                 }
-                else if (c == ']')
+                else if ((c == ']') && (!removedLast))
                 {
                     pendingInclude = true;
+                    removedLast = true;
                 }
                 else if (pendingInclude)
                 {

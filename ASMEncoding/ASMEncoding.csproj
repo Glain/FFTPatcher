@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ASMEncoding</RootNamespace>
     <AssemblyName>ASMEncoding</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,12 +33,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -46,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ASMEncodingUtility.cs" />
+    <Compile Include="Helpers\ASMCheckHelper.cs" />
     <Compile Include="Helpers\ASMEncodingUtilityHelper.cs" />
     <Compile Include="Helpers\ASMDataFileMap.cs" />
     <Compile Include="Helpers\ASMDebugHelper.cs" />
@@ -65,6 +67,12 @@
     <Content Include="ASMEncodingData\psp_vfpu_regs.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ASMEncodingData\mips_cop0_regs.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ASMEncodingData\psx_gte_control_regs.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ASMEncodingData\psx_encode.dat">
@@ -79,6 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ASMEncodingData\psp_encode.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ASMEncodingData\psx_gte_data_regs.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

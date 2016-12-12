@@ -42,21 +42,24 @@ namespace FFTorgASM
 
         }
 
-        private static void GetPatch( XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, out string name, out string description, out IList<PatchedByteArray> staticPatches )
+        private static void GetPatch( XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, out string name, out string description, out IList<PatchedByteArray> staticPatches,
+            out List<bool> outDataSectionList)
         {
             GetPatchNameAndDescription( node, out name, out description );
 
             XmlNodeList currentLocs = node.SelectNodes( "Location" );
             List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count );
+            List<bool> isDataSectionList = new List<bool>( currentLocs.Count );
 
             foreach ( XmlNode location in currentLocs )
             {
                 UInt32 offset = UInt32.Parse( location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
                 XmlAttribute fileAttribute = location.Attributes["file"];
                 XmlAttribute sectorAttribute = location.Attributes["sector"];
-                XmlAttribute asmAttribute = location.Attributes["mode"];
+                XmlAttribute modeAttribute = location.Attributes["mode"];
                 XmlAttribute offsetModeAttribute = location.Attributes["offsetMode"];
                 XmlAttribute inputFileAttribute = location.Attributes["inputFile"];
+                XmlAttribute replaceLabelsAttribute = location.Attributes["replaceLabels"];
                 
                 PsxIso.Sectors sector =  (PsxIso.Sectors)0;
                 if (fileAttribute != null)
@@ -73,12 +76,18 @@ namespace FFTorgASM
                 }
                 
                 bool asmMode = false;
-                if (asmAttribute != null)
+                bool markedAsData = false;
+                if (modeAttribute != null)
                 {
-                	if (asmAttribute.InnerText.ToLower().Trim() == "asm")
+                    string modeAttributeText = modeAttribute.InnerText.ToLower().Trim();
+                    if (modeAttributeText == "asm")
                 	{
                 		asmMode = true;
                 	}
+                    else if (modeAttributeText == "data")
+                    {
+                        markedAsData = true;
+                    }
                 }
                 
                 bool isRamOffset = false;
@@ -99,7 +108,9 @@ namespace FFTorgASM
                     else
                         ramOffset += (UInt32)ftrOffset;
                 }
-                catch (Exception ex) { }
+                catch (Exception) { }
+
+                ramOffset = ramOffset | 0x80000000;     // KSEG0
 
                 string content = location.InnerText;
                 if (inputFileAttribute != null)
@@ -108,6 +119,17 @@ namespace FFTorgASM
                     {
                         content = streamReader.ReadToEnd();
                     }
+                }
+
+                bool replaceLabels = false;
+                if (replaceLabelsAttribute != null)
+                {
+                    if (replaceLabelsAttribute.InnerText.ToLower().Trim() == "true")
+                        replaceLabels = true;
+                }
+                if (replaceLabels)
+                {
+                    content = asmUtility.ReplaceLabelsInHex(content, true);
                 }
 
                 byte[] bytes;
@@ -121,6 +143,8 @@ namespace FFTorgASM
                 }
                 
                 patches.Add( new PatchedByteArray( sector, fileOffset, bytes ) );
+
+                isDataSectionList.Add(markedAsData);
             }
 
             currentLocs = node.SelectNodes("STRLocation");
@@ -149,6 +173,7 @@ namespace FFTorgASM
             }
 
             staticPatches = patches.AsReadOnly();
+            outDataSectionList = isDataSectionList;
         }
 
         public static IList<AsmPatch> GetPatches( XmlNode rootNode, string xmlFilename, ASMEncodingUtility asmUtility )
@@ -164,7 +189,9 @@ namespace FFTorgASM
                 string name;
                 string description;
                 IList<PatchedByteArray> staticPatches;
-                GetPatch( node, xmlFilename, asmUtility, out name, out description, out staticPatches );
+                List<bool> isDataSectionList;
+
+                GetPatch(node, xmlFilename, asmUtility, out name, out description, out staticPatches, out isDataSectionList);
                 List<VariableType> variables = new List<VariableType>();
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
@@ -214,7 +241,7 @@ namespace FFTorgASM
                     
                     variables.Add( vType );
                 }
-                result.Add( new AsmPatch( name, description, staticPatches, variables ) );
+                result.Add( new AsmPatch( name, description, staticPatches, isDataSectionList, variables ) );
             }
 
             patchNodes = rootNode.SelectNodes( "ImportFilePatch" );

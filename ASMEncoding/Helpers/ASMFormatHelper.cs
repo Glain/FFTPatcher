@@ -54,6 +54,10 @@ namespace ASMEncoding.Helpers
         public const char VFPURegister = 'g';
         public const char PartialVFPURegister = 'p';
         public const char InvertedSingleBitVFPURegister = 'n';
+        public const char GTEDataRegister = 't';
+        public const char GTEControlRegister = 'v';
+        public const char Cop0Register = 'z';
+
         public const char SignedImmediate = 'i';
         public const char UnsignedImmediate = 'u';
         public const char BranchImmediate = 'b';
@@ -195,7 +199,7 @@ namespace ASMEncoding.Helpers
 	            	}
 	            }   
 	        }      
-	        catch 
+	        catch (Exception ex)
 	        { 
 	            
 	        }
@@ -428,6 +432,9 @@ namespace ASMEncoding.Helpers
                 case ASMElementTypeCharacter.VFPURegister:
                 case ASMElementTypeCharacter.PartialVFPURegister:
                 case ASMElementTypeCharacter.InvertedSingleBitVFPURegister:
+                case ASMElementTypeCharacter.Cop0Register:
+                case ASMElementTypeCharacter.GTEControlRegister:
+                case ASMElementTypeCharacter.GTEDataRegister:
                     return ASMElementMetaType.Register;
                 default:
                     return ASMElementMetaType.Immediate;
