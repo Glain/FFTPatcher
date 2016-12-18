@@ -158,6 +158,8 @@ namespace ASMEncoding.Helpers
             string[] lines = asm.Split('\n');
             lines = ASMStringHelper.RemoveFromLines(lines, "\r");
             string[] processLines = AddLabelLines(lines);
+
+            string oldErrorText = _errorTextBuilder.ToString();
             EncodeLine[] encodeLines = PreprocessLines(processLines, pc);
 
 			int encodeLineIndex = 0;
@@ -168,6 +170,11 @@ namespace ASMEncoding.Helpers
 			StringBuilder encodedASMBuilder = new StringBuilder();
 			
 			List<byte> byteList = new List<byte>();
+
+            if (oldErrorText != _errorTextBuilder.ToString())
+            {
+                return new ASMEncoderResult(encodedASMBuilder.ToString(), byteList.ToArray(), asm, _errorTextBuilder.ToString());
+            }
 			
 			foreach (string line in lines)
 			{				
@@ -281,11 +288,13 @@ namespace ASMEncoding.Helpers
 			string strArgs = "";
 			string[] args = null;
 			
+            /*
 			if (!string.IsNullOrEmpty(parts[1]))
 			{
 				strArgs = ASMStringHelper.RemoveSpaces(parts[1]).Replace('(',',').Replace(")","");
 				args = strArgs.Split(',');
 			}
+            */
 
             // Find encoding format and syntax
             string command = parts[0].ToLower();
@@ -293,6 +302,37 @@ namespace ASMEncoding.Helpers
             string formatBinary = encodingFormat.Binary;
             string syntax = encodingFormat.Syntax;
             string newFormat = formatBinary;
+
+            if (!string.IsNullOrEmpty(parts[1]))
+            {
+                List<string> argsList = new List<string>();
+                strArgs = ASMStringHelper.RemoveSpaces(parts[1]);
+                bool foundArg = false;
+                int strArgCharIndex = 0;
+
+                foreach (char currentChar in syntax)
+                {
+                    if (Char.IsLetter(currentChar))
+                    {
+                        foundArg = true;
+                    }
+                    else if (foundArg)
+                    {
+                        foundArg = false;
+                        bool isHiLo = ((strArgs.IndexOf("%hi(", strArgCharIndex) == strArgCharIndex) || (strArgs.IndexOf("%lo(", strArgCharIndex) == strArgCharIndex));
+                        int separatorIndex = strArgs.IndexOf(currentChar, strArgCharIndex + (isHiLo ? 4 : 0));
+                        argsList.Add(strArgs.Substring(strArgCharIndex, separatorIndex - strArgCharIndex));
+                        strArgCharIndex = separatorIndex + 1;
+                    }
+                }
+
+                if (foundArg)
+                {
+                    argsList.Add(strArgs.Substring(strArgCharIndex, strArgs.Length - strArgCharIndex));
+                }
+
+                args = argsList.ToArray();
+            }
 
             // Create array for registers and immediates
             Nullable<uint>[] regValue = new Nullable<uint>[26];
@@ -527,7 +567,7 @@ namespace ASMEncoding.Helpers
 
 		// Accepts 0x[hex] or [dec] format
         private uint EncodeImmediate(string strImmed, int length, uint mask)
-		{
+        {
             /*
             if ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
                 return ASMValueHelper.UnsignedToBinary_WithLength(ASMValueHelper.HexToUnsigned_AnySign(strImmed, length), length);
@@ -535,11 +575,15 @@ namespace ASMEncoding.Helpers
                 return ASMValueHelper.UnsignedToBinaryAny_WithLength(Convert.ToInt32(strImmed), length);
             */
 
+            /*
             if ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
                 return ASMValueHelper.HexToUnsigned_AnySign(strImmed, length) & mask;
             else
                 return ASMValueHelper.SignedToUnsigned(Convert.ToInt32(strImmed)) & mask;
-		}
+            */
+
+            return ValueHelper.GetAnyUnsignedValue(strImmed) & mask;
+        }
 
         private uint EncodeImmediate(int immed, int length, uint mask)
         {

@@ -544,6 +544,26 @@ namespace PatcherLib.Utilities
             }
         }
 
+        public static int FindBytes(this IList<byte> bytes, IList<byte> bytesToFind)
+        {
+            int result = -1;
+            int length = bytes.Count;
+            int innerIndex = 0;
+            int innerLength = bytesToFind.Count;
+
+            for (int index = 0; index < length; index++)
+            {
+                innerIndex = (bytes[index] == bytesToFind[innerIndex]) ? (innerIndex + 1) : 0;
+                if (innerIndex == innerLength)
+                {
+                    result = index - innerLength + 1;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Writes an array to the specified position in the stream.
         /// </summary>

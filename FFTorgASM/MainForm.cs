@@ -404,16 +404,31 @@ namespace FFTorgASM
             //Patchbutton copy. Modify to patch byte array right to savestate.
             saveFileDialog1.Filter = "PSV files (*.psv)|*.psv|All files (*.*)|*.*";
             saveFileDialog1.FileName = string.Empty;
+
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                byte[] filecopy = File.ReadAllBytes(saveFileDialog1.FileName);
+                //byte[] filecopy = File.ReadAllBytes(saveFileDialog1.FileName);
 
-                using (BinaryReader b = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
+                using (BinaryReader reader = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
                 {
+                    List<PatchedByteArray> patches = new List<PatchedByteArray>();
+                    foreach (AsmPatch innerPatches in clb_Patches.CheckedItems)
+                    {
+                        //patchList.AddRange(patch);
+                        foreach (PatchedByteArray innerPatch in innerPatches)
+                        {
+                            patches.Add(innerPatch);
+                        }
+                    }
+
+                    PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
+
+                    /*
                     foreach (AsmPatch patch in clb_Patches.CheckedItems)
                     {
-                        PatcherLib.Iso.PsxIso.PatchPsxSaveState(b, patch, filecopy);
+                        PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patch);
                     }
+                    */
                 }
             }
         }

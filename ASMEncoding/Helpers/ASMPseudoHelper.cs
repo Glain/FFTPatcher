@@ -129,8 +129,10 @@ namespace ASMEncoding.Helpers
 				case "sb":
 				case "sh":
 				case "sw":
-					startParenIndex = args[1].IndexOf('('); // check -1
-					endParenIndex = args[1].IndexOf(')');
+                    bool isHiLo = ((args[1].ToLower().StartsWith("%hi")) || (args[1].ToLower().StartsWith("%lo")));
+
+					startParenIndex = args[1].IndexOf('(', (isHiLo ? 4 : 0)); // check -1
+                    endParenIndex = args[1].IndexOf(')', (startParenIndex >= 0) ? startParenIndex : 0);
                     isStore = encoding.Command.ToLower().StartsWith("s");
 					useAT = ((startParenIndex >= 0) || (isStore));
 					
@@ -148,9 +150,10 @@ namespace ASMEncoding.Helpers
                             ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
                         || (ASMStringHelper.StringIsNumeric(strImmed))
                         || ((strImmed.StartsWith("-")) && (strImmed.Length > 1))
+                        || (isHiLo)
                     );
 
-					if (((ivalue > 0x7fff) && (strImmed[0] != '-')) || isLabel)
+					if (((ivalue > 0x7fff) && (strImmed[0] != '-') && (!isHiLo)) || isLabel)
 					{
 						ushortval = (ushort)(ivalue & 0xffff);
 						if (ushortval >= 0x8000)

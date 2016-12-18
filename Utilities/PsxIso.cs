@@ -267,14 +267,11 @@ namespace FFTPatcher
                 sendProgress("Getting errands patches");
             }
 
+            //byte[] filecopy = File.ReadAllBytes(patchList.FileName);
 
-            byte[] filecopy = File.ReadAllBytes(patchList.FileName);
-
-            using (BinaryReader b = new BinaryReader(File.Open(patchList.FileName, FileMode.Open)))
+            using (BinaryReader reader = new BinaryReader(File.Open(patchList.FileName, FileMode.Open)))
             {
-
-                    PatcherLib.Iso.PsxIso.PatchPsxSaveState(b, patches, filecopy);
-                    
+                PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);     
             }
             
         }

@@ -78,26 +78,7 @@ namespace ASMEncoding.Helpers
 
 		public uint GetAnyUnsignedValue(string val, bool skipLabelAssertion = false)
 		{
-			if ((val.StartsWith("0x")) || (val.StartsWith("-0x")))
-				return HexToUnsigned_AnySign(val,32);
-			else if (ASMStringHelper.StringIsNumeric(val))
-				return Convert.ToUInt32(val);
-			else if ((val.StartsWith("-")) && (val.Length > 1))
-			{
-				string str_uvalue = val.Substring(1);
-				if (ASMStringHelper.StringIsNumeric(str_uvalue))
-				{
-					uint uvalue = Convert.ToUInt32(str_uvalue);
-					if (uvalue == 0)
-						return 0;
-					else
-						return (uint)(0x100000000 - uvalue);
-				}
-				else
-					return 0;
-			}
-			else
-				return LabelHelper.LabelToUnsigned(val, skipLabelAssertion);
+            return LabelHelper.GetAnyUnsignedValue(val, skipLabelAssertion);
 		}
 
         public static string UnsignedToHex_WithLength(uint num, int reqLength)

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FFTPatcher.SpriteEditor</RootNamespace>
     <AssemblyName>ShishiSpriteEditor</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>sprite.ico</ApplicationIcon>
     <StartupObject>FFTPatcher.SpriteEditor.Program</StartupObject>

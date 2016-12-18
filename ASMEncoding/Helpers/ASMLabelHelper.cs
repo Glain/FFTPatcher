@@ -253,16 +253,59 @@ namespace ASMEncoding.Helpers
 			return LabelDict[newLabel];
 		}
         */
+
+        public uint GetAnyUnsignedValue(string val, bool skipLabelAssertion = false)
+        {
+            if ((val.StartsWith("0x")) || (val.StartsWith("-0x")))
+                return ASMValueHelper.HexToUnsigned_AnySign(val, 32);
+            else if (ASMStringHelper.StringIsNumeric(val))
+                return Convert.ToUInt32(val);
+            else if ((val.StartsWith("-")) && (val.Length > 1))
+            {
+                string str_uvalue = val.Substring(1);
+                if (ASMStringHelper.StringIsNumeric(str_uvalue))
+                {
+                    uint uvalue = Convert.ToUInt32(str_uvalue);
+                    if (uvalue == 0)
+                        return 0;
+                    else
+                        return (uint)(0x100000000 - uvalue);
+                }
+                else
+                    return 0;
+            }
+            else
+                return LabelToUnsigned(val, skipLabelAssertion);
+        }
 				
 		public uint LabelToUnsigned(string label, bool skipAssertion = false)
 		{
 			string newLabel = ASMStringHelper.RemoveSpaces(label).ToUpper();
+            string lowerLabel = newLabel.ToLower();
+
+            if (((lowerLabel.StartsWith("%hi(")) || (lowerLabel.StartsWith("%lo("))) && (lowerLabel.Substring(3).Contains(")")))
+            {
+                string newValue = lowerLabel.Substring(4, lowerLabel.IndexOf(")") - 4).Trim();
+                uint uValue = GetAnyUnsignedValue(newValue, skipAssertion);
+                return (lowerLabel.StartsWith("%hi(") ? ProcessHi(uValue) : ProcessLo(uValue));
+            }
 
             if (!skipAssertion)
                 ASMDebugHelper.assert(LabelDict.ContainsKey(newLabel), "Label not found: " + label);
 
 			return (uint) (LabelDict.ContainsKey(newLabel) ? LabelDict[newLabel] : 0);
 		}
+
+        private uint ProcessHi(uint uValue)
+        {
+            uint rawHiValue = (uValue >> 16) & 0xffff;
+            return (((uValue & 0x8000) == 0) ? (rawHiValue) : (rawHiValue + 1));
+        }
+
+        private uint ProcessLo(uint uValue)
+        {
+            return uValue & 0xffff;
+        }
 
         public string ReplaceLabelsInHex(string hex, bool littleEndian)
         {
