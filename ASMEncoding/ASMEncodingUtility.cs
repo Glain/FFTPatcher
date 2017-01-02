@@ -38,11 +38,11 @@ namespace ASMEncoding
 
         public HashSet<ASMCheckCondition> GetCheckConditions()
         {
-            HashSet<ASMCheckCondition> resultSet = ASMCheckHelper.GetAllCheckConditions();
+            HashSet<ASMCheckCondition> resultSet = ASMCheckHelper.GetStandardCheckConditions();
             if (EncodingMode == ASMEncodingMode.PSP)
             {
                 resultSet.Remove(ASMCheckCondition.LoadDelay);
-                resultSet.Remove(ASMCheckCondition.LoadInBranchDelaySlot);
+                //resultSet.Remove(ASMCheckCondition.LoadInBranchDelaySlot);
             }
             return resultSet;
         }

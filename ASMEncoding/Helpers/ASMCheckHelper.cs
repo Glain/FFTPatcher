@@ -32,8 +32,10 @@ namespace ASMEncoding.Helpers
         public ASMEncoder Encoder { get; private set; }
         public ASMDecoder Decoder { get; private set; }
 
-        private HashSet<ASMCheckCondition> allCheckConditions = GetAllCheckConditions();
+        //private HashSet<ASMCheckCondition> allCheckConditions = GetAllCheckConditions();
+        private HashSet<ASMCheckCondition> standardCheckConditions = GetStandardCheckConditions();
 
+        /*
         public static HashSet<ASMCheckCondition> GetAllCheckConditions()
         {
             return new HashSet<ASMCheckCondition>()
@@ -44,6 +46,19 @@ namespace ASMEncoding.Helpers
                 ASMCheckCondition.StackPointerOffset,
                 ASMCheckCondition.BranchInBranchDelaySlot,
                 ASMCheckCondition.LoadInBranchDelaySlot
+            };
+        }
+        */
+
+        public static HashSet<ASMCheckCondition> GetStandardCheckConditions()
+        {
+            return new HashSet<ASMCheckCondition>()
+            {
+                ASMCheckCondition.LoadDelay,
+                ASMCheckCondition.UnalignedOffset,
+                ASMCheckCondition.MultCountdown,
+                ASMCheckCondition.StackPointerOffset,
+                ASMCheckCondition.BranchInBranchDelaySlot
             };
         }
 
@@ -112,7 +127,7 @@ namespace ASMEncoding.Helpers
         {
             if (conditions == null)
             {
-                conditions = allCheckConditions;
+                conditions = standardCheckConditions;
             }
 
             bool isASM = (_errorTextBuilder.Length == 0);
