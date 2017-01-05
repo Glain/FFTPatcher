@@ -119,9 +119,11 @@ namespace MassHexASM
 		
 		private void CauseSelectAll(TextBox box, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.A && e.Control)
+			if ((e.KeyCode == Keys.A) && e.Control)
 			{
 				box.SelectAll();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
 			}
 		}
 
