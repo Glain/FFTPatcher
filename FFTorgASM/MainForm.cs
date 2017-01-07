@@ -63,8 +63,13 @@ namespace FFTorgASM
             {
             	AsmPatch patch = ( clb_Patches.SelectedItem as AsmPatch );
             	Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes();
-            	variableSpinner.Maximum = (decimal)Math.Pow(256,patch.Variables[variableComboBox.SelectedIndex].bytes) - 1;
-            	variableSpinner.Value = patch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+
+                // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
+                ignoreChanges = true;
+                variableSpinner.Maximum = (decimal)Math.Pow(256, patch.Variables[variableComboBox.SelectedIndex].bytes) - 1;
+                ignoreChanges = false;
+
+                variableSpinner.Value = patch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
             }
         }
 
