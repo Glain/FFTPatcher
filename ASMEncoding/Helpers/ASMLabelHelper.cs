@@ -309,17 +309,14 @@ namespace ASMEncoding.Helpers
 
         public string ReplaceLabelsInHex(string hex, bool littleEndian)
         {
-            string result = hex;
+            string result = hex.ToUpper();
 
             foreach (string label in LabelDict.Keys)
             {
-                if (LabelDict.ContainsKey(label))
-                {
-                    uint labelValue = LabelToUnsigned(label);
-                    labelValue = littleEndian ? ASMValueHelper.ReverseBytes(labelValue) : labelValue;
-                    string labelHex = ASMValueHelper.UnsignedToHex_WithLength(labelValue, 8).ToUpper();
-                    result = result.Replace(label, labelHex);
-                }
+                uint labelValue = LabelToUnsigned(label);
+                labelValue = littleEndian ? ASMValueHelper.ReverseBytes(labelValue) : labelValue;
+                string labelHex = ASMValueHelper.UnsignedToHex_WithLength(labelValue, 8).ToUpper();
+                result = result.Replace(label, labelHex);
             }
 
             return result;
