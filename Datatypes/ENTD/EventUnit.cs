@@ -117,7 +117,7 @@ namespace FFTPatcher.Datatypes
             "SkillSet", "SecondaryAction", "Reaction", "Support", "Movement", "RightHand", "LeftHand", "Head",
             "Body", "Accessory", "BonusMoney", "WarTrophy", "Male", "Female", "Monster", "JoinAfterEvent",
             "LoadFormation", "ZodiacMonster", "Blank2", "SaveFormation", "AlwaysPresent", "RandomlyPresent",
-            "Control", "Immortal", "Blank6", "Blank7", "Unknown2", "TargetX", "TargetY", "Unknown8", 
+            "Control", "Immortal", "Blank6", "Blank7", "Experience", "TargetX", "TargetY", "Unknown8", 
             "Unknown10", "Unknown11", "Unknown12" };
         public bool Female;
         public static readonly string[] Flags1FieldNames = new string[] { 
@@ -248,8 +248,7 @@ namespace FFTPatcher.Datatypes
         [Hex]
         public byte Unknown12 { get; set; }
 
-        [Hex]
-        public byte Unknown2 { get; set; }
+        public byte Experience { get; set; }
 
         [Hex]
         public byte TargetX { get; set; }
@@ -308,7 +307,7 @@ namespace FFTPatcher.Datatypes
             Y = bytes[26];
             FacingDirection = (Facing)(bytes[27] & 0x7F);
             UpperLevel = (bytes[27] & 0x80) == 0x80;
-            Unknown2 = bytes[28];
+            Experience = bytes[28];
             SkillSet = SkillSet.EventSkillSets[bytes[29]];
             WarTrophy = Item.EventItems[bytes[30]];
             BonusMoney = bytes[31];
@@ -373,7 +372,7 @@ namespace FFTPatcher.Datatypes
             destination.Y = source.Y;
             destination.FacingDirection = source.FacingDirection;
             destination.UpperLevel = source.UpperLevel;
-            destination.Unknown2 = source.Unknown2;
+            destination.Experience = source.Experience;
             destination.SkillSet = source.SkillSet;
             destination.WarTrophy = source.WarTrophy;
             destination.BonusMoney = source.BonusMoney;
@@ -443,7 +442,7 @@ namespace FFTPatcher.Datatypes
             result.Add( X );
             result.Add( Y );
             result.Add( (byte)(((byte)FacingDirection & 0x7F) | (UpperLevel ? 0x80 : 0x00)) );
-            result.Add( Unknown2 );
+            result.Add( Experience );
             result.Add( SkillSet.Value );
             result.Add( (byte)(WarTrophy.Offset & 0xFF) );
             result.Add( BonusMoney );

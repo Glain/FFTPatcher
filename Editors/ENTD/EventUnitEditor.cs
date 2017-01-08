@@ -80,6 +80,8 @@ namespace FFTPatcher.Editors
             "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", 
             "30", "31", "Random" };
 
+        private string[] byteNumberWithRandom = new string[256];
+
 		#endregion Instance Variables 
 
 		#region Public Properties (1) 
@@ -114,13 +116,13 @@ namespace FFTPatcher.Editors
             spinners = new NumericUpDownWithDefault[] {
                 paletteSpinner, xSpinner, ySpinner,
                 unknown10Spinner, unknown11Spinner, unknown12Spinner, jobLevelSpinner,
-                unknown2Spinner, bonusMoneySpinner, unitIDSpinner, 
+                bonusMoneySpinner, unitIDSpinner, 
                 targetXSpinner, targetYSpinner, unknown8Spinner, targetSpinner };
             */
             spinners = new NumericUpDownWithDefault[] {
                 paletteSpinner, xSpinner, ySpinner,
                 unknown10Spinner, unknown12Spinner, jobLevelSpinner,
-                unknown2Spinner, bonusMoneySpinner, unitIDSpinner, 
+                bonusMoneySpinner, unitIDSpinner, 
                 targetXSpinner, targetYSpinner, targetSpinner };
             comboBoxes = new ComboBoxWithDefault[] {
                 spriteSetComboBox, specialNameComboBox, monthComboBox, jobComboBox, 
@@ -141,11 +143,17 @@ namespace FFTPatcher.Editors
             faithComboBox.SelectedIndexChanged += zeroTo99ComboBox_SelectedIndexChanged;
             dayComboBox.SelectedIndexChanged += zeroTo31ComboBox_SelectedIndexChanged;
             levelComboBox.SelectedIndexChanged += levelComboBox_SelectedIndexChanged;
+            experienceComboBox.SelectedIndexChanged += byteNumberWithRandomComboBox_SelectedIndexChanged;
             flags1CheckedListBox.ItemCheck += flagsCheckedListBox_ItemCheck;
             flags2CheckedListBox.ItemCheck += flagsCheckedListBox_ItemCheck;
             clbAIFlags1.ItemCheck += flagsCheckedListBox_ItemCheck;
             clbAIFlags2.ItemCheck += flagsCheckedListBox_ItemCheck;
             upperLevelCheckBox.CheckedChanged += upperLevelCheckBox_CheckedChanged;
+
+            for (int index = 0; index < 256; index++)
+            {
+                byteNumberWithRandom[index] = (index == 254) ? "Random" : index.ToString();
+            }
         }
 
 		#endregion Constructors 
@@ -211,6 +219,10 @@ namespace FFTPatcher.Editors
                 levelComboBox.SetValueAndDefault(
                     eventUnit.Level == 254 ? levelStrings[200] : levelStrings[eventUnit.Level],
                     eventUnit.Default.Level == 254 ? levelStrings[200] : levelStrings[eventUnit.Default.Level] );
+                experienceComboBox.SetValueAndDefault(
+                    (eventUnit.Experience == 254) ? "Random" : eventUnit.Experience.ToString(),
+                    (eventUnit.Default.Experience == 254) ? "Random" : eventUnit.Default.Experience.ToString()
+                );
 
                 upperLevelCheckBox.Checked = eventUnit.UpperLevel;
             }
@@ -256,6 +268,19 @@ namespace FFTPatcher.Editors
             }
         }
 
+        private void byteNumberWithRandomComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!ignoreChanges)
+            {
+                ComboBoxWithDefault combo = sender as ComboBoxWithDefault;
+                ReflectionHelpers.SetFieldOrProperty(
+                    eventUnit,
+                    combo.Tag.ToString(),
+                    (byte)((combo.SelectedIndex == 254) ? 254 : combo.SelectedIndex));
+                OnDataChanged(this, EventArgs.Empty);
+            }
+        }
+
         private void spinner_ValueChanged( object sender, System.EventArgs e )
         {
             if( !ignoreChanges )
@@ -292,6 +317,7 @@ namespace FFTPatcher.Editors
             braveryComboBox.DataSource = zeroTo100;
             dayComboBox.DataSource = zeroTo31;
             levelComboBox.DataSource = levelStrings;
+            experienceComboBox.DataSource = byteNumberWithRandom;
 
             spriteSetComboBox.DataSource = SpriteSet.SpriteSets;
             specialNameComboBox.DataSource = SpecialName.SpecialNames;
