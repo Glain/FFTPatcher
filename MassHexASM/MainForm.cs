@@ -151,5 +151,10 @@ namespace MassHexASM
 			
 			return retval;
 		}
+
+        private void menuItem_Form_LEDecoder_Click(object sender, EventArgs e)
+        {
+            new LEDecoder.LEDecoder().Show();
+        }
 	}
 }

@@ -58,8 +58,12 @@ namespace MassHexASM
             this.pnl_RightSide = new System.Windows.Forms.Panel();
             this.btn_Check = new System.Windows.Forms.Button();
             this.pnl_BottomSection = new System.Windows.Forms.Panel();
+            this.menu_Top = new System.Windows.Forms.MenuStrip();
+            this.menuItem_Form = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_Form_LEDecoder = new System.Windows.Forms.ToolStripMenuItem();
             this.pnl_RightSide.SuspendLayout();
             this.pnl_BottomSection.SuspendLayout();
+            this.menu_Top.SuspendLayout();
             this.SuspendLayout();
             // 
             // txt_ASM
@@ -112,15 +116,15 @@ namespace MassHexASM
             // 
             // lbl_ASM_Text
             // 
-            this.lbl_ASM_Text.Location = new System.Drawing.Point(35, 21);
+            this.lbl_ASM_Text.Location = new System.Drawing.Point(33, 29);
             this.lbl_ASM_Text.Name = "lbl_ASM_Text";
-            this.lbl_ASM_Text.Size = new System.Drawing.Size(132, 21);
+            this.lbl_ASM_Text.Size = new System.Drawing.Size(132, 20);
             this.lbl_ASM_Text.TabIndex = 4;
             this.lbl_ASM_Text.Text = "MIPS Assembly";
             // 
             // lbl_Hex_Text
             // 
-            this.lbl_Hex_Text.Location = new System.Drawing.Point(125, 4);
+            this.lbl_Hex_Text.Location = new System.Drawing.Point(125, 12);
             this.lbl_Hex_Text.Name = "lbl_Hex_Text";
             this.lbl_Hex_Text.Size = new System.Drawing.Size(132, 21);
             this.lbl_Hex_Text.TabIndex = 5;
@@ -279,6 +283,31 @@ namespace MassHexASM
             this.pnl_BottomSection.Size = new System.Drawing.Size(783, 135);
             this.pnl_BottomSection.TabIndex = 19;
             // 
+            // menu_Top
+            // 
+            this.menu_Top.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItem_Form});
+            this.menu_Top.Location = new System.Drawing.Point(0, 0);
+            this.menu_Top.Name = "menu_Top";
+            this.menu_Top.Size = new System.Drawing.Size(837, 24);
+            this.menu_Top.TabIndex = 20;
+            this.menu_Top.Text = "menuStrip1";
+            // 
+            // menuItem_Form
+            // 
+            this.menuItem_Form.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItem_Form_LEDecoder});
+            this.menuItem_Form.Name = "menuItem_Form";
+            this.menuItem_Form.Size = new System.Drawing.Size(47, 20);
+            this.menuItem_Form.Text = "Form";
+            // 
+            // menuItem_Form_LEDecoder
+            // 
+            this.menuItem_Form_LEDecoder.Name = "menuItem_Form_LEDecoder";
+            this.menuItem_Form_LEDecoder.Size = new System.Drawing.Size(152, 22);
+            this.menuItem_Form_LEDecoder.Text = "LEDecoder";
+            this.menuItem_Form_LEDecoder.Click += new System.EventHandler(this.menuItem_Form_LEDecoder_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,12 +317,16 @@ namespace MassHexASM
             this.Controls.Add(this.pnl_RightSide);
             this.Controls.Add(this.lbl_ASM_Text);
             this.Controls.Add(this.txt_ASM);
+            this.Controls.Add(this.menu_Top);
+            this.MainMenuStrip = this.menu_Top;
             this.Name = "MainForm";
             this.Text = "MassHexASM";
             this.pnl_RightSide.ResumeLayout(false);
             this.pnl_RightSide.PerformLayout();
             this.pnl_BottomSection.ResumeLayout(false);
             this.pnl_BottomSection.PerformLayout();
+            this.menu_Top.ResumeLayout(false);
+            this.menu_Top.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,5 +352,8 @@ namespace MassHexASM
         private System.Windows.Forms.Panel pnl_RightSide;
         private System.Windows.Forms.Panel pnl_BottomSection;
         private System.Windows.Forms.Button btn_Check;
+        private System.Windows.Forms.MenuStrip menu_Top;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_Form;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_Form_LEDecoder;
 	}
 }

@@ -21,7 +21,7 @@ namespace LEDecoder
         public string FileName;
     }
 
-    public partial class MainForm : Form
+    public partial class LEDecoder : Form
     {
         #region Fields
         Color _ledColor = Color.Yellow;
@@ -29,7 +29,7 @@ namespace LEDecoder
         #endregion
 
         #region Form Initialization
-        public MainForm()
+        public LEDecoder()
         {
             InitializeComponent();
             Process();

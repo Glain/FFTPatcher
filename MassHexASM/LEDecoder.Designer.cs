@@ -8,7 +8,7 @@
  */
 namespace LEDecoder
 {
-    partial class MainForm
+    partial class LEDecoder
     {
         /// <summary>
         /// Designer variable used to keep track of non-visual components.

@@ -4,6 +4,7 @@
 bin/
 obj/
 bak/
+staging/
 
 # Windows image file caches
 Thumbs.db
