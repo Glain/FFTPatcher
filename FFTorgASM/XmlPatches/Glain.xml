@@ -6,7 +6,7 @@
       (0x16b is the last row, last column in the ENTD for a unit, in the Unknown box, two underneath
        the top value that has its own row.)
     </Description>
-    <Location file="BATTLE_BIN" offset="F59BC" mode="ASM">  
+    <Location file="BATTLE_BIN" offset="F59BC" mode="ASM">
       lbu     t6,0x016b(t5)             # Load 0x016b from unit
       lui     t0,0x8005
       bne     t6,zero,SKP               # If not zero, jump to SKP (don't use shop availability)
@@ -74,7 +74,7 @@ SKP:  move    t4,v1
     </Location>
     <Location file="SCUS_942_21" offset="4D628" mode="ASM">
       addiu   s0,t1,1               # Length = list index + 1
-      beq     t7,zero,0x5ce60       # If (no item found), skip
+      beq     t7,zero,0x8005ce60    # If (no item found), skip
     </Location>
   </Patch>
   <Patch name="All formulas apply elemental (v2)">
