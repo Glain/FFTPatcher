@@ -139,6 +139,9 @@ namespace ASMEncoding.Helpers
             bool isLastCommandBranch = false;
             uint lastBranchAddress = 0;
 
+            bool isLastCommandUnconditionalJump = false;
+            bool isLastCommandLoadAfterUnconditionalJump = false;
+
             foreach (string line in lines)
             {
                 string[] parts = ASMStringHelper.SplitLine(line);
@@ -152,9 +155,17 @@ namespace ASMEncoding.Helpers
                 string commandLower = command.ToLower().Trim();
                 bool isLoad = IsLoadCommand(command);
                 bool isBranch = IsBranchCommand(command);
+                bool isUnconditionalJump = IsUnconditionalJump(command);
+                bool skipLoadDelayCheck = false;
                 
                 string strPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8);
                 string strArgs = parts[1];
+
+                if (isLastCommandLoadAfterUnconditionalJump)
+                {
+                    isLastCommandLoadAfterUnconditionalJump = false;
+                    skipLoadDelayCheck = true;
+                }
 
                 if (!string.IsNullOrEmpty(strArgs))
                 {
@@ -162,7 +173,8 @@ namespace ASMEncoding.Helpers
 
                     if (conditions.Contains(ASMCheckCondition.LoadDelay))
                     {
-                        CheckLoadDelay(args, gprLoad, strPC);
+                        if (!skipLoadDelayCheck)
+                            CheckLoadDelay(args, gprLoad, strPC);
                     }
 
                     if (conditions.Contains(ASMCheckCondition.UnalignedOffset))
@@ -224,6 +236,11 @@ namespace ASMEncoding.Helpers
                                     }
                                 }
                             }
+
+                            if (isLastCommandUnconditionalJump)
+                            {
+                                isLastCommandLoadAfterUnconditionalJump = true;
+                            }
                         }
                     }
                     
@@ -273,6 +290,7 @@ namespace ASMEncoding.Helpers
                 }
 
                 isLastCommandBranch = isBranch;
+                isLastCommandUnconditionalJump = isUnconditionalJump;
 
                 pc += 4;
             }
@@ -435,6 +453,24 @@ namespace ASMEncoding.Helpers
                 case "bltzal":
                 case "bgezal":
                 case "bgtzal":
+                case "j":
+                case "jr":
+                case "jal":
+                case "jalr":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private bool IsUnconditionalJump(string command)
+        {
+            if (string.IsNullOrEmpty(command))
+                return false;
+
+            string commandLower = command.ToLower().Trim();
+            switch (commandLower)
+            {
                 case "j":
                 case "jr":
                 case "jal":
