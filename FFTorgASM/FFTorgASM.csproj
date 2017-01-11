@@ -106,9 +106,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="XmlPatches\DefaultHacks.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="XmlPatches\DefaultHacks.xml" />
     <Content Include="XmlPatches\Example.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
