@@ -140,7 +140,7 @@ namespace ASMEncoding.Helpers
             uint lastBranchAddress = 0;
 
             bool isLastCommandUnconditionalJump = false;
-            bool isLastCommandLoadAfterUnconditionalJump = false;
+            bool isLastCommandUnconditionalJumpDelaySlot = false;
 
             foreach (string line in lines)
             {
@@ -156,16 +156,9 @@ namespace ASMEncoding.Helpers
                 bool isLoad = IsLoadCommand(command);
                 bool isBranch = IsBranchCommand(command);
                 bool isUnconditionalJump = IsUnconditionalJump(command);
-                bool skipLoadDelayCheck = false;
                 
                 string strPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8);
                 string strArgs = parts[1];
-
-                if (isLastCommandLoadAfterUnconditionalJump)
-                {
-                    isLastCommandLoadAfterUnconditionalJump = false;
-                    skipLoadDelayCheck = true;
-                }
 
                 if (!string.IsNullOrEmpty(strArgs))
                 {
@@ -173,7 +166,7 @@ namespace ASMEncoding.Helpers
 
                     if (conditions.Contains(ASMCheckCondition.LoadDelay))
                     {
-                        if (!skipLoadDelayCheck)
+                        if (!isLastCommandUnconditionalJumpDelaySlot)
                             CheckLoadDelay(args, gprLoad, strPC);
                     }
 
@@ -216,7 +209,7 @@ namespace ASMEncoding.Helpers
                             // If there is a load in the branch delay slot, check if the branch target address tries to use the loaded value
                             if (conditions.Contains(ASMCheckCondition.LoadDelay))
                             {
-                                uint endPC = startPC + ((uint)lines.Length * 4);
+                                uint endPC = startPC + ((uint)(lines.Length - 1) * 4);
                                 uint branchPC = lastBranchAddress;
                                 string strBranchPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(branchPC, 8);
 
@@ -235,11 +228,6 @@ namespace ASMEncoding.Helpers
                                         }
                                     }
                                 }
-                            }
-
-                            if (isLastCommandUnconditionalJump)
-                            {
-                                isLastCommandLoadAfterUnconditionalJump = true;
                             }
                         }
                     }
@@ -266,6 +254,93 @@ namespace ASMEncoding.Helpers
                     }
                 }
 
+                // Check if we're jumping into a hazard
+                if (isLastCommandBranch)
+                {
+                    uint endPC = startPC + ((uint)(lines.Length - 1) * 4);
+                    uint branchPC = lastBranchAddress;
+                    string strBranchPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(branchPC, 8);
+
+                    if ((startPC <= branchPC) && (branchPC <= endPC))
+                    {
+                        int index = (int)((branchPC - startPC) / 4);
+                        string branchLine = lines[index];
+                        string[] branchParts = ASMStringHelper.SplitLine(branchLine);
+                        if (branchParts.Length > 1)
+                        {
+                            string strCommand = branchParts[0];
+                            string strBranchArgs = branchParts[1];
+                            if (!string.IsNullOrEmpty(strBranchArgs))
+                            {
+                                string[] branchArgs = strBranchArgs.Split(',');
+
+                                if (conditions.Contains(ASMCheckCondition.LoadDelay))
+                                {
+                                    if ((IsLoadCommand(strCommand)) && ((branchPC + 4) <= endPC))
+                                    {
+                                        string secondBranchLine = lines[index + 1];
+                                        string[] secondBranchParts = ASMStringHelper.SplitLine(secondBranchLine);
+                                        if (secondBranchParts.Length > 1)
+                                        {
+                                            string strSecondBranchArgs = secondBranchParts[1];
+                                            if (!string.IsNullOrEmpty(strSecondBranchArgs))
+                                            {
+                                                string[] secondBranchArgs = strSecondBranchArgs.Split(',');
+                                                string strSecondBranchPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(branchPC + 4, 8);
+                                                string branchGprLoad = branchArgs[0].Trim();
+                                                CheckLoadDelay(secondBranchArgs, branchGprLoad, strSecondBranchPC);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (conditions.Contains(ASMCheckCondition.MultCountdown))
+                                {
+                                    string strCommandLower = strCommand.ToLower();
+                                    if ((strCommandLower == "mfhi") || (strCommandLower == "mflo"))
+                                    {
+                                        if (((branchPC + 4) <= endPC))
+                                        {
+                                            string nextBranchLine = lines[index + 1];
+                                            string[] nextBranchParts = ASMStringHelper.SplitLine(nextBranchLine);
+                                            if (nextBranchParts.Length > 0)
+                                            {
+                                                string nextBranchCommand = nextBranchParts[0].ToLower();
+                                                bool isMultiplication = ((nextBranchCommand == "mult") || (nextBranchCommand == "multu"));
+                                                bool isDivision = ((nextBranchCommand == "div") || (nextBranchCommand == "divu"));
+                                                if ((isMultiplication) || (isDivision))
+                                                {
+                                                    string operation = isMultiplication ? "Multiplication" : "Division";
+                                                    string strNextPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(branchPC + 4, 8);
+                                                    _errorTextBuilder.AppendLine("WARNING: " + operation + " within 2 commands of " + strCommandLower + " at address " + strNextPC);
+                                                }
+                                            }
+                                        }
+
+                                        if (((branchPC + 8) <= endPC))
+                                        {
+                                            string nextBranchLine = lines[index + 2];
+                                            string[] nextBranchParts = ASMStringHelper.SplitLine(nextBranchLine);
+                                            if (nextBranchParts.Length > 0)
+                                            {
+                                                string nextBranchCommand = nextBranchParts[0].ToLower();
+                                                bool isMultiplication = ((nextBranchCommand == "mult") || (nextBranchCommand == "multu"));
+                                                bool isDivision = ((nextBranchCommand == "div") || (nextBranchCommand == "divu"));
+                                                if ((isMultiplication) || (isDivision))
+                                                {
+                                                    string operation = isMultiplication ? "Multiplication" : "Division";
+                                                    string strNextPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(branchPC + 8, 8);
+                                                    _errorTextBuilder.AppendLine("WARNING: " + operation + " within 2 commands of " + strCommandLower + " at address " + strNextPC);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (conditions.Contains(ASMCheckCondition.BranchInBranchDelaySlot))
                 {
                     if (isBranch && isLastCommandBranch)
@@ -279,7 +354,11 @@ namespace ASMEncoding.Helpers
                     gprLoad = "";
                 }
 
-                if ((commandLower == "mfhi") || (commandLower == "mflo"))
+                if (isLastCommandUnconditionalJump)
+                {
+                    hiLoCountdown = 0;
+                }
+                else if ((commandLower == "mfhi") || (commandLower == "mflo"))
                 {
                     hiLoCountdown = 2;
                     hiLoCommand = commandLower;
@@ -290,6 +369,7 @@ namespace ASMEncoding.Helpers
                 }
 
                 isLastCommandBranch = isBranch;
+                isLastCommandUnconditionalJumpDelaySlot = isLastCommandUnconditionalJump;
                 isLastCommandUnconditionalJump = isUnconditionalJump;
 
                 pc += 4;
