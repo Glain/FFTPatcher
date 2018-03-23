@@ -133,7 +133,20 @@ namespace PatcherLib.Iso
                 if (!FailedFiles.Contains(sector))
                 {
                     bool valid = true;
-                    int ramOffset = (int)(PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + filename.ToUpper().Trim());
+                    int ramOffset = 0;
+                    
+                    try
+                    {
+                        ramOffset = (int)(PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + filename.ToUpper().Trim());
+                    }
+                    catch (Exception)
+                    {
+                        FailedFiles.Add(sector);
+                        MessageBox.Show(sector.ToString() + " is not supported for savestate patching");
+                        valid = false;
+                        continue;
+                    }
+                    
                     int startOffset = ramOffset + ramToPsvOffset;
 
                     if (!LoadedFiles.Contains(sector))
