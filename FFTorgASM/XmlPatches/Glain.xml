@@ -813,7 +813,7 @@ SKP:  move    t4,v1
         addiu   sp, sp, -8
         sw      ra, 4(sp)
         
-        jal     0x152300                # Call new defense routine
+        jal     0x80152300              # Call new defense routine
         nop
         
         lhu     t0, 0x8015cd30          # Check for "All formulas apply elemental (v2)" patch
@@ -1151,7 +1151,7 @@ SKP:  j       0x80180848            #   Skip this ability
       sltiu   t1,t1,1
       sll     t1,t1,2                   
       or      t3,t3,t1              # If so, set 0x04 bit ("Materia Blade" equipped) of equip flags
-      j       0x5c668
+      j       0x8005c668
       sb      t3,0x0184(s1)         # Save equip flags to memory
     </Location>
     <Variable name="X" file="SCUS_942_21" offset="4CE24" default="0F" />
