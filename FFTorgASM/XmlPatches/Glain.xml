@@ -1348,6 +1348,9 @@ SKP:  j       0x80180848            #   Skip this ability
     <Location file="BATTLE_BIN" offset="14A43C" mode="ASM" offsetMode="RAM">
         jal     @wait_value_hook
     </Location>
+    <Location file="BATTLE_BIN" offset="79198" mode="ASM" offsetMode="RAM">
+        jal     @reveal_hook
+    </Location>
     <Location file="EVENT_REQUIRE_OUT" offset="1C4AAC" mode="ASM" offsetMode="RAM">
         j       @post_battle_tail
     </Location>
@@ -2166,6 +2169,32 @@ SKP:  j       0x80180848            #   Skip this ability
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1367FC" mode="ASM" offsetMode="RAM">
         beq     v0, zero, 0x80136818
+    </Location>
+  </Patch>
+  <Patch name="Level down fix">
+    <Description>
+        Fixes leveling down to subtract raw stats based on old level instead of new level, so it should subtract the same amount gained in the previous level.  Also fixes level up abilities so that they add the same amount as leveling up via experience gain.
+    </Description>
+    <Location file="BATTLE_BIN" offset="18C870" mode="ASM" offsetMode="RAM">
+        sw      s0, 0x0c(sp)
+    </Location>
+    <Location file="BATTLE_BIN" offset="18C8E0" mode="ASM" offsetMode="RAM">
+        move    s0, v1
+    </Location>
+    <Location file="BATTLE_BIN" offset="18C8EC" mode="ASM" offsetMode="RAM">
+        lui     a0, 0x8019
+        lw      a0, 0x2d98(a0)
+        jal     0x8005da10
+        nop
+        lui     a0, 0x8019
+        lw      a0, 0x2d98(a0)
+        nop
+        sb      s0, 0x22(a0)
+    </Location>
+    <Location file="BATTLE_BIN" offset="18C914" mode="ASM" offsetMode="RAM">
+        lw      s0, 0x0c(sp)
+        jr      ra
+        addiu   sp, sp, 0x18
     </Location>
   </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">

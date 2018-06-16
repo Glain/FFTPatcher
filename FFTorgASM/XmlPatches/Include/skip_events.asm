@@ -1261,7 +1261,24 @@
         addiu   sp, sp, 16
         jr      ra
         nop
+
+#   HOOK: Reveal
+#       If skipping the event, break out of Reveal.
+#       Parameters:
+#           v0 = Current Reveal value (Stops at 0) (Set value = 0 if skipping)
+#       Preserve: v0 (if not skipping)
+@reveal_hook:
+        lbu     t0, @address_event_skip_type
+        nop
+        beq     t0, zero, reveal_hook_end
+        nop
         
+        li      v0, 0
+        
+    reveal_hook_end:
+        jr      ra
+        nop
+    
 #   TAIL: Post-battle
 @post_battle_tail:
         sb      zero, @address_is_mid_battle
