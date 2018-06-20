@@ -284,6 +284,7 @@ namespace PatcherLib.Iso
             public static KeyValuePair<int, byte[]> EVENT_EQUIP_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x44 });
             public static KeyValuePair<int, byte[]> EVENT_OPTION_OUT = new KeyValuePair<int, byte[]>(0x50, new byte[4] { 0xac, 0x5f, 0xb5, 0x26 });
             public static KeyValuePair<int, byte[]> EVENT_ETC_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x57, 0x41, 0x49, 0x54 });
+            public static KeyValuePair<int, byte[]> EVENT_BUNIT_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x00, 0x00, 0xc7, 0x14 });
             public static KeyValuePair<int, byte[]> EVENT_HELPMENU_OUT = new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x04, 0x75, 0xa5, 0x24 });
             public static KeyValuePair<int, byte[]> EVENT_JOBSTTS_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }); 
             public static KeyValuePair<int, byte[]> OPEN_OPEN_BIN = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x78, 0xF2, 0x06, 0x80 });
@@ -296,16 +297,17 @@ namespace PatcherLib.Iso
 
         public enum FileToRamOffsets
         {
-        	OFFSET_SCUS_942_21 = 0xF800,
+            OFFSET_SCUS_942_21 = 0xF800,
             OFFSET_BATTLE_BIN = 0x67000,
             OFFSET_WORLD_WLDCORE_BIN = 0x67000,
             OFFSET_OPEN_OPEN_BIN = 0x67000,
-        	OFFSET_WORLD_WORLD_BIN = 0xE0000,
+            OFFSET_WORLD_WORLD_BIN = 0xE0000,
             OFFSET_EVENT_ATTACK_OUT = 0x1BF000,
-        	OFFSET_EVENT_REQUIRE_OUT = 0x1BF000,
+            OFFSET_EVENT_REQUIRE_OUT = 0x1BF000,
             OFFSET_EVENT_EQUIP_OUT = 0x1BF000,
             OFFSET_EVENT_OPTION_OUT = 0x1BF000,
             OFFSET_EVENT_ETC_OUT = 0x1BF000,
+            OFFSET_EVENT_BUNIT_OUT = 0x1BF000,
             OFFSET_EVENT_HELPMENU_OUT = 0x1DF000,
             OFFSET_EVENT_JOBSTTS_OUT = 0x1DF000
         }
