@@ -2197,6 +2197,30 @@ SKP:  j       0x80180848            #   Skip this ability
         addiu   sp, sp, 0x18
     </Location>
   </Patch>
+  <Patch name="Crits always deal bonus damage">
+    <Description>
+        Crit XA bonus minimum is 1 instead of 0.  Maximum is still XA - 1.
+    </Description>
+    <Location file="BATTLE_BIN" offset="186528" mode="ASM" offsetMode="RAM">
+        lh      v1, 0x38ce(a0)
+        nop
+        sltiu   t0, v1, 1
+        addu    v1, v1, t0
+        addiu   t0, v1, -1
+        mult    v0, t0
+        mflo    v0
+        addiu   v1, v1, 1
+    </Location>
+    <Location file="BATTLE_BIN" offset="186554" mode="ASM" offsetMode="RAM">
+        sh      v0, 0x38ce(a0)
+    </Location>
+  </Patch>
+  <Patch name="Always crit">
+    <Location file="BATTLE_BIN" offset="186500" mode="ASM" offsetMode="RAM">
+        lui     v0, 0x8019
+        lw      v0, -0x0a04(v0)
+    </Location>
+  </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
         Changes formula 3B to a mana burn/feedback ability 
