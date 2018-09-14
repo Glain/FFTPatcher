@@ -2436,7 +2436,7 @@
             <Name>(No name) -- Checkerboard Wall Waterland</Name>
             <Name>(Garbled name) -- Sloped Checkerboard</Name>
         </Names>
-        <Repeat Number="119" Offset="2560">
+        <Repeat Number="120" Offset="2560">
             <Greyscale4bppImage>
                 <Width>256</Width>
                 <Height>20</Height>
