@@ -106,13 +106,13 @@ namespace ASMEncoding
             return _helper[EncodingMode].CheckASMFromHex(hex, pc, littleEndian, useRegAliases, conditions);
         }
 
-        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        public ASMCheckResult CheckASMFromBytes(byte[] bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
         {
             conditions = conditions ?? GetCheckConditions();
             return _helper[EncodingMode].CheckASMFromBytes(bytes, pcText, littleEndian, useRegAliases, conditions);
         }
 
-        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        public ASMCheckResult CheckASMFromBytes(byte[] bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
         {
             conditions = conditions ?? GetCheckConditions();
             return _helper[EncodingMode].CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions);

@@ -174,12 +174,12 @@ namespace ASMEncoding
             return _asmCheckHelper.CheckASMFromHex(hex, pc, littleEndian, useRegAliases, conditions);
         }
 
-        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        public ASMCheckResult CheckASMFromBytes(byte[] bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
         {
             return _asmCheckHelper.CheckASMFromBytes(bytes, pcText, littleEndian, useRegAliases, conditions);
         }
 
-        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        public ASMCheckResult CheckASMFromBytes(byte[] bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
         {
             return _asmCheckHelper.CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions);
         }

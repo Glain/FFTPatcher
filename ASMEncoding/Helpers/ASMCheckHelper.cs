@@ -105,7 +105,7 @@ namespace ASMEncoding.Helpers
             return CheckASM(lines, pc, littleEndian, useRegAliases, conditions);
         }
 
-        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
+        public ASMCheckResult CheckASMFromBytes(byte[] bytes, string pcText, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions = null)
         {
             _errorTextBuilder = new StringBuilder();
             ASMProcessPCResult result = ASMPCHelper.ProcessPC(0, pcText, true, true);
@@ -114,7 +114,7 @@ namespace ASMEncoding.Helpers
             return CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions, false);
         }
 
-        public ASMCheckResult CheckASMFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions, bool clearErrorText = true)
+        public ASMCheckResult CheckASMFromBytes(byte[] bytes, uint pc, bool littleEndian, bool useRegAliases, ICollection<ASMCheckCondition> conditions, bool clearErrorText = true)
         {
             if (clearErrorText)
                 _errorTextBuilder = new StringBuilder();
@@ -167,7 +167,7 @@ namespace ASMEncoding.Helpers
                     if (conditions.Contains(ASMCheckCondition.LoadDelay))
                     {
                         if (!isLastCommandUnconditionalJumpDelaySlot)
-                            CheckLoadDelay(args, gprLoad, strPC);
+                            CheckLoadDelay(command, args, gprLoad, strPC);
                     }
 
                     if (conditions.Contains(ASMCheckCondition.UnalignedOffset))
@@ -224,7 +224,7 @@ namespace ASMEncoding.Helpers
                                         if (!string.IsNullOrEmpty(strBranchArgs))
                                         {
                                             string[] branchArgs = strBranchArgs.Split(',');
-                                            CheckLoadDelay(branchArgs, gprLoad, strBranchPC);
+                                            CheckLoadDelay(branchParts[0], branchArgs, gprLoad, strBranchPC);
                                         }
                                     }
                                 }
@@ -288,7 +288,7 @@ namespace ASMEncoding.Helpers
                                                 string[] secondBranchArgs = strSecondBranchArgs.Split(',');
                                                 string strSecondBranchPC = "0x" + ASMValueHelper.UnsignedToHex_WithLength(branchPC + 4, 8);
                                                 string branchGprLoad = branchArgs[0].Trim();
-                                                CheckLoadDelay(secondBranchArgs, branchGprLoad, strSecondBranchPC);
+                                                CheckLoadDelay(secondBranchParts[0], secondBranchArgs, branchGprLoad, strSecondBranchPC);
                                             }
                                         }
                                     }
@@ -413,7 +413,7 @@ namespace ASMEncoding.Helpers
             return lines;
         }
 
-        private string[] GetASMLinesFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases)
+        private string[] GetASMLinesFromBytes(byte[] bytes, uint pc, bool littleEndian, bool useRegAliases)
         {
             string asmText = GetASMTextFromBytes(bytes, pc, littleEndian, useRegAliases);
             string[] lines = asmText.Split('\n');
@@ -437,8 +437,22 @@ namespace ASMEncoding.Helpers
             return decodeResult.DecodedASM;
         }
 
-        private string GetASMTextFromBytes(IEnumerable<byte> bytes, uint pc, bool littleEndian, bool useRegAliases)
+        private string GetASMTextFromBytes(byte[] bytes, uint pc, bool littleEndian, bool useRegAliases)
         {
+            if (bytes.Length > 4)
+            {
+                uint offsetBytes = pc % 4;
+                if (offsetBytes != 0)
+                {
+                    uint skipBytes = 4 - offsetBytes;
+                    pc = pc + skipBytes;
+                    int length = (int)(bytes.Length - skipBytes);
+                    byte[] newBytes = new byte[length];
+                    Array.Copy(bytes, skipBytes, newBytes, 0, length);
+                    bytes = newBytes;
+                }
+            }
+
             ASMDecoderResult decodeResult = Decoder.DecodeASM(bytes, pc, littleEndian, useRegAliases);
             _errorTextBuilder.Append(decodeResult.ErrorText);
 
@@ -570,11 +584,21 @@ namespace ASMEncoding.Helpers
             return ((command == "addi") || (command == "addiu"));
         }
 
-        private void CheckLoadDelay(string[] args, string gprLoad, string strPC)
+        private void CheckLoadDelay(string command, string[] args, string gprLoad, string strPC)
         {
             bool foundLoadDelay = false;
+            bool isLoad = IsLoadCommand(command);
+            bool isFirstArg = true;
+
             foreach (string arg in args)
             {
+                if (isFirstArg)
+                {
+                    isFirstArg = false;
+                    if (isLoad)
+                        continue;
+                }
+
                 if (string.IsNullOrEmpty(arg))
                     continue;
 

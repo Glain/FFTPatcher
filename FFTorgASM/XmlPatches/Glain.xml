@@ -2221,6 +2221,34 @@ SKP:  j       0x80180848            #   Skip this ability
         lw      v0, -0x0a04(v0)
     </Location>
   </Patch>
+  <Patch name="Brave story can point to non-setup events">
+    <Description>
+        Changes when the brave story variable is unset to being when you leave the menu as opposed to when you enter a new event.
+    </Description>
+    <Location file="BATTLE_BIN" offset="142E84" mode="ASM" offsetMode="RAM">
+        nop
+    </Location>
+    <Location file="WORLD_WLDCORE_BIN" offset="83220" mode="ASM" offsetMode="RAM">
+        jal     0x800903e4
+        addiu   a0, a0, -0x1108
+        bne     v0, zero, 0x80083428
+        li      a0, 0x1fc
+        jal     0x800ef25c
+        li      a1, 0
+        jal     0x80090d30
+        li      a0, 2
+        lui     t0, 0x800c
+        lw      a2, -0x4b10(t0)
+        nop
+        addiu   v0, a2, -2
+        sll     a0, v0, 1
+        addu    a0, a0, v0
+        sll     a0, a0, 3
+        subu    a0, a0, v0
+        sll     a0, a0, 2
+        addiu   at, t0, -0x466c
+    </Location>
+  </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
         Changes formula 3B to a mana burn/feedback ability 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patches>
-  <Patch name="Inherent RSM Limitation Hack">
+<Patch name="Inherent RSM Limitation Hack">
     <Description>Inherent RSM Limitation Hack</Description>
     <Location file="WORLD_WORLD_BIN" offset="42D6C">
       40100700
@@ -20,7 +20,7 @@
       00000000
       0040C634
       01001026
-      00000000
+      00F50408
       00000000
       00000000
       00000000
@@ -39,8 +39,8 @@
       00290500
       20082500
       B8102124
-      01002294
-      62008594
+      01002290
+      62008590
       00000000
       0200A214
       02002124
@@ -49,8 +49,8 @@
       F8FF0514
       00000000
       F8FF2120
-      01002294
-      64008594
+      01002290
+      64008590
       00000000
       0200A214
       02002124
@@ -59,8 +59,8 @@
       F8FF0514
       00000000
       F8FF2120
-      01002294
-      66008594
+      01002290
+      66008590
       00000000
       0200A214
       02002124
@@ -85,6 +85,33 @@
       02004114
       80101400
       640080A4
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="5D400">
+      25101600
+      5D000334
+      06006214
+      FF01C330
+      3AFE6324
+      0800632C
+      02006010
+      00000000
+      0040C634
+      708B0408
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="44B14">
+      0BF50408
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="5D42c">
+      06008294
+      00000000
+      3AFE4224
+      0800422C
+      02004010
+      00000000
+      060080A4
+      C7920408
+      00000000
     </Location>
   </Patch>
   <Patch name="Units rot or reanimate without skipped turns">
