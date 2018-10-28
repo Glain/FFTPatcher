@@ -675,6 +675,7 @@
             <Name>Behemoth</Name>
             <Name>Dragon</Name>
             <Name>Hydra</Name>
+            <Name>Holy Dragon</Name>
             <Name>Byblos</Name>
             <Name>Elidibs</Name>
             <Name>Archaic Demon</Name>
@@ -754,6 +755,22 @@
                 </PalettedImage4bppSectioned>
             </Repeat>
         </Repeat>
+        <PalettedImage4bppSectioned>
+            <Name>Holy Dragon</Name>
+            <Width>48</Width>
+            <Height>48</Height>
+            <NumBytesBetweenRows>128</NumBytesBetweenRows>
+            <Sector>EVENT_UNIT_BIN</Sector>
+            <PaletteCount>1</PaletteCount>
+            <PalettePosition>
+                <Offset>65344</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>44104</Offset>
+                <Length>24</Length>
+            </Position>
+        </PalettedImage4bppSectioned>
         <Repeat Number="4" Offset="24" PaletteOffset="96">
             <PalettedImage4bppSectioned>
                 <Name>UNIT.BIN</Name>
