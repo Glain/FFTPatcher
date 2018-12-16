@@ -35,6 +35,9 @@
     <Location file="EVENT_REQUIRE_OUT" offset="58A8">
       14
     </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="710C">
+      14
+    </Location>
     <Location file="WORLD_WORLD_BIN" offset="40C08">
       14
     </Location>
