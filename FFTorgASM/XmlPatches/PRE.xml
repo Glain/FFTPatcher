@@ -1,0 +1,1297 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Patches>
+  <Patch name="Party Roster Extension (PRE)">
+    <Description>Extends party roster limit to 20. It removes almost all guest features, so it is not recommended to use with vanilla unless you will use Beowulf and ENTD fixes too. For compatibility with Xifanie's Unit Restriction hack, you may need to remove or edit the scus section to avoid losing control over units in the last 4 slots. Credits goes to pokeytax and those who help him.</Description>
+    <Location file="SCUS_942_21" offset="59BF4" mode="ASM" offsetMode="RAM">
+      j 0x00059c38
+    </Location>
+    <Location file="SCUS_942_21" offset="59C7C" mode="DATA" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="SCUS_942_21" offset="59DA0" mode="DATA" offsetMode="RAM">
+      00
+    </Location>
+    <Location file="SCUS_942_21" offset="59DB0" mode="DATA" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="SCUS_942_21" offset="59F64" mode="DATA" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="SCUS_942_21" offset="5B134" mode="DATA" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="4110">
+      14
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="9BCC">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="50F0">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="546C">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="58A8">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40C08">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40924">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="582F8">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="B5ABF">
+      14
+    </Location>
+  </Patch>
+  <Patch name="PRE - Beowulf Vanilla Fix">
+    <Description>This is to fix (or remove) Beowulf guest requirement with vanilla. Needed if Roster Extension is used with vanilla.</Description>
+    <Location file="WORLD_WLDCORE_BIN" offset="3087A">
+      03
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch1 Vanilla Fix">
+    <Description>This, for chapter 1, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--180 Sweegy Woods-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00001" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00003" mode="DATA">
+      04				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00006" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      01				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0001c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00029" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0002b" mode="DATA">
+      04				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0002e" mode="DATA">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      01				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00044" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--181 Dorter Trade City1-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00281" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00283" mode="DATA">
+      05				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00286" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      02				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0029c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="002a9" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="002ab" mode="DATA">
+      05				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="002ae" mode="DATA">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      02				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="002c4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--182 Sand Rat Cellar-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00501" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00503" mode="DATA">
+      06				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00506" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0051c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00529" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0052b" mode="DATA">
+      06				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0052e" mode="DATA">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00544" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--184 Gariland Fight-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00A01" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00A03" mode="DATA">
+      01				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00A06" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      01				<!--job unlock-->
+      01				<!--level of it-->
+      04				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      13				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00A1c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--185 Mandalia Plains-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00C81" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00C83" mode="DATA">
+      02				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00C86" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      01				<!--job unlock-->
+      02				<!--level of it-->
+      04				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      13				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00C9c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00Ca9" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00Cab" mode="DATA">
+      02				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00Cae" mode="DATA">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      01				<!--job unlock-->
+      02				<!--level of it-->
+      07				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00Cc4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--188 Military Academy-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="01429" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0142b" mode="DATA">
+      01				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0142e" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      01				<!--job unlock-->
+      01				<!--level of it-->
+      04				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      13				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01444" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--18B Miluda1-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="01B81" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01B83" mode="DATA">
+      07				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01B86" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      81				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01B9c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="01Ba9" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01Bab" mode="DATA">
+      07				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01Bae" mode="DATA">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      81				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01Bc4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--18F Miluda2-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02581" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02583" mode="DATA">
+      08				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02586" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      04				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      82				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0259c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--190 Wiegraf1-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02801" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02803" mode="DATA">
+      09				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02806" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      05				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      82				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0281c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--191 Fort Zeakden-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02BC1" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02BC3" mode="DATA">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02BC6" mode="DATA">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      06				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      82				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02BDc" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch2 Vanilla Fix">
+    <Description>This, for chapter 2, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--110 Ch2 Start-->
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD3_ENT" offset="02829" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0282b" mode="DATA">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0282e" mode="DATA">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      02				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="02844" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD3_ENT" offset="028C9" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="028Cb" mode="DATA">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="028Ce" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      03				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="028E4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--193 Dorter2-->
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02FD1" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FD3" mode="DATA">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FD6" mode="DATA">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      02				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FEc" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02FF9" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FFb" mode="DATA">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FFe" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      03				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03014" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--194 Araguay Woods-->
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03319" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0331b" mode="DATA">
+      0b				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0331e" mode="DATA">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      03				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03334" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03341" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03343" mode="DATA">
+      0b				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03346" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      04				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0335c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--195 Zirekile Falls-->
+   <!--Ovelia-->
+    <Location file="BATTLE_ENTD4_ENT" offset="034A9" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="034Ab" mode="DATA">
+      05				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="034Ae" mode="DATA">
+      35				<!--bravery-->
+      48				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      0c				<!--main job-->
+      00				<!--secondary skill set-->
+      0000				<!--Reaction-->
+      0000				<!--Support-->
+      0000				<!--Movement-->
+      a1				<!--Head-->
+      ca				<!--Body-->
+      ff				<!--Acc-->
+      3c				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="034C4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD4_ENT" offset="035E9" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="035Eb" mode="DATA">
+      0c				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="035Ee" mode="DATA">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      03				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="035E4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03611" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03613" mode="DATA">
+      0c				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03616" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      04				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0362c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--197 Zaland City Fort-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03981" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03983" mode="DATA">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03986" mode="DATA">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      04				<!--level of it-->
+      22				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0399c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03A99" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03A9b" mode="DATA">
+      0d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03A9e" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      04				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03AB4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--199 Bariaus Hill-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03E81" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03E83" mode="DATA">
+      0b				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03E86" mode="DATA">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      22				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03E9c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03EA9" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03EAb" mode="DATA">
+      0e				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03EAe" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      05				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03EC4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--19A Zigolis Swamp-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04101" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04103" mode="DATA">
+      0c				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04106" mode="DATA">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      22				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0411c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--19B Goug M City-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04381" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04383" mode="DATA">
+      0d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04386" mode="DATA">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      16				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      ff				<!--Head-->
+      ff				<!--Body-->
+      ff				<!--Acc-->
+      ff				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0439c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--19C Besrodio Saved-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04629" mode="DATA">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0462b" mode="DATA">
+      0d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0462e" mode="DATA">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      16				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04644" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--19D Bariaus Valley-->
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04881" mode="DATA">
+      50				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04883" mode="DATA">
+      0f				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04886" mode="DATA">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      05				<!--level of it-->
+      1e				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      e0				<!--Acc-->
+      18				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0489c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch3 Vanilla Fix">
+    <Description>This, for chapter 3, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--1A4 Zalmo1-->
+   <!--Alma-->
+    <Location file="BATTLE_ENTD4_ENT" offset="05A01" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="05A03" mode="DATA">
+      03				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="05A06" mode="DATA">
+      27				<!--bravery-->
+      57				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      30				<!--main job-->
+      00				<!--secondary skill set-->
+      0000				<!--Reaction-->
+      0000				<!--Support-->
+      0000				<!--Movement-->
+      aa				<!--Head-->
+      c0				<!--Body-->
+      d6				<!--Acc-->
+      3d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="05A1c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1AC Rescue Rafa-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="06E01" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="06E03" mode="DATA">
+      16				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="06E06" mode="DATA">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      04				<!--level of it-->
+      19				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="06E1c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1AE Yugo Woods-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07301" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07303" mode="DATA">
+      17				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07306" mode="DATA">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      19				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0731c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1AF Riovanes Entrance-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07581" mode="DATA">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07583" mode="DATA">
+      18				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07586" mode="DATA">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      19				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0759c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1B2 Reviving Malak-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07D29" mode="DATA">
+      50				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D2b" mode="DATA">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D2e" mode="DATA">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      29				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D44" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Malak-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07D51" mode="DATA">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D53" mode="DATA">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D56" mode="DATA">
+      45				<!--bravery-->
+      1f				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      1a				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a5				<!--Head-->
+      ca				<!--Body-->
+      e2				<!--Acc-->
+      6f				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D6c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--132 Searching for Alma-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD3_ENT" offset="07E41" mode="DATA">
+      50				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E43" mode="DATA">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E46" mode="DATA">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      29				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E5c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+   <!--Malak-->
+    <Location file="BATTLE_ENTD3_ENT" offset="07E69" mode="DATA">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E6b" mode="DATA">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E6e" mode="DATA">
+      45				<!--bravery-->
+      1f				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      1a				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a5				<!--Head-->
+      ca				<!--Body-->
+      e2				<!--Acc-->
+      6f				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E84" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch4 Vanilla Fix">
+    <Description>This, for chapter 4, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--14A Bar Goland City-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD3_ENT" offset="0B929" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0B92b" mode="DATA">
+      2d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0B92e" mode="DATA">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0B944" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1CF CoilleryU Third Floor-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0C581" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C583" mode="DATA">
+      2d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C586" mode="DATA">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C59c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1D0 CoilleryU Second Floor-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0C801" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C803" mode="DATA">
+      2e				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C806" mode="DATA">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C81c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1D1 CoilleryU First Floor-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA81" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA83" mode="DATA">
+      2f				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA86" mode="DATA">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA9c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1D2 UPassage in Goland-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD01" mode="DATA">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD03" mode="DATA">
+      30				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD06" mode="DATA">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD1c" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  <!--1D3 UPassage in Goland2-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFA9" mode="DATA">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFAb" mode="DATA">
+      31				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFAe" mode="DATA">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFC4" mode="DATA">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+</Patches>
