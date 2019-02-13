@@ -91,6 +91,8 @@ SKP:  move    t4,v1
         A multiplier of zero (default) will be ignored.
     </Description>
     <Location file="BATTLE_BIN" offset="F5D30" mode="ASM">
+.label  @get_source_unit_misc_data_pointer, 0x8007a218
+    
 .label  @elemental_nullify, 0x80184e40
 .label  @apply_elemental, 0x80186ffc
 .label  @address_damage_multiplier, 0x8015cd20
@@ -2248,6 +2250,13 @@ SKP:  j       0x80180848            #   Skip this ability
         sll     a0, a0, 2
         addiu   at, t0, -0x466c
     </Location>
+  </Patch>
+  <Patch name="Change camera zoom values">
+    <Description>Change camera zoom values.  Lower is more zoomed out, higher is more zoomed in.  Recommended to use same values for zooming and fixed.</Description>
+    <Variable name="Zoom-in value (zooming)" file="BATTLE_BIN" offset="86C0" bytes="2" default="1000" />
+    <Variable name="Zoom-in value (fixed)" file="BATTLE_BIN" offset="86F8" bytes="2" default="1000" />
+    <Variable name="Zoom-out value (zooming)" file="BATTLE_BIN" offset="8744" bytes="2" default="0C01" />
+    <Variable name="Zoom-out value (fixed)" file="BATTLE_BIN" offset="8774" bytes="2" default="0C00" />
   </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
