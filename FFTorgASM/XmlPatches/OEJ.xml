@@ -79,7 +79,9 @@ UJED: jr ra
       nop							#0x5dce8, for level job req data.
       nop
       nop
-      nop							#0x5dcf4, 19 free spaces.
+      nop							#0x5dcf4, 21 free spaces.
+      nop
+      nop
       nop
       nop
       nop
@@ -855,7 +857,7 @@ BJED: jr ra
 	st_tier1	Inner game stage (0f = end of chapter 1)
 	st_tier2	Inner game stage (1f = end of chapter 2)
 	st_tier3	Inner game stage (32 = after Limberry Castle?)</Description>
-    <Location file="SCUS_942_21" offset="5DCF8" mode="ASM" offsetMode="RAM">
+    <Location file="SCUS_942_21" offset="5DCF4" mode="ASM" offsetMode="RAM">
     .eqv %st_tier1, 0x000f
     .eqv %st_tier2, 0x001f
     .eqv %st_tier3, 0x0032
@@ -875,6 +877,8 @@ BJED: jr ra
       lui t0,0x00fe
 ERED: jr ra
       and v0,v0,t0
+      nop
+      nop
       nop
       nop
       nop
