@@ -1,6 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?> 
 <Patches>
 <!--Patches that require branching outside of original routine scope:-->
+  <Patch name="Magic Break can break accessory">
+    <Description>With FFTPatcher or similar program change ability 'Magic Break' formula from 2c to 25, change x and y values, uncheck Affect MP and check Unequip. If need change offset F6400 to whatever you want (as long as it is a safe spot).</Description>
+    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+@my_code_cave:
+      beq v1,v0,SKP			#Branch if used ability is 'Icewolf  Bite'
+      ori v0,zero,0x008e
+      beq v1,v0,SKP			#Branch if used ability is 'Acc Break'=='MP Break'
+      ori v0,zero,0x0072
+      j 0x00187b54
+      nop
+SKP:  j 0x00187b5c
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="187B4C" mode="ASM" offsetMode="RAM">
+      j @my_code_cave
+      nop
+    </Location>
+  </Patch>
   <Patch name="Formula 18: melee spellcaster - Hooking">
     <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
     <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
@@ -52,7 +70,7 @@ MSED: lw ra,0x0010(sp)
       nor v0,zero,v0
     </Location>
   </Patch>
-  <Patch name="Teleport based on MA">
+  <Patch name="Teleport based on MA - Hooking (for AI)">
     <Description>It changes the base for failure in teleport, MA * ma_factor/128 instead of Move. No variables, so edit through xml only. Changes suggested by Glain. Edit this eqv if needed:
 	ma_factor	Amount to multiply MA/128, 64=MA/2, 51=MA/2.5, 42(43)=MA/3.</Description>
     <Location file="BATTLE_BIN" offset="176C58" mode="ASM" offsetMode="RAM">
@@ -298,16 +316,16 @@ MSED: lw ra,0x0010(sp)
   </Patch>
   <Patch name="Level Cap">
     <Description>It caps all levels to an specific value, with some sort of progession with the event progession byte, up to four time windows in the game, after that caps goes to 99. The idea was based on Glain SCC Patch. No variables, so edit through xml only. Edit these eqvs if needed:
-	stage1_id	The first time window from 0x00 (new game) to 0x0f (end of chapter 1?)
+	stage1_id	The first time window from 0x00 (new game) to 0x0f (end of chapter 1)
 	stage1_lc	Higher byte. Maximum level achievable in the first time window (0x0a=10)
 	stage1_lc	Lower byte. Progession byte substract offset in the first time window (0x00)
-	stage2_id	The second time window from first time window to 0x1f (end of chapter 2?)
+	stage2_id	The second time window from first time window to 0x1f (end of chapter 2)
 	stage2_lc	Higher byte. Maximum level achievable in the second time window (0x14=20)
 	stage2_lc	Lower byte. Progession byte substract offset in the second time window (0x05=1_id-1_ic)
-	stage3_id	The third time window from second time window to 0x29 (end of chapter 3?)
+	stage3_id	The third time window from second time window to 0x29 (end of chapter 3)
 	stage3_lc	Higher byte. Maximum level achievable in the third time window (0x23=35)
 	stage3_lc	Lower byte. Progession byte substract offset in the third time window (0x0b=2_id-2_ic)
-	stage4_id	The fourth time window from third time window to 0x35 (chapter 4 - before orbonne?)
+	stage4_id	The fourth time window from third time window to 0x35 (chapter 4 - before orbonne)
 	stage4_lc	Higher byte. Maximum level achievable in the fourth time window (0x32=50)
 	stage4_lc	Lower byte. Progession byte substract offset in the fourth time window (0x06=3_id-3_ic)</Description>
     <Location file="SCUS_942_21" offset="5DA10" mode="ASM" offsetMode="RAM">
@@ -638,11 +656,11 @@ SBED: lw ra,0x001c(sp)
     </Location>
   </Patch>
   <Patch name="Broken/Stolen items can be bought back at Fur Shop v2">
-    <Description>Requires 'Vanilla Steal/Break Routine v2',self explanatory.</Description>
+    <Description>Requires 'Vanilla Steal/Break Routine v2', self explanatory.</Description>
     <Location file="BATTLE_BIN" offset="18D4E4" mode="ASM" offsetMode="RAM">
 @store_poach_inv:					#t0 = ff, a0 = attacker pointer, v0 untouched
       addiu t2,s4,0x0001
-      bne t2,zero,0x0018D44C		#If a real action then s4 is all set.
+      bne t2,zero,0x0018D44C		#If it is a real action then s4 is all set.
       lui t2,0x8005
       ori t2,t2,0x9494
       addu t2,t2,a1
@@ -713,13 +731,12 @@ SILP: sltu t0,t1,v1
       nop
     </Location>
   </Patch>
-  <Patch name="Starting items and Swap X-O v2">
-    <Description>Custom starting items with swap buttons. Overwrites 'Vanilla Starting items v2'. Free 21 spaces.</Description>
+  <Patch name="Starting items, Swap X-O and Turbo X+O v2">
+    <Description>Custom starting items with swap buttons and turbo X if X+O is pressed. Overwrites 'Vanilla Starting items v2'. Free 10 spaces.</Description>
     <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
       ori v1,zero,0x00ff
       lui t2,0x8006
       addiu v0,t2,0x97df			#Load Inventory, last byte.
-      ori t1,zero,0x00ef
 SILP: sb zero,0x0000(v0)
       addiu v1,v1,0xffff			#v1 = v1 - 1, next type of item.
       bgez v1,SILP					#Loop to clear.
@@ -727,27 +744,28 @@ SILP: sb zero,0x0000(v0)
       ori v0,zero,0x0005			#Store Potion 5.
       jr ra
       sh v0,-0x6830(t2)
-@swap_b6_b7:						#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7.
+	  nop							#Turbo data space, not a valid instruction.
+@swap_b6_b7_turbo:					#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
       andi t0,v0,0x0040
       srl t0,t0,0x01
       andi t1,v0,0x0020
       sll t1,t1,0x01
       andi v0,v0,0xff9f
       or t0,t0,t1
-      jr ra
-      or v0,v0,t0
-      nop							#0x00042a5c, free 21 spaces.
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
+      lui t2,0x8004
+      lbu t1,0x2a38(t2)				#Load turbo previous state.
+      ori at,zero,0x0060
+      bne t0,at,SWED				#If X+O are not pressed, then end.
+      lbu at,0x2a39(t2)				#Load turbo delay.
+      xori t0,t1,0x0020
+      addiu t1,at,0x0001
+      andi t1,t1,0x0007				#Turbo delay value.
+      bne t1,zero,SWED
+      sb t1,0x2a39(t2)				#Update turbo delay.
+      sb t0,0x2a38(t2)				#Save current turbo state.
+SWED: jr ra
+      or v0,v0,t0	  
+      nop							#0x00042a88, free 10 spaces.
       nop
       nop
       nop
@@ -759,7 +777,7 @@ SILP: sb zero,0x0000(v0)
       nop
     </Location>
     <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
-      jal @swap_b6_b7				#Swap buttons X-O.
+      jal @swap_b6_b7_turbo			#Swap buttons X-O and turbo X+O.
       nor v0,zero,v0
     </Location>
   </Patch>
@@ -846,7 +864,7 @@ UJED: lw ra,0x0010(sp)
     </Location>
   </Patch>
   <Patch name="Extra Requirements for Jobs">
-    <Description>Requires 'Vanilla Calculate Unlocked Jobs v2',uses all free space. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
+    <Description>Requires 'Vanilla Calculate Unlocked Jobs v2', uses all free space. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
 	st_tier1	Inner game stage (0f = end of chapter 1)
 	st_tier2	Inner game stage (1f = end of chapter 2)
 	st_tier3	Inner game stage (32 = after Limberry Castle?)</Description>
@@ -1113,6 +1131,12 @@ JGS4: addiu s0,s0,0x0001
     </Location>
     <Location file="BATTLE_BIN" offset="18D6AC" mode="ASM" offsetMode="RAM">
       or a0,zero,zero
+    </Location>
+  </Patch>
+  <Patch name="Move-find rare minimum brave">
+    <Description>Sets the amount of minimum brave to get always rare item to 20. Vanilla is zero.</Description>
+    <Location file="BATTLE_BIN" offset="18025C" mode="ASM" offsetMode="RAM">
+      ori a1,zero,0x0078			#MinBr = 0x78 - 0x64 = 0x14 = 20d.
     </Location>
   </Patch>
 </Patches>

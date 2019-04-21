@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Patches>
+  <Patch name="One Extra Job (OEJ)">
+    <Description>Extend jobs from 19 to 20. Based on RAD3. Made by xjamxx. No variables, so edit through xml only. In the second location lies the jobs levels requirement for the OEJ. Also edit these labels (cuz they go across all locations):
+	oej_id			OEJ job ID. Don't use higher than 0x8F.
+	oej_ss			OEJ skillset. The one that the job ID has. id(0x34)=ss(0x21).
+	oej_ma_unit		OEJ formation sprite for male. Shishi value -1?
+	oej_ma_unit_p1	OEJ formation sprite for male. Shishi value?
+	oej_fe_unit		OEJ formation sprite for female. Shishi value -1?
+	oej_fe_unit_p1	OEJ formation sprite for female. Shishi value?
+	oej_ma_face		OEJ formation portrait for male. Shishi value -1?
+	oej_fe_face		OEJ formation portrait for female. Shishi value -1?
+	oej_m_ss		OEJ spritesheet for male. Shishi value?
+	oej_f_ss		OEJ spritesheet for female. Shishi value?</Description>
+    <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
+    .label  @oej_id, 0x34
+    .label  @oej_ss, 0x21
+    .label  @oej_ma_unit, 0x08
+    .label  @oej_ma_unit_p1, 0x09
+    .label  @oej_fe_unit, 0x09
+    .label  @oej_fe_unit_p1, 0x0A
+    .label  @oej_ma_face, 0x08
+    .label  @oej_fe_face, 0x09
+    .label  @oej_m_ss, 0x0A
+    .label  @oej_f_ss, 0x0B
+      or t7,zero,a0
+      andi v0,a1,0x0020
+      bne v0,zero,UJED				#Branch if Unit is a monster.
+      addu v0,zero,zero				#v0 = 0.
+      lui t2,0x0040					#Current Unlock Check = 0x400000.
+      lui t3,0x0080					#Jobs Unlocked = 0x800000 (start squire).
+      addiu t6,zero,0x0000			#Counter = 0.
+      lui t9,0x8006
+      lui t8,0x8005
+      ori t8,t8,0xdce8
+      ori t5,t9,0x60c4
+UJLP: addu t1,zero,zero				#t1 = 0
+      addu a3,t7,zero				#a3 = Stack Pointer
+      addu t0,t5,zero				#t0 = Job Unlock Requirements Pointer
+UJIL: lbu a0,0x0000(t0)				#Load Job Unlock Requirements
+      lbu a2,0x0000(a3)				#Load Job Levels
+      andi v1,a0,0x00f0				#v1 = high nybble job requirement
+      andi v0,a2,0x00f0				#v0 = high nybble job level
+      sltu t1,v0,v1
+      bne t1,zero,UJS2				#Branch if Level less than requirement
+      andi v1,a0,0x000f				#v1 = low nybble job requirement
+      andi v0,a2,0x000f				#v0 = low nybble job level
+      sltu t1,v0,v1
+      bne t1,zero,UJS2				#Branch if Level less than requirement
+      addiu a3,a3,0x0001			#Stack Pointer ++
+      addiu v0,t7,0x000a			#v0 = Stack Pointer + 10
+      slt v0,a3,v0
+      bne v0,zero,UJIL				#Branch if Stack Pointer less than SP + 10
+      addiu t0,t0,0x0001			#Job Unlock Requirements Pointer ++
+UJS2: ori v0,zero,0x0011
+      bne v0,t6,UJS3
+      andi v0,a1,0x0040
+      beq v0,zero,UJS4				#Branch if Unit is not Female.
+      lui a0,0x00ff
+      ori v0,a0,0xff80
+      and t3,t3,v0
+      bne t1,zero,UJLP
+      or a1,zero,zero
+      j UJLP
+      or t3,t3,t2
+UJS4: beq t5,t8,UJS3
+      ori t5,t9,0x6178
+      j UJLP
+      or t5,t8,zero
+UJS3: bne t1,zero,UJS5				#Branch if Job can't be unlocked
+      addiu t5,t5,0x000a			#Job Unlock Requirements Pointer += 10
+      or t3,t3,t2					#Unlock Job for the unit
+UJS5: addiu t6,t6,0x0001			#Counter ++
+      slti v0,t6,0x0013
+      bne v0,zero,UJLP				#Branch if Counter less than 20
+      sra t2,t2,0x01				#Current Unlock Check div 2
+UJED: jr ra
+      or v0,t3,zero
+      nop							#0x5dce8, for level job req data.
+      nop
+      nop
+      nop							#0x5dcf4, 19 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5DCE8" offsetMode="RAM">
+       50000000		<!--Jobs levels requirement for OEJ -->
+       00000000		<!--From Squire to Mime every one hexa digits-->
+       0000			<!--Example 5000 0000 0000 0000 0000 = Squire level 5-->
+    </Location>
+    <Location file="SCUS_942_21" offset="5B2B4" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0			#From ENTD calculation job, simplification, free space for routines.
+      sw s0,0x0010(sp)
+      addu s0,a0,zero				#s0 = Unit's Data Pointer
+      sw s1,0x0014(sp)
+      addu s1,a1,zero				#s1 = ENTD Pointer
+      addiu a0,s0,0x00d2			#a0 = Unit's Job Level Pointer
+      sw ra,0x0018(sp)
+      jal 0x0005e644				#Data Nullifying (Job Levels)
+      ori a1,zero,0x000a			#Limit = 10
+      bne s1,zero,EJS1				#Branch if ENTD Pointer exists
+      addu a1,zero,zero				#a1 = 0
+      jal 0x0005b5dc				#Transfer Job's Data to Unit's Data
+      addu a0,s0,zero				#a0 = Unit's Data Pointer
+      addiu a0,s0,0x0096			#a0 = Pointer to Unit's Unlocked Jobs
+      addu a1,zero,zero				#a1 = 0
+      ori v0,zero,0x0020			#v0 = 0x20
+      sb zero,0x0013(s0)			#Store Unit's Secondary Skillset = 0
+      jal 0x0005ded8				#Store 3-Byte Data (Unlocked Jobs = 0)
+      sb v0,0x0006(s0)				#Store Unit's Gender = Monster
+      j EJED
+EJS1: lbu t2,0x0001(s1)				#Load ENTD's Gender Byte
+      lbu a2,0x0008(s1)				#Load ENTD's Job Unlocked
+      andi v0,t2,0x0020
+      bne v0,zero,EJS2				#Branch if Unit is a Monster
+      andi a3,a2,0x00ff
+      sltiu v0,a3,0x0014
+      lbu at,0x0009(s1)				#Load ENTD's Job Level
+      beq v0,zero,EJS2				#Branch if Job Unlocked is Invalid
+      andi v1,at,0x000f
+      andi v0,a2,0x0001
+      bne v0,zero,EJS3				#Branch if Job Unlocked is odd (low nybble job)
+      addu a0,v1,zero				#a0 = Job Level
+      sll a0,v1,0x04				#Job Level * 16
+EJS3: srl v0,a3,0x01				#Job Unlocked / 2 (Job Byte)
+      addu v0,s0,v0
+      sb a0,0x00d2(v0)				#Store Job Unlocked
+      addu a2,zero,zero				#Counter = 0
+      addu t1,a3,zero				#t1 = Job Unlocked
+      lui v1,0x8006
+      addiu v1,v1,0x60ba			#v1 = Job Unlock Requirements
+      sll v0,t1,0x02				#Job Unlocked * 4
+      addu v0,v0,t1					#Job Unlocked * 5
+      sll v0,v0,0x01				#Job Unlocked * 10
+      addu t0,v0,v1
+EJLP: beq t1,zero,EJS4				#Branch if Job Unlocked = Base
+      addu a3,s0,a2					#a3 = Unit's Data Pointer + Counter
+      j EJS5
+      lbu a0,0x0000(t0)				#Load Required Job Levels
+EJS4: beq a2,zero,EJS6				#Branch if Counter = 0
+      ori a0,zero,0x0001			#Job Levels = 0x01
+      ori a0,zero,0x0011			#Job Levels = 0x11
+EJS6: addu a3,s0,a2					#a3 = Unit's Data Pointer + Counter
+EJS5: lbu v0,0x00d2(a3)				#Load Unit's Job Levels
+      nop
+      or v1,a0,v0					#Enable Job Levels
+      andi v0,v1,0x000f
+      bne v0,zero,EJS7				#Branch if Low Nybble Job Level != 0
+      addu a0,v1,zero				#a0 = Required Job Level
+      ori a0,v1,0x0001				#Low Nybble Job Level = 1
+EJS7: andi v0,a0,0x00f0
+      bne v0,zero,EJS8				#Branch if High Nybble Job Level != 0
+      addiu t0,t0,0x0001			#Pointer ++
+      ori a0,a0,0x0010				#High Nybble Job Level = 1
+EJS8: addiu a2,a2,0x0001			#Counter ++
+      slti v0,a2,0x000a
+      bne v0,zero,EJLP				#Branch if Counter is less than 10
+      sb a0,0x00d2(a3)				#Store Unit's new Job Levels
+      jal 0x0005dc14				#Calculate Unlocked Jobs
+      addu a1,t2,zero				#a1 = Unit's Gender Byte
+      addu a1,v0,zero				#a1 = Unlocked Jobs
+EJS2: jal 0x0005ded8				#Store 3-Byte Data (Unlocked Jobs)
+      addiu a0,s0,0x0096			#a0 = Unit's Unlocked Jobs Pointer
+      lbu v0,0x000a(s1)				#Load ENTD Job ID
+      addu a0,s0,zero				#a0 = Unit's Data Pointer
+      jal 0x0005b5dc				#Transfer Job's Data to Unit's Data
+      sb v0,0x0003(s0)				#Store Unit's Job ID
+      lbu a2,0x001d(s1)				#Load ENTD Primary Skillset
+      ori v0,zero,0x00ff			#v0 = FF
+      andi v1,a2,0x00ff
+      beq v1,v0,EJS9				#Branch if Primary Skillset = FF (Job's)
+      nop
+      beq v1,zero,EJS9				#Branch if Primary Skillset = 0
+      ori v0,zero,0x00ff			#v0 = FF
+      sb a2,0x0012(s0)				#Store Unit's Primary Skillset
+      sb v0,0x0189(s0)				#Store ? = FF
+EJS9: lbu a2,0x000b(s1)				#Load ENTD Secondary ID
+      ori v0,zero,0x00fe			#v0 = FE
+      andi v1,a2,0x00ff				#v1 = Secondary ID
+      bne v1,v0,EJE2				#Branch if Secondary ID != Random
+      nop
+      lbu v0,0x0006(s0)				#Load Unit's Gender Byte
+      nop
+      andi v0,v0,0x0020
+      beq v0,zero,EJSA				#Branch if Unit isn't a Monster
+      nop
+      j EJED
+      sb zero,0x0013(s0)			#Store Unit's Secondary ID = 0
+EJSA: jal 0x0005b500				#Sprite Set and Random Secondary Job Calculation
+      addu a0,s0,zero				#a0 = Unit's Data Pointer
+      addu a0,v0,zero				#a0 = Chosen Job ID
+      andi v1,a0,0x00ff
+      beq v1,zero,EJSB				#Branch if a Job wasn't chosen
+      sll v0,v1,0x01				#ID * 2
+      addu v0,v0,v1					#ID * 3
+      lui v1,0x8006
+      lw v1,0x6194(v1)				#Load Job Data Pointer
+      sll v0,v0,0x04				#ID * 48
+      addu v0,v0,v1
+      lbu v1,0x0000(v0)				#Load Job's Skillset
+EJSB: lbu v0,0x0012(s0)				#Load Unit's Primary Skillset ID
+      nop
+      bne v1,v0,EJE3				#Branch if Skillset != Chosen Skillset
+      nop
+      addu v1,zero,zero				#Skillset = 0
+EJE3: j EJED
+      sb v1,0x0013(s0)				#Store Chosen Secondary Skillset
+EJE2: sb a2,0x0013(s0)				#Store Secondary Skillset = ENTD Secondary Skillset
+EJED: lw ra,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0020
+@oej_mjpss1:
+      ori t0,zero,@oej_id
+      beq a0,t0,M1ED
+      ori t1,zero,0x0012
+      ori t0,zero,0x005c
+      beq a0,t0,M1ED
+      ori t1,zero,0x0011
+      or t1,v0,zero
+M1ED: jr ra
+      or v0,t1,zero
+@oej_mjpss2:
+      ori v0,zero,@oej_id
+      beq a1,v0,M2ED
+      addiu v0,zero,0x005c
+      beq a1,v0,M2ED
+      addiu v0,zero,0x005b
+      or v0,a1,zero
+M2ED: or a1,v0,zero
+      addiu v0,a1,0xffb6
+      jr t0
+      sltiu v0,v0,0x0014
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5E14C" mode="ASM" offsetMode="RAM">
+      sltiu v0,v1,0x0082
+      beq v0,zero,0x0005e184		#Branch if Sprite Set is not generic male or female.
+      ori v0,zero,@oej_id
+BSS1: bne v0,a2,BSS2
+      ori v0,zero,0x0081
+      beq v1,v0,0x0005e1a8
+      ori v0,zero,@oej_f_ss
+      j 0x0005e1a8
+      ori v0,zero,@oej_m_ss
+BSS2: sll v0,a2,0x01				#Job ID * 2.
+      addiu v0,v0,0xffcc			#Job ID * 2 - 0x34.
+      andi v1,v1,0x0001
+      j 0x0005e1a8
+      addu v0,v0,v1
+    </Location>
+    <Location file="SCUS_942_21" offset="5DDA8" mode="ASM" offsetMode="RAM">
+      lbu a1,0x0002(s1)				#JP proposition gain.
+      lui t0,0x8005
+      j @oej_mjpss2
+      ori t0,t0,0xddb8
+      beq v0,zero,0x0005ddc4
+      addu s0,zero,zero
+      addiu s0,a1,0xffb6
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122634" mode="ASM" offsetMode="RAM">
+      lw at,0x0000(s0)
+      bne v0,zero,W1ED
+      lh at,0x003e(at)
+      ori a0,zero,0x0001
+      bne at,zero,W1ED
+      ori s3,zero,0x0001
+      jal 0x0012b1ec
+      addu s4,s0,zero
+      sll v0,s2,0x01
+      addu s1,v0,s6
+W1LP: addiu s0,s3,0x004a
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      lw at,0x0000(s4)
+      addu v1,v0,zero
+      lbu at,0x0070(at)
+      ori v0,zero,0x005b
+      andi at,at,0x0040
+      srl at,at,0x0006
+      beq s0,v0,W1S1
+      addu v0,v0,at
+      ori v0,zero,0x005c
+      beq s0,v0,W1S1
+      addiu v0,zero,@oej_id
+      or v0,s0,zero
+W1S1: or s0,v0,zero
+      lw at,0x0000(s4)
+      ori v0,zero,0x0002
+      bne s5,v0,W1S2
+      lh v0,0x0024(at)
+      nop
+      beq s0,v0,W1S3
+      ori v0,s0,0x4000
+W1S2: beq v1,zero,W1S4
+      ori v0,zero,0x0002
+      j W1S5
+      sh s0,0x0000(s1)
+W1S4: bne s5,v0,W1S6
+      nop
+      sll a0,s0,0x10
+      jal 0x00122488
+      sra a0,a0,0x10
+      bne v0,zero,W1S6
+      addiu v0,s0,0x4000
+W1S3: sh v0,0x0000(s1)
+W1S5: addiu s1,s1,0x0002
+      addiu s2,s2,0x0001
+W1S6: addiu s3,s3,0x0001
+      slti v0,s3,0x0014
+      bne v0,zero,W1LP
+W1ED: sll v0,s2,0x01
+      addu v0,v0,s6
+      addiu v1,zero,0xffff
+      sh v1,0x0000(v0)
+      addu v0,s2,zero
+      lw ra,0x002c(sp)
+      lw s6,0x0028(sp)
+      lw s5,0x0024(sp)
+      lw s4,0x0020(sp)
+      lw s3,0x001c(sp)
+      lw s2,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0030
+@oej_wjpss:
+      ori at,zero,0x0005b
+      bne a1,at,W2S1
+      ori at,zero,0x0005c
+      andi at,s0,0x0040
+      srl at,at,0x0006
+      b W2ED
+      addiu at,t7,0x0005b
+W2S1: beq a1,at,W2ED
+      ori at,zero,@oej_id
+      or at,a1,zero
+W2ED: jr ra
+      or a1,at,zero
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122C34" mode="ASM" offsetMode="RAM">
+      sw s5,0x01cc(sp)				#Needed for RSM.
+      sll s5,a0,0x10
+      sw s0,0x01b8(sp)
+      sra s0,s5,0x10
+      addu a0,s0,zero
+      sw s1,0x01bc(sp)
+      ori s1,zero,0x0001
+      sw s4,0x01c8(sp)
+      addiu s4,sp,0x0018
+      sll v0,s0,0x02
+      sw ra,0x01d8(sp)
+      sw s6,0x01d0(sp)
+      sw s2,0x01c0(sp)
+      lui at,0x801d
+      addu at,at,v0
+      lw v0,-0x2a14(at)
+      lui s2,0x8005
+      sll at,s0,0x08
+      addu s2,s2,at
+      lbu s2,0x7F78(s2)
+      jal 0x0012243c
+      lhu s6,0x0024(v0)
+      addu a0,s0,zero
+      sll v0,v0,0x10
+      sra a1,v0,0x10
+      addu a2,s3,zero
+      addiu a3,sp,0x0018
+      ori v0,zero,0x0001
+      jal 0x001228f0
+      sw v0,0x0010(sp)
+      addu s0,v0,zero
+W3LP: ori v0,zero,0x0001
+      sw v0,0x0010(sp)
+      sra a0,s5,0x10
+      jal @oej_wjpss
+      addiu a1,s1,0x004a
+      addu a2,s3,zero
+      sll a3,s0,0x01
+      jal 0x001228f0
+      addu a3,s4,a3
+      addu s0,s0,v0
+      addiu s1,s1,0x0001
+      slti v0,s1,0x0013
+      bne v0,zero,W3LP
+      addiu a2,s0,0xffff
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1223DC" mode="ASM" offsetMode="RAM">
+      j @oej_mjpss1
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1258B0" mode="ASM" offsetMode="RAM">
+      sw ra,0x0010(sp)
+      ori at,zero,@oej_id
+      beq at,v1,W4S1
+      slti v0,v1,0x0035				#Special job up to 35h
+      beq v0,zero,W4S2
+      lui at,0x8019
+      addu at,at,v1
+      lbu v1,-0x21cc(at)
+      j 0x0012591c
+      sll v0,v1,0x10
+W4S1: sll v0,a1,0x10				#Gender?
+      beq v0,zero,0x00125918
+      ori v1,zero,@oej_ma_unit
+      j 0x00125918
+      ori v1,zero,@oej_fe_unit
+W4S2: addiu at,v1,0xffa4			#Check if mime or dancer.
+      bltz at,0x00125904			#If not, branch.
+      sll v0,a0,0x01
+      sll at,at,0x01
+      addiu v0,at,0x00b6
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10CB00" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x0010cb54			#Branch if not Extra job for male.
+      addiu a1,a0,0x0060
+      j 0x0010cb88
+      addiu a1,zero,@oej_ma_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10CB2C" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x0010cb54			#Branch if not Extra job for female.
+      addiu a1,a0,0x0061
+      j 0x0010cb88
+      addiu a1,zero,@oej_fe_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10CB54" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,W5S1				#Branch if Dancer.
+      addiu a1,a1,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W5S1				#Branch if not Mime.
+      addiu a1,a1,0x0002
+      addiu a1,a1,0xfffe
+W5S1: sll v0,a1,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a1,-0x5748(at)
+      lbu v1,0x0000(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="109290" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001092e4			#Branch if not Extra job for male.
+      addiu a0,a1,0x0060
+      j 0x00109318
+      addiu a0,zero,@oej_ma_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1092BC" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001092e4			#Branch if not Extra job for female.
+      addiu a0,a1,0x0061
+      j 0x00109318
+      addiu a0,zero,@oej_fe_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1092E4" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,W6S1				#Branch if Dancer.
+      addiu a0,a0,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W6S1				#Branch if not Mime.
+      addiu a0,a0,0x0002
+      addiu a0,a0,0xfffe
+W6S1: sll v0,a0,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a0,-0x5e98(at)
+      lbu v1,0x0000(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="109110" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x00109164			#Branch if not Extra job for male.
+      addiu a0,a1,0x0060
+      j 0x00109198
+      addiu a0,zero,@oej_ma_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10913C" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x00109164			#Branch if not Extra job for female.
+      addiu a0,a1,0x0061
+      j 0x00109198
+      addiu a0,zero,@oej_fe_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="109164" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,W7S1				#Branch if Dancer.
+      addiu a0,a0,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W7S1				#Branch if not Mime.
+      addiu a0,a0,0x0002
+      addiu a0,a0,0xfffe
+W7S1: sll v0,a0,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a0,-0x5e98(at)
+      lbu v1,0x0000(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="E5014" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x000e5068			#Branch if not Extra job for male.
+      addiu a0,a1,0x0060
+      j 0x000e509c
+      addiu a0,zero,@oej_ma_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="E5040" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x000e5068			#Branch if not Extra job for female.
+      addiu a0,a1,0x0061
+      j 0x000e509c
+      addiu a0,zero,@oej_fe_face
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="E5068" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,W8S1				#Branch if Dancer.
+      addiu a0,a0,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W8S1				#Branch if not Mime.
+      addiu a0,a0,0x0002
+      addiu a0,a0,0xfffe
+W8S1: sll v0,a0,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a0,-0x5e98(at)
+      lbu v1,0x0000(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122488" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffd8
+      sw s0,0x0018(sp)
+      lui s0,0x801d
+      lbu v0,-0x2878(s0)
+      sw s1,0x001c(sp)
+      addu s1,zero,zero
+      sw ra,0x0024(sp)
+      sw s2,0x0020(sp)
+      blez v0,W9ED
+      ori s2,zero,@oej_id
+      beq s2,a0,W9S1
+      addiu s2,zero,0x005c
+      beq s2,a0,W9S1
+      addiu s2,zero,0x005b
+      or s2,a0,zero
+W9S1: or a0,s2,zero
+      addiu s0,s0,0xd5ec
+W9LP: lw v0,0x0000(s0)
+      jal 0x00120b90
+      lh a0,0x0024(v0)
+      bne v0,zero,W9S2
+      lw a0,0x0000(s0)
+      jal 0x0012b1d0
+      addiu a0,a0,0x0077
+      jal 0x0012b354
+      addiu a0,s2,0xffb6
+      jal 0x0012b354
+      ori a0,zero,0x0001
+      bne v0,zero,W9E2
+      addu v0,zero,zero
+W9S2: lui v0,0x801d
+      lbu v0,-0x2878(v0)
+      addiu s1,s1,0x0001
+      slt v0,s1,v0
+      bne v0,zero,W9LP
+      addiu s0,s0,0x0004
+W9ED: ori v0,zero,0x0001
+W9E2: lw ra,0x0024(sp)
+      lw s2,0x0020(sp)
+      lw s1,0x001c(sp)
+      lw s0,0x0018(sp)
+      jr ra
+      addiu sp,sp,0x0028
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="120B90" mode="ASM" offsetMode="RAM">
+      nop							#To prevent possible load delay.
+      addiu at,a0,0xff70
+      sltiu at,at,0x000b
+      beq at,zero,WAED
+      addiu v0,a0,0xff70			#Increase possible job ids to 8F?.
+      ori v0,zero,0x0001
+WAED: jr ra
+      sltiu v0,v0,0x000e
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C86B8" mode="ASM" offsetMode="RAM">
+      bne v0,zero,0x001c8754		#Branch if special.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C86DC" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001c8734			#Branch if not Extra job for male.
+      addiu a1,a0,0x0060
+      j 0x001c8768
+      addiu a1,zero,@oej_ma_unit_p1
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8708" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001c8734			#Branch if not Extra job for female.
+      addiu a1,a0,0x0061
+      j 0x001c8768
+      addiu a1,zero,@oej_fe_unit_p1
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8734" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,A1S1				#Branch if Dancer.
+      addiu a1,a1,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,A1S1				#Branch if not Mime.
+      addiu a1,a1,0x0002
+      addiu a1,a1,0xfffe
+A1S1: sll v0,a1,0x01
+      lui at,0x801d
+      addu at,at,v0
+      lhu a1,0x5bb0(at)
+      lbu v1,0x0000(s0)
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8200" mode="ASM" offsetMode="RAM">
+      bne v0,zero,0x001c829c		#Branch if special.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8224" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001c827c			#Branch if not Extra job for male.
+      addiu a3,a0,0x0060
+      j 0x001c82b0
+      addiu a3,zero,@oej_ma_face
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8250" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001c827c			#Branch if not Extra job for female.
+      addiu a3,a0,0x0061
+      j 0x001c82b0
+      addiu a3,zero,@oej_fe_face
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C827C" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,A2S1				#Branch if Dancer.
+      addiu a3,a3,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,A2S1				#Branch if not Mime.
+      addiu a3,a3,0x0002
+      addiu a3,a3,0xfffe
+A2S1: sll v0,a3,0x01
+      lui at,0x801d
+      addu at,at,v0
+      lhu a3,0x5bb0(at)
+      lbu v1,0x0000(s0)
+    </Location>
+    <Location file="EVENT_JOBSTTS_OUT" offset="1E0270" mode="ASM" offsetMode="RAM">
+      lw at,0x0000(s4)
+      ori v0,zero,0x005b
+      lbu at,0x0006(at)
+      bne s0,v0,BMS1
+      ori v0,zero,0x005c
+      andi at,at,0x0040
+      bne at,zero,BMED
+      ori v0,zero,0x005c
+BMS1: beq s0,v0,BMED
+      ori v0,zero,@oej_id
+      or v0,s0,zero
+BMED: or s0,v0,zero
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="EVENT_JOBSTTS_OUT" offset="1E03B4" mode="ASM" offsetMode="RAM">
+      j @oej_mjpss1
+    </Location>
+    <Location file="BATTLE_BIN" offset="17EA28" mode="ASM" offsetMode="RAM">
+      lui t0,0x8017
+      j @oej_mjpss2
+      ori t0,t0,0xea34
+      beq v0,zero,0x0017ea40
+      nop
+      addiu v0,a1,0xffb6
+      sw v0,0x0000(a2)
+    </Location>
+    <Location file="BATTLE_BIN" offset="17EA80" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0			#From Store JP and UJ, simplification, free space for routines.
+      sw s1,0x0014(sp)
+      addu s1,a3,zero				#s1 = Generic Job ID
+      sw ra,0x0018(sp)
+      sw s0,0x0010(sp)
+      bltz a1,SJED					#Branch if JP is less than 0
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      sll v0,a0,0x03				#ID * 8
+      subu v0,v0,a0					#ID * 7
+      sll v0,v0,0x06				#ID * 1c0
+      lui v1,0x8019
+      addiu v1,v1,0x08cc
+      addu s0,v0,v1
+      lbu v1,0x0001(s0)				#Load Unit's Unit ID
+      ori v0,zero,0x00ff			#v0 = FF
+      beq v1,v0,SJED				#Branch if Unit doesn't exist
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      lbu v0,0x0058(s0)				#Load Unit's Current Statuses 1
+      nop
+      andi v0,v0,0x0060
+      bne v0,zero,SJED				#Branch if Unit is a Crystal or Dead
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      lbu v0,0x0059(s0)				#Load Unit's Current Statuses 2
+      nop
+      andi v0,v0,0x0001
+      bne v0,zero,SJED				#Branch if Unit is Treasure
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      lbu a0,0x0006(s0)				#Load Gender Byte
+      nop
+      andi v0,a0,0x0020
+      bne v0,zero,SJED				#Branch if Unit is a monster
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      lbu v0,0x01ba(s0)				#Load Unit's Modified ENTD Flags
+      andi v1,a2,0x00ff				#v1 = Team Flags
+      andi v0,v0,0x0030				#v0 = Team Flags
+      bne v0,v1,SJED				#Branch if the Teams differ
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      sll v0,s1,0x01
+      addu a2,v0,s0
+      lhu v0,0x00dc(a2)				#Load Job's JP
+      nop
+      addu v1,v0,a1					#v1 = Job's JP += JP
+      slti v0,v1,0x2710
+      bne v0,zero,SJS1				#Branch if JP is less than 10000
+      nop
+      ori v1,zero,0x270f			#Job's JP = 9999
+SJS1: lhu v0,0x0104(a2)				#Load Job's Total JP
+      sh v1,0x00dc(a2)				#Store Job's new JP
+      addu v1,v0,a1					#v1 = Job's Total JP += JP
+      slti v0,v1,0x2710
+      bne v0,zero,SJS2				#Branch if JP is less than 10000
+      andi a0,v1,0xffff				#a0 = Job's Total JP
+      ori v1,zero,0x270f			#v1 = 9999
+      andi a0,v1,0xffff				#a0 = Job's Total JP
+SJS2: jal 0x0005def4				#Calculate Job Level
+      sh v1,0x0104(a2)				#Store Job's new Total JP
+      srl v1,s1,0x1f
+      addu v1,s1,v1
+      sra v1,v1,0x01				#ID * 2
+      addu v1,s0,v1
+      addu a0,v0,zero				#a0 = Job Level
+      andi v0,s1,0x0001				#v0 = Generic Job ID AND 0x1 (find nybble)
+      lbu v1,0x00d2(v1)				#Load Job Level
+      beq v0,zero,SJS3				#Branch if replacing high nybble
+      addu a1,a0,zero				#a1 = Job Level
+      andi v0,v1,0x00f0				#v0 = High nybble Job Level (keep as is)
+      j SJS4
+      addu v1,a0,v0					#v1 = new Job Level (replaces low nybble)
+SJS3: andi v1,v1,0x000f				#v1 = low nybble Job Level (keep as is)
+      andi v0,a1,0x00ff				#v0 = Job Level
+      sll v0,v0,0x04				#Job Level * 16
+      or v1,v1,v0					#v1 = new Job Level (replaces high nybble)
+SJS4: srl v0,s1,0x1f
+      addu v0,s1,v0
+      sra v0,v0,0x01				#ID / 2
+      addu v0,s0,v0
+      sb v1,0x00d2(v0)				#Store Job's new Job Level
+      lbu a1,0x0006(s0)				#Load Unit's Gender Byte
+      jal 0x0005dc14				#Calculate Unlocked Jobs
+      addiu a0,s0,0x00d2			#a0 = Pointer to Unit's Job Levels
+      addiu a0,s0,0x0096			#a0 = Pointer to Unit's Unlocked Jobs
+      jal 0x0005ded8				#Store 3-Byte Data (unlocked jobs)
+      addu a1,v0,zero				#a1 = Unlocked Jobs
+      addu v0,zero,zero				#v0 = 0 (Success)
+SJED: lw ra,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0020
+@oej_bjpss:
+      ori v0,zero,@oej_ss
+      beq t1,v0,BJED
+      ori v0,zero,0x0017
+      beq t1,v0,BJED
+      ori v0,zero,0x0016
+      or v0,t1,zero
+BJED: jr ra
+      or t1,v0,zero
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="1818E4" mode="ASM" offsetMode="RAM">
+      jal @oej_bjpss
+      lbu t1,0x00B8(sp)
+    </Location>
+    <Location file="BATTLE_BIN" offset="181900" mode="ASM" offsetMode="RAM">
+      or v0,t1,zero
+    </Location>
+    <Location file="BATTLE_BIN" offset="181910" mode="ASM" offsetMode="RAM">
+      or v1,t1,zero
+    </Location>
+    <Location file="SCUS_942_21" offset="5A1BC" mode="ASM" offsetMode="RAM">
+      nop							#Dancer or bard will get initial jp.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5BB54" mode="ASM" offsetMode="RAM">
+      nop							#Dancer or bard will get initial jp if generated in battle.
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5BBF8" mode="ASM" offsetMode="RAM">
+      nop							#Dancer or bard will get initial jp if generated in battle.
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5CF20" mode="ASM" offsetMode="RAM">
+      nop							#Calculated learned abilities... RSM could be involved.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Extra Requirements for Jobs v2">
+    <Description>Requires 'OEJ'. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
+	st_tier1	Inner game stage (0f = end of chapter 1)
+	st_tier2	Inner game stage (1f = end of chapter 2)
+	st_tier3	Inner game stage (32 = after Limberry Castle?)</Description>
+    <Location file="SCUS_942_21" offset="5DCF8" mode="ASM" offsetMode="RAM">
+    .eqv %st_tier1, 0x000f
+    .eqv %st_tier2, 0x001f
+    .eqv %st_tier3, 0x0032
+@ex_req_jobs:
+      lui t1,0x8005
+      lbu t1,0x78d4(t1)
+      lui v1,0x00ff
+      sltiu t2,t1,%st_tier3
+      beq t2,zero,ERED
+      ori t0,v1,0xfff0
+      sltiu t2,t1,%st_tier2
+      beq t2,zero,ERED
+      ori t0,v1,0xfe00
+      sltiu t2,t1,%st_tier1
+      beq t2,zero,ERED
+      ori t0,v1,0xe000
+      lui t0,0x00fe
+ERED: jr ra
+      and v0,v0,t0
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5DCE0" mode="ASM" offsetMode="RAM">
+      jal @ex_req_jobs				#jal for extra req v0 = Unlocked Jobs, for in and out.
+      or v0,t3,zero
+    </Location>
+  </Patch>
+</Patches>
