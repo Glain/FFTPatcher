@@ -26,7 +26,7 @@
       or t7,zero,a0
       andi v0,a1,0x0020
       bne v0,zero,UJED				#Branch if Unit is a monster.
-      addu v0,zero,zero				#v0 = 0.
+      addu t3,zero,zero				#t3 = 0.
       lui t2,0x0040					#Current Unlock Check = 0x400000.
       lui t3,0x0080					#Jobs Unlocked = 0x800000 (start squire).
       addiu t6,zero,0x0000			#Counter = 0.
