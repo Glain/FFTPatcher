@@ -440,14 +440,14 @@ W4S2: addiu at,v1,0xffa4			#Check if mime or dancer.
       ori v1,zero,@oej_id
       bne v0,v1,0x0010cb54			#Branch if not Extra job for male.
       addiu a1,a0,0x0060
-      j 0x0010cb88
+      j 0x0010cb84
       addiu a1,zero,@oej_ma_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="10CB2C" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x0010cb54			#Branch if not Extra job for female.
       addiu a1,a0,0x0061
-      j 0x0010cb88
+      j 0x0010cb84
       addiu a1,zero,@oej_fe_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="10CB54" mode="ASM" offsetMode="RAM">
@@ -464,19 +464,27 @@ W5S1: sll v0,a1,0x01
       addu at,at,v0
       lhu a1,-0x5748(at)
       lbu v1,0x0000(s0)
+      lbu at,0x002e(s1)				#
+      bne v1,zero,W5S2
+      ori v0,zero,0x0082
+      addu a1,zero,zero
+W5S2: bne v1,v0,0x0010cbb0
+      andi v0,a1,0x0300
+      sll v0,at,0x0a
+      nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="109290" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x001092e4			#Branch if not Extra job for male.
       addiu a0,a1,0x0060
-      j 0x00109318
+      j 0x00109314
       addiu a0,zero,@oej_ma_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1092BC" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x001092e4			#Branch if not Extra job for female.
       addiu a0,a1,0x0061
-      j 0x00109318
+      j 0x00109314
       addiu a0,zero,@oej_fe_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1092E4" mode="ASM" offsetMode="RAM">
@@ -493,19 +501,27 @@ W6S1: sll v0,a0,0x01
       addu at,at,v0
       lhu a0,-0x5e98(at)
       lbu v1,0x0000(s0)
+      lbu at,0x002e(s1)				#
+      bne v1,zero,W6S2
+      ori v0,zero,0x0082
+      addu a0,zero,zero
+W6S2: bne v1,v0,0x00109340
+      addu v0,a0,zero
+      sll v0,at,0x0a
+      nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="109110" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x00109164			#Branch if not Extra job for male.
       addiu a0,a1,0x0060
-      j 0x00109198
+      j 0x00109194
       addiu a0,zero,@oej_ma_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="10913C" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x00109164			#Branch if not Extra job for female.
       addiu a0,a1,0x0061
-      j 0x00109198
+      j 0x00109194
       addiu a0,zero,@oej_fe_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="109164" mode="ASM" offsetMode="RAM">
@@ -522,19 +538,27 @@ W7S1: sll v0,a0,0x01
       addu at,at,v0
       lhu a0,-0x5e98(at)
       lbu v1,0x0000(s0)
+      lbu at,0x002e(s1)				#
+      bne v1,zero,W7S2
+      ori v0,zero,0x0082
+      addu a0,zero,zero
+W7S2: bne v1,v0,0x001091bc
+      nop
+      sll v0,at,0x0a
+      nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="E5014" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x000e5068			#Branch if not Extra job for male.
       addiu a0,a1,0x0060
-      j 0x000e509c
+      j 0x000e5098
       addiu a0,zero,@oej_ma_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="E5040" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x000e5068			#Branch if not Extra job for female.
       addiu a0,a1,0x0061
-      j 0x000e509c
+      j 0x000e5098
       addiu a0,zero,@oej_fe_face
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="E5068" mode="ASM" offsetMode="RAM">
@@ -547,10 +571,18 @@ W7S1: sll v0,a0,0x01
       addiu a0,a0,0x0002
       addiu a0,a0,0xfffe
 W8S1: sll v0,a0,0x01
-      lui at,0x8019
+      lui at,0x8015
       addu at,at,v0
-      lhu a0,-0x5e98(at)
+      lhu a0,0x4b14(at)
       lbu v1,0x0000(s0)
+      lbu at,0x002e(s3)				#
+      bne v1,zero,W8S2
+      ori v0,zero,0x0082
+      addu a0,zero,zero
+W8S2: bne v1,v0,0x000e50c0
+      nop
+      sll v0,at,0x0a
+      nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122488" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xffd8
@@ -614,14 +646,14 @@ WAED: jr ra
       ori v1,zero,@oej_id
       bne v0,v1,0x001c8734			#Branch if not Extra job for male.
       addiu a1,a0,0x0060
-      j 0x001c8768
+      j 0x001c8764
       addiu a1,zero,@oej_ma_unit_p1
     </Location>
     <Location file="EVENT_ATTACK_OUT" offset="1C8708" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x001c8734			#Branch if not Extra job for female.
       addiu a1,a0,0x0061
-      j 0x001c8768
+      j 0x001c8764
       addiu a1,zero,@oej_fe_unit_p1
     </Location>
     <Location file="EVENT_ATTACK_OUT" offset="1C8734" mode="ASM" offsetMode="RAM">
@@ -638,6 +670,14 @@ A1S1: sll v0,a1,0x01
       addu at,at,v0
       lhu a1,0x5bb0(at)
       lbu v1,0x0000(s0)
+      lui at,0x801e					#
+      bne v1,zero,A1S2
+      ori v0,zero,0x0082
+      addu a3,zero,zero
+A1S2: bne v1,v0,0x001c8798
+      lui v0,0x6666
+      lw v0,-0x3558(at)
+      nop
     </Location>
     <Location file="EVENT_ATTACK_OUT" offset="1C8200" mode="ASM" offsetMode="RAM">
       bne v0,zero,0x001c829c		#Branch if special.
@@ -646,14 +686,14 @@ A1S1: sll v0,a1,0x01
       ori v1,zero,@oej_id
       bne v0,v1,0x001c827c			#Branch if not Extra job for male.
       addiu a3,a0,0x0060
-      j 0x001c82b0
+      j 0x001c82ac
       addiu a3,zero,@oej_ma_face
     </Location>
     <Location file="EVENT_ATTACK_OUT" offset="1C8250" mode="ASM" offsetMode="RAM">
       ori v1,zero,@oej_id
       bne v0,v1,0x001c827c			#Branch if not Extra job for female.
       addiu a3,a0,0x0061
-      j 0x001c82b0
+      j 0x001c82ac
       addiu a3,zero,@oej_fe_face
     </Location>
     <Location file="EVENT_ATTACK_OUT" offset="1C827C" mode="ASM" offsetMode="RAM">
@@ -670,6 +710,51 @@ A2S1: sll v0,a3,0x01
       addu at,at,v0
       lhu a3,0x5bb0(at)
       lbu v1,0x0000(s0)
+      lui at,0x801e					#
+      bne v1,zero,A2S2
+      ori v0,zero,0x0082
+      addu a3,zero,zero
+A2S2: bne v1,v0,0x001c82e4
+      lui v0,0x6666
+      lw v0,-0x3558(at)
+      nop
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="1C5580" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001c55d8			#Branch if not Extra job for male.
+      addiu a3,a0,0x0060
+      j 0x001c5608
+      addiu a3,zero,@oej_ma_face
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="1C55AC" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id
+      bne v0,v1,0x001c55d8			#Branch if not Extra job for female.
+      addiu a3,a0,0x0061
+      j 0x001c5608
+      addiu a3,zero,@oej_fe_face
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="1C55D8" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)
+      ori v1,zero,0x005c
+      beq v0,v1,R1S1				#Branch if Dancer.
+      addiu a3,a3,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,R1S1				#Branch if not Mime.
+      addiu a3,a3,0x0002
+      addiu a3,a3,0xfffe
+R1S1: sll v0,a3,0x01
+      lui at,0x801d
+      addu a3,at,v0
+      lhu a3,0x0b3c(a3)
+      lbu v1,0x0000(s0)
+      lui at,0x801d					#
+      bne v1,zero,R1S2
+      ori v0,zero,0x0082
+      addu a3,zero,zero
+R1S2: bne v1,v0,0x001c5640
+      lui v0,0x6666
+      lw v0,0x7db0(at)
+      nop
     </Location>
     <Location file="EVENT_JOBSTTS_OUT" offset="1E0270" mode="ASM" offsetMode="RAM">
       lw at,0x0000(s4)
