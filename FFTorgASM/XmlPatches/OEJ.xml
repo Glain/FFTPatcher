@@ -970,7 +970,7 @@ ERED: jr ra
       nop
     </Location>
     <Location file="SCUS_942_21" offset="5DCE0" mode="ASM" offsetMode="RAM">
-      jal @ex_req_jobs				#jal for extra req v0 = Unlocked Jobs, for in and out.
+      j @ex_req_jobs				#v0 = Unlocked Jobs, for in and out.
       or v0,t3,zero
     </Location>
   </Patch>

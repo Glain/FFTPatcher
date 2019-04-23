@@ -5,13 +5,13 @@
     <Description>With FFTPatcher or similar program change ability 'Magic Break' formula from 2c to 25, change x and y values, uncheck Affect MP and check Unequip. If need change offset F6400 to whatever you want (as long as it is a safe spot).</Description>
     <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
 @my_code_cave:
-      beq v1,v0,SKP			#Branch if used ability is 'Icewolf  Bite'
+      beq v1,v0,SKIP			#Branch if used ability is 'Icewolf  Bite'
       ori v0,zero,0x008e
-      beq v1,v0,SKP			#Branch if used ability is 'Acc Break'=='MP Break'
+      beq v1,v0,SKIP			#Branch if used ability is 'Acc Break'=='MP Break'
       ori v0,zero,0x0072
       j 0x00187b54
       nop
-SKP:  j 0x00187b5c
+SKIP: j 0x00187b5c
       nop
     </Location>
     <Location file="BATTLE_BIN" offset="187B4C" mode="ASM" offsetMode="RAM">
@@ -248,10 +248,10 @@ MSS2: jal 0x00185fa4				#Weapon Element Strengthen.
       nop
 MSED: lw ra,0x0010(sp)
       lw s0,0x0014(sp)
-      addiu sp,sp,0x0018
       jr ra
+      addiu sp,sp,0x0018
+      nop							#0x00189c28, free 10 spaces.
       nop
-      nop							#0x00189c2c, free 9 spaces.
       nop
       nop
       nop
@@ -300,10 +300,10 @@ MSS1: jal 0x00185e5c				#Store PA and WP+Y.
       nop
 MSED: lw ra,0x0010(sp)
       lw s0,0x0014(sp)
-      addiu sp,sp,0x0018
       jr ra
+      addiu sp,sp,0x0018
+      nop							#0x00189c28, free 10 spaces.
       nop
-      nop							#0x00189c2c, free 9 spaces.
       nop
       nop
       nop
@@ -744,7 +744,7 @@ SILP: sb zero,0x0000(v0)
       ori v0,zero,0x0005			#Store Potion 5.
       jr ra
       sh v0,-0x6830(t2)
-	  nop							#Turbo data space, not a valid instruction.
+      nop							#Turbo data space, not a valid instruction.
 @swap_b6_b7_turbo:					#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
       andi t0,v0,0x0040
       srl t0,t0,0x01
@@ -782,14 +782,12 @@ SWED: jr ra
     </Location>
   </Patch>
   <Patch name="Vanilla Calculate Unlocked Jobs v2">
-    <Description>Like vanilla, free 20 spaces.</Description>
+    <Description>Like vanilla, free 25 spaces.</Description>
     <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe8			#bard, dancer and monster are coded in another place too.
-      sw ra,0x0010(sp)
       or t7,zero,a0
       andi v0,a1,0x0020
       bne v0,zero,UJED				#Branch if Unit is a monster
-      addu v0,zero,zero				#v0 = 0
+      addu t3,zero,zero				#v0 = 0
       lhu t4,0x0008(t7)				#Load Unit's Dancer-Mime-Calc-Bard Job Levels
       andi v0,a1,0x0040
       beq v0,zero,UJS1				#Branch if Unit is not Female
@@ -835,13 +833,15 @@ UJS3: addiu t6,t6,0x0001			#Counter ++
       ori v0,a0,0xffd0
       ori v0,a0,0xffb0
 UJS4: sh t4,0x0008(t7)				#Store old Job Levels
-      nop							#jal for extra req v0 = Unlocked Jobs, for in and out.
-      and v0,t3,v0					#Disable Bard or Dancer.
-UJED: lw ra,0x0010(sp)
-      addiu sp,sp,0x0018
-      jr ra
+      and t3,t3,v0					#Disable Bard or Dancer.
+UJED: jr ra
+      or v0,t3,zero
+      nop							#0x0005dce4, used for extra req jobs patch.
       nop
-      nop							#0x0005dcf8, used for extra req jobs patch.
+      nop
+      nop
+      nop
+      nop
       nop
       nop
       nop
@@ -868,7 +868,7 @@ UJED: lw ra,0x0010(sp)
 	st_tier1	Inner game stage (0f = end of chapter 1)
 	st_tier2	Inner game stage (1f = end of chapter 2)
 	st_tier3	Inner game stage (32 = after Limberry Castle?)</Description>
-    <Location file="SCUS_942_21" offset="5DCF8" mode="ASM" offsetMode="RAM">
+    <Location file="SCUS_942_21" offset="5DCE4" mode="ASM" offsetMode="RAM">
     .eqv %st_tier1, 0x000f
     .eqv %st_tier2, 0x001f
     .eqv %st_tier3, 0x0032
@@ -893,10 +893,15 @@ ERED: jr ra
       nop
       nop
       nop
+      nop
+      nop
+      nop
+      nop
+      nop
     </Location>
-    <Location file="SCUS_942_21" offset="5DCE0" mode="ASM" offsetMode="RAM">
-      jal @ex_req_jobs				#jal for extra req v0 = Unlocked Jobs, for in and out.
-      and v0,t3,v0					#Disable Bard or Dancer.
+    <Location file="SCUS_942_21" offset="5DCDC" mode="ASM" offsetMode="RAM">
+      j @ex_req_jobs				#v0 = Unlocked Jobs, for in and out.
+      or v0,t3,zero					#Disable Bard or Dancer.
     </Location>
   </Patch>
   <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu) v2">
