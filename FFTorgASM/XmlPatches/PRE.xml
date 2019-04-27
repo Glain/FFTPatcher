@@ -74,9 +74,9 @@
       01				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ad				<!--Body-->
       d0				<!--Acc-->
@@ -100,9 +100,9 @@
       01				<!--level of it-->
       4c				<!--main job-->
       1f				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ad				<!--Body-->
       d0				<!--Acc-->
@@ -127,9 +127,9 @@
       02				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ad				<!--Body-->
       d0				<!--Acc-->
@@ -153,9 +153,9 @@
       02				<!--level of it-->
       4c				<!--main job-->
       1f				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ad				<!--Body-->
       d0				<!--Acc-->
@@ -180,9 +180,9 @@
       03				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ad				<!--Body-->
       d0				<!--Acc-->
@@ -206,9 +206,9 @@
       03				<!--level of it-->
       4c				<!--main job-->
       1f				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ad				<!--Body-->
       d0				<!--Acc-->
@@ -233,9 +233,9 @@
       01				<!--level of it-->
       04				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9d				<!--Head-->
       ba				<!--Body-->
       d0				<!--Acc-->
@@ -260,9 +260,9 @@
       02				<!--level of it-->
       04				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9d				<!--Head-->
       ba				<!--Body-->
       d0				<!--Acc-->
@@ -286,9 +286,9 @@
       02				<!--level of it-->
       07				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9d				<!--Head-->
       ba				<!--Body-->
       d0				<!--Acc-->
@@ -313,9 +313,9 @@
       01				<!--level of it-->
       04				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9d				<!--Head-->
       ba				<!--Body-->
       d0				<!--Acc-->
@@ -340,9 +340,9 @@
       03				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ae				<!--Body-->
       d0				<!--Acc-->
@@ -366,9 +366,9 @@
       03				<!--level of it-->
       4c				<!--main job-->
       1f				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ae				<!--Body-->
       d0				<!--Acc-->
@@ -393,9 +393,9 @@
       04				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ae				<!--Body-->
       d0				<!--Acc-->
@@ -420,9 +420,9 @@
       05				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ae				<!--Body-->
       d0				<!--Acc-->
@@ -447,9 +447,9 @@
       06				<!--level of it-->
       4c				<!--main job-->
       1c				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       91				<!--Head-->
       ae				<!--Body-->
       d0				<!--Acc-->
@@ -477,9 +477,9 @@
       02				<!--level of it-->
       17				<!--main job-->
       0b				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      d401			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
       96				<!--Head-->
       b1				<!--Body-->
       d7				<!--Acc-->
@@ -503,9 +503,9 @@
       03				<!--level of it-->
       34				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       d0				<!--Acc-->
@@ -530,9 +530,9 @@
       02				<!--level of it-->
       17				<!--main job-->
       0b				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      d401			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
       96				<!--Head-->
       b1				<!--Body-->
       d7				<!--Acc-->
@@ -556,9 +556,9 @@
       03				<!--level of it-->
       34				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       d0				<!--Acc-->
@@ -583,9 +583,9 @@
       03				<!--level of it-->
       17				<!--main job-->
       0b				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      d401			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
       96				<!--Head-->
       b1				<!--Body-->
       d7				<!--Acc-->
@@ -609,9 +609,9 @@
       04				<!--level of it-->
       34				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       d0				<!--Acc-->
@@ -636,9 +636,9 @@
       06				<!--level of it-->
       0c				<!--main job-->
       00				<!--secondary skill set-->
-      0000			<!--Reaction-->
-      0000			<!--Support-->
-      0000			<!--Movement-->
+      0000				<!--Reaction-->
+      0000				<!--Support-->
+      0000				<!--Movement-->
       a1				<!--Head-->
       ca				<!--Body-->
       ff				<!--Acc-->
@@ -662,9 +662,9 @@
       03				<!--level of it-->
       17				<!--main job-->
       0b				<!--secondary skill set-->
-      bf01			<!--Reaction-->
-      d401			<!--Support-->
-      e601			<!--Movement-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
       96				<!--Head-->
       b1				<!--Body-->
       d7				<!--Acc-->
@@ -688,9 +688,9 @@
       04				<!--level of it-->
       34				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       d0				<!--Acc-->
@@ -715,9 +715,9 @@
       04				<!--level of it-->
       22				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a0				<!--Head-->
       be				<!--Body-->
       d0				<!--Acc-->
@@ -741,9 +741,9 @@
       04				<!--level of it-->
       34				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       d0				<!--Acc-->
@@ -768,9 +768,9 @@
       05				<!--level of it-->
       22				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a0				<!--Head-->
       be				<!--Body-->
       d0				<!--Acc-->
@@ -794,9 +794,9 @@
       05				<!--level of it-->
       34				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       d0				<!--Acc-->
@@ -821,9 +821,9 @@
       06				<!--level of it-->
       22				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a0				<!--Head-->
       be				<!--Body-->
       d0				<!--Acc-->
@@ -848,9 +848,9 @@
       06				<!--level of it-->
       16				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       ff				<!--Head-->
       ff				<!--Body-->
       ff				<!--Acc-->
@@ -875,9 +875,9 @@
       06				<!--level of it-->
       16				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a0				<!--Head-->
       be				<!--Body-->
       d0				<!--Acc-->
@@ -902,9 +902,9 @@
       05				<!--level of it-->
       1e				<!--main job-->
       0a				<!--secondary skill set-->
-      ac01			<!--Reaction-->
-      d201			<!--Support-->
-      e601			<!--Movement-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
       95				<!--Head-->
       b2				<!--Body-->
       e0				<!--Acc-->
@@ -932,9 +932,9 @@
       06				<!--level of it-->
       30				<!--main job-->
       00				<!--secondary skill set-->
-      0000			<!--Reaction-->
-      0000			<!--Support-->
-      0000			<!--Movement-->
+      0000				<!--Reaction-->
+      0000				<!--Support-->
+      0000				<!--Movement-->
       aa				<!--Head-->
       c0				<!--Body-->
       d6				<!--Acc-->
@@ -959,9 +959,9 @@
       04				<!--level of it-->
       19				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a4				<!--Head-->
       cc				<!--Body-->
       e8				<!--Acc-->
@@ -986,9 +986,9 @@
       05				<!--level of it-->
       19				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a4				<!--Head-->
       cc				<!--Body-->
       e8				<!--Acc-->
@@ -1013,9 +1013,9 @@
       06				<!--level of it-->
       19				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a4				<!--Head-->
       cc				<!--Body-->
       e8				<!--Acc-->
@@ -1040,9 +1040,9 @@
       06				<!--level of it-->
       29				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a4				<!--Head-->
       cc				<!--Body-->
       e8				<!--Acc-->
@@ -1066,9 +1066,9 @@
       05				<!--level of it-->
       1a				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a5				<!--Head-->
       ca				<!--Body-->
       e2				<!--Acc-->
@@ -1093,9 +1093,9 @@
       06				<!--level of it-->
       29				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a4				<!--Head-->
       cc				<!--Body-->
       e8				<!--Acc-->
@@ -1119,9 +1119,9 @@
       05				<!--level of it-->
       1a				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       a5				<!--Head-->
       ca				<!--Body-->
       e2				<!--Acc-->
@@ -1149,9 +1149,9 @@
       06				<!--level of it-->
       1f				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9a				<!--Head-->
       b6				<!--Body-->
       da				<!--Acc-->
@@ -1176,9 +1176,9 @@
       06				<!--level of it-->
       1f				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9a				<!--Head-->
       b6				<!--Body-->
       da				<!--Acc-->
@@ -1203,9 +1203,9 @@
       06				<!--level of it-->
       1f				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9a				<!--Head-->
       b6				<!--Body-->
       da				<!--Acc-->
@@ -1230,9 +1230,9 @@
       06				<!--level of it-->
       1f				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9a				<!--Head-->
       b6				<!--Body-->
       da				<!--Acc-->
@@ -1257,9 +1257,9 @@
       06				<!--level of it-->
       1f				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9a				<!--Head-->
       b6				<!--Body-->
       da				<!--Acc-->
@@ -1284,9 +1284,9 @@
       06				<!--level of it-->
       1f				<!--main job-->
       00				<!--secondary skill set-->
-      b401			<!--Reaction-->
-      df01			<!--Support-->
-      e601			<!--Movement-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
       9a				<!--Head-->
       b6				<!--Body-->
       da				<!--Acc-->

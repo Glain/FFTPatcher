@@ -12,10 +12,10 @@
   </Patch>
   <Patch name="Battle Initial Camera (DEPRECATED)">
     <Description>It changes the elevation angle and zoom initial values with their flags. No variables, so edit through xml only. Edit these eqvs if needed:
-	init_elev	Elevation angle value
-	init_elef	Elevation angle flag (1=lo or 2=hi)
-	init_zoom	Zoom initial value
-	init_zoof	Zoom flag (1=in or 4=out)</Description>
+	init_elev			Elevation angle value
+	init_elef			Elevation angle flag (1=lo or 2=hi)
+	init_zoom			Zoom initial value
+	init_zoof			Zoom flag (1=in or 4=out)</Description>
     <Location file="BATTLE_BIN" offset="12DEBC" mode="ASM" offsetMode="RAM">
     .eqv %init_elev, 0x01C0
     .eqv %init_elef, 0x0002
@@ -43,26 +43,26 @@
       lw v1,0x5f9c(v1)
       addiu v0,zero,0x0001
       lui s0,0x8009
-      jal 0x0006f8c8				#Toogle to angle hi.
+      jal 0x0006f8c8			#Toogle to angle hi.
       sw v0,0x60d8(s0)
       ori v0,zero,0x0001
       sw v0,0x60d0(s0)
       ori v0,zero,0x1000
-      jal 0x0006f5bc				#Toogle zoom far.
+      jal 0x0006f5bc			#Toogle zoom far.
       sw v0,0x0080(v1)
     </Location>
   </Patch>
   <Patch name="Incremental Jump Range for Vanilla">
     <Description>Jump ability for the horizontal/vertical ranges adds +1, except for horizontal 8 which adds +3. Don't use if you will edit jump abilities with FFTPatcher or other tool. Credits go to Xifanie.</Description>
     <Location file="BATTLE_BIN" offset="179EE0" mode="ASM" offsetMode="RAM">
-      beq v0,zero,IJS1				#Check for horizontal increment.
-      andi a1,v0,0x0008				#Check if it is horizontal 8.
+      beq v0,zero,IJS1			#Check for horizontal increment.
+      andi a1,v0,0x0008			#Check if it is horizontal 8.
       beq a1,zero,IJS1
       addiu s4,s4,0x0001
-      addiu s4,s4,0x0002				#If it is horizontal 8 it adds +2 to the general +1.
-IJS1: beq v1,zero,IJED				#Check for verical increment.
+      addiu s4,s4,0x0002		#If it is horizontal 8 it adds +2 to the general +1.
+IJS1: beq v1,zero,IJED			#Check for verical increment.
       nop
-      addiu s0,s0,0x0002				#Vertical adds +2, height goes in 0.5 step.
+      addiu s0,s0,0x0002		#Vertical adds +2, height goes in 0.5 step.
 IJED: nop
       nop
       nop
@@ -77,13 +77,13 @@ IJED: nop
     <Location file="BATTLE_BIN" offset="179EE0" mode="ASM" offsetMode="RAM">
     .eqv %max_horiz, 0x0008
     .eqv %max_verti, 0x0010
-      ssl a1,v1,0x01				#Vertical increment by 2, height goes in 0.5 step.
-      addu s0,a1,s0					#Vertical accumulator.
-      sltiu a1,s0,%max_verti			#Check if current vertical is higher than max vertical.
+      ssl a1,v1,0x01			#Vertical increment by 2, height goes in 0.5 step.
+      addu s0,a1,s0			#Vertical accumulator.
+      sltiu a1,s0,%max_verti		#Check if current vertical is higher than max vertical.
       bne a1,zero,IJS1
-      addu s4,v0,s4					#Horizontal accumulator.
+      addu s4,v0,s4			#Horizontal accumulator.
       addiu s0,zero,%max_verti		#If current vertical is higher than max vertical, then set it to max.
-IJS1: sltiu a1,s4,%max_horiz			#Check if current horizontal is higher than max horizontal.
+IJS1: sltiu a1,s4,%max_horiz		#Check if current horizontal is higher than max horizontal.
       bne a1,zero,IJED
       nop
       addiu s4,zero,%max_horiz		#If current horizontal is higher than max horizontal, then set it to max.
@@ -96,41 +96,41 @@ IJED: nop
       addiu sp,sp,0xffe8
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
-      jal 0x00188510				#Physical Evade Calculation.
+      jal 0x00188510			#Physical Evade Calculation.
       lui s0,0x8019
       bne v0,zero,MSED
-      lw s0,0x2d90(s0)				#Target current action pointer.
-      jal 0x00187638				#Maintenance.
+      lw s0,0x2d90(s0)			#Target current action pointer.
+      jal 0x00187638			#Maintenance.
       nop
-      bne v0,zero,MSED				#Here could jump to 'Store PA and WP+Y' instead of MSED if dmg with maintenance.
+      bne v0,zero,MSED			#Here could jump to 'Store PA and WP+Y' instead of MSED if dmg with maintenance.
       nop
-      jal 0x001879c8				#Steal/Break/Might Sword Hard Coding.
+      jal 0x001879c8			#Steal/Break/Might Sword Hard Coding.
       nop
       bne v0,zero,MSS1
       ori t0,zero,0x0004
-      jal 0x00185dd8				#Store PA and WP.
-      sh t0,0x0010(s0)				#Store special flag = break item.
-      j MSS2						#Skip 'Store PA and WP+Y'.
+      jal 0x00185dd8			#Store PA and WP.
+      sh t0,0x0010(s0)			#Store special flag = break item.
+      j MSS2				#Skip 'Store PA and WP+Y'.
       nop
-MSS1: jal 0x00185e5c				#Store PA and WP+Y.
+MSS1: jal 0x00185e5c			#Store PA and WP+Y.
       nop
-MSS2: jal 0x00185fa4				#Weapon Element Strengthen.
+MSS2: jal 0x00185fa4			#Weapon Element Strengthen.
       nop
-      jal 0x001886a4				#Damage Calculation.
+      jal 0x001886a4			#Damage Calculation.
       nop
-      jal 0x00186fd0				#Elemental Damage Modification (Prep).
+      jal 0x00186fd0			#Elemental Damage Modification (Prep).
       nop
-      lbu v0,0x0000(s0)				#Load hit flag.
+      lbu v0,0x0000(s0)			#Load hit flag.
       nop
       beq v0,zero,MSED
       nop	
-      jal 0x001870fc				#Elemental Absorption.
+      jal 0x001870fc			#Elemental Absorption.
       nop
 MSED: lw ra,0x0010(sp)
       lw s0,0x0014(sp)
       jr ra
       addiu sp,sp,0x0018
-      nop							#0x00189c28, 10 free spaces.
+      nop				#0x00189c28, 10 free spaces.
       nop
       nop
       nop
@@ -148,41 +148,41 @@ MSED: lw ra,0x0010(sp)
       addiu sp,sp,0xffe8
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
-      jal 0x00188510				#Physical Evade Calculation.
+      jal 0x00188510			#Physical Evade Calculation.
       lui s0,0x8019
       bne v0,zero,MSED
-      lw s0,0x2d90(s0)				#Target current action pointer.
-      jal 0x00187638				#Maintenance.
+      lw s0,0x2d90(s0)			#Target current action pointer.
+      jal 0x00187638			#Maintenance.
       nop
-      bne v0,zero,MSED				#Here could jump to 'Store PA and WP+Y' instead of MSED if dmg with maintenance.
+      bne v0,zero,MSED			#Here could jump to 'Store PA and WP+Y' instead of MSED if dmg with maintenance.
       nop
-      jal 0x001879c8				#Steal/Break/Might Sword Hard Coding.
+      jal 0x001879c8			#Steal/Break/Might Sword Hard Coding.
       nop
       bne v0,zero,MSS1
       ori t0,zero,0x0004
-      nop							#Here could go 'jal 0x00185dd8' for 'Store PA and WP' if dmg with break.
-      sh t0,0x0010(s0)				#Store special flag = break item.
-      j MSED						#If 'Store PA and WP' was set then jump to 'Weapon Element Strengthen'.
+      nop				#Here could go 'jal 0x00185dd8' for 'Store PA and WP' if dmg with break.
+      sh t0,0x0010(s0)			#Store special flag = break item.
+      j MSED				#If 'Store PA and WP' was set then jump to 'Weapon Element Strengthen'.
       nop
-MSS1: jal 0x00185e5c				#Store PA and WP+Y.
+MSS1: jal 0x00185e5c			#Store PA and WP+Y.
       nop
-      jal 0x00185fa4				#Weapon Element Strengthen.
+      jal 0x00185fa4			#Weapon Element Strengthen.
       nop
-      jal 0x001886a4				#Damage Calculation.
+      jal 0x001886a4			#Damage Calculation.
       nop
-      jal 0x00186fd0				#Elemental Damage Modification (Prep).
+      jal 0x00186fd0			#Elemental Damage Modification (Prep).
       nop
-      lbu v0,0x0000(s0)				#Load hit flag.
+      lbu v0,0x0000(s0)			#Load hit flag.
       nop
       beq v0,zero,MSED
       nop	
-      jal 0x001870fc				#Elemental Absorption.
+      jal 0x001870fc			#Elemental Absorption.
       nop
 MSED: lw ra,0x0010(sp)
       lw s0,0x0014(sp)
       jr ra
       addiu sp,sp,0x0018
-      nop							#0x00189c28, 10 free spaces.
+      nop				#0x00189c28, 10 free spaces.
       nop
       nop
       nop
@@ -196,18 +196,18 @@ MSED: lw ra,0x0010(sp)
   </Patch>
   <Patch name="Level Cap">
     <Description>It caps all levels to an specific value, with some sort of progession with the event progession byte, up to four time windows in the game, after that caps goes to 99. The idea was based on Glain SCC Patch. No variables, so edit through xml only. Edit these eqvs if needed:
-	stage1_id	The first time window from 0x00 (new game) to 0x0f (end of chapter 1)
-	stage1_lc	Higher byte. Maximum level achievable in the first time window (0x0a=10)
-	stage1_lc	Lower byte. Progession byte substract offset in the first time window (0x00)
-	stage2_id	The second time window from first time window to 0x1f (end of chapter 2)
-	stage2_lc	Higher byte. Maximum level achievable in the second time window (0x14=20)
-	stage2_lc	Lower byte. Progession byte substract offset in the second time window (0x05=1_id-1_ic)
-	stage3_id	The third time window from second time window to 0x29 (end of chapter 3)
-	stage3_lc	Higher byte. Maximum level achievable in the third time window (0x23=35)
-	stage3_lc	Lower byte. Progession byte substract offset in the third time window (0x0b=2_id-2_ic)
-	stage4_id	The fourth time window from third time window to 0x35 (chapter 4 - before orbonne)
-	stage4_lc	Higher byte. Maximum level achievable in the fourth time window (0x32=50)
-	stage4_lc	Lower byte. Progession byte substract offset in the fourth time window (0x06=3_id-3_ic)</Description>
+	stage1_id			The first time window from 0x00 (new game) to 0x0f (end of chapter 1)
+	stage1_lc			Higher byte. Maximum level achievable in the first time window (0x0a=10)
+	stage1_lc			Lower byte. Progession byte substract offset in the first time window (0x00)
+	stage2_id			The second time window from first time window to 0x1f (end of chapter 2)
+	stage2_lc			Higher byte. Maximum level achievable in the second time window (0x14=20)
+	stage2_lc			Lower byte. Progession byte substract offset in the second time window (0x05=1_id-1_ic)
+	stage3_id			The third time window from second time window to 0x29 (end of chapter 3)
+	stage3_lc			Higher byte. Maximum level achievable in the third time window (0x23=35)
+	stage3_lc			Lower byte. Progession byte substract offset in the third time window (0x0b=2_id-2_ic)
+	stage4_id			The fourth time window from third time window to 0x35 (chapter 4 - before orbonne)
+	stage4_lc			Higher byte. Maximum level achievable in the fourth time window (0x32=50)
+	stage4_lc			Lower byte. Progession byte substract offset in the fourth time window (0x06=3_id-3_ic)</Description>
     <Location file="SCUS_942_21" offset="5DA10" mode="ASM" offsetMode="RAM">
     .eqv %stage1_id, 0x000f
     .eqv %stage1_lc, 0x0a00
@@ -224,66 +224,66 @@ MSED: lw ra,0x0010(sp)
       sw s2,0x001c(sp)
       sw s1,0x0018(sp)
       sw s0,0x0014(sp)
-      addu s0,a0,zero				#s0 = Unit's Data Pointer
-      addu s1,a1,zero				#s1 = Level Down Flag
-      addiu s2,s0,-0x000f			#s2 = Unit's Raw Stat Pointer -0x81
-      addiu s3,s0,0x0081				#s3 = Unit's Raw Growth Pointer
-LULP: jal 0x0002230c				#RNG, Main loop
+      addu s0,a0,zero			#s0 = Unit's Data Pointer
+      addu s1,a1,zero			#s1 = Level Down Flag
+      addiu s2,s0,-0x000f		#s2 = Unit's Raw Stat Pointer -0x81
+      addiu s3,s0,0x0081		#s3 = Unit's Raw Growth Pointer
+LULP: jal 0x0002230c			#RNG, Main loop
       addiu s2,s2,0x0081
-      lbu t7,0x0022(s0)				#Load Unit's Level
-      lbu t1,0x0000(s3)				#Load Stat Growth.
-      lbu v1,0x0000(s2)				#Load first byte of Raw Stat
-      lbu t3,0x0001(s2)				#Load second byte of Raw Stat
-      lbu v0,0x0002(s2)				#Load third byte of Raw Stat
-      sll t3,t3,0x08				#Raw Stat 2 * 100h
-      addu v1,v1,t3					#Raw Stat 2 * 100h + Raw Stat 1
-      sll v0,v0,0x10				#Raw Stat 3 * 10000h
-      bne t1,zero,LUS1				#Branch if Stat Growth != 0
-      addu t2,v1,v0					#t2 = Full Raw Stat
-      ori t1,zero,0x0001				#v0 = 1 (Min 1 growth)
-LUS1: addu t1,t1,t7					#t1 = Stat Growth + Level
+      lbu t7,0x0022(s0)			#Load Unit's Level
+      lbu t1,0x0000(s3)			#Load Stat Growth.
+      lbu v1,0x0000(s2)			#Load first byte of Raw Stat
+      lbu t3,0x0001(s2)			#Load second byte of Raw Stat
+      lbu v0,0x0002(s2)			#Load third byte of Raw Stat
+      sll t3,t3,0x08			#Raw Stat 2 * 100h
+      addu v1,v1,t3			#Raw Stat 2 * 100h + Raw Stat 1
+      sll v0,v0,0x10			#Raw Stat 3 * 10000h
+      bne t1,zero,LUS1			#Branch if Stat Growth != 0
+      addu t2,v1,v0			#t2 = Full Raw Stat
+      ori t1,zero,0x0001		#v0 = 1 (Min 1 growth)
+LUS1: addu t1,t1,t7			#t1 = Stat Growth + Level
       divu t2,t1
-      mflo v0						#v0 = Raw Stat / (Stat Growth + Level)
-      beq s1,zero,LUS2				#Branch if not Leveling Down
-      addu t0,t2,v0					#Raw Stat += Raw Stat / (Stat Growth + Level)
-      subu t0,t2,v0					#Raw Stat -= Raw Stat / (Stat Growth + Level)
+      mflo v0				#v0 = Raw Stat / (Stat Growth + Level)
+      beq s1,zero,LUS2			#Branch if not Leveling Down
+      addu t0,t2,v0			#Raw Stat += Raw Stat / (Stat Growth + Level)
+      subu t0,t2,v0			#Raw Stat -= Raw Stat / (Stat Growth + Level)
 LUS2: lui v1,0x00ff
-      ori v0,v1,0xffff				#v0 = ffffff
+      ori v0,v1,0xffff			#v0 = ffffff
       sltu v0,v0,t0
-      beq v0,zero,LUS3				#Branch if ffffff is greater ir equal than Raw Stat
-      addiu s3,s3,0x0002				#Unit's Growth Pointer += 2
-      ori t0,v1,0xffff				#Raw Stat = ffffff
-LUS3: srl v0,t0,0x08				#Raw Stat / 100
-      sb v0,0x0001(s2)				#Store Raw Stat 2
-      srl v0,t0,0x10				#Raw Stat / 10000
-      sb t0,0x0000(s2)				#Store Raw Stat 1
-      sb v0,0x0002(s2)				#Store Raw Stat 3
-      addiu s2,s2,-0x007e			#Unit's Raw Stat Pointer += 3 - 81
+      beq v0,zero,LUS3			#Branch if ffffff is greater ir equal than Raw Stat
+      addiu s3,s3,0x0002		#Unit's Growth Pointer += 2
+      ori t0,v1,0xffff			#Raw Stat = ffffff
+LUS3: srl v0,t0,0x08			#Raw Stat / 100
+      sb v0,0x0001(s2)			#Store Raw Stat 2
+      srl v0,t0,0x10			#Raw Stat / 10000
+      sb t0,0x0000(s2)			#Store Raw Stat 1
+      sb v0,0x0002(s2)			#Store Raw Stat 3
+      addiu s2,s2,-0x007e		#Unit's Raw Stat Pointer += 3 - 81
       slt v0,s2,s0
-      bne v0,zero,LULP				#Loop.
-      addu a0,s0,zero				#a0 = Unit's Data Pointer
-      jal 0x0005d5e0				#Status Setting/Checking Prep (Not Initializing, Statuses set?)
-      lhu s1,0x002a(s0)				#Load Unit's Max HP
-      lhu v0,0x0028(s0)				#Load Unit's HP
-      lhu s2,0x002e(s0)				#Load Unit's Max MP
-      lhu v1,0x002c(s0)				#Load Unit's MP
+      bne v0,zero,LULP			#Loop.
+      addu a0,s0,zero			#a0 = Unit's Data Pointer
+      jal 0x0005d5e0			#Status Setting/Checking Prep (Not Initializing, Statuses set?)
+      lhu s1,0x002a(s0)			#Load Unit's Max HP
+      lhu v0,0x0028(s0)			#Load Unit's HP
+      lhu s2,0x002e(s0)			#Load Unit's Max MP
+      lhu v1,0x002c(s0)			#Load Unit's MP
       sltu v0,s1,v0
-      beq v0,zero,LUS4				#Branch if Max HP greater or equal Current HP
+      beq v0,zero,LUS4			#Branch if Max HP greater or equal Current HP
       sltu v1,s2,v1
-      sh s1,0x0028(s0)				#Store Current HP = Max HP
-LUS4: beq v1,zero,LUED				#Branch if Max MP greater or equal Current MP
+      sh s1,0x0028(s0)			#Store Current HP = Max HP
+LUS4: beq v1,zero,LUED			#Branch if Max MP greater or equal Current MP
       lw ra,0x0010(sp)
-      sh s2,0x002c(s0)				#Store Current MP = Max MP
+      sh s2,0x002c(s0)			#Store Current MP = Max MP
 LUED: lw s3,0x0020(sp)
       lw s2,0x001c(sp)
       lw s1,0x0018(sp)
       lw s0,0x0014(sp)
       jr ra
       addiu sp,sp,0x0038
-@check_lvl_cap:						#0x0005db08, Check Level Cap, t2= curr lvl, return v0.
+@check_lvl_cap:				#0x0005db08, Check Level Cap, t2= curr lvl, return v0.
       lui t3,0x8005
-      lbu t3,0x78d4(t3)				#t3 = curr stage id.
-      ori t5,zero,0x63ff				#99 level cap by default.
+      lbu t3,0x78d4(t3)			#t3 = curr stage id.
+      ori t5,zero,0x63ff		#99 level cap by default.
 CLS1: sltiu v0,t3,%stage4_id
       beq v0,zero,CLS2
       sltiu v0,t3,%stage3_id
@@ -311,26 +311,26 @@ CLED: jr ra
     <Location file="SCUS_942_21" offset="5D880" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xffe0
       sw s0,0x0010(sp)
-      addu s0,a0,zero				#s0 = Unit's Data Pointer.
+      addu s0,a0,zero			#s0 = Unit's Data Pointer.
       sw ra,0x0018(sp)
       sw s1,0x0014(sp)
-      lbu v0,0x0021(s0)				#Load Unit's Exp.
-      lbu s1,0x0022(s0)				#Load Unit's Level.
+      lbu v0,0x0021(s0)			#Load Unit's Exp.
+      lbu s1,0x0022(s0)			#Load Unit's Level.
       sltiu v0,v0,0x0064
-      bne v0,zero,CUED				#Branch if Exp less than 100.
-      addu v0,zero,zero				#v0 = 0 (no level up).
-      jal @check_lvl_cap				#Check Level Cap.
-      addu t2,s1,zero				#Needed for Check Level cap. Current Level.
-      ori v1,zero,0x0063				#v0 = 99.
-      sb v1,0x0021(s0)				#Store Exp = 99.
-      beq v0,zero,CUED				#Branch if hit Level Cap. 
-      addu a0,s0,zero				#a0 = Unit's Data Pointer.
-      jal @lvl_up_section			#Level UP section.
-      addu a1,zero,zero				#a1 = 0 (Level Down Flag = False).
-      ori v0,zero,0x0001				#v0 = 1 (Leveled up).
-      addiu v1,s1,0x0001				#Level += 1.
-      sb zero,0x0021(s0)				#Store Exp = 0.
-      sb v1,0x0022(s0)				#Store new Level.
+      bne v0,zero,CUED			#Branch if Exp less than 100.
+      addu v0,zero,zero			#v0 = 0 (no level up).
+      jal @check_lvl_cap		#Check Level Cap.
+      addu t2,s1,zero			#Needed for Check Level cap. Current Level.
+      ori v1,zero,0x0063		#v0 = 99.
+      sb v1,0x0021(s0)			#Store Exp = 99.
+      beq v0,zero,CUED			#Branch if hit Level Cap. 
+      addu a0,s0,zero			#a0 = Unit's Data Pointer.
+      jal @lvl_up_section		#Level UP section.
+      addu a1,zero,zero			#a1 = 0 (Level Down Flag = False).
+      ori v0,zero,0x0001		#v0 = 1 (Leveled up).
+      addiu v1,s1,0x0001		#Level += 1.
+      sb zero,0x0021(s0)		#Store Exp = 0.
+      sb v1,0x0022(s0)			#Store new Level.
 CUED: lw ra,0x0018(sp)
       lw s1,0x0014(sp)
       lw s0,0x0010(sp)
@@ -344,67 +344,67 @@ CUED: lw ra,0x0018(sp)
     <Location file="SCUS_942_21" offset="5D8FC" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xfff8
       sw ra,0x0010(sp)
-      addu t0,a0,zero				#t0 = Party Data Pointer
-      lbu a0,0x0016(t0)				#Load Party Level
-      lbu t1,0x0002(t0)				#Load Party Job ID
-      addu a2,a0,a1					#Level = Party Level + Chosen Level
-      jal @check_lvl_cap				#Check Level Cap.
-      addiu t2,a2,-1				#Needed for Check Level cap. Current Level (Sort of).
-      bne v0,zero,LSS1				#Branch if Level didn't hit cap.
-      sll t2,t1,0x01				#ID * 2
-      addu a2,zero,v1				#Level = Cap.
-LSS1: addu t2,t2,t1					#ID * 3
+      addu t0,a0,zero			#t0 = Party Data Pointer
+      lbu a0,0x0016(t0)			#Load Party Level
+      lbu t1,0x0002(t0)			#Load Party Job ID
+      addu a2,a0,a1			#Level = Party Level + Chosen Level
+      jal @check_lvl_cap		#Check Level Cap.
+      addiu t2,a2,-1			#Needed for Check Level cap. Current Level (Sort of).
+      bne v0,zero,LSS1			#Branch if Level didn't hit cap.
+      sll t2,t1,0x01			#ID * 2
+      addu a2,zero,v1			#Level = Cap.
+LSS1: addu t2,t2,t1			#ID * 3
       lui t1,0x8006
-      lw t5,0x6194(t1)				#Load Job Data Pointer
-      sll t4,t2,0x04				#ID * 48
+      lw t5,0x6194(t1)			#Load Job Data Pointer
+      sll t4,t2,0x04			#ID * 48
       addu t5,t4,t5
-      subu t3,a2,a0					#Level - Party Level (Chosen Level essentially)
-      blez t3,LSED					#Branch if Level less or equal 0 (will happen at chosen level 99)
-      addu v0,a2,zero				#v0 = Level
-      blez t3,LSS2					#Branch if Level less or equal 0
-      addu t1,zero,zero				#Counter = 0
+      subu t3,a2,a0			#Level - Party Level (Chosen Level essentially)
+      blez t3,LSED			#Branch if Level less or equal 0 (will happen at chosen level 99)
+      addu v0,a2,zero			#v0 = Level
+      blez t3,LSS2			#Branch if Level less or equal 0
+      addu t1,zero,zero			#Counter = 0
       lui t4,0x00ff
-      ori t4,t4,0xffff				#Raw Cap = 0xFFFFFF, main loop
-LSLP: addiu a1,t0,0x0019				#a1 = Pointer to Party Raw HP
-      addiu a3,t5,0x000d				#a3 = Pointer to Job's HP Growth
-      addiu t2,a1,0x000f				#t2 = Pointer to Party's Unlocked Jobs (Limit)
-LSLI: lbu v0,0x0001(a1)				#Load Raw Stat Byte 2, inner loop.
-      lbu a2,0x0016(t0)				#Load Party Level
-      lbu a0,0x0000(a1)				#Load Raw Stat Byte 1
-      lbu v1,0x0002(a1)				#Load Raw Stat Byte 3
+      ori t4,t4,0xffff			#Raw Cap = 0xFFFFFF, main loop
+LSLP: addiu a1,t0,0x0019		#a1 = Pointer to Party Raw HP
+      addiu a3,t5,0x000d		#a3 = Pointer to Job's HP Growth
+      addiu t2,a1,0x000f		#t2 = Pointer to Party's Unlocked Jobs (Limit)
+LSLI: lbu v0,0x0001(a1)			#Load Raw Stat Byte 2, inner loop.
+      lbu a2,0x0016(t0)			#Load Party Level
+      lbu a0,0x0000(a1)			#Load Raw Stat Byte 1
+      lbu v1,0x0002(a1)			#Load Raw Stat Byte 3
       sll v0,v0,0x08
       addu a0,a0,v0
-      lbu v0,0x0000(a3)				#Load Stat Growth
+      lbu v0,0x0000(a3)			#Load Stat Growth
       sll v1,v1,0x10
-      bne v0,zero,LSS3				#Branch if Growth != 0
-      addu a0,a0,v1					#a0 = Full Raw Stat
-      ori v0,zero,0x0001				#v0 = 0 + 1 (min of 1 growth)
-LSS3: addu v0,a2,v0					#v0 = Level + Stat Growth
-      divu a0,v0					#Raw Stat / (Level + Growth)
-      mflo v1						#v1 = Raw Bonus
-      addiu a3,a3,0x0002				#Growth Pointer += 2
-      addu a0,a0,v1					#Raw Stat += Raw Bonus
+      bne v0,zero,LSS3			#Branch if Growth != 0
+      addu a0,a0,v1			#a0 = Full Raw Stat
+      ori v0,zero,0x0001		#v0 = 0 + 1 (min of 1 growth)
+LSS3: addu v0,a2,v0			#v0 = Level + Stat Growth
+      divu a0,v0			#Raw Stat / (Level + Growth)
+      mflo v1				#v1 = Raw Bonus
+      addiu a3,a3,0x0002		#Growth Pointer += 2
+      addu a0,a0,v1			#Raw Stat += Raw Bonus
       sltu v0,t4,a0
-      beq v0,zero,LSS4				#Branch if Raw Stat less than Raw Cap
+      beq v0,zero,LSS4			#Branch if Raw Stat less than Raw Cap
       lui v1,0x00ff
-      ori a0,v1,0xffff				#Raw Stat = FFFFFF
+      ori a0,v1,0xffff			#Raw Stat = FFFFFF
 LSS4: srl v0,a0,0x08
-      sb v0,0x0001(a1)				#Store Raw Stat Byte 2
+      sb v0,0x0001(a1)			#Store Raw Stat Byte 2
       srl v0,a0,0x10
-      sb a0,0x0000(a1)				#Store Raw Stat Byte 1
-      sb v0,0x0002(a1)				#Store Raw Stat Byte 3
-      addiu a1,a1,0x0003				#Raw Pointer += 3
+      sb a0,0x0000(a1)			#Store Raw Stat Byte 1
+      sb v0,0x0002(a1)			#Store Raw Stat Byte 3
+      addiu a1,a1,0x0003		#Raw Pointer += 3
       slt v0,a1,t2
-      bne v0,zero,LSLI				#Branch if all Raws haven't been Increased
+      bne v0,zero,LSLI			#Branch if all Raws haven't been Increased
       nop
-      lbu v0,0x0016(t0)				#Load Party Level
-      addiu t1,t1,0x0001				#Counter ++
-      addiu v0,v0,0x0001				#Level ++
-      sb v0,0x0016(t0)				#Store new Party Level
+      lbu v0,0x0016(t0)			#Load Party Level
+      addiu t1,t1,0x0001		#Counter ++
+      addiu v0,v0,0x0001		#Level ++
+      sb v0,0x0016(t0)			#Store new Party Level
       slt v0,t1,t3
-      bne v0,zero,LSLP				#Branch if Current Level less End Level
+      bne v0,zero,LSLP			#Branch if Current Level less End Level
       nop
-LSS2: lbu v0,0x0016(t0)				#Load Unit's Party Level
+LSS2: lbu v0,0x0016(t0)			#Load Unit's Party Level
 LSED: lw ra,0x0010(sp)
       addiu sp,sp,0x0008
       jr ra
@@ -414,10 +414,10 @@ LSED: lw ra,0x0010(sp)
     </Location>
     <Location file="BATTLE_BIN" offset="18C888" mode="ASM" offsetMode="RAM">
       addu a1,zero,zero
-      jal @check_lvl_cap				#Check Level Cap.
-      lbu t2,0x0022(v0)				#Load level, needed for Check Level cap.
+      jal @check_lvl_cap		#Check Level Cap.
+      lbu t2,0x0022(v0)			#Load level, needed for Check Level cap.
       j 0x0018c8d8
-      addu v1,t2,v0					#Lvl = Lvl + 0 or 1.
+      addu v1,t2,v0			#Lvl = Lvl + 0 or 1.
       nop
       nop
       nop
@@ -431,68 +431,68 @@ LSED: lw ra,0x0010(sp)
       addiu sp,sp,0xffe0
       sw s2,0x0018(sp)
       sw ra,0x001c(sp)
-      lw s2,0x2d90(a0)				#target current action pointer
+      lw s2,0x2d90(a0)			#target current action pointer
       sw s1,0x0014(sp)
-      lhu v0,0x0010(s2)				#load steal/break item flags
+      lhu v0,0x0010(s2)			#load steal/break item flags
       sw s0,0x0010(sp)
       andi v0,v0,0x0014
-      beq v0,zero,SBED				#branch if not stealing or breaking
+      beq v0,zero,SBED			#branch if not stealing or breaking
       addu s1,zero,zero
       addu s0,zero,zero
-SBLP: ori v1,zero,0x0080				#Main loop.
-      lbu v0,0x0019(s2)				#Load remove equipment byte.
-      srav v1,v1,s0					#Rotate item type.
+SBLP: ori v1,zero,0x0080		#Main loop.
+      lbu v0,0x0019(s2)			#Load remove equipment byte.
+      srav v1,v1,s0			#Rotate item type.
       and v0,v0,v1
-      lw v1,0x2d98(a0)				#Target data pointer.
-      beq v0,zero,SBS1				#Skip if it is not the stolen/broken item.
+      lw v1,0x2d98(a0)			#Target data pointer.
+      beq v0,zero,SBS1			#Skip if it is not the stolen/broken item.
       addu v1,v1,s0
-      lbu a1,0x001a(v1)				#Type of item.
-      lw a0,0x2d94(a0)				#Attacker data pointer.
+      lbu a1,0x001a(v1)			#Type of item.
+      lw a0,0x2d94(a0)			#Attacker data pointer.
       beq a1,zero,SBS1
       ori t0,zero,0x00ff
-      sll v0,a1,0x01				#Item data flags. Can be removed.
+      sll v0,a1,0x01			#Item data flags. Can be removed.
       addu v0,v0,a1
       sll v0,v0,0x02
       lui at,0x8006
       addu at,at,v0
       lbu v0,0x2ebb(at)				
-      beq a1,t0,SBS1				#Sorted instruction, check if not 0xff.
+      beq a1,t0,SBS1			#Sorted instruction, check if not 0xff.
       andi v0,v0,0x0001
-      bne v0,zero,SBS1				#The flag below rare.
-      lhu v0,0x0010(s2)				#Steal/break byte.
-      nop							#Here goes fur shop patch.
-      andi v0,v0,0x0010				#Steal check.
-      sb t0,0x001a(v1)				#set item type to 0xff
+      bne v0,zero,SBS1			#The flag below rare.
+      lhu v0,0x0010(s2)			#Steal/break byte.
+      nop				#Here goes fur shop patch.
+      andi v0,v0,0x0010			#Steal check.
+      sb t0,0x001a(v1)			#set item type to 0xff
       beq v0,zero,SBS1
       addiu s1,s1,0x0001
-      jal 0x0018e9e8				#item/stat increment routines?
-SBS1: addiu s0,s0,0x0001				#counter
-      slti v0,s0,0x0007				#runs 7 times
-      bne v0,zero,SBLP				#Main loop.
+      jal 0x0018e9e8			#item/stat increment routines?
+SBS1: addiu s0,s0,0x0001		#counter
+      slti v0,s0,0x0007			#runs 7 times
+      bne v0,zero,SBLP			#Main loop.
       lui a0,0x8019
       lw t0,-0x0a04(a0)
-      beq s1,zero,SBED				#branch if no steal?
-      lw s0,0x2d98(a0)				#target data pointer
-      bne t0,zero,SBS4				#?
-      addu a0,s0,zero				#a0=target data pointer
-      jal 0x0005d5e0				#status setting/checking + equip  R/S/M stats check
-SBS4: lbu s1,0x0019(s2)				#remove item byte
-      lbu t0,0x0058(s0)				#load status 1
-      lbu t1,0x015d(s0)				#load target current ability CT
-      lbu t2,0x016f(s0)				#skillset of last attack used
-      lbu t3,0x0020(s2)				#attack status removal 1
+      beq s1,zero,SBED			#branch if no steal?
+      lw s0,0x2d98(a0)			#target data pointer
+      bne t0,zero,SBS4			#?
+      addu a0,s0,zero			#a0=target data pointer
+      jal 0x0005d5e0			#status setting/checking + equip  R/S/M stats check
+SBS4: lbu s1,0x0019(s2)			#remove item byte
+      lbu t0,0x0058(s0)			#load status 1
+      lbu t1,0x015d(s0)			#load target current ability CT
+      lbu t2,0x016f(s0)			#skillset of last attack used
+      lbu t3,0x0020(s2)			#attack status removal 1
       ori v0,zero,0x0010
-      beq s1,v0,SBS5				#branch if right hand weapon
+      beq s1,v0,SBS5			#branch if right hand weapon
       ori v0,zero,0x0004
-      bne s1,v0,SBS6				#branch if left hand weapon
-SBS5: andi t0,t0,0x0008				#if  charging?
-      beq t0,zero,SBS6				#branch if not charging
+      bne s1,v0,SBS6			#branch if left hand weapon
+SBS5: andi t0,t0,0x0008			#if  charging?
+      beq t0,zero,SBS6			#branch if not charging
       ori v0,zero,0x00ff
       beq t1,v0,SBS6
       ori v0,zero,0x0008
-      bne t2,v0,SBS6				#branch if skillset != charge?
+      bne t2,v0,SBS6			#branch if skillset != charge?
       ori v0,t3,0x0008
-      sb v0,0x0020(s2)				#store remove charge
+      sb v0,0x0020(s2)			#store remove charge
 SBS6: ori v0,zero,0x0001
 SBED: lw ra,0x001c(sp)
       lw s2,0x0018(sp)
@@ -500,7 +500,7 @@ SBED: lw ra,0x001c(sp)
       lw s0,0x0010(sp)
       jr ra
       addiu sp,sp,0x0020
-      nop							#0x0018d4e4, used for fur shop patch.
+      nop				#0x0018d4e4, used for fur shop patch.
       nop
       nop
       nop
@@ -515,7 +515,7 @@ SBED: lw ra,0x001c(sp)
       nop
       nop
       nop
-      nop							#0x0018d520, 20 free spaces.
+      nop					#0x0018d520, 20 free spaces.
       nop
       nop
       nop
@@ -540,25 +540,25 @@ SBED: lw ra,0x001c(sp)
   <Patch name="Broken/Stolen items can be bought back at Fur Shop v2">
     <Description>Requires 'Vanilla Steal/Break Routine v2', self-explanatory.</Description>
     <Location file="BATTLE_BIN" offset="18D4E4" mode="ASM" offsetMode="RAM">
-@store_poach_inv:					#t0 = ff, a0 = attacker pointer, v0 untouched
+@store_poach_inv:			#t0 = ff, a0 = attacker pointer, v0 untouched
       addiu t2,s4,0x0001
-      bne t2,zero,0x0018D44C			#If it is a real action then s4 is all set.
+      bne t2,zero,0x0018D44C		#If it is a real action then s4 is all set.
       lui t2,0x8005
       ori t2,t2,0x9494
       addu t2,t2,a1
       lbu t3,0x0000(t2)
       lbu t1,0x01ba(a0)
-      beq t3,t0,BSED				#Branch if Inventory is full, poach inv goes to 255.
-      andi t1,t1,0x0030				#Check if attacker is from player team or not
-      sltu t1,zero,t1				#t1 = 0 player team is attacker
+      beq t3,t0,BSED			#Branch if Inventory is full, poach inv goes to 255.
+      andi t1,t1,0x0030			#Check if attacker is from player team or not
+      sltu t1,zero,t1			#t1 = 0 player team is attacker
       sltiu t4,v0,0x0001
-      or t1,t1,t4					#Only +1 if not player or break.
+      or t1,t1,t4			#Only +1 if not player or break.
       addu t3,t3,t1
 BSED: j 0x0018D44C
       sb t3,0x0000(t2)
     </Location>
     <Location file="BATTLE_BIN" offset="18D444" mode="ASM" offsetMode="RAM">
-      j @store_poach_inv				#Here goes fur shop patch.
+      j @store_poach_inv		#Here goes fur shop patch.
     </Location>
   </Patch>
   <Patch name="Chapter 2 enables Fur Shop">
@@ -573,19 +573,19 @@ BSED: j 0x0018D44C
     <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
       ori v1,zero,0x00ff
       lui t2,0x8006
-      addiu v0,t2,0x97df				#Load Inventory, last byte.
+      addiu v0,t2,0x97df		#Load Inventory, last byte.
       ori t1,zero,0x00ef
 SILP: sltu t0,t1,v1
-      sb t0,0x0000(v0)				#Store 1 of F0 and higher items, 0 for others.
-      addiu v1,v1,0xffff				#v1 = v1 - 1, next type of item.
-      bgez v1,SILP					#Loop to clear.
-      addiu v0,v0,0xffff				#v0 = v0 - 1, next byte of type item.
-      ori v0,zero,0x0205				#Store Potion 5 and Hi Potion 2.
+      sb t0,0x0000(v0)			#Store 1 of F0 and higher items, 0 for others.
+      addiu v1,v1,0xffff		#v1 = v1 - 1, next type of item.
+      bgez v1,SILP			#Loop to clear.
+      addiu v0,v0,0xffff		#v0 = v0 - 1, next byte of type item.
+      ori v0,zero,0x0205		#Store Potion 5 and Hi Potion 2.
       sh v0,-0x6830(t2)
-      ori v0,zero,0x0201				#Store Phoenix Down 2 and clear FE and FF items.
+      ori v0,zero,0x0201		#Store Phoenix Down 2 and clear FE and FF items.
       jr ra
       sw v0,-0x6824(t2)
-      nop							#0x00042a48, 26 free spaces.
+      nop				#0x00042a48, 26 free spaces.
       nop
       nop
       nop
@@ -618,57 +618,57 @@ SILP: sltu t0,t1,v1
     <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
       or t7,zero,a0
       andi v0,a1,0x0020
-      bne v0,zero,UJED				#Branch if Unit is a monster
-      addu t3,zero,zero				#v0 = 0
-      lhu t4,0x0008(t7)				#Load Unit's Dancer-Mime-Calc-Bard Job Levels
+      bne v0,zero,UJED			#Branch if Unit is a monster
+      addu t3,zero,zero			#v0 = 0
+      lhu t4,0x0008(t7)			#Load Unit's Dancer-Mime-Calc-Bard Job Levels
       andi v0,a1,0x0040
-      beq v0,zero,UJS1				#Branch if Unit is not Female
-      ori a0,zero,0xf000				#Useless, unless bard or dancer are required for another job
+      beq v0,zero,UJS1			#Branch if Unit is not Female
+      ori a0,zero,0xf000		#Useless, unless bard or dancer are required for another job
       ori a0,zero,0x000f
-UJS1: or v1,t4,a0					#Bard or Dancer Level doesn't exist
-      sh v1,0x0008(t7)				#Store new Job Levels
-      lui t2,0x0080					#Current Unlock Check = 0x800000
-      lui t3,0x0080					#Jobs Unlocked = 0x800000 (start squire)
-      addu t6,zero,zero				#Counter = 0
+UJS1: or v1,t4,a0			#Bard or Dancer Level doesn't exist
+      sh v1,0x0008(t7)			#Store new Job Levels
+      lui t2,0x0080			#Current Unlock Check = 0x800000
+      lui t3,0x0080			#Jobs Unlocked = 0x800000 (start squire)
+      addu t6,zero,zero			#Counter = 0
       lui t5,0x8006
       addiu t5,t5,0x60c4
 UJLP: srl v0,t2,0x1f
       addu v0,t2,v0
-      sra t2,v0,0x01				#Current Unlock Check div 2
-      addu t1,zero,zero				#t1 = 0
-      addu a3,t7,zero				#a3 = Stack Pointer
-      addu t0,t5,zero				#t0 = Job Unlock Requirements Pointer
-UJIL: lbu a0,0x0000(t0)				#Load Job Unlock Requirements
-      lbu a2,0x0000(a3)				#Load Job Levels
-      andi v1,a0,0x00f0				#v1 = high nybble job requirement
-      andi v0,a2,0x00f0				#v0 = high nybble job level
+      sra t2,v0,0x01			#Current Unlock Check div 2
+      addu t1,zero,zero			#t1 = 0
+      addu a3,t7,zero			#a3 = Stack Pointer
+      addu t0,t5,zero			#t0 = Job Unlock Requirements Pointer
+UJIL: lbu a0,0x0000(t0)			#Load Job Unlock Requirements
+      lbu a2,0x0000(a3)			#Load Job Levels
+      andi v1,a0,0x00f0			#v1 = high nybble job requirement
+      andi v0,a2,0x00f0			#v0 = high nybble job level
       sltu t1,v0,v1
-      bne t1,zero,UJS2				#Branch if Level less than requirement
-      andi v1,a0,0x000f				#v1 = low nybble job requirement
-      andi v0,a2,0x000f				#v0 = low nybble job level
+      bne t1,zero,UJS2			#Branch if Level less than requirement
+      andi v1,a0,0x000f			#v1 = low nybble job requirement
+      andi v0,a2,0x000f			#v0 = low nybble job level
       sltu t1,v0,v1
-      bne t1,zero,UJS2				#Branch if Level less than requirement
-      addiu a3,a3,0x0001				#Stack Pointer ++
-      addiu v0,t7,0x000a				#v0 = Stack Pointer + 10
+      bne t1,zero,UJS2			#Branch if Level less than requirement
+      addiu a3,a3,0x0001		#Stack Pointer ++
+      addiu v0,t7,0x000a		#v0 = Stack Pointer + 10
       slt v0,a3,v0
-      bne v0,zero,UJIL				#Branch if Stack Pointer less than SP + 10
-      addiu t0,t0,0x0001				#Job Unlock Requirements Pointer ++
-UJS2: bne t1,zero,UJS3				#Branch if Job can't be unlocked
-      addiu t5,t5,0x000a				#Job Unlock Requirements Pointer += 10
-      or t3,t3,t2					#Unlock Job for the unit
-UJS3: addiu t6,t6,0x0001				#Counter ++
+      bne v0,zero,UJIL			#Branch if Stack Pointer less than SP + 10
+      addiu t0,t0,0x0001		#Job Unlock Requirements Pointer ++
+UJS2: bne t1,zero,UJS3			#Branch if Job can't be unlocked
+      addiu t5,t5,0x000a		#Job Unlock Requirements Pointer += 10
+      or t3,t3,t2			#Unlock Job for the unit
+UJS3: addiu t6,t6,0x0001		#Counter ++
       slti v0,t6,0x0013
-      bne v0,zero,UJLP				#Branch if Counter less than 19
+      bne v0,zero,UJLP			#Branch if Counter less than 19
       lui a0,0x00ff
       andi v0,a1,0x0040
-      beq v0,zero,UJS4				#Branch if Unit is not Female
+      beq v0,zero,UJS4			#Branch if Unit is not Female
       ori v0,a0,0xffd0
       ori v0,a0,0xffb0
-UJS4: sh t4,0x0008(t7)				#Store old Job Levels
-      and t3,t3,v0					#Disable Bard or Dancer.
+UJS4: sh t4,0x0008(t7)			#Store old Job Levels
+      and t3,t3,v0			#Disable Bard or Dancer.
 UJED: jr ra
       or v0,t3,zero
-      nop							#0x0005dce4, used for extra req jobs patch.
+      nop				#0x0005dce4, used for extra req jobs patch.
       nop
       nop
       nop
@@ -697,9 +697,9 @@ UJED: jr ra
   </Patch>
   <Patch name="Extra Requirements for Jobs">
     <Description>Requires 'Vanilla Calculate Unlocked Jobs v2', uses all free space. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
-	st_tier1	Inner game stage (0f = end of chapter 1)
-	st_tier2	Inner game stage (1f = end of chapter 2)
-	st_tier3	Inner game stage (32 = after Limberry Castle?)</Description>
+	st_tier1			Inner game stage (0f = end of chapter 1)
+	st_tier2			Inner game stage (1f = end of chapter 2)
+	st_tier3			Inner game stage (32 = after Limberry Castle?)</Description>
     <Location file="SCUS_942_21" offset="5DCE4" mode="ASM" offsetMode="RAM">
     .eqv %st_tier1, 0x000f
     .eqv %st_tier2, 0x001f
@@ -732,23 +732,23 @@ ERED: jr ra
       nop
     </Location>
     <Location file="SCUS_942_21" offset="5DCDC" mode="ASM" offsetMode="RAM">
-      j @ex_req_jobs				#v0 = Unlocked Jobs, for in and out.
+      j @ex_req_jobs			#v0 = Unlocked Jobs, for in and out.
     </Location>
   </Patch>
   <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu) v2">
     <Description>Disables paging when a confirm menu is up so there is no way to do the JP scroll glitch. It is Glain's hack but inserted in vanilla code without hooking. Only 2 instructions vs 13.</Description>
     <Location file="WORLD_WORLD_BIN" offset="129B7C" mode="ASM" offsetMode="RAM">
-      lui t0,0x801d					#Sort of vanilla code sorted.
-      lbu t1,-0x7ab0(t0)				#Load ...
-      addiu sp,sp,0xffc0				#Vanilla code.
-      bne t1,zero,0x00129ce0			#Check if ... Finish to avoid paging.
-      sw ra,0x0038(sp)				#Vanilla code sorted, for the 2 spaces needed.
+      lui t0,0x801d			#Sort of vanilla code sorted.
+      lbu t1,-0x7ab0(t0)		#Load ...
+      addiu sp,sp,0xffc0		#Vanilla code.
+      bne t1,zero,0x00129ce0		#Check if ... Finish to avoid paging.
+      sw ra,0x0038(sp)			#Vanilla code sorted, for the 2 spaces needed.
       sw s1,0x0034(sp)
       sw s0,0x0030(sp)
       lh s1,-0x2ab4(t0)
       addu a2,a0,zero
       lhu v0,-0x2df4(t0)
-      addu v1,s1,zero				#After this address vanilla is untouched.
+      addu v1,s1,zero			#After this address vanilla is untouched.
       nop
       subu s0,v0,v1
     </Location>
@@ -757,119 +757,119 @@ ERED: jr ra
     <Description>Switch unit number with L1/R1 buttons in the formation screen. Directional inputs reworked in the formation screen, Left/Right/Up/Down now behave like old L1/R1. It is similar to Glain's hack but inserted in vanilla code without hooking and some minor fixes.</Description>
     <Location file="WORLD_WORLD_BIN" offset="116590" mode="ASM" offsetMode="RAM">
       or a0,zero,v0
-      ori a1,zero,0x0003				#For column effect.
+      ori a1,zero,0x0003		#For column effect.
       jal 0x0012bb88
-      or t0,a3,zero					#Save current pos.
+      or t0,a3,zero			#Save current pos.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="12BB88" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xffe0
-      or t1,zero,a2					#Save original a2.
-SULP: andi t7,a0,0x0008				#Check if R1 is pressed.
+      or t1,zero,a2			#Save original a2.
+SULP: andi t7,a0,0x0008			#Check if R1 is pressed.
       bne t7,zero,SUS2
       addiu v0,t0,0x0001
-      andi t7,a0,0x2000				#Check if right is pressed.
+      andi t7,a0,0x2000			#Check if right is pressed.
       bne t7,zero,SUS4
-      andi t7,a0,0x0004				#Check if L1 is pressed.
+      andi t7,a0,0x0004			#Check if L1 is pressed.
       bne t7,zero,SUS2
       addiu v0,t0,0xffff
-      andi t7,a0,0x8000				#Check if left is pressed.
+      andi t7,a0,0x8000			#Check if left is pressed.
       bne t7,zero,SUS4
       subu t7,a2,a1
-      blez t7,SUS1					#Branch if a2 is less than or equal 3.
+      blez t7,SUS1			#Branch if a2 is less than or equal 3.
       addiu v1,zero,0x0001
       addiu v1,zero,0x0004
-      or a2,a2,a1					#Set last two bits of a2.
-SUS1: andi t7,a0,0x4000				#Check if down is pressed
+      or a2,a2,a1			#Set last two bits of a2.
+SUS1: andi t7,a0,0x4000			#Check if down is pressed
       bne t7,zero,SUS4
       addu v0,t0,v1
-      andi t7,a0,0x1000				#Check if up is pressed.
+      andi t7,a0,0x1000			#Check if up is pressed.
       bne t7,zero,SUS4
       subu v0,t0,v1
-SUAE: j SUED						#End of checking inputs. Abnormal end.
+SUAE: j SUED				#End of checking inputs. Abnormal end.
       or v0,a3,zero
-SUS2: bne s2,zero,SUAE				#Only in party roster menu.
-      lui t6,0x801d					#Glain's code optimized and fixed. From here to SUS4.
+SUS2: bne s2,zero,SUAE			#Only in party roster menu.
+      lui t6,0x801d			#Glain's code optimized and fixed. From here to SUS4.
       sll t7,t0,2
       addu t7,t6,t7
       lw t7,-0x2a14(t7)
       subu t5,v0,t0
-      lhu t0,0x2c(t7)				#Current UnitIndex.
+      lhu t0,0x2c(t7)			#Current UnitIndex.
       sll t2,v0,2
-      addu t1,t0,t5					#Destination UnitIndex.
+      addu t1,t0,t5			#Destination UnitIndex.
       addu t7,t0,t1
-      addiu v1,t7,0xffff				#Check if sum of both UnitIndex less than or equal 1
+      addiu v1,t7,0xffff		#Check if sum of both UnitIndex less than or equal 1
       blez v1,SUAE
-      addiu v1,t7,0xffd9				#Check if sum of both UnitIndex greater than or equal 39
+      addiu v1,t7,0xffd9		#Check if sum of both UnitIndex greater than or equal 39
       bgez v1,SUAE
       addu t7,t6,t2
       lw  t7,-0x2a14(t7)
       lui t6,0x8005
-      lhu t7,0x2c(t7)				#UnitIndex of the neighbor unit.
-      ori t6,t6,0x7f74				#Load Party Pointer.
-      subu t8,t7,t1					#Store diff of UnitIndex between neighbor and destination.
+      lhu t7,0x2c(t7)			#UnitIndex of the neighbor unit.
+      ori t6,t6,0x7f74			#Load Party Pointer.
+      subu t8,t7,t1			#Store diff of UnitIndex between neighbor and destination.
       or t2,zero,t0
       or t3,zero,t1
       sll t0,t0,8
       sll t1,t1,8
       addu t0,t0,t6
       addu t1,t1,t6
-      lbu v1,0x0001(t1)				#When dismissing units SUS3 branch fails.
+      lbu v1,0x0001(t1)			#When dismissing units SUS3 branch fails.
       or t6,t1,zero
       or t7,t0,zero
       bne t8,zero,SUS3
       ori t8,zero,0xff
-      bne v1,t8,SUIL				#Check if unit was not dismissed.
+      bne v1,t8,SUIL			#Check if unit was not dismissed.
 SUS3: ori v1,zero,0x0100
-      ori t2,zero,0xff				#If it was, keep it like that.
-      or v0,a3,zero					#Dont move the cursor.
-SUIL: addiu v1,v1,0xffff				#Swap data.
+      ori t2,zero,0xff			#If it was, keep it like that.
+      or v0,a3,zero			#Dont move the cursor.
+SUIL: addiu v1,v1,0xffff		#Swap data.
       lbu t5,0(t7)
       lbu t4,0(t6)
       bne t2,t8,SUIS
       sb t4,0(t7)
-      sb t5,0(t7)					#Keep data for better portrait transition.
+      sb t5,0(t7)			#Keep data for better portrait transition.
 SUIS: sb t5,0(t6)
       addiu t7,t7,0x0001
       bgtz v1,SUIL
       addiu t6,t6,0x0001
       sb t2,0x0001(t0)
       sb t3,0x0001(t1)
-      sw ra,0x0018(sp)				#This is for the jal's.
+      sw ra,0x0018(sp)			#This is for the jal's.
       sw a3,0x0014(sp)
       sw v0,0x0010(sp)
       lui t7,0x8019
-      jal 0x001140bc				#Update most graphic data. Kills a lot of visual effects.
+      jal 0x001140bc			#Update most graphic data. Kills a lot of visual effects.
       sb zero,-0x452c(t7)
-      jal 0x00108920				#Update portrait and name.
+      jal 0x00108920			#Update portrait and name.
       nop
-      lw v0,0x0010(sp)				#Recover from the jal's.
+      lw v0,0x0010(sp)			#Recover from the jal's.
       lw a3,0x0014(sp)
-      j SUNE						#Normal end.
+      j SUNE				#Normal end.
       lw ra,0x0018(sp)
-SUS4: bltz v0,SUS5					#Check if destination pos is less than zero.
-      subu t7,v0,a2					#Temporally subtract from destination pos the number of units.
-      bgez t7,SUS6					#If its non negative branch and store subtraction.
-      or v0,t7,zero					#If previous branch is false, then next addition will fix the subtraction.
-SUS5: addu v0,v0,a2					#Add to destination pos the number of units.
-SUS6: subu t7,v0,t1					#Subtract original a2 from destination pos. 
-      bgez t7,SULP					#If its greater than or equal zero it means prohibited pos.
-      or t0,v0,zero					#This will simulate a second press if previous branch is true.
-SUNE: beq v0,a3,SUED				#Normal end.
+SUS4: bltz v0,SUS5			#Check if destination pos is less than zero.
+      subu t7,v0,a2			#Temporally subtract from destination pos the number of units.
+      bgez t7,SUS6			#If its non negative branch and store subtraction.
+      or v0,t7,zero			#If previous branch is false, then next addition will fix the subtraction.
+SUS5: addu v0,v0,a2			#Add to destination pos the number of units.
+SUS6: subu t7,v0,t1			#Subtract original a2 from destination pos. 
+      bgez t7,SULP			#If its greater than or equal zero it means prohibited pos.
+      or t0,v0,zero			#This will simulate a second press if previous branch is true.
+SUNE: beq v0,a3,SUED			#Normal end.
       lui t7,0x8019
       ori t6,zero,0x0003
-      sb t6,-0x4534(t7)				#??? for visual effect.
-SUED: jr ra						#End.
+      sb t6,-0x4534(t7)			#??? for visual effect.
+SUED: jr ra				#End.
       addiu sp,sp,0x0020
       nop
-	</Location>
+    </Location>
   </Patch>
   <Patch name="Monster eggs in last roster slot only">
-    <Description>Self explanatory.</Description>
+    <Description>Self-explanatory.</Description>
     <Location file="SCUS_942_21" offset="59E18" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xffd8
       sw a0,0x001c(sp)
       sw s0,0x0010(sp)
-      addu s0,a1,zero				#s0 = Egg Mod (used as birthday)
+      addu s0,a1,zero			#s0 = Egg Mod (used as birthday)
       sw a2,0x0020(sp)
       sw ra,0x0024(sp)
       sw s2,0x0018(sp)
@@ -888,32 +888,32 @@ SUED: jr ra						#End.
       ori a1,zero,0x0003
       lw a0,0x001c(sp)
       lw a2,0x0020(sp)
-      lbu v0,0x0004(s1)				#Load Party Gender Byte
-      sb a0,0x0002(s1)				#Store Job ID
-      sb a2,0x00d2(s1)				#Store ? = Random
+      lbu v0,0x0004(s1)			#Load Party Gender Byte
+      sb a0,0x0002(s1)			#Store Job ID
+      sb a2,0x00d2(s1)			#Store ? = Random
       ori v0,v0,0x0004
-      sb v0,0x0004(s1)				#Store Gender with ??? Stats (Egg) Enabled
+      sb v0,0x0004(s1)			#Store Gender with ??? Stats (Egg) Enabled
       andi v0,s0,0xffff
       sltiu v0,v0,0x016e
-      bne v0,zero,MLS1				#Branch if Egg Mod less than 0x16e
+      bne v0,zero,MLS1			#Branch if Egg Mod less than 0x16e
       nop
-      ori s0,zero,0x0001				#s0 = 1
-MLS1: jal 0x0005e5d8				#Calculate Zodiac Symbol
-      andi a0,s0,0xffff				#a0 = Egg Mod
-      sll a0,v0,0x04				#Zodiac  16
-      addu v0,s2,zero				#v0 = Party ID
-      andi v1,s0,0x0100				#Egg Mod High Bit (not needed; just generic date code)
-      srl v1,v1,0x08				#High Bit / 256
-      addu v1,v1,a0					#High Bit + Zodiac
-      sb s0,0x0005(s1)				#Store Birthday = Egg Mod
-      sb v1,0x0006(s1)				#Store Zodiac (useless?)
+      ori s0,zero,0x0001		#s0 = 1
+MLS1: jal 0x0005e5d8			#Calculate Zodiac Symbol
+      andi a0,s0,0xffff			#a0 = Egg Mod
+      sll a0,v0,0x04			#Zodiac  16
+      addu v0,s2,zero			#v0 = Party ID
+      andi v1,s0,0x0100			#Egg Mod High Bit (not needed; just generic date code)
+      srl v1,v1,0x08			#High Bit / 256
+      addu v1,v1,a0			#High Bit + Zodiac
+      sb s0,0x0005(s1)			#Store Birthday = Egg Mod
+      sb v1,0x0006(s1)			#Store Zodiac (useless?)
 MLED: lw ra,0x0024(sp)
       lw s2,0x0018(sp)
       lw s1,0x0014(sp)
       lw s0,0x0010(sp)
       jr ra
       addiu sp,sp,0x0028
-	</Location>
+    </Location>
   </Patch>
   <Patch name="JP Gain">
     <Description>Base JP Gain is 10 instead of 8 and job level goes by 4 instead of 2. Now you can gain up to 99 JP. Gained JP Up goes to spillover too.</Description>
@@ -921,10 +921,10 @@ MLED: lw ra,0x0024(sp)
       sll v0,s7,0x02
       srl v1,s1,0x02
       addiu v1,v1,0x000a
-      lbu a0,0x0090(s2)				#Load Second Set of Supports
+      lbu a0,0x0090(s2)			#Load Second Set of Supports
       addu s1,v0,v1
       andi v0,a0,0x0040
-      beq v0,zero,JGS1				#Branch if Unit doesn't have Gained  JP Up
+      beq v0,zero,JGS1			#Branch if Unit doesn't have Gained  JP Up
       sll v0,s1,0x01
       addu v0,v0,s1
       srl v1,v0,0x1f
@@ -935,7 +935,7 @@ JGS1: lbu a0,0x0000(s0)
       bne a0,zero,JGS2
       nop
       addu s1,zero,zero
-JGS2: lbu v0,0x0005(s2)				#Load Unit's Team
+JGS2: lbu v0,0x0005(s2)			#Load Unit's Team
       addu s0,zero,zero
       andi s3,v0,0x0030
 JGLP: beq s0,s5,JGS4
@@ -944,9 +944,9 @@ JGLP: beq s0,s5,JGS4
       addu a1,s1,zero
       addiu a1,s1,0x0003
 JGS3: addu a0,s0,zero
-      sra a1,a1,0x02				#Gained JP / 4
+      sra a1,a1,0x02			#Gained JP / 4
       lw a3,0x0010(sp)
-      jal 0x0017ea80				#Store JP; Calculate Unlocked Jobs
+      jal 0x0017ea80			#Store JP; Calculate Unlocked Jobs
       andi a2,s3,0x00ff
 JGS4: addiu s0,s0,0x0001
       slti v0,s0,0x0015
@@ -969,7 +969,7 @@ JGS4: addiu s0,s0,0x0001
   <Patch name="Move-find rare minimum brave">
     <Description>Sets the amount of minimum brave to get always rare item to 20. Vanilla is zero.</Description>
     <Location file="BATTLE_BIN" offset="18025C" mode="ASM" offsetMode="RAM">
-      ori a1,zero,0x0078				#MinBr = 0x78 - 0x64 = 0x14 = 20d.
+      ori a1,zero,0x0078		#MinBr = 0x78 - 0x64 = 0x14 = 20d.
     </Location>
   </Patch>
 <!--Patches that are not for general use:-->
@@ -978,16 +978,16 @@ JGS4: addiu s0,s0,0x0001
     <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
       ori v1,zero,0x00ff
       lui t2,0x8006
-      addiu v0,t2,0x97df				#Load Inventory, last byte.
+      addiu v0,t2,0x97df		#Load Inventory, last byte.
 SILP: sb zero,0x0000(v0)
-      addiu v1,v1,0xffff				#v1 = v1 - 1, next type of item.
-      bgez v1,SILP					#Loop to clear.
-      addiu v0,v0,0xffff				#v0 = v0 - 1, next byte of type item.
-      ori v0,zero,0x0005				#Store Potion 5.
+      addiu v1,v1,0xffff		#v1 = v1 - 1, next type of item.
+      bgez v1,SILP			#Loop to clear.
+      addiu v0,v0,0xffff		#v0 = v0 - 1, next byte of type item.
+      ori v0,zero,0x0005		#Store Potion 5.
       jr ra
       sh v0,-0x6830(t2)
-      nop							#Turbo data space, not a valid instruction.
-@swap_b6_b7_turbo:					#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
+      nop				#Turbo data space, not a valid instruction.
+@swap_b6_b7_turbo:			#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
       andi t0,v0,0x0040
       srl t0,t0,0x01
       andi t1,v0,0x0020
@@ -995,19 +995,19 @@ SILP: sb zero,0x0000(v0)
       andi v0,v0,0xff9f
       or t0,t0,t1
       lui t2,0x8004
-      lbu t1,0x2a38(t2)				#Load turbo previous state.
+      lbu t1,0x2a38(t2)			#Load turbo previous state.
       ori at,zero,0x0060
-      bne t0,at,SWED				#If X+O are not pressed, then end.
-      lbu at,0x2a39(t2)				#Load turbo delay.
+      bne t0,at,SWED			#If X+O are not pressed, then end.
+      lbu at,0x2a39(t2)			#Load turbo delay.
       xori t0,t1,0x0020
       addiu t1,at,0x0001
-      andi t1,t1,0x0007				#Turbo delay value.
+      andi t1,t1,0x0007			#Turbo delay value.
       bne t1,zero,SWED
-      sb t1,0x2a39(t2)				#Update turbo delay.
-      sb t0,0x2a38(t2)				#Save current turbo state.
+      sb t1,0x2a39(t2)			#Update turbo delay.
+      sb t0,0x2a38(t2)			#Save current turbo state.
 SWED: jr ra
       or v0,v0,t0	  
-      nop							#0x00042a88, 10 free spaces.
+      nop				#0x00042a88, 10 free spaces.
       nop
       nop
       nop
@@ -1019,7 +1019,7 @@ SWED: jr ra
       nop
     </Location>
     <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
-      jal @swap_b6_b7_turbo			#Swap buttons X-O and turbo X+O.
+      jal @swap_b6_b7_turbo		#Swap buttons X-O and turbo X+O.
       nor v0,zero,v0
     </Location>
   </Patch>
@@ -1028,7 +1028,7 @@ SWED: jr ra
     <Location file="WORLD_WORLD_BIN" offset="120E84" mode="ASM" offsetMode="RAM">
     .label  @oej_id, 0x39
     .label  @oej_id_neg, 0xffc7
-      ori v0,zero,@oej_id			#Clean and block all abilities.
+      ori v0,zero,@oej_id		#Clean and block all abilities.
       beq v1,v0,0x00120f68
       lbu v0,0x0011(s2)
       ori at,zero,0x00ff
@@ -1036,7 +1036,7 @@ SWED: jr ra
       nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="124AF8" mode="ASM" offsetMode="RAM">
-      ori at,zero,@oej_id			#Clean and block all abilities, too?
+      ori at,zero,@oej_id		#Clean and block all abilities, too?
       lh s0,0x0024(a0)
       ori v0,zero,0x005d
       beq s0,at,M1S1
@@ -1050,7 +1050,7 @@ M1S1: ori v0,zero,0x004b
       or v1,s0,zero
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122808" mode="ASM" offsetMode="RAM">
-M2LP: lh a0,0x0000(v0)				#Avoid listing skill set for secondary ss.
+M2LP: lh a0,0x0000(v0)			#Avoid listing skill set for secondary ss.
       ori v0,zero,0x005d
       beq a0,v0,M2S1
       addiu s0,s0,0x0002
@@ -1083,7 +1083,7 @@ M2S1: addiu a0,sp,0x0010
       addiu sp,sp,0x0058
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="124824" mode="ASM" offsetMode="RAM">
-      ori at,zero,@oej_id			#To avoid losing equipment.
+      ori at,zero,@oej_id		#To avoid losing equipment.
       sh a1,0x0024(v0)
       andi a1,a1,0xffff
       beq a1,at,0x0012483c
@@ -1101,7 +1101,7 @@ M2S1: addiu a0,sp,0x0010
       lh a0,0x0024(s0)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="125598" mode="ASM" offsetMode="RAM">
-      lbu v0,0x0070(s0)				#Block menu options.
+      lbu v0,0x0070(s0)			#Block menu options.
       nop
       andi v0,v0,0x0004
       beq v0,zero,M3S1
@@ -1116,20 +1116,20 @@ M3S1: lh a0,0x0024(s0)
       addiu v0,zero,0xfffa
     </Location>
     <Location file="BATTLE_BIN" offset="182B60" mode="ASM" offsetMode="RAM">
-      lbu at,0x0003(r17)				#Block act and move for the turn of mentalist.
-      sb r30,0x0186(r17)				#store units turn = active
+      lbu at,0x0003(r17)		#Block act and move for the turn of mentalist.
+      sb r30,0x0186(r17)		#store units turn = active
       addiu at,at,@oej_id_neg
       sltiu at,at,0x0001
-      sb zero,0x0187(r17)			#store move available
-      sb at,0x0188(r17)				#store act available
+      sb zero,0x0187(r17)		#store move available
+      sb at,0x0188(r17)			#store act available
       bne r16,r0,M4S1
-      sb r30,0x0027(r17)				#set units turn = active
-      ori r21,r20,0x0100				#r21 = return code (0x0100) next turn?
+      sb r30,0x0027(r17)		#set units turn = active
+      ori r21,r20,0x0100		#r21 = return code (0x0100) next turn?
 M4S1: lui r1,0x8019
       lw r4,-0x0ae8(r1)
       ori r3,r0,0x000a
-      sw r20,-0x0ae0(r1)				#store active turn ID
-      sw r3,-0x0ae8(r1)				#go to validate units turn
+      sw r20,-0x0ae0(r1)		#store active turn ID
+      sw r3,-0x0ae8(r1)			#go to validate units turn
     </Location>
     <Location file="BATTLE_BIN" offset="18D520" mode="ASM" offsetMode="RAM">
 @men_jp_gain:
@@ -1140,7 +1140,7 @@ M4S1: lui r1,0x8019
       ori at,zero,0x0001
       sb at,0x0187(s0)
       jal 0x00073638
-      sb at,0x38e7(a1)				#Create 1 exp point so it get JP too.
+      sb at,0x38e7(a1)			#Create 1 exp point so it get JP too.
 M5ED: lw r31,0x0014(sp)
       lw s0,0x0010(sp)
       jr ra
@@ -1150,14 +1150,14 @@ M5ED: lw r31,0x0014(sp)
       lw s0,0x0134(s0)
       nop
       lbu a1,0x0003(s0)
-      j @men_jp_gain				#When player start a turn, no AI.
+      j @men_jp_gain			#When player start a turn, no AI.
       lbu a2,0x0187(s0)
     </Location>
     <Location file="BATTLE_BIN" offset="194300" mode="ASM" offsetMode="RAM">
       or s0,a0,zero
       nop
       lbu a1,0x0003(s0)
-      j	@men_jp_gain				#For AI. Not optimal.
+      j	@men_jp_gain			#For AI. Not optimal.
       lbu a2,0x0187(s0)
     </Location>
   </Patch>
@@ -1166,9 +1166,9 @@ M5ED: lw r31,0x0014(sp)
     <Description>With FFTPatcher or similar program change ability 'Magic Break' formula from 2c to 25, change x and y values, uncheck Affect MP and check Unequip. If need change offset F6400 to whatever you want (as long as it is a safe spot).</Description>
     <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
 @my_code_cave:
-      beq v1,v0,SKIP				#Branch if used ability is 'Icewolf  Bite'
+      beq v1,v0,SKIP			#Branch if used ability is 'Icewolf  Bite'
       ori v0,zero,0x008e
-      beq v1,v0,SKIP				#Branch if used ability is 'Acc Break'=='MP Break'
+      beq v1,v0,SKIP			#Branch if used ability is 'Acc Break'=='MP Break'
       ori v0,zero,0x0072
       j 0x00187b54
       nop
@@ -1186,15 +1186,15 @@ SKIP: j 0x00187b5c
 @melee_spellcaster:
       addiu sp,sp,0xffe8
       sw ra,0x0010(sp)
-      jal 0x001885b8				#Magic Evade. If Physical use 0x00188510.
+      jal 0x001885b8			#Magic Evade. If Physical use 0x00188510.
       nop
       bne v0,zero,MSED
       lui v0,0x8018
-      jal @acc_mag_melee  			#Calculate (PA + X)*Faith% acc, based on 0x001889cc.
+      jal @acc_mag_melee  		#Calculate (PA + X)*Faith% acc, based on 0x001889cc.
       addiu sp,sp,0xffe8
       bne v0,zero,MSED
       lui v0,0x8018
-      jal @dmg_f_melee				#DMG_F(PA*(WP+Y)), based on 0x00188d84.
+      jal @dmg_f_melee			#DMG_F(PA*(WP+Y)), based on 0x00188d84.
       addiu sp,sp,0xffe8
 MSED: lw ra,0x0010(sp)
       addiu sp,sp,0x0018
@@ -1202,12 +1202,12 @@ MSED: lw ra,0x0010(sp)
       nop
 @acc_mag_melee:
       sw ra,0x0010(sp)
-      j 0x00185dac					#Store PA+X.
-      ori ra,v0,0x89d8				#It is 0x001889cc but first part is patched.
+      j 0x00185dac			#Store PA+X.
+      ori ra,v0,0x89d8			#It is 0x001889cc but first part is patched.
 @dmg_f_melee:
       sw ra,0x0010(sp)
-      j 0x00185e5c					#Store PA and WP + Y.
-      ori ra,v0,0x8da0				#It is 0x00188d84 but first part is patched.
+      j 0x00185e5c			#Store PA and WP + Y.
+      ori ra,v0,0x8da0			#It is 0x00188d84 but first part is patched.
     </Location>
     <Location file="BATTLE_BIN" offset="18929C" mode="ASM" offsetMode="RAM">
       j @melee_spellcaster
@@ -1216,7 +1216,7 @@ MSED: lw ra,0x0010(sp)
   <Patch name="Swap X-O">
     <Description>Swap button X for O. Uses from 275C0, 8 instruction spaces.</Description>
     <Location file="SCUS_942_21" offset="275C0" mode="ASM" offsetMode="RAM">
-@swap_b6_b7:						#Used for swapping buttons. Swaps bit 6 for 7. Return v0.
+@swap_b6_b7:				#Used for swapping buttons. Swaps bit 6 for 7. Return v0.
       andi t0,v0,0x0040
       srl t0,t0,0x01
       andi t1,v0,0x0020
@@ -1227,7 +1227,7 @@ MSED: lw ra,0x0010(sp)
       or v0,v0,t0
     </Location>
     <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
-      jal @swap_b6_b7				#Swap buttons X-O.
+      jal @swap_b6_b7			#Swap buttons X-O.
       nor v0,zero,v0
     </Location>
   </Patch>
@@ -1236,22 +1236,22 @@ MSED: lw ra,0x0010(sp)
 	ma_factor	Amount to multiply MA/128, 64=MA/2, 51=MA/2.5, 42(43)=MA/3.</Description>
     <Location file="BATTLE_BIN" offset="176C58" mode="ASM" offsetMode="RAM">
     .eqv %ma_factor, 64
-      lbu v0,0x0037(t0)				#Load MA
-      subu a0,zero,a0				#Make Y Distance positive
+      lbu v0,0x0037(t0)			#Load MA
+      subu a0,zero,a0			#Make Y Distance positive
       ori t1,zero,%ma_factor
       multu v0,t1
-      mflo v0						#v0 = MA * ma_factor
-      addu v1,v1,a0					#X Distance + Y Distance
-      srl v0,v0,0x07				#v0 = MA * ma_factor/128
-      subu a1,v1,v0					#Extra Distance = Distance -  MA * ma_factor/128
-      jal 0x0005e0cc 				#Check if Random is greater/equal to Chance
-      ori a0,zero,0x000a				#a0 = 100% = 10 = ah (10% chance of failure per extra tile 1-10)
+      mflo v0				#v0 = MA * ma_factor
+      addu v1,v1,a0			#X Distance + Y Distance
+      srl v0,v0,0x07			#v0 = MA * ma_factor/128
+      subu a1,v1,v0			#Extra Distance = Distance -  MA * ma_factor/128
+      jal 0x0005e0cc 			#Check if Random is greater/equal to Chance
+      ori a0,zero,0x000a		#a0 = 100% = 10 = ah (10% chance of failure per extra tile 1-10)
     </Location>
     <Location file="BATTLE_BIN" offset="1744C0" mode="ASM" offsetMode="RAM">
       lui t0,0x8019
       sb v0,0x0007(s3)
       lbu v0,0x0048(s1)
-      sw s1,0x2d98(t0)				#Store unit data pointer in attacker slot.
+      sw s1,0x2d98(t0)			#Store unit data pointer in attacker slot.
     </Location>
     <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
       lui t0,0x8019
@@ -1259,24 +1259,24 @@ MSED: lw ra,0x0010(sp)
       addiu sp,sp,0xffe8
       sw ra,0x0010(sp)
       lbu v0,0x0024(a2)
-      lw t0,0x2d98(t0)				#Read unit data from attacker slot.
+      lw t0,0x2d98(t0)			#Read unit data from attacker slot.
     </Location>
     <Location file="BATTLE_BIN" offset="1942E8" mode="ASM" offsetMode="RAM">
-      j 0x001583a0					#Dirty jump to fix AI for this.
+      j 0x001583a0			#Dirty jump to fix AI for this.
       nop
     </Location>
     <Location file="BATTLE_BIN" offset="1583A0" mode="ASM" offsetMode="RAM">
     .eqv %ma_factor, 64
-      lbu t0,0x0094(a0)				#Load Unit's second movement type byte.
-      lbu v0,0x003a(a0)				#Load Unit's Move.
+      lbu t0,0x0094(a0)			#Load Unit's second movement type byte.
+      lbu v0,0x003a(a0)			#Load Unit's Move.
       andi t0,t0,0x0008
-      beq t0,zero,AIED				#If not teleport, return normal move.
-      lbu t0,0x0037(a0)				#Load MA
+      beq t0,zero,AIED			#If not teleport, return normal move.
+      lbu t0,0x0037(a0)			#Load MA
       ori t1,zero,%ma_factor
       multu t0,t1
-      mflo v0						#v0 = MA * ma_factor
+      mflo v0				#v0 = MA * ma_factor
       nop
-      srl v0,v0,0x07				#v0 = MA * ma_factor/128
+      srl v0,v0,0x07			#v0 = MA * ma_factor/128
 AIED: j 0x001942f0
       lui at,0x801a
     </Location>
