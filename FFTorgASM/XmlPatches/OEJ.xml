@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Patches>
   <Patch name="One Extra Job (OEJ)">
-    <Description>Extend jobs from 19 to 20. Based on RAD3. Made by xjamxx. No variables, so edit through xml only. In the second location lies the jobs levels requirement for the OEJ. Also edit these labels (cuz they go across all locations):
+    <Description>Extend jobs from 19 to 20. Based on RAD3 (more like inspired). Made by xjamxx. No variables, so edit through xml only. In the second location lies the jobs levels requirement for the OEJ. Also edit these labels (cuz they go across all locations):
 	oej_id			OEJ job ID. Don't use higher than 0x8F.
 	oej_ss			OEJ skillset. The one that the job ID has. id(0x34)=ss(0x21).
 	oej_ma_unit		OEJ formation sprite for male. Shishi value -1?
@@ -13,16 +13,16 @@
 	oej_m_ss		OEJ spritesheet for male. Shishi value?
 	oej_f_ss		OEJ spritesheet for female. Shishi value?</Description>
     <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
-    .label  @oej_id, 0x34
-    .label  @oej_ss, 0x21
+    .label  @oej_id, 0x39
+    .label  @oej_ss, 0x4d
     .label  @oej_ma_unit, 0x08
     .label  @oej_ma_unit_p1, 0x09
     .label  @oej_fe_unit, 0x09
     .label  @oej_fe_unit_p1, 0x0A
     .label  @oej_ma_face, 0x08
     .label  @oej_fe_face, 0x09
-    .label  @oej_m_ss, 0x0A
-    .label  @oej_f_ss, 0x0B
+    .label  @oej_m_ss, 0x3A
+    .label  @oej_f_ss, 0x3B
       or t7,zero,a0
       andi v0,a1,0x0020
       bne v0,zero,UJED				#Branch if Unit is a monster.
@@ -32,7 +32,7 @@
       addiu t6,zero,0x0000			#Counter = 0.
       lui t9,0x8006
       lui t8,0x8005
-      ori t8,t8,0xdce8
+      ori t8,t8,0xdcec
       ori t5,t9,0x60c4
 UJLP: addu t1,zero,zero				#t1 = 0
       addu a3,t7,zero				#a3 = Stack Pointer
@@ -61,8 +61,9 @@ UJS2: ori v0,zero,0x0011
       and t3,t3,v0
       bne t1,zero,UJLP
       or a1,zero,zero
+      sll at,t2,0x01				#Current Unlock Check by 2
       j UJLP
-      or t3,t3,t2
+      or t3,t3,at
 UJS4: beq t5,t8,UJS3
       ori t5,t9,0x6178
       j UJLP
@@ -76,11 +77,10 @@ UJS5: addiu t6,t6,0x0001			#Counter ++
       sra t2,t2,0x01				#Current Unlock Check div 2
 UJED: jr ra
       or v0,t3,zero
-      nop							#0x5dce8, for level job req data.
+      nop							#0x5dcec, for level job req data.
       nop
       nop
-      nop							#0x5dcf4, 21 free spaces.
-      nop
+      nop							#0x5dcf8, 20 free spaces.
       nop
       nop
       nop
@@ -101,10 +101,10 @@ UJED: jr ra
       nop
       nop
     </Location>
-    <Location file="SCUS_942_21" offset="5DCE8" offsetMode="RAM">
-       50000000		<!--Jobs levels requirement for OEJ -->
-       00000000		<!--From Squire to Mime every one hexa digits-->
-       0000			<!--Example 5000 0000 0000 0000 0000 = Squire level 5-->
+    <Location file="SCUS_942_21" offset="5DCEC" offsetMode="RAM">
+       02000888		<!--Jobs levels requirement for OEJ -->
+       80080000		<!--From Squire to Mime every one hexa digits-->
+       8000			<!--Example 0200 0888 8008 0000 8000 = CHM 2, WHM 8, BLM 8 ,TMM 8, SUM 8, ORA 8, CAL 8-->
     </Location>
     <Location file="SCUS_942_21" offset="5B2B4" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xffe0			#From ENTD calculation job, simplification, free space for routines.
@@ -807,17 +807,21 @@ BMED: or s0,v0,zero
       ori v0,zero,0x00ff			#v0 = FF
       beq v1,v0,SJED				#Branch if Unit doesn't exist
       addiu v0,zero,0xffff			#v0 = FFFF (Fail)
-      lbu v0,0x0058(s0)				#Load Unit's Current Statuses 1
-      nop
-      andi v0,v0,0x0060
-      bne v0,zero,SJED				#Branch if Unit is a Crystal or Dead
-      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
-      lbu v0,0x0059(s0)				#Load Unit's Current Statuses 2
-      nop
-      andi v0,v0,0x0001
-      bne v0,zero,SJED				#Branch if Unit is Treasure
-      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      lhu v0,0x0058(s0)				#Load Unit's Current Statuses 1 and 2
       lbu a0,0x0006(s0)				#Load Gender Byte
+      andi v0,v0,0x0160
+      bne v0,zero,SJED				#Branch if Unit is a Crystal or Dead or Treasure
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+      nop							#Free space used to manage Spillover JP.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
       nop
       andi v0,a0,0x0020
       bne v0,zero,SJED				#Branch if Unit is a monster
@@ -888,10 +892,6 @@ SJED: lw ra,0x0018(sp)
       or v0,t1,zero
 BJED: jr ra
       or t1,v0,zero
-      nop
-      nop
-      nop
-      nop
     </Location>
     <Location file="BATTLE_BIN" offset="1818E4" mode="ASM" offsetMode="RAM">
       jal @oej_bjpss
@@ -902,6 +902,26 @@ BJED: jr ra
     </Location>
     <Location file="BATTLE_BIN" offset="181910" mode="ASM" offsetMode="RAM">
       or v1,t1,zero
+    </Location>
+    <Location file="BATTLE_BIN" offset="18E000" mode="ASM" offsetMode="RAM">
+      sw ra,0x0024(sp)				#Switched r16 for r18. For later Spillover JP.
+      sw s2,0x0020(sp)
+      sw s1,0x001c(sp)
+      addu s2,a0,zero
+      addiu a2,sp,0x0010
+      lbu s0,0x0003(s2)
+      lbu s1,0x018a(s2)
+      jal 0x0017ea28
+      addu a1,s0,zero
+      addu a0,s1,zero
+      addu s1,v0,zero
+      lbu a2,0x01ba(s2)
+      lbu a1,0x01b5(s2)
+      lw a3,0x0010(sp)
+      jal 0x0017ea80				#Third and last place this one is called.
+      andi a2,a2,0x0030
+      addu a0,s2,zero
+      addu a1,s0,zero
     </Location>
     <Location file="SCUS_942_21" offset="5A1BC" mode="ASM" offsetMode="RAM">
       nop							#Dancer or bard will get initial jp.
@@ -937,12 +957,12 @@ BJED: jr ra
       nop
     </Location>
   </Patch>
-  <Patch name="Extra Requirements for Jobs v2">
+  <Patch name="OEJ - Extra Requirements for Jobs">
     <Description>Requires 'OEJ'. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
 	st_tier1	Inner game stage (0f = end of chapter 1)
 	st_tier2	Inner game stage (1f = end of chapter 2)
 	st_tier3	Inner game stage (32 = after Limberry Castle?)</Description>
-    <Location file="SCUS_942_21" offset="5DCF4" mode="ASM" offsetMode="RAM">
+    <Location file="SCUS_942_21" offset="5DCF8" mode="ASM" offsetMode="RAM">
     .eqv %st_tier1, 0x000f
     .eqv %st_tier2, 0x001f
     .eqv %st_tier3, 0x0032
@@ -967,11 +987,34 @@ ERED: jr ra
       nop
       nop
       nop
-      nop
     </Location>
-    <Location file="SCUS_942_21" offset="5DCE0" mode="ASM" offsetMode="RAM">
+    <Location file="SCUS_942_21" offset="5DCE4" mode="ASM" offsetMode="RAM">
       j @ex_req_jobs				#v0 = Unlocked Jobs, for in and out.
-      or v0,t3,zero
+    </Location>
+  </Patch>
+  <Patch name="OEJ - No Spillover JP between Bard and Dancer">
+    <Description>Requires 'OEJ'. Self-explanatory.</Description>
+    <Location file="BATTLE_BIN" offset="17EAD8" mode="ASM" offsetMode="RAM">
+    .eqv %bard_slot, 0x0011
+      lbu t0,0x0006(s2)				#Load Gender Flags
+      ori at,zero,%bard_slot
+      andi t0,t0,0x00c0
+      bne s1,at,SJSA
+      and v0,t0,a0					#t0 = Gender Flags
+      beq v0,zero,0x0017ebe0		#Branch if the gender differs
+SJSA: addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+    </Location>
+  </Patch>
+  <Patch name="OEJ - No Spillover JP for OEJ">
+    <Description>Requires 'OEJ'. Self-explanatory.</Description>
+    <Location file="BATTLE_BIN" offset="17EAF4" mode="ASM" offsetMode="RAM">
+    .eqv %oej_slot, 0x0012
+      ori at,zero,%oej_slot
+      bne s1,at,SJSB
+      andi v1,a0,0x0020
+      bne s0,s2,0x0017ebe0			#Branch if not the same unit
+      addiu v0,zero,0xffff			#v0 = FFFF (Fail)
+SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
     </Location>
   </Patch>
 </Patches>

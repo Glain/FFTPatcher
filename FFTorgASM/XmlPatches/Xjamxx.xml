@@ -1,125 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?> 
 <Patches>
-<!--Patches that require branching outside of original routine scope:-->
-  <Patch name="Magic Break can break accessory">
-    <Description>With FFTPatcher or similar program change ability 'Magic Break' formula from 2c to 25, change x and y values, uncheck Affect MP and check Unequip. If need change offset F6400 to whatever you want (as long as it is a safe spot).</Description>
-    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
-@my_code_cave:
-      beq v1,v0,SKIP			#Branch if used ability is 'Icewolf  Bite'
-      ori v0,zero,0x008e
-      beq v1,v0,SKIP			#Branch if used ability is 'Acc Break'=='MP Break'
-      ori v0,zero,0x0072
-      j 0x00187b54
-      nop
-SKIP: j 0x00187b5c
-      nop
-    </Location>
-    <Location file="BATTLE_BIN" offset="187B4C" mode="ASM" offsetMode="RAM">
-      j @my_code_cave
-      nop
-    </Location>
-  </Patch>
-  <Patch name="Formula 18: melee spellcaster - Hooking">
-    <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
-    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
-@melee_spellcaster:
-      addiu sp,sp,0xffe8
-      sw ra,0x0010(sp)
-      jal 0x001885b8				#Magic Evade. If Physical use 0x00188510.
-      nop
-      bne v0,zero,MSED
-      lui v0,0x8018
-      jal @acc_mag_melee  			#Calculate (PA + X)*Faith% acc, based on 0x001889cc.
-      addiu sp,sp,0xffe8
-      bne v0,zero,MSED
-      lui v0,0x8018
-      jal @dmg_f_melee				#DMG_F(PA*(WP+Y)), based on 0x00188d84.
-      addiu sp,sp,0xffe8
-MSED: lw ra,0x0010(sp)
-      addiu sp,sp,0x0018
-      jr ra
-      nop
-@acc_mag_melee:
-      sw ra,0x0010(sp)
-      j 0x00185dac					#Store PA+X.
-      ori ra,v0,0x89d8				#It is 0x001889cc but first part is patched.
-@dmg_f_melee:
-      sw ra,0x0010(sp)
-      j 0x00185e5c					#Store PA and WP + Y.
-      ori ra,v0,0x8da0				#It is 0x00188d84 but first part is patched.
-    </Location>
-    <Location file="BATTLE_BIN" offset="18929C" mode="ASM" offsetMode="RAM">
-      j @melee_spellcaster
-    </Location>
-  </Patch>
-  <Patch name="Swap X-O - Hooking">
-    <Description>Swap button X for O. Uses from 275C0, 8 instruction spaces.</Description>
-    <Location file="SCUS_942_21" offset="275C0" mode="ASM" offsetMode="RAM">
-@swap_b6_b7:						#Used for swapping buttons. Swaps bit 6 for 7. Return v0.
-      andi t0,v0,0x0040
-      srl t0,t0,0x01
-      andi t1,v0,0x0020
-      sll t1,t1,0x01
-      andi v0,v0,0xff9f
-      or t0,t0,t1
-      jr ra
-      or v0,v0,t0
-    </Location>
-    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
-      jal @swap_b6_b7				#Swap buttons X-O.
-      nor v0,zero,v0
-    </Location>
-  </Patch>
-  <Patch name="Teleport based on MA - Hooking (for AI)">
-    <Description>It changes the base for failure in teleport, MA * ma_factor/128 instead of Move. No variables, so edit through xml only. Changes suggested by Glain. Edit this eqv if needed:
-	ma_factor	Amount to multiply MA/128, 64=MA/2, 51=MA/2.5, 42(43)=MA/3.</Description>
-    <Location file="BATTLE_BIN" offset="176C58" mode="ASM" offsetMode="RAM">
-    .eqv %ma_factor, 64
-      lbu v0,0x0037(t0)				#Load MA
-      subu a0,zero,a0				#Make Y Distance positive
-      ori t1,zero,%ma_factor
-      multu v0,t1
-      mflo v0						#v0 = MA * ma_factor
-      addu v1,v1,a0					#X Distance + Y Distance
-      srl v0,v0,0x07				#v0 = MA * ma_factor/128
-      subu a1,v1,v0					#Extra Distance = Distance -  MA * ma_factor/128
-      jal 0x0005e0cc 				#Check if Random is greater/equal to Chance
-      ori a0,zero,0x000a			#a0 = 100% = 10 = ah (10% chance of failure per extra tile 1-10)
-    </Location>
-    <Location file="BATTLE_BIN" offset="1744C0" mode="ASM" offsetMode="RAM">
-      lui t0,0x8019
-      sb v0,0x0007(s3)
-      lbu v0,0x0048(s1)
-      sw s1,0x2d98(t0)				#Store unit data pointer in attacker slot.
-    </Location>
-    <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
-      lui t0,0x8019
-      lw a2,-0x0b20(t0)
-      addiu sp,sp,0xffe8
-      sw ra,0x0010(sp)
-      lbu v0,0x0024(a2)
-      lw t0,0x2d98(t0)				#Read unit data from attacker slot.
-    </Location>
-    <Location file="BATTLE_BIN" offset="1942E8" mode="ASM" offsetMode="RAM">
-      j 0x001583a0					#Dirty jump to fix AI for this.
-      nop
-    </Location>
-    <Location file="BATTLE_BIN" offset="1583A0" mode="ASM" offsetMode="RAM">
-    .eqv %ma_factor, 64
-      lbu t0,0x0094(a0)				#Load Unit's second movement type byte.
-      lbu v0,0x003a(a0)				#Load Unit's Move.
-      andi t0,t0,0x0008
-      beq t0,zero,AIED				#If not teleport, return normal move.
-      lbu t0,0x0037(a0)				#Load MA
-      ori t1,zero,%ma_factor
-      multu t0,t1
-      mflo v0						#v0 = MA * ma_factor
-      nop
-      srl v0,v0,0x07				#v0 = MA * ma_factor/128
-AIED: j 0x001942f0
-      lui at,0x801a
-    </Location>
-  </Patch>
 <!--Patches that fit in the original routine scope:-->
   <Patch name="Draw out visual bug fix">
     <Description>Someone else patch, for some glitch rod-katana.</Description>
@@ -130,7 +10,7 @@ AIED: j 0x001942f0
     <Location file="BATTLE_WEP1_SHP" offset="A42">1C</Location>
     <Location file="BATTLE_WEP1_SHP" offset="A48">1C</Location>
   </Patch>
-  <Patch name="Battle Initial Camera">
+  <Patch name="Battle Initial Camera (DEPRECATED)">
     <Description>It changes the elevation angle and zoom initial values with their flags. No variables, so edit through xml only. Edit these eqvs if needed:
 	init_elev	Elevation angle value
 	init_elef	Elevation angle flag (1=lo or 2=hi)
@@ -250,7 +130,7 @@ MSED: lw ra,0x0010(sp)
       lw s0,0x0014(sp)
       jr ra
       addiu sp,sp,0x0018
-      nop							#0x00189c28, free 10 spaces.
+      nop							#0x00189c28, 10 free spaces.
       nop
       nop
       nop
@@ -302,7 +182,7 @@ MSED: lw ra,0x0010(sp)
       lw s0,0x0014(sp)
       jr ra
       addiu sp,sp,0x0018
-      nop							#0x00189c28, free 10 spaces.
+      nop							#0x00189c28, 10 free spaces.
       nop
       nop
       nop
@@ -545,7 +425,7 @@ LSED: lw ra,0x0010(sp)
     </Location>
   </Patch>
   <Patch name="Vanilla Steal/Break Routine v2">
-    <Description>Like vanilla, free 35 spaces.</Description>
+    <Description>Like vanilla, 35 free spaces.</Description>
     <Location file="BATTLE_BIN" offset="18D3C0" mode="ASM" offsetMode="RAM">
       lui a0,0x8019
       addiu sp,sp,0xffe0
@@ -635,7 +515,9 @@ SBED: lw ra,0x001c(sp)
       nop
       nop
       nop
-      nop							#0x0018d520, free 20 spaces.
+      nop							#0x0018d520, 20 free spaces.
+      nop
+      nop
       nop
       nop
       nop
@@ -656,7 +538,7 @@ SBED: lw ra,0x001c(sp)
     </Location>
   </Patch>
   <Patch name="Broken/Stolen items can be bought back at Fur Shop v2">
-    <Description>Requires 'Vanilla Steal/Break Routine v2', self explanatory.</Description>
+    <Description>Requires 'Vanilla Steal/Break Routine v2', self-explanatory.</Description>
     <Location file="BATTLE_BIN" offset="18D4E4" mode="ASM" offsetMode="RAM">
 @store_poach_inv:					#t0 = ff, a0 = attacker pointer, v0 untouched
       addiu t2,s4,0x0001
@@ -687,7 +569,7 @@ BSED: j 0x0018D44C
     </Location>
   </Patch>
   <Patch name="Vanilla Starting items v2">
-    <Description>Similar to vanilla, though only one eye drop instead of 2. Free 26 spaces.</Description>
+    <Description>Similar to vanilla, though only one eye drop instead of 2. 26 free spaces.</Description>
     <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
       ori v1,zero,0x00ff
       lui t2,0x8006
@@ -703,7 +585,7 @@ SILP: sltu t0,t1,v1
       ori v0,zero,0x0201			#Store Phoenix Down 2 and clear FE and FF items.
       jr ra
       sw v0,-0x6824(t2)
-      nop							#0x00042a48, free 26 spaces.
+      nop							#0x00042a48, 26 free spaces.
       nop
       nop
       nop
@@ -729,60 +611,10 @@ SILP: sltu t0,t1,v1
       nop
       nop
       nop
-    </Location>
-  </Patch>
-  <Patch name="Starting items, Swap X-O and Turbo X+O v2">
-    <Description>Custom starting items with swap buttons and turbo X if X+O is pressed. Overwrites 'Vanilla Starting items v2'. Free 10 spaces.</Description>
-    <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
-      ori v1,zero,0x00ff
-      lui t2,0x8006
-      addiu v0,t2,0x97df			#Load Inventory, last byte.
-SILP: sb zero,0x0000(v0)
-      addiu v1,v1,0xffff			#v1 = v1 - 1, next type of item.
-      bgez v1,SILP					#Loop to clear.
-      addiu v0,v0,0xffff			#v0 = v0 - 1, next byte of type item.
-      ori v0,zero,0x0005			#Store Potion 5.
-      jr ra
-      sh v0,-0x6830(t2)
-      nop							#Turbo data space, not a valid instruction.
-@swap_b6_b7_turbo:					#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
-      andi t0,v0,0x0040
-      srl t0,t0,0x01
-      andi t1,v0,0x0020
-      sll t1,t1,0x01
-      andi v0,v0,0xff9f
-      or t0,t0,t1
-      lui t2,0x8004
-      lbu t1,0x2a38(t2)				#Load turbo previous state.
-      ori at,zero,0x0060
-      bne t0,at,SWED				#If X+O are not pressed, then end.
-      lbu at,0x2a39(t2)				#Load turbo delay.
-      xori t0,t1,0x0020
-      addiu t1,at,0x0001
-      andi t1,t1,0x0007				#Turbo delay value.
-      bne t1,zero,SWED
-      sb t1,0x2a39(t2)				#Update turbo delay.
-      sb t0,0x2a38(t2)				#Save current turbo state.
-SWED: jr ra
-      or v0,v0,t0	  
-      nop							#0x00042a88, free 10 spaces.
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-      nop
-    </Location>
-    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
-      jal @swap_b6_b7_turbo			#Swap buttons X-O and turbo X+O.
-      nor v0,zero,v0
     </Location>
   </Patch>
   <Patch name="Vanilla Calculate Unlocked Jobs v2">
-    <Description>Like vanilla, free 25 spaces.</Description>
+    <Description>Like vanilla, 25 free spaces.</Description>
     <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
       or t7,zero,a0
       andi v0,a1,0x0020
@@ -901,7 +733,6 @@ ERED: jr ra
     </Location>
     <Location file="SCUS_942_21" offset="5DCDC" mode="ASM" offsetMode="RAM">
       j @ex_req_jobs				#v0 = Unlocked Jobs, for in and out.
-      or v0,t3,zero					#Disable Bard or Dancer.
     </Location>
   </Patch>
   <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu) v2">
@@ -1087,9 +918,9 @@ MLED: lw ra,0x0024(sp)
   <Patch name="JP Gain">
     <Description>Base JP Gain is 10 instead of 8 and job level goes by 4 instead of 2. Now you can gain up to 99 JP. Gained JP Up goes to spillover too.</Description>
     <Location file="BATTLE_BIN" offset="17E934" mode="ASM" offsetMode="RAM">
-      sll r2,r23,0x02
-      srl r3,r17,0x02
-      addiu r3,r3,0x000a
+      sll v0,s7,0x02
+      srl v1,s1,0x02
+      addiu v1,v1,0x000a
       lbu a0,0x0090(s2)				#Load Second Set of Supports
       addu s1,v0,v1
       andi v0,a0,0x0040
@@ -1125,7 +956,7 @@ JGS4: addiu s0,s0,0x0001
     </Location>
   </Patch>
   <Patch name="EXP Gain">
-    <Description>Minimum EXP Gain is 0 instead of 1 and consecutive kills won't subtract from base EXP Gain.</Description>
+    <Description>Consecutive kills won't subtract from base EXP Gain.</Description>
     <Location file="BATTLE_BIN" offset="18D664" mode="ASM" offsetMode="RAM">
       ori a0,zero,0x000a		
       ori v0,zero,0x000a		
@@ -1134,14 +965,320 @@ JGS4: addiu s0,s0,0x0001
       nop				
       addu a0,v0,a0
     </Location>
-    <Location file="BATTLE_BIN" offset="18D6AC" mode="ASM" offsetMode="RAM">
-      or a0,zero,zero
-    </Location>
   </Patch>
   <Patch name="Move-find rare minimum brave">
     <Description>Sets the amount of minimum brave to get always rare item to 20. Vanilla is zero.</Description>
     <Location file="BATTLE_BIN" offset="18025C" mode="ASM" offsetMode="RAM">
       ori a1,zero,0x0078			#MinBr = 0x78 - 0x64 = 0x14 = 20d.
+    </Location>
+  </Patch>
+<!--Patches that are not for general use:-->
+  <Patch name="Starting items, Swap X-O and Turbo X+O">
+    <Description>Custom starting items with swap buttons and turbo X if X+O is pressed. Overwrites 'Vanilla Starting items v2'. 10 free spaces.</Description>
+    <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
+      ori v1,zero,0x00ff
+      lui t2,0x8006
+      addiu v0,t2,0x97df			#Load Inventory, last byte.
+SILP: sb zero,0x0000(v0)
+      addiu v1,v1,0xffff			#v1 = v1 - 1, next type of item.
+      bgez v1,SILP					#Loop to clear.
+      addiu v0,v0,0xffff			#v0 = v0 - 1, next byte of type item.
+      ori v0,zero,0x0005			#Store Potion 5.
+      jr ra
+      sh v0,-0x6830(t2)
+      nop							#Turbo data space, not a valid instruction.
+@swap_b6_b7_turbo:					#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
+      andi t0,v0,0x0040
+      srl t0,t0,0x01
+      andi t1,v0,0x0020
+      sll t1,t1,0x01
+      andi v0,v0,0xff9f
+      or t0,t0,t1
+      lui t2,0x8004
+      lbu t1,0x2a38(t2)				#Load turbo previous state.
+      ori at,zero,0x0060
+      bne t0,at,SWED				#If X+O are not pressed, then end.
+      lbu at,0x2a39(t2)				#Load turbo delay.
+      xori t0,t1,0x0020
+      addiu t1,at,0x0001
+      andi t1,t1,0x0007				#Turbo delay value.
+      bne t1,zero,SWED
+      sb t1,0x2a39(t2)				#Update turbo delay.
+      sb t0,0x2a38(t2)				#Save current turbo state.
+SWED: jr ra
+      or v0,v0,t0	  
+      nop							#0x00042a88, 10 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
+      jal @swap_b6_b7_turbo			#Swap buttons X-O and turbo X+O.
+      nor v0,zero,v0
+    </Location>
+  </Patch>
+  <Patch name="Mentalist Job Tweaks">
+    <Description>Requires 'OEJ' and 'Vanilla Steal/Break Routine v2'. It does the hard coding, so the class behaves similar to mime.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="120E84" mode="ASM" offsetMode="RAM">
+    .label  @oej_id, 0x39
+    .label  @oej_id_neg, 0xffc7
+      ori v0,zero,@oej_id			#Clean and block all abilities.
+      beq v1,v0,0x00120f68
+      lbu v0,0x0011(s2)
+      ori at,zero,0x00ff
+      beq at,v0,0x00120ea4
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="124AF8" mode="ASM" offsetMode="RAM">
+      ori at,zero,@oej_id			#Clean and block all abilities, too?
+      lh s0,0x0024(a0)
+      ori v0,zero,0x005d
+      beq s0,at,M1S1
+      or v1,s0,zero
+      bne v1,v0,0x00124b2c
+M1S1: ori v0,zero,0x004b
+      addiu a0,a0,0x005e
+      addu a1,zero,zero
+      jal 0x000222fc
+      ori a2,zero,0x000a
+      or v1,s0,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122808" mode="ASM" offsetMode="RAM">
+M2LP: lh a0,0x0000(v0)				#Avoid listing skill set for secondary ss.
+      ori v0,zero,0x005d
+      beq a0,v0,M2S1
+      addiu s0,s0,0x0002
+      beq s3,a0,M2S1
+      ori v0,zero,@oej_id
+      beq a0,v0,M2S1
+      nop
+      jal 0x0012276c
+      addiu s2,s2,0x0001
+      sh v0,0x0000(s1)
+      addiu s1,s1,0x0002
+M2S1: addiu a0,sp,0x0010
+      addu v0,s0,a0
+      lh v1,0x0000(v0)
+      addiu at,zero,0xffff
+      bne v1,at,M2LP
+      addu v0,s0,a0
+      sll v0,s2,0x01
+      addu v0,v0,s4
+      addiu v1,zero,0xffff
+      sh v1,0x0000(v0)
+      addu v0,s2,zero
+      lw ra,0x0054(sp)
+      lw s4,0x0050(sp)
+      lw s3,0x004c(sp)
+      lw s2,0x0048(sp)
+      lw s1,0x0044(sp)
+      lw s0,0x0040(sp)
+      jr ra
+      addiu sp,sp,0x0058
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="124824" mode="ASM" offsetMode="RAM">
+      ori at,zero,@oej_id			#To avoid losing equipment.
+      sh a1,0x0024(v0)
+      andi a1,a1,0xffff
+      beq a1,at,0x0012483c
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12555C" mode="ASM" offsetMode="RAM">
+      lw s0,0x0000(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125564" mode="ASM" offsetMode="RAM">
+      lbu v0,0x011f(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125574" mode="ASM" offsetMode="RAM">
+      lh v0,0x003e(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125584" mode="ASM" offsetMode="RAM">
+      lh a0,0x0024(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125598" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0070(s0)				#Block menu options.
+      nop
+      andi v0,v0,0x0004
+      beq v0,zero,M3S1
+      ori v1,zero,0x005d
+      j 0x001255d0
+      addiu v0,zero,0xfffc
+M3S1: lh a0,0x0024(s0)
+      ori at,zero,@oej_id
+      beq a0,at,0x001255d0
+      addiu v0,zero,0xfffa
+      beq a0,v1,0x001255d0
+      addiu v0,zero,0xfffa
+    </Location>
+    <Location file="BATTLE_BIN" offset="182B60" mode="ASM" offsetMode="RAM">
+      lbu at,0x0003(r17)			#Block act and move for the turn of mentalist.
+      sb r30,0x0186(r17)			#store units turn = active
+      addiu at,at,@oej_id_neg
+      sltiu at,at,0x0001
+      sb zero,0x0187(r17)			#store move available
+      sb at,0x0188(r17)				#store act available
+      bne r16,r0,M4S1
+      sb r30,0x0027(r17)			#set units turn = active
+      ori r21,r20,0x0100			#r21 = return code (0x0100) next turn?
+M4S1: lui r1,0x8019
+      lw r4,-0x0ae8(r1)
+      ori r3,r0,0x000a
+      sw r20,-0x0ae0(r1)			#store active turn ID
+      sw r3,-0x0ae8(r1)				#go to validate units turn
+    </Location>
+    <Location file="BATTLE_BIN" offset="18D520" mode="ASM" offsetMode="RAM">
+@men_jp_gain:
+      ori at,zero,@oej_id
+      bne a1,at,M5ED
+      lui a1,0x8019
+      bne a2,zero,M5ED
+      ori at,zero,0x0001
+      sb at,0x0187(s0)
+      jal 0x00073638
+      sb at,0x38e7(a1)				#Create 1 exp point so it get JP too.
+M5ED: lw r31,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0018
+    </Location>
+    <Location file="BATTLE_BIN" offset="71420" mode="ASM" offsetMode="RAM">
+      lw s0,0x0134(s0)
+      nop
+      lbu a1,0x0003(s0)
+      j @men_jp_gain				#When player start a turn, no AI.
+      lbu a2,0x0187(s0)
+    </Location>
+    <Location file="BATTLE_BIN" offset="194300" mode="ASM" offsetMode="RAM">
+      or s0,a0,zero
+      nop
+      lbu a1,0x0003(s0)
+      j	@men_jp_gain				#For AI. Not optimal.
+      lbu a2,0x0187(s0)
+    </Location>
+  </Patch>
+<!--Patches that require branching outside of original routine scope:-->
+  <Patch name="Magic Break can break accessory">
+    <Description>With FFTPatcher or similar program change ability 'Magic Break' formula from 2c to 25, change x and y values, uncheck Affect MP and check Unequip. If need change offset F6400 to whatever you want (as long as it is a safe spot).</Description>
+    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+@my_code_cave:
+      beq v1,v0,SKIP			#Branch if used ability is 'Icewolf  Bite'
+      ori v0,zero,0x008e
+      beq v1,v0,SKIP			#Branch if used ability is 'Acc Break'=='MP Break'
+      ori v0,zero,0x0072
+      j 0x00187b54
+      nop
+SKIP: j 0x00187b5c
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="187B4C" mode="ASM" offsetMode="RAM">
+      j @my_code_cave
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Formula 18: melee spellcaster">
+    <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
+    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+@melee_spellcaster:
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      jal 0x001885b8				#Magic Evade. If Physical use 0x00188510.
+      nop
+      bne v0,zero,MSED
+      lui v0,0x8018
+      jal @acc_mag_melee  			#Calculate (PA + X)*Faith% acc, based on 0x001889cc.
+      addiu sp,sp,0xffe8
+      bne v0,zero,MSED
+      lui v0,0x8018
+      jal @dmg_f_melee				#DMG_F(PA*(WP+Y)), based on 0x00188d84.
+      addiu sp,sp,0xffe8
+MSED: lw ra,0x0010(sp)
+      addiu sp,sp,0x0018
+      jr ra
+      nop
+@acc_mag_melee:
+      sw ra,0x0010(sp)
+      j 0x00185dac					#Store PA+X.
+      ori ra,v0,0x89d8				#It is 0x001889cc but first part is patched.
+@dmg_f_melee:
+      sw ra,0x0010(sp)
+      j 0x00185e5c					#Store PA and WP + Y.
+      ori ra,v0,0x8da0				#It is 0x00188d84 but first part is patched.
+    </Location>
+    <Location file="BATTLE_BIN" offset="18929C" mode="ASM" offsetMode="RAM">
+      j @melee_spellcaster
+    </Location>
+  </Patch>
+  <Patch name="Swap X-O">
+    <Description>Swap button X for O. Uses from 275C0, 8 instruction spaces.</Description>
+    <Location file="SCUS_942_21" offset="275C0" mode="ASM" offsetMode="RAM">
+@swap_b6_b7:						#Used for swapping buttons. Swaps bit 6 for 7. Return v0.
+      andi t0,v0,0x0040
+      srl t0,t0,0x01
+      andi t1,v0,0x0020
+      sll t1,t1,0x01
+      andi v0,v0,0xff9f
+      or t0,t0,t1
+      jr ra
+      or v0,v0,t0
+    </Location>
+    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
+      jal @swap_b6_b7				#Swap buttons X-O.
+      nor v0,zero,v0
+    </Location>
+  </Patch>
+  <Patch name="Teleport based on MA">
+    <Description>It changes the base for failure in teleport, MA * ma_factor/128 instead of Move. No variables, so edit through xml only. Changes suggested by Glain. Edit this eqv if needed:
+	ma_factor	Amount to multiply MA/128, 64=MA/2, 51=MA/2.5, 42(43)=MA/3.</Description>
+    <Location file="BATTLE_BIN" offset="176C58" mode="ASM" offsetMode="RAM">
+    .eqv %ma_factor, 64
+      lbu v0,0x0037(t0)				#Load MA
+      subu a0,zero,a0				#Make Y Distance positive
+      ori t1,zero,%ma_factor
+      multu v0,t1
+      mflo v0						#v0 = MA * ma_factor
+      addu v1,v1,a0					#X Distance + Y Distance
+      srl v0,v0,0x07				#v0 = MA * ma_factor/128
+      subu a1,v1,v0					#Extra Distance = Distance -  MA * ma_factor/128
+      jal 0x0005e0cc 				#Check if Random is greater/equal to Chance
+      ori a0,zero,0x000a			#a0 = 100% = 10 = ah (10% chance of failure per extra tile 1-10)
+    </Location>
+    <Location file="BATTLE_BIN" offset="1744C0" mode="ASM" offsetMode="RAM">
+      lui t0,0x8019
+      sb v0,0x0007(s3)
+      lbu v0,0x0048(s1)
+      sw s1,0x2d98(t0)				#Store unit data pointer in attacker slot.
+    </Location>
+    <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
+      lui t0,0x8019
+      lw a2,-0x0b20(t0)
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      lbu v0,0x0024(a2)
+      lw t0,0x2d98(t0)				#Read unit data from attacker slot.
+    </Location>
+    <Location file="BATTLE_BIN" offset="1942E8" mode="ASM" offsetMode="RAM">
+      j 0x001583a0					#Dirty jump to fix AI for this.
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="1583A0" mode="ASM" offsetMode="RAM">
+    .eqv %ma_factor, 64
+      lbu t0,0x0094(a0)				#Load Unit's second movement type byte.
+      lbu v0,0x003a(a0)				#Load Unit's Move.
+      andi t0,t0,0x0008
+      beq t0,zero,AIED				#If not teleport, return normal move.
+      lbu t0,0x0037(a0)				#Load MA
+      ori t1,zero,%ma_factor
+      multu t0,t1
+      mflo v0						#v0 = MA * ma_factor
+      nop
+      srl v0,v0,0x07				#v0 = MA * ma_factor/128
+AIED: j 0x001942f0
+      lui at,0x801a
     </Location>
   </Patch>
 </Patches>
