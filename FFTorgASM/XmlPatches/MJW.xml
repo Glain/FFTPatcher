@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Patches>
+  <Patch name="Monster Job Wheel (MJW)">
+    <Description>Allow monsters to change their job to other monster job. Made by xjamxx. This patch is not compatible with OEJ by itself, use MJW compatibility patch. No variables, so edit through xml only. Edit this label if needed (it goes across all locations):
+	st_unlock_mjw			Inner game stage to unlock monster wheel (35 = chapter 4 - before orbonne)</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A47C" mode="ASM" offsetMode="RAM">
+    .label  @st_unlock_mjw, 0x0032
+      nop				#Prevent focus to move to the first job in the wheel.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119C90" mode="ASM" offsetMode="RAM">
+      lhu t0,0x0000(s0)
+      addu s0,zero,zero
+      andi v0,t0,0x4000
+      beq v0,zero,0x00119cac
+      andi t0,t0,0x1000			#To handle mastered star.
+      lui s0,0x8019
+      addiu s0,s0,0xba10
+      lui at,0x801d
+      addu at,at,s3
+      lh v0,-0x7bdc(at)
+      sll a1,v1,0x10
+      beq v0,zero,0x00119cdc
+      sra a1,a1,0x10
+      lh a0,0x0010(sp)
+      bne t0,zero,0x00119cdc
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="118EA8" mode="ASM" offsetMode="RAM">
+      lui at,0x801d
+      lh v0,-0x7c0c(at)
+      nop
+      sll v0,v0,0x01
+      addu at,at,v0
+      lhu v0,-0x7c08(at)
+      nop
+      srl at,v0,0x0e
+      srl v0,v0,0x0c			#To handle displayed job lvl.
+      or v0,v0,at
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="120B90" mode="ASM" offsetMode="RAM">
+      nop				#To prevent possible load delay.
+      addiu at,a0,0xff70
+      sltiu at,at,0x000b
+      beq at,zero,WAED
+      addiu v0,a0,0xff70		#Increase possible job ids to 8F?.
+      ori v0,zero,0x0001
+WAED: jr ra
+      sltiu v0,v0,0x000e
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1256C8" mode="ASM" offsetMode="RAM">
+      sll v0,a0,0x10
+      sra v0,v0,0x0e
+      lui at,0x801d
+      addu at,at,v0
+      lw v0,-0x2a14(at)
+      addu a2,a1,zero
+      lbu a1,0x0070(v0)
+      lhu a0,0x0024(v0)
+      lbu a3,0x0072(v0)
+@setup_formation_sprite:
+      addiu sp,sp,0xffe0
+      sw ra,0x0010(sp)
+      sw s0,0x0014(sp)
+      sw s1,0x0018(sp)
+      sw s2,0x001c(sp)
+      or s0,a0,zero
+      or s1,a2,zero
+      lh s2,0x002c(v0)
+      ori v0,zero,0x009a
+      beq v0,s0,SFSF
+      ori v0,zero,0x51
+      addiu v0,s0,0xff6a
+      bltz v0,SFS1
+SFSB: addiu v0,v0,0x004e
+      j SFSF
+SFS1: addiu at,s0,0xff70
+      bltz at,SFS2
+      sll v0,at,0x02
+      j SFSB
+SFS2: addiu a0,s0,0xffa2		#From 5e to 8f.
+      bltz a0,SFS3
+      ori at,zero,0x0003
+      divu a0,at
+      mflo at
+      j SFSF
+      addiu v0,at,0x003e		#3e chocobo and so on. +1
+SFS3: ori v0,zero,0x0048
+      beq v0,s0,SFSF
+      ori v0,zero,0x4c
+      slti v0,a3,0x0035			#Special job up to 35
+      beq v0,zero,SFS4
+      lui at,0x8019
+      addu at,at,a3
+      lbu v1,-0x21cc(at)
+      j SFSE
+      sll v0,v1,0x10
+SFS4: or v1,s0,zero
+      ori v0,zero,0x005c		#5c = Dancer = 92
+      bne v1,v0,SFS5			#if not dancer branch?
+      ori v0,zero,0x005b
+      j SFS6				#if dancer v1 = 3b dancer unit.bin
+      ori v1,zero,0x003b
+SFS5: bne v1,v0,SFS7			#if not bard branch?
+      ori v0,zero,0x005d
+      j SFS6				#if bard v1 = 3a bard unit.bin
+      ori v1,zero,0x003a
+SFS7: bne v1,v0,SFS8			#if not mime branch?
+      sll v1,s0,0x01
+      j SFS9				#if mime v1 = 3c and v0 = job*2
+      ori v1,zero,0x003c
+SFS8: addiu v1,v1,0xff84
+SFS9: andi v0,a1,0x0040			#Female
+      beq v0,zero,SFSE
+      sll v0,v1,0x10
+      addiu v1,v1,0x0001		#Female +1 in unit.bin
+SFS6: sll v0,v1,0x10
+SFSE: sra v0,v0,0x10
+SFSF: sll a0,v0,0x01
+      addu a0,a0,v0
+      sll a0,a0,0x02
+      lui v0,0x8019
+      addiu v0,v0,0xda44
+      addu a0,a0,v0
+      or a1,a2,zero
+      jal 0x000222dc
+      ori a2,zero,0x000c
+      addiu v0,s0,0xffcb
+      sltiu v0,v0,0x0029		#Generic job
+      bne v0,zero,SFED
+      addiu at,sp,0xfffe
+      sb s0,0x0000(at)
+      jal 0x001090c8
+      or a0,s2,zero
+      sll v0,v0,0x10
+      sra v1,v0,0x10
+      bgez v1,SFSA
+      addu v0,v1,zero
+      addiu v0,v1,0x0003
+SFSA: sra a1,v0,0x02
+      sll v0,a1,0x02
+      subu v0,v1,v0
+      sll v0,v0,0x04
+      addiu v0,v0,0x0140
+      sll a0,v0,0x10
+      sra a0,a0,0x10
+      jal 0x00023a54
+      addiu a1,a1,0x00e0
+      sh v0,0x008(s1)
+SFED: lw ra,0x0010(sp)
+      lw s0,0x0014(sp)
+      lw s1,0x0018(sp)
+      lw s2,0x001c(sp)
+      jr ra
+      addiu sp,sp,0x0020
+@formation_cursor:
+      lui at,0x801d
+      lh a1,-0x79cc(at)
+      addu v1,zero,zero
+      blez a1,FCED
+      sll v0,a0,0x10
+      sra a2,v0,0x10
+      addiu a0,at,0xd5ec
+FCLP: lw at,0x0000(a0)
+      addiu a0,a0,0x0004
+      lh at,0x002c(at)
+      addiu t0,v1,0x0001
+      beq at,a2,FCED
+      slt at,t0,a1
+      bne at,zero,FCLP
+      or v1,t0,zero
+FCED: jr ra
+      addu v0,v1,zero
+@monster_wheel:
+      beq a0,zero,MWED
+      addiu a0,a1,0xffa2
+      sltiu v0,a0,0x0030		#8d, is the last hydra.
+      beq v0,zero,MWED
+      lui t1,0x8005
+      lbu t1,0x78d4(t1)
+      ori at,zero,0x0003
+      sltiu t2,t1,@st_unlock_mjw
+      bne t2,zero,MWED
+      divu a0,at
+      or s1,s6,zero
+      mflo t0
+      ori a1,a1,0x1000
+      or s2,zero,zero
+      or s0,zero,zero
+      or t2,zero,zero
+      sll at,t0,0x01
+      addu t0,t0,at
+      addiu t0,t0,0x105e
+      addiu t4,s1,0xfffc
+      ori t1,zero,0x105e		#5e for choco.
+MWLP: beq t1,t0,MWS1
+      sh t1,0x0000(s1)
+      addiu s1,s1,0x0002
+      j MWS2
+      addiu s2,s2,0x0001
+MWIL: bne s0,a1,MWS3
+      addu at,s2,t2
+      ori s0,s0,0x4000
+      sb at,0x0000(t4)
+MWS3: sh s0,0x0000(s1)
+      addiu s1,s1,0x0002
+      addiu t2,t2,0x0001
+MWS1: slti v0,t2,0x0003
+      bne v0,zero,MWIL
+      addu s0,t2,t0
+      addu s2,s2,t2
+MWS2: slti v0,t1,0x108b			#8b is the first hydra.
+      bne v0,zero,MWLP
+      addiu t1,t1,0x0003
+MWED: jr ra
+      nop
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1225DC" mode="ASM" offsetMode="RAM">
+      lw a0,0x0000(s3)
+      ori v0,zero,0x0002
+      lh a1,0x0024(a0)
+      bne s5,v0,JWS1
+      sll v0,s2,0x01
+      bne s0,a1,JWS1
+      sll v0,s2,0x01
+      ori s0,s0,0x4000
+JWS1: addu v0,v0,s6
+      sh s0,0x0000(v0)
+      andi v0,s1,0x00ff
+      lui v1,0x801d
+      addiu v1,v1,0xd5ec
+      sll v0,v0,0x02
+      addu s4,v0,v1
+      lw s0,0x0000(s4)
+      lbu a0,0x0070(a0)
+      jal @monster_wheel
+      andi a0,a0,0x0020
+      bne s2,zero,0x12272c
+      lh a0,0x0024(s0)
+      jal 0x001223b8
+      addiu s2,s2,0x0001
+      addiu at,s6,0xfffc
+      jal 0x00120b90
+      sb v0,0x0000(at)
+      bne v0,zero,0x12272c
+      lh v0,0x003e(s0)
+      ori s3,zero,0x0001
+      bne v0,zero,0x122730
+      sll v0,s2,0x01
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      sll v0,s2,0x01
+      addu s1,v0,s6
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119678" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11AE48" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11E014" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="120A44" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119C30" mode="ASM" offsetMode="RAM">
+      jal @setup_formation_sprite
+      or a3,a0,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1090C8" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0
+      sw ra,0x0018(sp)
+      sw s1,0x0014(sp)
+      jal 0x00059af0
+      sw s0,0x0010(sp)
+      lbu v1,0x0000(v0)
+      addiu s0,sp,0x001c
+      sb v1,0x0000(s0)
+    </Location>
+  </Patch>
+  <Patch name="MJW - OEJ compatibility patch">
+    <Description>Requires 'MJW', fixes incompatibility issues with OEJ patch. No variables, so edit through xml only. Edit these labels to match with OEJ labels (they go across all locations):
+	oej_id				OEJ job ID. Don't use higher than 0x5D.
+	oej_ma_unit			OEJ formation sprite for male. Shishi value -1?
+	oej_fe_unit			OEJ formation sprite for female. Shishi value -1?</Description>
+    <Location file="WORLD_WORLD_BIN" offset="125760" mode="ASM" offsetMode="RAM">
+    .label  @oej_id, 0x39
+    .label  @oej_ma_unit, 0x08
+    .label  @oej_fe_unit, 0x09
+      slti v0,a3,0x0035			#Special job up to 35
+      beq v0,zero,SFS4
+      lui at,0x8019
+      addu at,at,a3
+      lbu v1,-0x21cc(at)
+      j SFSE
+      sll v0,v1,0x10
+SFS4: ori at,zero,@oej_id
+      bne at,s0,SFS5
+      andi v0,a1,0x0040			#Gender
+      beq v0,zero,SFS6
+      ori v1,zero,@oej_ma_unit
+      j SFS6
+      ori v1,zero,@oej_fe_unit
+SFS5: or v1,s0,zero
+      addiu at,v1,0xffa4		#Check if mime or dancer.
+      bltz at,SFS7			#If not, branch.
+      sll v1,s0,0x01
+      sll at,at,0x01
+      addiu v1,at,0x00b6
+SFS7: addiu v1,v1,0xff84
+      andi v0,a1,0x0040			#Female
+      beq v0,zero,SFSE
+      sll v0,v1,0x10
+      addiu v1,v1,0x0001		#Female +1 in unit.bin
+SFS6: sll v0,v1,0x10
+SFSE: sra v0,v0,0x10
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122628" mode="ASM" offsetMode="RAM">
+      bne s2,zero,W1ED
+      lh a0,0x0024(s0)
+      jal 0x001223b8
+      addiu s2,s2,0x0001
+      addiu at,s6,0xfffc
+      jal 0x00120b90
+      sb v0,0x0000(at)
+      bne v0,zero,W1ED
+      lh at,0x003e(s0)
+      ori s3,zero,0x0001
+      bne at,zero,W1ED
+      sll v0,s2,0x01
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      sll v0,s2,0x01
+      addu s1,v0,s6
+      lw s4,0x0000(s4)
+W1LP: addiu s0,s3,0x004a
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      addiu v1,v0,0x0000		#Should be zero but no mime.
+      lbu at,0x0070(s4)
+      ori v0,zero,0x005b
+      andi at,at,0x0040
+      srl at,at,0x0006
+      beq s0,v0,W1S1
+      addu v0,v0,at
+      ori v0,zero,0x005c
+      beq s0,v0,W1S1
+      addiu v0,zero,@oej_id
+      or v0,s0,zero
+W1S1: or s0,v0,zero
+      ori v0,zero,0x0002
+      bne s5,v0,W1S2
+      lh at,0x0024(s4)
+      nop
+      beq s0,at,W1S3
+      ori v0,s0,0x4000
+W1S2: beq v1,zero,W1S4
+      ori v0,zero,0x0002
+      j W1S5
+      sh s0,0x0000(s1)
+W1S4: bne s5,v0,W1S6
+      sll a0,s0,0x10
+      jal 0x00122488
+      sra a0,a0,0x10
+      bne v0,zero,W1S6
+      addiu v0,s0,0x4000
+W1S3: sh v0,0x0000(s1)
+W1S5: addiu s1,s1,0x0002
+      addiu s2,s2,0x0001
+W1S6: addiu s3,s3,0x0001
+      slti v0,s3,0x0014
+      bne v0,zero,W1LP
+W1ED: sll v0,s2,0x01
+      addu v0,v0,s6
+      addiu v1,zero,0xffff
+      sh v1,0x0000(v0)
+      addu v0,s2,zero
+      lw ra,0x002c(sp)
+      lw s6,0x0028(sp)
+      lw s5,0x0024(sp)
+      lw s4,0x0020(sp)
+      lw s3,0x001c(sp)
+      lw s2,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0030
+@oej_wjpss:
+      ori at,zero,0x0005b
+      bne a1,at,W2S1
+      ori at,zero,0x0005c
+      andi at,s0,0x0040
+      srl at,at,0x0006
+      b W2ED
+      addiu at,t7,0x0005b
+W2S1: beq a1,at,W2ED
+      ori at,zero,@oej_id
+      or at,a1,zero
+W2ED: jr ra
+      or a1,at,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122CBC" mode="ASM" offsetMode="RAM">
+      jal @oej_wjpss
+    </Location>
+  </Patch>
+</Patches>

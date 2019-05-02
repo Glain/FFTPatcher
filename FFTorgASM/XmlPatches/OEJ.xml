@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Patches>
   <Patch name="One Extra Job (OEJ)">
-    <Description>Extend jobs from 19 to 20. Inspired on RAD3. Made by xjamxx. No variables, so edit through xml only. In the second location lies the jobs levels requirement for the OEJ. Also edit these labels (cuz they go across all locations):
-	oej_id				OEJ job ID. Don't use higher than 0x8F.
+    <Description>Extend jobs from 19 to 20. Inspired by RAD3. Made by xjamxx. No variables, so edit through xml only. In the second location lies the jobs levels requirement for the OEJ. Edit these labels if needed (they go across all locations):
+	oej_id				OEJ job ID. Recommended range from 0x35 to 0x49.
 	oej_ss				OEJ skillset. The one that the job ID has. id(0x34)=ss(0x21).
 	oej_ma_unit			OEJ formation sprite for male. Shishi value -1?
 	oej_ma_unit_p1			OEJ formation sprite for male. Shishi value?
@@ -65,7 +65,7 @@ UJS2: ori v0,zero,0x0011
       j UJLP
       or t3,t3,at
 UJS4: beq t5,t8,UJS3
-      ori t5,t9,0x6178
+      ori t5,t9,0x616e
       j UJLP
       or t5,t8,zero
 UJS3: bne t1,zero,UJS5			#Branch if Job can't be unlocked
