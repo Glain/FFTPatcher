@@ -281,7 +281,7 @@ JWS1: addu v0,v0,s6
   </Patch>
   <Patch name="MJW - OEJ compatibility patch">
     <Description>Requires 'MJW', fixes incompatibility issues with OEJ patch. No variables, so edit through xml only. Edit these labels to match with OEJ labels (they go across all locations):
-	oej_id				OEJ job ID. Don't use higher than 0x5D.
+	oej_id				OEJ job ID. Recommended range from 0x35 to 0x49.
 	oej_ma_unit			OEJ formation sprite for male. Shishi value -1?
 	oej_fe_unit			OEJ formation sprite for female. Shishi value -1?</Description>
     <Location file="WORLD_WORLD_BIN" offset="125760" mode="ASM" offsetMode="RAM">
