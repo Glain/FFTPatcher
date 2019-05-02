@@ -76,10 +76,10 @@ SFS1: addiu at,s0,0xff70
       bltz at,SFS2
       sll v0,at,0x02
       j SFSB
-SFS2: addiu a0,s0,0xffa2		#From 5e to 8f.
-      bltz a0,SFS3
-      ori at,zero,0x0003
-      divu a0,at
+SFS2: addiu at,s0,0xffa2		#From 5e to 8f.
+      bltz at,SFS3
+      ori v0,zero,0x0003
+      divu at,v0
       mflo at
       j SFSF
       addiu v0,at,0x003e		#3e chocobo and so on. +1
@@ -174,18 +174,17 @@ FCED: jr ra
       addiu a0,a1,0xffa2
       sltiu v0,a0,0x0030		#8d, is the last hydra.
       beq v0,zero,MWED
-      lui t1,0x8005
-      lbu t1,0x78d4(t1)
+      lui at,0x8005
+      lbu t1,0x78d4(at)
       ori at,zero,0x0003
       sltiu t2,t1,@st_unlock_mjw
       bne t2,zero,MWED
+      ori a1,a1,0x1000
       divu a0,at
       or s1,s6,zero
-      mflo t0
-      ori a1,a1,0x1000
       or s2,zero,zero
+      mflo t0
       or s0,zero,zero
-      or t2,zero,zero
       sll at,t0,0x01
       addu t0,t0,at
       addiu t0,t0,0x105e
@@ -211,6 +210,7 @@ MWS2: slti v0,t1,0x108b			#8b is the first hydra.
       bne v0,zero,MWLP
       addiu t1,t1,0x0003
 MWED: jr ra
+      nop
       nop
       nop
     </Location>
@@ -403,6 +403,17 @@ W2ED: jr ra
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122CBC" mode="ASM" offsetMode="RAM">
       jal @oej_wjpss
+    </Location>
+  </Patch>
+  <Patch name="MJW - BETTLE-PSX minimal workaround">
+    <Description>Requires 'MJW'. For some unknown reason MJW doesn't work with BETTLE-PSX, and for it is a major issue. Though I have a theory of what is going on, I could not prove it so far. The issue goes to monster_wheel routine that makes the list of jobs. It only works for 61h, 62h and 63h, all goblin jobs. It does not matter the sprite, I drawed with a choco sprite and as long as the jobs are those it works, for any other job it freezes. This patch turn MJW in a goblin job wheel for monsters, but it works with BETTLE-PSX.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="1258EC" mode="ASM" offsetMode="RAM">
+      addiu t0,zero,0x1061
+      addiu t4,s1,0xfffc
+      ori t1,zero,0x1061		#61 for goblin.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125938" mode="ASM" offsetMode="RAM">
+      slti v0,t1,0x008b			#only goblins
     </Location>
   </Patch>
 </Patches>
