@@ -388,13 +388,13 @@ W1ED: sll v0,s2,0x01
       jr ra
       addiu sp,sp,0x0030
 @oej_wjpss:
-      ori at,zero,0x0005b
+      ori at,zero,0x005b
       bne a1,at,W2S1
-      ori at,zero,0x0005c
+      ori at,zero,0x005c
       andi at,s0,0x0040
       srl at,at,0x0006
       b W2ED
-      addiu at,t7,0x0005b
+      addiu at,t7,0x005b
 W2S1: beq a1,at,W2ED
       ori at,zero,@oej_id
       or at,a1,zero
