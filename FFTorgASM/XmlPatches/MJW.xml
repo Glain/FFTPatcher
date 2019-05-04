@@ -70,12 +70,12 @@ WAED: jr ra
       ori v0,zero,0x51
       addiu v0,s0,0xff6a
       bltz v0,SFS1
-SFSB: addiu v0,v0,0x004e
+SFS0: addiu v0,v0,0x004e
       j SFSF
 SFS1: addiu at,s0,0xff70
       bltz at,SFS2
       sll v0,at,0x02
-      j SFSB
+      j SFS0
 SFS2: addiu at,s0,0xffa2		#From 5e to 8f.
       bltz at,SFS3
       ori v0,zero,0x0003
@@ -123,19 +123,21 @@ SFSF: sll a0,v0,0x01
       or a1,a2,zero
       jal 0x000222dc
       ori a2,zero,0x000c
+      ori v0,zero,0x0048		#Reis dragon form, exception.
+      beq v0,s0,SFSA
       addiu v0,s0,0xffcb
-      sltiu v0,v0,0x0029		#Generic job
+      sltiu v0,v0,0x0029		#Generic job.
       bne v0,zero,SFED
-      addiu at,sp,0xfffe
+SFSA: addiu at,sp,0xfffe
       sb s0,0x0000(at)
       jal 0x001090c8
       or a0,s2,zero
       sll v0,v0,0x10
       sra v1,v0,0x10
-      bgez v1,SFSA
+      bgez v1,SFSB
       addu v0,v1,zero
       addiu v0,v1,0x0003
-SFSA: sra a1,v0,0x02
+SFSB: sra a1,v0,0x02
       sll v0,a1,0x02
       subu v0,v1,v0
       sll v0,v0,0x04
@@ -184,7 +186,6 @@ FCED: jr ra
       or s1,s6,zero
       or s2,zero,zero
       mflo t0
-      or s0,zero,zero
       sll at,t0,0x01
       addu t0,t0,at
       addiu t0,t0,0x105e
@@ -195,22 +196,21 @@ MWLP: beq t1,t0,MWS1
       addiu s1,s1,0x0002
       j MWS2
       addiu s2,s2,0x0001
-MWIL: bne s0,a1,MWS3
+MWIL: bne t3,a1,MWS3
       addu at,s2,t2
-      ori s0,s0,0x4000
+      ori t3,t3,0x4000
       sb at,0x0000(t4)
-MWS3: sh s0,0x0000(s1)
+MWS3: sh t3,0x0000(s1)
       addiu s1,s1,0x0002
       addiu t2,t2,0x0001
 MWS1: slti v0,t2,0x0003
       bne v0,zero,MWIL
-      addu s0,t2,t0
+      addu t3,t2,t0
       addu s2,s2,t2
 MWS2: slti v0,t1,0x108b			#8b is the first hydra.
       bne v0,zero,MWLP
       addiu t1,t1,0x0003
 MWED: jr ra
-      nop
       nop
       nop
     </Location>
@@ -338,7 +338,7 @@ SFSE: sra v0,v0,0x10
 W1LP: addiu s0,s3,0x004a
       jal 0x0012b1ec
       ori a0,zero,0x0001
-      addiu v1,v0,0x0000		#Should be zero but no mime.
+      addiu v1,v0,0x0000
       lbu at,0x0070(s4)
       ori v0,zero,0x005b
       andi at,at,0x0040
@@ -403,17 +403,6 @@ W2ED: jr ra
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122CBC" mode="ASM" offsetMode="RAM">
       jal @oej_wjpss
-    </Location>
-  </Patch>
-  <Patch name="MJW - BETTLE-PSX minimal workaround">
-    <Description>Requires 'MJW'. For some unknown reason MJW doesn't work with BETTLE-PSX, and for it is a major issue. Though I have a theory of what is going on, I could not prove it so far. The issue goes to monster_wheel routine that makes the list of jobs. It only works for 61h, 62h and 63h, all goblin jobs. It does not matter the sprite, I drawed with a choco sprite and as long as the jobs are those it works, for any other job it freezes. This patch turn MJW in a goblin job wheel for monsters, but it works with BETTLE-PSX.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="1258EC" mode="ASM" offsetMode="RAM">
-      addiu t0,zero,0x1061
-      addiu t4,s1,0xfffc
-      ori t1,zero,0x1061		#61 for goblin.
-    </Location>
-    <Location file="WORLD_WORLD_BIN" offset="125938" mode="ASM" offsetMode="RAM">
-      slti v0,t1,0x008b			#only goblins
     </Location>
   </Patch>
 </Patches>
