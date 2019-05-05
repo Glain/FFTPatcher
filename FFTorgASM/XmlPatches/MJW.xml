@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Patches>
   <Patch name="Monster Job Wheel (MJW)">
-    <Description>Allow monsters to change their job to other monster job. Made by xjamxx. This patch is not compatible with OEJ by itself, use MJW compatibility patch. No variables, so edit through xml only. Edit this label if needed (it goes across all locations):
-	st_unlock_mjw			Inner game stage to unlock monster wheel (35 = chapter 4 - before orbonne)</Description>
+    <Description>Allow monsters to change their job to other monster job. Made by xjamxx. This patch is not compatible with OEJ by itself, use MJW compatibility patch.</Description>
     <Location file="WORLD_WORLD_BIN" offset="11A47C" mode="ASM" offsetMode="RAM">
-    .label  @st_unlock_mjw, 0x0032
       nop				#Prevent focus to move to the first job in the wheel.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="119C90" mode="ASM" offsetMode="RAM">
@@ -22,7 +20,7 @@
       beq v0,zero,0x00119cdc
       sra a1,a1,0x10
       lh a0,0x0010(sp)
-      bne t0,zero,0x00119cdc
+      bne t0,zero,0x00119cdc		#Jump to 119cec to avoid drawing wheel sprite at all.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="118EA8" mode="ASM" offsetMode="RAM">
       lui at,0x801d
@@ -47,7 +45,7 @@ WAED: jr ra
       sltiu v0,v0,0x000e
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1256C8" mode="ASM" offsetMode="RAM">
-      sll v0,a0,0x10
+      sll v0,a0,0x10			#This entire location must not exceed 163 instructions (166 with 3 labels).
       sra v0,v0,0x0e
       lui at,0x801d
       addu at,at,v0
@@ -55,9 +53,9 @@ WAED: jr ra
       addu a2,a1,zero
       lbu a1,0x0070(v0)
       lhu a0,0x0024(v0)
-      lbu a3,0x0072(v0)
-@setup_formation_sprite:
-      addiu sp,sp,0xffe0
+      lbu a3,0x0072(v0)			#Since plotting routines are mixed, needed a3 to check Sprite Set.
+@setup_formation_sprite:		#Now the plotting sprite routine is one for the roster and the wheel.
+      addiu sp,sp,0xffe0		#Now the wheel support both human and monster sprites.
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
       sw s1,0x0018(sp)
@@ -65,28 +63,28 @@ WAED: jr ra
       or s0,a0,zero
       or s1,a2,zero
       lh s2,0x002c(v0)
-      ori v0,zero,0x009a
+      ori v0,zero,0x009a		#Job ID special cases, 9a.
       beq v0,s0,SFSF
       ori v0,zero,0x51
-      addiu v0,s0,0xff6a
+      addiu v0,s0,0xff6a		#Job ID special cases, 96, 97 and 99.
       bltz v0,SFS1
 SFS0: addiu v0,v0,0x004e
       j SFSF
-SFS1: addiu at,s0,0xff70
+SFS1: addiu at,s0,0xff70		#Job ID special cases, 90 and 91.
       bltz at,SFS2
       sll v0,at,0x02
       j SFS0
-SFS2: addiu at,s0,0xffa2		#From 5e to 8f.
+SFS2: addiu at,s0,0xffa2		#Monsters Job IDs from 5e to 8f.
       bltz at,SFS3
       ori v0,zero,0x0003
       divu at,v0
       mflo at
-      j SFSF
-      addiu v0,at,0x003e		#3e chocobo and so on. +1
-SFS3: ori v0,zero,0x0048
+      j SFSF				#Will use for sprite calculation:
+      addiu v0,at,0x003e		#3e chocobo, +1 for goblin and so on.
+SFS3: ori v0,zero,0x0048		#Job ID special cases, 48.
       beq v0,s0,SFSF
       ori v0,zero,0x4c
-      slti v0,a3,0x0035			#Special job up to 35
+      slti v0,a3,0x0035			#Special job up to 34h, more like Unique jobs = Sprite sets.
       beq v0,zero,SFS4
       lui at,0x8019
       addu at,at,a3
@@ -122,14 +120,14 @@ SFSF: sll a0,v0,0x01
       addu a0,a0,v0
       or a1,a2,zero
       jal 0x000222dc
-      ori a2,zero,0x000c
-      ori v0,zero,0x0048		#Reis dragon form, exception.
+      ori a2,zero,0x000c		#It must be 0x000c or almost nothing will be drawn.
+      ori v0,zero,0x0048		#Reis dragon form, exception. Since its higher than 34 but it is not generic.
       beq v0,s0,SFSA
       addiu v0,s0,0xffcb
       sltiu v0,v0,0x0029		#Generic job.
       bne v0,zero,SFED
 SFSA: addiu at,sp,0xfffe
-      sb s0,0x0000(at)
+      sb s0,0x0000(at)			#Store Job ID in the stack to use it in next jal.
       jal 0x001090c8
       or a0,s2,zero
       sll v0,v0,0x10
@@ -153,7 +151,7 @@ SFED: lw ra,0x0010(sp)
       lw s2,0x001c(sp)
       jr ra
       addiu sp,sp,0x0020
-@formation_cursor:
+@formation_cursor:			#Vanilla routine, but optimized to gain space.
       lui at,0x801d
       lh a1,-0x79cc(at)
       addu v1,zero,zero
@@ -171,21 +169,22 @@ FCLP: lw at,0x0000(a0)
       or v1,t0,zero
 FCED: jr ra
       addu v0,v1,zero
-@monster_wheel:
-      beq a0,zero,MWED
+@monster_wheel:				#Custom routine, monster Job ID list maker.
+      beq a0,zero,MWED			#It can not be used as jal beside the place it is used.
       addiu a0,a1,0xffa2
       sltiu v0,a0,0x0030		#8d, is the last hydra.
       beq v0,zero,MWED
       lui at,0x8005
-      lbu t1,0x78d4(at)
+      lbu t1,0x79C7(at)
       ori at,zero,0x0003
-      sltiu t2,t1,@st_unlock_mjw
-      bne t2,zero,MWED
-      ori a1,a1,0x1000
+      andi t1,t1,0x000f			#Check if Elidibs was killed by player.
+      beq t1,zero,MWED
+      ori a1,a1,0x1000			#This extra one is to handle displayed lvl and mastered star.
       divu a0,at
       or s1,s6,zero
-      or s2,zero,zero
       mflo t0
+      or s2,zero,zero
+      or t2,zero,zero
       sll at,t0,0x01
       addu t0,t0,at
       addiu t0,t0,0x105e
@@ -212,11 +211,10 @@ MWS2: slti v0,t1,0x108b			#8b is the first hydra.
       addiu t1,t1,0x0003
 MWED: jr ra
       nop
-      nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1225DC" mode="ASM" offsetMode="RAM">
-      lw a0,0x0000(s3)
-      ori v0,zero,0x0002
+      lw a0,0x0000(s3)			#This is part of the routine that writes the Jobs ID list.
+      ori v0,zero,0x0002		#Mostly is vanilla, but optimized to gain space for a routine.
       lh a1,0x0024(a0)
       bne s5,v0,JWS1
       sll v0,s2,0x01
@@ -232,11 +230,11 @@ JWS1: addu v0,v0,s6
       addu s4,v0,v1
       lw s0,0x0000(s4)
       lbu a0,0x0070(a0)
-      jal @monster_wheel
+      jal @monster_wheel		#Added custom monster job wheel routine.
       andi a0,a0,0x0020
-      bne s2,zero,0x12272c
+      bne s2,zero,0x12272c		#Branch a job list was created.
       lh a0,0x0024(s0)
-      jal 0x001223b8
+      jal 0x001223b8			#This tiny routine will not touch a0, it is not clean, but saves space.
       addiu s2,s2,0x0001
       addiu at,s6,0xfffc
       jal 0x00120b90
@@ -250,7 +248,7 @@ JWS1: addu v0,v0,s6
       ori a0,zero,0x0001
       sll v0,s2,0x01
       addu s1,v0,s6
-      nop
+      nop				#One free space.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="119678" mode="ASM" offsetMode="RAM">
       jal @formation_cursor
@@ -266,17 +264,17 @@ JWS1: addu v0,v0,s6
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="119C30" mode="ASM" offsetMode="RAM">
       jal @setup_formation_sprite
-      or a3,a0,zero
+      or a3,a0,zero			#Since plotting routines are mixed, needed a3 to check Sprite Set.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1090C8" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe0
-      sw ra,0x0018(sp)
+      addiu sp,sp,0xffe0		#This routine returns values for palette calculation.
+      sw ra,0x0018(sp)			#The Job ID is already stored in the stack for future use.
       sw s1,0x0014(sp)
       jal 0x00059af0
       sw s0,0x0010(sp)
       lbu v1,0x0000(v0)
-      addiu s0,sp,0x001c
-      sb v1,0x0000(s0)
+      addiu s0,sp,0x001c		#Change s0 pointer reference to use custom values.
+      sb v1,0x0000(s0)			#Store sprite type in the stack for future use.
     </Location>
   </Patch>
   <Patch name="MJW - OEJ compatibility patch">
@@ -288,7 +286,7 @@ JWS1: addu v0,v0,s6
     .label  @oej_id, 0x39
     .label  @oej_ma_unit, 0x08
     .label  @oej_fe_unit, 0x09
-      slti v0,a3,0x0035			#Special job up to 35
+      slti v0,a3,0x0035			#Special job up to 34h, more like Unique jobs = Sprite sets.
       beq v0,zero,SFS4
       lui at,0x8019
       addu at,at,a3
@@ -299,9 +297,9 @@ SFS4: ori at,zero,@oej_id
       bne at,s0,SFS5
       andi v0,a1,0x0040			#Gender
       beq v0,zero,SFS6
-      ori v1,zero,@oej_ma_unit
+      ori v1,zero,@oej_ma_unit		#Set OEJ male Formation Sprite.
       j SFS6
-      ori v1,zero,@oej_fe_unit
+      ori v1,zero,@oej_fe_unit		#Set OEJ female Formation Sprite.
 SFS5: or v1,s0,zero
       addiu at,v1,0xffa4		#Check if mime or dancer.
       bltz at,SFS7			#If not, branch.
@@ -315,12 +313,12 @@ SFS7: addiu v1,v1,0xff84
       addiu v1,v1,0x0001		#Female +1 in unit.bin
 SFS6: sll v0,v1,0x10
 SFSE: sra v0,v0,0x10
-      nop
+      nop				#One free space.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122628" mode="ASM" offsetMode="RAM">
-      bne s2,zero,W1ED
-      lh a0,0x0024(s0)
-      jal 0x001223b8
+      bne s2,zero,W1ED			#Branch a job list was created.	
+      lh a0,0x0024(s0)			#This is half of the routine that writes the Jobs ID list.
+      jal 0x001223b8			#Mostly is vanilla, but optimized to gain space for a routine.
       addiu s2,s2,0x0001
       addiu at,s6,0xfffc
       jal 0x00120b90
@@ -387,22 +385,22 @@ W1ED: sll v0,s2,0x01
       lw s0,0x0010(sp)
       jr ra
       addiu sp,sp,0x0030
-@oej_wjpss:
+@oej_wjpss:				#Multi-purpose fixing routine.
       ori at,zero,0x005b
-      bne a1,at,W2S1
+      bne a1,at,W2S1			#Branch if not Bard. 
       ori at,zero,0x005c
       andi at,s0,0x0040
       srl at,at,0x0006
       b W2ED
-      addiu at,t7,0x005b
-W2S1: beq a1,at,W2ED
+      addiu at,at,0x005b		#But if Bard and female, then Dancer.
+W2S1: beq a1,at,W2ED			#Branch if Dancer, then OEJ.
       ori at,zero,@oej_id
       or at,a1,zero
 W2ED: jr ra
       or a1,at,zero
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122CBC" mode="ASM" offsetMode="RAM">
-      jal @oej_wjpss
+      jal @oej_wjpss			#Multi-purpose fixing routine.
     </Location>
   </Patch>
 </Patches>
