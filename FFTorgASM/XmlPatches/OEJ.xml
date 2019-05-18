@@ -283,7 +283,7 @@ BSS2: sll v0,a2,0x01			#Job ID * 2.
       addiu s0,a1,0xffb6
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122634" mode="ASM" offsetMode="RAM">
-      lw at,0x0000(s0)			#This is half of the routine that writes the Jobs ID list.
+      lw at,0x0000(s0)			#This is the second half of the routine that writes the Jobs ID list.
       bne v0,zero,W1ED			#Mostly is vanilla, but optimized to gain space for a routine.
       lh at,0x003e(at)
       ori a0,zero,0x0001
@@ -961,7 +961,7 @@ BJED: jr ra
     <Description>Requires 'OEJ'. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
 	st_tier1			Inner game stage (0f = end of chapter 1)
 	st_tier2			Inner game stage (1f = end of chapter 2)
-	st_tier3			Inner game stage (32 = after Limberry Castle?)</Description>
+	st_tier3			Inner game stage (32 = after Limberry Castle)</Description>
     <Location file="SCUS_942_21" offset="5DCF8" mode="ASM" offsetMode="RAM">
     .eqv %st_tier1, 0x000f
     .eqv %st_tier2, 0x001f
@@ -978,7 +978,7 @@ BJED: jr ra
       ori t0,v1,0xfe00
       sltiu t2,t1,%st_tier1
       beq t2,zero,ERED
-      ori t0,v1,0xe000
+      ori t0,v1,0xd000			#d=1101, Sum-Thief--Ora.
       lui t0,0x00fe
 ERED: jr ra
       and v0,v0,t0

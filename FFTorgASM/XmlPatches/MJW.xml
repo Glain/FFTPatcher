@@ -5,22 +5,32 @@
     <Location file="WORLD_WORLD_BIN" offset="11A47C" mode="ASM" offsetMode="RAM">
       nop				#Prevent focus to move to the first job in the wheel.
     </Location>
+    <Location file="WORLD_WORLD_BIN" offset="118178" mode="ASM" offsetMode="RAM">
+      lw at,0x001c(sp)
+      slti v0,v0,0x0019
+      bne v0,zero,0x001181b4
+      lui v0,0x8019
+      beq at,zero,0x001181b4		#at is original s1, in wheel is zero, otherwise not.
+      addiu v0,v0,0xc704
+    </Location>
     <Location file="WORLD_WORLD_BIN" offset="119C90" mode="ASM" offsetMode="RAM">
       lhu t0,0x0000(s0)
       addu s0,zero,zero
+      lui s1,0x8019
       andi v0,t0,0x4000
-      beq v0,zero,0x00119cac
+      beq v0,zero,SSS1
       andi t0,t0,0x1000			#To handle mastered star.
-      lui s0,0x8019
-      addiu s0,s0,0xba10
-      lui at,0x801d
+      addiu s0,s1,0xba10
+SSS1: lui at,0x801d
       addu at,at,s3
       lh v0,-0x7bdc(at)
       sll a1,v1,0x10
       beq v0,zero,0x00119cdc
       sra a1,a1,0x10
       lh a0,0x0010(sp)
+      lbu a3,-0x36e6(s1)
       bne t0,zero,0x00119cdc		#Jump to 119cec to avoid drawing wheel sprite at all.
+      or s1,zero,zero			#To prevent shadow correction for the wheel, since image reduced.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="118EA8" mode="ASM" offsetMode="RAM">
       lui at,0x801d
@@ -52,10 +62,10 @@ WAED: jr ra
       lw v0,-0x2a14(at)
       addu a2,a1,zero
       lbu a1,0x0070(v0)
-      lhu a0,0x0024(v0)
+      lbu a0,0x0024(v0)			#Monster wheel adds 1000h, so unless andi, just load byte instead of half.
       lbu a3,0x0072(v0)			#Since plotting routines are mixed, needed a3 to check Sprite Set.
 @setup_formation_sprite:		#Now the plotting sprite routine is one for the roster and the wheel.
-      addiu sp,sp,0xffe0		#Now the wheel support both human and monster sprites.
+      addiu sp,sp,0xffd0		#Now the wheel support both human and monster sprites.
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
       sw s1,0x0018(sp)
@@ -63,10 +73,11 @@ WAED: jr ra
       or s0,a0,zero
       or s1,a2,zero
       lh s2,0x002c(v0)
+      lui t0,0x8019
       ori v0,zero,0x009a		#Job ID special cases, 9a.
       beq v0,s0,SFSF
       ori v0,zero,0x51
-      addiu v0,s0,0xff6a		#Job ID special cases, 96, 97 and 99.
+      addiu v0,s0,0xff6a		#Job ID special cases, 96, 97, 98 (dummy) and 99.
       bltz v0,SFS1
 SFS0: addiu v0,v0,0x004e
       j SFSF
@@ -86,8 +97,7 @@ SFS3: ori v0,zero,0x0048		#Job ID special cases, 48.
       ori v0,zero,0x4c
       sltiu v0,a3,0x0035		#Special job up to 34h, more like Unique jobs = Sprite sets.
       beq v0,zero,SFS4
-      lui at,0x8019
-      addu at,at,a3
+      addu at,t0,a3
       lbu v1,-0x21cc(at)
       j SFSE
       sll v0,v1,0x10
@@ -112,11 +122,11 @@ SFS9: andi v0,a1,0x0040			#Female
       addiu v1,v1,0x0001		#Female +1 in unit.bin
 SFS6: sll v0,v1,0x10
 SFSE: sra v0,v0,0x10
-SFSF: sll a0,v0,0x01
+SFSF: sw a1,0x0020(sp)			#Store gender for later use.
+      sll a0,v0,0x01
       addu a0,a0,v0
       sll a0,a0,0x02
-      lui v0,0x8019
-      addiu v0,v0,0xda44
+      addiu v0,t0,0xda44
       addu a0,a0,v0
       or a1,a2,zero
       jal 0x000222dc
@@ -150,7 +160,7 @@ SFED: lw ra,0x0010(sp)
       lw s1,0x0018(sp)
       lw s2,0x001c(sp)
       jr ra
-      addiu sp,sp,0x0020
+      addiu sp,sp,0x0030
 @formation_cursor:			#Vanilla routine, but optimized to gain space.
       lui at,0x801d
       lh a1,-0x79cc(at)
@@ -212,21 +222,45 @@ MWS2: sltiu v0,t1,0x108b		#8b is the first hydra.
 MWED: jr ra
       nop
     </Location>
-    <Location file="WORLD_WORLD_BIN" offset="1225DC" mode="ASM" offsetMode="RAM">
-      lw a0,0x0000(s3)			#This is part of the routine that writes the Jobs ID list.
-      ori v0,zero,0x0002		#Mostly is vanilla, but optimized to gain space for a routine.
+    <Location file="WORLD_WORLD_BIN" offset="12257C" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffd0		#This is part of the routine that writes the Jobs ID list.
+      sw ra,0x002c(sp)			#Mostly is vanilla, but optimized to gain space for a routine.
+      sw s6,0x0028(sp)
+      sw s5,0x0024(sp)
+      sw s4,0x0020(sp)
+      sw s3,0x001c(sp)
+      sw s2,0x0018(sp)
+      sw s1,0x0014(sp)
+      sw s0,0x0010(sp)
+      addu s6,r5,zero
+      addu s5,a2,zero
+      andi s1,a0,0x00ff
+      lui v1,0x801d
+      addiu v1,v1,0xd5ec
+      sll v0,s1,0x02
+      addu s3,v0,v1
+      lw a0,0x0000(s3)
+      addu s2,zero,zero
+      jal 0x0012b1b4
+      addiu a0,a0,0x0077
+      jal 0x0012243c
+      or a0,s1,zero
+      addu s0,v0,zero
+      lw a0,0x0000(s3)
+      ori v0,zero,0x0002
       lh a1,0x0024(a0)
       bne s5,v0,JWS1
       sll v0,s2,0x01
       bne s0,a1,JWS1
       sll v0,s2,0x01
       ori s0,s0,0x4000
+      addiu at,s6,0xfffc
+      sb s2,0x0000(at)
 JWS1: addu v0,v0,s6
       sh s0,0x0000(v0)
-      andi v0,s1,0x00ff
       lui v1,0x801d
       addiu v1,v1,0xd5ec
-      sll v0,v0,0x02
+      sll v0,s1,0x02
       addu s4,v0,v1
       lw s0,0x0000(s4)
       lbu a0,0x0070(a0)
@@ -234,21 +268,30 @@ JWS1: addu v0,v0,s6
       andi a0,a0,0x0020
       bne s2,zero,0x12272c		#Branch if monster job list was created.
       lh a0,0x0024(s0)
-      jal 0x001223b8			#This tiny routine will not touch a0, it is not clean, but saves space.
-      addiu s2,s2,0x0001
-      addiu at,s6,0xfffc
       jal 0x00120b90
-      sb v0,0x0000(at)
+      addiu s2,s2,0x0001
       bne v0,zero,0x12272c
-      lh v0,0x003e(s0)
+      lh at,0x003e(s0)
       ori s3,zero,0x0001
-      bne v0,zero,0x122730
+      bne at,zero,0x122730
       sll v0,s2,0x01
       jal 0x0012b1ec
       ori a0,zero,0x0001
       sll v0,s2,0x01
       addu s1,v0,s6
-      nop				#One free space.
+      nop				#Four free spaces.
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1226CC" mode="ASM" offsetMode="RAM">
+      lw at,0x0000(s4)
+      addiu t0,s6,0xfffc
+      lh v0,0x0024(at)
+      lbu t1,0x0000(t0)
+      beq s0,v0,0x00122710
+      sb s2,0x0000(t0)
+      sb t1,0x0000(t0)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="119678" mode="ASM" offsetMode="RAM">
       jal @formation_cursor
@@ -275,6 +318,66 @@ JWS1: addu v0,v0,s6
       lbu v1,0x0000(v0)
       addiu s0,sp,0x001c		#Change s0 pointer reference to use custom values.
       sb v1,0x0000(s0)			#Store sprite type in the stack for future use.
+    </Location>
+  </Patch>
+  <Patch name="MJW - Show one message on wheel req">
+    <Description>Requires 'MJW'. Set only one message for the unlocked monster jobs. No variables, so edit through xml only. Edit this eqv if needed:
+	mjw_txtnum			Number of the text entry slot in job requirements.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="118EE8" mode="ASM" offsetMode="RAM">
+    .eqv  %mjw_txtnum, 0x004D
+      andi a0,a0,0x00ff
+      addiu v0,a0,0xffa2
+      sltiu v0,v0,0x0032
+      bne v0,zero,WTED
+      addiu v0,zero,%mjw_txtnum
+      slti v0,a0,0x004a
+      bne v0,r0,WTED
+      addiu v0,a0,0x0013
+      addiu v0,a0,0xffb6
+WTED: jr ra
+      andi v0,v0,0x00ff
+    </Location>
+  </Patch>
+  <Patch name="MJW - Fix transitions 1 - Center image">
+    <Description>Requires 'MJW'. One workaround to fix transitions with larger sprites.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A6D0" mode="ASM" offsetMode="RAM">
+      nop
+      nop
+      nop
+      nop
+      lui at,0x8019
+      ori v0,zero,0x0067
+      ori a0,zero,0x0074
+FTS1: sh v0,-0x375a(at)
+      sh v0,-0x374a(at)
+      ori v0,r0,0x0064
+      sh a0,-0x375c(at)
+      sh a0,-0x374c(at)
+      lhu t0,0x0010(sp)
+      bne v1,v0,0x0011a71c
+      sh a1,-0x3750(at)
+      sll r2,t0,0x10
+    </Location>
+  </Patch>
+  <Patch name="MJW - Fix transitions 2 - No image for monsters">
+    <Description>Requires 'MJW'. Another workaround to fix transitions with larger sprites. Additional notes, a complete fix for the bigger sprite transitions, it is not worth the effort. Still if anybody wants to try, check where this routine writes the v0, a0 and a1 and learn how to scale the incoming sprite plus the position and areas of the sprites.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A6D0" mode="ASM" offsetMode="RAM">
+      lbu t0,-0x0010(sp)
+      nop
+      ori t1,zero,0x0020
+      bne t0,t1,FTS1
+      lui at,0x8019
+      ori v0,zero,0x0200
+      ori a0,zero,0x0200
+FTS1: sh v0,-0x375a(at)
+      sh v0,-0x374a(at)
+      ori v0,r0,0x0064
+      sh a0,-0x375c(at)
+      sh a0,-0x374c(at)
+      lhu t0,0x0010(sp)
+      bne v1,v0,0x0011a71c
+      sh a1,-0x3750(at)
+      sll r2,t0,0x10
     </Location>
   </Patch>
   <Patch name="MJW - Monster Level restriction">
@@ -324,18 +427,17 @@ JWS1: addu v0,v0,s6
     </Location>
   </Patch>
   <Patch name="MJW - OEJ compatibility patch">
-    <Description>Requires 'OEJ' and after 'MJW', fixes incompatibility issues with OEJ patch. No variables, so edit through xml only. Edit these labels to match with OEJ labels (they go across all locations):
+    <Description>Requires 'OEJ' and 'MJW' after it, fixes incompatibility issues with OEJ patch. No variables, so edit through xml only. Edit these labels to match with OEJ labels (they go across all locations):
 	oej_id				OEJ job ID. Recommended range from 0x35 to 0x47.
 	oej_ma_unit			OEJ formation sprite for male. Shishi value -1?
 	oej_fe_unit			OEJ formation sprite for female. Shishi value -1?</Description>
-    <Location file="WORLD_WORLD_BIN" offset="125760" mode="ASM" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="125764" mode="ASM" offsetMode="RAM">
     .label  @oej_id, 0x39
     .label  @oej_ma_unit, 0x08
     .label  @oej_fe_unit, 0x09
       sltiu v0,a3,0x0035		#Special job up to 34h, more like Unique jobs = Sprite sets.
       beq v0,zero,SFS4
-      lui at,0x8019
-      addu at,at,a3
+      addu at,t0,a3
       lbu v1,-0x21cc(at)
       j SFSE
       sll v0,v1,0x10
@@ -362,13 +464,10 @@ SFSE: sra v0,v0,0x10
       nop				#One free space.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122628" mode="ASM" offsetMode="RAM">
-      bne s2,zero,W1ED			#Branch if monster job list was created.	
-      lh a0,0x0024(s0)			#This is half of the routine that writes the Jobs ID list.
-      jal 0x001223b8			#Mostly is vanilla, but optimized to gain space for a routine.
+      bne s2,zero,W1ED			#Branch if monster job list was created.
+      lh a0,0x0024(s0)			#This is the second half of the routine that writes the Jobs ID list.
+      jal 0x00120b90			#Mostly is vanilla, but optimized to gain space for a routine.
       addiu s2,s2,0x0001
-      addiu at,s6,0xfffc
-      jal 0x00120b90
-      sb v0,0x0000(at)
       bne v0,zero,W1ED
       lh at,0x003e(s0)
       ori s3,zero,0x0001
@@ -397,9 +496,11 @@ W1S1: or s0,v0,zero
       ori v0,zero,0x0002
       bne s5,v0,W1S2
       lh at,0x0024(s4)
-      nop
+      addiu t0,s6,0xfffc
+      lbu t1,0x0000(t0)
       beq s0,at,W1S3
-      ori v0,s0,0x4000
+      sb s2,0x0000(t0)
+      sb t1,0x0000(t0)
 W1S2: beq v1,zero,W1S4
       ori v0,zero,0x0002
       j W1S5
@@ -409,44 +510,14 @@ W1S4: bne s5,v0,W1S6
       jal 0x00122488
       sra a0,a0,0x10
       bne v0,zero,W1S6
-      addiu v0,s0,0x4000
-W1S3: sh v0,0x0000(s1)
+W1S3: ori v0,s0,0x4000
+      sh v0,0x0000(s1)
 W1S5: addiu s1,s1,0x0002
       addiu s2,s2,0x0001
 W1S6: addiu s3,s3,0x0001
       sltiu v0,s3,0x0014
       bne v0,zero,W1LP
 W1ED: sll v0,s2,0x01
-      addu v0,v0,s6
-      addiu v1,zero,0xffff
-      sh v1,0x0000(v0)
-      addu v0,s2,zero
-      lw ra,0x002c(sp)
-      lw s6,0x0028(sp)
-      lw s5,0x0024(sp)
-      lw s4,0x0020(sp)
-      lw s3,0x001c(sp)
-      lw s2,0x0018(sp)
-      lw s1,0x0014(sp)
-      lw s0,0x0010(sp)
-      jr ra
-      addiu sp,sp,0x0030
-@oej_wjpss:				#Multi-purpose fixing routine.
-      ori at,zero,0x005b
-      bne a1,at,W2S1			#Branch if not Bard. 
-      ori at,zero,0x005c
-      andi at,s0,0x0040
-      srl at,at,0x0006
-      b W2ED
-      addiu at,at,0x005b		#But if Bard and female, then Dancer.
-W2S1: beq a1,at,W2ED			#Branch if Dancer, then OEJ.
-      ori at,zero,@oej_id
-      or at,a1,zero
-W2ED: jr ra
-      or a1,at,zero
-    </Location>
-    <Location file="WORLD_WORLD_BIN" offset="122CBC" mode="ASM" offsetMode="RAM">
-      jal @oej_wjpss			#Multi-purpose fixing routine.
     </Location>
   </Patch>
 </Patches>
