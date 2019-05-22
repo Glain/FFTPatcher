@@ -136,8 +136,7 @@ SFSF: sw a1,0x0020(sp)			#Store gender for later use.
       addiu v0,s0,0xffcb
       sltiu v0,v0,0x0029		#Generic job.
       bne v0,zero,SFED
-SFSA: addiu at,sp,0xfffe
-      sb s0,0x0000(at)			#Store Job ID in the stack to use it in next jal.
+SFSA: sb s0,-0x0002(sp)			#Store Job ID in the stack to use it in next jal.
       jal 0x001090c8
       or a0,s2,zero
       sll v0,v0,0x10
@@ -161,6 +160,49 @@ SFED: lw ra,0x0010(sp)
       lw s2,0x001c(sp)
       jr ra
       addiu sp,sp,0x0030
+@monster_wheel:				#Custom routine, monster Job ID list maker.
+      beq a0,zero,MWED			#It cannot be used as jal beside the place it is used.
+      addiu a0,a1,0xffa2
+      sltiu v0,a0,0x0030		#8d, is the last hydra.
+      beq v0,zero,MWED
+      nop				#Nops for adding restrictions to unlock wheel.
+      nop
+      nop
+      ori at,zero,0x0003
+      or t2,zero,zero
+      nop
+      nop
+      nop
+      nop
+      ori a1,a1,0x1000			#This extra one is to handle displayed lvl and mastered star.
+      divu a0,at
+      mflo t0
+      or s1,s6,zero
+      or s2,zero,zero
+      sll at,t0,0x01
+      addu t0,t0,at
+      addiu t0,t0,0x105e
+      ori t1,zero,0x105e		#5e for choco.
+MWLP: beq t1,t0,MWS1
+      sh t1,0x0000(s1)
+      addiu s1,s1,0x0002
+      j MWS2
+      addiu s2,s2,0x0001
+MWIL: bne t3,a1,MWS3
+      addu at,s2,t2
+      ori t3,t3,0x4000
+      sb at,-0x0004(s6)
+MWS3: sh t3,0x0000(s1)
+      addiu s1,s1,0x0002
+      addiu t2,t2,0x0001
+MWS1: sltiu v0,t2,0x0003
+      bne v0,zero,MWIL
+      addu t3,t2,t0
+      addu s2,s2,t2
+MWS2: sltiu v0,t1,0x108b		#8b is the first hydra.
+      bne v0,zero,MWLP
+      addiu t1,t1,0x0003
+MWED: jr ra				#Since next instruction is a lui over at, it does not matter.
 @formation_cursor:			#Vanilla routine, but optimized to gain space.
       lui at,0x801d
       lh a1,-0x79cc(at)
@@ -179,48 +221,6 @@ FCLP: lw at,0x0000(a0)
       or v1,t0,zero
 FCED: jr ra
       addu v0,v1,zero
-@monster_wheel:				#Custom routine, monster Job ID list maker.
-      beq a0,zero,MWED			#It cannot be used as jal beside the place it is used.
-      addiu a0,a1,0xffa2
-      sltiu v0,a0,0x0030		#8d, is the last hydra.
-      beq v0,zero,MWED
-      nop				#Nops for adding restrictions to unlock wheel.
-      nop
-      ori at,zero,0x0003
-      nop
-      nop
-      or t2,zero,zero
-      ori a1,a1,0x1000			#This extra one is to handle displayed lvl and mastered star.
-      divu a0,at
-      mflo t0
-      or s1,s6,zero
-      or s2,zero,zero
-      sll at,t0,0x01
-      addu t0,t0,at
-      addiu t0,t0,0x105e
-      addiu t4,s1,0xfffc
-      ori t1,zero,0x105e		#5e for choco.
-MWLP: beq t1,t0,MWS1
-      sh t1,0x0000(s1)
-      addiu s1,s1,0x0002
-      j MWS2
-      addiu s2,s2,0x0001
-MWIL: bne t3,a1,MWS3
-      addu at,s2,t2
-      ori t3,t3,0x4000
-      sb at,0x0000(t4)
-MWS3: sh t3,0x0000(s1)
-      addiu s1,s1,0x0002
-      addiu t2,t2,0x0001
-MWS1: sltiu v0,t2,0x0003
-      bne v0,zero,MWIL
-      addu t3,t2,t0
-      addu s2,s2,t2
-MWS2: sltiu v0,t1,0x108b		#8b is the first hydra.
-      bne v0,zero,MWLP
-      addiu t1,t1,0x0003
-MWED: jr ra
-      nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="12257C" mode="ASM" offsetMode="RAM">
       addiu sp,sp,0xffd0		#This is part of the routine that writes the Jobs ID list.
@@ -254,8 +254,7 @@ MWED: jr ra
       bne s0,a1,JWS1
       sll v0,s2,0x01
       ori s0,s0,0x4000
-      addiu at,s6,0xfffc
-      sb s2,0x0000(at)
+      sb s2,-0x0004(s6)
 JWS1: addu v0,v0,s6
       sh s0,0x0000(v0)
       lui v1,0x801d
@@ -279,19 +278,20 @@ JWS1: addu v0,v0,s6
       ori a0,zero,0x0001
       sll v0,s2,0x01
       addu s1,v0,s6
-      nop				#Four free spaces.
+      nop				#Five free spaces.
+      nop
       nop
       nop
       nop
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1226CC" mode="ASM" offsetMode="RAM">
       lw at,0x0000(s4)
-      addiu t0,s6,0xfffc
+      lbu t1,-0x0004(s6)
       lh v0,0x0024(at)
-      lbu t1,0x0000(t0)
+      sb s2,-0x0004(s6)
       beq s0,v0,0x00122710
-      sb s2,0x0000(t0)
-      sb t1,0x0000(t0)
+      nop
+      sb t1,-0x0004(s6)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="119678" mode="ASM" offsetMode="RAM">
       jal @formation_cursor
@@ -338,91 +338,150 @@ WTED: jr ra
       andi v0,v0,0x00ff
     </Location>
   </Patch>
+  <Patch name="MJW - Show job descriptions on monster wheel req">
+    <Description>Requires 'MJW'. Set job descriptions as req message for the unlocked monster jobs.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="118EE8" mode="ASM" offsetMode="RAM">
+      addiu v0,a0,0xffa2
+      sltiu v0,v0,0x0032
+      bne v0,zero,WTED
+      or v0,a0,zero
+      ori t0,zero,0x8800
+      slti v0,a0,0x004a
+      bne v0,r0,WTED
+      addiu v0,a0,0x0013
+      addiu v0,a0,0xffb6
+WTED: jr ra
+      or v0,v0,t0
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119828" mode="ASM" offsetMode="RAM">
+      lbu r2,0x0024(r2)
+      andi a0,s1,0x00ff
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11983C" mode="ASM" offsetMode="RAM">
+      lui t0,0x0010
+      ori a0,zero,0x6000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119898" mode="ASM" offsetMode="RAM">
+      lui t0,0x0010
+      jal 0x00118ee8
+      andi a0,s1,0x00ff
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1198ac" mode="ASM" offsetMode="RAM">
+      ori a0,zero,0x6000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1134E8" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe8
+      sw ra,0x0014(sp)
+      sw s0,0x0010(sp)
+      andi a2,a0,0xffff
+      addu s0,a1,zero
+      srl a0,a0,0x10
+      ori a1,a0,0x002b
+      ori a0,zero,0x0001
+      jal 0x0012a370
+      addu a3,zero,zero
+      ori v0,zero,0x0001
+      lui at,0x8019
+      sb v0,-0x4533(at)
+      jal 0x00044018
+      addu a0,s0,zero
+      ori v0,zero,0x0001
+      lui at,0x8015
+      sw v0,0x330c(at)
+      lw ra,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0018
+    </Location>
+  </Patch>
   <Patch name="MJW - Fix transitions 1 - Center image">
     <Description>Requires 'MJW'. One workaround to fix transitions with larger sprites.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="11A6D0" mode="ASM" offsetMode="RAM">
-      nop
-      nop
-      nop
-      nop
-      lui at,0x8019
-      ori v0,zero,0x0067
+    <Location file="WORLD_WORLD_BIN" offset="11A6C4" mode="ASM" offsetMode="RAM">
       ori a0,zero,0x0074
-FTS1: sh v0,-0x375a(at)
-      sh v0,-0x374a(at)
-      ori v0,r0,0x0064
-      sh a0,-0x375c(at)
-      sh a0,-0x374c(at)
-      lhu t0,0x0010(sp)
-      bne v1,v0,0x0011a71c
-      sh a1,-0x3750(at)
-      sll r2,t0,0x10
+      ori v0,zero,0x0067
     </Location>
   </Patch>
   <Patch name="MJW - Fix transitions 2 - No image for monsters">
     <Description>Requires 'MJW'. Another workaround to fix transitions with larger sprites. Additional notes, a complete fix for the bigger sprite transitions, it is not worth the effort. Still if anybody wants to try, check where this routine writes the v0, a0 and a1 and learn how to scale the incoming sprite plus the position and areas of the sprites.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A6C4" mode="ASM" offsetMode="RAM">
+      ori v0,zero,0x007b		#Undo previous fix.
+      subu v0,v0,v1
+    </Location>
     <Location file="WORLD_WORLD_BIN" offset="11A6D0" mode="ASM" offsetMode="RAM">
       lbu t0,-0x0010(sp)
-      nop
       ori t1,zero,0x0020
+      lui t2,0x0028
       bne t0,t1,FTS1
-      lui at,0x8019
-      ori v0,zero,0x0200
-      ori a0,zero,0x0200
-FTS1: sh v0,-0x375a(at)
+      ori t2,t2,0x0018
+      or t2,zero,zero
+FTS1: lui at,0x8019
+      sw t2,-0x3758(at)
+      sw t2,-0x3748(at)
+      sh v0,-0x375a(at)
       sh v0,-0x374a(at)
-      ori v0,r0,0x0064
+      ori v0,zero,0x0064
+      lhu t2,0x0010(sp)
       sh a0,-0x375c(at)
       sh a0,-0x374c(at)
-      lhu t0,0x0010(sp)
-      bne v1,v0,0x0011a71c
+      sll t2,t2,0x10
+      sra t2,t2,0x12
+      beq v1,v0,FTS2
       sh a1,-0x3750(at)
-      sll r2,t0,0x10
+      addiu t2,t2,0x0040
+FTS2: addiu v0,t2,0x0100
+      nop
+      nop
+      nop
     </Location>
   </Patch>
   <Patch name="MJW - Monster Level restriction">
-    <Description>Requires 'MJW'. The wheel will be unlocked after the moster hits a certain level. Only one restriction can be applied due space limitations. For more complex restrictions, find a code cave and write it there. No variables, so edit through xml only. Edit this eqv if needed:
+    <Description>Requires 'MJW'. The wheel will be unlocked after the moster hits a certain level. For more complex restrictions, find a code cave and write it there. No variables, so edit through xml only. Edit this eqv if needed:
 	mon_lvl				Monster level needed to unlock wheel.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="1258C0" mode="ASM" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="125878" mode="ASM" offsetMode="RAM">
     .eqv  %mon_lvl, 0x0032
       lhu t1,0x0000(s0)
+      nop
+      nop
       ori at,zero,0x0003
       sltiu t2,t1,%mon_lvl		#Check if monster reached needed level.
-      bne t2,zero,0x0012594c
+      bne t2,zero,0x0012590c
+      nop
       nop
       nop
     </Location>
   </Patch>
   <Patch name="MJW - Progression Byte restriction">
-    <Description>Requires 'MJW'. The wheel will be unlocked after progression byte reaches a certain value. Only one restriction can be applied due space limitations. For more complex restrictions, find a code cave and write it there. No variables, so edit through xml only. Edit this eqv if needed:
+    <Description>Requires 'MJW'. The wheel will be unlocked after progression byte reaches a certain value. Can be used with level restriction. For more complex restrictions, find a code cave and write it there. No variables, so edit through xml only. Edit this eqv if needed:
 	prg_unlock			Inner game stage needed to unlock wheel (35h = chapter 4 - before orbonne).</Description>
-    <Location file="WORLD_WORLD_BIN" offset="1258C0" mode="ASM" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="125890" mode="ASM" offsetMode="RAM">
     .eqv  %prg_unlock, 0x0035
-      lui at,0x8005
-      lbu t1,0x78d4(at)
-      ori at,zero,0x0003
-      sltiu t2,t1,%prg_unlock		#Check if player reached progression value.
-      bne t2,zero,0x0012594c
       nop
+      sltiu t2,t3,%prg_unlock		#Check if player reached progression value.
+      bne t2,zero,0x0012590c
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12587C" mode="ASM" offsetMode="RAM">
+      lui at,0x8005
+      lbu t3,0x78d4(at)
     </Location>
   </Patch>
-  <Patch name="MJW - Elidibs Defeat restriction">
-    <Description>Requires 'MJW'. The wheel will be unlocked after Elidibs is killed. Only one restriction can be applied due space limitations. For more complex restrictions, find a code cave and write it there.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="1258C0" mode="ASM" offsetMode="RAM">
-      lui at,0x8005
-      lbu t1,0x79C7(at)
-      ori at,zero,0x0003
-      andi t1,t1,0x000f			#Check if Elidibs was killed by player.
-      beq t1,zero,0x0012594c
+  <Patch name="MJW - Elidibus Defeat restriction">
+    <Description>Requires 'MJW'. The wheel will be unlocked after Elidibus is killed. Can be used with level restriction, but overwrites progression byte restriction. For more complex restrictions, find a code cave and write it there.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="125890" mode="ASM" offsetMode="RAM">
+      andi t3,t3,0x000f			#Check if Elidibus was killed by player.
+      beq t3,zero,0x0012590c
       or t2,zero,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12587C" mode="ASM" offsetMode="RAM">
+      lui at,0x8005
+      lbu t3,0x79C7(at)
     </Location>
   </Patch>
   <Patch name="MJW - No class change">
     <Description>Requires 'MJW'. It simplifies the wheel to the 3 types of monsters per class.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="1258FC" mode="ASM" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="1258BC" mode="ASM" offsetMode="RAM">
       or t1,t0,zero
     </Location>
-    <Location file="WORLD_WORLD_BIN" offset="125940" mode="ASM" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="125900" mode="ASM" offsetMode="RAM">
       sltiu v0,t1,0x0000
     </Location>
   </Patch>
@@ -463,7 +522,7 @@ SFS6: sll v0,v1,0x10
 SFSE: sra v0,v0,0x10
       nop				#One free space.
     </Location>
-    <Location file="WORLD_WORLD_BIN" offset="122628" mode="ASM" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="122624" mode="ASM" offsetMode="RAM">
       bne s2,zero,W1ED			#Branch if monster job list was created.
       lh a0,0x0024(s0)			#This is the second half of the routine that writes the Jobs ID list.
       jal 0x00120b90			#Mostly is vanilla, but optimized to gain space for a routine.
@@ -496,11 +555,10 @@ W1S1: or s0,v0,zero
       ori v0,zero,0x0002
       bne s5,v0,W1S2
       lh at,0x0024(s4)
-      addiu t0,s6,0xfffc
-      lbu t1,0x0000(t0)
+      lbu t1,-0x0004(s6)
       beq s0,at,W1S3
-      sb s2,0x0000(t0)
-      sb t1,0x0000(t0)
+      sb s2,-0x0004(s6)
+      sb t1,-0x0004(s6)
 W1S2: beq v1,zero,W1S4
       ori v0,zero,0x0002
       j W1S5
@@ -518,6 +576,8 @@ W1S6: addiu s3,s3,0x0001
       sltiu v0,s3,0x0014
       bne v0,zero,W1LP
 W1ED: sll v0,s2,0x01
+      nop				#Two free spaces.
+      nop
     </Location>
   </Patch>
 </Patches>
