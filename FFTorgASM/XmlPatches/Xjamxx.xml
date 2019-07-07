@@ -1041,6 +1041,36 @@ SWED: jr ra
       D9 00 00 00 63 AA 1F 2F 00 2F 00 00 19 50 FF 00 00 00 10 2E 01 00 1E 00 00 00 10 20 00 E5 04 00 F1 10 00 92 2F 00 00 0C 00 E5 43 00 F1 0A 00 53 03 00 2F 00 00 01 00 64 2F 00 10 10 70 0D 00 2F 00 00 00 00 00 00 00 00 03 E5 01 00 1F 03 00 03 00 00 19 00 00 10 20 00 E5 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 92 03 00 00 0C 00 E5 43 00 F1 0A 00 53 2F 00 03 00 00 01 00 64 03 00 10 10 70 0E 00 03 00 00 00 00 00 00 00 00 00 E5 01 00 1F 69 00 69 00 00 19 00 00 10 20 00 E5 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 2D 03 00 14 00 01 00 2D 2F 00 14 00 01 00 64 2F 00 F1 08 00 80 03 00 00 80 2F 00 00 F1 0A 00 BE 7E
     </Location>
   </Patch>
+  <Patch name="Fixes X-O references in tutorial battles">
+    <Description>Custom patch, self-explanatory.</Description>
+    <Location file="EVENT_TEST_EVT" offset="336D47">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="336ECE">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="33EC46">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="33F4F7">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="346DF4">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="3367AF">
+      D9B9
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="336F12">
+      D9B9
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="346A56">
+      D9B9
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="35257E">
+      D9B9
+    </Location>
+  </Patch>
   <Patch name="Change tutorial soldier names">
     <Description>Custom patch, it also changes the gender of the last choco.</Description>
     <Location file="MENU_FFTSAVE_DAT" offset="542">
