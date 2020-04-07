@@ -1178,6 +1178,27 @@
             </PalettedImage4bppSectioned>
         </Repeat>
     </Section>
+    <!--
+    <Section Name="WLDFACE.BIN (Sets)" Filename="WLDFACE.BIN" Filesize="131072">
+        <Repeat Number="4" Offset="32768" PaletteOffset="32768">
+            <PalettedImage4bpp>
+                <Name>WLDFACE.BIN</Name>
+                <Width>256</Width>
+                <Height>240</Height>
+                <Sector>EVENT_WLDFACE_BIN</Sector>
+                <PaletteCount>64</PaletteCount>
+                <PalettePosition>
+                    <Offset>30720</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>0</Offset>
+                    <Length>30720</Length>
+                </Position>    
+            </PalettedImage4bpp>
+        </Repeat>
+    </Section>
+    -->
     <Section Name="WLDFACE.BIN" Filename="WLDFACE.BIN" Filesize="131072">
         <Names>
             <Name>Ramza (Chapter 1)</Name>
@@ -1340,6 +1361,30 @@
             <Name>(Unused)</Name>
             <Name>(Unused)</Name>
             <Name>(Unused)</Name>
+            <Name>Chocobo</Name>
+            <Name>Goblin</Name>
+            <Name>Bomb</Name>
+            <Name>Red Panther</Name>
+            <Name>Pisco Demon</Name>
+            <Name>Skeleton</Name>
+            <Name>Ghoul</Name>
+            <Name>Flotiball</Name>
+            <Name>Juravis</Name>
+            <Name>Uribo</Name>
+            <Name>Woodman</Name>
+            <Name>Bull Demon</Name>
+            <Name>Morbol</Name>
+            <Name>Behemoth</Name>
+            <Name>Dragon</Name>
+            <Name>Hydra</Name>
+            <Name>Byblos</Name>
+            <Name>Serpentarius</Name>
+            <Name>Archaic Demon</Name>
+            <Name>Steel Giant</Name>
+            <Name>Steel Giant?</Name>
+            <Name>Steel Giant?</Name>
+            <Name>Steel Giant?</Name>
+            <Name>Steel Giant?</Name>
         </Names>
         <Repeat Number="4" Offset="32768" PaletteOffset="32768">
             <Repeat Number="5" Offset="6144" PaletteOffset="256">
@@ -1361,6 +1406,138 @@
                     </PalettedImage4bppSectioned>
                 </Repeat>
             </Repeat>
+        </Repeat>
+        <PalettedImage4bppSectioned>
+            <Width>32</Width>
+            <Height>48</Height>
+            <NumBytesBetweenRows>128</NumBytesBetweenRows>
+            <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+            <PaletteCount>4</PaletteCount>
+            <PalettePosition>
+                <Offset>32000</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>45168</Offset>
+                <Length>16</Length>
+            </Position>
+        </PalettedImage4bppSectioned>
+        <Repeat Number="5" Offset="16" PaletteOffset="128">
+            <PalettedImage4bppSectioned>
+                <Width>32</Width>
+                <Height>48</Height>
+                <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+                <PaletteCount>4</PaletteCount>
+                <PalettePosition>
+                    <Offset>32128</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>51200</Offset>
+                    <Length>16</Length>
+                </Position>
+            </PalettedImage4bppSectioned>
+        </Repeat>
+        <Repeat Number="3" Offset="16" PaletteOffset="128">
+            <PalettedImage4bppSectioned>
+                <Width>32</Width>
+                <Height>48</Height>
+                <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+                <PaletteCount>4</PaletteCount>
+                <PalettePosition>
+                    <Offset>64768</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>51280</Offset>
+                    <Length>16</Length>
+                </Position>
+            </PalettedImage4bppSectioned>
+        </Repeat>
+        <Repeat Number="3" Offset="16" PaletteOffset="128">
+            <PalettedImage4bppSectioned>
+                <Width>32</Width>
+                <Height>48</Height>
+                <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+                <PaletteCount>4</PaletteCount>
+                <PalettePosition>
+                    <Offset>65152</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>57344</Offset>
+                    <Length>16</Length>
+                </Position>
+            </PalettedImage4bppSectioned>
+        </Repeat>
+        <Repeat Number="5" Offset="16" PaletteOffset="128">
+            <PalettedImage4bppSectioned>
+                <Width>32</Width>
+                <Height>48</Height>
+                <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+                <PaletteCount>4</PaletteCount>
+                <PalettePosition>
+                    <Offset>97536</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>57392</Offset>
+                    <Length>16</Length>
+                </Position>
+            </PalettedImage4bppSectioned>
+        </Repeat>
+        <PalettedImage4bppSectioned>
+            <Width>32</Width>
+            <Height>48</Height>
+            <NumBytesBetweenRows>128</NumBytesBetweenRows>
+            <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+            <PaletteCount>4</PaletteCount>
+            <PalettePosition>
+                <Offset>98176</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>65536</Offset>
+                <Length>16</Length>
+            </Position>
+        </PalettedImage4bppSectioned>
+        <Repeat Number="2" Offset="16" PaletteOffset="128">
+            <PalettedImage4bppSectioned>
+                <Width>32</Width>
+                <Height>48</Height>
+                <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+                <PaletteCount>4</PaletteCount>
+                <PalettePosition>
+                    <Offset>130304</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>65552</Offset>
+                    <Length>16</Length>
+                </Position>
+            </PalettedImage4bppSectioned>
+        </Repeat>
+        <Repeat Number="4" Offset="0" PaletteOffset="128">
+            <PalettedImage4bppSectioned>
+                <Width>32</Width>
+                <Height>48</Height>
+                <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                <FFTPack>EVENT_WLDFACE_BIN</FFTPack>
+                <PaletteCount>4</PaletteCount>
+                <PalettePosition>
+                    <Offset>130560</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>65568</Offset>
+                    <Length>16</Length>
+                </Position>
+            </PalettedImage4bppSectioned>
         </Repeat>
     </Section>
     <Section Name="WLDFACE4.BIN" Filename="WLDFACE4.BIN" Filesize="32768">
