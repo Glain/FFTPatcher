@@ -53,14 +53,18 @@ namespace FFTorgASM
 
             foreach ( XmlNode location in currentLocs )
             {
-                UInt32 offset = UInt32.Parse( location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
+                //UInt32 offset = UInt32.Parse( location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
+                XmlAttribute offsetAttribute = location.Attributes["offset"];
                 XmlAttribute fileAttribute = location.Attributes["file"];
                 XmlAttribute sectorAttribute = location.Attributes["sector"];
                 XmlAttribute modeAttribute = location.Attributes["mode"];
                 XmlAttribute offsetModeAttribute = location.Attributes["offsetMode"];
                 XmlAttribute inputFileAttribute = location.Attributes["inputFile"];
                 XmlAttribute replaceLabelsAttribute = location.Attributes["replaceLabels"];
-                
+
+                string strOffsetAttr = location.Attributes["offset"].InnerText;
+                string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
+
                 PsxIso.Sectors sector =  (PsxIso.Sectors)0;
                 if (fileAttribute != null)
                 {
@@ -96,21 +100,6 @@ namespace FFTorgASM
                 	if (offsetModeAttribute.InnerText.ToLower().Trim() == "ram")
                 		isRamOffset = true;
                 }
-                
-                UInt32 ramOffset = offset;
-                UInt32 fileOffset = offset;
-
-                try
-                {
-                    PsxIso.FileToRamOffsets ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + fileAttribute.InnerText);
-                    if (isRamOffset)
-                        fileOffset -= (UInt32)ftrOffset;
-                    else
-                        ramOffset += (UInt32)ftrOffset;
-                }
-                catch (Exception) { }
-
-                ramOffset = ramOffset | 0x80000000;     // KSEG0
 
                 string content = location.InnerText;
                 if (inputFileAttribute != null)
@@ -132,19 +121,50 @@ namespace FFTorgASM
                     content = asmUtility.ReplaceLabelsInHex(content, true);
                 }
 
-                byte[] bytes;
-                if (asmMode)
+                Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
+                try
                 {
-                    bytes = asmUtility.EncodeASM(content, ramOffset).EncodedBytes;
+                    ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + fileAttribute.InnerText);
                 }
-                else
+                catch (Exception)
                 {
-                	bytes = GetBytes( content );
+                    ftrOffset = null;
                 }
-                
-                patches.Add( new PatchedByteArray( sector, fileOffset, bytes ) );
 
-                isDataSectionList.Add(markedAsData);
+                foreach (string strOffset in strOffsets)
+                {
+                    UInt32 offset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
+
+                    UInt32 ramOffset = offset;
+                    UInt32 fileOffset = offset;
+
+                    if (ftrOffset.HasValue)
+                    {
+                        try
+                        {
+                            if (isRamOffset)
+                                fileOffset -= (UInt32)ftrOffset;
+                            else
+                                ramOffset += (UInt32)ftrOffset;
+                        }
+                        catch (Exception) { }
+                    }
+
+                    ramOffset = ramOffset | 0x80000000;     // KSEG0
+
+                    byte[] bytes;
+                    if (asmMode)
+                    {
+                        bytes = asmUtility.EncodeASM(content, ramOffset).EncodedBytes;
+                    }
+                    else
+                    {
+                        bytes = GetBytes(content);
+                    }
+
+                    patches.Add(new PatchedByteArray(sector, fileOffset, bytes));
+                    isDataSectionList.Add(markedAsData);
+                }
             }
 
             currentLocs = node.SelectNodes("STRLocation");
