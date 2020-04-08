@@ -49,7 +49,8 @@ namespace FFTPatcher.SpriteEditor
 
             var sprites = new List<AbstractSprite>();
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml( Properties.Resources.PSXFiles );
+            //doc.LoadXml( Properties.Resources.PSXFiles );
+            doc.LoadXml(Settings.PSXFiles);
             foreach ( XmlNode node in doc.SelectNodes( string.Format( "/PsxFiles/{0}/Sprite", typeof( MonsterSprite ).FullName ) ) )
             {
                 string name = node.SelectSingleNode( "@name" ).InnerText;
@@ -108,7 +109,8 @@ namespace FFTPatcher.SpriteEditor
 
             var sprites = new List<AbstractSprite>();
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml( Properties.Resources.PSPFiles );
+            //doc.LoadXml( Properties.Resources.PSPFiles );
+            doc.LoadXml(Settings.PSPFiles);
             foreach ( XmlNode node in doc.SelectNodes( string.Format( "/PspFiles/{0}/Sprite", typeof( MonsterSprite ).FullName ) ) )
             {
                 string name = node.SelectSingleNode( "@name" ).InnerText;

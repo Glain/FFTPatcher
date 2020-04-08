@@ -171,50 +171,6 @@ namespace FFTPatcher.SpriteEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;PspFiles&gt;
-        ///    &lt;Section Filename=&quot;FRAME.BIN&quot; Filesize=&quot;37568&quot;&gt;
-        ///        &lt;PalettedImage4bpp&gt;
-        ///            &lt;Name&gt;FRAME.BIN&lt;/Name&gt;
-        ///            &lt;Width&gt;256&lt;/Width&gt;
-        ///            &lt;Height&gt;288&lt;/Height&gt;
-        ///            &lt;FFTPack&gt;EVENT_FRAME_BIN&lt;/FFTPack&gt;
-        ///            &lt;PaletteCount&gt;22&lt;/PaletteCount&gt;
-        ///            &lt;DefaultPalette&gt;5&lt;/DefaultPalette&gt;
-        ///            &lt;PalettePosition&gt;
-        ///                &lt;Offset&gt;36864&lt;/Offset&gt;
-        ///                &lt;Length&gt;32&lt;/Length&gt;
-        ///            &lt;/PalettePosit [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string PSPFiles {
-            get {
-                return ResourceManager.GetString("PSPFiles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;PsxFiles&gt;
-        ///    &lt;Section Filename=&quot;FRAME.BIN&quot; Filesize=&quot;37568&quot;&gt;
-        ///        &lt;PalettedImage4bpp&gt;
-        ///            &lt;Name&gt;FRAME.BIN&lt;/Name&gt;
-        ///            &lt;Width&gt;256&lt;/Width&gt;
-        ///            &lt;Height&gt;288&lt;/Height&gt;
-        ///            &lt;Sector&gt;EVENT_FRAME_BIN&lt;/Sector&gt;
-        ///            &lt;PaletteCount&gt;22&lt;/PaletteCount&gt;
-        ///            &lt;DefaultPalette&gt;5&lt;/DefaultPalette&gt;
-        ///            &lt;PalettePosition&gt;
-        ///                &lt;Offset&gt;36864&lt;/Offset&gt;
-        ///                &lt;Length&gt;32&lt;/Length&gt;
-        ///            &lt;/PalettePositio [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string PSXFiles {
-            get {
-                return ResourceManager.GetString("PSXFiles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] RUKA_SEQ {

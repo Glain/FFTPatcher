@@ -136,12 +136,14 @@
   <data name="TYPE2_SHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\battle\type2\type2.shp;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <!--
   <data name="PSXFiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\psxfiles.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\psxfiles.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="PSPFiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\pspfiles.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\pspfiles.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  -->
   <data name="PatchedDummyFolder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\patcheddummyfolder.bin;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

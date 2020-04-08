@@ -239,12 +239,14 @@ namespace FFTPatcher.SpriteEditor
         // 0, 135
         private static List<AbstractImageList> BuildPsxImages()
         {
-            return BuildImages(Resources.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
+            return BuildImages(Settings.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
+            //return BuildImages(Resources.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
         }
 
         private static List<AbstractImageList> BuildPspImages()
         {
-            return BuildImages(Resources.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]");
+            return BuildImages(Settings.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]"); 
+            //return BuildImages(Resources.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]");
         }
 
         private static List<AbstractImageList> BuildImages(string xmlFile, string xpath)

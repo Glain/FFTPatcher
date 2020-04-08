@@ -457,6 +457,7 @@
     <Compile Include="Quantizer\PaletteQuantizer.cs" />
     <Compile Include="Quantizer\Quantizer.cs" />
     <Compile Include="Quantizer\ThumbnailGenerator.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="TestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -476,9 +477,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataTypes\Sprites\MemoryLocs.txt" />
-    <Content Include="Resources\PSPFiles.xml" />
-    <Content Include="Resources\PSXFiles.xml">
+    <Content Include="PSPFiles.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PSXFiles.xml">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\sprite.ico" />
     <Content Include="sprite.ico" />
