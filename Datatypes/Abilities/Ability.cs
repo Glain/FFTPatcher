@@ -285,7 +285,7 @@ namespace FFTPatcher.Datatypes
 
         public bool LearnWithJP { get { return learnWithJP; } set { learnWithJP = value; } }
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         public UInt16 Offset { get; private set; }
 
