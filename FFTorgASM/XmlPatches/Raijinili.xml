@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Patches>
+  <Patch name="Un-Truth uses PA instead of MA" author="Raijinili">
+    <Description>Un-Truth formula uses PA, in place of MA. It is still considered magical, boosted by Magic Attack Up and reduced by Shell and Magic Defense Up.</Description>
+    <Location file="BATTLE_BIN" offset="0012247C">40</Location>
+  </Patch>
+  <Patch name="Rando-spells always do max hits" author="Raijinili">
+    <Description>Truth, Un-Truth, Holy Bracelet, and anything else with the rando-hit formulas will always do the maximum number of hits, which is the X variable in FFTPatcher.</Description>
+    <Location file="BATTLE_BIN" offset="001165FC">
+        BB F5 05 08
+        00 00 02 26
+        00 00 00 00
+        00 00 00 00
+        00 00 00 00
+        00 00 00 00
+        00 00 00 00
+        00 00 00 00
+        00 00 00 00
+        00 00 00 00
+    </Location>
+  </Patch>
+  <Patch name="Un-Truth Faith/Innocent bugfix" author="Raijinili">
+    <Description>Un-Truth does max damage with Innocent and no damage with Faith.</Description>
+    <Location file="BATTLE_BIN" offset="001224B8">40</Location>
+    <Location file="BATTLE_BIN" offset="001224E0">80</Location>
+    <Location file="BATTLE_BIN" offset="00122508">40</Location>
+    <Location file="BATTLE_BIN" offset="00122530">80</Location>
+  </Patch>
+  <Patch name="Truth uses Faith" author="Raijinili">
+    <Description>Rafa's Truth spells are affected by Faith.
+
+Note: This is an evil hack: We jump from Truth damage calculation into the Faith damage spell calculation. A future version of this patch should overwrite the Faith damage spell calculation with itself, so that it will be detected as a conflict.</Description>
+    <Location file="BATTLE_BIN" offset="00121984">
+        6F 23 06 08
+    </Location>
+  </Patch>
+</Patches>

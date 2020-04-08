@@ -116,6 +116,9 @@
     <Content Include="XmlPatches\nates1984.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="XmlPatches\Raijinili.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="XmlPatches\Razele.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
