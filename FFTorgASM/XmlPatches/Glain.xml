@@ -2251,6 +2251,135 @@ SKP:  j       0x80180848            #   Skip this ability
         addiu   at, t0, -0x466c
     </Location>
   </Patch>
+    <Patch name="Enforce level caps">
+        <Description>Enforces level caps. Defined in sets of two by the data in the first Location tag. First number in the set is storyline progression variable value and second number in the set is what the level cap is up to that progression. All values in hex.</Description>
+        <Location file="SCUS_942_21" offset="27730" mode="DATA" offsetMode="RAM">
+            0F 14 1F 23 29 32 35 46 00 00
+        </Location>
+        <Location file="SCUS_942_21" offset="27A5C" mode="ASM" offsetMode="RAM">
+            .label  @address_storyline_progression_variable, 0x800578d4
+            .label  @address_level_cap_data, 0x80027730
+            .label  @address_skip_level_up, 0x8005d8e4
+            
+            .eqv    %battle_unit_experience_offset, 0x21
+        
+            #   HOOK: ENFORCE LEVEL CAP
+            #       Parameters:
+            #           s0 = Unit in-battle data pointer
+            #           s1 = Unit level
+            #       Sets v0 = 0 and experience = 99 if unit is at level cap, and skips the level up code.
+            #       Preserve: v0, in default case
+            @enforce_level_cap_hook:
+                    
+                    addiu   sp, sp, -24
+                    sw      ra, 4(sp)
+                    sw      v0, 8(sp)
+                    
+                    jal     @find_level_cap
+                    nop
+                    
+                    sltu    t0, s1, v0
+                    bne     t0, zero, enforce_level_cap_hook_default
+                    li      t0, 99
+                  
+                    sb      t0, %battle_unit_experience_offset (s0)
+                    la      ra, @address_skip_level_up
+                    j       enforce_level_cap_hook_end
+                    li      v0, 0
+                  
+                enforce_level_cap_hook_default:
+                    lw      v0, 8(sp)
+                    lw      ra, 4(sp)
+                    
+                enforce_level_cap_hook_end:
+                    addiu   sp, sp, 24
+                    jr      ra
+                    nop
+
+                    
+            #   ROUTINE: FIND LEVEL CAP
+            #       Finds the level cap based on the storyline progression variable.
+            #       Returns:
+            #           v0 = Level cap
+            @find_level_cap:
+
+                    lbu     t0, @address_storyline_progression_variable
+                    la      t1, @address_level_cap_data
+                    
+                find_level_cap_loop:
+                    lbu     t2, 0(t1)
+                    lbu     t3, 1(t1)
+                    beq     t2, zero, find_level_cap_default
+                    sltu    t4, t2, t0
+                    beq     t4, zero, find_level_cap_end
+                    move    v0, t3
+                    j       find_level_cap_loop
+                    addiu   t1, t1, 2
+                    
+                find_level_cap_default:
+                    li      v0, 99
+                    
+                find_level_cap_end:
+                    jr      ra
+                    nop
+        </Location>
+        
+        <Location file="SCUS_942_21" offset="5D8AC" mode="ASM" offsetMode="RAM">
+            jal     @enforce_level_cap_hook
+        </Location>        
+        
+        <Location file="BATTLE_BIN" offset="15AF30" mode="ASM" offsetMode="RAM">
+            .label  @address_skip_ability_level_up, 0x8018c910
+        
+            #   HOOK: ENFORCE LEVEL CAP (ABILITY)
+            #       Parameters:
+            #           v0 = Unit level
+            #       Sets v0 = 0 if unit is at level cap, and skips the level up code.
+            #       Preserve: v0 and v1, in default case
+            @enforce_ability_level_cap_hook:
+                    
+                    addiu   sp, sp, -24
+                    sw      ra, 4(sp)
+                    sw      s0, 8(sp)
+                    sw      v1, 12(sp)
+                    
+                    move    s0, v0
+                    jal     @find_level_cap
+                    nop
+                    
+                    sltu    t0, s0, v0
+                    bne     t0, zero, enforce_ability_level_cap_hook_default
+                    nop
+                  
+                    la      ra, @address_skip_ability_level_up
+                    j       enforce_ability_level_cap_hook_end
+                    li      v0, 0
+                  
+                enforce_ability_level_cap_hook_default:
+                    lw      v1, 12(sp)
+                    move    v0, s0
+                    lw      ra, 4(sp)
+                    
+                enforce_ability_level_cap_hook_end:
+                    lw      s0, 8(sp)
+                    addiu   sp, sp, 24
+                    jr      ra
+                    nop
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="18A770" mode="ASM" offsetMode="RAM">
+            lui     s1, 0x8019
+            lw      s1, 0x2d98(s1)
+            nop
+            lbu     s1, 0x22(s1)
+            jal     @find_level_cap
+            nop
+            sltu    v0, s1, v0
+        </Location>
+        <Location file="BATTLE_BIN" offset="18C890" mode="ASM" offsetMode="RAM">
+            jal     @enforce_ability_level_cap_hook
+        </Location>
+    </Patch>
   <Patch name="Change camera zoom values">
     <Description>Change camera zoom values.  Lower is more zoomed out, higher is more zoomed in.  Recommended to use same values for zooming and fixed.</Description>
     <Variable name="Zoom-in value (zooming)" file="BATTLE_BIN" offset="86C0" bytes="2" default="1000" />
