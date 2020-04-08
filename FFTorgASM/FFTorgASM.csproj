@@ -136,10 +136,6 @@
       <Project>{4AB43571-545C-4F80-AFF1-F6E43DE31F47}</Project>
       <Name>ASMEncoding</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FFTPatcher.csproj">
-      <Project>{48be23d0-2943-44ef-a3a6-8537d7695b37}</Project>
-      <Name>FFTPatcher</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PatcherLib\PatcherLib.csproj">
       <Project>{BB7322AD-75D3-44AF-A0BF-76015C53998F}</Project>
       <Name>PatcherLib</Name>
