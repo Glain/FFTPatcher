@@ -151,7 +151,7 @@
     <Compile Include="PSPResources.Lists.cs" />
     <Compile Include="PSXResources.Binaries.cs" />
     <Compile Include="PSXResources.Lists.cs" />
-    <Compile Include="Resources\PSP\bin\Abilities.bin" />
+    <None Include="Resources\PSP\bin\Abilities.bin" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PatcherLib\PatcherLib.csproj">
