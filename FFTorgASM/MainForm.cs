@@ -35,7 +35,7 @@ namespace FFTorgASM
             ASMCheckCondition.LoadDelay,
             ASMCheckCondition.UnalignedOffset,
             ASMCheckCondition.MultCountdown,
-            ASMCheckCondition.StackPointerOffset,
+            ASMCheckCondition.StackPointerOffset4,
             ASMCheckCondition.BranchInBranchDelaySlot
         };
 

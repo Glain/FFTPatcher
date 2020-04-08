@@ -17,9 +17,10 @@ namespace ASMEncoding
         LoadDelay = 1,
         UnalignedOffset = 2,
         MultCountdown = 3,
-        StackPointerOffset = 4,
+        StackPointerOffset4 = 4,
         BranchInBranchDelaySlot = 5,
-        LoadInBranchDelaySlot = 6
+        LoadInBranchDelaySlot = 6,
+        StackPointerOffset8 = 7
     }
 }
 
@@ -57,7 +58,7 @@ namespace ASMEncoding.Helpers
                 ASMCheckCondition.LoadDelay,
                 ASMCheckCondition.UnalignedOffset,
                 ASMCheckCondition.MultCountdown,
-                ASMCheckCondition.StackPointerOffset,
+                ASMCheckCondition.StackPointerOffset4,
                 ASMCheckCondition.BranchInBranchDelaySlot
             };
         }
@@ -231,8 +232,8 @@ namespace ASMEncoding.Helpers
                             }
                         }
                     }
-                    
-                    if (conditions.Contains(ASMCheckCondition.StackPointerOffset))
+
+                    if ((conditions.Contains(ASMCheckCondition.StackPointerOffset4)) || ((conditions.Contains(ASMCheckCondition.StackPointerOffset8))))
                     {
                         if (IsAddImmediateCommand(command))
                         {
@@ -240,7 +241,11 @@ namespace ASMEncoding.Helpers
                             if ((args[0].ToLower().Trim() == stackPointerRegName) && (args[1].ToLower().Trim() == stackPointerRegName))
                             {
                                 uint immed = Encoder.ValueHelper.GetAnyUnsignedValue(args[2].ToLower().Trim());
-                                if (immed % 8 != 0)
+                                if ((conditions.Contains(ASMCheckCondition.StackPointerOffset4)) && ((immed % 4) != 0))
+                                {
+                                    _errorTextBuilder.AppendLine("WARNING: Stack pointer offset not a multiple of 4 at address " + strPC);
+                                }
+                                else if ((conditions.Contains(ASMCheckCondition.StackPointerOffset8)) && ((immed % 8) != 0))
                                 {
                                     _errorTextBuilder.AppendLine("WARNING: Stack pointer offset not a multiple of 8 at address " + strPC);
                                 }
