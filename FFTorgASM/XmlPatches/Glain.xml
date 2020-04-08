@@ -620,7 +620,7 @@ SKP:  move    t4,v1
       jr      ra                    # Blank out routine (Ability element strengthen)
       nop
     </Location>
-    <Location file="BATTLE_BIN" offset="CEE4" mode="ASM">
+    <Location file="BATTLE_BIN" offset="C2C0" mode="ASM">
       j       @clear_elements       # Action post: call routine to clear elements
     </Location>
     <Location file="BATTLE_BIN" offset="12002C" mode="ASM">
@@ -2257,6 +2257,11 @@ SKP:  j       0x80180848            #   Skip this ability
     <Variable name="Zoom-in value (fixed)" file="BATTLE_BIN" offset="86F8" bytes="2" default="1000" />
     <Variable name="Zoom-out value (zooming)" file="BATTLE_BIN" offset="8744" bytes="2" default="0C01" />
     <Variable name="Zoom-out value (fixed)" file="BATTLE_BIN" offset="8774" bytes="2" default="0C00" />
+  </Patch>
+  <Patch name="Abilities can flash red without charge time">
+    <Location file="BATTLE_BIN" offset="1400BC" mode="ASM" offsetMode="RAM">
+      nop
+    </Location>
   </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
