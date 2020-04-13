@@ -44,7 +44,8 @@ namespace FFTPatcher.SpriteEditor
 
         protected override PalettedImage8bpp Get8BitPalettedBitmap()
         {
-            PatcherLib.Iso.KnownPosition newPalettePosition = PalettePosition.AddOffset(CurrentPalette * PalettePosition.Length, PalettePosition.Length * 15);
+            int numRemainingPalettes = PaletteCount - CurrentPalette;
+            PatcherLib.Iso.KnownPosition newPalettePosition = PalettePosition.AddOffset(CurrentPalette * PalettePosition.Length, PalettePosition.Length * Math.Min((numRemainingPalettes - 1), 15));
             PalettedImage8bppSectioned image = new PalettedImage8bppSectioned(Name, Width, Height, NumPalettes, Depth, position, newPalettePosition, true);
             image.ImportFilename = ImportFilename;
             image.NumBytesBetweenRows = NumBytesBetweenRows;

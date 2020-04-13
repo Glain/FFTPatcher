@@ -288,7 +288,8 @@ namespace FFTPatcher.SpriteEditor
 
         protected virtual PalettedImage8bpp Get8BitPalettedBitmap()
         {
-            PatcherLib.Iso.KnownPosition newPalettePosition = palettePosition.AddOffset(CurrentPalette * palettePosition.Length, palettePosition.Length * 15);
+            int numRemainingPalettes = PaletteCount - CurrentPalette;
+            PatcherLib.Iso.KnownPosition newPalettePosition = palettePosition.AddOffset(CurrentPalette * palettePosition.Length, palettePosition.Length * Math.Min((numRemainingPalettes - 1), 15));
             PalettedImage8bpp image = new PalettedImage8bpp(Name, Width, Height, NumPalettes, depth, position, newPalettePosition, true);
             image.ImportFilename = ImportFilename;
             return image;

@@ -176,6 +176,10 @@ namespace FFTPatcher.SpriteEditor
                 {
                     pal.Entries[i] = p.Colors[i];
                 }
+                for (int i = p.Colors.Length; i < 256; i++)
+                {
+                    pal.Entries[i] = Palette.BytesToColor(0x00, 0x00);
+                }
                 bmp.Palette = pal;
 
                 var bmd = bmp.LockBits( new Rectangle( 0, 0, Width, Height ), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
@@ -230,6 +234,7 @@ namespace FFTPatcher.SpriteEditor
         {
             List<byte> result = new List<byte>();
             int index = 0;
+            int originalPaletteEntries = (depth == FFTPatcher.SpriteEditor.Palette.ColorDepth._32bit) ? (originalPaletteBytes.Count / 4) : (originalPaletteBytes.Count / 2);
 
             foreach (Color c in colors)
             {
@@ -237,6 +242,9 @@ namespace FFTPatcher.SpriteEditor
                 byte alphaByte = (depth == FFTPatcher.SpriteEditor.Palette.ColorDepth._32bit ? originalPaletteBytes[index * 4 + 3] : originalPaletteBytes[index * 2 + 1]);
                 result.AddRange(Palette.ColorToBytes(c, alphaByte, depth));
                 index++;
+
+                if (index >= originalPaletteEntries)
+                    break;
             }
 
             return result;
