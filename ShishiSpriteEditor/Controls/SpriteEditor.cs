@@ -17,6 +17,7 @@ namespace FFTPatcher.SpriteEditor
         public AbstractSprite AbstractSprite { get; private set; }
         bool ignoreChanges = true;
 
+        private int paletteIndex = 0;
         private Stream iso;
         public void BindTo(Sprite sprite, IList<int> sharedSPRs, Stream iso)
         {
@@ -188,7 +189,12 @@ namespace FFTPatcher.SpriteEditor
         private void PaletteChanged(object sender, EventArgs e)
         {
             if (!ignoreChanges)
+            {
                 spriteViewer1.SetPalette(paletteSelector.SelectedIndex, portraitCheckbox.Checked ? (paletteSelector.SelectedIndex % 8 + 8) : paletteSelector.SelectedIndex);
+                paletteIndex = paletteSelector.SelectedIndex;
+                UpdatePictureBox();
+                UpdateAnimation();
+            }
         }
 
         private void shpComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -228,7 +234,7 @@ namespace FFTPatcher.SpriteEditor
             if (currentShape != null)
             {
                 Frame currentFrame = currentShape.Frames[(int)numericUpDown1.Value];
-                pictureBox1.Image = currentFrame.GetFrame(Sprite.GetAbstractSpriteFromIso(iso));
+                pictureBox1.Image = currentFrame.GetFrame(Sprite.GetAbstractSpriteFromIso(iso), paletteIndex);
                 if (tabControl1.SelectedTab == framesTabPage)
                 {
                     spriteViewer1.HighlightTiles(currentFrame.Tiles);
@@ -251,14 +257,19 @@ namespace FFTPatcher.SpriteEditor
 
         void numericUpDown2_SelectedIndexChanged( object sender, EventArgs e )
         {
-            Sequence seq = currentSequences[(int)numericUpDown2.Value];
-            IList<Bitmap> bmps;
-            IList<double> delays;
-            seq.BuildAnimation( spriteViewer1.Sprite, out bmps, out delays );
-            animationViewer1.ShowAnimation(bmps, delays, tabControl1.SelectedTab == animationTabPage);
+            UpdateAnimation();
         }
 
         private IList<Sequence> currentSequences;
+
+        private void UpdateAnimation()
+        {
+            Sequence seq = currentSequences[(int)numericUpDown2.Value];
+            IList<Bitmap> bmps;
+            IList<double> delays;
+            seq.BuildAnimation(spriteViewer1.Sprite, out bmps, out delays, paletteIndex);
+            animationViewer1.ShowAnimation(bmps, delays, tabControl1.SelectedTab == animationTabPage);
+        }
 
         private void UpdateAnimationTab(CharacterSprite charSprite, Sprite sprite)
         {

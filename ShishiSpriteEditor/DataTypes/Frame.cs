@@ -80,11 +80,11 @@ namespace FFTPatcher.SpriteEditor
         /// <summary>
         /// Gets this frame from the specified sprite.
         /// </summary>
-        public Bitmap GetFrame( AbstractSprite source )
+        public Bitmap GetFrame( AbstractSprite source, int paletteIndex = 0 )
         {
             Bitmap result = new Bitmap( defaultFrameSize.Width, defaultFrameSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
-            Bitmap sourceBmp = source.ToBitmap();
+            Bitmap sourceBmp = source.ToBitmap(paletteIndex, true);
             //sourceBmp = sourceBmp.RotateImg(90, Color.Transparent);
             result.Palette = sourceBmp.Palette;
             float rotation = 0;
@@ -96,8 +96,6 @@ namespace FFTPatcher.SpriteEditor
                 
             }
            
-             
-
             return result;
         }
 

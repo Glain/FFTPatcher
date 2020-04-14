@@ -149,13 +149,13 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        public void BuildAnimation( AbstractSprite sprite, out IList<System.Drawing.Bitmap> bitmaps, out IList<double> delays )
+        public void BuildAnimation( AbstractSprite sprite, out IList<System.Drawing.Bitmap> bitmaps, out IList<double> delays, int paletteIndex = 0 )
         {
             // Given the set of unique frame indices, build the minimal amount of Bitmaps necessary
             Dictionary<int, System.Drawing.Bitmap> frameToBitmap = new Dictionary<int, System.Drawing.Bitmap>( uniqueFrames.Count );
             foreach ( int frame in uniqueFrames )
             {
-                frameToBitmap[frame] = sprite.Shape.Frames[frame].GetFrame( sprite );
+                frameToBitmap[frame] = sprite.Shape.Frames[frame].GetFrame( sprite, paletteIndex );
             }
 
             List<System.Drawing.Bitmap> result = new List<System.Drawing.Bitmap>();

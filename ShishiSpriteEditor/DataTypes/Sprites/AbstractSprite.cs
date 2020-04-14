@@ -218,16 +218,21 @@ namespace FFTPatcher.SpriteEditor
         /// <summary>
         /// Converts this sprite to an indexed bitmap.
         /// </summary>
-        public unsafe Bitmap ToBitmap()
+        public Bitmap ToBitmap(int paletteIndex = 0, bool forceUpdate = false)
         {
-            if ( BitmapDirty )
+            if ( BitmapDirty || forceUpdate )
             {
 
                 Bitmap bmp = new Bitmap( Width, Height, PixelFormat.Format8bppIndexed );
                 ColorPalette palette = bmp.Palette;
-                Palette.FixupColorPalette( palette, Palettes );
-                bmp.Palette = palette;
 
+                //Palette.FixupColorPalette( palette, Palettes );
+                if (paletteIndex > 0)
+                    Palette.FixupColorPalette(palette, Palettes, paletteIndex, 0);
+                else
+                    Palette.FixupColorPalette(palette, Palettes);
+
+                bmp.Palette = palette;
 
                 BitmapData bmd = bmp.LockBits( new Rectangle( 0, 0, bmp.Width, bmp.Height ), ImageLockMode.ReadWrite, bmp.PixelFormat );
                 ToBitmapInner( bmp, bmd );
@@ -236,10 +241,11 @@ namespace FFTPatcher.SpriteEditor
                 CachedBitmap = bmp;
                 BitmapDirty = false;
             }
+
             return CachedBitmap;
         }
 
-        public virtual unsafe Bitmap To4bppBitmapUncached( int whichPalette )
+        public virtual Bitmap To4bppBitmapUncached( int whichPalette )
         {
             Bitmap result = new Bitmap( Width, Height, System.Drawing.Imaging.PixelFormat.Format4bppIndexed );
             System.Drawing.Imaging.BitmapData bmd = result.LockBits( new Rectangle( Point.Empty, result.Size ), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format4bppIndexed );
@@ -272,10 +278,12 @@ namespace FFTPatcher.SpriteEditor
     
         protected abstract void ToBitmapInner( Bitmap bmp, BitmapData bmd );
 
+        /*
         public virtual Image Export()
         {
             return ToBitmap();
         }
+        */
 
         /// <summary>
         /// Converts this sprite to an array of bytes.
