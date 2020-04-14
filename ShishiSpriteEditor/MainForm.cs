@@ -186,7 +186,7 @@ namespace FFTPatcher.SpriteEditor
 
             if (currentSprite != null && saveFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
-                currentSprite.GetAbstractSpriteFromIso( currentStream ).ToBitmap().Save( saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp );
+                currentSprite.GetAbstractSpriteFromIso( currentStream, true ).ToBitmap().Save( saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp );
             }
         }
 
