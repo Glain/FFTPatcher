@@ -41,6 +41,23 @@ namespace FFTPatcher.SpriteEditor
 
         private Stream currentStream = null;
 
+        private void ReimportBitmap()
+        {
+            Sprite currentSprite = allSpritesEditor1.CurrentSprite;
+            int paletteIndex = allSpritesEditor1.PaletteIndex;
+            bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
+
+            if (_fileName != null && currentSprite != null)
+            {
+                if (importExport8Bpp)
+                    currentSprite.ImportBitmap(currentStream, _fileName);
+                else
+                    currentSprite.ImportBitmap4bpp(currentStream, _fileName, paletteIndex);
+
+                allSpritesEditor1.ReloadCurrentSprite();
+            }
+        }
+
         private void openIsoMenuItem_Click( object sender, EventArgs e )
         {
             openFileDialog.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
@@ -97,26 +114,15 @@ namespace FFTPatcher.SpriteEditor
 		{
 			if (e.KeyChar.Equals('r')) 
 			{
-				Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-				if (_fileName != null && currentSprite != null )
-				{
-					currentSprite.ImportBitmap( currentStream, _fileName );
-	            	allSpritesEditor1.ReloadCurrentSprite();
-				}
+                ReimportBitmap();
 			}	
 		}
 		
 		// R999
 		private void reimportMenuItem_Click(object sender, EventArgs e)
 		{
-			Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-			if (_fileName != null && currentSprite != null )
-			{
-				currentSprite.ImportBitmap( currentStream, _fileName );
-            	allSpritesEditor1.ReloadCurrentSprite();
-			}
+            ReimportBitmap();
 		}
-
 
         private void importSprMenuItem_Click( object sender, EventArgs e )
         {
@@ -165,13 +171,21 @@ namespace FFTPatcher.SpriteEditor
         private void importBmpMenuItem_Click( object sender, EventArgs e )
         {
             Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-            openFileDialog.Filter = "8bpp paletted bitmap (*.BMP)|*.bmp";
+            int paletteIndex = allSpritesEditor1.PaletteIndex;
+            bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
+
+            openFileDialog.Filter = importExport8Bpp ? "8bpp paletted bitmap (*.BMP)|*.bmp" : "4bpp paletted bitmap (*.BMP)|*.bmp";
             openFileDialog.FileName = string.Empty;
             openFileDialog.CheckFileExists = true;
             if (currentSprite != null && openFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
 				_fileName = openFileDialog.FileName; // R999
-                currentSprite.ImportBitmap( currentStream, openFileDialog.FileName );
+
+                if (importExport8Bpp)
+                    currentSprite.ImportBitmap(currentStream, _fileName);
+                else
+                    currentSprite.ImportBitmap4bpp(currentStream, _fileName, paletteIndex);
+                
                 allSpritesEditor1.ReloadCurrentSprite();
             }
         }
@@ -179,14 +193,19 @@ namespace FFTPatcher.SpriteEditor
         private void exportBmpMenuItem_Click( object sender, EventArgs e )
         {
             Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-            saveFileDialog.Filter = "8bpp paletted bitmap (*.BMP)|*.bmp";
+            int paletteIndex = allSpritesEditor1.PaletteIndex;
+            bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
+
+            saveFileDialog.Filter = importExport8Bpp ? "8bpp paletted bitmap (*.BMP)|*.bmp" : "4bpp paletted bitmap (*.BMP)|*.bmp";
             saveFileDialog.OverwritePrompt = true;
             saveFileDialog.CreatePrompt = false;
             saveFileDialog.FileName = string.Empty;
 
             if (currentSprite != null && saveFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
-                currentSprite.GetAbstractSpriteFromIso( currentStream, true ).ToBitmap().Save( saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp );
+                AbstractSprite sprite = currentSprite.GetAbstractSpriteFromIso(currentStream, true);
+                Bitmap bitmap = importExport8Bpp ? sprite.ToBitmap() : sprite.To4bppBitmapUncached(paletteIndex);
+                bitmap.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
             }
         }
 

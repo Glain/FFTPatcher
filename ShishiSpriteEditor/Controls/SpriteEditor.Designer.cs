@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.GroupBox paletteGroupBox;
+            this.chkImportExport8bpp = new System.Windows.Forms.CheckBox();
             this.portraitCheckbox = new System.Windows.Forms.CheckBox();
             this.paletteSelector = new System.Windows.Forms.ComboBox();
             this.shpComboBox = new System.Windows.Forms.ComboBox();
@@ -41,14 +42,14 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.framesTabPage = new System.Windows.Forms.TabPage();
+            this.lblFramesH = new System.Windows.Forms.Label();
             this.animationTabPage = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
             this.maxSizeLabel = new System.Windows.Forms.Label();
             this.sharedLabel = new System.Windows.Forms.Label();
-            this.lblFramesH = new System.Windows.Forms.Label();
-            this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
             this.spriteViewer1 = new FFTPatcher.SpriteEditor.SpriteViewer();
-            this.label3 = new System.Windows.Forms.Label();
             paletteGroupBox = new System.Windows.Forms.GroupBox();
             paletteGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -63,24 +64,36 @@
             // 
             paletteGroupBox.AutoSize = true;
             paletteGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            paletteGroupBox.Controls.Add(this.chkImportExport8bpp);
             paletteGroupBox.Controls.Add(this.portraitCheckbox);
             paletteGroupBox.Controls.Add(this.paletteSelector);
             paletteGroupBox.Location = new System.Drawing.Point(323, 3);
             paletteGroupBox.Name = "paletteGroupBox";
-            paletteGroupBox.Size = new System.Drawing.Size(185, 106);
+            paletteGroupBox.Size = new System.Drawing.Size(185, 107);
             paletteGroupBox.TabIndex = 4;
             paletteGroupBox.TabStop = false;
             paletteGroupBox.Text = "Palette";
+            // 
+            // chkImportExport8bpp
+            // 
+            this.chkImportExport8bpp.Checked = true;
+            this.chkImportExport8bpp.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkImportExport8bpp.Location = new System.Drawing.Point(6, 69);
+            this.chkImportExport8bpp.Name = "chkImportExport8bpp";
+            this.chkImportExport8bpp.Size = new System.Drawing.Size(153, 19);
+            this.chkImportExport8bpp.TabIndex = 4;
+            this.chkImportExport8bpp.Text = "Import/Export 256-color";
+            this.chkImportExport8bpp.UseVisualStyleBackColor = true;
             // 
             // portraitCheckbox
             // 
             this.portraitCheckbox.Checked = true;
             this.portraitCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.portraitCheckbox.Location = new System.Drawing.Point(6, 50);
+            this.portraitCheckbox.Location = new System.Drawing.Point(6, 46);
             this.portraitCheckbox.Name = "portraitCheckbox";
-            this.portraitCheckbox.Size = new System.Drawing.Size(153, 37);
+            this.portraitCheckbox.Size = new System.Drawing.Size(153, 17);
             this.portraitCheckbox.TabIndex = 3;
-            this.portraitCheckbox.Text = "Always use corresponding palette for portrait";
+            this.portraitCheckbox.Text = "Portrait uses own palette";
             this.portraitCheckbox.UseVisualStyleBackColor = true;
             this.portraitCheckbox.CheckedChanged += new System.EventHandler(this.PaletteChanged);
             // 
@@ -222,6 +235,15 @@
             this.framesTabPage.Text = "Frames";
             this.framesTabPage.UseVisualStyleBackColor = true;
             // 
+            // lblFramesH
+            // 
+            this.lblFramesH.AutoSize = true;
+            this.lblFramesH.Location = new System.Drawing.Point(181, 13);
+            this.lblFramesH.Name = "lblFramesH";
+            this.lblFramesH.Size = new System.Drawing.Size(13, 13);
+            this.lblFramesH.TabIndex = 14;
+            this.lblFramesH.Text = "h";
+            // 
             // animationTabPage
             // 
             this.animationTabPage.Controls.Add(this.label3);
@@ -235,6 +257,15 @@
             this.animationTabPage.Text = "Animation";
             this.animationTabPage.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(252, 14);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(13, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "h";
+            // 
             // numericUpDown2
             // 
             this.numericUpDown2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -245,6 +276,16 @@
             this.numericUpDown2.Size = new System.Drawing.Size(240, 20);
             this.numericUpDown2.TabIndex = 2;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // animationViewer1
+            // 
+            this.animationViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.animationViewer1.Location = new System.Drawing.Point(6, 33);
+            this.animationViewer1.Name = "animationViewer1";
+            this.animationViewer1.Size = new System.Drawing.Size(268, 317);
+            this.animationViewer1.TabIndex = 1;
             // 
             // maxSizeLabel
             // 
@@ -268,25 +309,6 @@
             this.sharedLabel.Text = "label3";
             this.sharedLabel.Visible = false;
             // 
-            // lblFramesH
-            // 
-            this.lblFramesH.AutoSize = true;
-            this.lblFramesH.Location = new System.Drawing.Point(181, 13);
-            this.lblFramesH.Name = "lblFramesH";
-            this.lblFramesH.Size = new System.Drawing.Size(13, 13);
-            this.lblFramesH.TabIndex = 14;
-            this.lblFramesH.Text = "h";
-            // 
-            // animationViewer1
-            // 
-            this.animationViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.animationViewer1.Location = new System.Drawing.Point(6, 33);
-            this.animationViewer1.Name = "animationViewer1";
-            this.animationViewer1.Size = new System.Drawing.Size(268, 317);
-            this.animationViewer1.TabIndex = 1;
-            // 
             // spriteViewer1
             // 
             this.spriteViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -298,15 +320,6 @@
             this.spriteViewer1.Size = new System.Drawing.Size(314, 600);
             this.spriteViewer1.Sprite = null;
             this.spriteViewer1.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(252, 14);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(13, 13);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "h";
             // 
             // SpriteEditor
             // 
@@ -363,5 +376,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Label lblFramesH;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox chkImportExport8bpp;
     }
 }

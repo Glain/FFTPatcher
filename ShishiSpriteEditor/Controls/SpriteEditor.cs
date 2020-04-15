@@ -18,6 +18,16 @@ namespace FFTPatcher.SpriteEditor
         bool ignoreChanges = true;
 
         private int paletteIndex = 0;
+        public int PaletteIndex
+        {
+            get { return paletteIndex; }
+        }
+
+        public bool ImportExport8Bpp 
+        {
+            get { return chkImportExport8bpp.Checked; }
+        }
+
         private Stream iso;
         public void BindTo(Sprite sprite, IList<int> sharedSPRs, Stream iso)
         {

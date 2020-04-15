@@ -19,6 +19,16 @@ namespace FFTPatcher.SpriteEditor
             get { return spriteEditor1.Sprite; }
         }
 
+        public int PaletteIndex
+        {
+            get { return spriteEditor1.PaletteIndex; }
+        }
+
+        public bool ImportExport8Bpp
+        {
+            get { return spriteEditor1.ImportExport8Bpp; }
+        }
+
         public void BindTo(AllSprites allSprites, Stream iso)
         {
             if (allSprites == null)

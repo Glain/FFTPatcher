@@ -49,6 +49,22 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        internal virtual void ImportBitmap4bpp(Stream iso, string filename, int paletteIndex)
+        {
+            AbstractSprite sprite = GetAbstractSpriteFromIso(iso);
+            byte[] importBytes = System.IO.File.ReadAllBytes(filename);
+            const int totalPaletteBytes = 32 * 16;
+            byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
+            sprite.ImportBitmap4bpp(paletteIndex, importBytes, originalPaletteBytes);
+            byte[] sprBytes = sprite.ToByteArray(0);
+            if (sprBytes.Length > Size)
+            {
+                throw new SpriteTooLargeException(sprBytes.Length, (int)Size);
+            }
+
+            ImportSprite(iso, sprBytes);
+        }
+
         protected static int DeterminePercentageOfBlackPixels(System.Drawing.Bitmap bmp, System.Drawing.Rectangle rect)
         {
             System.Diagnostics.Debug.Assert(bmp.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
