@@ -38,6 +38,7 @@
             this.chk_8bpp = new System.Windows.Forms.CheckBox();
             this.lbl_Palette = new System.Windows.Forms.Label();
             this.ddl_Palette = new System.Windows.Forms.ComboBox();
+            this.cmbZoom = new System.Windows.Forms.ComboBox();
             this.comboBox1 = new FFTPatcher.SpriteEditor.SeparatorComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -110,6 +111,7 @@
             // 
             // pnl_Palette
             // 
+            this.pnl_Palette.Controls.Add(this.cmbZoom);
             this.pnl_Palette.Controls.Add(this.chk_8bpp);
             this.pnl_Palette.Controls.Add(this.lbl_Palette);
             this.pnl_Palette.Controls.Add(this.ddl_Palette);
@@ -147,6 +149,15 @@
             this.ddl_Palette.Size = new System.Drawing.Size(69, 21);
             this.ddl_Palette.TabIndex = 1;
             this.ddl_Palette.SelectedIndexChanged += new System.EventHandler(this.ddl_Palette_SelectedIndexChanged);
+            // 
+            // cmbZoom
+            // 
+            this.cmbZoom.FormattingEnabled = true;
+            this.cmbZoom.Location = new System.Drawing.Point(389, 5);
+            this.cmbZoom.Name = "cmbZoom";
+            this.cmbZoom.Size = new System.Drawing.Size(78, 21);
+            this.cmbZoom.TabIndex = 5;
+            this.cmbZoom.SelectedIndexChanged += cmbZoom_SelectedIndexChanged;
             // 
             // comboBox1
             // 
@@ -199,5 +210,6 @@
         private System.Windows.Forms.ComboBox ddl_Entry;
         private System.Windows.Forms.Label lbl_Entry;
         private System.Windows.Forms.Panel pnl_Palette;
+        private System.Windows.Forms.ComboBox cmbZoom;
     }
 }

@@ -6,18 +6,23 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using FFTPatcher.SpriteEditor.DataTypes.OtherImages;
+using FFTPatcher.SpriteEditor.DataTypes;
 
 namespace FFTPatcher.SpriteEditor
 {
     public partial class AllOtherImagesEditor : UserControl
     {
+        private bool ignoreChanges = false;
+        private System.IO.Stream iso = null;
+        private Zoom zoom;
+        private bool isInit = true;
+
         public AllOtherImagesEditor()
         {
             InitializeComponent();
+            InitZoomComboBox();
+            isInit = false;
         }
-
-        private bool ignoreChanges = false;
-        private System.IO.Stream iso = null;
 
         public AllOtherImages AllOtherImages { get; private set; }
 
@@ -39,6 +44,16 @@ namespace FFTPatcher.SpriteEditor
             SetupEntryDropdown();
             SetupPaletteDropdown();
             RefreshPictureBox();
+        }
+
+        private void InitZoomComboBox()
+        {
+            for (int mult = 1; mult < 17; mult++)
+            {
+                cmbZoom.Items.Add(new Zoom(mult, ((mult * 100).ToString() + "%")));
+            }
+
+            cmbZoom.SelectedIndex = 0;
         }
 
         public AbstractImageList GetImageListFromComboBoxItem()
@@ -141,7 +156,9 @@ namespace FFTPatcher.SpriteEditor
         private void RefreshPictureBox(bool forceReload = false)
         {
             AbstractImage im = GetImageFromComboBoxItem();
-            AssignNewPictureBoxImage( im.GetImageFromIso( iso, forceReload ) );
+            Bitmap image = im.GetImageFromIso(iso, forceReload);
+            Bitmap zoomedImage = zoom.GetZoomedBitmap(image);
+            AssignNewPictureBoxImage(zoomedImage);
             imageSizeLabel.Text = string.Format( "Image dimensions: {0}x{1}", im.Width, im.Height );
         }
 
@@ -224,6 +241,23 @@ namespace FFTPatcher.SpriteEditor
                 Setup8bppCheckbox();
                 RefreshPictureBox();
             }
+        }
+
+        private void cmbZoom_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            UpdateZoom();
+            if (!isInit)
+                UpdateImage();
+        }
+
+        private void UpdateZoom()
+        {
+            zoom = (Zoom)cmbZoom.SelectedItem;
+        }
+
+        private void UpdateImage()
+        {
+            RefreshPictureBox(true);
         }
 
         private void ddl_Palette_SelectedIndexChanged(object sender, EventArgs e)
