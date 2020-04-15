@@ -28,35 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.control1 = new System.Windows.Forms.Control();
+            this.control1 = new System.Windows.Forms.PictureBox();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.playButton = new System.Windows.Forms.Button();
             this.backButton = new System.Windows.Forms.Button();
             this.forwardButton = new System.Windows.Forms.Button();
             this.pauseButton = new System.Windows.Forms.Button();
+            this.zoomPanel = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.control1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.zoomPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // control1
             // 
-            this.control1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.control1.Location = new System.Drawing.Point(3, 3);
+            this.control1.Location = new System.Drawing.Point(0, 0);
             this.control1.Name = "control1";
-            this.control1.Size = new System.Drawing.Size(537, 327);
+            //this.control1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
+            this.control1.Size = new System.Drawing.Size(242, 257);
+            this.control1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.control1.TabIndex = 0;
             this.control1.TabStop = false;
-            this.control1.Text = "control1";
             // 
             // trackBar1
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar1.AutoSize = false;
             this.trackBar1.Location = new System.Drawing.Point(128, 336);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(383, 27);
+            this.trackBar1.Size = new System.Drawing.Size(104, 27);
             this.trackBar1.TabIndex = 3;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -94,7 +95,7 @@
             this.forwardButton.AutoSize = true;
             this.forwardButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.forwardButton.Enabled = false;
-            this.forwardButton.Location = new System.Drawing.Point(517, 336);
+            this.forwardButton.Location = new System.Drawing.Point(238, 336);
             this.forwardButton.Name = "forwardButton";
             this.forwardButton.Size = new System.Drawing.Size(23, 23);
             this.forwardButton.TabIndex = 4;
@@ -116,6 +117,21 @@
             this.pauseButton.UseVisualStyleBackColor = true;
             this.pauseButton.Click += new System.EventHandler(this.pauseButton_Click);
             // 
+            // zoomPanel
+            // 
+            this.zoomPanel.AutoScroll = true;
+            this.zoomPanel.BackColor = System.Drawing.Color.Black;
+            this.zoomPanel.Location = new System.Drawing.Point(0, 0);
+            this.zoomPanel.Name = "zoomPanel";
+            //this.zoomPanel.Size = new System.Drawing.Size(262, 330);
+            this.zoomPanel.Bounds = new System.Drawing.Rectangle(0, 0, this.control1.Width + 10 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth,
+                this.control1.Height + 10 + System.Windows.Forms.SystemInformation.HorizontalScrollBarHeight);
+            //this.zoomPanel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Top;
+            this.zoomPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
+            this.zoomPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.zoomPanel.Controls.Add(this.control1);
+            this.zoomPanel.TabIndex = 5;
+            // 
             // AnimationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -125,10 +141,13 @@
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.trackBar1);
-            this.Controls.Add(this.control1);
+            this.Controls.Add(this.zoomPanel);
             this.Name = "AnimationViewer";
-            this.Size = new System.Drawing.Size(543, 366);
+            this.Size = new System.Drawing.Size(264, 366);
+            ((System.ComponentModel.ISupportInitialize)(this.control1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.zoomPanel.ResumeLayout(false);
+            this.zoomPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,7 +155,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Control control1;
+        private System.Windows.Forms.Panel zoomPanel;
+        private System.Windows.Forms.PictureBox control1;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button backButton;

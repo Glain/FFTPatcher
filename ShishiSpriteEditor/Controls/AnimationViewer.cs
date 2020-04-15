@@ -14,12 +14,22 @@ namespace FFTPatcher.SpriteEditor
         FpsTimer fpsTimer;
         DrawManager drawManager;
         SpriteManager spriteManager;
+
+        private int origWidth, origHeight;
+
         public AnimationViewer()
         {
             InitializeComponent();
             playButton.Enabled = false;
             trackBar1.Enabled = false;
+            origWidth = control1.Width;
+            origHeight = control1.Height;
+        }
 
+        public void SetSize(int zoomMultiplier)
+        {
+            control1.Width = origWidth * zoomMultiplier;
+            control1.Height = origHeight * zoomMultiplier;
         }
 
         protected override void OnHandleDestroyed( EventArgs e )

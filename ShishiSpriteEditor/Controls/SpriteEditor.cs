@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using PatcherLib.Utilities;
+using FFTPatcher.SpriteEditor.DataTypes;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -16,6 +17,7 @@ namespace FFTPatcher.SpriteEditor
 
         public AbstractSprite AbstractSprite { get; private set; }
         bool ignoreChanges = true;
+        private Zoom zoom;
 
         private int paletteIndex = 0;
         public int PaletteIndex
@@ -29,6 +31,25 @@ namespace FFTPatcher.SpriteEditor
         }
 
         private Stream iso;
+
+        public SpriteEditor()
+        {
+            InitializeComponent();
+            var s = new List<SpriteType>((SpriteType[])Enum.GetValues(typeof(SpriteType)));
+            //s.Remove(SpriteType.RUKA);
+
+            shpComboBox.DataSource = s.ToArray();
+            seqComboBox.DataSource = Enum.GetValues(typeof(SpriteType));
+            paletteSelector.SelectedIndex = 0;
+            //pictureBox1.MinimumSize = Frame.DefaultFrameSize + pictureBox1.Padding.Size;
+            //animationViewer1.MinimumSize = Frame.DefaultFrameSize + animationViewer1.Padding.Size + new Size( 0, 40 );
+            numericUpDown2.ValueChanged += numericUpDown2_SelectedIndexChanged;
+            tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
+
+            InitZoomComboBox();
+            UpdateZoom();
+        }
+
         public void BindTo(Sprite sprite, IList<int> sharedSPRs, Stream iso)
         {
             ignoreChanges = true;
@@ -166,22 +187,30 @@ namespace FFTPatcher.SpriteEditor
             ignoreChanges = oldIgnoreChanges;
         }
 
-        public SpriteEditor()
+        private void InitZoomComboBox()
         {
-            InitializeComponent();
-            var s = new List<SpriteType>( (SpriteType[])Enum.GetValues( typeof( SpriteType ) ) );
-            //s.Remove(SpriteType.RUKA);
+            for (int mult = 1; mult < 17; mult++)
+            {
+                cmbZoom.Items.Add(new Zoom(mult, ((mult * 100).ToString() + "%")));
+            }
 
-            shpComboBox.DataSource = s.ToArray();
-            seqComboBox.DataSource = Enum.GetValues(typeof(SpriteType));
-            paletteSelector.SelectedIndex = 0;
-            //pictureBox1.MinimumSize = Frame.DefaultFrameSize + pictureBox1.Padding.Size;
-            //animationViewer1.MinimumSize = Frame.DefaultFrameSize + animationViewer1.Padding.Size + new Size( 0, 40 );
-            numericUpDown2.ValueChanged += numericUpDown2_SelectedIndexChanged;
-            tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
+            cmbZoom.SelectedIndex = 0;
         }
 
-        void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateZoom()
+        {
+            zoom = (Zoom)cmbZoom.SelectedItem;
+        }
+
+        private void UpdateImages()
+        {
+            UpdatePictureBox();
+
+            if (currentSequences != null)
+                UpdateAnimation();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab == animationTabPage && Sequence.Sequences.ContainsKey((SpriteType)seqComboBox.SelectedItem))
             {
@@ -194,6 +223,12 @@ namespace FFTPatcher.SpriteEditor
                 animationViewer1.Pause();
                 UpdatePictureBox();
             }
+        }
+
+        private void cmbZoom_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            UpdateZoom();
+            UpdateImages();
         }
 
         private void PaletteChanged(object sender, EventArgs e)
@@ -244,7 +279,11 @@ namespace FFTPatcher.SpriteEditor
             if (currentShape != null)
             {
                 Frame currentFrame = currentShape.Frames[(int)numericUpDown1.Value];
-                pictureBox1.Image = currentFrame.GetFrame(Sprite.GetAbstractSpriteFromIso(iso), paletteIndex);
+                //pictureBox1.Image = currentFrame.GetFrame(Sprite.GetAbstractSpriteFromIso(iso), paletteIndex);
+
+                Bitmap image = currentFrame.GetFrame(Sprite.GetAbstractSpriteFromIso(iso), paletteIndex);
+                pictureBox1.Image = zoom.GetZoomedBitmap(image);
+
                 if (tabControl1.SelectedTab == framesTabPage)
                 {
                     spriteViewer1.HighlightTiles(currentFrame.Tiles);
@@ -277,7 +316,8 @@ namespace FFTPatcher.SpriteEditor
             Sequence seq = currentSequences[(int)numericUpDown2.Value];
             IList<Bitmap> bmps;
             IList<double> delays;
-            seq.BuildAnimation(spriteViewer1.Sprite, out bmps, out delays, paletteIndex);
+            animationViewer1.SetSize(zoom.Multiplier);
+            seq.BuildAnimation(spriteViewer1.Sprite, out bmps, out delays, paletteIndex, zoom);
             animationViewer1.ShowAnimation(bmps, delays, tabControl1.SelectedTab == animationTabPage);
         }
 

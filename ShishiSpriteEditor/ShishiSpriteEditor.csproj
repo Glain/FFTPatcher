@@ -154,6 +154,7 @@
     <Compile Include="DataTypes\Sprites\WEP3Sprite.cs" />
     <Compile Include="DataTypes\Sprites\WEPSprite.cs" />
     <Compile Include="DataTypes\WepSprite.cs" />
+    <Compile Include="DataTypes\Zoom.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

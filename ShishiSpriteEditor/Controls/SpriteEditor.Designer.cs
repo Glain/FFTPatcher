@@ -46,10 +46,11 @@
             this.animationTabPage = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
             this.maxSizeLabel = new System.Windows.Forms.Label();
             this.sharedLabel = new System.Windows.Forms.Label();
+            this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
             this.spriteViewer1 = new FFTPatcher.SpriteEditor.SpriteViewer();
+            this.cmbZoom = new System.Windows.Forms.ComboBox();
             paletteGroupBox = new System.Windows.Forms.GroupBox();
             paletteGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -205,12 +206,23 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 32);
+            //this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(191, 256);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
+            //
+            // zoomPanel
+            //
+            zoomPanel = new System.Windows.Forms.Panel();
+            zoomPanel.Location = new System.Drawing.Point(5, 32);
+            zoomPanel.Bounds = new System.Drawing.Rectangle(5, 32, pictureBox1.Width + 10 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth, pictureBox1.Height);
+            zoomPanel.AutoScroll = true;
+            zoomPanel.BackColor = System.Drawing.Color.Black;
+            zoomPanel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Top;
+            zoomPanel.Controls.Add(pictureBox1);
             // 
             // tabControl1
             // 
@@ -226,7 +238,8 @@
             // 
             this.framesTabPage.Controls.Add(this.lblFramesH);
             this.framesTabPage.Controls.Add(this.numericUpDown1);
-            this.framesTabPage.Controls.Add(this.pictureBox1);
+            this.framesTabPage.Controls.Add(this.zoomPanel);
+            //this.framesTabPage.Controls.Add(this.pictureBox1);
             this.framesTabPage.Location = new System.Drawing.Point(4, 22);
             this.framesTabPage.Name = "framesTabPage";
             this.framesTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -277,16 +290,6 @@
             this.numericUpDown2.TabIndex = 2;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // animationViewer1
-            // 
-            this.animationViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.animationViewer1.Location = new System.Drawing.Point(6, 33);
-            this.animationViewer1.Name = "animationViewer1";
-            this.animationViewer1.Size = new System.Drawing.Size(268, 317);
-            this.animationViewer1.TabIndex = 1;
-            // 
             // maxSizeLabel
             // 
             this.maxSizeLabel.AutoSize = true;
@@ -309,6 +312,16 @@
             this.sharedLabel.Text = "label3";
             this.sharedLabel.Visible = false;
             // 
+            // animationViewer1
+            // 
+            this.animationViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.animationViewer1.Location = new System.Drawing.Point(6, 33);
+            this.animationViewer1.Name = "animationViewer1";
+            this.animationViewer1.Size = new System.Drawing.Size(268, 317);
+            this.animationViewer1.TabIndex = 1;
+            // 
             // spriteViewer1
             // 
             this.spriteViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -321,12 +334,22 @@
             this.spriteViewer1.Sprite = null;
             this.spriteViewer1.TabIndex = 0;
             // 
+            // cmbZoom
+            // 
+            this.cmbZoom.FormattingEnabled = true;
+            this.cmbZoom.Location = new System.Drawing.Point(522, 114);
+            this.cmbZoom.Name = "cmbZoom";
+            this.cmbZoom.Size = new System.Drawing.Size(81, 21);
+            this.cmbZoom.TabIndex = 18;
+            this.cmbZoom.SelectedIndexChanged += cmbZoom_SelectedIndexChanged;
+            // 
             // SpriteEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.cmbZoom);
             this.Controls.Add(this.sharedLabel);
             this.Controls.Add(this.maxSizeLabel);
             this.Controls.Add(this.tabControl1);
@@ -377,5 +400,7 @@
         private System.Windows.Forms.Label lblFramesH;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chkImportExport8bpp;
+        private System.Windows.Forms.ComboBox cmbZoom;
+        private System.Windows.Forms.Panel zoomPanel;
     }
 }

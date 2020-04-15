@@ -17,6 +17,7 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using FFTPatcher.SpriteEditor.DataTypes;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -26,23 +27,6 @@ namespace FFTPatcher.SpriteEditor
 {
     public class SpriteViewer : UserControl
     {
-        internal class SpriteViewerZoom
-        {
-            public int ZoomMultiplier { get; set; }
-            public string ZoomString { get; set; }
-
-            public SpriteViewerZoom(int zoomMultiplier, string zoomString)
-            {
-                this.ZoomMultiplier = zoomMultiplier;
-                this.ZoomString = zoomString;
-            }
-
-            public override string ToString()
-            {
-                return ZoomString;
-            }
-        }
-
 		#region Fields (5) 
 
         private int palette = 0;
@@ -52,7 +36,7 @@ namespace FFTPatcher.SpriteEditor
         private Owf.Controls.Office2007ColorPicker office2007ColorPicker1;
         private ComboBox cmbZoom;
         private IList<Tile> tiles;
-        private SpriteViewerZoom zoom;
+        private Zoom zoom;
 
 		#endregion Fields 
 
@@ -108,7 +92,7 @@ namespace FFTPatcher.SpriteEditor
             Controls.Add(cmbZoom);
             for (int mult = 1; mult < 17; mult++)
             {
-                cmbZoom.Items.Add(new SpriteViewerZoom(mult, ((mult * 100).ToString() + "%")));
+                cmbZoom.Items.Add(new Zoom(mult, ((mult * 100).ToString() + "%")));
             }
             cmbZoom.Size = new Size(75, 20); 
             cmbZoom.Location = new Point((Width - cmbZoom.Width - 3), (Height - cmbZoom.Height - 3));
@@ -129,13 +113,13 @@ namespace FFTPatcher.SpriteEditor
 
         #region Event Handlers (2)
 
-        void office2007ColorPicker1_SelectedColorChanged(object sender, System.EventArgs e)
+        private void office2007ColorPicker1_SelectedColorChanged(object sender, System.EventArgs e)
         {
             pictureBox1.Parent.BackColor = office2007ColorPicker1.Color;
             pictureBox1.BackColor = office2007ColorPicker1.Color;
         }
 
-        void cmbZoom_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void cmbZoom_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             UpdateZoom();
             UpdateImage();
@@ -168,7 +152,7 @@ namespace FFTPatcher.SpriteEditor
 
         private void UpdateZoom()
         {
-            zoom = (SpriteViewerZoom)cmbZoom.SelectedItem;
+            zoom = (Zoom)cmbZoom.SelectedItem;
         }
 
         private void UpdateImage()
@@ -189,14 +173,8 @@ namespace FFTPatcher.SpriteEditor
                     }
                 }
 
-                int zoomWidth = sprite.Width * zoom.ZoomMultiplier;
-                int zoomHeight = sprite.Height * zoom.ZoomMultiplier;
-                Bitmap zb = new Bitmap(zoomWidth, zoomHeight, PixelFormat.Format32bppArgb);
-                Graphics graphics = Graphics.FromImage(zb);
-                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                graphics.DrawImage(b, new Rectangle(0, 0, zoomWidth, zoomHeight));
-                graphics.Dispose();
-                
+                Bitmap zb = zoom.GetZoomedBitmap(b);
+
                 SuspendLayout();
                 pictureBox1.SuspendLayout();
                 if ( pictureBox1.Image != null )

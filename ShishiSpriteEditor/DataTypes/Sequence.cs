@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
+using FFTPatcher.SpriteEditor.DataTypes;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -149,7 +150,7 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        public void BuildAnimation( AbstractSprite sprite, out IList<System.Drawing.Bitmap> bitmaps, out IList<double> delays, int paletteIndex = 0 )
+        public void BuildAnimation( AbstractSprite sprite, out IList<System.Drawing.Bitmap> bitmaps, out IList<double> delays, int paletteIndex, Zoom zoom)
         {
             // Given the set of unique frame indices, build the minimal amount of Bitmaps necessary
             Dictionary<int, System.Drawing.Bitmap> frameToBitmap = new Dictionary<int, System.Drawing.Bitmap>( uniqueFrames.Count );
@@ -163,7 +164,8 @@ namespace FFTPatcher.SpriteEditor
 
             foreach ( AnimationFrame frame in frames )
             {
-                result.Add( frameToBitmap[frame.Index] );
+                //result.Add( frameToBitmap[frame.Index] );
+                result.Add(zoom.GetZoomedBitmap(frameToBitmap[frame.Index]));
                 ourDelays.Add( ( (double)frame.Delay ) / 60 );
             }
 
