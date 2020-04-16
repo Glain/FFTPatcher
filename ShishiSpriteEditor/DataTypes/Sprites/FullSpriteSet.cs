@@ -41,6 +41,7 @@ namespace FFTPatcher.SpriteEditor
             this.sprites = sprites;
         }
 
+        /*
         private static FullSpriteSet DoInitPSX( Stream iso, BackgroundWorker worker )
         {
             const int numberOfPsxSprites = 134;
@@ -155,6 +156,7 @@ namespace FFTPatcher.SpriteEditor
 
             return new FullSpriteSet( sprites, worker, tasksComplete, tasks );
         }
+        */
 
         public void PatchPsxISO( string filename, BackgroundWorker worker, IList<PatchedByteArray> patches )
         {
@@ -250,6 +252,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        /*
         public static FullSpriteSet FromPsxISO( string filename, BackgroundWorker worker )
         {
             using ( FileStream stream = File.OpenRead( filename ) )
@@ -275,6 +278,7 @@ namespace FFTPatcher.SpriteEditor
         {
             return DoInitPSP( stream, worker );
         }
+        */
 
         public static FullSpriteSet FromShishiFile( string filename, System.ComponentModel.BackgroundWorker worker )
         {

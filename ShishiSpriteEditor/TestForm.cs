@@ -43,7 +43,7 @@ namespace FFTPatcher.SpriteEditor
             BackgroundWorker bw = new BackgroundWorker();
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
-            set = FullSpriteSet.FromPsxISO(@"N:\dev\fft\images\fft-usa.bin", bw);
+            //set = FullSpriteSet.FromPsxISO(@"N:\dev\fft\images\fft-usa.bin", bw);
             numericUpDown2_ValueChanged(numericUpDown1, EventArgs.Empty);
         }
 
