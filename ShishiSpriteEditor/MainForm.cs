@@ -468,6 +468,124 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        private void importAllSpritesMenuItem_Click(object sender, EventArgs e)
+        {
+            using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
+            {
+                fbd.ShowNewFolderButton = true;
+                fbd.ShowFullPathInEditBox = true;
+                fbd.ShowEditBox = true;
+                fbd.ShowBothFilesAndFolders = false;
+                fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                fbd.NewStyle = true;
+                Cursor oldCursor = Cursor;
+
+                ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
+                {
+                    MethodInvoker mi = (() => progressBar1.Value = args2.ProgressPercentage);
+                    if (progressBar1.InvokeRequired)
+                        progressBar1.Invoke(mi);
+                    else mi();
+                };
+
+                RunWorkerCompletedEventHandler completeHandler = null;
+
+                completeHandler = delegate(object sender1, RunWorkerCompletedEventArgs args1)
+                {
+                    MethodInvoker mi = delegate()
+                    {
+                        var result = args1.Result as AllSprites.AllSpritesDoWorkResult;
+                        tabControl1.Enabled = true;
+                        progressBar1.Visible = false;
+                        if (oldCursor != null) Cursor = oldCursor;
+                        backgroundWorker1.RunWorkerCompleted -= completeHandler;
+                        backgroundWorker1.ProgressChanged -= progressHandler;
+                        backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.LoadAllSprites;
+                        MyMessageBox.Show(this, string.Format("{0} images imported", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
+                    };
+                    if (InvokeRequired) Invoke(mi);
+                    else mi();
+                };
+
+                if (fbd.ShowDialog(this) == DialogResult.OK)
+                {
+                    progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
+                    progressBar1.Value = 0;
+                    progressBar1.Visible = true;
+                    backgroundWorker1.DoWork += allSpritesEditor1.Sprites.LoadAllSprites;
+                    backgroundWorker1.ProgressChanged += progressHandler;
+                    backgroundWorker1.RunWorkerCompleted += completeHandler;
+                    backgroundWorker1.WorkerReportsProgress = true;
+                    tabControl1.Enabled = false;
+                    Cursor = Cursors.WaitCursor;
+                    progressBar1.BringToFront();
+
+                    bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
+                    int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
+                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                }
+            }
+        }
+
+        private void dumpAllSpritesMenuItem_Click(object sender, EventArgs e)
+        {
+            using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
+            {
+                fbd.ShowNewFolderButton = true;
+                fbd.ShowFullPathInEditBox = true;
+                fbd.ShowEditBox = true;
+                fbd.ShowBothFilesAndFolders = false;
+                fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                fbd.NewStyle = true;
+                Cursor oldCursor = Cursor;
+
+                ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
+                {
+                    MethodInvoker mi = (() => progressBar1.Value = args2.ProgressPercentage);
+                    if (progressBar1.InvokeRequired)
+                        progressBar1.Invoke(mi);
+                    else mi();
+                };
+
+                RunWorkerCompletedEventHandler completeHandler = null;
+
+                completeHandler = delegate(object sender1, RunWorkerCompletedEventArgs args1)
+                {
+                    MethodInvoker mi = delegate()
+                    {
+                        var result = args1.Result as AllSprites.AllSpritesDoWorkResult;
+                        tabControl1.Enabled = true;
+                        progressBar1.Visible = false;
+                        if (oldCursor != null) Cursor = oldCursor;
+                        backgroundWorker1.RunWorkerCompleted -= completeHandler;
+                        backgroundWorker1.ProgressChanged -= progressHandler;
+                        backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.DumpAllSprites;
+                        MyMessageBox.Show(this, string.Format("{0} images saved", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
+                    };
+                    if (InvokeRequired) Invoke(mi);
+                    else mi();
+                };
+
+                if (fbd.ShowDialog(this) == DialogResult.OK)
+                {
+                    progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
+                    progressBar1.Value = 0;
+                    progressBar1.Visible = true;
+                    backgroundWorker1.DoWork += allSpritesEditor1.Sprites.DumpAllSprites;
+                    backgroundWorker1.ProgressChanged += progressHandler;
+                    backgroundWorker1.RunWorkerCompleted += completeHandler;
+                    backgroundWorker1.WorkerReportsProgress = true;
+                    tabControl1.Enabled = false;
+                    Cursor = Cursors.WaitCursor;
+                    progressBar1.BringToFront();
+
+                    bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
+                    int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
+                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                }
+            }
+        }
+
         private void menuItem_ExpandIso_Click(object sender, EventArgs e)
         {
             bool isPsx = currentStream.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode2Form1] == 0;

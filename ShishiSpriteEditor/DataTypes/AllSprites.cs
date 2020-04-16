@@ -10,6 +10,39 @@ namespace FFTPatcher.SpriteEditor
 {
     public class AllSprites
     {
+        public class AllSpritesDoWorkData
+        {
+            public Stream ISO { get; private set; }
+            public string Path { get; private set; }
+            public bool ImportExport8bpp { get; private set; }
+            public int PaletteIndex { get; private set; }
+            public AllSpritesDoWorkData(Stream iso, string path, bool importExport8bpp, int paletteIndex)
+            {
+                ISO = iso;
+                Path = path;
+                ImportExport8bpp = importExport8bpp;
+                PaletteIndex = paletteIndex;
+            }
+        }
+
+        public class AllSpritesDoWorkResult
+        {
+            public enum Result
+            {
+                Success,
+                Failure
+            }
+
+            public Result DoWorkResult { get; private set; }
+            public int ImagesProcessed { get; private set; }
+            public AllSpritesDoWorkResult(Result result, int images)
+            {
+                DoWorkResult = result;
+                ImagesProcessed = images;
+            }
+
+        }
+
         private IList<Sprite> sprites;
         private AllSpriteAttributes attrs;
         private SpriteFileLocations locs;
@@ -272,6 +305,138 @@ namespace FFTPatcher.SpriteEditor
                 destination.Write( buffer, 0, bytesCopied );
                 copied += bytesCopied;
             }
+        }
+
+        internal void LoadAllSprites(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            AllSpritesDoWorkData data = e.Argument as AllSpritesDoWorkData;
+            if (data == null)
+                return;
+            e.Result = LoadAllSprites(data.ISO, data.Path, data.ImportExport8bpp, data.PaletteIndex, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null);
+        }
+
+        internal void DumpAllSprites(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            AllSpritesDoWorkData data = e.Argument as AllSpritesDoWorkData;
+            if (data == null)
+                return;
+            e.Result = DumpAllSprites(data.ISO, data.Path, data.ImportExport8bpp, data.PaletteIndex, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null);
+        }
+
+        private AllSpritesDoWorkResult LoadAllSprites(Stream iso, string path, bool importExport8bpp, int paletteIndex, Action<int> progressReporter)
+        {
+            bool progress = progressReporter != null;
+            int total = 0;
+            int complete = 0;
+            int imagesProcessed = 0;
+
+            Dictionary<string, Sprite> fileMap = new Dictionary<string, Sprite>();
+            foreach (Sprite sprite in sprites)
+            {
+                string name = sprite.GetSaveFileName();
+                if (!fileMap.ContainsKey(name))
+                {
+                    fileMap.Add(name, sprite);
+                    total = total + 1;
+                }
+            }
+
+            /*
+            if (progress)
+            {
+                sprites.ForEach(i => total += 1);
+            }
+            */
+
+            //foreach (Sprite sprite in sprites)
+            foreach (KeyValuePair<string, Sprite> singleFileMap in fileMap)
+            {
+                //string name = string.Empty;
+                //name = sprite.GetSaveFileName();
+                //name = Path.Combine(path, name);
+
+                string name = Path.Combine(path, singleFileMap.Key);
+                if (File.Exists(name))
+                {
+                    Sprite sprite = singleFileMap.Value;
+
+                    try
+                    {
+                        if (importExport8bpp)
+                            sprite.ImportBitmap(iso, name);
+                        else
+                            sprite.ImportBitmap4bpp(iso, name, paletteIndex);
+
+                        imagesProcessed++;
+                    }
+                    catch (Exception) { }
+                }
+                if (progress)
+                {
+                    progressReporter((100 * (complete++)) / total);
+                }
+            }
+
+            return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed);
+        }
+
+        private AllSpritesDoWorkResult DumpAllSprites(Stream iso, string path, bool importExport8bpp, int paletteIndex, Action<int> progressReporter)
+        {
+            bool progress = progressReporter != null;
+            int total = 0;
+            int complete = 0;
+            int imagesProcessed = 0;
+
+            /*
+            if (progress)
+                sprites.ForEach(i => total += 1);
+            */
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            Dictionary<string, Sprite> fileMap = new Dictionary<string, Sprite>();
+            foreach (Sprite sprite in sprites)
+            {
+                string name = sprite.GetSaveFileName();
+                if (!fileMap.ContainsKey(name))
+                {
+                    fileMap.Add(name, sprite);
+                    total = total + 1;
+                }
+            }
+
+            //foreach (Sprite sprite in sprites)
+            foreach (KeyValuePair<string, Sprite> singleFileMap in fileMap)
+            {
+                //string name = string.Empty;
+                //name = sprite.GetSaveFileName();
+                string name = singleFileMap.Key;
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    //Bitmap bmp = img.GetImageFromIso( iso );
+                    //bmp.Save( Path.Combine( path, name ), System.Drawing.Imaging.ImageFormat.Bmp );
+                    string fullPath = Path.Combine(path, name);
+                    Sprite sprite = singleFileMap.Value;
+                    AbstractSprite abstractSprite = sprite.GetAbstractSpriteFromIso(iso, true);
+                    System.Drawing.Bitmap bitmap = importExport8bpp ? abstractSprite.ToBitmap() : abstractSprite.To4bppBitmapUncached(paletteIndex);
+                    bitmap.Save(fullPath, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                    imagesProcessed++;
+                }
+
+                if (progress)
+                {
+                    progressReporter((100 * (complete++)) / total);
+                }
+            }
+
+            return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed);
         }
 
         public static void ExpandPsxIso( Stream iso )

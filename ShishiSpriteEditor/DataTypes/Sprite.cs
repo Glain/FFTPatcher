@@ -171,5 +171,23 @@ namespace FFTPatcher.SpriteEditor
         {
             return name;
         }
+
+        public string GetSaveFileName()
+        {
+            if (Position is PatcherLib.Iso.PsxIso.KnownPosition)
+            {
+                PatcherLib.Iso.PsxIso.KnownPosition pos = Position as PatcherLib.Iso.PsxIso.KnownPosition;
+                return string.Format("{0}_{1}_{2}.bmp", pos.Sector, pos.StartLocation, pos.Length);
+            }
+            else if (Position is PatcherLib.Iso.PspIso.KnownPosition)
+            {
+                PatcherLib.Iso.PspIso.KnownPosition pos = Position as PatcherLib.Iso.PspIso.KnownPosition;
+                return string.Format("{0}_{1}_{2}.bmp", pos.SectorEnum, pos.StartLocation, pos.Length);
+            }
+            else
+            {
+                return name;
+            }
+        }
     }
 }

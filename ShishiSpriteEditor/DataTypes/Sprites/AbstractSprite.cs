@@ -250,9 +250,13 @@ namespace FFTPatcher.SpriteEditor
                             int currentByteIndex = imageDataOffset + (rowIndex * stride) + colIndex;
                             int pixelIndex = ((image.Height - rowIndex - 1) * image.Width) + (colIndex * 2);
                             byte currentByte = importBytes[currentByteIndex];
-                            Pixels[pixelIndex] = (byte)((currentByte & 0xF0) >> 4);
-                            if (colIndex < image.Width)
-                                Pixels[pixelIndex + 1] = (byte)(currentByte & 0x0F);
+
+                            if (pixelIndex < Pixels.Count)
+                            {
+                                Pixels[pixelIndex] = (byte)((currentByte & 0xF0) >> 4);
+                                if ((colIndex < image.Width) && ((pixelIndex + 1) < Pixels.Count))
+                                    Pixels[pixelIndex + 1] = (byte)(currentByte & 0x0F);
+                            }
                         }
                     }
                 }

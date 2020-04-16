@@ -108,6 +108,10 @@ namespace FFTPatcher.SpriteEditor
             separator3 = new System.Windows.Forms.MenuItem();
             separator4 = new System.Windows.Forms.MenuItem();
             separator5 = new System.Windows.Forms.MenuItem();
+            System.Windows.Forms.MenuItem separatorImportExportAllSprites = new System.Windows.Forms.MenuItem();
+            this.menuItem_ImportAllSprites = new System.Windows.Forms.MenuItem();
+            this.menuItem_DumpAllSprites = new System.Windows.Forms.MenuItem();
+
             this.tabControl1.SuspendLayout();
             this.spriteTabPage.SuspendLayout();
             this.otherTabPage.SuspendLayout();
@@ -221,6 +225,7 @@ namespace FFTPatcher.SpriteEditor
             this.dumpAllImagesMenuItem.Index = 7;
             this.dumpAllImagesMenuItem.Text = "Dump all images...";
             this.dumpAllImagesMenuItem.Click += new System.EventHandler(this.dumpAllImagesMenuItem_Click);
+
             // 
             // spriteMenuItem
             // 
@@ -232,7 +237,11 @@ namespace FFTPatcher.SpriteEditor
             separator2,
             importBmpMenuItem,
             exportBmpMenuItem,
-            this.reimportMenuItem});
+            this.reimportMenuItem,
+            separatorImportExportAllSprites,
+            this.menuItem_ImportAllSprites,
+            this.menuItem_DumpAllSprites
+            });
             this.spriteMenuItem.Text = "Sprite";
             // 
             // importSprMenuItem
@@ -270,6 +279,23 @@ namespace FFTPatcher.SpriteEditor
             this.reimportMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
             this.reimportMenuItem.Text = "Reimport BMP";
             this.reimportMenuItem.Click += new System.EventHandler(this.reimportMenuItem_Click);
+            // 
+            // separatorImportExportAllSprites
+            // 
+            separatorImportExportAllSprites.Index = 6;
+            separatorImportExportAllSprites.Text = "-";
+            // 
+            // exportBmpMenuItem
+            // 
+            this.menuItem_ImportAllSprites.Index = 7;
+            this.menuItem_ImportAllSprites.Text = "Import all sprites...";
+            this.menuItem_ImportAllSprites.Click += new System.EventHandler(this.importAllSpritesMenuItem_Click);
+            // 
+            // exportBmpMenuItem
+            // 
+            this.menuItem_DumpAllSprites.Index = 8;
+            this.menuItem_DumpAllSprites.Text = "Dump all sprites...";
+            this.menuItem_DumpAllSprites.Click += new System.EventHandler(this.dumpAllSpritesMenuItem_Click);
             // 
             // sp2Menu
             // 
@@ -510,6 +536,9 @@ namespace FFTPatcher.SpriteEditor
         private System.Windows.Forms.MenuItem menuItem_ExportEntireFile;
         private System.Windows.Forms.MenuItem menuItem_ExpandIso;
         private System.Windows.Forms.MenuItem menuItem3;
+
+        private System.Windows.Forms.MenuItem menuItem_ImportAllSprites;
+        private System.Windows.Forms.MenuItem menuItem_DumpAllSprites;
     }
 }
 
