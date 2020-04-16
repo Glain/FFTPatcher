@@ -465,7 +465,7 @@ namespace FFTPatcher.SpriteEditor
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Menu = mainMenu;
-            this.MinimumSize = new System.Drawing.Size(663, 762);
+            this.MinimumSize = new System.Drawing.Size(647, 702);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Shishi Sprite Manager";
