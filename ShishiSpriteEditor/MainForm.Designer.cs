@@ -75,6 +75,9 @@ namespace FFTPatcher.SpriteEditor
             this.dumpAllImagesMenuItem = new System.Windows.Forms.MenuItem();
             this.spriteMenuItem = new System.Windows.Forms.MenuItem();
             this.reimportMenuItem = new System.Windows.Forms.MenuItem();
+            this.separatorImportExportAllSprites = new System.Windows.Forms.MenuItem();
+            this.menuItem_ImportAllSprites = new System.Windows.Forms.MenuItem();
+            this.menuItem_DumpAllSprites = new System.Windows.Forms.MenuItem();
             this.sp2Menu = new System.Windows.Forms.MenuItem();
             this.importFirstMenuItem = new System.Windows.Forms.MenuItem();
             this.exportFirstMenuItem = new System.Windows.Forms.MenuItem();
@@ -108,10 +111,6 @@ namespace FFTPatcher.SpriteEditor
             separator3 = new System.Windows.Forms.MenuItem();
             separator4 = new System.Windows.Forms.MenuItem();
             separator5 = new System.Windows.Forms.MenuItem();
-            System.Windows.Forms.MenuItem separatorImportExportAllSprites = new System.Windows.Forms.MenuItem();
-            this.menuItem_ImportAllSprites = new System.Windows.Forms.MenuItem();
-            this.menuItem_DumpAllSprites = new System.Windows.Forms.MenuItem();
-
             this.tabControl1.SuspendLayout();
             this.spriteTabPage.SuspendLayout();
             this.otherTabPage.SuspendLayout();
@@ -225,7 +224,6 @@ namespace FFTPatcher.SpriteEditor
             this.dumpAllImagesMenuItem.Index = 7;
             this.dumpAllImagesMenuItem.Text = "Dump all images...";
             this.dumpAllImagesMenuItem.Click += new System.EventHandler(this.dumpAllImagesMenuItem_Click);
-
             // 
             // spriteMenuItem
             // 
@@ -238,10 +236,9 @@ namespace FFTPatcher.SpriteEditor
             importBmpMenuItem,
             exportBmpMenuItem,
             this.reimportMenuItem,
-            separatorImportExportAllSprites,
+            this.separatorImportExportAllSprites,
             this.menuItem_ImportAllSprites,
-            this.menuItem_DumpAllSprites
-            });
+            this.menuItem_DumpAllSprites});
             this.spriteMenuItem.Text = "Sprite";
             // 
             // importSprMenuItem
@@ -282,16 +279,16 @@ namespace FFTPatcher.SpriteEditor
             // 
             // separatorImportExportAllSprites
             // 
-            separatorImportExportAllSprites.Index = 6;
-            separatorImportExportAllSprites.Text = "-";
+            this.separatorImportExportAllSprites.Index = 6;
+            this.separatorImportExportAllSprites.Text = "-";
             // 
-            // exportBmpMenuItem
+            // menuItem_ImportAllSprites
             // 
             this.menuItem_ImportAllSprites.Index = 7;
             this.menuItem_ImportAllSprites.Text = "Import all sprites...";
             this.menuItem_ImportAllSprites.Click += new System.EventHandler(this.importAllSpritesMenuItem_Click);
             // 
-            // exportBmpMenuItem
+            // menuItem_DumpAllSprites
             // 
             this.menuItem_DumpAllSprites.Index = 8;
             this.menuItem_DumpAllSprites.Text = "Dump all sprites...";
@@ -484,16 +481,17 @@ namespace FFTPatcher.SpriteEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(647, 702);
+            this.ClientSize = new System.Drawing.Size(663, 741);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Menu = mainMenu;
-            this.MinimumSize = new System.Drawing.Size(647, 702);
+            this.MinimumSize = new System.Drawing.Size(663, 741);
             this.Name = "MainForm";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.Size = new System.Drawing.Size(663, 741);
+            //this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Shishi Sprite Manager";
             this.tabControl1.ResumeLayout(false);
             this.spriteTabPage.ResumeLayout(false);
@@ -539,6 +537,7 @@ namespace FFTPatcher.SpriteEditor
 
         private System.Windows.Forms.MenuItem menuItem_ImportAllSprites;
         private System.Windows.Forms.MenuItem menuItem_DumpAllSprites;
+        private System.Windows.Forms.MenuItem separatorImportExportAllSprites;
     }
 }
 
