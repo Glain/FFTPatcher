@@ -34,8 +34,8 @@
             // 
             // comboBox1
             // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(3, 3);
@@ -46,12 +46,11 @@
             // 
             // spriteEditor1
             // 
-            this.spriteEditor1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.spriteEditor1.AutoSize = true;
+            this.spriteEditor1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.spriteEditor1.Location = new System.Drawing.Point(3, 30);
             this.spriteEditor1.Name = "spriteEditor1";
-            this.spriteEditor1.Size = new System.Drawing.Size(739, 662);
+            this.spriteEditor1.Size = new System.Drawing.Size(611, 662);
             this.spriteEditor1.TabIndex = 1;
             // 
             // AllSpritesEditor
@@ -63,6 +62,7 @@
             this.Name = "AllSpritesEditor";
             this.Size = new System.Drawing.Size(745, 695);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
