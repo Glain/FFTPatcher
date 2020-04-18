@@ -44,18 +44,23 @@
             // 
             this.control1.Location = new System.Drawing.Point(0, 0);
             this.control1.Name = "control1";
-            //this.control1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
+            //this.control1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             this.control1.Size = new System.Drawing.Size(242, 257);
+            //this.control1.Size = new System.Drawing.Size(242, 232);
+            //this.control1.Size = new System.Drawing.Size(242, 275);
+            //this.control1.Size = new System.Drawing.Size(242, 300);
             this.control1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.control1.TabIndex = 0;
             this.control1.TabStop = false;
             // 
             // trackBar1
             // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            //this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            //| System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
             this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(128, 336);
+            //this.trackBar1.Location = new System.Drawing.Point(128, 336);
+            this.trackBar1.Location = new System.Drawing.Point(128, 295);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(104, 27);
             this.trackBar1.TabIndex = 3;
@@ -64,10 +69,11 @@
             // 
             // playButton
             // 
-            this.playButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.playButton.AutoSize = true;
-            this.playButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.playButton.Location = new System.Drawing.Point(3, 336);
+            this.playButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            //this.playButton.AutoSize = true;
+            //this.playButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
+            //this.playButton.Location = new System.Drawing.Point(3, 336);
+            this.playButton.Location = new System.Drawing.Point(3, 295);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(37, 23);
             this.playButton.TabIndex = 0;
@@ -77,11 +83,12 @@
             // 
             // backButton
             // 
-            this.backButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.backButton.AutoSize = true;
-            this.backButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.backButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            //this.backButton.AutoSize = true;
+            //this.backButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.backButton.Enabled = false;
-            this.backButton.Location = new System.Drawing.Point(99, 336);
+            //this.backButton.Location = new System.Drawing.Point(99, 336);
+            this.backButton.Location = new System.Drawing.Point(99, 295);
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(23, 23);
             this.backButton.TabIndex = 2;
@@ -93,9 +100,10 @@
             // 
             this.forwardButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.forwardButton.AutoSize = true;
-            this.forwardButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.forwardButton.Enabled = false;
-            this.forwardButton.Location = new System.Drawing.Point(238, 336);
+            //this.forwardButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
+            //this.forwardButton.Enabled = false;
+            //this.forwardButton.Location = new System.Drawing.Point(238, 336);
+            this.forwardButton.Location = new System.Drawing.Point(238, 295);
             this.forwardButton.Name = "forwardButton";
             this.forwardButton.Size = new System.Drawing.Size(23, 23);
             this.forwardButton.TabIndex = 4;
@@ -105,11 +113,12 @@
             // 
             // pauseButton
             // 
-            this.pauseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pauseButton.AutoSize = true;
-            this.pauseButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pauseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            //this.pauseButton.AutoSize = true;
+            //this.pauseButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.pauseButton.Enabled = false;
-            this.pauseButton.Location = new System.Drawing.Point(46, 336);
+            this.pauseButton.Location = new System.Drawing.Point(46, 295);
+            //this.pauseButton.Location = new System.Drawing.Point(46, 336);
             this.pauseButton.Name = "pauseButton";
             this.pauseButton.Size = new System.Drawing.Size(47, 23);
             this.pauseButton.TabIndex = 1;
@@ -127,8 +136,8 @@
             this.zoomPanel.Bounds = new System.Drawing.Rectangle(0, 0, this.control1.Width + 10 + System.Windows.Forms.SystemInformation.VerticalScrollBarWidth,
                 this.control1.Height + 10 + System.Windows.Forms.SystemInformation.HorizontalScrollBarHeight);
             //this.zoomPanel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Top;
-            this.zoomPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
-            this.zoomPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.zoomPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            //this.zoomPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.zoomPanel.Controls.Add(this.control1);
             this.zoomPanel.TabIndex = 5;
             // 
@@ -143,7 +152,11 @@
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.zoomPanel);
             this.Name = "AnimationViewer";
-            this.Size = new System.Drawing.Size(264, 366);
+            //this.Size = new System.Drawing.Size(264, 366);
+            //this.Size = new System.Drawing.Size(264, 225);
+            //this.Size = new System.Drawing.Size(268, 275);
+            this.Size = new System.Drawing.Size(268, 325);
+            //this.Size = new System.Drawing.Size(268, 305);
             ((System.ComponentModel.ISupportInitialize)(this.control1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.zoomPanel.ResumeLayout(false);

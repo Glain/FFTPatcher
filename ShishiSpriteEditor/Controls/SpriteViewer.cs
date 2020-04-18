@@ -96,7 +96,7 @@ namespace FFTPatcher.SpriteEditor
             }
             cmbZoom.Size = new Size(75, 20); 
             cmbZoom.Location = new Point((Width - cmbZoom.Width - 3), (Height - cmbZoom.Height - 3));
-            cmbZoom.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
+            cmbZoom.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
             cmbZoom.SelectedIndex = 0;
             cmbZoom.SelectedIndexChanged += new System.EventHandler(cmbZoom_SelectedIndexChanged);
 
@@ -105,6 +105,8 @@ namespace FFTPatcher.SpriteEditor
             ResumeLayout( false );
             PerformLayout();
             office2007ColorPicker1.SelectedColorChanged += new System.EventHandler(office2007ColorPicker1_SelectedColorChanged);
+
+            AutoSize = false;
 
             UpdateZoom();
         }

@@ -437,11 +437,12 @@ namespace FFTPatcher.SpriteEditor
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             */
-            this.allSpritesEditor1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
+            //this.allSpritesEditor1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
+            this.allSpritesEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.allSpritesEditor1.Enabled = false;
             this.allSpritesEditor1.Location = new System.Drawing.Point(0, 0);
             this.allSpritesEditor1.Name = "allSpritesEditor1";
-            this.allSpritesEditor1.Size = new System.Drawing.Size(635, 747);
+            this.allSpritesEditor1.Size = new System.Drawing.Size(629, 671);
             this.allSpritesEditor1.TabIndex = 0;
             // 
             // otherTabPage
@@ -486,9 +487,9 @@ namespace FFTPatcher.SpriteEditor
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabControl1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
+            //this.MaximizeBox = false;
             this.Menu = mainMenu;
             this.MinimumSize = new System.Drawing.Size(663, 762);
             this.Name = "MainForm";
@@ -498,6 +499,7 @@ namespace FFTPatcher.SpriteEditor
             this.spriteTabPage.ResumeLayout(false);
             this.otherTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.ResizeEnd += MainForm_ResizeEnd;
 
         }
 

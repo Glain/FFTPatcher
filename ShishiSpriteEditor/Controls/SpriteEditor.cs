@@ -115,7 +115,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        public void ReloadSprite()
+        public void ReloadSprite(bool updateAnimationTab = true)
         {
             bool oldIgnoreChanges = ignoreChanges;
             ignoreChanges = true;
@@ -124,7 +124,10 @@ namespace FFTPatcher.SpriteEditor
 
             UpdateCheckBoxesEtc(Sprite as CharacterSprite);
             UpdateShapes(Sprite as CharacterSprite,Sprite);
-            UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
+
+            if (updateAnimationTab)
+                UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
+            
             maxSizeLabel.Visible = true;
             maxSizeLabel.Text = string.Format("Max SPR size:" + Environment.NewLine + "{0} bytes", Sprite.Size);
             ignoreChanges = oldIgnoreChanges;

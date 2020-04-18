@@ -351,6 +351,9 @@ namespace FFTPatcher.SpriteEditor
             spriteMenuItem.Visible = !image;
             sp2Menu.Visible = !image;
             imageMenuItem.Visible = image;
+
+            if (image)
+                allOtherImagesEditor1.RefreshPictureBox();
         }
 
         private void importAllImagesMenuItem_Click( object sender, EventArgs e )
@@ -609,6 +612,12 @@ namespace FFTPatcher.SpriteEditor
                     allOtherImagesEditor1.BindTo(otherImages, currentStream);
                 }
             }
+        }
+
+        private void MainForm_ResizeEnd(object sender, EventArgs e)
+        {
+            //allSpritesEditor1.ReloadCurrentSprite(false);
+            allOtherImagesEditor1.RefreshPictureBox();
         }
     }
 }

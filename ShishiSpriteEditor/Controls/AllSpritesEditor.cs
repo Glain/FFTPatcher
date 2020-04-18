@@ -57,11 +57,11 @@ namespace FFTPatcher.SpriteEditor
             Enabled = false;
         }
 
-        public void ReloadCurrentSprite()
+        public void ReloadCurrentSprite(bool updateAnimationTab = true)
         {
             if (CurrentSprite != null)
             {
-                spriteEditor1.ReloadSprite();
+                spriteEditor1.ReloadSprite(updateAnimationTab);
             }
         }
 

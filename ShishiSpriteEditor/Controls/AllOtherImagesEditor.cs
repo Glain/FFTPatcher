@@ -153,13 +153,16 @@ namespace FFTPatcher.SpriteEditor
             panel1.ResumeLayout();
         }
 
-        private void RefreshPictureBox(bool forceReload = false)
+        public void RefreshPictureBox(bool forceReload = false)
         {
-            AbstractImage im = GetImageFromComboBoxItem();
-            Bitmap image = im.GetImageFromIso(iso, forceReload);
-            Bitmap zoomedImage = zoom.GetZoomedBitmap(image);
-            AssignNewPictureBoxImage(zoomedImage);
-            imageSizeLabel.Text = string.Format( "Image dimensions: {0}x{1}", im.Width, im.Height );
+            if (comboBox1.SelectedItem != null)
+            {
+                AbstractImage im = GetImageFromComboBoxItem();
+                Bitmap image = im.GetImageFromIso(iso, forceReload);
+                Bitmap zoomedImage = zoom.GetZoomedBitmap(image);
+                AssignNewPictureBoxImage(zoomedImage);
+                imageSizeLabel.Text = string.Format("Image dimensions: {0}x{1}", im.Width, im.Height);
+            }
         }
 
         private void SetupEntryDropdown(AbstractImageList list = null)
@@ -302,6 +305,13 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
         }
+
+        /*
+        private void panel1_SizeChanged(object sender, EventArgs e)
+        {
+            RefreshPictureBox();
+        }
+        */
 
         private void panel1_DragEnter(object sender, DragEventArgs e)
         {
