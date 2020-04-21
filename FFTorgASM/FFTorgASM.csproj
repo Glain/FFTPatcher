@@ -63,6 +63,9 @@
     <Compile Include="Controls\BGCheckedListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\BGListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ConflictChecker\FileWrite.cs" />
     <Compile Include="FreeSpace.cs">
@@ -106,7 +109,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="XmlPatches\AsmFormulas.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="XmlPatches\DefaultHacks.xml" />
+    <Content Include="XmlPatches\DW.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XmlPatches\Eldiran.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XmlPatches\Emmy.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="XmlPatches\Example.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -126,9 +141,13 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="XmlPatches\RFH.xml" />
     <Content Include="XmlPatches\Xifanie.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="XmlPatches\Xjamxx.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

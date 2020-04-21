@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches> 
+
+<Patch name="JP + 130 per Battle">
+    <Description>Adds 130 JP to current job of all units at the start of battle. Exists in Move/Jump +X Calculation subroutine (see wiki).
+	
+Code takes place inside SCUS at 5e950
+	
+Huge thanks to Choto!
+</Description>
+    <Location file="SCUS_942_21" offset="4D0F4">
+		547A0108		<!-- j 0x0005e950	-->	
+    </Location>
+    <Location file="SCUS_942_21" offset="4f150">	
+03008290
+4A000324
+13000624
+22104300
+22184600
+02006004
+2800A394
+21100000
+FEFF4004
+20104200
+DC004524
+2128A400
+0000A294
+82006324
+82004224
+0000A2A4
+2800A3A4
+3E720108
+2A008294
+   </Location>
+  </Patch>
+
+</Patches>

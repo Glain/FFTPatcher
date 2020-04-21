@@ -50,62 +50,6 @@
     </Location>
   </Patch>
 
-  <Patch name="XX status use Wall CT">
-    <Description>
-      Made by RFH
-      Wall CT is always 0. The CT of the new status is adjustable in Wall CT in FFTPatcher
-
-      Status number:
-
-      00 Blank Status
-      01 Crystal
-      02 Dead
-      03 Undead
-      04 Charging
-      05 Jump
-      06 Defending
-      07 Performing
-      08 Petrify
-      09 Invite
-      0A Darkness
-      0B Confusion
-      0C Silence
-      0D Blood Suck
-      0E Dark / Evil Loocking
-      0F Treasure
-    </Description>
-    <Location file="BATTLE_BIN" offset="12693c">
-      BC770508
-      00000000
-      00000000
-      00000000
-    </Location>
-    <Location file="BATTLE_BIN" offset="f6ef0">
-      07000234
-      07004410
-      21100000
-      02008104
-      21108000
-      07008224
-      C3100200
-      53360608
-      00000000
-    </Location>
-      <Variable file="BATTLE_BIN" offset="f6f14" default="00" name="XX% Chance"/>
-    <Location file="BATTLE_BIN" offset="f6f15">
-      000534
-      01000834
-      1980073C
-      982DE78C
-      0700A330
-      2128E800
-      BB01A290
-      07306900
-      5A360608
-      00000000
-    </Location>
-  </Patch>
-
   <Patch name="Formula 8 inflicts 100% Status">
     <Description>Formula 8 inflicts a Status 100% of the time with All or Nothing flagged on the status effect.</Description>
     <Location file="BATTLE_BIN" offset="121DD4">
@@ -120,12 +64,7 @@
       000524
     </Location>
   </Patch>
-  <Patch name="No Spillover JP">
-    <Description>No Spillover JP</Description>
-    <Location file="BATTLE_BIN" offset="117980">
-      00000000
-    </Location>
-  </Patch>
+
   <Patch name="Punch Art formulas use Naked PA">
     <Description>Naked PA is the PA of a naked unit.  This does not affect monsters, but it does weaken the power of human units.</Description>
     <Location file="BATTLE_BIN" offset="11ED0C">
@@ -135,12 +74,14 @@
       30
     </Location>
   </Patch>
+
   <Patch name="Units start with 0 MP">
     <Description>Units start with 0 MP</Description>
     <Location file="SCUS_942_21" offset="4D102">
       80
     </Location>
   </Patch>
+
   <Patch name="Regain 10% of Max MP after each turn">
     <Description>Regain 10% of Max MP after each turn</Description>
     <Location file="BATTLE_BIN" offset="F6EBC">
@@ -163,15 +104,97 @@
       00000000
     </Location>
   </Patch>
-  
-  <Patch name="Remove forced slowdown for Math Skill (Skillset ID 0x15)">
-    <Location file="BATTLE_BIN" offset="115F74">
-      00000000
-    </Location>
-  </Patch>
+
   <Patch name="Abilities in Math skill skillset can be reflected">
     <Location file="BATTLE_BIN" offset="125ff4">
       00000000
     </Location>
   </Patch>
+
+  <Patch name="Priority Score Fixes">
+		<Description>Improves upon the AI's interaction with Golem and gives priority to Stat Abilities&#13;&#10;Reduces Golem's Priority to a maximum of 7C / 5 time the number of units on a team&#13;&#10;Replaces the Damaged Golem check with a Stat Ability check. &#13;&#10;Golem fix is the same as the previous one I released except it now skips if no golem is present, for increased thinking speed.&#13;&#10;Very basic fixes, but gets the job done. &#13;&#10;Version 2</Description>
+		<Location file="BATTLE_BIN" offset="136A3C">
+			00000334	<!-- Initialize r3 -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="136A54">
+			05000534	<!-- Divide Golem HP by 5 -->
+			0400C010	<!-- Branch if no Golem HP -->
+			C2300600	<!-- Divide Golem HP by 8 -->
+			1A00C500	<!-- Golem / 5 -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="136A68">
+			2138E300	<!-- Add Golem HP to Priority -->
+			34182291	<!-- Load Enemy Flag -->
+			00000000
+			02004010	<!-- Branch if not Enemy -->
+			00000000
+			23380700	<!-- Invert Priority -->
+			32004296	<!-- Load Current Unit Target Priority Value -->
+			00000000
+			21104700	<!-- Add/Subtract from current Target Priority -->
+			320042A6	<!-- Save New Unit Target Priority Value -->
+			21482A01	<!-- Unit AI Data++ -->
+			01004A25	<!-- Unit AI++ -->
+			15003126	<!-- Unit++ -->
+			1500222A
+			62FF4014	<!-- Loop for all units -->
+			C0016B25	<!-- Unit Data++ -->
+			0C004392	<!-- Load AI Ability Flags 1 -->
+			32004796	<!-- Load Ability Priority -->
+			08006330
+			02006010	<!-- Branch if not a Stat Ability -->
+			0900E724	<!-- Ability Priority + 9 -->
+			320047A6	<!-- Save new Priority -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="136E24">
+			F7FF1E34	<!-- Priority Score - 9 -->
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="136F34">
+			BA0C2292	<!-- Moved Old Code Up -->
+			00000000
+			01004224
+			BA0C22A2
+			B80C2296
+			2A004396
+			2E0E2492
+			21104300
+			2D000416
+			B80C22A6
+			01001634
+			21103002
+			8D0C4290
+			00000000
+			2D004010
+			01000234
+			BA1922A2
+			3800A28F
+			1200A327
+			01004224
+			3800A2AF
+			21106200
+			00004290
+			00000000
+			B2FF5514
+			00000000
+			1A80043C
+			F3018390	<!-- Load Unit Battle ID -->
+			C0F3848C	<!-- Load AI Extended Status Data -->
+			80190300	<!-- ID * 64 -->
+			21208300	<!-- Get Current Ability Data -->
+			20008390	<!-- Load Current Ability CT -->
+			01002292	<!-- Load New Ability CT -->
+			FF000434
+			08006410	<!-- Branch if not currently charging an ability -->
+			00000000
+			32002496	<!-- Load Current Priority -->
+			05006210	<!-- Branch if the same CTs -->
+			21209E00	<!-- Add to Priority (r30 is zero unless Stats) -->
+			F8770608	<!-- Jump to next routine -->
+			320024A6	<!-- Save New Priority -->
+			00000000
+			00000000
+		</Location>
+	</Patch>
+  
 </Patches>

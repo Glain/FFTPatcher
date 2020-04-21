@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches> 
+<Patch name="Brave up triggers on MP Cost">
+<Location file="BATTLE_BIN" offset="00125B88"> 
+5F420508 
+00000000 
+</Location>
+<Location file="BATTLE_BIN" offset="000E997C"> 
+DD33060C 
+AD010434 
+09330608 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Abandon gives 100/XX% evasion bonus">
+<Description>Fixing an old hack by FFM. Not sure if this hack was already fixed by someone else, but here you go anyway. The first section is vanilla, so you don't have to use that (it's mainly for when I patch FFT Arena with it).
+For 50% evasion bonus, XX = 43 and for 33% bonus, XX = 4b
+</Description>
+<Location file="BATTLE_BIN" offset="11E3BC">
+1980033c
+dc386324
+00006290
+00000000
+</Location>
+<Variable name="XX" file="BATTLE_BIN" offset="11E3CC" />
+<Location file="BATTLE_BIN" offset="11E3CD">
+000234
+000062a0
+</Location>
+</Patch>
+
+<Patch name="Geomastery RSM">
+<Description>Replaces Secret Hunt/Train Routine with Geomastery. Example: If a unit is standing on Lava (which corresponds to Lava Ball, which is fire elemental), this movement will boost all Fire elemental skills. If the unit is standing on Grass (which corresponds to Hell Ivy, which is non-elemental), this movement will do nothing. Default for this RSM is Move on Lava. Will be coded to work with weapons shortly :)</Description>
+<Location file="BATTLE_BIN" offset="124988">
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="11EFFC">
+e8ffbd27
+1000bfaf
+281f060c
+00000000
+834e050c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="120CA0">
+e8ffbd27
+1000bfaf
+1980023c
+942d428c
+00000000
+95004390
+00004434
+20006330
+16006010
+00000000
+b6fc050c
+00000000
+0680033c
+f0fb6324
+0e000434
+18004400
+12100000
+21186200
+07006390
+00000000
+08006010
+00000000
+1980023c
+942d428c
+00000000
+71004490
+00000000
+25186400
+710043a0
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="ECA0C">
+1980023c
+942d428c
+1980033c
+f7386390
+71004290
+00000000
+24104300
+0c004010
+00000000
+1980033c
+ce386384
+00000000
+80100300
+21104300
+02004104
+00000000
+03004224
+83100200
+1980013c
+ce3822a4
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Geomastery works on Weapon Attacks">
+<Location file="BATTLE_BIN" offset="11EFA4">
+e8ffbd27
+1000bfaf
+281f060c
+00000000
+994e050c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="ECA64">
+1980023c
+942d428c
+1980033c
+04396390
+71004290
+00000000
+24104300
+0c004010
+00000000
+1980033c
+ce386384
+00000000
+80100300
+21104300
+02004104
+00000000
+03004224
+83100200
+1980013c
+ce3822a4
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Disables Move+1">
+<Location file="SCUS_942_21" offset="4D11C"> 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Disables Move+2">
+<Location file="SCUS_942_21" offset="4D128"> 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Disables Move+3">
+<Location file="SCUS_942_21" offset="4D134"> 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Disables Jump+1">
+<Location file="SCUS_942_21" offset="4D140"> 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Disables Jump+2">
+<Location file="SCUS_942_21" offset="4D14C"> 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Disables Jump+3">
+<Location file="SCUS_942_21" offset="4D158"> 
+00000000 
+</Location>
+</Patch>
+
+<Patch name="Disables Move-Get EXP">
+<Location file="BATTLE_BIN" offset="126E1A"> 
+00 
+</Location>
+</Patch>
+
+<Patch name="Disables Move-Get JP">
+<Location file="BATTLE_BIN" offset="126E82"> 
+00 
+</Location>
+</Patch>
+
+<Patch name="Move/Jump+X Routine Condensation">
+<Description>Removes the checks for move/jump +2 and 3, and nops space afterward. This frees up SCUS space from 0x5c950-0x5c980. Useful if you are only using move/jump+1 for your hack.</Description>
+<Location file="SCUS_942_21" offset="4D0EC">
+0500a014
+00000000
+2a008294
+2e008394
+280082a4
+2c0083a4
+3a008590
+93008690
+3b008390
+8000c230
+02004010
+1000c230
+0100a524
+02004010
+00000000
+01006324
+fd00422c
+02004014
+ffff6230
+fc000534
+0800422c
+02004014
+3a0085a0
+07000334
+0800e003
+3b0083a0
+</Location>
+<Location file="SCUS_942_21" offset="4D150">
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+</Location>
+</Patch>
+
+<Patch name="Move-Get EXP becomes Reflect Null">
+<Description>Reflectable skills become unreflectable when equipped. A word of warning: This hack also makes stuff in math skill reflectable, so don't use unless you plan on scrapping calculators!</Description>
+<Location file="BATTLE_BIN" offset="125FE8">
+1980033c
+942d6390
+1980023c
+94006390
+f5384290
+40006330
+11006010
+00000000
+</Location>
+</Patch>
+
+<Patch name="Formula 26 becomes Random Steal">
+<Description>Was going to be 100% status if nothing can be stolen/broken, but I couldn't really do that feasibly in 37 lines or less. I set the base chance to steal/break as 50% for each slot here.</Description>
+<Location file="BATTLE_BIN" offset="122794">
+e8ffbd27
+1000bfaf
+4421060c
+00000000
+1c004014
+00000000
+8c17060c
+00000000
+7e21060c
+00000000
+6719060c
+00000000
+441d060c
+00000000
+1980023c
+982d428c
+00000000
+8c014390
+91004290
+0d006010
+00000000
+04004230
+05004014
+00000000
+d076050c
+00000000
+0400c014
+00000000
+18000434
+100044a0
+1a0048a0
+00000000
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="F6B40">
+e8ffbd27
+1000bfaf
+21300000
+21380000
+1980023c
+982d428c
+00000000
+21104700
+1a004890
+ff000334
+05000311
+00000000
+32000534
+3378010c
+64000434
+05004014
+06000234
+f2ffe214
+0100e724
+07000010
+01000134
+1980023c
+902d428c
+80000334
+0718e300
+190043a0
+030048a0
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Turn HP damage/healing into MP damage/healing">
+<Description>Useful if you wanted to make a weapon the deals MP damage, but heals MP upon absorb for instance.</Description>
+<Location file="BATTLE_BIN" offset="F6AFC">
+1980023c
+902d428c
+00000000
+06004494
+10000334
+03008010
+060040a4
+0a0044a4
+250043a0
+04004494
+20000334
+03008010
+040040a4
+080044a4
+250043a0
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Versatile Cure">
+<Description>Depends on the higher of PA or MA</Description>
+<Location file="BATTLE_BIN" offset="ECA10">
+1980023c
+942d428c
+1980043c
+36002280
+37002480
+fa382380
+2b288200
+0300a010
+ce3824a4
+00000000
+ce3822a4
+0800e003
+d03823a4
+</Location>
+<Location file="BATTLE_BIN" offset="121EF8">
+e8ffbd27
+1000bfaf
+844e050c
+00000000
+1622060c
+00000000
+541c060c
+00000000
+d41c060c
+00000000
+ad1f060c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Formula 5d adds status (critical only)">
+<Location file="BATTLE_BIN" offset="123A54">
+e8ffbd27
+1000bfaf
+1980023c
+942d428c
+00000000
+5a004290
+00000000
+01004230
+03004010
+00000000
+c91f060c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+00000000
+</Location>
+</Patch>
+
+<Patch name="Formula 05 deals MP damage, heals MP on absorb">
+<Description>Requires Turn HP damage/healing into MP damage/healing hack. Also accepts status procs, but doesn't show them.</Description>
+<Location file="BATTLE_BIN" offset="121C9C">
+e8ffbd27
+1000bfaf
+4421060c
+00000000
+0d004014
+00000000
+8e21060c
+00000000
+03004014
+00000000
+ad1f060c
+00000000
+bf76050c
+00000000
+00000000
+00000000
+00000000
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Formula 53 becomes Faith(PA*Y)">
+<Location file="BATTLE_BIN" offset="1235e4">
+e8ffbd27
+1000bfaf
+4421060c
+00000000
+13004014
+00000000
+8117060c
+00000000
+ff17060c
+00000000
+7e21060c
+00000000
+df21060c
+00000000
+09004014
+00000000
+541c060c
+00000000
+c721060c
+00000000
+03004014
+00000000
+ad1f060c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="New talk skill">
+<Description>Stat + Status Hack: Replaces talk skill formula
+Includes:
+- (MA+X)% chance to hit
+- 100% add status if ability lands
+- Change PA, MA, brave, faith, or speed based on elemental flags
+- Y value is between 0 and 255, determines whether it's raised or lowered (sign bit) and the amount (everything else)
+- Blockable by Finger Guard
+
+Notes:
+- You can only really change one stat unless you want both stats to be changed by the same amount
+- Quick and CT 00 can be done by setting a CT change of FF (255) and 7F (127), respectively.
+- How to determine the Y value if you're not familiar with hex: Take the amount you want to change the stat and add 128 to make it add the stat, and leave it as is to make it subtract.
+
+Elemental Flag correspondance:
+0x19E/0x12 - (SP Change Byte)   Fire
+0x19F/0x13 - (CT Change Byte)   Ice
+0x1A0/0x14 - (PA Change Byte)   Lightning
+0x1A1/0x15 - (MA Change Byte)   Wind
+0x1A2/0x16 - (Br Change Byte)   Earth
+0x1A3/0x17 - (Fa Change Byte)   Water
+</Description>
+<Location file="BATTLE_BIN" offset="E8334">
+e8ffbd27
+1000bfaf
+1980023c
+902d418c
+fa384390
+f7384290
+00000000
+80004430
+02008010
+40004430
+120023a0
+02008010
+20004430
+130023a0
+02008010
+10004430
+140023a0
+02008010
+08004430
+150023a0
+02008010
+04004430
+160023a0
+02008010
+00000000
+170023a0
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="1229A4">
+e8ffbd27
+1000bfaf
+1980023c
+902d428c
+00000000
+00004290
+00000000
+1b004010
+00000000
+be20060c
+00000000
+1980023c
+902d428c
+00000000
+00004290
+00000000
+14004010
+00000000
+6017060c
+00000000
+5912060c
+00000000
+6719060c
+00000000
+441d060c
+00000000
+1980023c
+902d428c
+00000000
+00004290
+00000000
+05004010
+00000000
+cd3c050c
+00000000
+ad1f060c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Status Conditional - Check if target has X status">
+<Description>The status to check for is indexed as X in the patcher and it is a value between 0-27 (hex).
+
+TUTORIAL:
+Offset represented by X/8:
+0-7      00000000 - 00000111 => 00000 = 0 => Group 1
+8-f      00001000 - 00001111 => 00001 = 1 => Group 2
+10-17   00010000 - 00010111 => 00010 = 2 => Group 3
+18-1f   00011000 - 00011111 => 00011 = 3 => Group 4
+20-27   00100000 - 00100111 => 00100 = 4 => Group 5
+
+This is the offset you want to read from byte 0x0058 in the unit's data.
+Last 3 bits of X value to status flags correlation:
+X   Bits   Flags   Example
+0   000    0x01   Wall
+1   001      0x02   Stop
+2   010      0x04   Slow ***
+3   011      0x08   Haste
+4   100      0x10   Shell
+5   101      0x20   Protect
+6   110      0x40   Regen
+7   111      0x80   Poison
+
+Slow is in the 4th group of statuses and has a value of 0x04. So to check for slow, we go to the start of the unit's current statuses (byte 0x0058 in the unit data) and we look 3 bytes after that. 
+The offset is 3, therefore our first 5 bytes of the X value will be 00011. Then we need to get the last 3 bytes from the table shown above. 0x04 corresponds to 010. 
+Now we just need to OR the two values to get the final X value: 00011010 = 1A in hex = 26 in decimal. Don't forget that the X field in patcher is decimal.
+</Description>
+<Location file="BATTLE_BIN" offset="E8480">
+1980023c
+fa384390
+982d428c
+c2200300
+21208200
+58008290
+07006330
+47106200
+c0170200
+c2170200
+02004010
+00000334
+01000334
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Faith-based damage, 2x damage if target has X status">
+<Description>Replaces formula 56. Does faith-based damage, and 2x damage if the target has a certain status.
+</Description>
+<Location file="BATTLE_BIN" offset="1236F8">
+e8ffbd27
+1000bfaf
+6123060c
+00000000
+203d050c
+00000000
+08006010
+00000000
+1980023c
+902d428c
+00000000
+04004384
+00000000
+00883100
+040064a4
+1000bf8f
+1800bd27
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Untruth Condensation">
+<Description>Removes faith/innocent checks from the untruth formula, and seperates the unfaith calculation into a subroutine.
+</Description>
+<Location file="BATTLE_BIN" offset="122464">
+e8ffbd27
+1000bfaf
+6e21060c
+00000000
+4f004014
+00000000
+3017060c
+00000000
+ff17060c
+00000000
+d121060c
+00000000
+df21060c
+00000000
+45004014
+00000000
+4d25060c
+00000000
+c721060c
+00000000
+03004014
+00000000
+ad1f060c
+00000000
+1000bf8f
+1800bd27
+0800e003
+00000000
+1980053c
+902da58c
+1980023c
+d2384290
+0400a484
+23106200
+18008200
+1980023c
+d3384290
+12200000
+23186200
+00000000
+18008300
+12180000
+db68023c
+ad8b4234
+18006200
+c31f0300
+10100000
+03130200
+23104300
+0400a2a4
+0800e003
+00000000
+</Location>
+</Patch>
+
+<Patch name="Faith/Innocent Check Removal">
+<Description>Removes the faith/innocent checks from the faith calculation. Also frees up a bunch of space.
+</Description>
+<Location file="BATTLE_BIN" offset="120150">
+1980043c
+902d848c
+1980023c
+d2384290
+04008384
+00000000
+18006200
+12180000
+1980023c
+d3384290
+00000000
+18006200
+12180000
+db68023c
+ad8b4234
+18006200
+c31f0300
+10100000
+03130200
+23104300
+0800e003
+040082a4
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+</Location>
+</Patch>
+
+<Patch name="Smart brave/faith hack 2.0">
+<Description>Brave and faith gradually return to original values when changed, works in increments of 5
+</Description>
+<Location file="BATTLE_BIN" offset="11c280">
+E7780508
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="f739c">
+24000B92
+23000C92
+26000D92
+25000E92
+2A106C01
+0A004010
+00000000
+23188B01
+0500622C
+02004014
+80006324
+85000334
+25002292
+160023A2
+01004234
+250022A2
+2A10AE01
+0A004010
+00000000
+2318CD01
+0500622C
+02004014
+80006324
+85000334
+25002292
+170023A2
+01004234
+250022A2
+A90C0608
+00000000
+</Location>
+</Patch>
+
+<Patch name="Multi-hit determined by random fire flag">
+<Description>X + 1 hits, Y + 1 hits if math skill is checked.
+</Description>
+<Location file="BATTLE_BIN" offset="1165D0">
+04004590
+00000000
+08004530
+1600a010
+ff00c330
+00000000
+05004590
+00000000
+4000a530
+0300a010
+00000000
+1980023c
+fa385090
+00000000
+bbf50508
+01000226
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+</Location>
+</Patch>
+
+<Patch name="Jump on Sleeping Unit Fix">
+<Description>AI no longer jumps on sleeping allies. Replaces the check for charge.</Description>
+<Location file="BATTLE_BIN" offset="137958">
+09000234
+</Location>
+</Patch>
+
+<Patch name="AI becomes not dumb with protect/shell">
+<Description>AI will now use these statuses only if GREATER than 50% HP.</Description>
+<Location file="BATTLE_BIN" offset="137CD4">
+01004230
+03004010
+</Location>
+</Patch>
+
+<Patch name="AI Throw Item Fix">
+<Description>AI correctly sees throw item as 4 range.</Description>
+<Location file="BATTLE_BIN" offset="12E9FC">
+04000234
+</Location>
+</Patch>
+</Patches>

@@ -1,0 +1,4370 @@
+<?xml version='1.0' encoding='utf-8'?> 
+<Patches hideInDefault="true">
+<!--Patches that require branching outside of original routine scope:-->
+  <Patch name="Formula 18: melee spellcaster - Hooking">
+    <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
+    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+@melee_spellcaster:
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      jal 0x801885b8				#Magic Evade. If Physical use 0x80188510.
+      nop
+      bne v0,zero,MSED
+      lui v0,0x8018
+      jal @acc_mag_melee  			#Calculate (PA + X)*Faith% acc, based on 0x801889cc.
+      addiu sp,sp,0xffe8
+      bne v0,zero,MSED
+      lui v0,0x8018
+      jal @dmg_f_melee				#DMG_F(PA*(WP+Y)), based on 0x80188d84.
+      addiu sp,sp,0xffe8
+MSED: lw ra,0x0010(sp)
+      addiu sp,sp,0x0018
+      jr ra
+      nop
+@acc_mag_melee:
+      sw ra,0x0010(sp)
+      j 0x80185dac					#Store PA+X.
+      ori ra,v0,0x89d8				#It is 0x801889cc but first part is patched.
+@dmg_f_melee:
+      sw ra,0x0010(sp)
+      j 0x80185e5c					#Store PA and WP + Y.
+      ori ra,v0,0x8da0				#It is 0x80188d84 but first part is patched.
+    </Location>
+    <Location file="BATTLE_BIN" offset="18929C" mode="ASM" offsetMode="RAM">
+      j @melee_spellcaster
+    </Location>
+  </Patch>
+
+  <Patch name="Swap X-O - Hooking">
+    <Description>Swap button X for O. Uses from 275C0, 8 instruction spaces.</Description>
+    <Location file="SCUS_942_21" offset="275C0" mode="ASM" offsetMode="RAM">
+@swap_b6_b7:						#Used for swapping buttons. Swaps bit 6 for 7. Return v0.
+      andi t0,v0,0x0040
+      srl t0,t0,0x01
+      andi t1,v0,0x0020
+      sll t1,t1,0x01
+      andi v0,v0,0xff9f
+      or t0,t0,t1
+      jr ra
+      or v0,v0,t0
+    </Location>
+    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
+      jal @swap_b6_b7				#Swap buttons X-O.
+      nor v0,zero,v0
+    </Location>
+  </Patch>
+
+<!--Patches that fit in the original routine scope:-->
+  <Patch name="Zodiac Compatibility Amount">
+    <Description>Vanilla does 1/4 for bad and good and doubles it for best and worst. Here it does 1/10.</Description>
+    <Location file="BATTLE_BIN" offset="184A30" mode="ASM" offsetMode="RAM">
+      sll v1,v0,0x03				#XA*8, alternative: 'addiu v1,zero,0x000a'.
+      addu v1,v1,v0					#XA*9, alternative: 'multu v1,v0'.
+      addu a1,v1,v0					#XA*10, alternative: 'mflo a1'.
+      nop
+    </Location>
+  </Patch>
+
+  <Patch name="Teleport based on MA">
+    <Description>It changes the base for failure in teleport, MA * ma_factor/128 instead of Move. No variables, so edit through xml only. Changes suggested by Glain. Edit this eqv if needed:
+	ma_factor	Amount to multiply MA/128, 64=MA/2, 51=MA/2.5, 42(43)=MA/3.</Description>
+    <Location file="BATTLE_BIN" offset="176C58" mode="ASM" offsetMode="RAM">
+    .eqv %ma_factor, 64
+      lbu v0,0x0037(t0)				#Load MA
+      subu a0,zero,a0				#Make Y Distance positive
+      ori t1,zero,%ma_factor
+      multu v0,t1
+      mflo v0						#v0 = MA * ma_factor
+      addu v1,v1,a0					#X Distance + Y Distance
+      srl v0,v0,0x07				#v0 = MA * ma_factor/128
+      subu a1,v1,v0					#Extra Distance = Distance -  MA * ma_factor/128
+      jal 0x0005e0cc 				#Check if Random is greater/equal to Chance
+      ori a0,zero,0x000a			#a0 = 100% = 10 = ah (10% chance of failure per extra tile 1-10)
+    </Location>
+    <Location file="BATTLE_BIN" offset="1744C0" mode="ASM" offsetMode="RAM">
+      lui t0,0x8019
+      sb v0,0x0007(s3)
+      lbu v0,0x0048(s1)
+      sw s1,0x2d98(t0)				#Store unit data pointer in attacker slot.
+    </Location>
+    <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
+      lui t0,0x8019
+      lw a2,-0x0b20(t0)
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      lbu v0,0x0024(a2)
+      lw t0,0x2d98(t0)				#Read unit data from attacker slot.
+    </Location>
+  </Patch>
+
+  <!--Patch AI: at 0x12D2E8:e860050800000000 and at 0xF13A0:3a0082901a80013cXX004224bc50060800000000-->
+  <Patch name="Draw out visual bug fix">
+    <Description>Someone else patch, for some glitch rod-katana.</Description>
+    <Location file="BATTLE_WEP1_SHP" offset="A2A">1C</Location>
+    <Location file="BATTLE_WEP1_SHP" offset="A30">1C</Location>
+    <Location file="BATTLE_WEP1_SHP" offset="A36">1C</Location>
+    <Location file="BATTLE_WEP1_SHP" offset="A3C">1C</Location>
+    <Location file="BATTLE_WEP1_SHP" offset="A42">1C</Location>
+    <Location file="BATTLE_WEP1_SHP" offset="A48">1C</Location>
+  </Patch>
+  <Patch name="Battle Initial Camera (DEPRECATED)">
+    <Description>It changes the elevation angle and zoom initial values with their flags. No variables, so edit through xml only. Edit these eqvs if needed:
+	init_elev			Elevation angle value
+	init_elef			Elevation angle flag (1=lo or 2=hi)
+	init_zoom			Zoom initial value
+	init_zoof			Zoom flag (1=in or 4=out)</Description>
+    <Location file="BATTLE_BIN" offset="12DEBC" mode="ASM" offsetMode="RAM">
+    .eqv %init_elev, 0x01C0
+    .eqv %init_elef, 0x0002
+    .eqv %init_zoom, 0x0C00
+    .eqv %init_zoof, 0x0004
+      ori s1,zero,%init_elev
+      sw s1,0x0074(v0)
+      lui v1,0x8016
+      lw v1,0x5f9c(v1)
+      ori v0,zero,%init_elef
+      lui t0,0x8009
+      sw v0,0x60d8(t0)
+      ori v0,zero,%init_zoof
+      lui t0,0x8009
+      sw v0,0x60d0(t0)
+      ori v0,zero,%init_zoom
+    </Location>
+  </Patch>
+  <Patch name="Battle Initial Camera v2">
+    <Description>Set initial camera zoom far and angle hi values. Overwrites previous version.</Description>
+    <Location file="BATTLE_BIN" offset="12DEB8" mode="ASM" offsetMode="RAM">
+      lw v0,0x5f9c(v0)
+      lui v1,0x8016
+      sw s1,0x0074(v0)
+      lw v1,0x5f9c(v1)
+      addiu v0,zero,0x0001
+      lui s0,0x8009
+      jal 0x0006f8c8			#Toogle to angle hi.
+      sw v0,0x60d8(s0)
+      ori v0,zero,0x0001
+      sw v0,0x60d0(s0)
+      ori v0,zero,0x1000
+      jal 0x0006f5bc			#Toogle zoom far.
+      sw v0,0x0080(v1)
+    </Location>
+  </Patch>
+  <Patch name="Incremental Jump Range for Vanilla">
+    <Description>Jump ability for the horizontal/vertical ranges adds +1, except for horizontal 8 which adds +3. Don't use if you will edit jump abilities with FFTPatcher or other tool. Credits go to Xifanie.</Description>
+    <Location file="BATTLE_BIN" offset="179EE0" mode="ASM" offsetMode="RAM">
+      beq v0,zero,IJS1			#Check for horizontal increment.
+      andi a1,v0,0x0008			#Check if it is horizontal 8.
+      beq a1,zero,IJS1
+      addiu s4,s4,0x0001
+      addiu s4,s4,0x0002		#If it is horizontal 8 it adds +2 to the general +1.
+IJS1: beq v1,zero,IJED			#Check for verical increment.
+      nop
+      addiu s0,s0,0x0002		#Vertical adds +2, height goes in 0.5 step.
+IJED: nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Incremental Jump Range v2">
+    <Description>Instead of choosing the highest value of the learned jump ability for the horizontal/vertical ranges, they are added all together. Edit through xml. Overwrites 'for Vanilla' version. Credits go to Xifanie.</Description>
+    <Variable name="Min Horizontal" file="BATTLE_BIN" bytes="2" default="0001" offset="112DD0"/>
+    <Variable name="Min Verticalx2" file="BATTLE_BIN" bytes="2" default="0002" offset="112E28"/>
+    <Variable name="Master Horizontal" file="BATTLE_BIN" bytes="2" default="0008" offset="112E2C"/>
+    <Variable name="Master Verticalx2" file="BATTLE_BIN" bytes="2" default="0010" offset="112E30"/>
+    <Location file="BATTLE_BIN" offset="179EE0" mode="ASM" offsetMode="RAM">
+    .eqv %max_horiz, 0x0008
+    .eqv %max_verti, 0x0010
+      ssl a1,v1,0x01			#Vertical increment by 2, height goes in 0.5 step.
+      addu s0,a1,s0			#Vertical accumulator.
+      sltiu a1,s0,%max_verti		#Check if current vertical is higher than max vertical.
+      bne a1,zero,IJS1
+      addu s4,v0,s4			#Horizontal accumulator.
+      addiu s0,zero,%max_verti		#If current vertical is higher than max vertical, then set it to max.
+IJS1: sltiu a1,s4,%max_horiz		#Check if current horizontal is higher than max horizontal.
+      bne a1,zero,IJED
+      nop
+      addiu s4,zero,%max_horiz		#If current horizontal is higher than max horizontal, then set it to max.
+IJED: nop
+    </Location>
+  </Patch>
+  <Patch name="Mighty sword WOTL">
+    <Description>Mighty swordskills have 100% chance to break equipment, but damage is WP*PA if gear is about to be broken. If no gear, human or not, it will do normal damage like other swordskills (WP+Y)*PA. Maintenance or Safeguard prevents item breakage and damage.</Description>
+    <Location file="BATTLE_BIN" offset="189B94" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      sw s0,0x0014(sp)
+      jal 0x00188510			#Physical Evade Calculation.
+      lui s0,0x8019
+      bne v0,zero,MSED
+      lw s0,0x2d90(s0)			#Target current action pointer.
+      jal 0x00187638			#Maintenance.
+      nop
+      bne v0,zero,MSED			#Here could jump to 'Store PA and WP+Y' instead of MSED if dmg with maintenance.
+      nop
+      jal 0x001879c8			#Steal/Break/Might Sword Hard Coding.
+      nop
+      bne v0,zero,MSS1
+      ori t0,zero,0x0004
+      jal 0x00185dd8			#Store PA and WP.
+      sh t0,0x0010(s0)			#Store special flag = break item.
+      j MSS2				#Skip 'Store PA and WP+Y'.
+      nop
+MSS1: jal 0x00185e5c			#Store PA and WP+Y.
+      nop
+MSS2: jal 0x00185fa4			#Weapon Element Strengthen.
+      nop
+      jal 0x001886a4			#Damage Calculation.
+      nop
+      jal 0x00186fd0			#Elemental Damage Modification (Prep).
+      nop
+      lbu v0,0x0000(s0)			#Load hit flag.
+      nop
+      beq v0,zero,MSED
+      nop	
+      jal 0x001870fc			#Elemental Absorption.
+      nop
+MSED: lw ra,0x0010(sp)
+      lw s0,0x0014(sp)
+      jr ra
+      addiu sp,sp,0x0018
+      nop				#0x00189c28, 10 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Mighty sword v2">
+    <Description>Mighty swordskills have 100% chance to break equipment, but now it won't do damage if gear is about to be broken. If no gear, human or not, it will do normal damage like other swordskills (WP+Y)*PA. Maintenance or Safeguard prevents item breakage and damage. Overwrites 'WOTL' version.</Description>
+    <Location file="BATTLE_BIN" offset="189B94" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      sw s0,0x0014(sp)
+      jal 0x00188510			#Physical Evade Calculation.
+      lui s0,0x8019
+      bne v0,zero,MSED
+      lw s0,0x2d90(s0)			#Target current action pointer.
+      jal 0x00187638			#Maintenance.
+      nop
+      bne v0,zero,MSED			#Here could jump to 'Store PA and WP+Y' instead of MSED if dmg with maintenance.
+      nop
+      jal 0x001879c8			#Steal/Break/Might Sword Hard Coding.
+      nop
+      bne v0,zero,MSS1
+      ori t0,zero,0x0004
+      nop				#Here could go 'jal 0x00185dd8' for 'Store PA and WP' if dmg with break.
+      sh t0,0x0010(s0)			#Store special flag = break item.
+      j MSED				#If 'Store PA and WP' was set then jump to 'Weapon Element Strengthen'.
+      nop
+MSS1: jal 0x00185e5c			#Store PA and WP+Y.
+      nop
+      jal 0x00185fa4			#Weapon Element Strengthen.
+      nop
+      jal 0x001886a4			#Damage Calculation.
+      nop
+      jal 0x00186fd0			#Elemental Damage Modification (Prep).
+      nop
+      lbu v0,0x0000(s0)			#Load hit flag.
+      nop
+      beq v0,zero,MSED
+      nop	
+      jal 0x001870fc			#Elemental Absorption.
+      nop
+MSED: lw ra,0x0010(sp)
+      lw s0,0x0014(sp)
+      jr ra
+      addiu sp,sp,0x0018
+      nop				#0x00189c28, 10 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Level Cap (xjamxx version)" hideInDefault="true">
+    <Description>It caps all levels to an specific value, with some sort of progession with the event progession byte, up to four time windows in the game, after that caps goes to 99. The idea was based on Glain SCC Patch. No variables, so edit through xml only. Edit these eqvs if needed:
+	stage1_id			The first time window from 0x00 (new game) to 0x0f (end of chapter 1)
+	stage1_lc			Higher byte. Maximum level achievable in the first time window (0x0a=10)
+	stage1_lc			Lower byte. Progession byte substract offset in the first time window (0x00)
+	stage2_id			The second time window from first time window to 0x1f (end of chapter 2)
+	stage2_lc			Higher byte. Maximum level achievable in the second time window (0x14=20)
+	stage2_lc			Lower byte. Progession byte substract offset in the second time window (0x05=1_id-1_ic)
+	stage3_id			The third time window from second time window to 0x29 (end of chapter 3)
+	stage3_lc			Higher byte. Maximum level achievable in the third time window (0x23=35)
+	stage3_lc			Lower byte. Progession byte substract offset in the third time window (0x0b=2_id-2_ic)
+	stage4_id			The fourth time window from third time window to 0x35 (chapter 4 - before orbonne)
+	stage4_lc			Higher byte. Maximum level achievable in the fourth time window (0x32=50)
+	stage4_lc			Lower byte. Progession byte substract offset in the fourth time window (0x06=3_id-3_ic)</Description>
+    <Location file="SCUS_942_21" offset="5DA10" mode="ASM" offsetMode="RAM">
+    .eqv %stage1_id, 0x000f
+    .eqv %stage1_lc, 0x0a00
+    .eqv %stage2_id, 0x001f
+    .eqv %stage2_lc, 0x1405
+    .eqv %stage3_id, 0x0029
+    .eqv %stage3_lc, 0x230b
+    .eqv %stage4_id, 0x0035
+    .eqv %stage4_lc, 0x3206
+@lvl_up_section:
+      addiu sp,sp,0xffc8
+      sw ra,0x0010(sp)
+      sw s3,0x0020(sp)
+      sw s2,0x001c(sp)
+      sw s1,0x0018(sp)
+      sw s0,0x0014(sp)
+      addu s0,a0,zero			#s0 = Unit's Data Pointer
+      addu s1,a1,zero			#s1 = Level Down Flag
+      addiu s2,s0,-0x000f		#s2 = Unit's Raw Stat Pointer -0x81
+      addiu s3,s0,0x0081		#s3 = Unit's Raw Growth Pointer
+LULP: jal 0x0002230c			#RNG, Main loop
+      addiu s2,s2,0x0081
+      lbu t7,0x0022(s0)			#Load Unit's Level
+      lbu t1,0x0000(s3)			#Load Stat Growth.
+      lbu v1,0x0000(s2)			#Load first byte of Raw Stat
+      lbu t3,0x0001(s2)			#Load second byte of Raw Stat
+      lbu v0,0x0002(s2)			#Load third byte of Raw Stat
+      sll t3,t3,0x08			#Raw Stat 2 * 100h
+      addu v1,v1,t3			#Raw Stat 2 * 100h + Raw Stat 1
+      sll v0,v0,0x10			#Raw Stat 3 * 10000h
+      bne t1,zero,LUS1			#Branch if Stat Growth != 0
+      addu t2,v1,v0			#t2 = Full Raw Stat
+      ori t1,zero,0x0001		#v0 = 1 (Min 1 growth)
+LUS1: addu t1,t1,t7			#t1 = Stat Growth + Level
+      divu t2,t1
+      mflo v0				#v0 = Raw Stat / (Stat Growth + Level)
+      beq s1,zero,LUS2			#Branch if not Leveling Down
+      addu t0,t2,v0			#Raw Stat += Raw Stat / (Stat Growth + Level)
+      subu t0,t2,v0			#Raw Stat -= Raw Stat / (Stat Growth + Level)
+LUS2: lui v1,0x00ff
+      ori v0,v1,0xffff			#v0 = ffffff
+      sltu v0,v0,t0
+      beq v0,zero,LUS3			#Branch if ffffff is greater ir equal than Raw Stat
+      addiu s3,s3,0x0002		#Unit's Growth Pointer += 2
+      ori t0,v1,0xffff			#Raw Stat = ffffff
+LUS3: srl v0,t0,0x08			#Raw Stat / 100
+      sb v0,0x0001(s2)			#Store Raw Stat 2
+      srl v0,t0,0x10			#Raw Stat / 10000
+      sb t0,0x0000(s2)			#Store Raw Stat 1
+      sb v0,0x0002(s2)			#Store Raw Stat 3
+      addiu s2,s2,-0x007e		#Unit's Raw Stat Pointer += 3 - 81
+      slt v0,s2,s0
+      bne v0,zero,LULP			#Loop.
+      addu a0,s0,zero			#a0 = Unit's Data Pointer
+      jal 0x0005d5e0			#Status Setting/Checking Prep (Not Initializing, Statuses set?)
+      lhu s1,0x002a(s0)			#Load Unit's Max HP
+      lhu v0,0x0028(s0)			#Load Unit's HP
+      lhu s2,0x002e(s0)			#Load Unit's Max MP
+      lhu v1,0x002c(s0)			#Load Unit's MP
+      sltu v0,s1,v0
+      beq v0,zero,LUS4			#Branch if Max HP greater or equal Current HP
+      sltu v1,s2,v1
+      sh s1,0x0028(s0)			#Store Current HP = Max HP
+LUS4: beq v1,zero,LUED			#Branch if Max MP greater or equal Current MP
+      lw ra,0x0010(sp)
+      sh s2,0x002c(s0)			#Store Current MP = Max MP
+LUED: lw s3,0x0020(sp)
+      lw s2,0x001c(sp)
+      lw s1,0x0018(sp)
+      lw s0,0x0014(sp)
+      jr ra
+      addiu sp,sp,0x0038
+@check_lvl_cap:				#0x0005db08, Check Level Cap, t2= curr lvl, return v0.
+      lui t3,0x8005
+      lbu t3,0x78d4(t3)			#t3 = curr stage id.
+      ori t5,zero,0x63ff		#99 level cap by default.
+CLS1: sltiu v0,t3,%stage4_id
+      beq v0,zero,CLS2
+      sltiu v0,t3,%stage3_id
+      beq v0,zero,CLS2
+      ori t5,zero,%stage4_lc
+      sltiu v0,t3,%stage2_id
+      beq v0,zero,CLS2
+      ori t5,zero,%stage3_lc
+      sltiu v0,t3,%stage1_id
+      beq v0,zero,CLS2
+      ori t5,zero,%stage2_lc
+      ori t5,zero,%stage1_lc
+CLS2: andi t4,t5,0x00ff
+      subu t3,t3,t4
+      sltu t4,t2,t3
+      beq t4,zero,CLED
+      addu v1,zero,t3
+      srl v1,t5,0x08
+CLED: jr ra
+      sltu v0,t2,v1
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5D880" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0
+      sw s0,0x0010(sp)
+      addu s0,a0,zero			#s0 = Unit's Data Pointer.
+      sw ra,0x0018(sp)
+      sw s1,0x0014(sp)
+      lbu v0,0x0021(s0)			#Load Unit's Exp.
+      lbu s1,0x0022(s0)			#Load Unit's Level.
+      sltiu v0,v0,0x0064
+      bne v0,zero,CUED			#Branch if Exp less than 100.
+      addu v0,zero,zero			#v0 = 0 (no level up).
+      jal @check_lvl_cap		#Check Level Cap.
+      addu t2,s1,zero			#Needed for Check Level cap. Current Level.
+      ori v1,zero,0x0063		#v0 = 99.
+      sb v1,0x0021(s0)			#Store Exp = 99.
+      beq v0,zero,CUED			#Branch if hit Level Cap. 
+      addu a0,s0,zero			#a0 = Unit's Data Pointer.
+      jal @lvl_up_section		#Level UP section.
+      addu a1,zero,zero			#a1 = 0 (Level Down Flag = False).
+      ori v0,zero,0x0001		#v0 = 1 (Leveled up).
+      addiu v1,s1,0x0001		#Level += 1.
+      sb zero,0x0021(s0)		#Store Exp = 0.
+      sb v1,0x0022(s0)			#Store new Level.
+CUED: lw ra,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0020
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5D8FC" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xfff8
+      sw ra,0x0010(sp)
+      addu t0,a0,zero			#t0 = Party Data Pointer
+      lbu a0,0x0016(t0)			#Load Party Level
+      lbu t1,0x0002(t0)			#Load Party Job ID
+      addu a2,a0,a1			#Level = Party Level + Chosen Level
+      jal @check_lvl_cap		#Check Level Cap.
+      addiu t2,a2,-1			#Needed for Check Level cap. Current Level (Sort of).
+      bne v0,zero,LSS1			#Branch if Level didn't hit cap.
+      sll t2,t1,0x01			#ID * 2
+      addu a2,zero,v1			#Level = Cap.
+LSS1: addu t2,t2,t1			#ID * 3
+      lui t1,0x8006
+      lw t5,0x6194(t1)			#Load Job Data Pointer
+      sll t4,t2,0x04			#ID * 48
+      addu t5,t4,t5
+      subu t3,a2,a0			#Level - Party Level (Chosen Level essentially)
+      blez t3,LSED			#Branch if Level less or equal 0 (will happen at chosen level 99)
+      addu v0,a2,zero			#v0 = Level
+      blez t3,LSS2			#Branch if Level less or equal 0
+      addu t1,zero,zero			#Counter = 0
+      lui t4,0x00ff
+      ori t4,t4,0xffff			#Raw Cap = 0xFFFFFF, main loop
+LSLP: addiu a1,t0,0x0019		#a1 = Pointer to Party Raw HP
+      addiu a3,t5,0x000d		#a3 = Pointer to Job's HP Growth
+      addiu t2,a1,0x000f		#t2 = Pointer to Party's Unlocked Jobs (Limit)
+LSLI: lbu v0,0x0001(a1)			#Load Raw Stat Byte 2, inner loop.
+      lbu a2,0x0016(t0)			#Load Party Level
+      lbu a0,0x0000(a1)			#Load Raw Stat Byte 1
+      lbu v1,0x0002(a1)			#Load Raw Stat Byte 3
+      sll v0,v0,0x08
+      addu a0,a0,v0
+      lbu v0,0x0000(a3)			#Load Stat Growth
+      sll v1,v1,0x10
+      bne v0,zero,LSS3			#Branch if Growth != 0
+      addu a0,a0,v1			#a0 = Full Raw Stat
+      ori v0,zero,0x0001		#v0 = 0 + 1 (min of 1 growth)
+LSS3: addu v0,a2,v0			#v0 = Level + Stat Growth
+      divu a0,v0			#Raw Stat / (Level + Growth)
+      mflo v1				#v1 = Raw Bonus
+      addiu a3,a3,0x0002		#Growth Pointer += 2
+      addu a0,a0,v1			#Raw Stat += Raw Bonus
+      sltu v0,t4,a0
+      beq v0,zero,LSS4			#Branch if Raw Stat less than Raw Cap
+      lui v1,0x00ff
+      ori a0,v1,0xffff			#Raw Stat = FFFFFF
+LSS4: srl v0,a0,0x08
+      sb v0,0x0001(a1)			#Store Raw Stat Byte 2
+      srl v0,a0,0x10
+      sb a0,0x0000(a1)			#Store Raw Stat Byte 1
+      sb v0,0x0002(a1)			#Store Raw Stat Byte 3
+      addiu a1,a1,0x0003		#Raw Pointer += 3
+      slt v0,a1,t2
+      bne v0,zero,LSLI			#Branch if all Raws haven't been Increased
+      nop
+      lbu v0,0x0016(t0)			#Load Party Level
+      addiu t1,t1,0x0001		#Counter ++
+      addiu v0,v0,0x0001		#Level ++
+      sb v0,0x0016(t0)			#Store new Party Level
+      slt v0,t1,t3
+      bne v0,zero,LSLP			#Branch if Current Level less End Level
+      nop
+LSS2: lbu v0,0x0016(t0)			#Load Unit's Party Level
+LSED: lw ra,0x0010(sp)
+      addiu sp,sp,0x0008
+      jr ra
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="18C888" mode="ASM" offsetMode="RAM">
+      addu a1,zero,zero
+      jal @check_lvl_cap		#Check Level Cap.
+      lbu t2,0x0022(v0)			#Load level, needed for Check Level cap.
+      j 0x0018c8d8
+      addu v1,t2,v0			#Lvl = Lvl + 0 or 1.
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Vanilla Steal/Break Routine v2">
+    <Description>Like vanilla, 35 free spaces.</Description>
+    <Location file="BATTLE_BIN" offset="18D3C0" mode="ASM" offsetMode="RAM">
+      lui a0,0x8019
+      addiu sp,sp,0xffe0
+      sw s2,0x0018(sp)
+      sw ra,0x001c(sp)
+      lw s2,0x2d90(a0)			#target current action pointer
+      sw s1,0x0014(sp)
+      lhu v0,0x0010(s2)			#load steal/break item flags
+      sw s0,0x0010(sp)
+      andi v0,v0,0x0014
+      beq v0,zero,SBED			#branch if not stealing or breaking
+      addu s1,zero,zero
+      addu s0,zero,zero
+SBLP: ori v1,zero,0x0080		#Main loop.
+      lbu v0,0x0019(s2)			#Load remove equipment byte.
+      srav v1,v1,s0			#Rotate item type.
+      and v0,v0,v1
+      lw v1,0x2d98(a0)			#Target data pointer.
+      beq v0,zero,SBS1			#Skip if it is not the stolen/broken item.
+      addu v1,v1,s0
+      lbu a1,0x001a(v1)			#Type of item.
+      lw a0,0x2d94(a0)			#Attacker data pointer.
+      beq a1,zero,SBS1
+      ori t0,zero,0x00ff
+      sll v0,a1,0x01			#Item data flags. Can be removed.
+      addu v0,v0,a1
+      sll v0,v0,0x02
+      lui at,0x8006
+      addu at,at,v0
+      lbu v0,0x2ebb(at)				
+      beq a1,t0,SBS1			#Sorted instruction, check if not 0xff.
+      andi v0,v0,0x0001
+      bne v0,zero,SBS1			#The flag below rare.
+      lhu v0,0x0010(s2)			#Steal/break byte.
+      nop				#Here goes fur shop patch.
+      andi v0,v0,0x0010			#Steal check.
+      sb t0,0x001a(v1)			#set item type to 0xff
+      beq v0,zero,SBS1
+      addiu s1,s1,0x0001
+      jal 0x0018e9e8			#item/stat increment routines?
+SBS1: addiu s0,s0,0x0001		#counter
+      slti v0,s0,0x0007			#runs 7 times
+      bne v0,zero,SBLP			#Main loop.
+      lui a0,0x8019
+      lw t0,-0x0a04(a0)
+      beq s1,zero,SBED			#branch if no steal?
+      lw s0,0x2d98(a0)			#target data pointer
+      bne t0,zero,SBS4			#?
+      addu a0,s0,zero			#a0=target data pointer
+      jal 0x0005d5e0			#status setting/checking + equip  R/S/M stats check
+SBS4: lbu s1,0x0019(s2)			#remove item byte
+      lbu t0,0x0058(s0)			#load status 1
+      lbu t1,0x015d(s0)			#load target current ability CT
+      lbu t2,0x016f(s0)			#skillset of last attack used
+      lbu t3,0x0020(s2)			#attack status removal 1
+      ori v0,zero,0x0010
+      beq s1,v0,SBS5			#branch if right hand weapon
+      ori v0,zero,0x0004
+      bne s1,v0,SBS6			#branch if left hand weapon
+SBS5: andi t0,t0,0x0008			#if  charging?
+      beq t0,zero,SBS6			#branch if not charging
+      ori v0,zero,0x00ff
+      beq t1,v0,SBS6
+      ori v0,zero,0x0008
+      bne t2,v0,SBS6			#branch if skillset != charge?
+      ori v0,t3,0x0008
+      sb v0,0x0020(s2)			#store remove charge
+SBS6: ori v0,zero,0x0001
+SBED: lw ra,0x001c(sp)
+      lw s2,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0020
+      nop				#0x0018d4e4, used for fur shop patch.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop					#0x0018d520, 20 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Broken/Stolen items can be bought back at Fur Shop v2">
+    <Description>Requires 'Vanilla Steal/Break Routine v2', self-explanatory.</Description>
+    <Location file="BATTLE_BIN" offset="18D4E4" mode="ASM" offsetMode="RAM">
+@store_poach_inv:			#t0 = ff, a0 = attacker pointer, v0 untouched
+      addiu t2,s4,0x0001
+      bne t2,zero,0x0018D44C		#If it is a real action then s4 is all set.
+      lui t2,0x8005
+      ori t2,t2,0x9494
+      addu t2,t2,a1
+      lbu t3,0x0000(t2)
+      lbu t1,0x01ba(a0)
+      beq t3,t0,BSED			#Branch if Inventory is full, poach inv goes to 255.
+      andi t1,t1,0x0030			#Check if attacker is from player team or not
+      sltu t1,zero,t1			#t1 = 0 player team is attacker
+      sltiu t4,v0,0x0001
+      or t1,t1,t4			#Only +1 if not player or break.
+      addu t3,t3,t1
+BSED: j 0x0018D44C
+      sb t3,0x0000(t2)
+    </Location>
+    <Location file="BATTLE_BIN" offset="18D444" mode="ASM" offsetMode="RAM">
+      j @store_poach_inv		#Here goes fur shop patch.
+    </Location>
+  </Patch>
+  <Patch name="Vanilla Starting items v2">
+    <Description>Similar to vanilla, though only one eye drop instead of 2. 26 free spaces.</Description>
+    <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
+      ori v1,zero,0x00ff
+      lui t2,0x8006
+      addiu v0,t2,0x97df		#Load Inventory, last byte.
+      ori t1,zero,0x00ef
+SILP: sltu t0,t1,v1
+      sb t0,0x0000(v0)			#Store 1 of F0 and higher items, 0 for others.
+      addiu v1,v1,0xffff		#v1 = v1 - 1, next type of item.
+      bgez v1,SILP			#Loop to clear.
+      addiu v0,v0,0xffff		#v0 = v0 - 1, next byte of type item.
+      ori v0,zero,0x0205		#Store Potion 5 and Hi Potion 2.
+      sh v0,-0x6830(t2)
+      ori v0,zero,0x0201		#Store Phoenix Down 2 and clear FE and FF items.
+      jr ra
+      sw v0,-0x6824(t2)
+      nop				#0x00042a48, 26 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Vanilla Calculate Unlocked Jobs v2">
+    <Description>Like vanilla, 25 free spaces.</Description>
+    <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
+      or t7,zero,a0
+      andi v0,a1,0x0020
+      bne v0,zero,UJED			#Branch if Unit is a monster
+      addu t3,zero,zero			#v0 = 0
+      lhu t4,0x0008(t7)			#Load Unit's Dancer-Mime-Calc-Bard Job Levels
+      andi v0,a1,0x0040
+      beq v0,zero,UJS1			#Branch if Unit is not Female
+      ori a0,zero,0xf000		#Useless, unless bard or dancer are required for another job
+      ori a0,zero,0x000f
+UJS1: or v1,t4,a0			#Bard or Dancer Level doesn't exist
+      sh v1,0x0008(t7)			#Store new Job Levels
+      lui t2,0x0080			#Current Unlock Check = 0x800000
+      lui t3,0x0080			#Jobs Unlocked = 0x800000 (start squire)
+      addu t6,zero,zero			#Counter = 0
+      lui t5,0x8006
+      addiu t5,t5,0x60c4
+UJLP: srl v0,t2,0x1f
+      addu v0,t2,v0
+      sra t2,v0,0x01			#Current Unlock Check div 2
+      addu t1,zero,zero			#t1 = 0
+      addu a3,t7,zero			#a3 = Stack Pointer
+      addu t0,t5,zero			#t0 = Job Unlock Requirements Pointer
+UJIL: lbu a0,0x0000(t0)			#Load Job Unlock Requirements
+      lbu a2,0x0000(a3)			#Load Job Levels
+      andi v1,a0,0x00f0			#v1 = high nybble job requirement
+      andi v0,a2,0x00f0			#v0 = high nybble job level
+      sltu t1,v0,v1
+      bne t1,zero,UJS2			#Branch if Level less than requirement
+      andi v1,a0,0x000f			#v1 = low nybble job requirement
+      andi v0,a2,0x000f			#v0 = low nybble job level
+      sltu t1,v0,v1
+      bne t1,zero,UJS2			#Branch if Level less than requirement
+      addiu a3,a3,0x0001		#Stack Pointer ++
+      addiu v0,t7,0x000a		#v0 = Stack Pointer + 10
+      slt v0,a3,v0
+      bne v0,zero,UJIL			#Branch if Stack Pointer less than SP + 10
+      addiu t0,t0,0x0001		#Job Unlock Requirements Pointer ++
+UJS2: bne t1,zero,UJS3			#Branch if Job can't be unlocked
+      addiu t5,t5,0x000a		#Job Unlock Requirements Pointer += 10
+      or t3,t3,t2			#Unlock Job for the unit
+UJS3: addiu t6,t6,0x0001		#Counter ++
+      slti v0,t6,0x0013
+      bne v0,zero,UJLP			#Branch if Counter less than 19
+      lui a0,0x00ff
+      andi v0,a1,0x0040
+      beq v0,zero,UJS4			#Branch if Unit is not Female
+      ori v0,a0,0xffd0
+      ori v0,a0,0xffb0
+UJS4: sh t4,0x0008(t7)			#Store old Job Levels
+      and t3,t3,v0			#Disable Bard or Dancer.
+UJED: jr ra
+      or v0,t3,zero
+      nop				#0x0005dce4, used for extra req jobs patch.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Extra Requirements for Jobs">
+    <Description>Requires 'Vanilla Calculate Unlocked Jobs v2', uses all free space. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
+	st_tier1			Inner game stage (0f = end of chapter 1)
+	st_tier2			Inner game stage (1f = end of chapter 2)
+	st_tier3			Inner game stage (32 = after Limberry Castle?)</Description>
+    <Location file="SCUS_942_21" offset="5DCE4" mode="ASM" offsetMode="RAM">
+    .eqv %st_tier1, 0x000f
+    .eqv %st_tier2, 0x001f
+    .eqv %st_tier3, 0x0032
+@ex_req_jobs:
+      lui t1,0x8005
+      lbu t1,0x78d4(t1)
+      lui v1,0x00ff
+      sltiu t2,t1,%st_tier3
+      beq t2,zero,ERED
+      ori t0,v1,0xfff0
+      sltiu t2,t1,%st_tier2
+      beq t2,zero,ERED
+      ori t0,v1,0xfe00
+      sltiu t2,t1,%st_tier1
+      beq t2,zero,ERED
+      ori t0,v1,0xd000			#d=1101, Sum-Thief--Ora.
+      lui t0,0x00fe
+ERED: jr ra
+      and v0,v0,t0
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5DCDC" mode="ASM" offsetMode="RAM">
+      j @ex_req_jobs			#v0 = Unlocked Jobs, for in and out.
+    </Location>
+  </Patch>
+  <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu) (xjamxx version)" hideInDefault="true">
+    <Description>Disables paging when a confirm menu is up so there is no way to do the JP scroll glitch. It is Glain's hack but inserted in vanilla code without hooking. Only 2 instructions vs 13.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="129B7C" mode="ASM" offsetMode="RAM">
+      lui t0,0x801d			#Sort of vanilla code sorted.
+      lbu t1,-0x7ab0(t0)		#Load ...
+      addiu sp,sp,0xffc0		#Vanilla code.
+      bne t1,zero,0x00129ce0		#Check if ... Finish to avoid paging.
+      sw ra,0x0038(sp)			#Vanilla code sorted, for the 2 spaces needed.
+      sw s1,0x0034(sp)
+      sw s0,0x0030(sp)
+      lh s1,-0x2ab4(t0)
+      addu a2,a0,zero
+      lhu v0,-0x2df4(t0)
+      addu v1,s1,zero			#After this address vanilla is untouched.
+      nop
+      subu s0,v0,v1
+    </Location>
+  </Patch>
+  <Patch name="Switch unit number with L1 and R1 buttons (formation) (xjamxx version)" hideInDefault="true">
+    <Description>Switch unit number with L1/R1 buttons in the formation screen. Directional inputs reworked in the formation screen, Left/Right/Up/Down now behave like old L1/R1. It is similar to Glain's hack but inserted in vanilla code without hooking and some minor fixes.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="116590" mode="ASM" offsetMode="RAM">
+      or a0,zero,v0
+      ori a1,zero,0x0003		#For column effect.
+      jal 0x0012bb88
+      or t0,a3,zero			#Save current pos.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12BB88" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0
+      or t1,zero,a2			#Save original a2.
+SULP: andi t7,a0,0x0008			#Check if R1 is pressed.
+      bne t7,zero,SUS2
+      addiu v0,t0,0x0001
+      andi t7,a0,0x2000			#Check if right is pressed.
+      bne t7,zero,SUS4
+      andi t7,a0,0x0004			#Check if L1 is pressed.
+      bne t7,zero,SUS2
+      addiu v0,t0,0xffff
+      andi t7,a0,0x8000			#Check if left is pressed.
+      bne t7,zero,SUS4
+      subu t7,a2,a1
+      blez t7,SUS1			#Branch if a2 is less than or equal 3.
+      addiu v1,zero,0x0001
+      addiu v1,zero,0x0004
+      or a2,a2,a1			#Set last two bits of a2.
+SUS1: andi t7,a0,0x4000			#Check if down is pressed
+      bne t7,zero,SUS4
+      addu v0,t0,v1
+      andi t7,a0,0x1000			#Check if up is pressed.
+      bne t7,zero,SUS4
+      subu v0,t0,v1
+SUAE: j SUED				#End of checking inputs. Abnormal end.
+      or v0,a3,zero
+SUS2: bne s2,zero,SUAE			#Only in party roster menu.
+      lui t6,0x801d			#Glain's code optimized and fixed. From here to SUS4.
+      sll t7,t0,2
+      addu t7,t6,t7
+      lw t7,-0x2a14(t7)
+      subu t5,v0,t0
+      lhu t0,0x2c(t7)			#Current UnitIndex.
+      sll t2,v0,2
+      addu t1,t0,t5			#Destination UnitIndex.
+      addu t7,t0,t1
+      addiu v1,t7,0xffff		#Check if sum of both UnitIndex less than or equal 1
+      blez v1,SUAE
+      addiu v1,t7,0xffd9		#Check if sum of both UnitIndex greater than or equal 39
+      bgez v1,SUAE
+      addu t7,t6,t2
+      lw  t7,-0x2a14(t7)
+      lui t6,0x8005
+      lhu t7,0x2c(t7)			#UnitIndex of the neighbor unit.
+      ori t6,t6,0x7f74			#Load Party Pointer.
+      subu t8,t7,t1			#Store diff of UnitIndex between neighbor and destination.
+      or t2,zero,t0
+      or t3,zero,t1
+      sll t0,t0,8
+      sll t1,t1,8
+      addu t0,t0,t6
+      addu t1,t1,t6
+      lbu v1,0x0001(t1)			#When dismissing units SUS3 branch fails.
+      or t6,t1,zero
+      or t7,t0,zero
+      bne t8,zero,SUS3
+      ori t8,zero,0xff
+      bne v1,t8,SUIL			#Check if unit was not dismissed.
+SUS3: ori v1,zero,0x0100
+      ori t2,zero,0xff			#If it was, keep it like that.
+      or v0,a3,zero			#Dont move the cursor.
+SUIL: addiu v1,v1,0xffff		#Swap data.
+      lbu t5,0(t7)
+      lbu t4,0(t6)
+      bne t2,t8,SUIS
+      sb t4,0(t7)
+      sb t5,0(t7)			#Keep data for better portrait transition.
+SUIS: sb t5,0(t6)
+      addiu t7,t7,0x0001
+      bgtz v1,SUIL
+      addiu t6,t6,0x0001
+      sb t2,0x0001(t0)
+      sb t3,0x0001(t1)
+      sw ra,0x0018(sp)			#This is for the jal's.
+      sw a3,0x0014(sp)
+      sw v0,0x0010(sp)
+      lui t7,0x8019
+      jal 0x001140bc			#Update most graphic data. Kills a lot of visual effects.
+      sb zero,-0x452c(t7)
+      jal 0x00108920			#Update portrait and name.
+      nop
+      lw v0,0x0010(sp)			#Recover from the jal's.
+      lw a3,0x0014(sp)
+      j SUNE				#Normal end.
+      lw ra,0x0018(sp)
+SUS4: bltz v0,SUS5			#Check if destination pos is less than zero.
+      subu t7,v0,a2			#Temporally subtract from destination pos the number of units.
+      bgez t7,SUS6			#If its non negative branch and store subtraction.
+      or v0,t7,zero			#If previous branch is false, then next addition will fix the subtraction.
+SUS5: addu v0,v0,a2			#Add to destination pos the number of units.
+SUS6: subu t7,v0,t1			#Subtract original a2 from destination pos. 
+      bgez t7,SULP			#If its greater than or equal zero it means prohibited pos.
+      or t0,v0,zero			#This will simulate a second press if previous branch is true.
+SUNE: beq v0,a3,SUED			#Normal end.
+      lui t7,0x8019
+      ori t6,zero,0x0003
+      sb t6,-0x4534(t7)			#??? for visual effect.
+SUED: jr ra				#End.
+      addiu sp,sp,0x0020
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Monster eggs in last roster slot only">
+    <Description>Self-explanatory.</Description>
+    <Location file="SCUS_942_21" offset="59E18" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffd8
+      sw a0,0x001c(sp)
+      sw s0,0x0010(sp)
+      addu s0,a1,zero			#s0 = Egg Mod (used as birthday)
+      sw a2,0x0020(sp)
+      sw ra,0x0024(sp)
+      sw s2,0x0018(sp)
+      sw s1,0x0014(sp)
+      ori s2,zero,0x0013
+      jal 0x00059af0
+      addu a0,s2,zero
+      addu s1,v0,zero
+      lbu v0,0x0001(v0)
+      addiu a0,zero,0x00ff
+      bne v0,a0,MLED
+      or a0,zero,s1
+      sb s2,0x0001(s1)
+      sb zero,0x0003(s1)
+      jal 0x00059ffc
+      ori a1,zero,0x0003
+      lw a0,0x001c(sp)
+      lw a2,0x0020(sp)
+      lbu v0,0x0004(s1)			#Load Party Gender Byte
+      sb a0,0x0002(s1)			#Store Job ID
+      sb a2,0x00d2(s1)			#Store ? = Random
+      ori v0,v0,0x0004
+      sb v0,0x0004(s1)			#Store Gender with ??? Stats (Egg) Enabled
+      andi v0,s0,0xffff
+      sltiu v0,v0,0x016e
+      bne v0,zero,MLS1			#Branch if Egg Mod less than 0x16e
+      nop
+      ori s0,zero,0x0001		#s0 = 1
+MLS1: jal 0x0005e5d8			#Calculate Zodiac Symbol
+      andi a0,s0,0xffff			#a0 = Egg Mod
+      sll a0,v0,0x04			#Zodiac  16
+      addu v0,s2,zero			#v0 = Party ID
+      andi v1,s0,0x0100			#Egg Mod High Bit (not needed; just generic date code)
+      srl v1,v1,0x08			#High Bit / 256
+      addu v1,v1,a0			#High Bit + Zodiac
+      sb s0,0x0005(s1)			#Store Birthday = Egg Mod
+      sb v1,0x0006(s1)			#Store Zodiac (useless?)
+MLED: lw ra,0x0024(sp)
+      lw s2,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0028
+    </Location>
+  </Patch>
+  <Patch name="JP Gain">
+    <Description>Base JP Gain is 10 instead of 8 and job level goes by 4 instead of 2. Now you can gain up to 99 JP. Gained JP Up goes to spillover too.</Description>
+    <Location file="BATTLE_BIN" offset="17E934" mode="ASM" offsetMode="RAM">
+      sll v0,s7,0x02
+      srl v1,s1,0x02
+      addiu v1,v1,0x000a
+      lbu a0,0x0090(s2)			#Load Second Set of Supports
+      addu s1,v0,v1
+      andi v0,a0,0x0040
+      beq v0,zero,JGS1			#Branch if Unit doesn't have Gained  JP Up
+      sll v0,s1,0x01
+      addu v0,v0,s1
+      srl v1,v0,0x1f
+      addu v0,v0,v1
+      sra s1,v0,0x01
+JGS1: lbu a0,0x0000(s0)
+      nop
+      bne a0,zero,JGS2
+      nop
+      addu s1,zero,zero
+JGS2: lbu v0,0x0005(s2)			#Load Unit's Team
+      addu s0,zero,zero
+      andi s3,v0,0x0030
+JGLP: beq s0,s5,JGS4
+      nop
+      bgez s1,JGS3
+      addu a1,s1,zero
+      addiu a1,s1,0x0003
+JGS3: addu a0,s0,zero
+      sra a1,a1,0x02			#Gained JP / 4
+      lw a3,0x0010(sp)
+      jal 0x0017ea80			#Store JP; Calculate Unlocked Jobs
+      andi a2,s3,0x00ff
+JGS4: addiu s0,s0,0x0001
+      slti v0,s0,0x0015
+      bne v0,zero,JGLP
+      nop
+      addu a0,s5,zero
+    </Location>
+  </Patch>
+  <Patch name="EXP Gain">
+    <Description>Consecutive kills won't subtract from base EXP Gain.</Description>
+    <Location file="BATTLE_BIN" offset="18D664" mode="ASM" offsetMode="RAM">
+      ori a0,zero,0x000a		
+      ori v0,zero,0x000a		
+      div v0,v1
+      mflo v0			
+      nop				
+      addu a0,v0,a0
+    </Location>
+  </Patch>
+  <Patch name="Move-find rare minimum brave">
+    <Description>Sets the amount of minimum brave to get always rare item to 20. Vanilla is zero.</Description>
+    <Location file="BATTLE_BIN" offset="18025C" mode="ASM" offsetMode="RAM">
+      ori a1,zero,0x0078		#MinBr = 0x78 - 0x64 = 0x14 = 20d.
+    </Location>
+  </Patch>
+<!--Patches that are not for general use:-->
+  <Patch name="Starting items, Swap X-O and Turbo X+O">
+    <Description>Custom starting items with swap buttons and turbo X if X+O is pressed. Overwrites 'Vanilla Starting items v2'. 10 free spaces.</Description>
+    <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
+      ori v1,zero,0x00ff
+      lui t2,0x8006
+      addiu v0,t2,0x97df		#Load Inventory, last byte.
+SILP: sb zero,0x0000(v0)
+      addiu v1,v1,0xffff		#v1 = v1 - 1, next type of item.
+      bgez v1,SILP			#Loop to clear.
+      addiu v0,v0,0xffff		#v0 = v0 - 1, next byte of type item.
+      ori v0,zero,0x0005		#Store Potion 5.
+      jr ra
+      sh v0,-0x6830(t2)
+      nop				#Turbo data space, not a valid instruction.
+@swap_b6_b7_turbo:			#0x00042a3c Used for swapping buttons. Swaps bit 6 for 7. Turbo too.
+      andi t0,v0,0x0040
+      srl t0,t0,0x01
+      andi t1,v0,0x0020
+      sll t1,t1,0x01
+      andi v0,v0,0xff9f
+      or t0,t0,t1
+      lui t2,0x8004
+      lbu t1,0x2a38(t2)			#Load turbo previous state.
+      ori at,zero,0x0060
+      bne t0,at,SWED			#If X+O are not pressed, then end.
+      lbu at,0x2a39(t2)			#Load turbo delay.
+      xori t0,t1,0x0020
+      addiu t1,at,0x0001
+      andi t1,t1,0x0007			#Turbo delay value.
+      bne t1,zero,SWED
+      sb t1,0x2a39(t2)			#Update turbo delay.
+      sb t0,0x2a38(t2)			#Save current turbo state.
+SWED: jr ra
+      or v0,v0,t0	  
+      nop				#0x00042a88, 10 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
+      jal @swap_b6_b7_turbo		#Swap buttons X-O and turbo X+O.
+      nor v0,zero,v0
+    </Location>
+  </Patch>
+  <Patch name="Chapter 2 enables Fur Shop">
+    <Description>It replace this '00B092000000BEA4' which equals 00-ADD(x92,x0000)-ZERO(x?A4) for this '00BC90000100BEA4' which equals 00-OR(x90,x0001)-ZERO(x?A4). Before that there is a ZERO(x92).</Description>
+    <Location file="EVENT_TEST_EVT" offset="EA5F0">
+      00BC9000
+      0100BEA4
+    </Location>
+  </Patch>
+  <Patch name="Fixes Meliadoul join events">
+    <Description>Works with FFTPatcher modifications. Changed 2A for 2F, added a draw '442A00'.</Description>
+    <Location file="EVENT_TEST_EVT" offset="356004">
+      47 2F 00 00 01 05 00 03 01 48 3B 64 00 1D 00 E0 FF 09 00 00 01 01 00 6F 64 00 3B 03 00 F7 FF FF FF 00 00 00 01 01 00 6F 03 00 11 00 00 02 00 00 19 18 01 B4 FB 68 02 2E 01 00 06 00 00 00 10 01 00 E5 04 00 58 01 74 00 E5 34 00 59 01 11 2F 00 58 02 00 3B 2F 00 08 00 00 00 00 00 00 01 01 00 6F 2F 00 47 2F 00 01 02 05 00 03 00 48 7F 65 00 01 02 11 65 00 6D 02 00 3B 65 00 F6 FF F0 FF 00 00 00 01 01 00 6F 65 00 71 65 00 71 03 00 4E 65 00 01 18 17 02 64 01 05 00 63 A9 4D 3C 19 18 01 B4 FF 68 02 2E 01 00 06 00 00 00 10 80 00 E5 04 00 63 AA F1 1E 00 10 10 11 01 00 2F 00 00 00 00 00 00 00 00 02 E5 01 00 F1 1E 00 8A 1C 02 8B E5 41 00 1C 01 F1 1E 00 10 10 92 02 00 03 00 00 00 00 06 00 00 00 02 E5 01 00 10 10 91 03 00 2F 00 00 00 00 00 00 00 00 02 E5 01 00 51 02 FF FF 00 00 F1 08 00 51 01 FF FF 00 00 E5 01 00 F1 0E 00 11 03 00 5F 02 00 F1 06 00 11 03 00 60 02 00 F1 0C 00 11 03 00 5F 02 00 F1 06 00 11 03 00 02 00 00 F1 06 00 11 03 00 61 02 00 F1 06 00 11 03 00 62 02 00 F1 0C 00 11 03 00 61 02 00 F1 06 00 11 03 00 02 00 00 F1 1E 00 10 10 92 04 00 03 00 00 00 00 06 00 00 00 02 E5 01 00 10 10 91 05 00 2F 00 00 00 00 00 00 00 00 02 E5 01 00 51 02 06 00 00 00 E5 01 00 51 01 07 00 00 00 E5 01 00 51 02 08 00 00 00 E5 01 00 51 01 FF FF 00 00 F1 08 00 51 02 FF FF 00 00 E5 01 00 F1 1C 00 11 2F 00 58 02 00 F1 06 00 11 65 00 6D 02 00 3B 65 00 F8 FF F2 FF 00 00 00 01 01 00 3B 2F 00 0A 00 00 00 00 00 00 01 01 00 11 2F 00 5B 02 00 F1 04 00 3B 65 00 FA FF F1 FF 00 00 00 01 01 00 3B 2F 00 0C 00 00 00 00 00 00 01 01 00 11 2F 00 5B 02 00 F1 04 00 3B 65 00 FB FF F3 FF 00 00 00 01 01 00 3B 2F 00 0D 00 00 00 00 00 00 01 01 00 11 2F 00 5C 02 00 F1 04 00 3B 65 00 FB FF F3 FF 00 00 00 01 01 00 3B 2F 00 0E 00 00 00 00 00 00 01 01 00 11 2F 00 5C 02 00 F1 04 00 3B 65 00 FE FF F2 FF 00 00 00 01 01 00 3B 2F 00 10 00 00 00 00 00 00 01 01 00 11 2F 00 5B 02 00 F1 04 00 3B 65 00 00 00 F1 FF 00 00 00 01 01 00 3B 2F 00 12 00 00 00 00 00 00 01 01 00 11 2F 00 5B 02 00 F1 04 00 3B 65 00 01 00 F0 FF 00 00 00 01 01 00 3B 2F 00 13 00 00 00 00 00 00 01 01 00 11 2F 00 58 02 00 F1 04 00 3B 65 00 01 00 F0 FF 00 00 00 01 01 00 11 2F 00 58 02 00 F1 04 00 F1 3C 00 3B 65 00 03 00 F1 FF 00 00 00 01 01 00 3B 2F 00 13 00 01 00 00 00 00 01 01 00 6F 2F 00 11 2F 00 5D 02 00 F1 0A 00 3B 65 00 04 00 F3 FF 00 00 00 01 01 00 11 2F 00 5E 02 00 F1 32 00 11 03 00 66 02 00 F1 08 00 11 03 00 67 02 00 F1 08 00 11 03 00 68 02 00 F1 1A 00 21 41 00 3B 65 00 04 00 F4 FF 00 00 00 01 01 00 11 65 00 6E 02 00 11 03 00 68 02 00 11 2F 00 63 02 00 F1 08 00 11 2F 00 64 02 00 F1 08 00 11 03 00 6A 02 00 F1 1E 00 11 2F 00 65 02 00 3B 65 00 04 00 F6 FF 00 00 00 01 01 00 11 03 00 6B 02 00 F1 08 00 11 2F 00 02 00 00 3B 65 00 05 00 F9 FF 00 00 00 01 01 00 11 03 00 6C 02 00 44 2A 00 F1 44 00 10 10 91 09 00 2F 00 00 00 00 00 00 00 00 02
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="3181E8">
+      49 45 2F 00 01 4A F1 3C 00 10 10 11 04 00 3E 00 00 0C 00 0A 00 00 00 02 E5 01 00 4B 5F 2F 00 03 00 00 02 44 2F 00 11 2F 00 02 00 00 55 01 00 21 4C 00 F1 1E 00 19 88 01 B4 FF A8 00 2E 01 60 1A 00 00 00 10 44 00 E5 04 00 F1 1E 00 10 10 11 05 00 2F 00 00 08 00 00 00
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="3182F0">
+      00 11 2F 00
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="31A000">
+      0B 02 00 00 63 AA 1F 2F 00 2F 00 00 19 50 FF 00 00 00 10 2E 01 00 1E 00 00 00 10 20 00 E5 04 00 F1 10 00 92 2F 00 00 0C 00 E5 43 00 F1 0A 00 10 10 70 06 00 2F 00 00 00 00 00 00 00 00 00 E5 01 00 1F 03 00 03 00 00 19 00 11 00 00 02 00 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 92 03 00 00 0C 00 E5 43 00 F1 0A 00 53 2F 00 03 00 00 01 00 64 03 00 10 10 70 07 00 03 00 00 00 00 00 00 00 00 01 E5 01 00 1F 2F 00 2F 00 00 19 0E 00 12 E5 01 00 2E 01 00 1E 00 00 00 10 20 00 E5 04 00 F1 10 00 53 03 00 2F 00 00 01 00 64 2F 00 F1 0A 00 10 10 70 08 00 2F 00 00 00 00 00 00 00 00 00 E5 01 00 1F 03 00 03 00 00 19 02 00 00 32 81 00 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 10 10 70 09 00 03 00 00 00 00 00 00 00 00 03 E5 01 00 1F 3E 00 3E 00 00 19 00 F1 08 00 21 68 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 92 3E 00 00 0C 00 E5 43 00 F1 0A 00 53 2F 00 3E 00 00 00 00 64 3E 00 10 10 70 0A 00 3E 00 00 00 00 00 00 00 00 00 E5 01 00 F1 10 00 53 3E 00 03 00 00 01 00 F1 08 00 53 3E 00 2F 00 00 01 00 64 2F 00 1F 2F 00 2F 00 00 19 08 00 00 00 04 F1 2E 01 00 1E 00 00 00 10 20 00 E5 04 00 F1 10 00 10 10 70 0B 00 2F 00 00 00 00 00 00 00 00 01 E5 01 00 1F 3E 00 3E 00 00 19 00 01 E5 01 00 F1 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 10 10 70 0C 00 3E 00 00 00 00 00 00 00 00 00 E5 01 00 1F 69 00 69 00 00 19 F1 FA 00 46 1B 00 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 2D 03 00 14 00 01 00 2D 2F 00 14 00 01 00 64 2F 00 F1 06 00 2D 3E 00 14 00 01 00 64 3E 00 F1 0A 00 80 03 00 00 80 2F 00 00 F1 06
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="31C000">
+      D9 00 00 00 63 AA 1F 2F 00 2F 00 00 19 50 FF 00 00 00 10 2E 01 00 1E 00 00 00 10 20 00 E5 04 00 F1 10 00 92 2F 00 00 0C 00 E5 43 00 F1 0A 00 53 03 00 2F 00 00 01 00 64 2F 00 10 10 70 0D 00 2F 00 00 00 00 00 00 00 00 03 E5 01 00 1F 03 00 03 00 00 19 00 00 10 20 00 E5 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 92 03 00 00 0C 00 E5 43 00 F1 0A 00 53 2F 00 03 00 00 01 00 64 03 00 10 10 70 0E 00 03 00 00 00 00 00 00 00 00 00 E5 01 00 1F 69 00 69 00 00 19 00 00 10 20 00 E5 2E 01 00 1A 00 00 00 10 20 00 E5 04 00 F1 10 00 2D 03 00 14 00 01 00 2D 2F 00 14 00 01 00 64 2F 00 F1 08 00 80 03 00 00 80 2F 00 00 F1 0A 00 BE 7E
+    </Location>
+  </Patch>
+  <Patch name="Fixes X-O references in tutorial battles">
+    <Description>Custom patch, self-explanatory.</Description>
+    <Location file="EVENT_TEST_EVT" offset="336D47">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="336ECE">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="33EC46">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="33F4F7">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="346DF4">
+      D11F
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="3367AF">
+      D9B9
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="336F12">
+      D9B9
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="346A56">
+      D9B9
+    </Location>
+    <Location file="EVENT_TEST_EVT" offset="35257E">
+      D9B9
+    </Location>
+  </Patch>
+  <Patch name="Change tutorial soldier names">
+    <Description>Custom patch, it also changes the gender of the last choco.</Description>
+    <Location file="MENU_FFTSAVE_DAT" offset="542">
+      0C 2B 28 28 37 24 2B FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="622">
+      16 28 2F 32 31 FE FE FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="702">
+      0D 32 30 2C 31 2C 26 FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="7E2">
+      11 28 2C 24 31 FE FE FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="8C2">
+      1F 24 31 3C 24 FE FE FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="9A2">
+      0E 37 28 35 31 24 2F FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="A82">
+      13 24 30 FE FE FE FE FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="B62">
+      23 32 27 2C 24 26 FE FE FE FE FE FE FE FE FE FE
+    </Location>
+    <Location file="MENU_FFTSAVE_DAT" offset="AA8">
+      40
+    </Location>
+  </Patch>
+  <Patch name="Mentalist Job Tweaks">
+    <Description>Requires 'OEJ' and 'Vanilla Steal/Break Routine v2'. It does the hard coding, so the class behaves similar to mime.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="120E84" mode="ASM" offsetMode="RAM">
+    .label  @oej_id, 0x39
+    .label  @oej_id_neg, 0xffc7
+      ori v0,zero,@oej_id		#Clean and block all abilities.
+      beq v1,v0,0x00120f68
+      lbu v0,0x0011(s2)
+      ori at,zero,0x00ff
+      beq at,v0,0x00120ea4
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="124AF8" mode="ASM" offsetMode="RAM">
+      ori at,zero,@oej_id		#Clean and block all abilities, too?
+      lh s0,0x0024(a0)
+      ori v0,zero,0x005d
+      beq s0,at,M1S1
+      or v1,s0,zero
+      bne v1,v0,0x00124b2c
+M1S1: ori v0,zero,0x004b
+      addiu a0,a0,0x005e
+      addu a1,zero,zero
+      jal 0x000222fc
+      ori a2,zero,0x000a
+      or v1,s0,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122808" mode="ASM" offsetMode="RAM">
+M2LP: lh a0,0x0000(v0)			#Avoid listing skill set for secondary ss.
+      ori v0,zero,0x005d
+      beq a0,v0,M2S1
+      addiu s0,s0,0x0002
+      beq s3,a0,M2S1
+      ori v0,zero,@oej_id
+      beq a0,v0,M2S1
+      nop
+      jal 0x0012276c
+      addiu s2,s2,0x0001
+      sh v0,0x0000(s1)
+      addiu s1,s1,0x0002
+M2S1: addiu a0,sp,0x0010
+      addu v0,s0,a0
+      lh v1,0x0000(v0)
+      addiu at,zero,0xffff
+      bne v1,at,M2LP
+      addu v0,s0,a0
+      sll v0,s2,0x01
+      addu v0,v0,s4
+      addiu v1,zero,0xffff
+      sh v1,0x0000(v0)
+      addu v0,s2,zero
+      lw ra,0x0054(sp)
+      lw s4,0x0050(sp)
+      lw s3,0x004c(sp)
+      lw s2,0x0048(sp)
+      lw s1,0x0044(sp)
+      lw s0,0x0040(sp)
+      jr ra
+      addiu sp,sp,0x0058
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="124824" mode="ASM" offsetMode="RAM">
+      ori at,zero,@oej_id		#To avoid losing equipment.
+      sh a1,0x0024(v0)
+      andi a1,a1,0xffff
+      beq a1,at,0x0012483c
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12555C" mode="ASM" offsetMode="RAM">
+      lw s0,0x0000(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125564" mode="ASM" offsetMode="RAM">
+      lbu v0,0x011f(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125574" mode="ASM" offsetMode="RAM">
+      lh v0,0x003e(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125584" mode="ASM" offsetMode="RAM">
+      lh a0,0x0024(s0)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125598" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0070(s0)			#Block menu options.
+      nop
+      andi v0,v0,0x0004
+      beq v0,zero,M3S1
+      ori v1,zero,0x005d
+      j 0x001255d0
+      addiu v0,zero,0xfffc
+M3S1: lh a0,0x0024(s0)
+      ori at,zero,@oej_id
+      beq a0,at,0x001255d0
+      addiu v0,zero,0xfffa
+      beq a0,v1,0x001255d0
+      addiu v0,zero,0xfffa
+    </Location>
+    <Location file="BATTLE_BIN" offset="182B60" mode="ASM" offsetMode="RAM">
+      lbu at,0x0003(r17)		#Block act and move for the turn of mentalist.
+      sb r30,0x0186(r17)		#store units turn = active
+      addiu at,at,@oej_id_neg
+      sltiu at,at,0x0001
+      sb zero,0x0187(r17)		#store move available
+      sb at,0x0188(r17)			#store act available
+      bne r16,r0,M4S1
+      sb r30,0x0027(r17)		#set units turn = active
+      ori r21,r20,0x0100		#r21 = return code (0x0100) next turn?
+M4S1: lui r1,0x8019
+      lw r4,-0x0ae8(r1)
+      ori r3,r0,0x000a
+      sw r20,-0x0ae0(r1)		#store active turn ID
+      sw r3,-0x0ae8(r1)			#go to validate units turn
+    </Location>
+    <Location file="BATTLE_BIN" offset="18D520" mode="ASM" offsetMode="RAM">
+@men_jp_gain:
+      ori at,zero,@oej_id
+      bne a1,at,M5ED
+      lui a1,0x8019
+      bne a2,zero,M5ED
+      ori at,zero,0x0001
+      sb at,0x0187(s0)
+      jal 0x00073638
+      sb at,0x38e7(a1)			#Create 1 exp point so it get JP too.
+M5ED: lw r31,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0018
+    </Location>
+    <Location file="BATTLE_BIN" offset="71420" mode="ASM" offsetMode="RAM">
+      lw s0,0x0134(s0)
+      nop
+      lbu a1,0x0003(s0)
+      j @men_jp_gain			#When player start a turn, no AI.
+      lbu a2,0x0187(s0)
+    </Location>
+    <Location file="BATTLE_BIN" offset="194300" mode="ASM" offsetMode="RAM">
+      or s0,a0,zero
+      nop
+      lbu a1,0x0003(s0)
+      j	@men_jp_gain			#For AI. Not optimal.
+      lbu a2,0x0187(s0)
+    </Location>
+  </Patch>
+<!--Patches that require branching outside of original routine scope:-->
+  <Patch name="Magic Break can break accessory">
+    <Description>With FFTPatcher or similar program change ability 'Magic Break' formula from 2c to 25, change x and y values, uncheck Affect MP and check Unequip. If need change offset F6400 to whatever you want (as long as it is a safe spot).</Description>
+    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+@my_code_cave:
+      beq v1,v0,SKIP			#Branch if used ability is 'Icewolf  Bite'
+      ori v0,zero,0x008e
+      beq v1,v0,SKIP			#Branch if used ability is 'Acc Break'=='MP Break'
+      ori v0,zero,0x0072
+      j 0x00187b54
+      nop
+SKIP: j 0x00187b5c
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="187B4C" mode="ASM" offsetMode="RAM">
+      j @my_code_cave
+      nop
+    </Location>
+  </Patch>
+  <Patch name="Formula 18: melee spellcaster">
+    <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
+    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+@melee_spellcaster:
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      jal 0x001885b8			#Magic Evade. If Physical use 0x00188510.
+      nop
+      bne v0,zero,MSED
+      lui v0,0x8018
+      jal @acc_mag_melee  		#Calculate (PA + X)*Faith% acc, based on 0x001889cc.
+      addiu sp,sp,0xffe8
+      bne v0,zero,MSED
+      lui v0,0x8018
+      jal @dmg_f_melee			#DMG_F(PA*(WP+Y)), based on 0x00188d84.
+      addiu sp,sp,0xffe8
+MSED: lw ra,0x0010(sp)
+      addiu sp,sp,0x0018
+      jr ra
+      nop
+@acc_mag_melee:
+      sw ra,0x0010(sp)
+      j 0x00185dac			#Store PA+X.
+      ori ra,v0,0x89d8			#It is 0x001889cc but first part is patched.
+@dmg_f_melee:
+      sw ra,0x0010(sp)
+      j 0x00185e5c			#Store PA and WP + Y.
+      ori ra,v0,0x8da0			#It is 0x00188d84 but first part is patched.
+    </Location>
+    <Location file="BATTLE_BIN" offset="18929C" mode="ASM" offsetMode="RAM">
+      j @melee_spellcaster
+    </Location>
+  </Patch>
+  <Patch name="Swap X-O">
+    <Description>Swap button X for O. Uses from 275C0, 8 instruction spaces.</Description>
+    <Location file="SCUS_942_21" offset="275C0" mode="ASM" offsetMode="RAM">
+@swap_b6_b7:				#Used for swapping buttons. Swaps bit 6 for 7. Return v0.
+      andi t0,v0,0x0040
+      srl t0,t0,0x01
+      andi t1,v0,0x0020
+      sll t1,t1,0x01
+      andi v0,v0,0xff9f
+      or t0,t0,t1
+      jr ra
+      or v0,v0,t0
+    </Location>
+    <Location file="SCUS_942_21" offset="1DB70" mode="ASM" offsetMode="RAM">
+      jal @swap_b6_b7			#Swap buttons X-O.
+      nor v0,zero,v0
+    </Location>
+  </Patch>
+  <Patch name="Teleport based on MA">
+    <Description>It changes the base for failure in teleport, MA * ma_factor/128 instead of Move. No variables, so edit through xml only. Changes suggested by Glain. Edit this eqv if needed:
+	ma_factor	Amount to multiply MA/128, 64=MA/2, 51=MA/2.5, 42(43)=MA/3.</Description>
+    <Location file="BATTLE_BIN" offset="176C58" mode="ASM" offsetMode="RAM">
+    .eqv %ma_factor, 64
+      lbu v0,0x0037(t0)			#Load MA
+      subu a0,zero,a0			#Make Y Distance positive
+      ori t1,zero,%ma_factor
+      multu v0,t1
+      mflo v0				#v0 = MA * ma_factor
+      addu v1,v1,a0			#X Distance + Y Distance
+      srl v0,v0,0x07			#v0 = MA * ma_factor/128
+      subu a1,v1,v0			#Extra Distance = Distance -  MA * ma_factor/128
+      jal 0x0005e0cc 			#Check if Random is greater/equal to Chance
+      ori a0,zero,0x000a		#a0 = 100% = 10 = ah (10% chance of failure per extra tile 1-10)
+    </Location>
+    <Location file="BATTLE_BIN" offset="1744C0" mode="ASM" offsetMode="RAM">
+      lui t0,0x8019
+      sb v0,0x0007(s3)
+      lbu v0,0x0048(s1)
+      sw s1,0x2d98(t0)			#Store unit data pointer in attacker slot.
+    </Location>
+    <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
+      lui t0,0x8019
+      lw a2,-0x0b20(t0)
+      addiu sp,sp,0xffe8
+      sw ra,0x0010(sp)
+      lbu v0,0x0024(a2)
+      lw t0,0x2d98(t0)			#Read unit data from attacker slot.
+    </Location>
+    <Location file="BATTLE_BIN" offset="1942E8" mode="ASM" offsetMode="RAM">
+      j 0x001583a0			#Dirty jump to fix AI for this.
+      nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="1583A0" mode="ASM" offsetMode="RAM">
+    .eqv %ma_factor, 64
+      lbu t0,0x0094(a0)			#Load Unit's second movement type byte.
+      lbu v0,0x003a(a0)			#Load Unit's Move.
+      andi t0,t0,0x0008
+      beq t0,zero,AIED			#If not teleport, return normal move.
+      lbu t0,0x0037(a0)			#Load MA
+      ori t1,zero,%ma_factor
+      multu t0,t1
+      mflo v0				#v0 = MA * ma_factor
+      nop
+      srl v0,v0,0x07			#v0 = MA * ma_factor/128
+AIED: j 0x001942f0
+      lui at,0x801a
+    </Location>
+  </Patch>
+  
+  
+  
+  
+  
+  <Patch name="Monster Job Wheel (MJW)">
+    <Description>Allow monsters to change their job to other monster job. Made by xjamxx. This patch is not compatible with OEJ by itself, use MJW compatibility patch.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A47C" mode="ASM" offsetMode="RAM">
+      nop				#Prevent focus to move to the first job in the wheel.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="118178" mode="ASM" offsetMode="RAM">
+      lw at,0x001c(sp)
+      slti v0,v0,0x0019
+      bne v0,zero,0x001181b4
+      lui v0,0x8019
+      beq at,zero,0x001181b4		#at is original s1, in wheel is zero, otherwise not.
+      addiu v0,v0,0xc704
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119C90" mode="ASM" offsetMode="RAM">
+      lhu t0,0x0000(s0)
+      addu s0,zero,zero
+      lui s1,0x8019
+      andi v0,t0,0x4000
+      beq v0,zero,SSS1
+      andi t0,t0,0x1000			#To handle mastered star.
+      addiu s0,s1,0xba10
+SSS1: lui at,0x801d
+      addu at,at,s3
+      lh v0,-0x7bdc(at)
+      sll a1,v1,0x10
+      beq v0,zero,0x00119cdc
+      sra a1,a1,0x10
+      lh a0,0x0010(sp)
+      lbu a3,-0x36e6(s1)
+      bne t0,zero,0x00119cdc		#Jump to 119cec to avoid drawing wheel sprite at all.
+      or s1,zero,zero			#To prevent shadow correction for the wheel, since image reduced.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="118EA8" mode="ASM" offsetMode="RAM">
+      lui at,0x801d
+      lh v0,-0x7c0c(at)
+      nop
+      sll v0,v0,0x01
+      addu at,at,v0
+      lhu v0,-0x7c08(at)
+      nop
+      srl at,v0,0x0e
+      srl v0,v0,0x0c			#To handle displayed job lvl.
+      or v0,v0,at
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="120B90" mode="ASM" offsetMode="RAM">
+      nop				#To prevent possible load delay.
+      addiu at,a0,0xff70
+      sltiu at,at,0x000b
+      beq at,zero,WAED
+      addiu v0,a0,0xff70		#Increase possible job ids to 8F?.
+      ori v0,zero,0x0001
+WAED: jr ra
+      sltiu v0,v0,0x000e
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1256C8" mode="ASM" offsetMode="RAM">
+      sll v0,a0,0x10			#This entire location must not exceed 163 instructions (166 with 3 labels).
+      sra v0,v0,0x0e
+      lui at,0x801d
+      addu at,at,v0
+      lw v0,-0x2a14(at)
+      addu a2,a1,zero
+      lbu a1,0x0070(v0)
+      lbu a0,0x0024(v0)			#Monster wheel adds 1000h, so unless andi, just load byte instead of half.
+      lbu a3,0x0072(v0)			#Since plotting routines are mixed, needed a3 to check Sprite Set.
+@setup_formation_sprite:		#Now the plotting sprite routine is one for the roster and the wheel.
+      addiu sp,sp,0xffd0		#Now the wheel support both human and monster sprites.
+      sw ra,0x0010(sp)
+      sw s0,0x0014(sp)
+      sw s1,0x0018(sp)
+      sw s2,0x001c(sp)
+      or s0,a0,zero
+      or s1,a2,zero
+      lh s2,0x002c(v0)
+      lui t0,0x8019
+      ori v0,zero,0x009a		#Job ID special cases, 9a.
+      beq v0,s0,SFSF
+      ori v0,zero,0x51
+      addiu v0,s0,0xff6a		#Job ID special cases, 96, 97, 98 (dummy) and 99.
+      bltz v0,SFS1
+SFS0: addiu v0,v0,0x004e
+      j SFSF
+SFS1: addiu at,s0,0xff70		#Job ID special cases, 90 and 91.
+      bltz at,SFS2
+      sll v0,at,0x02
+      j SFS0
+SFS2: addiu at,s0,0xffa2		#Monsters Job IDs from 5e to 8f.
+      bltz at,SFS3
+      ori v0,zero,0x0003
+      divu at,v0
+      mflo at
+      j SFSF				#Will use for sprite calculation:
+      addiu v0,at,0x003e		#3e chocobo, +1 for goblin and so on.
+SFS3: ori v0,zero,0x0048		#Job ID special cases, 48.
+      beq v0,s0,SFSF
+      ori v0,zero,0x4c
+      sltiu v0,a3,0x0035		#Special job up to 34h, more like Unique jobs = Sprite sets.
+      beq v0,zero,SFS4
+      addu at,t0,a3
+      lbu v1,-0x21cc(at)
+      j SFSE
+      sll v0,v1,0x10
+SFS4: or v1,s0,zero
+      ori v0,zero,0x005c		#5c = Dancer = 92
+      bne v1,v0,SFS5			#if not dancer branch?
+      ori v0,zero,0x005b
+      j SFS6				#if dancer v1 = 3b dancer unit.bin
+      ori v1,zero,0x003b
+SFS5: bne v1,v0,SFS7			#if not bard branch?
+      ori v0,zero,0x005d
+      j SFS6				#if bard v1 = 3a bard unit.bin
+      ori v1,zero,0x003a
+SFS7: bne v1,v0,SFS8			#if not mime branch?
+      sll v1,s0,0x01
+      j SFS9				#if mime v1 = 3c and v0 = job*2
+      ori v1,zero,0x003c
+SFS8: addiu v1,v1,0xff84
+SFS9: andi v0,a1,0x0040			#Female
+      beq v0,zero,SFSE
+      sll v0,v1,0x10
+      addiu v1,v1,0x0001		#Female +1 in unit.bin
+SFS6: sll v0,v1,0x10
+SFSE: sra v0,v0,0x10
+SFSF: sw a1,0x0020(sp)			#Store gender for later use.
+      sll a0,v0,0x01
+      addu a0,a0,v0
+      sll a0,a0,0x02
+      addiu v0,t0,0xda44
+      addu a0,a0,v0
+      or a1,a2,zero
+      jal 0x000222dc
+      ori a2,zero,0x000c		#It must be 0x000c or almost nothing will be drawn.
+      ori v0,zero,0x0048		#Reis dragon form, exception. Since its higher than 34 but it is not generic.
+      beq v0,s0,SFSA
+      addiu v0,s0,0xffcb
+      sltiu v0,v0,0x0029		#Generic job.
+      bne v0,zero,SFED
+SFSA: sb s0,-0x0002(sp)			#Store Job ID in the stack to use it in next jal.
+      jal 0x001090c8
+      or a0,s2,zero
+      sll v0,v0,0x10
+      sra v1,v0,0x10
+      bgez v1,SFSB
+      addu v0,v1,zero
+      addiu v0,v1,0x0003
+SFSB: sra a1,v0,0x02
+      sll v0,a1,0x02
+      subu v0,v1,v0
+      sll v0,v0,0x04
+      addiu v0,v0,0x0140
+      sll a0,v0,0x10
+      sra a0,a0,0x10
+      jal 0x00023a54
+      addiu a1,a1,0x00e0
+      sh v0,0x008(s1)
+SFED: lw ra,0x0010(sp)
+      lw s0,0x0014(sp)
+      lw s1,0x0018(sp)
+      lw s2,0x001c(sp)
+      jr ra
+      addiu sp,sp,0x0030
+@monster_wheel:				#Custom routine, monster Job ID list maker.
+      beq a0,zero,MWED			#It cannot be used as jal beside the place it is used.
+      addiu a0,a1,0xffa2
+      sltiu v0,a0,0x0030		#8d, is the last hydra.
+      beq v0,zero,MWED
+      nop				#Nops for adding restrictions to unlock wheel.
+      nop
+      nop
+      ori at,zero,0x0003
+      or t2,zero,zero
+      nop
+      nop
+      nop
+      nop
+      ori a1,a1,0x1000			#This extra one is to handle displayed lvl and mastered star.
+      divu a0,at
+      mflo t0
+      or s1,s6,zero
+      or s2,zero,zero
+      sll at,t0,0x01
+      addu t0,t0,at
+      addiu t0,t0,0x105e
+      ori t1,zero,0x105e		#5e for choco.
+MWLP: beq t1,t0,MWS1
+      sh t1,0x0000(s1)
+      addiu s1,s1,0x0002
+      j MWS2
+      addiu s2,s2,0x0001
+MWIL: bne t3,a1,MWS3
+      addu at,s2,t2
+      ori t3,t3,0x4000
+      sb at,-0x0004(s6)
+MWS3: sh t3,0x0000(s1)
+      addiu s1,s1,0x0002
+      addiu t2,t2,0x0001
+MWS1: sltiu v0,t2,0x0003
+      bne v0,zero,MWIL
+      addu t3,t2,t0
+      addu s2,s2,t2
+MWS2: sltiu v0,t1,0x108b		#8b is the first hydra.
+      bne v0,zero,MWLP
+      addiu t1,t1,0x0003
+MWED: jr ra				#Since next instruction is a lui over at, it does not matter.
+@formation_cursor:			#Vanilla routine, but optimized to gain space.
+      lui at,0x801d
+      lh a1,-0x79cc(at)
+      addu v1,zero,zero
+      blez a1,FCED
+      sll v0,a0,0x10
+      sra a2,v0,0x10
+      addiu a0,at,0xd5ec
+FCLP: lw at,0x0000(a0)
+      addiu a0,a0,0x0004
+      lh at,0x002c(at)
+      addiu t0,v1,0x0001
+      beq at,a2,FCED
+      slt at,t0,a1
+      bne at,zero,FCLP
+      or v1,t0,zero
+FCED: jr ra
+      addu v0,v1,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12257C" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffd0		#This is part of the routine that writes the Jobs ID list.
+      sw ra,0x002c(sp)			#Mostly is vanilla, but optimized to gain space for a routine.
+      sw s6,0x0028(sp)
+      sw s5,0x0024(sp)
+      sw s4,0x0020(sp)
+      sw s3,0x001c(sp)
+      sw s2,0x0018(sp)
+      sw s1,0x0014(sp)
+      sw s0,0x0010(sp)
+      addu s6,r5,zero
+      addu s5,a2,zero
+      andi s1,a0,0x00ff
+      lui v1,0x801d
+      addiu v1,v1,0xd5ec
+      sll v0,s1,0x02
+      addu s3,v0,v1
+      lw a0,0x0000(s3)
+      addu s2,zero,zero
+      jal 0x0012b1b4
+      addiu a0,a0,0x0077
+      jal 0x0012243c
+      or a0,s1,zero
+      addu s0,v0,zero
+      lw a0,0x0000(s3)
+      ori v0,zero,0x0002
+      lh a1,0x0024(a0)
+      bne s5,v0,JWS1
+      sll v0,s2,0x01
+      bne s0,a1,JWS1
+      sll v0,s2,0x01
+      ori s0,s0,0x4000
+      sb s2,-0x0004(s6)
+JWS1: addu v0,v0,s6
+      sh s0,0x0000(v0)
+      lui v1,0x801d
+      addiu v1,v1,0xd5ec
+      sll v0,s1,0x02
+      addu s4,v0,v1
+      lw s0,0x0000(s4)
+      lbu a0,0x0070(a0)
+      jal @monster_wheel		#Added custom monster job wheel routine.
+      andi a0,a0,0x0020
+      bne s2,zero,0x12272c		#Branch if monster job list was created.
+      lh a0,0x0024(s0)
+      jal 0x00120b90
+      addiu s2,s2,0x0001
+      bne v0,zero,0x12272c
+      lh at,0x003e(s0)
+      ori s3,zero,0x0001
+      bne at,zero,0x122730
+      sll v0,s2,0x01
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      sll v0,s2,0x01
+      addu s1,v0,s6
+      nop				#Five free spaces.
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1226CC" mode="ASM" offsetMode="RAM">
+      lw at,0x0000(s4)
+      lbu t1,-0x0004(s6)
+      lh v0,0x0024(at)
+      sb s2,-0x0004(s6)
+      beq s0,v0,0x00122710
+      nop
+      sb t1,-0x0004(s6)
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119678" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11AE48" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11E014" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="120A44" mode="ASM" offsetMode="RAM">
+      jal @formation_cursor
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119C30" mode="ASM" offsetMode="RAM">
+      jal @setup_formation_sprite
+      or a3,a0,zero			#Since plotting routines are mixed, needed a3 to check Sprite Set.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1090C8" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0		#This routine returns values for palette calculation.
+      sw ra,0x0018(sp)			#The Job ID is already stored in the stack for future use.
+      sw s1,0x0014(sp)
+      jal 0x00059af0
+      sw s0,0x0010(sp)
+      lbu v1,0x0000(v0)
+      addiu s0,sp,0x001c		#Change s0 pointer reference to use custom values.
+      sb v1,0x0000(s0)			#Store sprite type in the stack for future use.
+    </Location>
+  </Patch>
+  <Patch name="MJW - Show one message on wheel req">
+    <Description>Requires 'MJW'. Set only one message for the unlocked monster jobs. No variables, so edit through xml only. Edit this eqv if needed:
+	mjw_txtnum			Number of the text entry slot in job requirements.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="118EE8" mode="ASM" offsetMode="RAM">
+    .eqv  %mjw_txtnum, 0x004D
+      andi a0,a0,0x00ff
+      addiu v0,a0,0xffa2
+      sltiu v0,v0,0x0032
+      bne v0,zero,WTED
+      addiu v0,zero,%mjw_txtnum
+      slti v0,a0,0x004a
+      bne v0,r0,WTED
+      addiu v0,a0,0x0013
+      addiu v0,a0,0xffb6
+WTED: jr ra
+      andi v0,v0,0x00ff
+    </Location>
+  </Patch>
+  <Patch name="MJW - Show job descriptions on monster wheel req">
+    <Description>Requires 'MJW'. Set job descriptions as req message for the unlocked monster jobs.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="118EE8" mode="ASM" offsetMode="RAM">
+      addiu v0,a0,0xffa2
+      sltiu v0,v0,0x0032
+      bne v0,zero,WTED
+      or v0,a0,zero
+      ori t0,zero,0x8800
+      slti v0,a0,0x004a
+      bne v0,r0,WTED
+      addiu v0,a0,0x0013
+      addiu v0,a0,0xffb6
+WTED: jr ra
+      or v0,v0,t0
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119828" mode="ASM" offsetMode="RAM">
+      lbu r2,0x0024(r2)
+      andi a0,s1,0x00ff
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11983C" mode="ASM" offsetMode="RAM">
+      lui t0,0x0010
+      ori a0,zero,0x6000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="119898" mode="ASM" offsetMode="RAM">
+      lui t0,0x0010
+      jal 0x00118ee8
+      andi a0,s1,0x00ff
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1198ac" mode="ASM" offsetMode="RAM">
+      ori a0,zero,0x6000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1134E8" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe8
+      sw ra,0x0014(sp)
+      sw s0,0x0010(sp)
+      andi a2,a0,0xffff
+      addu s0,a1,zero
+      srl a0,a0,0x10
+      ori a1,a0,0x002b
+      ori a0,zero,0x0001
+      jal 0x0012a370
+      addu a3,zero,zero
+      ori v0,zero,0x0001
+      lui at,0x8019
+      sb v0,-0x4533(at)
+      jal 0x00044018
+      addu a0,s0,zero
+      ori v0,zero,0x0001
+      lui at,0x8015
+      sw v0,0x330c(at)
+      lw ra,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0018
+    </Location>
+  </Patch>
+  <Patch name="MJW - Fix transitions 1 - Center image">
+    <Description>Requires 'MJW'. One workaround to fix transitions with larger sprites.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A6C4" mode="ASM" offsetMode="RAM">
+      ori a0,zero,0x0074
+      ori v0,zero,0x0067
+    </Location>
+  </Patch>
+  <Patch name="MJW - Fix transitions 2 - No image for monsters">
+    <Description>Requires 'MJW'. Another workaround to fix transitions with larger sprites. Additional notes, a complete fix for the bigger sprite transitions, it is not worth the effort. Still if anybody wants to try, check where this routine writes the v0, a0 and a1 and learn how to scale the incoming sprite plus the position and areas of the sprites.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="11A6C4" mode="ASM" offsetMode="RAM">
+      ori v0,zero,0x007b		#Undo previous fix.
+      subu v0,v0,v1
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="11A6D0" mode="ASM" offsetMode="RAM">
+      lbu t0,-0x0010(sp)
+      ori t1,zero,0x0020
+      lui t2,0x0028
+      bne t0,t1,FTS1
+      ori t2,t2,0x0018
+      or t2,zero,zero
+FTS1: lui at,0x8019
+      sw t2,-0x3758(at)
+      sw t2,-0x3748(at)
+      sh v0,-0x375a(at)
+      sh v0,-0x374a(at)
+      ori v0,zero,0x0064
+      lhu t2,0x0010(sp)
+      sh a0,-0x375c(at)
+      sh a0,-0x374c(at)
+      sll t2,t2,0x10
+      sra t2,t2,0x12
+      beq v1,v0,FTS2
+      sh a1,-0x3750(at)
+      addiu t2,t2,0x0040
+FTS2: addiu v0,t2,0x0100
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="MJW - Monster Level restriction">
+    <Description>Requires 'MJW'. The wheel will be unlocked after the moster hits a certain level. For more complex restrictions, find a code cave and write it there. No variables, so edit through xml only. Edit this eqv if needed:
+	mon_lvl				Monster level needed to unlock wheel.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="125878" mode="ASM" offsetMode="RAM">
+    .eqv  %mon_lvl, 0x0032
+      lhu t1,0x0000(s0)
+      nop
+      nop
+      ori at,zero,0x0003
+      sltiu t2,t1,%mon_lvl		#Check if monster reached needed level.
+      bne t2,zero,0x0012590c
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="MJW - Progression Byte restriction">
+    <Description>Requires 'MJW'. The wheel will be unlocked after progression byte reaches a certain value. Can be used with level restriction. For more complex restrictions, find a code cave and write it there. No variables, so edit through xml only. Edit this eqv if needed:
+	prg_unlock			Inner game stage needed to unlock wheel (35h = chapter 4 - before orbonne).</Description>
+    <Location file="WORLD_WORLD_BIN" offset="125890" mode="ASM" offsetMode="RAM">
+    .eqv  %prg_unlock, 0x0035
+      nop
+      sltiu t2,t3,%prg_unlock		#Check if player reached progression value.
+      bne t2,zero,0x0012590c
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12587C" mode="ASM" offsetMode="RAM">
+      lui at,0x8005
+      lbu t3,0x78d4(at)
+    </Location>
+  </Patch>
+  <Patch name="MJW - Elidibus Defeat restriction">
+    <Description>Requires 'MJW'. The wheel will be unlocked after Elidibus is killed. Can be used with level restriction, but overwrites progression byte restriction. For more complex restrictions, find a code cave and write it there.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="125890" mode="ASM" offsetMode="RAM">
+      andi t3,t3,0x000f			#Check if Elidibus was killed by player.
+      beq t3,zero,0x0012590c
+      or t2,zero,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="12587C" mode="ASM" offsetMode="RAM">
+      lui at,0x8005
+      lbu t3,0x79C7(at)
+    </Location>
+  </Patch>
+  <Patch name="MJW - No class change">
+    <Description>Requires 'MJW'. It simplifies the wheel to the 3 types of monsters per class.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="1258BC" mode="ASM" offsetMode="RAM">
+      or t1,t0,zero
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="125900" mode="ASM" offsetMode="RAM">
+      sltiu v0,t1,0x0000
+    </Location>
+  </Patch>
+  <Patch name="MJW - OEJ compatibility patch">
+    <Description>Requires 'OEJ' and 'MJW' after it, fixes incompatibility issues with OEJ patch. No variables, so edit through xml only. Edit these labels to match with OEJ labels (they go across all locations):
+	oej_id				OEJ job ID. Recommended range from 0x35 to 0x47.
+	oej_ma_unit			OEJ formation sprite for male. Shishi value -1?
+	oej_fe_unit			OEJ formation sprite for female. Shishi value -1?</Description>
+    <Location file="WORLD_WORLD_BIN" offset="125764" mode="ASM" offsetMode="RAM">
+    .label  @oej_id, 0x39
+    .label  @oej_ma_unit, 0x08
+    .label  @oej_fe_unit, 0x09
+      sltiu v0,a3,0x0035		#Special job up to 34h, more like Unique jobs = Sprite sets.
+      beq v0,zero,SFS4
+      addu at,t0,a3
+      lbu v1,-0x21cc(at)
+      j SFSE
+      sll v0,v1,0x10
+SFS4: ori at,zero,@oej_id
+      bne at,s0,SFS5
+      andi v0,a1,0x0040			#Gender
+      beq v0,zero,SFS6
+      ori v1,zero,@oej_ma_unit		#Set OEJ male Formation Sprite.
+      j SFS6
+      ori v1,zero,@oej_fe_unit		#Set OEJ female Formation Sprite.
+SFS5: or v1,s0,zero
+      addiu at,v1,0xffa4		#Check if mime or dancer.
+      bltz at,SFS7			#If not, branch.
+      sll v1,s0,0x01
+      sll at,at,0x01
+      addiu v1,at,0x00b6
+SFS7: addiu v1,v1,0xff84
+      andi v0,a1,0x0040			#Female
+      beq v0,zero,SFSE
+      sll v0,v1,0x10
+      addiu v1,v1,0x0001		#Female +1 in unit.bin
+SFS6: sll v0,v1,0x10
+SFSE: sra v0,v0,0x10
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122624" mode="ASM" offsetMode="RAM">
+      bne s2,zero,W1ED			#Branch if monster job list was created.
+      lh a0,0x0024(s0)			#This is the second half of the routine that writes the Jobs ID list.
+      jal 0x00120b90			#Mostly is vanilla, but optimized to gain space for a routine.
+      addiu s2,s2,0x0001
+      bne v0,zero,W1ED
+      lh at,0x003e(s0)
+      ori s3,zero,0x0001
+      bne at,zero,W1ED
+      sll v0,s2,0x01
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      sll v0,s2,0x01
+      addu s1,v0,s6
+      lw s4,0x0000(s4)
+W1LP: addiu s0,s3,0x004a
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      addiu v1,v0,0x0000
+      lbu at,0x0070(s4)
+      ori v0,zero,0x005b
+      andi at,at,0x0040
+      srl at,at,0x0006
+      beq s0,v0,W1S1
+      addu v0,v0,at
+      ori v0,zero,0x005c
+      beq s0,v0,W1S1
+      addiu v0,zero,@oej_id
+      or v0,s0,zero
+W1S1: or s0,v0,zero
+      ori v0,zero,0x0002
+      bne s5,v0,W1S2
+      lh at,0x0024(s4)
+      lbu t1,-0x0004(s6)
+      beq s0,at,W1S3
+      sb s2,-0x0004(s6)
+      sb t1,-0x0004(s6)
+W1S2: beq v1,zero,W1S4
+      ori v0,zero,0x0002
+      j W1S5
+      sh s0,0x0000(s1)
+W1S4: bne s5,v0,W1S6
+      sll a0,s0,0x10
+      jal 0x00122488
+      sra a0,a0,0x10
+      bne v0,zero,W1S6
+W1S3: ori v0,s0,0x4000
+      sh v0,0x0000(s1)
+W1S5: addiu s1,s1,0x0002
+      addiu s2,s2,0x0001
+W1S6: addiu s3,s3,0x0001
+      sltiu v0,s3,0x0014
+      bne v0,zero,W1LP
+W1ED: sll v0,s2,0x01
+      nop				#Two free spaces.
+      nop
+    </Location>
+  </Patch>
+  
+  
+  
+  
+  
+  <Patch name="One Extra Job (OEJ)">
+    <Description>Extend jobs from 19 to 20. Inspired by RAD3. Made by xjamxx. No variables, so edit through xml only. In the second location lies the jobs levels requirement for the OEJ. Edit these labels if needed (they go across all locations):
+	oej_id				OEJ job ID. Recommended range from 0x35 to 0x47.
+	oej_ss				OEJ skillset. The one that the job ID has. id(0x34)=ss(0x21).
+	oej_ma_unit			OEJ formation sprite for male. Shishi value -1?
+	oej_ma_unit_p1			OEJ formation sprite for male. Shishi value?
+	oej_fe_unit			OEJ formation sprite for female. Shishi value -1?
+	oej_fe_unit_p1			OEJ formation sprite for female. Shishi value?
+	oej_ma_face			OEJ formation portrait for male. Shishi value -1?
+	oej_fe_face			OEJ formation portrait for female. Shishi value -1?
+	oej_m_ss			OEJ spritesheet for male. Shishi value?
+	oej_f_ss			OEJ spritesheet for female. Shishi value?</Description>
+    <Location file="SCUS_942_21" offset="5DC14" mode="ASM" offsetMode="RAM">
+    .label  @oej_id, 0x39
+    .label  @oej_ss, 0x4d
+    .label  @oej_ma_unit, 0x08
+    .label  @oej_ma_unit_p1, 0x09
+    .label  @oej_fe_unit, 0x09
+    .label  @oej_fe_unit_p1, 0x0A
+    .label  @oej_ma_face, 0x08
+    .label  @oej_fe_face, 0x09
+    .label  @oej_m_ss, 0x3A
+    .label  @oej_f_ss, 0x3B
+      or t7,zero,a0
+      andi v0,a1,0x0020
+      bne v0,zero,UJED			#Branch if Unit is a monster.
+      addu t3,zero,zero			#t3 = 0.
+      lui t2,0x0040			#Current Unlock Check = 0x400000.
+      lui t3,0x0080			#Jobs Unlocked = 0x800000 (start squire).
+      addiu t6,zero,0x0000		#Counter = 0.
+      lui t9,0x8006
+      lui t8,0x8005
+      ori t8,t8,0xdcec			#Set Pointer to OEJ job requirements.
+      ori t5,t9,0x60c4
+UJLP: addu t1,zero,zero			#t1 = 0
+      addu a3,t7,zero			#a3 = Stack Pointer
+      addu t0,t5,zero			#t0 = Job Unlock Requirements Pointer
+UJIL: lbu a0,0x0000(t0)			#Load Job Unlock Requirements
+      lbu a2,0x0000(a3)			#Load Job Levels
+      andi v1,a0,0x00f0			#v1 = high nybble job requirement
+      andi v0,a2,0x00f0			#v0 = high nybble job level
+      sltu t1,v0,v1
+      bne t1,zero,UJS2			#Branch if Level less than requirement
+      andi v1,a0,0x000f			#v1 = low nybble job requirement
+      andi v0,a2,0x000f			#v0 = low nybble job level
+      sltu t1,v0,v1
+      bne t1,zero,UJS2			#Branch if Level less than requirement
+      addiu a3,a3,0x0001		#Stack Pointer ++
+      addiu v0,t7,0x000a		#v0 = Stack Pointer + 10
+      slt v0,a3,v0
+      bne v0,zero,UJIL			#Branch if Stack Pointer less than SP + 10
+      addiu t0,t0,0x0001		#Job Unlock Requirements Pointer ++
+UJS2: ori v0,zero,0x0011
+      bne v0,t6,UJS3			#Branch if it is not Dancer slot.
+      andi v0,a1,0x0040
+      beq v0,zero,UJS4			#Branch if Unit is not Female.
+      lui a0,0x00ff
+      ori v0,a0,0xff80
+      and t3,t3,v0			#If it is Dancer slot and Female, clean Bard slot.
+      bne t1,zero,UJLP			#Branch if Dancer can not be unlocked.
+      or a1,zero,zero			#Set gender to male, so it prevents endless loop.
+      sll at,t2,0x01			#Current Unlock Check by 2
+      j UJLP
+      or t3,t3,at			#Store Dancer unlock.
+UJS4: beq t5,t8,UJS3			#Workaround to check for next loop, so it can continue
+      ori t5,t9,0x616e			#Set Pointer to Dancer job requirements slot.
+      j UJLP
+      or t5,t8,zero			#Set Pointer to OEJ job requirements.
+UJS3: bne t1,zero,UJS5			#Branch if Job can not be unlocked.
+      addiu t5,t5,0x000a		#Job Unlock Requirements Pointer += 10
+      or t3,t3,t2			#Unlock Job for the unit
+UJS5: addiu t6,t6,0x0001		#Counter ++
+      sltiu v0,t6,0x0013
+      bne v0,zero,UJLP			#Branch if Counter less than 20
+      sra t2,t2,0x01			#Current Unlock Check div 2
+UJED: jr ra
+      or v0,t3,zero
+      nop				#0x5dcec, for level job req data.
+      nop
+      nop
+      nop				#0x5dcf8, 20 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5DCEC" offsetMode="RAM">
+      02000888				<!--Jobs levels requirement for OEJ -->
+      80080000				<!--From Squire to Mime every one hexa digits-->
+      8000				<!--Ex: 0200 0888 8008 0000 8000 = CHM2, WHM8, BLM8 ,TMM8, SUM8, ORA8, CAL8-->
+    </Location>
+    <Location file="SCUS_942_21" offset="5B2B4" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0		#From ENTD calculation job, simplification, free space for routines.
+      sw s0,0x0010(sp)
+      addu s0,a0,zero			#s0 = Unit's Data Pointer
+      sw s1,0x0014(sp)
+      addu s1,a1,zero			#s1 = ENTD Pointer
+      addiu a0,s0,0x00d2		#a0 = Unit's Job Level Pointer
+      sw ra,0x0018(sp)
+      jal 0x0005e644			#Data Nullifying (Job Levels)
+      ori a1,zero,0x000a		#Limit = 10
+      bne s1,zero,EJS1			#Branch if ENTD Pointer exists
+      addu a1,zero,zero			#a1 = 0
+      jal 0x0005b5dc			#Transfer Job's Data to Unit's Data
+      addu a0,s0,zero			#a0 = Unit's Data Pointer
+      addiu a0,s0,0x0096		#a0 = Pointer to Unit's Unlocked Jobs
+      addu a1,zero,zero			#a1 = 0
+      ori v0,zero,0x0020		#v0 = 0x20
+      sb zero,0x0013(s0)		#Store Unit's Secondary Skillset = 0
+      jal 0x0005ded8			#Store 3-Byte Data (Unlocked Jobs = 0)
+      sb v0,0x0006(s0)			#Store Unit's Gender = Monster
+      j EJED
+EJS1: lbu t2,0x0001(s1)			#Load ENTD's Gender Byte
+      lbu a2,0x0008(s1)			#Load ENTD's Job Unlocked
+      andi v0,t2,0x0020
+      bne v0,zero,EJS2			#Branch if Unit is a Monster
+      andi a3,a2,0x00ff
+      sltiu v0,a3,0x0014
+      lbu at,0x0009(s1)			#Load ENTD's Job Level
+      beq v0,zero,EJS2			#Branch if Job Unlocked is Invalid
+      andi v1,at,0x000f
+      andi v0,a2,0x0001
+      bne v0,zero,EJS3			#Branch if Job Unlocked is odd (low nybble job)
+      addu a0,v1,zero			#a0 = Job Level
+      sll a0,v1,0x04			#Job Level * 16
+EJS3: srl v0,a3,0x01			#Job Unlocked / 2 (Job Byte)
+      addu v0,s0,v0
+      sb a0,0x00d2(v0)			#Store Job Unlocked
+      addu a2,zero,zero			#Counter = 0
+      addu t1,a3,zero			#t1 = Job Unlocked
+      lui v1,0x8006
+      addiu v1,v1,0x60ba		#v1 = Job Unlock Requirements
+      sll v0,t1,0x02			#Job Unlocked * 4
+      addu v0,v0,t1			#Job Unlocked * 5
+      sll v0,v0,0x01			#Job Unlocked * 10
+      addu t0,v0,v1
+EJLP: beq t1,zero,EJS4			#Branch if Job Unlocked = Base
+      addu a3,s0,a2			#a3 = Unit's Data Pointer + Counter
+      j EJS5
+      lbu a0,0x0000(t0)			#Load Required Job Levels
+EJS4: beq a2,zero,EJS6			#Branch if Counter = 0
+      ori a0,zero,0x0001		#Job Levels = 0x01
+      ori a0,zero,0x0011		#Job Levels = 0x11
+EJS6: addu a3,s0,a2			#a3 = Unit's Data Pointer + Counter
+EJS5: lbu v0,0x00d2(a3)			#Load Unit's Job Levels
+      nop
+      or v1,a0,v0			#Enable Job Levels
+      andi v0,v1,0x000f
+      bne v0,zero,EJS7			#Branch if Low Nybble Job Level != 0
+      addu a0,v1,zero			#a0 = Required Job Level
+      ori a0,v1,0x0001			#Low Nybble Job Level = 1
+EJS7: andi v0,a0,0x00f0
+      bne v0,zero,EJS8			#Branch if High Nybble Job Level != 0
+      addiu t0,t0,0x0001		#Pointer ++
+      ori a0,a0,0x0010			#High Nybble Job Level = 1
+EJS8: addiu a2,a2,0x0001		#Counter ++
+      sltiu v0,a2,0x000a
+      bne v0,zero,EJLP			#Branch if Counter is less than 10
+      sb a0,0x00d2(a3)			#Store Unit's new Job Levels
+      jal 0x0005dc14			#Calculate Unlocked Jobs
+      addu a1,t2,zero			#a1 = Unit's Gender Byte
+      addu a1,v0,zero			#a1 = Unlocked Jobs
+EJS2: jal 0x0005ded8			#Store 3-Byte Data (Unlocked Jobs)
+      addiu a0,s0,0x0096		#a0 = Unit's Unlocked Jobs Pointer
+      lbu v0,0x000a(s1)			#Load ENTD Job ID
+      addu a0,s0,zero			#a0 = Unit's Data Pointer
+      jal 0x0005b5dc			#Transfer Job's Data to Unit's Data
+      sb v0,0x0003(s0)			#Store Unit's Job ID
+      lbu a2,0x001d(s1)			#Load ENTD Primary Skillset
+      ori v0,zero,0x00ff		#v0 = FF
+      andi v1,a2,0x00ff
+      beq v1,v0,EJS9			#Branch if Primary Skillset = FF (Job's)
+      nop
+      beq v1,zero,EJS9			#Branch if Primary Skillset = 0
+      ori v0,zero,0x00ff		#v0 = FF
+      sb a2,0x0012(s0)			#Store Unit's Primary Skillset
+      sb v0,0x0189(s0)			#Store ? = FF
+EJS9: lbu a2,0x000b(s1)			#Load ENTD Secondary ID
+      ori v0,zero,0x00fe		#v0 = FE
+      andi v1,a2,0x00ff			#v1 = Secondary ID
+      bne v1,v0,EJE2			#Branch if Secondary ID != Random
+      nop
+      lbu v0,0x0006(s0)			#Load Unit's Gender Byte
+      nop
+      andi v0,v0,0x0020
+      beq v0,zero,EJSA			#Branch if Unit isn't a Monster
+      nop
+      j EJED
+      sb zero,0x0013(s0)		#Store Unit's Secondary ID = 0
+EJSA: jal 0x0005b500			#Sprite Set and Random Secondary Job Calculation
+      addu a0,s0,zero			#a0 = Unit's Data Pointer
+      addu a0,v0,zero			#a0 = Chosen Job ID
+      andi v1,a0,0x00ff
+      beq v1,zero,EJSB			#Branch if a Job wasn't chosen
+      sll v0,v1,0x01			#ID * 2
+      addu v0,v0,v1			#ID * 3
+      lui v1,0x8006
+      lw v1,0x6194(v1)			#Load Job Data Pointer
+      sll v0,v0,0x04			#ID * 48
+      addu v0,v0,v1
+      lbu v1,0x0000(v0)			#Load Job's Skillset
+EJSB: lbu v0,0x0012(s0)			#Load Unit's Primary Skillset ID
+      nop
+      bne v1,v0,EJE3			#Branch if Skillset != Chosen Skillset
+      nop
+      addu v1,zero,zero			#Skillset = 0
+EJE3: j EJED
+      sb v1,0x0013(s0)			#Store Chosen Secondary Skillset
+EJE2: sb a2,0x0013(s0)			#Store Secondary Skillset = ENTD Secondary Skillset
+EJED: lw ra,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0020
+@oej_mjpss1:				#Multi-purpose fixing routine. Since SCUS is always loaded in RAM.
+      ori t0,zero,@oej_id		#oej_id goes to 12, 5c goes to 11. Returns to ra. v0 contains Job ID - 4a.
+      beq a0,t0,M1ED
+      ori t1,zero,0x0012
+      ori t0,zero,0x005c
+      beq a0,t0,M1ED
+      ori t1,zero,0x0011
+      or t1,v0,zero
+M1ED: jr ra
+      or v0,t1,zero
+@oej_mjpss2:				#Multi-purpose fixing routine. Since SCUS is always loaded in RAM.
+      ori v0,zero,@oej_id		#oej_id goes to 5c, 5c goes to 5b. Returns to t0. 
+      beq a1,v0,M2ED			#v0 is 1 if Job ID - 4a is less than 14 (20 jobs).
+      addiu v0,zero,0x005c
+      beq a1,v0,M2ED
+      addiu v0,zero,0x005b
+      or v0,a1,zero
+M2ED: or a1,v0,zero
+      addiu v0,a1,0xffb6
+      jr t0
+      sltiu v0,v0,0x0014
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5E14C" mode="ASM" offsetMode="RAM">
+      sltiu v0,v1,0x0082
+      beq v0,zero,0x0005e184		#Branch if Sprite Set is not generic male or female.
+      ori v0,zero,@oej_id
+BSS1: bne v0,a2,BSS2
+      ori v0,zero,0x0081
+      beq v1,v0,0x0005e1a8
+      ori v0,zero,@oej_f_ss		#Set OEJ female Sprite Set.
+      j 0x0005e1a8
+      ori v0,zero,@oej_m_ss		#Set OEJ male Sprite Set.
+BSS2: sll v0,a2,0x01			#Job ID * 2.
+      addiu v0,v0,0xffcc		#Job ID * 2 - 0x34.
+      andi v1,v1,0x0001
+      j 0x0005e1a8
+      addu v0,v0,v1
+    </Location>
+    <Location file="SCUS_942_21" offset="5DDA8" mode="ASM" offsetMode="RAM">
+      lbu a1,0x0002(s1)			#JP proposition gain.
+      lui t0,0x8005
+      j @oej_mjpss2			#Go to multi-purpose ID fixing routine.
+      ori t0,t0,0xddb8
+      beq v0,zero,0x0005ddc4
+      addu s0,zero,zero
+      addiu s0,a1,0xffb6
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122634" mode="ASM" offsetMode="RAM">
+      lw at,0x0000(s0)			#This is the second half of the routine that writes the Jobs ID list.
+      bne v0,zero,W1ED			#Mostly is vanilla, but optimized to gain space for a routine.
+      lh at,0x003e(at)
+      ori a0,zero,0x0001
+      bne at,zero,W1ED
+      ori s3,zero,0x0001
+      jal 0x0012b1ec
+      addu s4,s0,zero
+      sll v0,s2,0x01
+      addu s1,v0,s6
+W1LP: addiu s0,s3,0x004a
+      jal 0x0012b1ec
+      ori a0,zero,0x0001
+      lw at,0x0000(s4)
+      addu v1,v0,zero
+      lbu at,0x0070(at)
+      ori v0,zero,0x005b		#Custom code starts here.
+      andi at,at,0x0040
+      srl at,at,0x0006
+      beq s0,v0,W1S1
+      addu v0,v0,at			#When the Job ID is Bard, this will add a 1 if gender is female.
+      ori v0,zero,0x005c
+      beq s0,v0,W1S1
+      addiu v0,zero,@oej_id		#When the Job ID is Dancer, this will change it to OEJ.
+      or v0,s0,zero
+W1S1: or s0,v0,zero
+      lw at,0x0000(s4)
+      ori v0,zero,0x0002
+      bne s5,v0,W1S2
+      lh v0,0x0024(at)
+      nop
+      beq s0,v0,W1S3
+      ori v0,s0,0x4000
+W1S2: beq v1,zero,W1S4
+      ori v0,zero,0x0002
+      j W1S5
+      sh s0,0x0000(s1)
+W1S4: bne s5,v0,W1S6
+      nop
+      sll a0,s0,0x10
+      jal 0x00122488
+      sra a0,a0,0x10
+      bne v0,zero,W1S6
+      addiu v0,s0,0x4000
+W1S3: sh v0,0x0000(s1)
+W1S5: addiu s1,s1,0x0002
+      addiu s2,s2,0x0001
+W1S6: addiu s3,s3,0x0001
+      sltiu v0,s3,0x0014
+      bne v0,zero,W1LP
+W1ED: sll v0,s2,0x01
+      addu v0,v0,s6
+      addiu v1,zero,0xffff
+      sh v1,0x0000(v0)
+      addu v0,s2,zero
+      lw ra,0x002c(sp)
+      lw s6,0x0028(sp)
+      lw s5,0x0024(sp)
+      lw s4,0x0020(sp)
+      lw s3,0x001c(sp)
+      lw s2,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0030
+@oej_wjpss:				#Multi-purpose fixing routine.
+      ori at,zero,0x005b
+      bne a1,at,W2S1			#Branch if not Bard. 
+      ori at,zero,0x005c
+      andi at,s0,0x0040
+      srl at,at,0x0006
+      b W2ED
+      addiu at,at,0x005b		#But if Bard and female, then Dancer.
+W2S1: beq a1,at,W2ED			#Branch if Dancer, then OEJ. 
+      ori at,zero,@oej_id
+      or at,a1,zero
+W2ED: jr ra
+      or a1,at,zero
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122C34" mode="ASM" offsetMode="RAM">
+      sw s5,0x01cc(sp)			#RSM control routine.
+      sll s5,a0,0x10			#Mostly vanilla, but optimized to insert fixing routine.
+      sw s0,0x01b8(sp)
+      sra s0,s5,0x10
+      addu a0,s0,zero
+      sw s1,0x01bc(sp)
+      ori s1,zero,0x0001
+      sw s4,0x01c8(sp)
+      addiu s4,sp,0x0018
+      sll v0,s0,0x02
+      sw ra,0x01d8(sp)
+      sw s6,0x01d0(sp)
+      sw s2,0x01c0(sp)
+      lui at,0x801d
+      addu at,at,v0
+      lw v0,-0x2a14(at)
+      lui s2,0x8005
+      sll at,s0,0x08
+      addu s2,s2,at
+      lbu s2,0x7F78(s2)
+      jal 0x0012243c
+      lhu s6,0x0024(v0)
+      addu a0,s0,zero
+      sll v0,v0,0x10
+      sra a1,v0,0x10
+      addu a2,s3,zero
+      addiu a3,sp,0x0018
+      ori v0,zero,0x0001
+      jal 0x001228f0
+      sw v0,0x0010(sp)
+      addu s0,v0,zero
+W3LP: ori v0,zero,0x0001
+      sw v0,0x0010(sp)
+      sra a0,s5,0x10
+      jal @oej_wjpss			#Multi-purpose fixing routine.
+      addiu a1,s1,0x004a
+      addu a2,s3,zero
+      sll a3,s0,0x01
+      jal 0x001228f0
+      addu a3,s4,a3
+      addu s0,s0,v0
+      addiu s1,s1,0x0001
+      sltiu v0,s1,0x0013
+      bne v0,zero,W3LP
+      addiu a2,s0,0xffff
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1223DC" mode="ASM" offsetMode="RAM">
+      j @oej_mjpss1			#Multi-purpose fixing routine.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1258B0" mode="ASM" offsetMode="RAM">
+      sw ra,0x0010(sp)			#Part of ploting routine for sprites in roster.
+      ori at,zero,@oej_id		#First check if OEJ so it can be treated as generic
+      beq at,v1,W4S1
+      sltiu v0,v1,0x0035		#Special job up to 34h, more like Unique jobs = Sprite sets. 
+      beq v0,zero,W4S2
+      lui at,0x8019
+      addu at,at,v1
+      lbu v1,-0x21cc(at)
+      j 0x0012591c
+      sll v0,v1,0x10
+W4S1: sll v0,a1,0x10			#Gender
+      beq v0,zero,0x00125918
+      ori v1,zero,@oej_ma_unit		#Set OEJ male Formation Sprite.
+      j 0x00125918
+      ori v1,zero,@oej_fe_unit		#Set OEJ female Formation Sprite.
+W4S2: addiu at,v1,0xffa4		#Check if mime or dancer.
+      bltz at,0x00125904		#If not, branch.
+      sll v0,a0,0x01
+      sll at,at,0x01
+      addiu v0,at,0x00b6
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10CB00" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x0010cb54		#Branch if not Extra job for male.
+      addiu a1,a0,0x0060
+      j 0x0010cb84
+      addiu a1,zero,@oej_ma_face	#Set OEJ male Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10CB2C" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x0010cb54		#Branch if not Extra job for female.
+      addiu a1,a0,0x0061
+      j 0x0010cb84
+      addiu a1,zero,@oej_fe_face	#Set OEJ female Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10CB54" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
+      ori v1,zero,0x005c
+      beq v0,v1,W5S1			#Branch if Dancer.
+      addiu a1,a1,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W5S1			#Branch if not Mime.
+      addiu a1,a1,0x0002
+      addiu a1,a1,0xfffe
+W5S1: sll v0,a1,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a1,-0x5748(at)
+      lbu v1,0x0000(s0)
+      lbu at,0x002e(s1)			#
+      bne v1,zero,W5S2
+      ori v0,zero,0x0082
+      addu a1,zero,zero
+W5S2: bne v1,v0,0x0010cbb0
+      andi v0,a1,0x0300
+      sll v0,at,0x0a
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="109290" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x001092e4		#Branch if not Extra job for male.
+      addiu a0,a1,0x0060
+      j 0x00109314
+      addiu a0,zero,@oej_ma_face	#Set OEJ male Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1092BC" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x001092e4		#Branch if not Extra job for female.
+      addiu a0,a1,0x0061
+      j 0x00109314
+      addiu a0,zero,@oej_fe_face	#Set OEJ female Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="1092E4" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
+      ori v1,zero,0x005c
+      beq v0,v1,W6S1			#Branch if Dancer.
+      addiu a0,a0,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W6S1			#Branch if not Mime.
+      addiu a0,a0,0x0002
+      addiu a0,a0,0xfffe
+W6S1: sll v0,a0,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a0,-0x5e98(at)
+      lbu v1,0x0000(s0)
+      lbu at,0x002e(s1)			#
+      bne v1,zero,W6S2
+      ori v0,zero,0x0082
+      addu a0,zero,zero
+W6S2: bne v1,v0,0x00109340
+      addu v0,a0,zero
+      sll v0,at,0x0a
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="109110" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x00109164		#Branch if not Extra job for male.
+      addiu a0,a1,0x0060
+      j 0x00109194
+      addiu a0,zero,@oej_ma_face	#Set OEJ male Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="10913C" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x00109164		#Branch if not Extra job for female.
+      addiu a0,a1,0x0061
+      j 0x00109194
+      addiu a0,zero,@oej_fe_face	#Set OEJ female Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="109164" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
+      ori v1,zero,0x005c
+      beq v0,v1,W7S1			#Branch if Dancer.
+      addiu a0,a0,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W7S1			#Branch if not Mime.
+      addiu a0,a0,0x0002
+      addiu a0,a0,0xfffe
+W7S1: sll v0,a0,0x01
+      lui at,0x8019
+      addu at,at,v0
+      lhu a0,-0x5e98(at)
+      lbu v1,0x0000(s0)
+      lbu at,0x002e(s1)			#
+      bne v1,zero,W7S2
+      ori v0,zero,0x0082
+      addu a0,zero,zero
+W7S2: bne v1,v0,0x001091bc
+      nop				#One free space.
+      sll v0,at,0x0a
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="E5014" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x000e5068		#Branch if not Extra job for male.
+      addiu a0,a1,0x0060
+      j 0x000e5098
+      addiu a0,zero,@oej_ma_face	#Set OEJ male Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="E5040" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x000e5068		#Branch if not Extra job for female.
+      addiu a0,a1,0x0061
+      j 0x000e5098
+      addiu a0,zero,@oej_fe_face	#Set OEJ female Formation Portrait.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="E5068" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
+      ori v1,zero,0x005c
+      beq v0,v1,W8S1			#Branch if Dancer.
+      addiu a0,a0,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,W8S1			#Branch if not Mime.
+      addiu a0,a0,0x0002
+      addiu a0,a0,0xfffe
+W8S1: sll v0,a0,0x01
+      lui at,0x8015
+      addu at,at,v0
+      lhu a0,0x4b14(at)
+      lbu v1,0x0000(s0)
+      lbu at,0x002e(s3)			#
+      bne v1,zero,W8S2
+      ori v0,zero,0x0082
+      addu a0,zero,zero
+W8S2: bne v1,v0,0x000e50c0
+      nop				#One free space.
+      sll v0,at,0x0a
+      nop				#One free space.
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="122488" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffd8
+      sw s0,0x0018(sp)
+      lui s0,0x801d
+      lbu v0,-0x2878(s0)
+      sw s1,0x001c(sp)
+      addu s1,zero,zero
+      sw ra,0x0024(sp)
+      sw s2,0x0020(sp)
+      blez v0,W9ED
+      ori s2,zero,@oej_id		#Custom code.
+      beq s2,a0,W9S1
+      addiu s2,zero,0x005c
+      beq s2,a0,W9S1
+      addiu s2,zero,0x005b
+      or s2,a0,zero
+W9S1: or a0,s2,zero			#End of custom code.
+      addiu s0,s0,0xd5ec
+W9LP: lw v0,0x0000(s0)
+      jal 0x00120b90
+      lh a0,0x0024(v0)
+      bne v0,zero,W9S2
+      lw a0,0x0000(s0)
+      jal 0x0012b1d0
+      addiu a0,a0,0x0077
+      jal 0x0012b354
+      addiu a0,s2,0xffb6
+      jal 0x0012b354
+      ori a0,zero,0x0001
+      bne v0,zero,W9E2
+      addu v0,zero,zero
+W9S2: lui v0,0x801d
+      lbu v0,-0x2878(v0)
+      addiu s1,s1,0x0001
+      slt v0,s1,v0
+      bne v0,zero,W9LP
+      addiu s0,s0,0x0004
+W9ED: ori v0,zero,0x0001
+W9E2: lw ra,0x0024(sp)
+      lw s2,0x0020(sp)
+      lw s1,0x001c(sp)
+      lw s0,0x0018(sp)
+      jr ra
+      addiu sp,sp,0x0028
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="120B90" mode="ASM" offsetMode="RAM">
+      nop				#To prevent possible load delay.
+      addiu at,a0,0xff70
+      sltiu at,at,0x000b
+      beq at,zero,WAED
+      addiu v0,a0,0xff70		#Increase possible job ids to 8F?.
+      ori v0,zero,0x0001
+WAED: jr ra
+      sltiu v0,v0,0x000e
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C86B8" mode="ASM" offsetMode="RAM">
+      bne v0,zero,0x001c8754		#Branch if special.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C86DC" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of the attack out formation sprite handling routine.
+      bne v0,v1,0x001c8734		#Branch if not Extra job for male.
+      addiu a1,a0,0x0060
+      j 0x001c8764
+      addiu a1,zero,@oej_ma_unit_p1	#Set OEJ male Formation Sprite for attack out.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8708" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of the attack out formation sprite handling routine.
+      bne v0,v1,0x001c8734		#Branch if not Extra job for female.
+      addiu a1,a0,0x0061
+      j 0x001c8764
+      addiu a1,zero,@oej_fe_unit_p1	#Set OEJ female Formation Sprite for attack out.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8734" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of the attack out formation sprite handling routine.
+      ori v1,zero,0x005c
+      beq v0,v1,A1S1			#Branch if Dancer.
+      addiu a1,a1,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,A1S1			#Branch if not Mime.
+      addiu a1,a1,0x0002
+      addiu a1,a1,0xfffe
+A1S1: sll v0,a1,0x01
+      lui at,0x801d
+      addu at,at,v0
+      lhu a1,0x5bb0(at)
+      lbu v1,0x0000(s0)
+      lui at,0x801e			#
+      bne v1,zero,A1S2
+      ori v0,zero,0x0082
+      addu a3,zero,zero
+A1S2: bne v1,v0,0x001c8798
+      lui v0,0x6666
+      lw v0,-0x3558(at)
+      nop				#One free space.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8200" mode="ASM" offsetMode="RAM">
+      bne v0,zero,0x001c829c		#Branch if special.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8224" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x001c827c		#Branch if not Extra job for male.
+      addiu a3,a0,0x0060
+      j 0x001c82ac
+      addiu a3,zero,@oej_ma_face	#Set OEJ male Formation Portrait.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C8250" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x001c827c		#Branch if not Extra job for female.
+      addiu a3,a0,0x0061
+      j 0x001c82ac
+      addiu a3,zero,@oej_fe_face	#Set OEJ female Formation Portrait.
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="1C827C" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
+      ori v1,zero,0x005c
+      beq v0,v1,A2S1			#Branch if Dancer.
+      addiu a3,a3,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,A2S1			#Branch if not Mime.
+      addiu a3,a3,0x0002
+      addiu a3,a3,0xfffe
+A2S1: sll v0,a3,0x01
+      lui at,0x801d
+      addu at,at,v0
+      lhu a3,0x5bb0(at)
+      lbu v1,0x0000(s0)
+      lui at,0x801e			#
+      bne v1,zero,A2S2
+      ori v0,zero,0x0082
+      addu a3,zero,zero
+A2S2: bne v1,v0,0x001c82e4
+      lui v0,0x6666
+      lw v0,-0x3558(at)
+      nop				#One free space.
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="1C5580" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#1 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x001c55d8		#Branch if not Extra job for male.
+      addiu a3,a0,0x0060
+      j 0x001c5608
+      addiu a3,zero,@oej_ma_face	#Set OEJ male Formation Portrait.
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="1C55AC" mode="ASM" offsetMode="RAM">
+      ori v1,zero,@oej_id		#2 of 3 Parts of one of the portrait handling routines.
+      bne v0,v1,0x001c55d8		#Branch if not Extra job for female.
+      addiu a3,a0,0x0061
+      j 0x001c5608
+      addiu a3,zero,@oej_fe_face	#Set OEJ female Formation Portrait.
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="1C55D8" mode="ASM" offsetMode="RAM">
+      lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
+      ori v1,zero,0x005c
+      beq v0,v1,R1S1			#Branch if Dancer.
+      addiu a3,a3,0xfffe
+      ori v1,zero,0x005d
+      bne v0,v1,R1S1			#Branch if not Mime.
+      addiu a3,a3,0x0002
+      addiu a3,a3,0xfffe
+R1S1: sll v0,a3,0x01
+      lui at,0x801d
+      addu a3,at,v0
+      lhu a3,0x0b3c(a3)
+      lbu v1,0x0000(s0)
+      lui at,0x801d			#
+      bne v1,zero,R1S2
+      ori v0,zero,0x0082
+      addu a3,zero,zero
+R1S2: bne v1,v0,0x001c5640
+      lui v0,0x6666
+      lw v0,0x7db0(at)
+      nop				#One free space.
+    </Location>
+    <Location file="EVENT_JOBSTTS_OUT" offset="1E0270" mode="ASM" offsetMode="RAM">
+      lw at,0x0000(s4)			#For battle job list menu.
+      ori v0,zero,0x005b
+      lbu at,0x0006(at)
+      bne s0,v0,BMS1
+      ori v0,zero,0x005c
+      andi at,at,0x0040
+      bne at,zero,BMED
+      ori v0,zero,0x005c
+BMS1: beq s0,v0,BMED
+      ori v0,zero,@oej_id
+      or v0,s0,zero
+BMED: or s0,v0,zero
+      nop				#7 free spaces.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="EVENT_JOBSTTS_OUT" offset="1E03B4" mode="ASM" offsetMode="RAM">
+      j @oej_mjpss1			#Multi-purpose fixing routine.
+    </Location>
+    <Location file="BATTLE_BIN" offset="17EA28" mode="ASM" offsetMode="RAM">
+      lui t0,0x8017
+      j @oej_mjpss2			#Multi-purpose fixing routine.
+      ori t0,t0,0xea34
+      beq v0,zero,0x0017ea40
+      nop
+      addiu v0,a1,0xffb6
+      sw v0,0x0000(a2)
+    </Location>
+    <Location file="BATTLE_BIN" offset="17EA80" mode="ASM" offsetMode="RAM">
+      addiu sp,sp,0xffe0		#From Store JP and UJ, simplification, free space for routines.
+      sw s1,0x0014(sp)
+      addu s1,a3,zero			#s1 = Generic Job ID
+      sw ra,0x0018(sp)
+      sw s0,0x0010(sp)
+      bltz a1,SJED			#Branch if JP is less than 0
+      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      sll v0,a0,0x03			#ID * 8
+      subu v0,v0,a0			#ID * 7
+      sll v0,v0,0x06			#ID * 1c0
+      lui v1,0x8019
+      addiu v1,v1,0x08cc
+      addu s0,v0,v1
+      lbu v1,0x0001(s0)			#Load Unit's Unit ID
+      ori v0,zero,0x00ff		#v0 = FF
+      beq v1,v0,SJED			#Branch if Unit doesn't exist
+      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      lhu v0,0x0058(s0)			#Load Unit's Current Statuses 1 and 2
+      lbu a0,0x0006(s0)			#Load Gender Byte
+      andi v0,v0,0x0160
+      bne v0,zero,SJED			#Branch if Unit is a Crystal or Dead or Treasure
+      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      nop				#Free space used to manage Spillover JP.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      andi v0,a0,0x0020
+      bne v0,zero,SJED			#Branch if Unit is a monster
+      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      lbu v0,0x01ba(s0)			#Load Unit's Modified ENTD Flags
+      andi v1,a2,0x00ff			#v1 = Team Flags
+      andi v0,v0,0x0030			#v0 = Team Flags
+      bne v0,v1,SJED			#Branch if the Teams differ
+      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      sll v0,s1,0x01
+      addu a2,v0,s0
+      lhu v0,0x00dc(a2)			#Load Job's JP
+      nop
+      addu v1,v0,a1			#v1 = Job's JP += JP
+      sltiu v0,v1,0x2710
+      bne v0,zero,SJS1			#Branch if JP is less than 10000
+      nop
+      ori v1,zero,0x270f		#Job's JP = 9999
+SJS1: lhu v0,0x0104(a2)			#Load Job's Total JP
+      sh v1,0x00dc(a2)			#Store Job's new JP
+      addu v1,v0,a1			#v1 = Job's Total JP += JP
+      sltiu v0,v1,0x2710
+      bne v0,zero,SJS2			#Branch if JP is less than 10000
+      andi a0,v1,0xffff			#a0 = Job's Total JP
+      ori v1,zero,0x270f		#v1 = 9999
+      andi a0,v1,0xffff			#a0 = Job's Total JP
+SJS2: jal 0x0005def4			#Calculate Job Level
+      sh v1,0x0104(a2)			#Store Job's new Total JP
+      srl v1,s1,0x1f
+      addu v1,s1,v1
+      sra v1,v1,0x01			#ID * 2
+      addu v1,s0,v1
+      addu a0,v0,zero			#a0 = Job Level
+      andi v0,s1,0x0001			#v0 = Generic Job ID AND 0x1 (find nybble)
+      lbu v1,0x00d2(v1)			#Load Job Level
+      beq v0,zero,SJS3			#Branch if replacing high nybble
+      addu a1,a0,zero			#a1 = Job Level
+      andi v0,v1,0x00f0			#v0 = High nybble Job Level (keep as is)
+      j SJS4
+      addu v1,a0,v0			#v1 = new Job Level (replaces low nybble)
+SJS3: andi v1,v1,0x000f			#v1 = low nybble Job Level (keep as is)
+      andi v0,a1,0x00ff			#v0 = Job Level
+      sll v0,v0,0x04			#Job Level * 16
+      or v1,v1,v0			#v1 = new Job Level (replaces high nybble)
+SJS4: srl v0,s1,0x1f
+      addu v0,s1,v0
+      sra v0,v0,0x01			#ID / 2
+      addu v0,s0,v0
+      sb v1,0x00d2(v0)			#Store Job's new Job Level
+      lbu a1,0x0006(s0)			#Load Unit's Gender Byte
+      jal 0x0005dc14			#Calculate Unlocked Jobs
+      addiu a0,s0,0x00d2		#a0 = Pointer to Unit's Job Levels
+      addiu a0,s0,0x0096		#a0 = Pointer to Unit's Unlocked Jobs
+      jal 0x0005ded8			#Store 3-Byte Data (unlocked jobs)
+      addu a1,v0,zero			#a1 = Unlocked Jobs
+      addu v0,zero,zero			#v0 = 0 (Success)
+SJED: lw ra,0x0018(sp)
+      lw s1,0x0014(sp)
+      lw s0,0x0010(sp)
+      jr ra
+      addiu sp,sp,0x0020
+@oej_bjpss:				#Multi-purpose fixing routine.
+      ori v0,zero,@oej_ss		#This time for skillsets in battle (for secondary).
+      beq t1,v0,BJED
+      ori v0,zero,0x0017
+      beq t1,v0,BJED
+      ori v0,zero,0x0016
+      or v0,t1,zero
+BJED: jr ra
+      or t1,v0,zero
+    </Location>
+    <Location file="BATTLE_BIN" offset="1818E4" mode="ASM" offsetMode="RAM">
+      jal @oej_bjpss			#Multi-purpose fixing routine.
+      lbu t1,0x00B8(sp)
+    </Location>
+    <Location file="BATTLE_BIN" offset="181900" mode="ASM" offsetMode="RAM">
+      or v0,t1,zero
+    </Location>
+    <Location file="BATTLE_BIN" offset="181910" mode="ASM" offsetMode="RAM">
+      or v1,t1,zero
+    </Location>
+    <Location file="BATTLE_BIN" offset="18E000" mode="ASM" offsetMode="RAM">
+      sw ra,0x0024(sp)			#Switched r16 for r18. For later Spillover JP.
+      sw s2,0x0020(sp)
+      sw s1,0x001c(sp)
+      addu s2,a0,zero
+      addiu a2,sp,0x0010
+      lbu s0,0x0003(s2)
+      lbu s1,0x018a(s2)
+      jal 0x0017ea28
+      addu a1,s0,zero
+      addu a0,s1,zero
+      addu s1,v0,zero
+      lbu a2,0x01ba(s2)
+      lbu a1,0x01b5(s2)
+      lw a3,0x0010(sp)
+      jal 0x0017ea80			#Third and last place this one is called.
+      andi a2,a2,0x0030
+      addu a0,s2,zero
+      addu a1,s0,zero
+    </Location>
+    <Location file="SCUS_942_21" offset="5A1BC" mode="ASM" offsetMode="RAM">
+      nop				#Dancer or bard will get initial jp.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5BB54" mode="ASM" offsetMode="RAM">
+      nop				#Dancer or bard will get initial jp if generated in battle.
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5BBF8" mode="ASM" offsetMode="RAM">
+      nop				#Dancer or bard will get initial jp if generated in battle.
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5CF20" mode="ASM" offsetMode="RAM">
+      nop				#Calculated learned abilities... RSM could be involved.
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+  </Patch>
+  <Patch name="OEJ - Extra Requirements for Jobs">
+    <Description>Requires 'OEJ'. Now at the end of chapter 1, 2 and after beating Elmdor at Limberry Castle if vanilla req are met, it will unlock 4 more jobs each time. No variables, so edit through xml only. Edit these eqvs if needed:
+	st_tier1			Inner game stage (0f = end of chapter 1)
+	st_tier2			Inner game stage (1f = end of chapter 2)
+	st_tier3			Inner game stage (32 = after Limberry Castle)</Description>
+    <Location file="SCUS_942_21" offset="5DCF8" mode="ASM" offsetMode="RAM">
+    .eqv %st_tier1, 0x000f
+    .eqv %st_tier2, 0x001f
+    .eqv %st_tier3, 0x0032
+@ex_req_jobs:
+      lui t1,0x8005
+      lbu t1,0x78d4(t1)
+      lui v1,0x00ff
+      sltiu t2,t1,%st_tier3
+      beq t2,zero,ERED
+      ori t0,v1,0xfff0
+      sltiu t2,t1,%st_tier2
+      beq t2,zero,ERED
+      ori t0,v1,0xfe00
+      sltiu t2,t1,%st_tier1
+      beq t2,zero,ERED
+      ori t0,v1,0xd000			#d=1101, Sum-Thief--Ora.
+      lui t0,0x00fe
+ERED: jr ra
+      and v0,v0,t0
+      nop
+      nop
+      nop
+      nop
+      nop
+    </Location>
+    <Location file="SCUS_942_21" offset="5DCE4" mode="ASM" offsetMode="RAM">
+      j @ex_req_jobs			#v0 = Unlocked Jobs, for in and out.
+    </Location>
+  </Patch>
+  <Patch name="OEJ - No Spillover JP between Bard and Dancer">
+    <Description>Requires 'OEJ'. Self-explanatory.</Description>
+    <Location file="BATTLE_BIN" offset="17EAD8" mode="ASM" offsetMode="RAM">
+    .eqv %bard_slot, 0x0011
+      lbu t0,0x0006(s2)			#Load Gender Flags
+      ori at,zero,%bard_slot
+      andi t0,t0,0x00c0
+      bne s1,at,SJSA
+      and v0,t0,a0			#t0 = Gender Flags
+      beq v0,zero,0x0017ebe0		#Branch if the gender differs
+SJSA: addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+    </Location>
+  </Patch>
+  <Patch name="OEJ - No Spillover JP for OEJ">
+    <Description>Requires 'OEJ'. Self-explanatory.</Description>
+    <Location file="BATTLE_BIN" offset="17EAF4" mode="ASM" offsetMode="RAM">
+    .eqv %oej_slot, 0x0012
+      ori at,zero,%oej_slot
+      bne s1,at,SJSB
+      andi v1,a0,0x0020
+      bne s0,s2,0x0017ebe0		#Branch if not the same unit
+      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
+    </Location>
+  </Patch>
+
+  
+  
+  
+  
+  
+  <Patch name="Party Roster Extension (PRE)">
+    <Description>Extends party roster limit to 20. It removes almost all guest features, so it is not recommended to use with vanilla unless you will use Beowulf and ENTD fixes too. For compatibility with Xifanie's Unit Restriction hack, you may need to remove or edit the scus section to avoid losing control over units in the last 4 slots. Credits goes to pokeytax and those who help him.</Description>
+    <Location file="SCUS_942_21" offset="59BF4" mode="ASM" offsetMode="RAM">
+      j 0x00059c38
+    </Location>
+    <Location file="SCUS_942_21" offset="59C7C" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="SCUS_942_21" offset="59DA0" offsetMode="RAM">
+      00
+    </Location>
+    <Location file="SCUS_942_21" offset="59DB0" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="SCUS_942_21" offset="59F64" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="SCUS_942_21" offset="5B134" offsetMode="RAM">
+      14
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="4110">
+      14
+    </Location>
+    <Location file="EVENT_ATTACK_OUT" offset="9BCC">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="50F0">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="546C">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="58A8">
+      14
+    </Location>
+    <Location file="EVENT_REQUIRE_OUT" offset="710C">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40C08">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40924">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="582F8">
+      14
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="B5ABF">
+      14
+    </Location>
+  </Patch>
+  <Patch name="PRE - Beowulf Vanilla Fix">
+    <Description>This is to fix (or remove) Beowulf guest requirement with vanilla. Needed if Roster Extension is used with vanilla.</Description>
+    <Location file="WORLD_WLDCORE_BIN" offset="3087A">
+      03
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch1 Vanilla Fix">
+    <Description>This, for chapter 1, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--180 Sweegy Woods-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00001">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00003">
+      04				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00006">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      01				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0001c">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00029">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0002b">
+      04				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0002e">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      01				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00044">
+      00				<!--Exp-->
+    </Location>
+  <!--181 Dorter Trade City1-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00281">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00283">
+      05				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00286">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      02				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0029c">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="002a9">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="002ab">
+      05				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="002ae">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      02				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="002c4">
+      00				<!--Exp-->
+    </Location>
+  <!--182 Sand Rat Cellar-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00501">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00503">
+      06				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00506">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0051c">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00529">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0052b">
+      06				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0052e">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ad				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      80				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00544">
+      00				<!--Exp-->
+    </Location>
+  <!--184 Gariland Fight-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00A01">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00A03">
+      01				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00A06">
+      47				<!--bravery-->
+      37				<!--faith-->
+      01				<!--job unlock-->
+      01				<!--level of it-->
+      04				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      13				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00A1c">
+      00				<!--Exp-->
+    </Location>
+  <!--185 Mandalia Plains-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00C81">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00C83">
+      02				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00C86">
+      47				<!--bravery-->
+      37				<!--faith-->
+      01				<!--job unlock-->
+      02				<!--level of it-->
+      04				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      13				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00C9c">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="00Ca9">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00Cab">
+      02				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00Cae">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      01				<!--job unlock-->
+      02				<!--level of it-->
+      07				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      14				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="00Cc4">
+      00				<!--Exp-->
+    </Location>
+  <!--188 Military Academy-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="01429">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0142b">
+      01				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0142e">
+      47				<!--bravery-->
+      37				<!--faith-->
+      01				<!--job unlock-->
+      01				<!--level of it-->
+      04				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9d				<!--Head-->
+      ba				<!--Body-->
+      d0				<!--Acc-->
+      13				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01444">
+      00				<!--Exp-->
+    </Location>
+  <!--18B Miluda1-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="01B81">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01B83">
+      07				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01B86">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      81				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01B9c">
+      00				<!--Exp-->
+    </Location>
+   <!--Algus-->
+    <Location file="BATTLE_ENTD4_ENT" offset="01Ba9">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01Bab">
+      07				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01Bae">
+      49				<!--bravery-->
+      3b				<!--faith-->
+      02				<!--job unlock-->
+      03				<!--level of it-->
+      4c				<!--main job-->
+      1f				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      81				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="01Bc4">
+      00				<!--Exp-->
+    </Location>
+  <!--18F Miluda2-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02581">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02583">
+      08				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02586">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      04				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      82				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0259c">
+      00				<!--Exp-->
+    </Location>
+  <!--190 Wiegraf1-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02801">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02803">
+      09				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02806">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      05				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      82				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0281c">
+      00				<!--Exp-->
+    </Location>
+  <!--191 Fort Zeakden-->
+   <!--Delita-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02BC1">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02BC3">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02BC6">
+      47				<!--bravery-->
+      37				<!--faith-->
+      02				<!--job unlock-->
+      06				<!--level of it-->
+      4c				<!--main job-->
+      1c				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      91				<!--Head-->
+      ae				<!--Body-->
+      d0				<!--Acc-->
+      15				<!--RHand-->
+      82				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02BDc">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch2 Vanilla Fix">
+    <Description>This, for chapter 2, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--110 Ch2 Start-->
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD3_ENT" offset="02829">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0282b">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0282e">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      02				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="02844">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD3_ENT" offset="028C9">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="028Cb">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="028Ce">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      03				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="028E4">
+      00				<!--Exp-->
+    </Location>
+  <!--193 Dorter2-->
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02FD1">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FD3">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FD6">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      02				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FEc">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="02FF9">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FFb">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="02FFe">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      03				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03014">
+      00				<!--Exp-->
+    </Location>
+  <!--194 Araguay Woods-->
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03319">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0331b">
+      0b				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0331e">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      03				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03334">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03341">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03343">
+      0b				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03346">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      04				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0335c">
+      00				<!--Exp-->
+    </Location>
+  <!--195 Zirekile Falls-->
+   <!--Ovelia-->
+    <Location file="BATTLE_ENTD4_ENT" offset="034A9">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="034Ab">
+      05				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="034Ae">
+      35				<!--bravery-->
+      48				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      0c				<!--main job-->
+      00				<!--secondary skill set-->
+      0000				<!--Reaction-->
+      0000				<!--Support-->
+      0000				<!--Movement-->
+      a1				<!--Head-->
+      ca				<!--Body-->
+      ff				<!--Acc-->
+      3c				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="034C4">
+      00				<!--Exp-->
+    </Location>
+   <!--Gafgarion-->
+    <Location file="BATTLE_ENTD4_ENT" offset="035E9">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="035Eb">
+      0c				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="035Ee">
+      3d				<!--bravery-->
+      43				<!--faith-->
+      06				<!--job unlock-->
+      03				<!--level of it-->
+      17				<!--main job-->
+      0b				<!--secondary skill set-->
+      bf01				<!--Reaction-->
+      d401				<!--Support-->
+      e601				<!--Movement-->
+      96				<!--Head-->
+      b1				<!--Body-->
+      d7				<!--Acc-->
+      16				<!--RHand-->
+      85				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="035E4">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03611">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03613">
+      0c				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03616">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      04				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0362c">
+      00				<!--Exp-->
+    </Location>
+  <!--197 Zaland City Fort-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03981">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03983">
+      0a				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03986">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      04				<!--level of it-->
+      22				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0399c">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03A99">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03A9b">
+      0d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03A9e">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      04				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03AB4">
+      00				<!--Exp-->
+    </Location>
+  <!--199 Bariaus Hill-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03E81">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03E83">
+      0b				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03E86">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      22				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03E9c">
+      00				<!--Exp-->
+    </Location>
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="03EA9">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03EAb">
+      0e				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03EAe">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      05				<!--level of it-->
+      34				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      d0				<!--Acc-->
+      16				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="03EC4">
+      00				<!--Exp-->
+    </Location>
+  <!--19A Zigolis Swamp-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04101">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04103">
+      0c				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04106">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      22				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0411c">
+      00				<!--Exp-->
+    </Location>
+  <!--19B Goug M City-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04381">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04383">
+      0d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04386">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      16				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      ff				<!--Head-->
+      ff				<!--Body-->
+      ff				<!--Acc-->
+      ff				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0439c">
+      00				<!--Exp-->
+    </Location>
+  <!--19C Besrodio Saved-->
+   <!--Mustadio-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04629">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0462b">
+      0d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0462e">
+      3c				<!--bravery-->
+      3e				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      16				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a0				<!--Head-->
+      be				<!--Body-->
+      d0				<!--Acc-->
+      47				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04644">
+      00				<!--Exp-->
+    </Location>
+  <!--19D Bariaus Valley-->
+   <!--Agrias-->
+    <Location file="BATTLE_ENTD4_ENT" offset="04881">
+      50				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04883">
+      0f				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="04886">
+      47				<!--bravery-->
+      3f				<!--faith-->
+      05				<!--job unlock-->
+      05				<!--level of it-->
+      1e				<!--main job-->
+      0a				<!--secondary skill set-->
+      ac01				<!--Reaction-->
+      d201				<!--Support-->
+      e601				<!--Movement-->
+      95				<!--Head-->
+      b2				<!--Body-->
+      e0				<!--Acc-->
+      18				<!--RHand-->
+      84				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0489c">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch3 Vanilla Fix">
+    <Description>This, for chapter 3, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--1A4 Zalmo1-->
+   <!--Alma-->
+    <Location file="BATTLE_ENTD4_ENT" offset="05A01">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="05A03">
+      03				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="05A06">
+      27				<!--bravery-->
+      57				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      30				<!--main job-->
+      00				<!--secondary skill set-->
+      0000				<!--Reaction-->
+      0000				<!--Support-->
+      0000				<!--Movement-->
+      aa				<!--Head-->
+      c0				<!--Body-->
+      d6				<!--Acc-->
+      3d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="05A1c">
+      00				<!--Exp-->
+    </Location>
+  <!--1AC Rescue Rafa-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="06E01">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="06E03">
+      16				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="06E06">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      04				<!--level of it-->
+      19				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="06E1c">
+      00				<!--Exp-->
+    </Location>
+  <!--1AE Yugo Woods-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07301">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07303">
+      17				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07306">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      19				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0731c">
+      00				<!--Exp-->
+    </Location>
+  <!--1AF Riovanes Entrance-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07581">
+      40				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07583">
+      18				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07586">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      19				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0759c">
+      00				<!--Exp-->
+    </Location>
+  <!--1B2 Reviving Malak-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07D29">
+      50				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D2b">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D2e">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      29				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D44">
+      00				<!--Exp-->
+    </Location>
+   <!--Malak-->
+    <Location file="BATTLE_ENTD4_ENT" offset="07D51">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D53">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D56">
+      45				<!--bravery-->
+      1f				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      1a				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a5				<!--Head-->
+      ca				<!--Body-->
+      e2				<!--Acc-->
+      6f				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="07D6c">
+      00				<!--Exp-->
+    </Location>
+  <!--132 Searching for Alma-->
+   <!--Rafa-->
+    <Location file="BATTLE_ENTD3_ENT" offset="07E41">
+      50				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E43">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E46">
+      1f				<!--bravery-->
+      45				<!--faith-->
+      00				<!--job unlock-->
+      06				<!--level of it-->
+      29				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a4				<!--Head-->
+      cc				<!--Body-->
+      e8				<!--Acc-->
+      6d				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E5c">
+      00				<!--Exp-->
+    </Location>
+   <!--Malak-->
+    <Location file="BATTLE_ENTD3_ENT" offset="07E69">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E6b">
+      19				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E6e">
+      45				<!--bravery-->
+      1f				<!--faith-->
+      00				<!--job unlock-->
+      05				<!--level of it-->
+      1a				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      a5				<!--Head-->
+      ca				<!--Body-->
+      e2				<!--Acc-->
+      6f				<!--RHand-->
+      ff				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="07E84">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+  <Patch name="PRE - ENTD ch4 Vanilla Fix">
+    <Description>This, for chapter 4, prevents normal guest to join your party as GUEST, it tweaks ENTD flags accordingly and adds some sort of progression for those unsaved guests. Needed if Roster Extension is used with vanilla.</Description>
+  <!--14A Bar Goland City-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD3_ENT" offset="0B929">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0B92b">
+      2d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0B92e">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD3_ENT" offset="0B944">
+      00				<!--Exp-->
+    </Location>
+  <!--1CF CoilleryU Third Floor-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0C581">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C583">
+      2d				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C586">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C59c">
+      00				<!--Exp-->
+    </Location>
+  <!--1D0 CoilleryU Second Floor-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0C801">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C803">
+      2e				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C806">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0C81c">
+      00				<!--Exp-->
+    </Location>
+  <!--1D1 CoilleryU First Floor-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA81">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA83">
+      2f				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA86">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CA9c">
+      00				<!--Exp-->
+    </Location>
+  <!--1D2 UPassage in Goland-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD01">
+      80				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD03">
+      30				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD06">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CD1c">
+      00				<!--Exp-->
+    </Location>
+  <!--1D3 UPassage in Goland2-->
+   <!--Beowulf-->
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFA9">
+      90				<!--flags Male|Female|Monster|JoinA-Load|???|unknown|Save-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFAb">
+      31				<!--level-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFAe">
+      2d				<!--bravery-->
+      41				<!--faith-->
+      0b				<!--job unlock-->
+      06				<!--level of it-->
+      1f				<!--main job-->
+      00				<!--secondary skill set-->
+      b401				<!--Reaction-->
+      df01				<!--Support-->
+      e601				<!--Movement-->
+      9a				<!--Head-->
+      b6				<!--Body-->
+      da				<!--Acc-->
+      21				<!--RHand-->
+      8b				<!--LHand-->
+    </Location>
+    <Location file="BATTLE_ENTD4_ENT" offset="0CFC4">
+      00				<!--Exp-->
+    </Location>
+  </Patch>
+
+</Patches>

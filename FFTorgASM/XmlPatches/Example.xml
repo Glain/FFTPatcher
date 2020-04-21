@@ -33,7 +33,7 @@
 
   </Patch>
   
-  <ImportFilePatch name="Patch name" ignore="false">
+  <ImportFilePatch name="Patch name" ignore="false" hideInDefault="true">
     <!-- This type of patch will force you to select a file to read
          before patching -->
     <!-- The "file" attribute here is which file on the CD should be replaced -->

@@ -894,4 +894,312 @@ F9FF2015
       00000000
     </Location>
   </Patch>
+
+<Patch name="Short Charge affects Charge Skillset FIX">
+<Location file="BATTLE_BIN" offset="1157e4">
+16f20508
+</Location>
+<Location file="BATTLE_BIN" offset="11AAc8">
+37610508
+1000A627
+</Location>
+<Location file="BATTLE_BIN" offset="F14DC">
+0680013C
+21082200
+180D3090
+F000A18F
+00000000
+03002010
+00000000
+01001026
+42801000
+B6060608
+00000000
+</Location>
+</Patch>
+
+<Patch name="Mighty sword uses X as % to break">
+  <Location file="BATTLE_BIN" offset="00122B94">
+E8FFBD27
+1000BFAF
+8E1D060C
+1980053C
+0C004014
+64000434
+B63B060C
+F938A590
+08004014
+00000000
+721E060C
+00000000
+1E004014
+1980033C
+902D638C
+04000234
+100062A0
+01000234
+020060A0
+4421060C
+000062A0
+15004014
+00000000
+9717060C
+00000000
+E917060C
+00000000
+A921060C
+00000000
+1980033C
+902D638C
+42100200
+040062A4
+1980043C
+DC388290
+2A0062A0
+00000000
+00000000
+00000000
+F41B060C
+00000000
+3F1C060C
+00000000
+1000BF8F
+1800BD27
+0800E003
+00000000
+ </Location>
+ </Patch>
+
+<Patch name="Sprite ID Causes Gameover when crystal">
+<Description>You can put up to 5 different sprites that will cause game over. If you need less, just make the excess ones duplicates and it should work fine.
+</Description>
+  <Location file="BATTLE_BIN" offset="EB048">
+FDFF1424
+  </Location>
+<Variable file="BATTLE_BIN" offset="EB04c" default="01" name="Sprite 1"/>
+   <Location file="BATTLE_BIN" offset="EB04D">
+000434
+CB02060C
+21800400
+17005410
+00000000
+ </Location>
+<Variable file="BATTLE_BIN" offset="EB060" default="02" name="Sprite 2"/>
+   <Location file="BATTLE_BIN" offset="EB061">
+000434
+CB02060C
+21800400
+12005410
+00000000
+</Location>
+<Variable file="BATTLE_BIN" offset="EB074" default="03" name="Sprite 3"/>
+   <Location file="BATTLE_BIN" offset="EB075">
+000434
+CB02060C
+21800400
+0D005410
+00000000
+</Location>
+<Variable file="BATTLE_BIN" offset="EB088" default="03" name="Sprite 4"/>
+   <Location file="BATTLE_BIN" offset="EB089">
+000434
+CB02060C
+21800400
+08005410
+00000000
+</Location>
+<Variable file="BATTLE_BIN" offset="EB09c" default="03" name="Sprite 5"/>
+   <Location file="BATTLE_BIN" offset="EB09d">
+000434
+CB02060C
+21800400
+03005410
+00000000
+12070508
+21900000
+12070508
+01001224
+</Location>
+   <Location file="BATTLE_BIN" offset="DAc1c">
+12480508
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+ </Location>
+ </Patch>
+
+<Patch name="Break skills don't default to weapon strike">
+<Description>This will keep formula 25 from defaulting to a regular attack if no equipment is present. Good for using break skills as a proc-effect and preventing a double-attack.
+    </Description>
+    <Location file="BATTLE_BIN" offset="122700">
+00000000
+961d060c
+00000000
+e1250608
+00000000
+00000000
+00000000
+ </Location>
+ </Patch>
+
+<Patch name="R/S/M freedom hack">
+<Description>This hack allows you to designate which R/S/M adhere to reaction slots, support slots, and movement slots. In FFTPatcher if you click on one of the RSM abilities, you'll notice a textbox called "Ability ID". 
+To use this hack, change those numbers to the following:
+
+Reaction - 1
+Support - 2
+Movement - 3
+
+From what I could tell this byte had no effect in vanilla. Hopefully it won't break anything.
+</Description>
+<Location file="WORLD_WORLD_BIN" offset="0429a8">
+8E69010C
+0F000534
+21304002
+21804000
+01000334
+21200002
+00F50408
+00000000
+848A0408
+A5010234
+0680013C
+5C102224
+00008394
+00000000
+0AF50408
+5AFE6324
+0000A590
+00000000
+0200C510
+01005226
+000080A4
+1800412A
+F5FF2014
+02008424
+908A0408
+00000000
+00008684
+00000000
+2A28C300
+0300A014
+2A284600
+0200A010
+00000000
+000080A4
+01005226
+1800452A
+F5FFA014
+02008424
+</Location>
+<Location file="WORLD_WORLD_BIN" offset="05D400">
+05004012
+0400522E
+05004016
+FD010234
+848A0408
+21900000
+728A0408
+21900000
+748A0408
+21900000
+</Location>
+<Location file="WORLD_WORLD_BIN" offset="05D428">
+02006018
+21286200
+7A8A0408
+00000000
+7D8A0408
+00000000
+</Location>
+<Location file="SCUS_942_21" offset="04db24">
+00000000
+</Location>
+</Patch>
+
+<Patch name="Original attacker hits after hamedo">
+<Location file="BATTLE_BIN" offset="1095c">
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="117114">
+00000000
+</Location>
+</Patch>
+
+<Patch name="Hamedo attack/skillset">
+<Description>Ability ID bytes are reversed. For example if I want Stasis Sword (009B)
+I would enter 9B00 for Ability ID and 21 for Skillset
+</Description>
+<Variable file="BATTLE_BIN" offset="1170b8" default="14" name="Skillset"/>
+<Location file="BATTLE_BIN" offset="1170b9">
+000534
+</Location>
+<Variable file="BATTLE_BIN" offset="1170c0" bytes="2" default="FF01" name="Ability ID"/>
+<Location file="BATTLE_BIN" offset="1170c2">
+0634
+</Location>
+</Patch>
+
+<Patch name="Chicken status not set when brave low">
+<Location file="BATTLE_BIN" offset="1253dc">
+00000000
+</Location>
+</Patch>
+
+<Patch name="Equip Change Uses Move instead of Act">
+<Location file="BATTLE_BIN" offset="E1C0">
+40490508
+05000192
+</Location>
+<Location file="BATTLE_BIN" offset="EB500">
+03000534
+05002514
+00000000
+F30E060C
+00000000
+72D40108
+00000000
+EA0E060C
+00000000
+72D40108
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="11a6fc">
+50490508
+FF00C230
+</Location>
+<Location file="BATTLE_BIN" offset="11a5b4">
+21882000
+</Location>
+<Location file="BATTLE_BIN" offset="EB540">
+0C001034
+06005014
+01000234
+530A3192
+00000000
+02002012
+00000000
+25100000
+C1050608
+00000000
+</Location>
+</Patch>
+
+<Patch name="Disable Br/Fa leaving/warning">
+<Location file="EVENT_REQUIRE_OUT" offset="50f4">
+A0000010
+00000000
+</Location>
+<Location file="EVENT_REQUIRE_OUT" offset="5488">
+A0000010
+00000000
+</Location>
+</Patch>
+
 </Patches>

@@ -55,6 +55,11 @@ namespace FFTorgASM
             clb_Patches.SelectedIndexChanged += new EventHandler( clb_Patches_SelectedIndexChanged );
             variableSpinner.ValueChanged += new EventHandler( variableSpinner_ValueChanged );
             variableComboBox.SelectedIndexChanged += new EventHandler(variableComboBox_SelectedIndexChanged);
+
+            //lsb_FilesList.Scrollable = true;
+            //lsb_FilesList.View = View.List;
+            //lsb_FilesList.HeaderStyle = ColumnHeaderStyle.None;
+            //lsb_FilesList.Columns.Add("", -2, HorizontalAlignment.Left);
         }
 
         void variableComboBox_SelectedIndexChanged( object sender, EventArgs e )
@@ -112,8 +117,9 @@ namespace FFTorgASM
                 files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1);
                 lsb_FilesList.Items.Add(files[i]);
 
-                if(!Patchlist.LoadedCorrectly[i])
-                    lsb_FilesList.Items[i + 1].BackColor = Color.Red;
+                if (!Patchlist.LoadedCorrectly[i])
+                    //lsb_FilesList.Items[i + 1].BackColor = Color.Red;
+                    lsb_FilesList.BackColors[i + 1] = Color.Red;
             }
             //LoadFiles( files );
             
@@ -131,16 +137,19 @@ namespace FFTorgASM
 
             bool somethingchecked = false;
 
-            if (lsb_FilesList.FocusedItem == null)
+
+            int selectedIndex = lsb_FilesList.SelectedIndex;
+
+            if (lsb_FilesList.SelectedItem == null)
                 return;
             //if ALL
-            if (lsb_FilesList.FocusedItem.Index == 0)
+            if (selectedIndex == 0)
             {
                 LoadPatches(Patchlist.AllPatches);
 
                 for (int i = 0; i < clb_Patches.Items.Count; i++)
                 {
-                    if (lsb_FilesList.FocusedItem.Index == 0)
+                    if (selectedIndex == 0)
                     {
 
                         if (Patchlist.AllCheckStates[i] == CheckState.Checked)
@@ -151,7 +160,7 @@ namespace FFTorgASM
                     }
                     else
                     {
-                        if (Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index].PatchCheckStates[i] == CheckState.Checked)
+                        if (Patchlist.FilePatches[selectedIndex].PatchCheckStates[i] == CheckState.Checked)
                         {
                             clb_Patches.SetItemChecked(i, true);
                             somethingchecked = true;
@@ -163,16 +172,16 @@ namespace FFTorgASM
             else //if NOT ALL
             {
 
-                if (Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1] != null)
+                if (Patchlist.FilePatches[selectedIndex - 1] != null)
                 {
-                    LoadPatches(Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].Patches);
+                    LoadPatches(Patchlist.FilePatches[selectedIndex - 1].Patches);
 
 
-                    for (int i = 0; i < Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].PatchCheckStates.Length; i++)
+                    for (int i = 0; i < Patchlist.FilePatches[selectedIndex - 1].PatchCheckStates.Length; i++)
                     {
                         if (clb_Patches.Items.Count > i)
                         {
-                            if (Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].PatchCheckStates[i] == CheckState.Checked)
+                            if (Patchlist.FilePatches[selectedIndex - 1].PatchCheckStates[i] == CheckState.Checked)
                             {
                                 clb_Patches.SetItemChecked(i, true);
                                 somethingchecked = true;
@@ -188,7 +197,7 @@ namespace FFTorgASM
                 else
                 {
                     clb_Patches.Items.Clear();
-                    MessageBox.Show(lsb_FilesList.FocusedItem.Text + " did not load correctly!");
+                    MessageBox.Show(lsb_FilesList.SelectedItem + " did not load correctly!");
                     
                 }
             }
@@ -244,7 +253,7 @@ namespace FFTorgASM
 
         void clb_Patches_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if ((skipchecked) || (lsb_FilesList.FocusedItem == null))
+            if ((skipchecked) || (lsb_FilesList.SelectedItem == null))
                 return;
 
             if (e.CurrentValue == CheckState.Unchecked && e.NewValue == CheckState.Checked &&
@@ -260,13 +269,15 @@ namespace FFTorgASM
                                  !(clb_Patches.CheckedItems.Count == 1 && e.NewValue == CheckState.Unchecked);
 
 
+            int selectedIndex = lsb_FilesList.SelectedIndex;
+
             //if NOT ALL
-            if (lsb_FilesList.FocusedItem.Index != 0)
+            if (selectedIndex != 0)
             {
                 //Set indiivdual list
-                Patchlist.FilePatches[lsb_FilesList.FocusedItem.Index - 1].PatchCheckStates[e.Index] = e.NewValue;
+                Patchlist.FilePatches[selectedIndex - 1].PatchCheckStates[e.Index] = e.NewValue;
                 //Set Master List
-                Patchlist.SetMasterListCheckState(lsb_FilesList.FocusedItem.Index - 1, e.Index, e.NewValue);
+                Patchlist.SetMasterListCheckState(selectedIndex - 1, e.Index, e.NewValue);
                 //Patchlist.Files[lsb_FilesList.SelectedIndex - 1].CheckedPatches = clb_Patches.CheckedItems;
             }
             else //If ALL
@@ -534,8 +545,12 @@ namespace FFTorgASM
                 {
                     if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
                     {
-
-                        AllPatches.AddRange(tryPatches);
+                        //AllPatches.AddRange(tryPatches);
+                        foreach (AsmPatch patch in tryPatches)
+                        {
+                            if (!patch.HideInDefault)
+                                AllPatches.Add(patch);
+                        }
 
                         FilePatches[i] = new PatchFile(tryPatches.Count);
                         FilePatches[i].filename = file;

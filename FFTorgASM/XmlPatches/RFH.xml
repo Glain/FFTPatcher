@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Patches>
+
+<Patch name="Chance to react become (Br+XX)/2">
+<Description>Chance to react become (Br+XX)/2 (65 by default)
+Location file="BATTLE_BIN" offset="F7120"
+24008590
+00000000
+XX000934
+
+XX is % chance (in hex)</Description>
+<Location file="BATTLE_BIN" offset="126398">
+48780508
+00000000
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="F7120">
+24008590
+00000000
+41000934
+21282501
+42280500
+3378010C
+64000434
+E9340608
+00000000
+</Location>
+</Patch>
+
+
+<Patch name="Concentrate divides /2 target evasion">
+<Location file="BATTLE_BIN" offset="F75B4">
+00008390
+00000000
+40180300
+000083A0
+C6140608
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="11E308">
+6D790508
+00000000
+</Location>
+</Patch>
+
+
+<Patch name="Formula 09 and 10 (Demi and Drain) don't work on immortal units">
+<Description>Formula 09 and 10 (Demi and Drain) don't work on immortal units</Description>
+<Location file="BATTLE_BIN" offset="121E1C">
+D9780508
+</Location>
+<Location file="BATTLE_BIN" offset="F7364">
+1980023C
+982D428C
+00000000
+05004290
+00000000
+04004230
+05004010
+00000000
+C310060C
+00000000
+9A230608
+00000000
+8919060C
+00000000
+89230608
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="122104">
+E9780508
+</Location>
+<Location file="BATTLE_BIN" offset="F7364">
+1980023C
+982D428C
+00000000
+05004290
+00000000
+04004230
+05004010
+00000000
+C310060C
+00000000
+45240608
+00000000
+8919060C
+00000000
+43240608
+00000000
+</Location>
+</Patch>
+
+  <Patch name="XX status uses Wall CT">
+    <Description>
+      Wall CT is always 0. The CT of the selected status is adjustable via Wall CT in FFTPatcher. Select status to gain CT timer with XX Status variable below.
+
+      Status number:
+
+      00 Blank Status
+      01 Crystal
+      02 Dead
+      03 Undead
+      04 Charging
+      05 Jump
+      06 Defending
+      07 Performing
+      08 Petrify
+      09 Invite
+      0A Darkness
+      0B Confusion
+      0C Silence
+      0D Blood Suck
+      0E Dark / Evil Loocking
+      0F Treasure
+    </Description>
+    <Location file="BATTLE_BIN" offset="12693c">
+      BC770508
+      00000000
+      00000000
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f6ef0">
+      07000234
+      07004410
+      21100000
+      02008104
+      21108000
+      07008224
+      C3100200
+      53360608
+      00000000
+    </Location>
+      <Variable file="BATTLE_BIN" offset="f6f14" default="00" name="XX Status"/>
+    <Location file="BATTLE_BIN" offset="f6f15">
+      000534
+      01000834
+      1980073C
+      982DE78C
+      0700A330
+      2128E800
+      BB01A290
+      07306900
+      5A360608
+      00000000
+    </Location>
+  </Patch>
+
+
+</Patches>

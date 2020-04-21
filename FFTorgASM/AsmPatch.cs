@@ -30,7 +30,7 @@ namespace FFTorgASM
 
         private InputFilePatch patch;
         public FileAsmPatch( string name, string description, InputFilePatch patch )
-            : base( name, description, new PatchedByteArray[] { patch }, new bool[] { false } )
+            : base( name, description, new PatchedByteArray[] { patch }, new bool[] { false }, false )
         {
             this.patch = patch;
         }
@@ -92,12 +92,14 @@ namespace FFTorgASM
         public IList<VariableType> Variables { get; private set; }
         private IEnumerator<PatchedByteArray> enumerator;
 
+        public bool HideInDefault { get; private set; }
+
         public virtual bool ValidatePatch()
         {
             return true;
         }
 
-        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList )
+        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList, bool hideInDefault )
         {
             enumerator = new AsmPatchEnumerator( this );
             this.Name = name;
@@ -105,10 +107,11 @@ namespace FFTorgASM
             innerList = new List<PatchedByteArray>( patches );
             Variables = new VariableType[0];
             this.isDataSectionList = new List<bool>(isDataSectionList);
+            this.HideInDefault = hideInDefault;
         }
 
-        public AsmPatch(string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList, IList<VariableType> variables)
-            : this( name, description, patches, isDataSectionList )
+        public AsmPatch(string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList, bool hideInDefault, IList<VariableType> variables)
+            : this( name, description, patches, isDataSectionList, hideInDefault )
         {
         	VariableType[] myVars = new VariableType[variables.Count];
             variables.CopyTo( myVars, 0 );

@@ -1,0 +1,5996 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+
+  <Patch name="Super Duper Reaction Looper - Version 1.2">
+    <Description>Rewrites all of reaction routine as a double loop.  This checks reactions in this order: presence of ability, rng check, presence of proper flags.  If any of those checks fail, it checks the next reaction in the list.  Why would I do this, you ask?
+
+1. Writes whatever trigger you want to (almost) any reaction you want.  Normally this is hardcoded to the skillslot, in a way that wasn't changeable until now!  This means that you can also give triggers to blank abilities in a way that is more efficient than the old "multi-reaction gets damage trigger" and that abilities aren't necessarily only able to get damage triggers.
+
+2. Reactions can now freely stack with each other.  In vanilla, they could only stack if they were on different priority lists, because the vanilla code ignores the rest of the abilities in the list it's checking if it gets a hit on the ability.  This means, for example, that you can now equip a character with both Counter and Counter Magic and it will now work, reacting to flags as appropriate. 
+
+3. Reactions are reordered in this check in a way that's a bit more interesting, but still efficient, pushing critical x abilities early in the list.  It checks these slots in order: 
+Face (Faith) UP, HP Restore, MP Restore, Critical Quick, Meatbone Slash, Counter Magic, Counter Tackle, Counter Flood, PA Save, MA Save, Speed Save, Sunken State, Caution, Dragon Spirit, Regenerator, Brave UP, Absorb Used MP, Gilgame Heart, Reflect, Auto Potion, Counter, Distribute, MP Switch, Damage Split, Weapon Guard, Finger Guard, Abandon, Catch, Blade Grasp, Arrow Guard, Hamedo
+
+4. Disables most of Distribute's vanilla code.  See my other hack to disable it fully.
+
+5. WAYYYY more efficient!  Frees space between 0x0018ccd8 - 0x0018cfe4 and 0x0018d29c - 0x0018d380, battle bin.
+
+6. If you want to expand this to use other types of triggers than vanilla did, it is easier to do so than to try to edit vanilla's code, but you're on your own with that one.
+
+Directions for use:  Set the trigger that you want for each ability by the the slot in the trigger table.  Use the order of abilities listed above.  Set "Reflect" to 00 since it's unusable.  If you are using the vanilla effects or my "using the screwed up slots" or "Distribute = Synchronize" hacks for Hamedo, Distribute, Weapon Guard, Finger Guard, Abandon, Catch, Blade Grasp, Arrow Guard; set these to 00 as well.  01 = MP Cost, 02 = Critical, 03 = HP Damage, 80 = Counter Flood, 40 = Counter Magic, 10 = Counter Grasp.  
+
+It is highly recommended that you disable Distribute's vanilla effect with this hack, instead of trying to make it work here.  Nerfed versions of Damage Split and MP Switch do not work with this hack, unless you rewrite the damage split/MP switch section to do so yourself.
+
+Version 1.2 - Separates MP Switch calculation. This was done because before it wasn't working properly.  Set MP Switch's reaction trigger to 00 in the main code.  This turns MP switch into a "free" priority ability (as in, it can react to anything and get another reaction).  This effect isn't 100% intended but since I don't have a problem with it I'm keeping it.
+</Description>
+    <Location file="BATTLE_BIN" offset="125b00"> <!-- Main routine -->
+D0FFBD27
+1000BFAF
+1400B0AF
+1800B1AF
+1C00B2AF
+2000B3AF
+2400B4AF
+19800A3C
+982D448D
+00000000
+21808000
+4832060C
+00000000
+4B004014
+00000000
+AE011434
+8C001292
+00001334
+00001134
+80000934
+06182902
+24104302
+30004010
+00000000
+E134060C
+21200002
+2C004014
+00000000
+1980083C
+B8CC0825
+21401101
+C0101300
+21400201
+00000291
+1980053C
+1000432C
+1B006010
+00000000
+20004010
+01000334
+07006214
+02000334
+EB38A590
+00000000
+1A00A010
+00000000
+22330608
+00000000
+06006214
+00000000
+5A000692
+00000000
+0100C630
+1100C010
+00000000
+902DA78C
+00000000
+2500E790
+00000000
+8000E730
+0A00E010
+00000000
+22330608
+00000000
+F638A590
+00000000
+24104500
+03004010
+00000000
+22330608
+00000000
+01003126
+08000834
+C9FF2816
+00000000
+00001134
+01007326
+01000234
+8B001292
+C3FF5310
+A6011434
+02000234
+8D001292
+BFFF5310
+B6011434
+03000234
+8E001292
+BBFF5310
+BE011434
+2400B48F
+2000B38F
+1C00B28F
+1800B18F
+1400B08F
+1000BF8F
+3000BD27
+0800E003
+00000000
+19800A3C
+902D438D
+D6384295
+21203402
+0E0064A4
+260062A4
+19330608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="125cb8"><!-- Table of Triggers -->
+      01020202
+      02401080
+      03030310
+      10108010
+      01030003
+      10030000
+      03000000
+      00000300
+    </Location>
+    <Location file="BATTLE_BIN" offset="124eec">
+00000000
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="124fcc">
+7C34060C
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1261b8"><!-- Damage Split -->
+19800A3C
+902D4B8D
+982D448D
+04006295
+0E006695
+BE010734
+0500C714
+00000000
+01004224
+FFFF4330
+42100300
+260062A5
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1261f0"><!-- MP Switch -->
+E0FFBD27
+1000BFAF
+19800A3C
+982D448D
+5A32060C
+00000000
+1E004014
+00000000
+19800A3C
+982D448D
+902D4B8D
+8D008390
+2C008594
+04006695
+01006330
+15006010
+00000000
+1300A010
+00000000
+1100C010
+00000000
+E134060C
+00000000
+0D004014
+00000000
+19800A3C
+902D4B8D
+00000000
+08006295
+04006395
+25006591
+21104300
+7F00A530
+080062A5
+2000A534
+250065A1
+040060A5
+1000BF8F
+2000BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="12562c">
+C032060C
+00000000
+6E34060C
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Weapon damage rewrite">
+    <Description>Unarmed = PA^2, Dagger = Butterknife (1 damage always), else PA * (PA+wp)/2 or MA * (MA+wp)/2 (if 0x80 is used under wp).  Frees 0x80 and 0x40 from wp to be used as flags.
+
+*Fixed typo version*</Description>
+    <Location file="BATTLE_BIN" offset="11ea9c">
+E8FFBD27
+1000BFAF
+19800A3C
+D8384F91
+0680013C
+40180200
+21186F00
+80180300
+21082300
+942D4B8D
+BD2E2490
+02394C91
+36006D91
+37006E91
+01000834
+05000F15
+00000000
+CE3848A5
+D03848A5
+13000010
+00000000
+0500E015
+00000000
+CE384DA5
+D0384DA5
+0D000010
+00000000
+3F008831
+80008231
+05004010
+00000000
+CE384EA5
+21100E01
+03000010
+00000000
+CE384DA5
+21100D01
+42100200
+D03842A5
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+<Location file="BATTLE_BIN" offset="12475c">
+00000000
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Multi-Reaction Deluxe">
+    <Description>Changes several reaction abilities.  Abilities function as Counter Tackle (uses ability that is indexed by 2nd table, as reaction indexed by 1st table).  Change the corresponding scus flag to 29 for each ability you are changing.  Credit goes to secondadvent for rewriting this so it works. :)</Description>
+    <Location file="SCUS_942_21" offset="4F3D0">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3D1">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3D2">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3E1">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3E5">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3E0">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3D6">
+      29
+    </Location>
+    <Location file="SCUS_942_21" offset="4F3EE">
+      29
+    </Location>
+    <Location file="BATTLE_BIN" offset="1173F4">
+9C470508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EAE70">
+00000434
+1580063C
+40100400
+2130C200
+C01EC594
+1980023C
+9C2D4294
+00000000
+05004514
+01008424
+D01EC694
+0B000534
+F7F80508
+21202002
+0800852C
+F1FFA014
+1980023C
+9C2D4284
+00F90508
+0680013C
+    </Location>
+    <Location file="BATTLE_BIN" offset="EAEC0">
+B701BB01
+B601A601
+A701AC01
+A801C401
+    </Location>
+    <Location file="BATTLE_BIN" offset="EAED0">
+6D016E01
+6A016901
+68017F00
+4D01DF00
+    </Location>
+  </Patch>
+
+  <Patch name="Sicken 2.0">
+    <Description>All physical attacks by a unit apply Poison (in addition to regular effects). Requires Disable Secret Hunt/train and Monster Skill nullifies M-ev hack.  This version written to work with Darkness applied to both Physical and Magical abilities.</Description>
+    <Location file="BATTLE_BIN" offset="121528">
+      9448050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EB250">
+E8FFBD27
+1000BFAF
+1980023C
+942D428C
+00000000
+91004290
+00000000
+80004230
+08004010
+1980033C
+902D638C
+00000000
+1E006290
+00000000
+80004234
+C912060C
+1E0062A0
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Monster Skill = Arcane Focus, Ignore Height = inflicts Don't Move">
+    <Description>Monster skill Nullifies M-ev (works as Concentrate for Magic).  Ignore Height inflicts Don't Move on any spells that use the M-ev routine.  Works similar to Sicken's code.  This version written to work with Darkness applied to both Physical and Magical abilities.</Description>
+    <Location file="BATTLE_BIN" offset="11E3B4">
+07004010
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E3D4">
+2E15060C
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="eadf0">
+1980013C
+942D218C
+E8FFBD27
+1000BFAF
+92002290
+00000000
+80004230
+05004010
+00000000
+1980043C
+DE388424
+9179010C
+04000534
+93002290
+00000000
+02004230
+09004010
+00000000
+1980033C
+902D638C
+00000000
+1F006290
+00000000
+08004234
+C912060C
+1F0062A0
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1215c8">
+7C47050C
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Blade Grasp, Reflect, Arrow Guard, Mold Breaker rewrite">
+    <Description>Makes this code more efficient/change friendly :) Defaults here put Mold Breaker on slot 0x01e5, Blade Grasp on slot 0x01c6, Arrow Guard on 0x01c7. </Description>
+    <Location file="BATTLE_BIN" offset="1259e4">
+      E8FFBD27
+      1000BFAF
+      19800A3C
+      F0F5428D
+      942D458D
+      38004014
+      00000000
+      9200A290  <!-- 0x92 = Ability group for Mold Breaker -->
+      982D448D
+      01004230  <!-- 0x01 = Ability slot for Mold Breaker -->
+      33004014
+      00000000
+      6832060C
+      00000000
+      01000334
+      2E004310
+      00000000
+      19800A3C
+      982D448D
+      C6384395
+      5C008290
+      06006014
+      00000000
+      02004230
+      03004010
+      00000000
+      FA33060C
+      00000000
+      1980043C
+      982D848C
+      5A32060C
+      00000000
+      1D004014
+      00000000
+      1980043C
+      982D848C
+      C304060C
+      00000000
+      17004014
+      00000000
+      19800A3C
+      982D448D
+      00000000
+      8F008390  <!-- 0x8f = Ability group for Blade Grasp -->
+      00000000
+      80006330  <!-- 0x80 = Ability slot for Blade Grasp -->
+      03006010
+      00000000
+      1434060C
+      00000000
+      19800A3C
+      982D448D
+      00000000
+      8F008390  <!-- 0x8f = Ability group for Arrow Guard -->
+      00000000
+      40006330  <!-- 0x40 = Ability slot for Arrow Guard -->
+      03006010
+      00000000
+      3A34060C
+      00000000
+      0C48050C  <!-- nop out this line if not using Runic -->
+      00000000
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1260c8"> <!-- Removes dumb hardcoding on bg/ag. required for now -->
+00000000  
+00000000
+00000000
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="126198">
+00000000
+00000000
+00000000
+00000000
+    </Location>
+  </Patch>
+
+<Patch name="Equip Crossbow (0x01ca) = Runic">
+    <Description>Works as Blade Grasp for the math skill flag. Requires Blade Grasp/Arrow Guard/Mold Breaker rewrite.</Description>
+    <Location file="BATTLE_BIN" offset="EB030">
+E8FFBD27
+1000BFAF
+19800A3C
+982D448D
+F5384291
+8F008390  <!-- 0x8f = ability group for runic -->
+40004230
+08006330  <!-- 0x08 = ability slot for runic -->
+12006010
+00000000
+10004010
+64000234
+24008390
+902D458D
+23104300
+E134060C
+2A00A2A4
+09004014
+00000000
+19800A3C
+FCF5428D
+902D458D
+04004014
+00000000
+0000A0A0
+0B000234
+0200A2A0
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Move XX up rewrite">
+    <Description>This rewrite serves several functions: 1. Changes Move XP/JP up to Move PA/Speed up, respectively. 2. Allows any move XX up ability to stack with any other move XX up ability (in vanilla's code you could only equip one at a time and have it work, since the code is written such that presence of one overrides the checks for the next in the list) 3. Changes Move HP/MP up to both give a bonus of 1/8 max HP/MP, but if unit is ???, will give 1/64 max HP/MP (so giving to bosses isn't a complete death sentence). 4. Improved from my previous code for these abilities because all bonus amounts are displayed! 5. MUCH more efficient - Frees space between 0x0018de54 - 0x0018df08 and 0x00180134 - 0x00180174, battle.bin.</Description>
+    <Location file="BATTLE_BIN" offset="126d44">
+      D8FFBD27
+      2000B0AF
+      21808000
+      2400BFAF
+      8A010292
+      8C010426
+      1980013C
+      982D30AC
+      902D24AC
+      C13822A0
+      5D2F060C
+      00000000
+      21200002
+      6C78010C
+      04000534
+      2F004014
+      FFFF0224
+      01000134
+      00000F34
+      19800A3C
+      902D4B8D
+      93000692
+      94000592
+      0100C630
+      0B00C010
+      00000000
+      06000392
+      2A000296
+      04006330
+      02006010
+      00000000
+      C2100200
+      C2100200
+      060062A5
+      4000EF35
+      000061A1
+      8000A630
+      0B00C010
+      00000000
+      06000392
+      2E000296
+      04006330
+      02006010
+      00000000
+      C2100200
+      C2100200
+      0A0062A5
+      1000EF35
+      000061A1
+      81000234  <!-- 0x81 = amount of bonus to stat for 0x01ef ability -->
+      4000A630
+      0400C010
+      00000000
+      140062A1  <!-- 0x14 = stat affected (PA) -->
+      000061A1
+      0100EF35
+      2000A630
+      0400C010
+      81000234  <!-- 0x81 = amount of bonus to stat for 0x01f0 ability -->
+      120062A1  <!-- 0x12 = stat affected (speed) -->
+      000061A1
+      0100EF35
+      25006FA1
+      2400BF8F
+      2000B08F
+      2800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Disables Distribute">
+    <Description>Completely disables the effects of Distribute.  This frees up Distribute's slot for other use (not compatible with Multi-reaction deluxe without further coding), and eliminates any weirdness/bugs that are related to use of Multi-reaction deluxe.
+
+**Works with Super Duper Reaction Looper**</Description>
+    <Location file="BATTLE_BIN" offset="1262a8">
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="124168">
+812C0608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="115bbc">
+30F30508
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Level Jump 4 (slot 0x018c) = Moody">
+    <Description>Rolls a 1/8 chance at the end of every turn for one of the following effects:  +100 hp (healing), +100 mp (healing), +1 PA, +1 MA, +1 Speed, +5 Brave, +5 Faith, Quick. Requires Recategorizing r/s/m, check for presence of ability on unit.</Description>
+    <Location file="BATTLE_BIN" offset="11be9c">
+6F4E050C
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec9bc">
+E8FFBD27
+1000BFAF
+F235060C
+21209600
+324E050C
+00000000
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec8c8">
+E8FFBD27
+1000BFAF
+1980043C
+982D848C
+9F70010C
+8C010234
+32006010
+00000000
+C388000C
+00000000
+1980013C
+902D2B8C
+01000534
+000065A1
+07004230
+05004014
+01000134
+64000334
+060063A5
+40000334
+250063A1
+05004514
+02000534
+64000334
+0A0063A5
+10000334
+250063A1
+04004514
+03000534
+81000334
+120063A1
+250061A1
+04004514
+04000534
+81000334
+140063A1
+250061A1
+04004514
+05000534
+81000334
+150063A1
+250061A1
+04004514
+06000534
+85000334
+160063A1
+250061A1
+04004514
+07000534
+85000334
+170063A1
+250061A1
+04004514
+00000000
+FF000334
+130063A1
+250061A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Crit Rate Pack">
+    <Description>Requires check for presence of ability.  Contains Serene Grace (0x1e1), RNG Guard (0x19e)</Description>
+    <Location file="BATTLE_BIN" offset="11f504">
+      6C77050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f6db0">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      982D848C
+      9F70010C
+      9E010234
+      0C006014
+      01000234
+      1980013C
+      942D2B8C
+      64000434
+      92006291
+      00000000
+      10004230
+      02004010
+      00000000
+      32000434
+      B63B060C
+      04000534
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Attack Up = Sheer Force">
+    <Description>Unit does 1/3 more damage of all types, but loses status procs.  Replaces Attack up, and makes M-atk up a blank slot. 
+	
+New version, requires Proc Rate Pack
+</Description>
+    <Location file="BATTLE_BIN" offset="11f204">
+      19800A3C
+      942D428D
+      CE384395
+      90004290  
+      AA000434  
+      10004230  
+      05004010
+      00000000
+      18006400
+      12180000
+      C2190300
+      CE3843A5
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Proc Rate Pack">
+    <Description>Requires check for presence of ability.  Contains Sheer Force (Attack Up slot), Serene Grace (slot 0x1e1), RNG Guard (slot 0x19e).  Alters proc rates for these abilities.  Weapons use proc rate as indexed by unknown next to range.  If you want them to default to 19%, keep that value 0xff</Description>
+    <Location file="BATTLE_BIN" offset="120690">
+      1980023C
+      FCF5428C
+      E8FFBD27
+      0B004014
+      1000BFAF
+      0962050C
+      00000000
+      1980033C
+      902D638C
+      05004014
+      00000000
+      10006294
+      00000000
+      00024234
+      100062A4
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f1824">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      982D848C
+      9F70010C
+      9E010234
+      1C006014
+      01000234
+      64000434
+      13000534
+      1980013C
+      942D2B8C
+      D8382990
+      90006291
+      92006391
+      10004230
+      12004014
+      01000234
+      10006330
+      02006010
+      00000000
+      32000434
+      0A002011
+      00000000
+      0680063C
+      B83AC624
+      C0380900
+      2130C700
+      0300C690
+      FF000734
+      0200C710
+      00000000
+      2128C000
+      3378010C
+      00000000
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Checks for presence of ability on unit">
+    <Description>Requires r2 = ability ID that you're checking, r4 = unit data of unit you are checking.  Returns r3 = 0 if ability is not present, r3 = 3 if present.  Requires disable all equip support abilities, to place it in scus.  This routine is placed in scus due to one of my routines in scus requiring it.  However if you're only using it for battle.bin stuff, feel free to move it to kanji.</Description>
+    <Location file="SCUS_942_21" offset="4ca7c">
+      0A008594
+      0C008694
+      0E008794
+      10008894
+      14008994
+      16008A94
+      18008B94
+      0E00A210
+      03000334
+      0C00C210
+      00000000
+      0A00E210
+      00000000
+      08000211
+      00000000
+      06002211
+      00000000
+      04004211
+      00000000
+      02006211
+      00000000
+      00000334
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Units get randomized abilities if Random (0x01fe) in Entd">
+    <Description>Version 1.00 - Requires checks for presence of ability on unit, 6 abilities (unusable slot, teleport 2, beast boost, move speed up, warp touch, non-charge) flagged as rare.  Frees space from 0x5d154 - 0x5d3c0, scus.</Description>
+    <Location file="SCUS_942_21" offset="4d8bc">
+E0FFBD27
+1000BFAF
+1800B0AF
+FFFFA530
+FE01A22C
+03004010
+00000000
+19000010
+2110A000
+21808000
+C388000C
+00000000
+63000334  <!-- Number of abilities considered (vanilla default = 0x57) -->
+1A004300
+10100000
+9A014224  <!-- First ability considered (vanilla default = 0x1a6) -->
+9F70010C
+21200002
+0D006014
+B8010534
+0B00A210
+F3010534
+0900A210
+F0010534
+0700A210
+E3010534
+0500A210
+F9010534
+0300A210
+EB010534
+0200A214
+00000000
+00000234
+1800B08F
+1000BF8F
+2000BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Unknown 1 and 2 = new item attributes">
+    <Description>Requires No Monster Breeding (overwrites code that lays eggs). Unknown 1 = byte you want affected, Unknown 2 = amount you want it affected by.  Adds to item attributes.
+
+Some useful values for byte 1: 33 = PA, 34 = MA, 35 = Speed, 3a = Move, 3b = Jump, 4a-4d = Equippable items (make an item grant the ability to grant other items), 4e-52 = innate statuses, 53-57 = status immunities, etc.  
+
+You can even add use of R/s/m through an item this way! :):):)  
+
+Credit to Pride to finding my mistake (twice).
+Version 1.3 improvements:
+1. Works! (old version didn't work as more than just a proof of concept, please use this instead)
+2. Can affect HP and MP now
+3. Works properly with value caps
+
+Does not accept signed values, or values greater than 0x7f for PA/MA/Speed/Move/Jump bonuses.  Sorry :(
+</Description>
+    <Location file="SCUS_942_21" offset="4a618">
+06002291
+2A000834
+DFFF4324
+2500632C
+11006010
+21282202
+03004810
+2E000834
+07004814
+00000000
+0B002391
+0000AB94
+00000000
+21586301
+0C000010
+0000ABA4
+0B002381
+0000AB80
+00000000
+20586301
+06000010
+0000ABA0
+0B002391
+0000AB90
+00000000
+25586301
+0000ABA0
+07002391
+AE710108
+03008824
+    </Location>
+    <Location file="SCUS_942_21" offset="4ceb0">
+      86670108
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Monster riding changes!">
+    <Description>"Large" monsters are mountable, "small" monsters can ride.  Monster size defined by "stepping stone" check.  Teleport bypasses rider validation (so anything with teleport can ride regardless of size).  This version works. :)</Description>
+    <Location file="BATTLE_BIN" offset="10d87c">
+      49002292
+      00000000
+      40004230
+      0D004014
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d3d8">
+00000000
+49000292
+00000000
+40004230
+    </Location>
+  </Patch>
+
+  <Patch name="Move +2 = Range + 2">
+    <Description>
+Version 1
+Uses 0x00153300 to 0x001533b0 in Kanji Space
+
+Changes Move + 2 into Range + 2. No longer increases Move by 2.
+Range + 2 increases the range of all abilities that:
+	-Have an Ability ID of less than 0x0170 (no Jump/Item/Throw)
+	-Are not Weapon Range (Attack, Charge, etc.)
+	-Have a minimum range of 2
+Will not overflow when used on abilities with 254 or greater range. An ability with 254 range will increase to 255 and a 255 range ability will not increase at all.
+The AI is also notified of this change and their target finding should increase with this support enabled
+
+**This version requires Disable all move/jump +x to not stack with move+2's vanilla effect**
+    </Description>
+	<Location offset="113304" file="BATTLE_BIN">
+	  C04C050C
+	  00000000
+	  00000000
+	</Location>
+	<Location offset="12ECE0" file="BATTLE_BIN">
+	  D74C050C
+	  00000000
+	  00000000
+	</Location>
+	<Location offset="EC300" file="BATTLE_BIN">
+01004790
+00005390
+2800A7A3
+03004790
+1200A387
+93009692
+7001632C
+0D006010
+2000E730
+0B00E014
+4000D632
+0900C012
+0200632E
+07006014
+FF000334
+05006312
+FE000334
+02006312
+01000334
+02000334
+21986302
+0800E003
+00000000
+	</Location>
+	<Location offset="EC35C" file="BATTLE_BIN">
+03006290
+00000000
+20004230
+04004014
+00000234
+93004292
+00000000
+40004230
+0B004010
+00006490
+00000000
+0200822C
+07004014
+00000000
+FF000234
+04004410
+FE000234
+02004410
+01008424
+01008424
+0800E003
+040004A2
+	</Location>
+  </Patch>
+
+
+  <Patch name="Faith/Innocent calculation rewrite">
+    <Description>Allows for correct/efficient usage of faith/innocent status in more formulas and abilities.  Rewritten for use with Contrary (reverses faith/innocent usage by unit).</Description>
+    <Location file="BATTLE_BIN" offset="120150">
+      7C1C0608 
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="124568">
+      561C060C
+      00000000
+      00000000  
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="120158">
+E8FFBD27
+1000BFAF
+19800A3C
+942D4B8D
+982D4C8D
+26006891
+26008991
+D33848A1
+D23849A1
+5C006691
+5C008791
+64000234
+8000C430
+02008010
+00000000
+D33842A1
+4000C430
+02008010
+00000000
+D33840A1
+8000E430
+02008010
+00000000
+D23842A1
+4000E430
+02008010
+00000000
+D23840A1
+3A58050C <!-- Change this line to 00000000 if not using Contrary -->
+00000000
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Action menu expansion">
+    <Description>Grants access to jump (0x34) if unit has skillset 0x12.  Original code by Pride.</Description>
+    <Location file="BATTLE_BIN" offset="e9994">
+      12000934
+      0300A910
+      34000234
+      0300E914
+      00000000
+      000002A2
+      01001026
+      FF000234
+      000002A2
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="e99c0">
+      E8FFBD27
+      1000BFAF
+      12004392
+      13004592
+      12000934
+      03006910
+      00000000
+      0500A914
+      00000000
+      21302002
+      7E69060C
+      34000534
+      12004392
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11a4f0">
+      6542050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="13347c">
+      7042050C
+      00000000
+    </Location>
+  </Patch>
+
+
+<Patch name="Generic Skillset Fix">
+<Location file="BATTLE_BIN" offset="E9378">
+FFFFFFFFFFFFFFFF05FFFFFFFFFFFFFFFF0505FF0505FFFF05FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0505FF05FFFF05FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF05050505050505050505050505050505050505050505050505050505050505050505050505050505050505050505050560402790110020001500013C2108E1007803219013006000FF00033402006110000000002538200010080000DC04050812180000
+</Location>
+<Location file="BATTLE_BIN" offset="DA36C">
+1641050800000000
+</Location>
+</Patch>
+
+<Patch name="Smart PA/MA variation">
+    <Description>Requires disable female/equip x.  This will randomly choose whether a monster gets a bonus PA or a bonus MA at creation.  Intended for use with pre-raw stat edits (particularly, to remove the regular PA/MA variance on monsters).</Description>
+    <Location file="SCUS_942_21" offset="4cb50">
+      03000734
+      0C00F414
+      00000000
+      C388000C
+      00000000
+      01004230
+      02004010
+      03000734
+      0300E724
+      23882702
+      01002992
+      00000000
+      40002925
+      010029A2
+      2800BF8F
+      2400B58F
+      40690108
+      00000000
+    </Location>
+    <Location file="SCUS_942_21" offset="4acf8">
+      D4700108
+      00000000
+    </Location>
+  </Patch>
+
+<Patch name="Pre-Raw Stats Edits">
+<Location file="SCUS_942_21" offset="4A8A4">
+80
+</Location>
+<Location file="SCUS_942_21" offset="4A914">
+48
+</Location>
+<Location file="SCUS_942_21" offset="4A98C">
+01
+</Location>
+<Location file="SCUS_942_21" offset="4F124">
+23230606059DBA0013FF
+</Location>
+<Location file="SCUS_942_21" offset="4F146">
+0000000000
+</Location>
+<Location file="SCUS_942_21" offset="4F10C">
+2323060605
+</Location>
+<Location file="SCUS_942_21" offset="4F13C">
+0000000000
+</Location>
+<Location file="SCUS_942_21" offset="4F118">
+2323060506
+</Location>
+<Location file="SCUS_942_21" offset="4F141">
+0000000000
+</Location>
+<Location file="SCUS_942_21" offset="4F130">
+2323060505
+</Location>
+<Location file="SCUS_942_21" offset="4F14B">
+0303000000
+</Location>
+<Location file="SCUS_942_21" offset="4C0A0">
+0A
+</Location>
+<Location file="SCUS_942_21" offset="4F111">
+9DBAFF13FFFFFF
+</Location>
+<Location file="SCUS_942_21" offset="4F11D">
+9DBAFF01FFFFFF
+</Location>
+<Location file="WORLD_WORLD_BIN" offset="58E8C">
+DC05
+</Location>
+<Location file="WORLD_WORLD_BIN" offset="58E98">
+7805
+</Location>
+<Location file="WORLD_WORLD_BIN" offset="58458">
+E803
+</Location>
+</Patch>
+
+
+<Patch name="Defense and Magic Defense % By Job">
+<Description>Original code by Pride, fixed by Emmy. Improvements made: 
+1. Load delay error removed
+2. More efficient
+3. Framework in place to allow additions to this routine
+4. includes attack type = damage flag
+Requires Tying It All Together 2</Description>
+<Location file="BATTLE_BIN" offset="F6B98">
+19800A3C
+CE384395
+D0384295
+1680063C
+D6384585
+0680043C
+C0280500
+21208500
+F6EB8590
+18006200
+12100000
+982D438D
+0200A430
+03006390
+00000000
+2130C300
+04000410
+00000000
+24DCC690
+06000010
+00000000
+0100A430
+07000410
+00000000
+C4DCC690
+00000000
+18004600
+12300000
+02320600
+23104600
+902D438D
+80000134
+040062A4
+0800E003
+250061A0
+</Location>
+<Location file="BATTLE_BIN" offset="F6C24">
+00000000
+50004A59
+0068682C
+33453400
+3400FEC0
+8050601A
+00004000
+00000000
+1A000040
+00004E00
+0000
+00000080
+59000000
+00000000
+000000FE
+40D0FE34
+0000001A
+34000000
+4E681A9C
+00000000
+00000000
+0000
+00000000
+00000000
+00004E00
+4E003400
+D034D01A
+1A1A5959
+59404040
+0D0D0D34
+34342727
+27E8E8E8
+1A1A
+1A006868
+80808027
+40271A1A
+1A003434
+001A3468
+00004000
+34000068
+1A000000
+0000
+00000000
+000038A5
+331A1A08
+4D458000
+68001A00
+0050261A
+9000C000
+00000000
+1A000000
+000034B2
+0000
+00000000
+2600B200
+2700001A
+80FE331A
+40340000
+00340068
+00000000
+341A1A68
+00000000
+00000000
+0000
+00000000
+00000000
+00003400
+3434D034
+34003468
+68682700
+27404040
+2727274E
+4E4E0D0D
+0D1A1A1A
+E8E8
+E8591A1A
+80808059
+40591A1A
+1A80D0D0
+001A009C
+00004000
+0000801A
+68000000
+0000
+</Location>
+</Patch>
+
+  <Patch name="Maintenance = bonus damage based on HP lost">
+    <Description>Requires Tying It All Together 2</Description>
+    <Location file="BATTLE_BIN" offset="eafd0">
+19800A3C
+942D4B8D
+902D4C8D
+91006291
+04008995
+04004230
+0F004010
+00000000
+28006795
+2A006895
+00000000
+23280701
+C0210500
+1A008800
+12200000
+00000000
+00000000
+18008900
+12200000
+02220400
+21208900
+040084A5
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="M-atk up = Healing * 5/4, accuracy * 5/4 on status effects and faith based hit rates">
+    <Description>Requires disabling M-atk up.  Requires Tying it all together 3.</Description>
+    <Location file="BATTLE_BIN" offset="120350">
+084B0508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ebc20">
+1980013C
+942D228C
+00000000
+90004290
+00000000
+04004230
+09004010
+00000000
+902D228C
+00000000
+04004394
+00000000
+80200300
+21208300
+82200400
+040044A4
+982D228C
+D71C0608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="eb468">
+1980013C
+942D258C
+902D268C
+9000A290
+0400C394
+04004230
+05004010
+00000000
+80200300
+21208300
+82200400
+0400C4A4
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="121808">
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Equip Change = increased damage at higher HP/increased hit rate at lower hp">
+    <Description>Requires Tying it all together 2.  Requires Tying it all together 3.</Description>
+    <Location file="BATTLE_BIN" offset="f75bc">
+19800A3C
+942D4B8D
+902D4C8D
+92006291
+04008995
+20004230
+0E004010
+00000000
+28006795
+2A006895
+42100900
+C0210700
+1A008800
+12200000
+82180900
+21304300
+18008900
+12200000
+02220400
+21208600
+040084A5
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f6b34">
+19800A3C
+942D4B8D
+902D468D
+92006291
+0400C594
+20004230
+10004010
+00000000
+28006795
+2A006895
+00000000
+23180701
+C0210300
+1A008800
+12200000
+00000000
+00000000
+18008500
+12200000
+02220400
+21208500
+0400C4A4
+0400C584
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1a3 (math skill 5) = No Guard">
+    <Description>Requires Tying it all together 3. Requires check for presence of ability on unit.  All abilities that are done to or by a unit with this ability that have a non-0 hit rate will hit 100% of the time.  Negates evasion, faith based hit rates, % based hit rates in general.  Abilities that have 0% hit rate due to immunity, reflect, or 0 faith on either target/attacker still have 0% hit rate.  Ability does not bypass Blade Grasp, Arrow Guard, etc.</Description>
+    <Location file="BATTLE_BIN" offset="11e3f4">
+      E8FFBD27
+      1000BFAF
+      284C050C
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec0a0">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      942D848C
+      9F70010C
+      A3010234
+      07006014
+      00000000
+      1980043C
+      982D848C
+      9F70010C
+      A3010234
+      05006010
+      00000000
+      1980043C
+      DE388424
+      9179010C
+      04000534
+      1980053C
+      982DA58C
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ec100">
+E8FFBD27
+1000BFAF
+1980013C
+902D268C
+00000000
+0400C584
+942D248C
+0F00A010
+00000000
+9F70010C
+A3010234
+07006014
+00000000
+1980043C
+982D848C
+9F70010C
+A3010234
+05006010
+00000000
+1980013C
+902D268C
+64000534
+0400C5A4
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Blank Support after No charge (0x01e4) gives unit 50% bonus damage on units that are Hasted or Reraised">
+    <Description>Much more efficient than old version. Requires Tying it All Together 2.</Description>
+    <Location file="BATTLE_BIN" offset="11f198">
+      19800A3C
+      942D4B8D
+      982D4C8D
+      92006391
+      5A008491
+      902D4D8D
+      02006330
+      0E006010
+      00000000
+      5B008391
+      20008430
+      04008014
+      00000000
+      08006330
+      07006010
+      00000000
+      0400A295
+      00000000
+      40180200
+      21186200
+      42180300
+      0400A3A5
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Monster talk = 2x damage if user is critical">
+    <Description>Requires Tying it all together 2.  Much more efficient than old version.  Multiplies final damage by 2 if user is critical.  Uses Monster Talk's slot (0x01d9).</Description>
+    <Location file="BATTLE_BIN" offset="11f154">
+      19800A3C
+      942D4B8D
+      902D4C8D
+      91006491
+      5A006391
+      04008295
+      10008430
+      06008010
+      00000000
+      01006330
+      03006010
+      00000000
+      40100200
+      040082A5
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="2 Hands, Attack Up, Martial Arts, 2 Swords rewrite">
+    <Description>A more efficient rewrite of these abilities.  This makes it so that you can easily change the amount of bonus given.  Defaults are approximations of vanilla's.</Description>
+    <Location file="BATTLE_BIN" offset="11f054">
+      19800A3C
+      FF384391
+      D9384491
+      CE384995
+      942D4B8D
+      01006230
+      0A004014
+      04006230
+      08004010
+      00000000
+      06008010
+      00000000
+      00010234  <!-- 2 hands bonus, change 0x0001 to whatever you want to divide by 128 -->
+      18004900
+      12100000
+      C2110200
+      CE3842A5
+      90006291  <!-- Ability group associated with Attack UP, change 0x90 if moving this -->
+      CE384995
+      10004230  <!-- Ability slot, change 0x10 if moving Attack Up -->
+      06004010
+      00000000
+      AA000234  <!-- Attack up bonus, change 0xaa00 to whatever you want to divide by 128 -->
+      18004900
+      12100000
+      C2110200
+      CE3842A5
+      D8384391
+      91006291  <!-- Ability group associated with Martial Arts, change 0x91 if moving this -->  
+      0A006014
+      00000000
+      20004230  <!-- Ability slot, change 0x20 if moving Martial Arts -->
+      07004010
+      00000000
+      CE384995
+      C0000234  <!-- Martial Arts bonus, change 0xc000 to whatever you want to divide by 128 -->
+      18004900
+      12100000
+      C2110200
+      CE3842A5
+      91006291  <!-- Ability group associated with 2 swords, change 0x91 if moving this -->
+      F3384391
+      01004230  <!-- Ability slot, change 0x01 if moving 2 swords -->
+      0A004010
+      00000000
+      20006330
+      07006010
+      00000000
+      CE384995
+      60000234  <!-- Penalty per hit, change 0x6000 to whatever you want to divide by 128 -->
+      18004900
+      12100000
+      C2110200
+      CE3842A5
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11f14c"> <!-- Deletes duplicate routine -->
+15180608
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1a5 (math skill 3) = Analytic">
+    <Description>Requires check for presence of ability, recategorize r/s/m, tying it all together 2.  Attacker with Analytic gets 50% bonus damage on XA*YA based moves if it is slower than the target.  Takes into effect haste and slow on both target and attacker, but not any other temporary effects on speed such as my Adrenaline/Frenzy hacks.</Description>
+    <Location file="BATTLE_BIN" offset="eed1c">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      942D848C
+      9F70010C
+      A5010234
+      1E006010
+      00000000
+      1980013C
+      942D2B8C
+      982D2C8C
+      38006291
+      5B006491
+      38008391
+      5B008591
+      04008630
+      0200C010
+      08008630
+      42100200
+      0200C010
+      42300200
+      21104600
+      0400A630
+      0200C010
+      0800A630
+      42180300
+      0200C010
+      42300300
+      21186600
+      902D2D8C
+      23304300
+      0400A495
+      0400C104
+      00000000
+      42300400
+      2130C400
+      0400A6A5
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1a2 = Damage reduced by a % MP lost">
+    <Description>Requires check for presence of ability.  Requires tying it all together 2.  Each 2% of mp missing = 1% reduction of damage dealt to this unit.</Description>
+    <Location file="BATTLE_BIN" offset="eef10">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      982D848C
+      9F70010C
+      A2010234
+      11006010
+      00000000
+      1980013C
+      982D2B8C
+      902D2C8C
+      2C006895
+      2E006995
+      04008795
+      23102801
+      1800E200
+      12100000
+      00000000
+      00000000
+      1A004900
+      12100000
+      42100200
+      2318E200
+      040083A5
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1a1 = 1/2 damage from non-elemental attacks">
+    <Description>Requires check for presence of ability.  Requires tying it all together 2.</Description>
+    <Location file="BATTLE_BIN" offset="eef80">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      982D848C
+      9F70010C
+      A1010234
+      0C006010
+      00000000
+      1980013C
+      F7382290
+      902D2B8C
+      07004014
+      00000000
+      04006395
+      08006495
+      42180300
+      42200400
+      040063A5
+      080064A5
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Item on body grants damage reduction instead of HP/MP">
+    <Description>Requires Tying it all together 2.  Requires only helmets grant hp/mp. Interprets HP as physical reduction, MP as magical reduction.  Damage = damage * xx/128, so armor with a penalty is possible with number greater than 128.
+
+**New version that prevents loading of junk data if something other than armor is in the armor slot**</Description>
+    <Location file="BATTLE_BIN" offset="ef1f4">
+1980013C
+982D2B8C
+902D2C8C
+1B006291
+D6382584
+54FF4324
+2400632C
+1C006010
+00000000
+0680063C
+C0280500
+2120C500
+F6EB8590
+40180200
+21184300
+80180300
+B82EC424
+21488300
+04002291
+04008895
+40180200
+2120C300
+D83E8290
+D93E8390
+0100A430
+04008010
+0200A430
+18004800
+12100000
+C2410200
+04008010
+00000000
+18006800
+12180000
+C2410300
+040088A5
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Tying it all together 2">
+    <Description>Affects XA*YA routine, requirement as listed in description</Description>
+<Location file="BATTLE_BIN" offset="f7994">
+E8FFBD27
+1000BFAF
+19800A3C
+902D4B8D
+01000234
+000062A1
+E676050C  <!-- Def/Mdef by job -->
+00000000
+7D58050C  <!-- Item on body grants damage reduction -->
+00000000
+F447050C  <!-- Maintenance = bonus damage by hp lost -->
+00000000
+6F79050C  <!-- Equip change = bonus damage at high hp -->
+00000000
+5518060C  <!-- Monster Skill = 2x damage in critical -->
+00000000
+6618060C  <!-- Blank Support after No charge (0x01e4) -->
+00000000
+4757050C  <!-- Slot 0x1a5 = Analytic -->
+00000000
+C457050C  <!-- Slot 0x1a2 = damage reduced by a % mp lost -->
+00000000
+E057050C  <!-- Slot 0x1a1 = 1/2 damage from non-elemental attacks -->
+00000000
+1000BF8F
+1800BD27
+0800E003
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="11F568">
+657A0508  
+00000000
+</Location>
+  </Patch>
+
+  <Patch name="Tying it all together 3">
+    <Description>Affects accuracy routine. Required for hacks as indicated in descriptions</Description>
+    <Location file="BATTLE_BIN" offset="ec23c">
+      E8FFBD27
+      1000BFAF
+      1A49050C <!-- Divine Gift -->
+      00000000
+      CD76050C <!-- Zeal -->
+      00000000
+      404C050C <!-- No Guard -->
+      00000000
+      1980063C <!-- Required for original routine/don't touch -->
+      902DC68C
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="120510">
+      E8FFBD27
+      1000BFAF
+      8F4C050C
+      00000000
+      0400C584
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Ability 0x1c3 = Sturdy">
+    <Description>Requires Super Duper Reaction Looper set trigger = 0 (if using a reaction slot), and Blade Grasp/AG routine rewrite if using BG's slot.  If moved to a support/move slot, requires nothing at all. 
+
+Unit has a current hp/max hp chance to survive any attack with 1 hp.  For example, a character with 400 current hp and 800 max hp has a 50% chance of an attack that normally does >400 hp damage only doing 399 to it.  This will proc separately on multi-hit attacks.  For example, an attack hits 3x and does 500 damage each vs. something with 800 hp current/max.  First hit, the ability doesn't matter.  Second hit, it'll 3/8 chance to proc and leave the unit with 1 hp.  Assuming it survives, there's now a 1/800 chance to survive the 3rd hit!</Description>
+    <Location file="BATTLE_BIN" offset="f6e24">
+      E8FFBD27
+      1000BFAF
+      19800A3C
+      982D448D
+      4832060C
+      00000000
+      1A004014
+      00000000
+      19800A3C
+      982D448D
+      00000000
+      8E008290
+      28008594
+      04004230
+      12004010
+      00000000
+      2A008494
+      3378010C
+      00000000
+      0D004014
+      00000000
+      19800A3C
+      982D4B8D
+      902D4C8D
+      28006295
+      04008395
+      00000000
+      2B206200
+      04008014
+      00000000
+      01000134
+      23104100
+      040082A5
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="124a44">
+      E8FFBD27
+      1000BFAF
+      8977050C
+      00000000
+      19800A3C
+      982D428D
+      60384591
+      58004490
+      00000000
+      20008630
+      0700C010
+      21180000
+      2000A230
+    </Location>
+  </Patch>
+
+  <Patch name="Half of MP => Amplify">
+    <Description>
+Kanji Space location - 0x00153284
+Half of MP now doubles MP costs, but increases the AoE by +1. 
+Currently no AI adjustments and will cause problems with the AI determining skill useablity.
+Version 0.6 - Fixed display, AI now knows proper MP cost :)
+    </Description>
+    <Location offset="1148DC" file="BATTLE_BIN">
+	  A14C050C
+	  01007390
+	</Location>
+	<Location offset="116B6C" file="BATTLE_BIN">
+	  40200400
+	</Location>
+	<Location offset="1338ac" file="BATTLE_BIN">
+	  40180300
+	</Location>
+	<Location offset="11aa40" file="BATTLE_BIN">
+          00002226
+	  40880200
+	</Location>
+	<Location offset="EC284" file="BATTLE_BIN">
+	  FF000634
+	  0A006612
+	  0D006690
+	  00000000
+	  0700C010
+	  21304500
+	  9000C690
+	  00000000
+	  8000C630
+	  0200C010
+	  00000000
+	  01007326
+	  0800E003
+	  02007590
+	 </Location>
+  </Patch>
+
+  <Patch name="2 Hands = Extra hits if low on MP">
+    <Description>+1 extra hit if less than 50% mp, +2 hits if 0 MP.</Description>
+    <Location file="BATTLE_BIN" offset="1164b8">
+794E0508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC9e4">
+19800A3C
+91008890
+00000000
+02000831
+0B000011
+00000000
+2E008894
+2C008994
+42600800
+2A182C01
+05006010
+00000000
+01004224
+02002015
+00000000
+01004224
+C23842A1
+30F50508
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Rewards Hack">
+
+  <Description>Characters gain +1 level, +300 JP, +5000 gil per battle.  This hack is meant to be used with XP/JP gain = 0.  This switches to a system of rewards gained per battle and not per action.</Description>
+ 
+  <Location file="BATTLE_BIN" offset="119E00">
+21400000
+21480000
+21280000
+21388000
+1980063C
+CC08C624
+8301C390
+0500C290
+16006010
+FF000B34
+14006B10
+30004230
+03004014
+80000A34
+B4030608
+00000000
+04006A10
+5800C294
+60C50A34
+24104A00
+0A004010
+6301C390
+6401C290
+04006010
+64000A34
+0000E3A0
+0100E724
+01000825
+18004A00
+12180000
+21482301
+0100A524
+1500A228
+E4FF4014
+C001C624
+21280001
+1500A228
+07004010
+150088A0
+2118A400
+000060A0
+0100A524
+1500A22C
+FCFF4014
+01006324
+180089AC
+88130A34
+1C008AAC
+0800E003
+200080AC
+</Location>
+ 
+  <Location file="BATTLE_BIN" offset="119ed0">
+
+
+0600C190
+0300C390
+20002130
+0C002014
+B6FF6324
+1400612C
+03002010
+DC00C124
+40180300
+21082300
+00002A94
+28002B94
+96004A25
+96006B25
+00002AA4
+28002BA4
+64000B34
+9F030608
+2100CBA0
+</Location>
+ 
+ </Patch>
+
+
+  <Patch name="EXP Gain = 0.">
+    <Location file="BATTLE_BIN" offset="1178A4">
+      E73860A0
+      22005192
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      210042A2
+    </Location>
+  </Patch>
+  <Patch name="JP Gain = 0.">
+    <Location file="BATTLE_BIN" offset="117948">
+       00000000
+       00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Walk on Water = Rivalry">
+    <Description>Walk on Water's slot increases effects of compatibility by 25% for attackers.  Has no effect if defender has ability.</Description>
+    <Location file="BATTLE_BIN" offset="11da8c">
+FA600508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f13e8">
+1980033C
+942D638C
+00000000
+95006390
+00000000
+80006330
+04006010
+00000000
+42100600
+BE120608
+21104600
+82100600
+BE120608
+21104600
+    </Location>
+    <Location file="BATTLE_BIN" offset="11dac4">
+08610508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f1420">
+1980033C
+942D638C
+00000000
+95006390
+00000000
+80006330
+04006010
+00000000
+42100600
+BE120608
+00000000
+82100600
+BE120608
+2310C200
+    </Location>
+    <Location file="BATTLE_BIN" offset="11dadc">
+16610508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f1458">
+1980033C
+942D638C
+00000000
+95006390
+00000000
+80006330
+04006010
+00000000
+82100600
+BE120608
+00000000
+42100600
+BE120608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11daa8">
+24610508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f1490">
+1980033C
+942D638C
+00000000
+95006390
+00000000
+80006330
+05006010
+00000000
+82100600
+40180600
+BE120608
+23106200
+42100600
+BE120608
+21104600
+    </Location>
+  </Patch>
+
+  <Patch name="Movement Merge">
+    <Description>Turns Float into Terrain Mastery, disables all other slots.  Disables Can't Enter Water.  A little weirdness with animations such as when 4 deep water is involved.</Description>
+    <Location file="BATTLE_BIN" offset="10d534">
+      08004230
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d588">
+      08004230
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d5a0">
+      02000010
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d610">
+      05000010
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d620">
+      FF004230
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d738">
+      0C004230
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d750">
+      02000010
+    </Location>
+    <Location file="BATTLE_BIN" offset="11a38c">
+      08004230
+    </Location>
+    <Location file="SCUS_942_21" offset="4dcf4">
+      05000010
+    </Location>
+<Location file="SCUS_942_21" offset="4F250">
+010101010101010101020202010102020202FF010101010101FF0201FF01010101010101020101010101010101020101010101010101010101010101010101FF
+</Location>
+<Location file="SCUS_942_21" offset="4f310">
+010101010101010101020202010102020202FF010101010101FF0201FF01010101010101020101010101010101020101010101010101010101010101010101FF
+</Location>
+<Location file="SCUS_942_21" offset="4f350">
+010101010101010101020202010102020202FF010101010101FF0201FF01010101010101020101010101010101020101010101010101010101010101010101FF
+</Location>
+<Location file="SCUS_942_21" offset="4f390">
+010101010101010101020202010102020202FF010101010101FF0201FF01010101010101020101010101010101020101010101010101010101010101010101FF
+</Location>
+  </Patch>
+
+  <Patch name="Equip Spear = +5 speed in critical, Equip Axe = double speed while berserked">
+    <Description>Speed bonus removed when unit is no longer critical.</Description>
+    <Location file="BATTLE_BIN" offset="11C964">
+4C420508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="e9930">
+38003792
+8F002292
+00000000
+04004230
+07000210
+00000000
+5A002292
+00000000
+01004230
+02000210
+00000000
+0500F726
+8F002292
+00000000
+02004230
+07000210
+00000000
+5A002292
+00000000
+08004230
+02000210
+00000000
+40B81700
+5B0E0608
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Equip Gun grants immunity to all evadable attacks, Blank slot after Non charge gives +25% hit rate to hasted or reraised targets, Maintenance gives increased hit rate as unit takes damage (up to 50% bonus).">
+    <Description>Equip Gun Sets hit rate = 0% if attack is evadable.  Concentrate/transparent ignores this.  Rewritten to work with Mold Breaker</Description>
+    <Location file="BATTLE_BIN" offset="eb340">
+1980033C
+942D638C
+00000000
+92006890
+00000000
+01000831
+08000015
+00000000
+8F00A890
+00000000
+01000831
+03000011
+00000000
+1980083C
+DC3800A1
+19800A3C
+942D4B8D
+DC384995
+91006291
+28006795
+04004230
+0E004010
+00000000
+2A006895
+00000000
+23280701
+C0210500
+1A008800
+12200000
+64000634
+00000000
+18008600
+12200000
+02220400
+21208900
+DC3844A5
+92006390
+00000000
+02006330
+0E006010
+00000000
+5A00A390
+00000000
+20006330
+06006014
+00000000
+5B00A390
+00000000
+08006330
+04006010
+00000000
+1980083C
+7D000334
+DC3803A1
+1980083C
+DC380891
+14160608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11e848">
+D0480508
+00000000
+    </Location>
+  </Patch>
+
+
+<Patch name="Gain XP Up = Shed Skin">
+    <Description>Sheds negative status at the end of turn, fa/200% accuracy. More efficient version - requires Faith/Innocent calculation rewrite.
+
+**Version 2.0 - rewritten to work properly with Contrary**</Description>
+    <Location file="BATTLE_BIN" offset="EBC6C">
+90000392
+00000000
+20006230
+18004010
+00000000
+561C060C
+00000000
+1980053C
+D238A590
+3378010C
+C8000434
+1980013C
+0F004014
+00000000
+902D238C
+80000234
+25006490
+200062A0
+BE000234
+210062A0
+8A000234
+220062A0
+86000234
+230062A0
+3D000234
+240062A0
+08008434
+250064A0
+902D228C
+14360608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="126844">
+1B4B0508
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Defense Up Rewrite">
+    <Description>^^^^</Description>
+    <Location file="BATTLE_BIN" offset="11f2cc">
+      E8FFBD27
+      1000BFAF
+      19800A3C
+      982D438D
+      CE384995
+      90006390  <!-- 0x90 = Support group -->
+      55000234  <!-- 0x5500 = amount of penalty/bonus -->
+      08006330  <!-- 0x08 = ability slot -->
+      05006010
+      00000000
+      18004900
+      12100000
+      C2110200
+      CE3842A5
+      4A33060C  <!-- Marvel Scale/Guts check -->
+      00000000
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Mdef up rewrite">
+    <Description>^^^^</Description>
+    <Location file="BATTLE_BIN" offset="11f31c">
+      E8FFBD27
+      1000BFAF
+      19800A3C
+      982D438D
+      CE384995
+      90006390  <!-- 0x90 = Support group -->
+      55000234  <!-- 0x5500 = amount of penalty/bonus -->
+      02006330  <!-- 0x02 = ability slot -->
+      05006010
+      00000000
+      18004900
+      12100000
+      C2110200
+      CE3842A5
+      4A33060C  <!-- Marvel Scale/Guts check -->
+      00000000
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Check for presence of negative status">
+    <Description>Requires r4 = pointer to unit you are checking. Return r2 = 2 if status is present, r2 = 0 if 0 statuses are present.  Defines negative status as presence of: blank, petrify, darkness, confusion, bs, silence, cursed, oil, berserk, chicken, frog, poison, slow, stop, charm, sleep, dm, da, ds. Requires Super Duper Reaction Looper (to clear space for this hack, otherwise move it elsewhere).  Credit goes to Pride for figuring out why this wasn't working before.</Description>
+    <Location file="BATTLE_BIN" offset="125cd8">
+58008590
+59008690
+5A008790
+5B008890
+5C008990
+02000234
+8000A530
+0A00A014
+BE00C630
+0800C014
+8E00E730
+0600E014
+86000831
+04000015
+3D002931
+02002015
+00000000
+00000234
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Gain JP Up slot = Marvel Scale, Jump +2 = Guts 2.0">
+    <Description>Requires check for presence of negative status, Super Duper Reaction Looper, Def/Mdef up rewrites.  If negative status is present on unit with Marvel Scale, damage dealt to it is halved.  If negative status is present on unit with Guts, it deals 1/2 more damage.  This version requires disable all move/jump+x to disable jump+2's vanilla effect.</Description>
+    <Location file="BATTLE_BIN" offset="125d28">
+E8FFBD27
+1000BFAF
+19800A3C
+982D448D
+CE384395
+90008290
+00000000
+40004230
+07004010
+00000000
+3633060C
+00000000
+03004010
+00000000
+42180300
+CE3843A5
+942D448D
+CE384395
+93008290
+00000000
+08004230
+09004010
+00000000
+3633060C
+00000000
+05004010
+00000000
+40100300
+21104300
+42180200
+CE3843A5
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Secret Hunt = +1 PA/MA if unit gets kill, Jump +3 = +1 speed if unit gets kill">
+    <Description>Requires Disable Secret Hunt/Train Slots.  Requires Disables vanilla's Move/Jump abilities.  **Improved** No longer procs on revival. :)</Description>
+    <Location file="BATTLE_BIN" offset="124c38">
+D44B0508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ebf50">
+19800A3C
+942D418D
+8C2D438D
+91002290
+902D4B8D
+40004230
+20006691
+00000000
+2000C630
+1E00C014
+00000000
+0E004010
+00000000
+01000234
+000062A0
+14006290
+15006590
+01004224
+80004234
+140062A0
+25006290
+0100A524
+8000A534
+150065A0
+01004234
+250062A0
+93002290
+00000000
+04004230
+0A004010
+00000000
+12006590
+01000234
+000062A0
+0100A524
+25006290
+8000A534
+120065A0
+01004234
+250062A0
+4D2F060C
+00000000
+102F0608
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Arrow Guard blocks Formula 28, 3c, 46">
+    <Description>Arrow Guard blocks Formula 28, 3c, 46 with br% accuracy.  Stacks with Arrow Guard's vanilla effect</Description>
+    <Location file="BATTLE_BIN" offset="1260e8">
+35780508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f70d4">
+1980023C
+E5384290
+28000334
+07004310
+00000000
+3C000334
+04004310
+00000000
+46000334
+05004314
+00000000
+E8FFBD27
+1000BFAF
+4D340608
+00000000
+1980023C
+F3384290
+3C340608
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Class M-ev">
+    <Description>Set magic evade by class! Credit goes to Xifanie for rewriting it to work. :)</Description>
+    <Location file="BATTLE_BIN" offset="11e1f8">
+      78480508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="eb1e0">
+      03008290
+      1580013C
+      21082200
+      40212290
+      1980013C
+      83140608
+      E13822A0
+    </Location>
+    <Location file="BATTLE_BIN" offset="eb140">
+00
+00000014
+19191E14
+0F0F1919
+28280028
+0F3C6319<!-- 0x14/20 -->
+19140032
+000A0A32
+1400190A
+1E191E14
+141E0A1E<!-- 0x28/40 -->
+1E231446
+14141423
+23192D1E
+190F1E0F
+3C143763<!-- 0x3c/60 -->
+141E0F1E
+190F1900
+001E1923
+23000000
+00000000<!-- 0x50/80 -->
+00000000
+00000000
+00000000
+281E5A1E
+0F050F37<!-- 0x64/100 -->
+32371919
+19143214
+1414140F
+0F0F0F0F
+0F1E1E1E<!-- 0x78/120 -->
+3C3C3C1E
+1E1E1414
+14191919
+14141423
+00232828<!-- 0x8c/140 -->
+28232314
+231E1414
+0F142323
+23230000
+191919
+    </Location>
+  </Patch>
+
+  <Patch name="Hats give fractional HP/MP bonus or penalty">
+    <Description>HP/MP bonus = max hp or mp * x/128.  If my hack that makes hp/mp bonuses only apply to hats is not used, beware that the armor slot will give a fractional bonus of total + hat bonus.  Does not touch display.</Description>
+    <Location file="SCUS_942_21" offset="4cfd4">
+      D93E2B90
+      2E002C96
+      18004300
+      12100000
+      C2110200
+      2B180202
+      02006010
+      00000000
+      21100002
+      2A0022A6
+      18006C01
+      12580000
+      C2590B00
+      2B180B02
+      02006010
+      00000000
+      21580002
+      2E002BA6
+    </Location>
+  </Patch>
+
+  <Patch name="Physical status multiplier rewrite">
+    <Description>Requires check for presence of ability. Includes code for ability (0x19d) that changes protect's multiplier on a character.  Multipliers are in the form of 0xYY/0x80.</Description>
+    <Location file="BATTLE_BIN" offset="11f36c">
+      E8FFBD27
+      1000BFAF
+      1980013C
+      982D248C
+      9F70010C
+      9D010234
+      1980013C
+      982D248C
+      CE382594
+      5B008690
+      5C008290
+      2000C630
+      0900C010
+      10004230
+      02006010
+      40000634
+      20000634
+      1800C500
+      12300000
+      C2310600
+      CE3826A4
+      2128C000
+      58008390
+      06004014
+      08006330
+      5A008290
+      03006014
+      06004230
+      06004010
+      00000000
+      C0000634
+      1800C500
+      12300000
+      C2310600
+      CE3826A4
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Magical status multiplier rewrite">
+    <Description>Requires check for presence of ability. Includes code for ability (0x19d) that changes shell's multiplier on a character.  Multipliers are in the form of 0xYY/0x80.</Description>
+    <Location file="BATTLE_BIN" offset="11f460">
+      E8FFBD27
+      1000BFAF
+      1980013C
+      982D248C
+      9F70010C
+      9D010234
+      1980013C
+      982D248C
+      CE382594
+      5B008690
+      5A008290
+      1000C630
+      0900C010
+      06004230
+      02006010
+      40000634
+      20000634
+      1800C500
+      12300000
+      C2310600
+      CE3826A4
+      2128C000
+      06004010
+      00000000
+      C0000634
+      1800C500
+      12300000
+      C2310600
+      CE3826A4
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Move +1 = Poison Heal">
+    <Description>Heals 1/4 max hp if unit is Poisoned, replaces poison's normal effect.
+
+**This version requires disable move/jump+x to not stack with move+1's vanilla effect**</Description>
+    <Location file="BATTLE_BIN" offset="126800">
+28780508
+00000000
+    </Location>
+<Location file="BATTLE_BIN" offset="f70a0">
+93000392
+2A000296
+80006330
+07006010
+00000000
+1980033C
+902D638C
+82100200
+060062A4
+10360608
+40000234
+02360608
+1980033C
+    </Location>
+  </Patch>
+
+<Patch name="Wall becomes Mist or MP Regen, Blank status becomes MP Poison">
+    <Description>The MP Regen recovers 1/4 of Max MP after each turn. MP Poison depletes 1/4 max mp after each turn.</Description>
+    <Location file="BATTLE_BIN" offset="f6ebc">
+5B000392
+00000000
+01006230
+08004010
+00000000
+2E000296
+1980033C
+902D638C
+82100200
+0A0062A4
+10000234
+250062A0
+58000392
+00000000
+80006230
+08004010
+00000000
+2E000296
+1980033C
+902D638C
+82100200
+080062A4
+20000234
+250062A0
+5B000392
+FD350608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1267EC">
+      AF770508
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x19b = Wallchange">
+    <Description>Requires check for presence of ability.  Requires all code related to putting Geomancy on one skill (Vanilla elemental routine edit, Elemental tables 2.0, Counter Flood edit).  This bundles together my old Oil/Undead routine (original code by FFMaster, my mistakes fixed by Glain).  
+
+A unit with ability slot 0x19b takes double damage from the element that corresponds to where he is standing, and does 50% more damage with that element.  All other elements are nulled.  This effect overrides Oil/Undead's elemental changes.  This bonus does not happen twice, such as if unit is hitting self with a weakness.  A unit with Mold Breaker (0x1e5) will ignore both the elemental weakness and nullification granted by Wallchange.
+
+**Should not load junk data**</Description>
+    <Location file="BATTLE_BIN" offset="11de98">
+E8FFBD27
+1000BFAF
+1400B0AF
+32000012
+00000000
+1980043C
+982D848C
+9F70010C
+9B010234
+17006010
+00000000
+1980013C
+942D238C
+982D248C
+92006290
+902D298C
+01004230
+0F004014
+00000000
+B6FC050C
+00000000
+07000416
+00000000
+04002295
+00000000
+40100200
+040022A5
+DC130608
+00000000
+9013060C
+00000000
+DC130608
+00000000
+1980013C
+942D248C
+9F70010C
+9B010234
+0E006010
+00000000
+B6FC050C
+00000000
+0A000416
+00000000
+1980013C
+902D298C
+00000000
+04002295
+00000000
+40180200
+21186200
+42180300
+040023A5
+3361050C
+21200002
+1400B08F
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f15d8">
+E8FFBD27
+1000BFAF
+1400B0AF
+1980103C
+04391092
+A613060C
+00000000
+1400B08F
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="121660">
+7661050C
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1200e0">
+A613060C
+    </Location>
+    <Location file="BATTLE_BIN" offset="f14cc">
+1980023C
+982D428C
+E8FFBD27
+5A004590
+1000BFAF
+8000A130
+6D004590
+58004690
+02002010
+9C014194
+7F00A530
+1000C330
+03006010
+00000000
+0100A534
+FD00A530
+24188500
+02006010
+00042334
+9C0143A4
+5A004190
+6E004590
+80002130
+02002010
+00000000
+7F00A530
+1000C130
+02002010
+00000000
+FC00A530
+24188500
+05006010
+00000000
+9013060C
+00000000
+72610508
+00000000
+6F004590
+02002010
+90014194
+0300A530
+24188500
+02006010
+43080100
+900141A4
+5A004190
+70004590
+80002130
+02002010
+90014194
+8000A534
+1000C330
+03006010
+00000000
+FE00A530
+0200A534
+24188500
+05006010
+40080100
+9C014394
+900141A4
+00086334
+9C0143A4
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name ="Mime functions as normal Job (last line deleted)" hideInDefault="true">
+    <Description>
+      Mime still can't learn abilities, but otherwise, they should be perfectly normal.
+    </Description>
+    <Location file="WORLD_WORLD_BIN" offset="00005014">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00005040">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000150C0">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00029110">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="0002913C">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00029290">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000292BC">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="0002CB00">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="0002CB2C">
+      FFFF0334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00040E80">
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00042818">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00044834">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000448D0">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00044B00">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="00045470">
+      FFFF0234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="000455B0">
+      FFFF0334
+    </Location>
+    <Location file="BATTLE_BIN" offset="00116BD8">
+      FFFF0234
+    </Location>
+  </Patch>
+
+  <Patch name="Mime only accesses Mimic skillset">
+    <Description>Meant to be used with Xifanie's mime change (delete last line), and Generic Skillset Fix (to make Mimic skillset function as an ordinary auto learn set).</Description>
+    <Location file="BATTLE_BIN" offset="11a4a4">
+      000007A2
+      01001026
+      18000234
+      05008210
+      4000C230
+    </Location>
+  </Patch>
+
+  <Patch name="Silent Walk becomes Flee - FIXED for branching/load issue">
+    <Description>Add 4 move when unit is in critical. Originally written by FFMaster FIXED thanks to Raijinili!!</Description>
+    <Location file="BATTLE_BIN" offset="10D860">
+      ED600508
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13B4">
+      95002292
+      00000000
+      02004230
+      07000210
+      3A003092
+      5A002292
+      00000000
+      01004230
+      02000210
+      00000000
+      04001026
+      1AD20508
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Inherent RSM Limitation Hack">
+    <Description>The code in vanilla that prevents, for example, a knight from using Equip Armor is replaced with this code.  This prevents the player from equipping something innate to the class, but allows all other abilities' use.  Bugfix by Emmy. :)</Description>
+    <Location file="WORLD_WORLD_BIN" offset="42D6C">
+      40100700
+      2010E200
+      00210200
+      0680023C
+      20204400
+      B8108424
+      01008290
+      FF00C330
+      06006210
+      0F008330
+      0E006328
+      FAFF0314
+      02008424
+      02000010
+      00000000
+      0040C634
+      01001026
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="44B08">
+      0680013C
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="44B28">
+DA010508
+00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="60768">
+0680013C
+40280300
+20286500
+00290500
+20082500
+B8102124
+01002290
+00002890
+00120200
+25104800
+62008594
+00000000
+0200A214
+02002124
+620080A4
+0F002530
+F5FF0514
+00000000
+F8FF2120
+01002290
+00002890
+00120200
+25104800
+64008594
+00000000
+0200A214
+02002124
+640080A4
+0F002530
+F5FF0514
+00000000
+F8FF2120
+01002290
+00002890
+00120200
+25104800
+66008594
+00000000
+0200A214
+02002124
+660080A4
+0F002530
+F5FF0514
+00000000
+F8FF2120
+62008194
+64008294
+00000000
+02004114
+00000000
+620080A4
+66008294
+00000000
+02004114
+00000000
+620080A4
+64008194
+00000000
+02004114
+80101400
+640080A4
+FE920408
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Party lv+ 50+ interpreted as party lv - x">
+    <Description>Party level, Party lv - random, and Party lv +50 are interpreted as Party Level.  Party Level +51 is interpreted as Party Level -1, Party Level +52 is interpreted as Party Level -2, etc. through party Lv +99 is interpreted as Party level -49.  Set levels and party +1-49 are interpreted as normal.</Description>
+    <Location file="SCUS_942_21" offset="4b5dc">
+      FF000332
+      03006010
+      FE000234
+      06006214
+      6400622C
+      0680033C
+      08636390
+      00000000
+      9D6B0108
+      00007034
+      11004014
+      21180002
+      0680023C
+      08634290
+      9600042E
+      09008014
+      00000000
+      96000434
+      23200402
+      23804400
+      1100001E
+      00000000
+      9D6B0108
+      01001034
+    </Location>
+  </Patch>
+
+  <Patch name="Cone AoE">
+    <Description>
+Creates Cone AoE. Enable this on any skill by flagging both Linear and Tri Direction AoE flags.
+Uses Kanji Space. Uses lines 0x1557fc - 0x155b04. 194 Lines.
+Does not work with Direct/Stop at Obstacle, as neither does Linear/Tri AoE.
+Make sure you are using the latest version of FFTPatcher.
+Version 1.09
+    </Description>
+<Location file="BATTLE_BIN" offset="112204">
+00004126
+</Location>
+<Location file="BATTLE_BIN" offset="114B24">
+06000234
+FF55050C
+00000000
+02004014
+1000A427
+0C56050C
+00000000
+0300A010
+C0003032
+9AEF050C
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="EE7FC">
+06002632
+09004610
+00000234
+02000234
+0600C210
+03000534
+04000234
+0300C210
+01000534
+FF000234
+00000534
+0800E003
+00002F24
+</Location>
+<Location file="BATTLE_BIN" offset="EE830">
+C0FFBD27
+1000A527
+3C00BFAF
+3800B4AF
+3400B3AF
+3000B2AF
+2C00B1AF
+8B78010C
+2800B0AF
+1000A393
+1C00B287
+2000B487
+01000234
+1980013C
+F8F422AC
+C0100300
+23104300
+80110200
+1980033C
+CC086324
+21104300
+47005190
+48005090
+2A103202
+04004010
+01001334
+5856050C
+00000000
+3A560508
+2A105102
+04004010
+FF001334
+5856050C
+00000000
+3A560508
+2A101402
+04004010
+00011334
+5856050C
+00000000
+3A560508
+2A109002
+18004010
+00FF1334
+5856050C
+00000000
+21200000
+1980033C
+D82D6324
+01006290
+00000000
+03004014
+00000000
+44560508
+000060A0
+010060A0
+01008424
+00028228
+F6FF4014
+05006324
+00000000
+2C00B18F
+FF00E431
+2128A002
+42311100
+A9E4050C
+0100C630
+3C00BF8F
+3800B48F
+3400B38F
+3000B28F
+2C00B18F
+2800B08F
+4000BD27
+0800E003
+25280000
+</Location>
+<Location file="BATTLE_BIN" offset="EE960">
+21380000
+19800B3C
+D82D6B25
+01000A34
+3400A68F
+62004006
+0E80033C
+9C4E6390
+00000000
+2A104302
+5D004010
+00000000
+5B008006
+0E80023C
+A04E4290
+00000000
+2A108202
+56004010
+18000302
+12100000
+21205100
+0E80033C
+FF000834
+24106802
+0F004010
+00000000
+05000215
+FFFF2126
+48002004
+00000000
+7D560508
+FFFF0224
+9C4E6390
+01002126
+42006110
+00000000
+01000220
+20882202
+93560508
+20208200
+02121300
+3E004010
+FFFF0126
+06000215
+00000000
+37002004
+FFFF0224
+9C4E6390
+91560508
+22180300
+A04E6390
+01000126
+30007010
+00000000
+0E80033C
+9C4E6390
+01000234
+20800202
+20208300
+22480700
+25288000
+FF000334
+24106302
+0E004010
+0E80033C
+20100902
+20004004
+A04E6390
+00000000
+1F006210
+00000000
+0E80033C
+9C4E6390
+00000000
+18006900
+12180000
+B0560508
+20288300
+02121300
+18004010
+00000000
+20102902
+10004004
+9C4E6390
+00000000
+0F006210
+00000000
+20288900
+80100500
+21104500
+21184B00
+00006AA0
+01006AA0
+0001A824
+80100800
+21104800
+21184B00
+00006AA0
+01006AA0
+D9FF2715
+01002921
+2210C700
+AEFF401C
+0100E724
+0800E003
+00000000
+</Location>
+</Patch>
+
+  <Patch name="Arcing AoE/Range">
+    <Description>
+Feeds AoE/Range generation through the Arc Range Routine (0x001798b0), creating an AoE/Range that gains size from height/2
+Uses Ability Flags 1 Unknown Flags 0x80 and 0x40.
+Removes and overwrites the coding otherwise attached to the Unknown Ability Flags (0x0017a6dc) known so far. 
+0x80 - Arcing AoE
+0x40 - Arcing Range	
+Version 1.1
+
+Load delay error fixed by Emmy. :)
+	</Description>
+	<Location file="BATTLE_BIN" offset="114AC8">
+	0680053C
+	01006226
+	000002A1
+	B7E9050C
+	</Location>
+	<Location file="BATTLE_BIN" offset="11343C">
+	B7E9050C
+	0680053C
+	</Location>
+	<Location file="BATTLE_BIN" offset="1134A0">
+	00000000
+	97E4050C
+	00000000
+	00000000
+	00000000
+	00000000
+	00000000
+	21208002
+	10004232
+	05004014
+	</Location>
+	<Location file="BATTLE_BIN" offset="1136DC">
+1200A287
+F0FBA524
+C0180200
+23186200
+40180300
+2128A300
+1880063C
+A8A7DFAC
+A8A7C280
+DC000334
+FF004230
+0300A580
+14004314
+8000A230
+1D004010
+4CA7C324
+2000AD93
+1C00AC93
+0E80023C
+D0FFBD27
+2000B0AF
+2400B1AF
+2800A3AF
+3899C0AC
+21184002
+21886002
+39E6050C
+A04E4290
+1880023C
+4014033C
+27006324
+389943AC
+E5E90508
+4000A230
+09004010
+25288000
+3899C0AC
+2CE6050C
+25208002
+1880023C
+4014033C
+27006324
+E5E90508
+389943AC
+46E5050C
+21280000
+1880023C
+A8A75F8C
+00000000
+0800E003
+00000000
+00000000
+	</Location>
+  </Patch>
+
+  <Patch name="Smart brave/faith hack 2.0">
+<Description>Original idea by DW, Fixed by Emmy. :)
+What it does:
+- Brave and faith gradually return to original values when changed
+- Works in increments of 5
+- Works! :)
+</Description>
+    <Location file="BATTLE_BIN" offset="11c280">
+E7780508
+00000000
+    </Location>
+<Location file="BATTLE_BIN" offset="f739c">
+24000B92
+23000C92
+26000D92
+25000E92
+2A106C01
+0A004010
+00000000
+23188B01
+0500622C
+02004014
+80006324
+85000334
+25002292
+160023A2
+01004234
+250022A2
+2A10AE01
+0A004010
+00000000
+2318CD01
+0500622C
+02004014
+80006324
+85000334
+25002292
+170023A2
+01004234
+250022A2
+A90C0608
+00000000
+</Location>
+  </Patch>
+
+  <Patch name="Relabels star displays for monsters with a monster skillset">
+    <Description>On player side: innate abilities in battle, action abilities in formation/unit list screen.  On enemy side, will only display if additional r/s/m given to it (randomly generated or otherwise)</Description>
+    <Location file="BATTLE_BIN" offset="cca00">
+30004010
+00000000
+05008292
+2E0020A6
+30004230
+39004014
+300020A6
+0A008296
+0C008396
+0E008496
+10008596
+2E0022A6
+300023A6
+320024A6
+340025A6
+D0CE0408
+360020A6
+    </Location>
+  </Patch>
+
+  <Patch name="Monsters can use attack">
+    <Description>Changes all monsters to be able to use Attack command.  Version 0.03 - Monsters don't get a 2nd skillset randomly.</Description>
+    <Location file="BATTLE_BIN" offset="11A424">
+01000234
+000002A2
+01001026
+000007A2
+FF000334
+3E050608
+010003A2
+00000000
+00000000
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Removes ability previews for move/jump +1/2/3">
+    <Description>Removes all these previews. Useful if replacing with something else.  Credit to Pride for finding routine. :)</Description>
+    <Location file="WORLD_WORLD_BIN" offset="42f58">
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Status display images - Fixing bugs">
+    <Description>
+      Charging, Jump, Defending, Performing no longer display "cursed" if using status display = cursed.
+   </Description>
+    <Location file="BATTLE_BIN" offset="2CD1c">
+      1F1F1F1F
+    </Location>
+	<Location file="BATTLE_BIN" offset="100924">
+      1F1F1F1F
+    </Location>
+   <Location file="BATTLE_BIN" offset="E5FE4">
+      01010101
+   </Location>
+  </Patch>
+
+  <Patch name="Status display images - Rasp">
+    <Description>
+      Display "Rasp" text images when targeting / inflicting Blank status.  Requires  modifications to FRAME.BIN. 
+   </Description>
+    <Location file="BATTLE_BIN" offset="2CD18">
+      20
+    </Location>
+	<Location file="BATTLE_BIN" offset="100920">
+      20
+    </Location>
+   <Location file="BATTLE_BIN" offset="E5FE8">
+      c4a8120a
+   </Location>
+  </Patch>
+
+  <Patch name="Status display images - Cursed">
+    <Description>
+      Display "Cursed" text images when targeting / inflicting Dark/Evil looking status.  Requires  modifications to FRAME.BIN. 
+   </Description>
+    <Location file="BATTLE_BIN" offset="2CD26">
+      21
+    </Location>
+	<Location file="BATTLE_BIN" offset="10092e">
+      21
+    </Location>
+   <Location file="BATTLE_BIN" offset="E5FEC">
+      40ef1808
+   </Location>
+  </Patch>
+
+  <Patch name="Status display images - Mist">
+    <Description>
+      Display "Mist" text images when targeting / inflicting Wall status.  Requires  modifications to FRAME.BIN. 
+   </Description>
+    <Location file="BATTLE_BIN" offset="2CD37">
+      1E
+    </Location>
+	<Location file="BATTLE_BIN" offset="10093F">
+      1E
+    </Location>
+   <Location file="BATTLE_BIN" offset="E5FE0">
+      DB481108
+   </Location>
+  </Patch>
+
+
+  <Patch name="Uncap HP/MP in formation">
+    <Description>Requires uncap hp/mp.  Displays the last 3 digits of hp/mp if greater than 999 when hovering over individual characters, and 000 if looking at the formation as a whole.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="40c48">
+00000000
+00000000
+00000000
+00000000
+00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40c68">
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40c88">
+00000000
+00000000
+00000000
+00000000
+00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40ca8">
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Display 4 monster skills in formation">
+    <Description>^^^^^</Description>
+    <Location file="WORLD_WORLD_BIN" offset="40e5c">
+04008228
+    </Location>
+  </Patch>
+
+  <Patch name="New display information">
+    <Description>Displays immortal flag, special snowflakes, class defense in place of weapon power/evade%.  Requires Special Snowflakes/Defense by class.
+New values:
+"R" - 004 if immortal, 000 if not
+"L" - special snowflakes index number
+r% - % damage reduction physical
+l% - % damage reduction magical</Description>
+    <Location file="BATTLE_BIN" offset="cc828">
+1580013C
+03008392
+1680093C
+C4DC2625
+24DC2725
+2130C300
+2138E300
+0000C690
+0000E790
+FF000234
+F7610508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f17dc">
+64000334
+1800C300
+12300000
+05008492
+69018892
+1A00C200
+12300000
+AAD026A4
+04008430
+1800E300
+12380000
+A6D024A4
+A8D028A4
+1A00E200
+12380000
+ACD027A4
+16CE0408
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Display class m-ev">
+    <Description>Requires class M-ev.  Displays the value under Class Ev that is normally hardcoded to 00 as the character's M-ev.  This hack only displays in battle (not Unit List or formation screen).</Description>
+    <Location file="BATTLE_BIN" offset="cc8b0">
+00000000
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="eb11c">
+1580013C
+82D022A4
+40214624
+2130C100
+0000C690
+00000000
+BED026A4
+F6CD0408
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="cc7d0">
+47480508
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="World.bin display changes">
+    <Description>Requires cloned tables for world.bin. Requires Special Snowflakes, Def/Mdef by class, M-ev by class.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="40d5c">
+03002392
+1480093C
+A4092625
+04092725
+64082A25
+2130C300
+2138E300
+21504301
+0000C690
+0000E790
+91020508
+00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="60a44">
+00004A91
+FF000234
+64000334
+1800C300
+12300000
+05002592
+69012892
+1A00C200
+12300000
+3A0006A6
+0400A530
+1800E300
+12380000
+360005A6
+380008A6
+1A00E200
+12380000
+3C0007A6
+63830408
+00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40dec">
+4E000AA6
+    </Location>
+  </Patch>
+
+  <Patch name="Cloned tables for world.bin">
+    <Description>Class M-ev, Defense.  Copy/paste these tables from their respective hacks.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="60864"><!-- M-ev -->
+00
+00000014
+19191E14
+0F0F1919
+28280028
+0F3C6319<!-- 0x14/20 -->
+19140032
+000A0A32
+1400190A
+1E191E14
+141E0A1E<!-- 0x28/40 -->
+1E231446
+14141423
+23192D1E
+190F1E0F
+3C143763<!-- 0x3c/60 -->
+141E0F1E
+190F1900
+001E1923
+23000000
+00000000<!-- 0x50/80 -->
+00000000
+00000000
+00000000
+281E5A1E
+0F050F37<!-- 0x64/100 -->
+32371919
+19143214
+1414140F
+0F0F0F0F
+0F1E1E1E<!-- 0x78/120 -->
+3C3C3C1E
+1E1E1414
+14191919
+14141423
+00232828<!-- 0x8c/140 -->
+28232314
+231E1414
+0F142323
+23230000
+191919
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="60904"><!--Defense -->
+00000000
+50004A59
+0068682C
+33453400
+3400FEC0
+8050601A
+00004000
+00000000
+1A000040
+00004E00
+0000
+00000080
+59000000
+00000000
+000000FE
+40D0FE34
+0000001A
+34000000
+4E681A9C
+00000000
+00000000
+0000
+00000000
+00000000
+00004E00
+4E003400
+D034D01A
+1A1A5959
+59404040
+0D0D0D34
+34342727
+27E8E8E8
+1A1A
+1A006868
+80808027
+40271A1A
+1A003434
+001A3468
+00004000
+34000068
+1A000000
+0000
+00000000
+000038A5
+331A1A08
+4D458000
+68001A00
+0050261A
+9000C000
+00000000
+1A000000
+000034B2
+0000
+00000000
+2600B200
+2700001A
+80FE331A
+40340000
+00340068
+00000000
+341A1A68
+00000000
+00000000
+0000
+00000000
+00000000
+00003400
+3434D034
+34003468
+68682700
+27404040
+2727274E
+4E4E0D0D
+0D1A1A1A
+E8E8
+E8591A1A
+80808059
+40591A1A
+1A80D0D0
+001A009C
+00004000
+0000801A
+68000000
+0000
+</Location>
+  </Patch>
+
+  <Patch name="Instant skills blink red if unusable due to silence/out of mp">
+    <Description>^^^^^</Description>
+    <Location file="BATTLE_BIN" offset="d90bc">
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="d90f4">
+      00000000
+    </Location>
+  </Patch>
+
+
+
+<Patch name="Character with Dark/Evil Looking Marches Normally">
+<Location file="BATTLE_BIN" offset="1c0a4">
+0c004010 
+</Location>
+</Patch>
+
+  <Patch name="Locks job wheel/equip screen for standard monsters">
+    <Description>This means if you change the skillsets for any of the monsters from 5E onwards, it works as a regular monster skillset in that job wheel, change ability, item screen no longer is accessible. No more glitchy job wheel! :)</Description>
+    <Location file="WORLD_WORLD_BIN" offset="40b94">
+      A2FF8424
+      4200842C
+    </Location>
+  </Patch>
+
+  <Patch name="Disables equip at job change">
+    <Description>Option 12 (Equip at Job Change) does nothing. Code is disabled, so game behaves as if permanently off.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="448a8">
+      32000010
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="3ee28">
+      00000000
+    </Location>
+  </Patch>
+
+
+<Patch name="Video Hack">
+<Location file="OPEN_OPEN_BIN" offset="3084">00000000</Location>
+<Location file="OPEN_OPEN_BIN" offset="3CAC">00000234</Location>
+<Location file="OPEN_OPEN_BIN" offset="2E74">0200</Location>
+<Location file="OPEN_OPEN_BIN" offset="2E80">C06E</Location>
+<Location file="OPEN_OPEN_BIN" offset="2E84">9186</Location>
+<Location file="OPEN_OPEN_BIN" offset="2E90">0000</Location>
+</Patch>
+
+    
+  <Patch name="Event Instruction Upgrade v1.13 (modified)" hideInDefault="true">
+<Description>
+Upgrades InflictStatus(), Allows editing more variables and Adds many instructions to use in events, such as: BlockLoop(), LUI(), SET(), Random(), LoadAddress(), UnitAddress(), WorldUnitAddress(), SaveAddress(), UpdateUnit(), MinMax() and Routine(). Automatically recalculates the text offset when necessary removing the need to include a Text() offset for savestate eventing.
+
+**Fixed to remove stack pointer offset errors**
+</Description>
+<Location file="BATTLE_BIN" offset="EB4D0">
+00068228
+0B004010
+00FC8224
+00014330
+FF004230
+83100200
+80100200
+02006014
+0680033C
+4C026324
+94946324
+E1280508
+21806200
+000A8228
+07004010
+00FA8224
+43110200
+80100200
+0680033C
+14946324
+E1280508
+21806200
+000B8228
+07004010
+00F68224
+43100200
+80100200
+0580033C
+C8796324
+E1280508
+21806200
+800B8228
+06004010
+00F58224
+80100200
+1680033C
+F45E6324
+E1280508
+21806200
+5632050C
+00000000
+E1280508
+00000000
+04004010
+00068228
+07008230
+F8280508
+80800200
+04004010
+000A8228
+03008230
+F8280508
+C0800200
+03004010
+000B8228
+F8280508
+1F009030
+04004010
+800B8228
+01008230
+F8280508
+00810200
+03004010
+00000000
+F8280508
+FFFF1024
+F4280508
+00000000
+03004014
+000A622A
+0800E003
+FFFF0424
+03004014
+0006622A
+0800E003
+FFFF0434
+03004014
+0004622A
+0800E003
+01000434
+03004014
+6003622A
+0800E003
+FF000434
+02004014
+01000434
+0F000434
+0800E003
+00000000
+05004014
+0004622A
+03004010
+00000000
+75280508
+01000234
+7E280508
+00000000
+BF000234
+0B008216
+C1000234
+00000000
+00000000
+C388000C
+7F004432
+0580013C
+80100400
+21082200
+1C7723AC
+C9170508
+00000000
+00000434
+04008212
+C4000234
+3A008216
+C2000234
+01000434
+03002392
+0580013C
+7F006330
+80180300
+21082300
+1C77238C
+FFFF0224
+03004314
+00000000
+C9170508
+00000000
+02002292
+00000000
+00120200
+21184300
+01002292
+00000000
+21084300
+04002392
+00000000
+02006014
+05006228
+01000334
+02004014
+00000000
+04000334
+10008014
+25206000
+25100000
+FFFF2124
+21082400
+00002390
+FFFF8424
+00120200
+25104300
+FBFF801C
+FFFF2124
+00002392
+0580013C
+80180300
+21082300
+C9170508
+1C7722AC
+00002392
+0580023C
+7F006330
+80180300
+21104300
+1C77428C
+FFFF8424
+000022A0
+02120200
+FCFF801C
+01002124
+C9170508
+00000000
+25400000
+18008212
+C3000234
+13008216
+C5000234
+14000434
+0580013C
+747F2124
+00002284
+01002392
+08004004
+FF004230
+18005210
+FFFF8424
+04004010
+CE002294
+00000000
+13005210
+00000000
+F4FF801C
+00012124
+074A0508
+25080000
+21008216
+C6000234
+01000834
+15000434
+1980013C
+CC082124
+61012290
+01002392
+05005210
+FFFF8424
+FBFF801C
+C0012124
+074A0508
+25080000
+07000015
+00000000
+7F006230
+80100200
+0580033C
+21184300
+C9170508
+1C7761AC
+02006830
+08000011
+00000000
+1A80013C
+14000334
+22206400
+21082400
+04000234
+65FD22A0
+00000000
+C9170508
+00000000
+1D008216
+CF000234
+0580013C
+7F004232
+80100200
+21082200
+1C77228C
+01002892
+03002392
+01000431
+08008014
+02000831
+02002492
+001A0300
+21186400
+22204300
+02008104
+00000000
+25106000
+08000015
+05002392
+04002492
+001A0300
+21186400
+22206200
+02008104
+00000000
+25106000
+C9170508
+1C7722AC
+3A008216
+00000000
+B8FFBD27
+1400A5AF
+1800A6AF
+1C00A7AF
+2000A8AF
+2400A9AF
+2800AAAF
+2C00ABAF
+3000ACAF
+3400ADAF
+3800AEAF
+3C00AFAF
+4000B0AF
+20100000
+03002392
+02002492
+001E0300
+25104300
+00240400
+25104400
+01002392
+00002492
+001A0300
+25104300
+25104400
+0580013C
+1C772124
+0C00238C
+1000248C
+1400258C
+1800268C
+1C00278C
+2000288C
+2400298C
+28002A8C
+2C002B8C
+30002C8C
+34002D8C
+38002E8C
+3C002F8C
+4000308C
+09F84000
+00000000
+0000A58F
+0400A68F
+0800A78F
+0C00A88F
+1000A98F
+1400AA8F
+1800AB8F
+1C00AC8F
+2000AD8F
+2400AE8F
+2800AF8F
+2C00B08F
+C9170508
+4800BD27
+510F0508
+C0000234
+03004216
+AE00422A
+6E280508
+21800000
+03004010
+B000422A
+6E280508
+00841100
+03004010
+B200422A
+6E280508
+21802002
+48280508
+00000000
+03004216
+04000534
+F0230508
+05000534
+33004516
+00000000
+D8FFBD27
+10002BAC
+14002CAC
+18002DAC
+1C002EAC
+20002FAC
+25580000
+01000C34
+25680000
+A7010F92
+25700000
+24208F01
+05008010
+2528A001
+21202002
+01000634
+4024050C
+01000734
+01006B25
+01000C34
+0800642D
+07006531
+0460AC00
+F3FF8014
+0100AD25
+25580000
+0500C429
+05008010
+0100CE25
+21780E02
+A701EF91
+934A0508
+00000000
+10002B8C
+14002C8C
+18002D8C
+1C002E8C
+20002F8C
+2800BD27
+1780023C
+783C428C
+04000334
+21105400
+B10343A0
+0980023C
+E4BD4224
+1780013C
+A83C22AC
+2E240508
+21206002
+09240508
+00000000
+00000000
+00000000
+00000000
+00000000
+2F000234
+36004314
+00000000
+01000292
+1580013C
+C2180200
+07004530
+21082300
+F02A2390
+01000434
+0420A400
+24288300
+0580063C
+80100200
+2130C200
+1C77C28C
+0600A010
+00000000
+0C004014
+00000000
+26186500
+60FB0408
+F02A23A0
+25186400
+00000492
+00000000
+0200852C
+0300A014
+00000000
+25108000
+FFFF4224
+00000492
+03004014
+01008530
+60FB0408
+00000000
+F02A23A0
+02008010
+00000000
+FFFF4224
+1C77C2AC
+03000282
+02000392
+00120200
+25104300
+05004014
+80220A00
+1780013C
+21082400
+67FB0408
+6C98328C
+02004004
+21904202
+05005226
+67FB0408
+00000000
+36FB0408
+6F000234
+0A004014
+21082200
+0580093C
+BCA62925
+00002A8D
+F2F2083C
+F2F20835
+03004811
+21204901
+000028AD
+8C3F24AC
+10CA0408
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="CB838">FA4A0508 1780013C</Location>
+<Location file="BATTLE_BIN" offset="D7CD0">C04A0508 00004392</Location>
+<Location file="BATTLE_BIN" offset="DCD3C">95490508 21984000</Location>
+<Location file="BATTLE_BIN" offset="E31CC">8D490508 00000000</Location>
+<Location file="BATTLE_BIN" offset="E337C">34490508 00000000</Location>
+<Location file="BATTLE_BIN" offset="E33C8">
+5F490508 00000000 5632050C 00000000 00000000 00000000
+</Location>
+<Location file="BATTLE_BIN" offset="E3098">
+000B622A 7849050C FFFF0424 00000000
+</Location>
+<Location file="BATTLE_BIN" offset="E30E0">
+000B622A 7849050C FFFF0424 00000000
+</Location>
+<Location file="BATTLE_BIN" offset="E3280">
+000B622A 7849050C FFFF0424 00000000
+</Location>
+<Location file="BATTLE_BIN" offset="DCD5C">54FF8226</Location>
+<Location file="BATTLE_BIN" offset="DCD70">1300422C</Location>
+<Location file="BATTLE_BIN" offset="E1FB8">824A0508 00000000</Location>
+<Location file="BATTLE_BIN" offset="E619F">04</Location>
+<Location file="BATTLE_BIN" offset="E621C">04040404</Location>
+<Location file="BATTLE_BIN" offset="E622F">01</Location>
+<Location file="BATTLE_BIN" offset="E6231">050202050206</Location>
+<Location file="BATTLE_BIN" offset="E623F">04</Location>
+  </Patch>
+
+  <Patch name="Only helmets grant hp/mp">
+    <Description>Blanks out these fields for armor</Description>
+    <Location file="SCUS_942_21" offset="4cfb0">
+      20004230
+    </Location>
+  </Patch>
+
+  <Patch name="Remove HP Cap">
+    <Description>All things cap at 65535 instead of 999 regardless of flags/equipment.</Description>
+    <Location file="SCUS_942_21" offset="4c088">
+      FFFF0E34
+    </Location>
+    <Location file="SCUS_942_21" offset="4ce04">
+      FFFF1034
+    </Location>
+  </Patch>
+
+  <Patch name="Disables all equip support abilities">
+    <Description>Disables the effect of all "Equip X" support abilities.</Description>
+    <Location file="SCUS_942_21" offset="4B178">
+      00000000
+    </Location>
+    <Location file="SCUS_942_21" offset="4B2A0">
+      00000000
+    </Location>
+    <Location file="SCUS_942_21" offset="4DF18">
+      00000000
+    </Location>
+  </Patch>
+
+<Patch name="Compatibility is no longer calculated twice for no reason in spell accuracy, silly hardcoding to Golem's slot removed">
+    <Description>nop nop</Description>
+    <Location file="BATTLE_BIN" offset="11f5b0">
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11f5d0">
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="WG hardcoding removal">
+    <Description>Removes hard coding on Weapon Guard?</Description>
+    <Location file="BATTLE_BIN" offset="11dfac">
+00000000
+00000000
+00000000
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="MBS mimics range and animation of other attack">
+    <Description>Keeps its original effect (unevadable counter in amount of max hp), but uses several properties of attack indexed here.</Description>
+    <Location file="BATTLE_BIN" offset="1172d4">
+      33000534
+      0A010634  <!-- First 2 bytes are attack indexed, reversed (0x010a here) -->
+    </Location>
+  </Patch>
+
+  <Patch name="Counter = physical counterpart to Counter Magic">
+    <Description>Counter will counter with the same move used on target, going by Countergrasp flag.</Description>
+    <Location file="SCUS_942_21" offset="4F3E4">
+      29
+    </Location>
+    <Location file="BATTLE_BIN" offset="1173d4">
+0B000534
+00000000
+94F9050C
+01000734
+    </Location>
+  </Patch>
+
+  <Patch name="Counter Flood uses Flood Ball">
+    <Description>This allows for Counter Flood to work by using an ability instead of vanilla geomancy.  If you changed geomancy with my other codes, this is required to make Counter Flood work.</Description>
+    <Location file="SCUS_942_21" offset="4f3df">
+      29
+    </Location>
+    <Location file="BATTLE_BIN" offset="11731c">
+      21202002
+      0B000534
+      F7F80508
+      7E000634  <!-- Ability used is indexed here (0x007e default) -->
+    </Location>
+  </Patch>
+
+  <Patch name="Darkness applies to both Physical and Magical abilities.">
+    <Description>Also makes accuracy penalty only apply to Darkness, not Confusion</Description>
+    <Location file="BATTLE_BIN" offset="11e340">
+20004230
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E3DC">
+CA14060C
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Moves Abandon to support abilities">
+    <Description>Abandon support in Equip Katana slot instead of reactions.</Description>
+    <Location file="BATTLE_BIN" offset="11E3A8">
+8F004290
+00000000
+10004230
+    </Location>
+  </Patch>
+
+  <Patch name="Disable Defend. Merge Equip Change, Maintenance, Move-Find on Move-Find's slot">
+    <Description>^^^^^</Description>
+    <Location file="BATTLE_BIN" offset="11a450">    <!-- Equip Change -->
+95006690
+    </Location>
+    <Location file="BATTLE_BIN" offset="11a4c8">    <!-- Disables Defend (required for Equip Change's move to work) -->
+03000010
+    </Location>
+    <Location file="BATTLE_BIN" offset="11a4d8">    <!-- Equip Change -->
+0100C230
+    </Location>
+    <Location file="BATTLE_BIN" offset="120644">    <!-- Maintenance -->
+95004290
+00000000
+01004230
+    </Location>
+  </Patch>
+
+  <Patch name="Disables Catch">
+    <Description>Useful if you are replacing Catch with something else.</Description>
+    <Location file="BATTLE_BIN" offset="12145c">
+00000000
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="124f10">
+00000000
+00000000
+00000000
+00000000
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="2 Hands innate all">
+    <Description>Equip items in 2 hands for more damage!  Fixed display! :)</Description>
+    <Location file="BATTLE_BIN" offset="124848">
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ccbe0">
+      00000000
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="40B6C">
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Critical = 1/4">
+    <Description>Critical status applies at 1/4 hp instead of 1/5</Description>
+    <Location file="BATTLE_BIN" offset="125344">
+      00000000
+      00000000
+      00000000
+    </Location>
+    <Location file="SCUS_942_21" offset="4DF88">
+      00000000
+      00000000
+      28002396
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Undead always rerise, Treasure disabled">
+    <Description>First part makes undead always rerise. Second part removes treasure.</Description>
+    <Location file="BATTLE_BIN" offset="11C17C">
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11C1DC">
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Silly hardcoding removal, related to skillset 08">
+    <Description>If you use skillset 08 (charge) for anything other than charge, you want to use this hack.  This eliminates the hardcoding that causes characters to cancel their own spells by moving.</Description>
+    <Location file="BATTLE_BIN" offset="1191a0">
+FFFF0234
+    </Location>
+  </Patch>
+
+  <Patch name="Disables Gained XP Up Slot">
+    <Description>Useful if you want to use the slot for something else.</Description>
+    <Location file="BATTLE_BIN" offset="1266b8">
+      00000234
+    </Location>
+  </Patch>
+
+  <Patch name="Golem checks for Countergrasp flag">
+    <Description>Golem blocks all attacks with the Countergrasp flag.</Description>
+    <Location file="BATTLE_BIN" offset="124cac">
+F6384290
+00000000
+10004230
+    </Location>
+  </Patch>
+
+  <Patch name="Disables Ignore Height, Any Ground, Any weather">
+    <Description>Disables these so that another ability can be written in their slots</Description>
+    <Location file="BATTLE_BIN" offset="10d774">
+      02000010
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d7b8">
+      04000010
+    </Location>
+    <Location file="BATTLE_BIN" offset="10d828">
+      03000010
+    </Location>
+  </Patch>
+
+  <Patch name="Disables all move/jump +x">
+    <Description>Requirement for hacks as listed in descriptions.  Frees space between 0x0005c93c - 0x0005c980, scus.</Description>
+    <Location file="SCUS_942_21" offset="4d110">
+      FFFFA230
+      FD00422C
+      02004014
+      FFFF6230
+      FC000534
+      0800422C
+      02004014
+      3A0085A0
+      07000334
+      0800E003
+      3B0083A0
+    </Location>
+  </Patch>
+
+  <Patch name="January 1 = Serpentarius">
+    <Description>Serpentarius is no longer hardcoded to a job slot, but to the date January 1.  This means that you can set any unit to have Serpentarius via the Entd, and randomized units have a 1/365 chance to appear with Serpentarius.  Does not affect Ramza, but can affect any special unit.</Description>
+    <Location file="SCUS_942_21" offset="4b720">
+      FF018330
+      01000234
+    </Location>
+  </Patch>
+
+<Patch name="Guns are able to proc">
+    <Description>Removes dumb hardcoding.</Description>
+<Location file="BATTLE_BIN" offset="124900">
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="MP Restore change to cancel/inflict statuses">
+    <Description>Changes MP Restore to Cancel Cursed (if unit is inflicted with cursed), and if unit is not inflicted with Cursed, will inflict on it Float, Transparent, Reraise, Regen, Protect, Shell, Haste, Mist.</Description>
+    <Location file="BATTLE_BIN" offset="1240d8">
+21200000
+1980033C
+902D638C
+02000234
+210062A0
+70000234
+1D0062A0
+79000234
+1C2C0608
+1E0062A0
+    </Location>
+  </Patch>
+
+<Patch name="Brave up = CT Save (+20 CT, Countergrasp trigger)">
+    <Description>A variation of Pokeytax's boost XX by YY</Description>
+    <Location file="BATTLE_BIN" offset="124090">
+      94000234
+      862C0608
+      130062A0
+    </Location>
+  </Patch>
+
+<Patch name="Faith up = Arcane Quickening">
+    <Description>Casts quick on reaction</Description>
+    <Location file="BATTLE_BIN" offset="12409c">
+      1980033C
+      902D638C
+      FF000234
+      862C0608
+      130062A0
+    </Location>
+  </Patch>
+
+<Patch name="Gained JP UP innate all">
+    <Description>Disables the Gained JP Up slot too.</Description>
+    <Location file="BATTLE_BIN" offset="1179a4">
+      00000000
+    </Location>
+  </Patch>
+  
+<Patch name="Caution becomes Barrier">
+    <Description>Caution adds protect and shell</Description>
+    <Location file="BATTLE_BIN" offset="00124038">
+      30000234
+    </Location>
+    <Location file="BATTLE_BIN" offset="00124040">
+      1E0062A0
+    </Location>
+  </Patch>
+
+<Patch name="Sunken State adds Haste">
+    <Description>Sunken State adds Haste</Description>
+    <Location file="BATTLE_BIN" offset="00124020">
+      08000234
+    </Location>
+    <Location file="BATTLE_BIN" offset="00124028">
+      1E0062A0
+    </Location>
+  </Patch>
+
+<Patch name="hpc/mpc/spc/pac/mac of 0 produces 0 growth">
+    <Description>0 = 0 growth</Description>
+    <Location file="SCUS_942_21" offset="4E278">
+      80FF0234
+    </Location>
+    <Location file="SCUS_942_21" offset="4C0FC">
+      80FF0234
+    </Location>
+  </Patch>
+
+<Patch name="Learn On Hit = XX%">
+    <Description>Learn On Hit = XX%</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="64" offset="127844"/>
+    <Location file="BATTLE_BIN" offset="127845">
+      000534
+    </Location>
+  </Patch>
+
+  <Patch name="Fixed override problem - Allows better stacking of reactions">
+    <Description>Can use additional reactions in entd.  Innate reactions in entd no longer override reactions added in entd.  Originally made by FDC, I fixed typo.</Description>
+    <Location file="SCUS_942_21" offset="4C050">
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Recategorizing R/s/m">
+    <Description>Merges Reaction, Support, and Movement.  Expands r/s/m slots to 0x18b.</Description>
+    <Location file="WORLD_WORLD_BIN" offset="429c0">
+      8a010234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="429d0">
+      8b010334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="429d8">
+      fd010234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="429E4">
+      8b010334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="429EC">
+      fd010234
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="429F8">
+      8b010334
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="429FC">
+      fd010234
+    </Location>
+  </Patch>
+
+  <Patch name="Tying It All Together">
+    <Description>Requirement for hacks as listed in descriptions.  Disables Secret Hunt/Train.  If you are not using a hack, replace line commented with nop (00000000).  If you move a hack, replace commented line to jal (wherever you moved it to).</Description>
+    <Location file="BATTLE_BIN" offset="ebce8">
+E8FFBD27
+1000BFAF
+281F060C  <!-- Distribute = Synchronize --> 
+00000000
+7057050C  <!-- Slot 0x1a4 = br% chance to return damage/healing -->
+00000000
+CB42050C  <!-- Move on Lava = Aftermath -->
+00000000
+8378050C  <!-- Move on water = Warp Touch -->
+00000000
+CA77050C  <!-- Move +3 = Siphon -->
+00000000
+BD61050C  <!-- Defend = Br% +1 pa, etc -->
+00000000
+D343050C  <!-- Damage Trigger Passives Pack -->
+00000000
+A057050C  <!-- Slot 0x18d = fa% chance to raise speed -->
+00000000
+F757050C  <!-- Slot 0x1a0 = unit heals 1/4 of damage dealt -->
+00000000
+6758050C  <!-- Slot 0x19c = 50% of damage done by unit damages MP -->
+00000000
+7F48050C  <!-- Slot 0x19d = doubles healing received by target -->
+00000000
+A358050C  <!-- Slot 0x19a = Attacks done by this unit have a br% chance to also weaken target -->
+00000000
+1358050C  <!-- Slot 0x19f = Reverse stat changes (Must go 2nd to last!) -->
+00000000
+5B4C050C  <!-- Slot 0x1c8 = immunity to negative stat changes (MUST GO LAST!) -->
+00000000
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="12497c">
+3A4B050C
+00000000
+00000000
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x19a = Attacks done by this unit have a br% chance to also weaken target">
+    <Description>Version 0.02. Requires Tying It All Together</Description>
+    <Location file="BATTLE_BIN" offset="EF28C">
+ E8FFBD27
+1000BFAF
+1400B0AF
+1980013C
+942D248C
+942D308C
+9F70010C
+9A010234
+23006010
+00000000
+24000592
+3378010C
+64000434
+0D004014
+00000000
+1980013C
+F6382390
+902D2B8C
+40006230
+07004010
+00000000
+15006491
+25006591
+01008424
+150064A1
+0100A534
+250065A1
+24000592
+3378010C
+64000434
+0D004014
+00000000
+1980013C
+F6382390
+902D2B8C
+10006230
+07004010
+00000000
+14006491
+25006591
+01008424
+140064A1
+0100A534
+250065A1
+1400B08F
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x19c = 50% of damage done by unit damages MP">
+    <Description>Requires check for presence of ability on unit.  Requires Tying it all together 1</Description>
+    <Location file="BATTLE_BIN" offset="ef19c">
+E8FFBD27
+1000BFAF
+1980043C
+942D848C
+9F70010C
+9C010234
+0B006010
+00000000
+1980013C
+902D2B8C
+00000000
+04006295
+25006391
+04004010
+20006334
+42100200
+080062A5
+250063A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x19d = Doubles healing received by target">
+    <Description>Requires check for presence of ability on unit.  Requires Tying it all together 1.  Works on both HP and MP healing.</Description>
+    <Location file="BATTLE_BIN" offset="eb1fc">
+      E8FFBD27
+      1000BFAF
+      1980043C
+      982D848C
+      9F70010C
+      9D010234
+      0A006010
+      00000000
+      1980013C
+      902D2B8C
+      00000000
+      06006295
+      0A006395
+      40100200
+      40180300
+      060062A5
+      0A0063A5
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Ability 0x19f = Reverses stat changes done to unit, reverses faith/innocent use by unit">
+    <Description>Requires Check for presence of ability.  Requires Tying it all together 1.  Requires Faith/Innocent calculation rewrite.  Must be placed 2nd to last in tying it all together 1 to stack properly with other abilities.
+
+Version 2.0 - Used correctly by the ai now</Description>
+    <Location file="BATTLE_BIN" offset="ef04c">
+      E0FFBD27
+      1000BFAF
+      1400B0AF
+      1800B1AF
+      00001034
+      1980043C
+      8C2D918C
+      942D848C
+      9F70010C
+      9F010234
+      10006010
+      01001026
+      00000F34
+      12002926
+      21402F01
+      00000391
+      0100EF25
+      07000434
+      0800E411
+      00000000
+      F9FF6010
+      80006530
+      0200A014
+      7F006530
+      80006534
+      F4FF0010
+      000005A1
+      1980013C
+      902D318C
+      982D248C
+      02000234
+      E8FF5014
+      00000000
+      1800B18F
+      1400B08F
+      1000BF8F
+      2000BD27
+      0800E003
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ef0e8">
+E8FFBD27
+1000BFAF
+1980043C
+942D848C
+9F70010C
+9F010234
+16006010
+00000000
+1980013C
+942D248C
+64000234
+5C008390
+982D278C
+80006530
+0200A010
+40006530
+D33820A0
+0200A010
+00000000
+D33822A0
+5C00E390
+00000000
+80006530
+0200A010
+40006530
+D23820A0
+0200A010
+00000000
+D23822A0
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="ef16c">
+2120C002
+9F70010C
+9F010234
+1000A48F
+21000634
+02006010
+2128C002
+20000634
+C97B060C
+00000000
+C7790608
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="137710">
+5B580508
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1c8 = Immunity to all negative stat changes">
+    <Description>Requires Tying it all together 1.  Requires Disable Equip X/Female equips (if you want to keep this ability on the same slot I used and not stack with vanilla's effect, otherwise move its slot).  Purpose of this routine is to make stat change formulas stack properly with other abilities.  This must go last in Tying it all together 1.</Description>
+    <Location file="BATTLE_BIN" offset="EC16C">
+1980013C
+982D2B8C
+902D2C8C
+8F006291
+00000E34
+20004230
+18004010
+0100CE25
+25008A91
+12008925
+01004231
+13004010
+00000F34
+21402F01
+00000391
+0100EF25
+07000434
+0D00E411
+00000000
+F9FF6010
+80006630
+F7FFC014
+07000534
+FE004231
+000000A1
+05004014
+250082A1
+000080A1
+2A0080A5
+07000010
+020085A1
+942D2B8C
+8C2D2C8C
+8F006291
+02000334
+E1FFC315
+00000000
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1a0 = Unit heals 1/4 of the damage it deals">
+    <Description>Requires check for ability on unit.  Requires tying it all together 1</Description>
+    <Location file="BATTLE_BIN" offset="eefdc">
+E8FFBD27
+1000BFAF
+1980043C
+942D848C
+9F70010C
+A0010234
+11006010
+00000000
+1980013C
+902D2B8C
+8C2D2C8C
+04006295
+0B006C11
+00000000
+06008395
+08004010
+01000534
+25008491
+000085A1
+40008434
+82100200
+21104300
+060082A5
+250084A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Slot 0x1a4 = Br% chance to return 1/2 of damage/healing to attacker">
+    <Description>Requires check for presence of ability on unit.  Requires Tying it all together.  Works on all types of damage and healing.
+
+Version 0.2 - Now doesn't work on units unable to act</Description>
+    <Location file="BATTLE_BIN" offset="eedc0">
+E8FFBD27
+1000BFAF
+1980013C
+982D248C
+5A32060C
+00000000
+25004014
+00000000
+1980043C
+982D848C
+9F70010C
+A4010234
+1F006010
+00000000
+1980013C
+982D268C
+64000434
+2400C590
+3378010C
+00000000
+17004014
+01000634
+1980013C
+8C2D2D8C
+902D2E8C
+00000F34
+1100AE11
+04000934
+2500A891
+2110C901
+00004294
+2118A901
+07004010
+80000734
+42100200
+000062A4
+0638E701
+2538E800
+2500A7A1
+0000A6A1
+0100EF25
+04000434
+F1FFE415
+02002925
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Ability slot 0x18d (Level Jump 5) = fa% chance to raise speed upon using a non-damaging move">
+    <Description>Requires Tying it all together.  Requires check for presence of ability. Version 0.02 - does not proc on attacks that miss.</Description>
+    <Location file="BATTLE_BIN" offset="eee80">
+E8FFBD27
+1000BFAF
+1980043C
+942D848C
+9F70010C
+8D010234
+19006010
+00000000
+1980013C
+D3382590
+3378010C
+64000434
+13004014
+00000000
+1980013C
+902D2B8C
+8C2D2C8C
+25006491
+12008391
+A0008230
+0B004014
+00000000
+09008010
+00000000
+25008591
+80006334
+01006324
+120083A1
+0100A534
+250085A1
+01000234
+000082A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+<Patch name="Distribute = Synchronize (Status infliction on a target has a Br% chance to inflict all current statuses on the caster)">
+    <Description>Disables Secret Hunt/Train (use instead of Disable Secret Hunt/Train hack).  Requires Disable Distribute.  Requires Tying It All Together.
+
+Version 2.0 - no longer reacts to self casts</Description>
+    <Location file="BATTLE_BIN" offset="120ca0">
+E8FFBD27
+1000BFAF
+19800A3C
+982D488D
+902D498D
+8D000391
+25002491
+942D4B8D
+02006330
+3C006010
+00000000
+3A000B11
+00000000
+08008430
+37008010
+00000000
+21200001
+5A32060C
+00000000
+32004014
+00000000
+19800A3C
+982D488D
+00000000
+24000591
+3378010C
+64000434
+2A004014
+00000000
+19800A3C
+982D488D
+902D4B8D
+8C2D498D
+58000291
+1B006391
+00000000
+25104300
+F6004230
+1B0022A1
+59000291
+1C006391
+00000000
+25104300
+1C0022A1
+5A000291
+1D006391
+00000000
+25104300
+FE004230
+1D0022A1
+5B000291
+1E006391
+00000000
+25104300
+1E0022A1
+5C000291
+1F006391
+00000000
+25104300
+1F0022A1
+C912060C
+00000434
+07004010
+00000000
+19800A3C
+8C2D498D
+01000134
+000021A1
+08000234
+250022A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Move on Lava = Aftermath">
+    <Description>Upon dealing a killing blow to this unit, it will deal damage equal to its max HP.  Bundle with Tying It All Together. :) Bugfix - no longer triggers upon revival of a unit.</Description>
+    <Location file="BATTLE_BIN" offset="e9b2c">
+19800A3C
+982D4B8D
+8C2D4D8D
+95006291
+902D4C8D
+20004230
+0B004010
+01000134
+28006295
+04008395
+80000534
+23204300
+05008104
+00000000
+2A006395
+0000A1A1
+0400A3A5
+2500A5A1
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Move Underwater = Warp Touch">
+    <Description>Requires Tying It All Together.  Runs off the Counter Flood flag.  Attacking an enemy with Warp touch will do a random effect selected from the following:
+1. HP Damage equal to target pa^2 (ignores defense)
+2. 999 MP damage, inflict Rasp
+3. CT 0, inflict slow and stop
+4. 25 brave damage
+5. 10 faith damage
+6. 2 PA, 2 MA damage
+7. Inflict Blood Suck, Confusion, Petrify
+8. Heals 999 HP/MP
+
+***Version 2.0 - no longer includes Finger Guard (see Tying it all together 1 for new Finger Guard code).  HP damage works**</Description>
+    <Location file="BATTLE_BIN" offset="f720c">
+E8FFBD27
+1000BFAF
+19800A3C
+982D4B8D
+8C2D4D8D
+95006291
+F6384491
+10004230
+43004010
+80008430
+41008010
+01000134
+0000A1A1
+C388000C
+00000000
+07004230
+19800A3C
+982D4B8D
+8C2D4D8D
+942D4C8D
+2500A691
+06004014
+01000134
+36006391
+8000C634
+18006300
+12180000
+0400A3A5
+07004114
+02000334
+1B00A491
+E7030534
+0800A5A5
+80008434
+1B00A4A1
+2800C634
+07004314
+03000334
+1E00A491
+7F000534
+1300A5A1
+06008434
+1E00A4A1
+0900C634
+04004314
+04000334
+19000434
+1600A4A1
+0100C634
+04004314
+05000334
+14000434
+1700A4A1
+0100C634
+05004314
+06000334
+02000434
+1400A4A1
+1500A4A1
+0100C634
+05004314
+07000334
+1C00A491
+0800C634
+94008434
+1C00A4A1
+08004314
+00000000
+0600A595
+0A00A495
+E703A534
+E7038434
+0600A5A5
+0A00A4A5
+5000C634
+2500A6A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Move +3 = Siphon">
+    <Description>Character doesn't spend MP to cast spells.  Instead, he deals MP damage to targets equal to double the normal MP cost of moves in addition to the move's regular effects.  Requires Tying it all together.  Requires disable all move/jump+x to not stack with move+3's effect.</Description>
+    <Location file="BATTLE_BIN" offset="f6f28">
+19800A3C
+942D4B8D
+902D4C8D
+93006291
+FD384991
+20004230
+09004010
+00000000
+08008295
+25008391
+05002011
+40480900
+21104900
+080082A5
+20006334
+250083A1
+0800E003
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="116b70">
+1E780508
+00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="f7078">
+93000292
+00000000
+20004230
+02004010
+00000000
+00000434
+1980013C
+DEF60508
+EB3824A0
+    </Location>
+  </Patch>
+
+ <Patch name="Defend = Br% +1 PA when unit uses attack with CG flag. Can't enter water = Br% +1 MA when unit uses attack with CM flag.">
+    <Description>Requires Tying It All Together.  Requires Disable Defend and Disable Can't Enter Water.</Description>
+    <Location file="BATTLE_BIN" offset="f16f4">
+E8FFBD27
+1000BFAF
+19800A3C
+942D4B8D
+00000000
+92006291
+F6384391
+40004230
+13004010
+00000000
+24006591
+10006330
+0F006010
+00000000
+3378010C
+64000434
+0B004014
+00000000
+19800A3C
+8C2D4C8D
+01000134
+000081A1
+14008291
+25008391
+81004234
+140082A1
+01006334
+250083A1
+19800A3C
+942D4B8D
+00000000
+94006291
+F6384391
+10004230
+13004010
+00000000
+24006591
+40006330
+0F006010
+00000000
+3378010C
+64000434
+0B004014
+00000000
+19800A3C
+8C2D4C8D
+01000134
+000081A1
+15008291
+25008391
+81004234
+150082A1
+01006334
+250083A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Jump +1 = Rough Skin">
+    <Description>Requires Damage Trigger Passive Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9b7c">
+      1980013C
+      982D278C
+      8C2D258C
+      9300E490 
+      3600E290
+      10008430
+      09008010
+      01000634
+      2500A390
+      18004200
+      12100000
+      82100200
+      0400A2A4
+      80006334
+      2500A3A0
+      0000A6A0
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Any Weather = Static">
+    <Description>Requires Damage Trigger Passive Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9bc4">
+      1980013C
+      982D2B8C
+      8C2D258C
+      94006491
+      1E00A690
+      02008430
+      0A008010
+      01000234
+      1F00A790
+      0400C634
+      0400E734
+      1E00A6A0
+      1F00A7A0
+      2500A390
+      0000A2A0
+      08006334
+      2500A3A0
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Any Ground = Decay">
+    <Description>Requires Damage Trigger Passives Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9c10">
+      1980013C
+      982D2B8C
+      8C2D258C
+      94006491
+      1B00A690
+      01008430
+      0A008010
+      01000234
+      1F00A790
+      1000C634
+      4000E734
+      1B00A6A0
+      1F00A7A0
+      2500A390
+      0000A2A0
+      08006334
+      2500A3A0
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Weapon Guard = PA Save">
+    <Description>Requires Damage Trigger Passives Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9c5c">
+      E8FFBD27
+      1000BFAF
+      1980013C
+      982D248C
+      5A32060C
+      00000000
+      18004014
+      00000000
+      1980013C
+      982D248C
+      00000000
+      8E008290
+      24008590
+      40004230
+      10004010
+      00000000
+      3378010C
+      64000434
+      0C004014
+      00000000
+      1980013C
+      902D2B8C
+      01000234
+      14006391
+      000062A1
+      25006491
+      80006334
+      01006324
+      140063A1
+      01008434
+      250064A1
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Finger Guard = MA Save">
+    <Description>Requires Damage Trigger Passives Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9ce8">
+      E8FFBD27
+      1000BFAF
+      1980013C
+      982D248C
+      5A32060C
+      00000000
+      18004014
+      00000000
+      1980013C
+      982D248C
+      00000000
+      8E008290
+      24008590
+      20004230
+      10004010
+      00000000
+      3378010C
+      64000434
+      0C004014
+      00000000
+      1980013C
+      902D2B8C
+      01000234
+      15006391
+      000062A1
+      25006491
+      80006334
+      01006324
+      150063A1
+      01008434
+      250064A1
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Level Jump 3 = Speed Save">
+    <Description>Requires Damage Trigger Passives Pack.  Requires Recategorizing r/s/m, check for presence of ability on unit.</Description>
+    <Location file="BATTLE_BIN" offset="e9d74">
+      E8FFBD27
+      1000BFAF
+      1980013C
+      982D248C
+      5A32060C
+      00000000
+      1A004014
+      00000000
+      1980043C
+      982D848C
+      9F70010C
+      8B010234
+      14006010
+      00000000
+      1980013C
+      982D248C
+      00000000
+      24008590
+      3378010C
+      64000434
+      0C004014
+      00000000
+      1980013C
+      902D2B8C
+      01000234
+      12006391
+      000062A1
+      25006491
+      80006334
+      01006324
+      120063A1
+      01008434
+      250064A1
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Catch = Regenerator">
+    <Description>Requires Damage Trigger Passives Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9e08">
+      E8FFBD27
+      1000BFAF
+      1980013C
+      982D248C
+      5A32060C
+      00000000
+      17004014
+      00000000
+      1980013C
+      982D248C
+      00000000
+      8E008290
+      24008590
+      08004230
+      0F004010
+      00000000
+      3378010C
+      64000434
+      0B004014
+      00000000
+      1980013C
+      902D2B8C
+      01000234
+      1E006391
+      000062A1
+      25006491
+      40006334
+      1E0063A1
+      08008434
+      250064A1
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+
+  <Patch name="Move in Water = Daze">
+    <Description>Requires Damage Trigger Passives Pack.</Description>
+    <Location file="BATTLE_BIN" offset="e9e90">
+E8FFBD27
+1000BFAF
+1980013C
+942D248C
+00000000
+95008290
+24008590
+40004230
+10004010
+00000000
+3378010C
+64000434
+0C004014
+00000000
+1980013C
+902D2B8C
+982D2C8C
+14000334
+8F008491
+25006291
+20008430
+03008014
+01004234
+130063A1
+250062A1
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Abandon = Pressure">
+    <Description>Requires Damage Trigger Passives Pack</Description>
+    <Location file="BATTLE_BIN" offset="e9f04">
+1980013C
+982D278C
+8C2D258C
+8E00E490
+3700E290
+10008430
+09008010
+01000634
+2500A390
+18004200
+12100000
+82100200
+0800A2A4
+20006334
+2500A3A0
+0000A6A0
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Damage Trigger Passives Pack">
+    <Description>Requires Tying It All Together 1.  Requirement for hacks as listed in their descriptions</Description>
+    <Location file="BATTLE_BIN" offset="e9f4c">
+E8FFBD27
+1000BFAF
+1980013C
+902D228C
+942D238C
+04004594
+982D248C
+1500A010
+00000000
+13006410
+00000000
+DF42050C
+00000000
+F142050C
+00000000
+0443050C
+00000000
+1743050C
+00000000
+3A43050C
+00000000
+5D43050C
+00000000
+8243050C
+00000000
+A443050C
+00000000
+C143050C
+00000000
+1000BF8F
+1800BD27
+0800E003
+00000000
+    </Location>
+  </Patch>
+
+</Patches>

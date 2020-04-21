@@ -43,9 +43,17 @@ namespace FFTorgASM
         }
 
         private static void GetPatch( XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, out string name, out string description, out IList<PatchedByteArray> staticPatches,
-            out List<bool> outDataSectionList)
+            out List<bool> outDataSectionList, out bool hideInDefault)
         {
             GetPatchNameAndDescription( node, out name, out description );
+
+            hideInDefault = false;
+            XmlAttribute attrHideInDefault = node.Attributes["hideInDefault"];
+            if (attrHideInDefault != null)
+            {
+                if (attrHideInDefault.InnerText.ToLower().Trim() == "true")
+                    hideInDefault = true;
+            }
 
             XmlNodeList currentLocs = node.SelectNodes( "Location" );
             List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count );
@@ -198,6 +206,13 @@ namespace FFTorgASM
 
         public static IList<AsmPatch> GetPatches( XmlNode rootNode, string xmlFilename, ASMEncodingUtility asmUtility )
         {
+            bool rootHideInDefault = false;
+            XmlAttribute attrHideInDefault = rootNode.Attributes["hideInDefault"];
+            if (attrHideInDefault != null)
+            {
+                rootHideInDefault = (attrHideInDefault.InnerText.ToLower().Trim() == "true");
+            }
+
             XmlNodeList patchNodes = rootNode.SelectNodes( "Patch" );
             List<AsmPatch> result = new List<AsmPatch>( patchNodes.Count );
             foreach ( XmlNode node in patchNodes )
@@ -210,8 +225,9 @@ namespace FFTorgASM
                 string description;
                 IList<PatchedByteArray> staticPatches;
                 List<bool> isDataSectionList;
+                bool hideInDefault;
 
-                GetPatch(node, xmlFilename, asmUtility, out name, out description, out staticPatches, out isDataSectionList);
+                GetPatch(node, xmlFilename, asmUtility, out name, out description, out staticPatches, out isDataSectionList, out hideInDefault);
                 List<VariableType> variables = new List<VariableType>();
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
@@ -261,7 +277,8 @@ namespace FFTorgASM
                     
                     variables.Add( vType );
                 }
-                result.Add( new AsmPatch( name, description, staticPatches, isDataSectionList, variables ) );
+
+                result.Add( new AsmPatch( name, description, staticPatches, isDataSectionList, (hideInDefault | rootHideInDefault), variables ) );
             }
 
             patchNodes = rootNode.SelectNodes( "ImportFilePatch" );

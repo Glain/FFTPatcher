@@ -38,7 +38,7 @@
             this.checkAllButton = new System.Windows.Forms.Button();
             this.PatchSaveStbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.lsb_FilesList = new System.Windows.Forms.ListView();
+            this.lsb_FilesList = new FFTorgASM.Controls.BGListBox();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
             this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
             this.txt_Messages = new System.Windows.Forms.TextBox();
@@ -152,14 +152,14 @@
             // 
             this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.lsb_FilesList.LabelWrap = false;
+            //this.lsb_FilesList.LabelWrap = false;
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
-            this.lsb_FilesList.MultiSelect = false;
+            //this.lsb_FilesList.MultiSelect = false;
             this.lsb_FilesList.Name = "lsb_FilesList";
             this.lsb_FilesList.Size = new System.Drawing.Size(186, 319);
             this.lsb_FilesList.TabIndex = 13;
-            this.lsb_FilesList.UseCompatibleStateImageBehavior = false;
-            this.lsb_FilesList.View = System.Windows.Forms.View.List;
+            //this.lsb_FilesList.UseCompatibleStateImageBehavior = false;
+            //this.lsb_FilesList.View = System.Windows.Forms.View.List;
             this.lsb_FilesList.SelectedIndexChanged += new System.EventHandler(this.lsb_FilesList_SelectedIndexChanged);
             // 
             // btn_OpenConflictChecker
@@ -268,7 +268,7 @@
         private System.Windows.Forms.Button checkAllButton;
         private System.Windows.Forms.Button PatchSaveStbutton;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView lsb_FilesList;
+        private FFTorgASM.Controls.BGListBox lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;
