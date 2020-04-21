@@ -49,7 +49,7 @@ namespace FFTPatcher.Editors
         {
         	System.Windows.Forms.Panel panel;
         	this.itemEditor = new FFTPatcher.Editors.ItemEditor();
-        	this.itemListBox = new FFTPatcher.Controls.ModifiedListBox();
+            this.itemListBox = new PatcherLib.Controls.ModifiedListBox();
         	panel = new System.Windows.Forms.Panel();
         	panel.SuspendLayout();
         	this.SuspendLayout();
@@ -98,7 +98,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private FFTPatcher.Controls.ModifiedListBox itemListBox;
+        private PatcherLib.Controls.ModifiedListBox itemListBox;
         private ItemEditor itemEditor;
     }
 }

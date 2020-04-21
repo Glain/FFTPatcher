@@ -48,7 +48,7 @@ namespace FFTPatcher.Editors
         private void InitializeComponent()
         {
             this.eventEditor1 = new FFTPatcher.Editors.EventEditor();
-            this.eventListBox = new FFTPatcher.Controls.ModifiedListBox();
+            this.eventListBox = new PatcherLib.Controls.ModifiedListBox();
             this.SuspendLayout();
             // 
             // eventEditor1
@@ -89,7 +89,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private FFTPatcher.Controls.ModifiedListBox eventListBox;
+        private PatcherLib.Controls.ModifiedListBox eventListBox;
         private EventEditor eventEditor1;
     }
 }

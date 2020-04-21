@@ -70,9 +70,6 @@
     <Compile Include="Controls\DualList\DualListActionEventArgs.cs" />
     <Compile Include="Controls\DualList\DualListCancelEventArgs.cs" />
     <Compile Include="Controls\DualList\DualListDesigner.cs" />
-    <Compile Include="Controls\ModifiedListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\NumericUpDownWithDefault.cs">
       <SubType>Component</SubType>
     </Compile>

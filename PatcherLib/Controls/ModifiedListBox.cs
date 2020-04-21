@@ -11,7 +11,7 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 
-namespace FFTPatcher.Controls
+namespace PatcherLib.Controls
 {
 	/// <summary>
 	/// Description of ModifiedListBox.

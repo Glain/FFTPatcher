@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-            this.unitSelectorListBox = new FFTPatcher.Controls.ModifiedListBox();
+            this.unitSelectorListBox = new PatcherLib.Controls.ModifiedListBox();
             this.eventUnitEditor = new FFTPatcher.Editors.EventUnitEditor();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
@@ -103,7 +103,7 @@ namespace FFTPatcher.Editors
         #endregion
 
         private EventUnitEditor eventUnitEditor;
-        private FFTPatcher.Controls.ModifiedListBox unitSelectorListBox;
+        private PatcherLib.Controls.ModifiedListBox unitSelectorListBox;
         private System.Windows.Forms.Panel panel1;
     }
 }

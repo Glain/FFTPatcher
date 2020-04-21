@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-        	this.listBox = new FFTPatcher.Controls.ModifiedListBox();
+            this.listBox = new PatcherLib.Controls.ModifiedListBox();
         	this.statusAttributeEditor = new FFTPatcher.Editors.StatusAttributeEditor();
         	this.SuspendLayout();
         	// 
@@ -86,7 +86,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private FFTPatcher.Controls.ModifiedListBox listBox;
+        private PatcherLib.Controls.ModifiedListBox listBox;
         private StatusAttributeEditor statusAttributeEditor;
     }
 }

@@ -38,12 +38,12 @@
             this.checkAllButton = new System.Windows.Forms.Button();
             this.PatchSaveStbutton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.lsb_FilesList = new FFTorgASM.Controls.BGListBox();
+            this.lsb_FilesList = new PatcherLib.Controls.BGListBox();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
             this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
             this.txt_Messages = new System.Windows.Forms.TextBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
-            this.clb_Patches = new FFTorgASM.Controls.BGCheckedListBox();
+            this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -222,6 +222,7 @@
             this.clb_Patches.Name = "clb_Patches";
             this.clb_Patches.Size = new System.Drawing.Size(351, 319);
             this.clb_Patches.TabIndex = 0;
+            this.clb_Patches.IncludePrefix = true;
             this.clb_Patches.DragDrop += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragDrop);
             this.clb_Patches.DragEnter += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragEnter);
             // 
@@ -256,7 +257,7 @@
 
         #endregion
 
-        private FFTorgASM.Controls.BGCheckedListBox clb_Patches;
+        private PatcherLib.Controls.ModifiedBGCheckedListBox clb_Patches;
         private System.Windows.Forms.Button patchButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button reloadButton;
@@ -268,7 +269,7 @@
         private System.Windows.Forms.Button checkAllButton;
         private System.Windows.Forms.Button PatchSaveStbutton;
         private System.Windows.Forms.Label label1;
-        private FFTorgASM.Controls.BGListBox lsb_FilesList;
+        private PatcherLib.Controls.BGListBox lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;

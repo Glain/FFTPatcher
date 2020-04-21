@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-            this.jobsListBox = new FFTPatcher.Controls.ModifiedListBox();
+            this.jobsListBox = new PatcherLib.Controls.ModifiedListBox();
             this.jobEditor = new FFTPatcher.Editors.JobEditor();
             this.SuspendLayout();
             // 
@@ -86,7 +86,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private FFTPatcher.Controls.ModifiedListBox jobsListBox;
+        private PatcherLib.Controls.ModifiedListBox jobsListBox;
         private JobEditor jobEditor;
     }
 }
