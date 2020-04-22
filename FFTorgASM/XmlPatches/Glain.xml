@@ -1529,8 +1529,8 @@ SKP:  j       0x80180848            #   Skip this ability
                 lbu     t0, @address_geomancy_tile_array (t0)       #   LookupID   
                 sll     t2, t1, 1                                   #   Ability ID * 2
                 addu    t1, t2, t1                                  #   Ability ID * 3
-                la      t2, @address_geomancy_element_array
-                addu    t1, t1, t2                                  #   Base address for element property array
+                la      t2, @address_geomancy_properties_array
+                addu    t1, t1, t2                                  #   Base address for geomancy property array
                 
                 addiu   t0, t0, -126                                #   EntryID = LookupID - 126
                 
