@@ -278,8 +278,26 @@ namespace FFTorgASM
                     //UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
                     string strOffsetAttr = varNode.Attributes["offset"].InnerText;
                     string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
-                    XmlAttribute defaultAttr = varNode.Attributes["default"];
 
+                    XmlAttribute offsetModeAttribute = varNode.Attributes["offsetMode"];
+                    bool isRamOffset = false;
+                    if (offsetModeAttribute != null)
+                    {
+                        if (offsetModeAttribute.InnerText.ToLower().Trim() == "ram")
+                            isRamOffset = true;
+                    }
+
+                    Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
+                    try
+                    {
+                        ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + fileAttribute.InnerText);
+                    }
+                    catch (Exception)
+                    {
+                        ftrOffset = null;
+                    }
+
+                    XmlAttribute defaultAttr = varNode.Attributes["default"];
                     Byte[] byteArray = new Byte[numBytes];
                     UInt32 def = 0;
                     if ( defaultAttr != null )
@@ -294,8 +312,25 @@ namespace FFTorgASM
                     List<PatchedByteArray> patchedByteArrayList = new List<PatchedByteArray>();
                     foreach (string strOffset in strOffsets)
                     {
-                        UInt32 varOffset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
-                        patchedByteArrayList.Add(new PatchedByteArray(varSec, varOffset, byteArray));
+                        UInt32 offset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
+                        //UInt32 ramOffset = offset;
+                        UInt32 fileOffset = offset;
+
+                        if (ftrOffset.HasValue)
+                        {
+                            try
+                            {
+                                if (isRamOffset)
+                                    fileOffset -= (UInt32)ftrOffset;
+                                //else
+                                //    ramOffset += (UInt32)ftrOffset;
+                            }
+                            catch (Exception) { }
+                        }
+
+                        //ramOffset = ramOffset | 0x80000000;     // KSEG0
+
+                        patchedByteArrayList.Add(new PatchedByteArray(varSec, fileOffset, byteArray));
                     }
 
                     VariableType vType = new VariableType();
