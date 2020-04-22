@@ -170,7 +170,12 @@ namespace FFTorgASM
                         bytes = GetBytes(content);
                     }
 
-                    patches.Add(new PatchedByteArray(sector, fileOffset, bytes));
+                    PatchedByteArray patchedByteArray = new PatchedByteArray(sector, fileOffset, bytes);
+                    patchedByteArray.IsAsm = asmMode;
+                    patchedByteArray.AsmText = content;
+                    patchedByteArray.RamOffset = ramOffset;
+                    
+                    patches.Add(patchedByteArray);
                     isDataSectionList.Add(markedAsData);
                 }
             }

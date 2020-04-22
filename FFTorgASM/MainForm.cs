@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using PatcherLib.Utilities;
-using ASMEncoding;
 using PatcherLib.Datatypes;
 using PatcherLib.Iso;
+using ASMEncoding;
+using ASMEncoding.Helpers;
 
 namespace FFTorgASM
 {
@@ -411,6 +412,28 @@ namespace FFTorgASM
             variableComboBox.Visible = false;
         }
 
+        private void ModifyPatch(AsmPatch patch)
+        {
+            foreach (PatchedByteArray patchedByteArray in patch)
+            {
+                if (patchedByteArray.IsAsm)
+                {
+                    string content = patchedByteArray.AsmText;
+                    IList<VariableType> variables = patch.Variables;
+                    if (variables.Count > 0)
+                    {
+                        string strPrefix = "";
+                        foreach (VariableType variable in variables)
+                        {
+                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.content.Key), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                            content = strPrefix + content;
+                        }
+                    }
+                    patchedByteArray.SetBytes(asmUtility.EncodeASM(content, (uint)patchedByteArray.RamOffset).EncodedBytes);
+                }
+            }
+        }
+
         void patchButton_Click( object sender, EventArgs e )
         {
             saveFileDialog1.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
@@ -421,6 +444,7 @@ namespace FFTorgASM
                 {
                     foreach ( AsmPatch patch in clb_Patches.CheckedItems )
                     {
+                        ModifyPatch(patch);
                         PatcherLib.Iso.PsxIso.PatchPsxIso( file, patch );
                     }
                 }
@@ -439,10 +463,11 @@ namespace FFTorgASM
                 using (BinaryReader reader = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
                 {
                     List<PatchedByteArray> patches = new List<PatchedByteArray>();
-                    foreach (AsmPatch innerPatches in clb_Patches.CheckedItems)
+                    foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
                     {
+                        ModifyPatch(asmPatch);
                         //patchList.AddRange(patch);
-                        foreach (PatchedByteArray innerPatch in innerPatches)
+                        foreach (PatchedByteArray innerPatch in asmPatch)
                         {
                             patches.Add(innerPatch);
                         }

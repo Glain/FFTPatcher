@@ -142,6 +142,10 @@ namespace PatcherLib.Datatypes
         {
             return bytes;
         }
+        public void SetBytes(byte[] bytes)
+        {
+            this.bytes = bytes;
+        }
 
         private byte[] bytes;
 
@@ -150,6 +154,10 @@ namespace PatcherLib.Datatypes
         public int Sector { get; protected set; }
 
         public Enum SectorEnum { get; protected set; }
+
+        public bool IsAsm { get; set; }
+        public string AsmText { get; set; }
+        public long RamOffset { get; set; }
 
 		#endregion Public Properties 
 
