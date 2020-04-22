@@ -161,9 +161,12 @@ namespace FFTorgASM
                     ramOffset = ramOffset | 0x80000000;     // KSEG0
 
                     byte[] bytes;
+                    string errorText = "";
                     if (asmMode)
                     {
-                        bytes = asmUtility.EncodeASM(content, ramOffset).EncodedBytes;
+                        ASMEncoderResult result = asmUtility.EncodeASM(content, ramOffset);
+                        bytes = result.EncodedBytes;
+                        errorText = result.ErrorText;
                     }
                     else
                     {
@@ -174,6 +177,7 @@ namespace FFTorgASM
                     patchedByteArray.IsAsm = asmMode;
                     patchedByteArray.AsmText = content;
                     patchedByteArray.RamOffset = ramOffset;
+                    patchedByteArray.ErrorText = errorText;
                     
                     patches.Add(patchedByteArray);
                     isDataSectionList.Add(markedAsData);

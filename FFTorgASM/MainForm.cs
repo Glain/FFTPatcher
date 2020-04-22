@@ -345,6 +345,12 @@ namespace FFTorgASM
                             canLoadBytes = false;
                         }
 
+                        if (!string.IsNullOrEmpty(patchedByteArray.ErrorText))
+                        {
+                            color = Color.FromArgb(225, 125, 125);
+                            sbMessage.Append(patchedByteArray.ErrorText);
+                        }
+
                         if (canLoadBytes)
                         {
                             UInt32 ramOffset = 0;

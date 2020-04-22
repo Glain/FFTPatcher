@@ -158,6 +158,7 @@ namespace PatcherLib.Datatypes
         public bool IsAsm { get; set; }
         public string AsmText { get; set; }
         public long RamOffset { get; set; }
+        public string ErrorText { get; set; }
 
 		#endregion Public Properties 
 
