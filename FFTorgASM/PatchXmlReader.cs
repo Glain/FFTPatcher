@@ -6,6 +6,7 @@ using PatcherLib.Iso;
 using ASMEncoding;
 using System.IO;
 using System.Text;
+using ASMEncoding.Helpers;
 
 namespace FFTorgASM
 {
@@ -42,8 +43,8 @@ namespace FFTorgASM
 
         }
 
-        private static void GetPatch( XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, out string name, out string description, out IList<PatchedByteArray> staticPatches,
-            out List<bool> outDataSectionList, out bool hideInDefault)
+        private static void GetPatch( XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, List<VariableType> variables,
+            out string name, out string description, out IList<PatchedByteArray> staticPatches, out List<bool> outDataSectionList, out bool hideInDefault)
         {
             GetPatchNameAndDescription( node, out name, out description );
 
@@ -164,6 +165,16 @@ namespace FFTorgASM
                     string errorText = "";
                     if (asmMode)
                     {
+                        if (variables.Count > 0)
+                        {
+                            string strPrefix = "";
+                            foreach (VariableType variable in variables)
+                            {
+                                strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.content.Key), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                                content = strPrefix + content;
+                            }
+                        }
+
                         ASMEncoderResult result = asmUtility.EncodeASM(content, ramOffset);
                         bytes = result.EncodedBytes;
                         errorText = result.ErrorText;
@@ -236,7 +247,6 @@ namespace FFTorgASM
                 List<bool> isDataSectionList;
                 bool hideInDefault;
 
-                GetPatch(node, xmlFilename, asmUtility, out name, out description, out staticPatches, out isDataSectionList, out hideInDefault);
                 List<VariableType> variables = new List<VariableType>();
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
@@ -295,6 +305,7 @@ namespace FFTorgASM
                     variables.Add( vType );
                 }
 
+                GetPatch(node, xmlFilename, asmUtility, variables, out name, out description, out staticPatches, out isDataSectionList, out hideInDefault);
                 result.Add( new AsmPatch( name, description, staticPatches, isDataSectionList, (hideInDefault | rootHideInDefault), variables ) );
             }
 
