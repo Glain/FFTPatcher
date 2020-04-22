@@ -231,9 +231,9 @@ namespace FFTorgASM
                 List<VariableType> variables = new List<VariableType>();
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
-                	XmlAttribute xmlAttr = varNode.Attributes["bytes"];
-                	string strBytes = (xmlAttr == null) ? "1" : xmlAttr.InnerText;
-                	char bytes = (char)(UInt32.Parse(strBytes) & 0xff);
+                	XmlAttribute numBytesAttr = varNode.Attributes["bytes"];
+                    string strNumBytes = (numBytesAttr == null) ? "1" : numBytesAttr.InnerText;
+                    char numBytes = (char)(UInt32.Parse(strNumBytes) & 0xff);
                 	
                     string varName = varNode.Attributes["name"].InnerText;
 
@@ -256,25 +256,33 @@ namespace FFTorgASM
 
                     //PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
                     
-                    UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
+                    //UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
+                    string strOffsetAttr = varNode.Attributes["offset"].InnerText;
+                    string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
                     XmlAttribute defaultAttr = varNode.Attributes["default"];
-                    
-                    Byte[] byteArray = new Byte[bytes];
+
+                    Byte[] byteArray = new Byte[numBytes];
                     UInt32 def = 0;
                     if ( defaultAttr != null )
                     {
                         def = UInt32.Parse( defaultAttr.InnerText, System.Globalization.NumberStyles.HexNumber );
-                        for (int i=0; i < bytes; i++)
+                        for (int i = 0; i < numBytes; i++)
                         {
                         	byteArray[i] = (Byte)((def >> (i * 8)) & 0xff);
                         }
                     }
-                    
-                    KeyValuePair<string, PatchedByteArray> kvp = new KeyValuePair<string, PatchedByteArray>( varName, new PatchedByteArray( varSec, varOffset, byteArray ) );
+
+                    List<PatchedByteArray> patchedByteArrayList = new List<PatchedByteArray>();
+                    foreach (string strOffset in strOffsets)
+                    {
+                        UInt32 varOffset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
+                        patchedByteArrayList.Add(new PatchedByteArray(varSec, varOffset, byteArray));
+                    }
+
                     VariableType vType = new VariableType();
-                    vType.content = kvp;
-                    vType.bytes = bytes;
-                    
+                    vType.numBytes = numBytes;
+                    vType.byteArray = byteArray;
+                    vType.content = new KeyValuePair<string, List<PatchedByteArray>>(varName, patchedByteArrayList);                    
                     variables.Add( vType );
                 }
 

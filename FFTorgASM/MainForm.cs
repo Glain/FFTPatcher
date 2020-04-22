@@ -67,11 +67,12 @@ namespace FFTorgASM
             if ( !ignoreChanges )
             {
             	AsmPatch patch = ( clb_Patches.SelectedItem as AsmPatch );
-            	Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes();
+            	//Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes();
+                Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].byteArray;
 
                 // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
                 ignoreChanges = true;
-                variableSpinner.Maximum = (decimal)Math.Pow(256, patch.Variables[variableComboBox.SelectedIndex].bytes) - 1;
+                variableSpinner.Maximum = (decimal)Math.Pow(256, patch.Variables[variableComboBox.SelectedIndex].numBytes) - 1;
                 ignoreChanges = false;
 
                 variableSpinner.Value = patch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
@@ -84,9 +85,15 @@ namespace FFTorgASM
             if ( !ignoreChanges )
             {
                 UInt32 def = (UInt32)variableSpinner.Value;
-                for (int i=0; i < patch.Variables[variableComboBox.SelectedIndex].bytes; i++)
+                for (int i=0; i < patch.Variables[variableComboBox.SelectedIndex].numBytes; i++)
                 {
-                	patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
+                	//patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
+                    byte byteValue = (byte)((def >> (i * 8)) & 0xff);
+                    patch.Variables[variableComboBox.SelectedIndex].byteArray[i] = byteValue;
+                    foreach (PatchedByteArray patchedByteArray in patch.Variables[variableComboBox.SelectedIndex].content.Value)
+                    {
+                        patchedByteArray.GetBytes()[i] = byteValue;
+                    }
                 }
             }
         }
@@ -234,8 +241,9 @@ namespace FFTorgASM
                     variableComboBox.SelectedIndex = 0;
 
                     //variableSpinner.Value = p.Variables[0].content.Value.GetBytes()[0];
-                    Byte[] byteArray = p.Variables[0].content.Value.GetBytes();
-                    variableSpinner.Maximum = (decimal)Math.Pow(256, p.Variables[0].bytes) - 1;
+                    //Byte[] byteArray = p.Variables[0].content.Value.GetBytes();
+                    byte[] byteArray = p.Variables[0].byteArray;
+                    variableSpinner.Maximum = (decimal)Math.Pow(256, p.Variables[0].numBytes) - 1;
                     variableSpinner.Value = p.GetUnsignedByteArrayValue_LittleEndian(byteArray);
 
                     variableSpinner.Visible = true;
@@ -321,7 +329,8 @@ namespace FFTorgASM
                     int byteArrayIndex = 0;
                     foreach (PatchedByteArray patchedByteArray in asmPatch)
                     {
-                        if (byteArrayIndex >= (asmPatch.Count - asmPatch.Variables.Count))
+                        //if (byteArrayIndex >= (asmPatch.Count - asmPatch.Variables.Count))
+                        if (byteArrayIndex >= asmPatch.NonVariableCount)
                             break;
 
                         bool canLoadBytes = true;

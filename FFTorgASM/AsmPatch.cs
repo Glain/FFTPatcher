@@ -78,18 +78,21 @@ namespace FFTorgASM
 
     public struct VariableType
     {
-    	public KeyValuePair<string,PatchedByteArray> content;
-    	public char bytes;
+    	public KeyValuePair<string, List<PatchedByteArray>> content;
+    	public char numBytes;
+        public byte[] byteArray;
     }
     
     public class AsmPatch : IList<PatchedByteArray>
     {
         List<PatchedByteArray> innerList;
+        List<PatchedByteArray> varInnerList;
         public List<bool> isDataSectionList;
 
         public string Name { get; private set; }
         public string Description { get; private set; }
         public IList<VariableType> Variables { get; private set; }
+
         private IEnumerator<PatchedByteArray> enumerator;
 
         public bool HideInDefault { get; private set; }
@@ -106,6 +109,7 @@ namespace FFTorgASM
             Description = description;
             innerList = new List<PatchedByteArray>( patches );
             Variables = new VariableType[0];
+            varInnerList = new List<PatchedByteArray>();
             this.isDataSectionList = new List<bool>(isDataSectionList);
             this.HideInDefault = hideInDefault;
         }
@@ -116,6 +120,23 @@ namespace FFTorgASM
         	VariableType[] myVars = new VariableType[variables.Count];
             variables.CopyTo( myVars, 0 );
             Variables = myVars;
+            SetVarInnerList();
+        }
+
+        private void SetVarInnerList()
+        {
+            varInnerList.Clear();
+            foreach (VariableType varType in Variables)
+            {
+                List<PatchedByteArray> patchedByteArrayList = varType.content.Value;
+                if (patchedByteArrayList != null)
+                {
+                    foreach (PatchedByteArray patchedByteArray in patchedByteArrayList)
+                    {
+                        varInnerList.Add(patchedByteArray);
+                    }
+                }
+            }
         }
 
         public int IndexOf( PatchedByteArray item )
@@ -143,7 +164,7 @@ namespace FFTorgASM
                 }
                 else
                 {
-                    return Variables[index - innerList.Count].content.Value;
+                    return varInnerList[index - innerList.Count];
                 }
             }
             set
@@ -174,7 +195,12 @@ namespace FFTorgASM
 
         public int Count
         {
-            get { return innerList.Count + Variables.Count; }
+            get { return innerList.Count + varInnerList.Count; }
+        }
+
+        public int NonVariableCount
+        {
+            get { return innerList.Count; }
         }
 
         public bool IsReadOnly
