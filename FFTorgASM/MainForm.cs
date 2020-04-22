@@ -91,7 +91,7 @@ namespace FFTorgASM
                 	//patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
                     byte byteValue = (byte)((def >> (i * 8)) & 0xff);
                     patch.Variables[variableComboBox.SelectedIndex].byteArray[i] = byteValue;
-                    foreach (PatchedByteArray patchedByteArray in patch.Variables[variableComboBox.SelectedIndex].content.Value)
+                    foreach (PatchedByteArray patchedByteArray in patch.Variables[variableComboBox.SelectedIndex].content)
                     {
                         patchedByteArray.GetBytes()[i] = byteValue;
                     }
@@ -238,7 +238,7 @@ namespace FFTorgASM
                 {
                     ignoreChanges = true;
                     variableComboBox.Items.Clear();
-                    p.Variables.ForEach(varType => variableComboBox.Items.Add(varType.content.Key));
+                    p.Variables.ForEach(varType => variableComboBox.Items.Add(varType.name));
                     variableComboBox.SelectedIndex = 0;
 
                     //variableSpinner.Value = p.Variables[0].content.Value.GetBytes()[0];
@@ -431,7 +431,7 @@ namespace FFTorgASM
                         string strPrefix = "";
                         foreach (VariableType variable in variables)
                         {
-                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.content.Key), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
                             content = strPrefix + content;
                         }
                     }

@@ -170,7 +170,7 @@ namespace FFTorgASM
                             string strPrefix = "";
                             foreach (VariableType variable in variables)
                             {
-                                strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.content.Key), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                                strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
                                 content = strPrefix + content;
                             }
                         }
@@ -336,7 +336,8 @@ namespace FFTorgASM
                     VariableType vType = new VariableType();
                     vType.numBytes = numBytes;
                     vType.byteArray = byteArray;
-                    vType.content = new KeyValuePair<string, List<PatchedByteArray>>(varName, patchedByteArrayList);                    
+                    vType.name = varName;
+                    vType.content = patchedByteArrayList;
                     variables.Add( vType );
                 }
 

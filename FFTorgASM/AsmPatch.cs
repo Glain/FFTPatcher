@@ -78,9 +78,10 @@ namespace FFTorgASM
 
     public struct VariableType
     {
-    	public KeyValuePair<string, List<PatchedByteArray>> content;
     	public char numBytes;
         public byte[] byteArray;
+        public string name;
+        public List<PatchedByteArray> content;
     }
     
     public class AsmPatch : IList<PatchedByteArray>
@@ -128,7 +129,7 @@ namespace FFTorgASM
             varInnerList.Clear();
             foreach (VariableType varType in Variables)
             {
-                List<PatchedByteArray> patchedByteArrayList = varType.content.Value;
+                List<PatchedByteArray> patchedByteArrayList = varType.content;
                 if (patchedByteArrayList != null)
                 {
                     foreach (PatchedByteArray patchedByteArray in patchedByteArrayList)
