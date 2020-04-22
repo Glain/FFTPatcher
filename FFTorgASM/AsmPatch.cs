@@ -231,7 +231,7 @@ namespace FFTorgASM
         }
         
 		// Returns combined value of byte array (little endian)
-		public UInt32 GetUnsignedByteArrayValue_LittleEndian(Byte[] bytes)
+		public static UInt32 GetUnsignedByteArrayValue_LittleEndian(Byte[] bytes)
         {
 			UInt32 result = 0;
 			int i = 0;
