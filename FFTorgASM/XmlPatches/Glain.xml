@@ -1170,18 +1170,55 @@ SKP:  j       0x80180848            #   Skip this ability
     <Description>
         Start button skips events, effects, battle and event text, map titles, unit movement, chapter title and end graphics, the gameover screen, and the ending credits.
     </Description>
-    <Location file="BATTLE_BIN" offset="15BB85" mode="DATA" offsetMode="RAM">
-        000000
-        00000000
+    <Location file="BATTLE_BIN" offset="15BB85" mode="DATA" offsetMode="RAM" label="address_calc_skip_type">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB86" mode="DATA" offsetMode="RAM" label="address_is_dialog_text_unskippable">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB87" mode="DATA" offsetMode="RAM" label="address_are_effects_unskippable">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB88" mode="DATA" offsetMode="RAM" label="address_is_event">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB89" mode="DATA" offsetMode="RAM" label="address_is_skipping_effect_targets">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB8A" mode="DATA" offsetMode="RAM" label="address_is_skipping_effect">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB8B" mode="DATA" offsetMode="RAM" label="address_run_next_wait">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB8C" mode="DATA" offsetMode="RAM" label="address_pathing_direction_map">
         03010002
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB90" mode="DATA" offsetMode="RAM">
-        00000000
-        00000000
-        00000000
+    <Location file="BATTLE_BIN" offset="15BB90" mode="DATA" offsetMode="RAM" label="address_event_last_camera_instruction_pointer">
         00000000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BBA0" mode="DATA" offsetMode="RAM">
+    <Location file="BATTLE_BIN" offset="15BB94" mode="DATA" offsetMode="RAM" label="address_event_last_focus_instruction_pointer">
+        00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB98" mode="DATA" offsetMode="RAM" label="address_event_choice_message_id">
+        0000
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB9A" mode="DATA" offsetMode="RAM" label="address_event_choice_message_id_display_message">
+        0000
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB9C" mode="DATA" offsetMode="RAM" label="address_event_skip_type">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB9D" mode="DATA" offsetMode="RAM" label="address_event_old_skip_type">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB9E" mode="DATA" offsetMode="RAM" label="address_is_mid_battle">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BB9F" mode="DATA" offsetMode="RAM" label="address_is_mid_battle_event">
+        00
+    </Location>
+    <Location file="BATTLE_BIN" offset="15BBA0" mode="DATA" offsetMode="RAM" label="address_can_skip_instruction_array">
         FFFF2F86
         DE018FE1
         C180A00E
@@ -1191,7 +1228,7 @@ SKP:  j       0x80180848            #   Skip this ability
         00000000
         00004000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BBC0" mode="DATA" offsetMode="RAM">
+    <Location file="BATTLE_BIN" offset="15BBC0" mode="DATA" offsetMode="RAM" label="address_can_total_skip_instruction_array">
         FFFFFFFF
         FFFFFFFD
         CFFFBFFF
@@ -1496,7 +1533,7 @@ SKP:  j       0x80180848            #   Skip this ability
     <Description>Geomancy single ability</Description>
     <!-- Ability properties corresponding to vanilla elemental ability order (Pitfall to Lava Ball) -->
     <!-- Each entry has format [Inflict Status ID, Element, Effect ID] -->
-    <Location file="BATTLE_BIN" offset="15D350" mode="DATA" offsetMode="RAM">
+    <Location file="BATTLE_BIN" offset="15D350" mode="DATA" offsetMode="RAM" label="address_geomancy_properties_array">
         41 01 79
         42 04 7A
         43 08 7B
@@ -1511,8 +1548,6 @@ SKP:  j       0x80180848            #   Skip this ability
         4C 80 84
     </Location>
     <Location file="BATTLE_BIN" offset="15D374" mode="ASM" offsetMode="RAM">
-        .label  @address_geomancy_properties_array, 0x8015d350
-
         .label  @address_geomancy_tile_array, 0x8005e9d0
         .label  @address_caster_tile_type, 0x801938cd
         .label  @address_ability_id, 0x801938d6
@@ -1530,7 +1565,7 @@ SKP:  j       0x80180848            #   Skip this ability
                 sll     t2, t1, 1                                   #   Ability ID * 2
                 addu    t1, t2, t1                                  #   Ability ID * 3
                 la      t2, @address_geomancy_properties_array
-                addu    t1, t1, t2                                  #   Base address for geomancy property array
+                addu    t1, t1, t2                                  #   Address for geomancy property
                 
                 addiu   t0, t0, -126                                #   EntryID = LookupID - 126
                 
@@ -1776,12 +1811,10 @@ SKP:  j       0x80180848            #   Skip this ability
     <Description>
         Switch unit number with L1 and R1 buttons in the formation screen.  Changes unit order as appropriate.  L1 and R1 still work normally (switching the selected unit) in menus.
     </Description>
-    <Location file="WORLD_WORLD_BIN" offset="1481FF" mode="DATA" offsetMode="RAM">
+    <Location file="WORLD_WORLD_BIN" offset="1481FF" mode="DATA" offsetMode="RAM" label="address_skip_portrait_transition">
         00
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="148200" mode="ASM" offsetMode="RAM">
-        .label  @address_skip_portrait_transition, 0x801481ff
-
         @swap_formation_unit_hook:
                 addiu   sp, sp, -24
                 sw      ra, 4(sp)
@@ -2253,12 +2286,11 @@ SKP:  j       0x80180848            #   Skip this ability
   </Patch>
     <Patch name="Enforce level caps">
         <Description>Enforces level caps. Defined in sets of two by the data in the first Location tag. First number in the set is storyline progression variable value and second number in the set is what the level cap is up to that progression. All values in hex.</Description>
-        <Location file="SCUS_942_21" offset="27730" mode="DATA" offsetMode="RAM">
+        <Location file="SCUS_942_21" offset="27730" mode="DATA" offsetMode="RAM" label="address_level_cap_data">
             0F 14 1F 23 29 32 35 46 00 00
         </Location>
         <Location file="SCUS_942_21" offset="27A5C" mode="ASM" offsetMode="RAM">
             .label  @address_storyline_progression_variable, 0x800578d4
-            .label  @address_level_cap_data, 0x80027730
             .label  @address_skip_level_up, 0x8005d8e4
             
             .eqv    %battle_unit_experience_offset, 0x21

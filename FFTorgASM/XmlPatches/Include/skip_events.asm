@@ -12,25 +12,6 @@
 .label  @address_current_event_pointer, 0x80173ca4
 .label  @address_current_thread_id, 0x80174038
 
-.label  @address_calc_skip_type, 0x8015bb85
-.label  @address_is_dialog_text_unskippable, 0x8015bb86
-.label  @address_are_effects_unskippable, 0x8015bb87
-.label  @address_is_event, 0x8015bb88
-.label  @address_is_skipping_effect_targets, 0x8015bb89
-.label  @address_is_skipping_effect, 0x8015bb8a
-.label  @address_run_next_wait, 0x8015bb8b
-.label  @address_pathing_direction_map, 0x8015bb8c
-.label  @address_event_last_camera_instruction_pointer, 0x8015bb90
-.label  @address_event_last_focus_instruction_pointer, 0x8015bb94
-.label  @address_event_choice_message_id, 0x8015bb98
-.label  @address_event_choice_message_id_display_message, 0x8015bb9a
-.label  @address_event_skip_type, 0x8015bb9c
-.label  @address_event_old_skip_type, 0x8015bb9d
-.label  @address_is_mid_battle, 0x8015bb9e
-.label  @address_is_mid_battle_event, 0x8015bb9f
-.label  @address_can_skip_instruction_array, 0x8015bba0
-.label  @address_can_total_skip_instruction_array, 0x8015bbc0
-
 .label  @get_unit_misc_data_pointer, 0x8007a6e4
 .label  @color_field, 0x80093170
 .label  @color_background_tiles_set_1, 0x8009349c
