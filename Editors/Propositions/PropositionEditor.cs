@@ -132,6 +132,7 @@ namespace FFTPatcher.Editors
                 townStrings[i] = unknownString;
                 propNames[i] = unknownString;
             }
+            townStrings[0] = "Any Town";
 
             rewardStrings[(int)Reward.Gil] = "Gil";
 
