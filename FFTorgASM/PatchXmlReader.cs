@@ -165,17 +165,18 @@ namespace FFTorgASM
                     string errorText = "";
                     if (asmMode)
                     {
+                        string encodeContent = content;
                         if (variables.Count > 0)
                         {
                             string strPrefix = "";
                             foreach (VariableType variable in variables)
                             {
-                                strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
-                                content = strPrefix + content;
+                                strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                                encodeContent = strPrefix + encodeContent;
                             }
                         }
 
-                        ASMEncoderResult result = asmUtility.EncodeASM(content, ramOffset);
+                        ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, ramOffset);
                         bytes = result.EncodedBytes;
                         errorText = result.ErrorText;
                     }
