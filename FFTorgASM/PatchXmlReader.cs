@@ -70,6 +70,7 @@ namespace FFTorgASM
                 XmlAttribute offsetModeAttribute = location.Attributes["offsetMode"];
                 XmlAttribute inputFileAttribute = location.Attributes["inputFile"];
                 XmlAttribute replaceLabelsAttribute = location.Attributes["replaceLabels"];
+                XmlAttribute attrLabel = location.Attributes["label"];
 
                 string strOffsetAttr = location.Attributes["offset"].InnerText;
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -130,6 +131,12 @@ namespace FFTorgASM
                     content = asmUtility.ReplaceLabelsInHex(content, true);
                 }
 
+                string label = "";
+                if (attrLabel != null)
+                {
+                    label = attrLabel.InnerText.Replace(" ", "");
+                }
+
                 Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
                 try
                 {
@@ -166,15 +173,19 @@ namespace FFTorgASM
                     if (asmMode)
                     {
                         string encodeContent = content;
-                        if (variables.Count > 0)
+
+                        string strPrefix = "";
+                        foreach (PatchedByteArray currentPatchedByteArray in patches)
                         {
-                            string strPrefix = "";
-                            foreach (VariableType variable in variables)
-                            {
-                                strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
-                                encodeContent = strPrefix + encodeContent;
-                            }
+                            if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
+                                strPrefix += String.Format(".label @{0}, {1}\r\n", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset);
                         }
+                        foreach (VariableType variable in variables)
+                        {
+                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                        }
+
+                        encodeContent = strPrefix + content;
 
                         ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, ramOffset);
                         bytes = result.EncodedBytes;
@@ -190,6 +201,7 @@ namespace FFTorgASM
                     patchedByteArray.AsmText = content;
                     patchedByteArray.RamOffset = ramOffset;
                     patchedByteArray.ErrorText = errorText;
+                    patchedByteArray.Label = label;
                     
                     patches.Add(patchedByteArray);
                     isDataSectionList.Add(markedAsData);

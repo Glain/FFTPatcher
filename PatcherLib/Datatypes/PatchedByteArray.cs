@@ -159,6 +159,7 @@ namespace PatcherLib.Datatypes
         public string AsmText { get; set; }
         public long RamOffset { get; set; }
         public string ErrorText { get; set; }
+        public string Label { get; set; }
 
 		#endregion Public Properties 
 

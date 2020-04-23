@@ -487,18 +487,22 @@ namespace FFTorgASM
             {
                 if (patchedByteArray.IsAsm)
                 {
-                    string content = patchedByteArray.AsmText;
+                    string encodeContent = patchedByteArray.AsmText;
+                    string strPrefix = "";
                     IList<VariableType> variables = patch.Variables;
-                    if (variables.Count > 0)
+
+                    foreach (PatchedByteArray currentPatchedByteArray in patch)
                     {
-                        string strPrefix = "";
-                        foreach (VariableType variable in variables)
-                        {
-                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
-                            content = strPrefix + content;
-                        }
+                        if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
+                            strPrefix += String.Format(".label @{0}, {1}\r\n", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset);
                     }
-                    patchedByteArray.SetBytes(asmUtility.EncodeASM(content, (uint)patchedByteArray.RamOffset).EncodedBytes);
+                    foreach (VariableType variable in variables)
+                    {
+                        strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                    }
+
+                    encodeContent = strPrefix + patchedByteArray.AsmText;
+                    patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
                 }
             }
         }
