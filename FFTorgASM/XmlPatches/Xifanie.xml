@@ -2466,19 +2466,6 @@ C1400508
   </Patch>
 
 
-  <Patch name="num of allowed spritesheets">
-    <Description>
-      This one is risky if you aren't aware of the consequences.
-      Normally the spritesheet limit is 9 and the game will always calculate that you bring 5 units in random battles, even if the squad allows less.
-      Therefore the game will calculate that only 4 enemy spritesheets are allowed to be loaded and will not even try to load any different spritesheet units after that.
-      By raising the limit to 13, it allows 8 enemy spritesheets.
-      Whoever you have to make sure the amount of units the player is allowed in the squad plus the the total spritesheets the ENTD can generate doesn't exceed 9.
-      Else you create the possibility that a graphical glitch will occur for some units just like in story battles or the Deep Dungeon.
-    </Description>
-    <Variable file="BATTLE_BIN" offset="00118910" name="X"/>
-  </Patch>
-
-
 <Patch name="Stat gain/break cap + Maintenance prevents stat break">
 <Description>For example, a lower limit of 1/3 and a upper limit of 1/4 for someone with 18PA, would be:
 lower cap: 18PA - (18PA * 1/3) = 12PA
