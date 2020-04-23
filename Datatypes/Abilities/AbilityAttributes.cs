@@ -34,9 +34,9 @@ namespace FFTPatcher.Datatypes
         public bool AnimateMiss;
         public bool Arithmetick;
         public bool Auto;
-        public bool Blank6;
+        public bool ForceSelfTarget;
         public bool Blank7;
-        public bool Blank8;
+        public bool TopDownTarget;
         public bool CounterFlood;
         public bool CounterMagic;
         public byte CT;
@@ -71,9 +71,9 @@ namespace FFTPatcher.Datatypes
             public const string AnimateMiss = "AnimateMiss";
             public const string Arithmetick = "Arithmetick";
             public const string Auto = "Auto";
-            public const string Blank6 = "Blank6";
+            public const string ForceSelfTarget = "Blank6";
             public const string Blank7 = "Blank7";
-            public const string Blank8 = "Blank8";
+            public const string TopDownTarget = "TopDownTarget";
             public const string CounterFlood = "CounterFlood";
             public const string CounterMagic = "CounterMagic";
             public const string CT = "CT";
@@ -112,7 +112,7 @@ namespace FFTPatcher.Datatypes
             public const string Formula = "Formula";
         }
         private static readonly string[] valuesToSerialize = new string[] {
-            Strings.AnimateMiss,Strings.Arithmetick,Strings.Auto,Strings.Blank6,Strings.Blank7,Strings.Blank8,Strings.CounterFlood,Strings.CounterMagic,
+            Strings.AnimateMiss,Strings.Arithmetick,Strings.Auto,Strings.ForceSelfTarget,Strings.Blank7,Strings.TopDownTarget,Strings.CounterFlood,Strings.CounterMagic,
             Strings.CT,Strings.Direct,Strings.Effect,Strings.Evadeable,Strings.FollowTarget,Strings.HitAllies,Strings.HitCaster,Strings.HitEnemies,
             Strings.InflictStatus,Strings.LinearAttack,Strings.Mimic,Strings.MPCost,Strings.NormalAttack,Strings.Perservere,Strings.RandomFire,
             Strings.Range,Strings.Reflect,Strings.RequiresMateriaBlade,Strings.RequiresSword,Strings.Shirahadori,Strings.ShowQuote,Strings.Silence,
@@ -180,10 +180,10 @@ namespace FFTPatcher.Datatypes
             Effect = second[1];
             Vertical = second[2];
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( second[3],
-                ref Blank6, ref Blank7, ref WeaponRange, ref VerticalFixed, ref VerticalTolerance, ref WeaponStrike, ref Auto, ref TargetSelf );
+                ref ForceSelfTarget, ref Blank7, ref WeaponRange, ref VerticalFixed, ref VerticalTolerance, ref WeaponStrike, ref Auto, ref TargetSelf);
             TargetSelf = !TargetSelf;
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( second[4],
-                ref HitEnemies, ref HitAllies, ref Blank8, ref FollowTarget, ref RandomFire, ref LinearAttack, ref ThreeDirections, ref HitCaster );
+                ref HitEnemies, ref HitAllies, ref TopDownTarget, ref FollowTarget, ref RandomFire, ref LinearAttack, ref ThreeDirections, ref HitCaster);
             HitEnemies = !HitEnemies;
             FollowTarget = !FollowTarget;
             HitAllies = !HitAllies;
@@ -236,7 +236,7 @@ namespace FFTPatcher.Datatypes
             destination.InflictStatus = source.InflictStatus;
             destination.CT = source.CT;
             destination.MPCost = source.MPCost;
-            destination.Blank6 = source.Blank6;
+            destination.ForceSelfTarget = source.ForceSelfTarget;
             destination.Blank7 = source.Blank7;
             destination.WeaponRange = source.WeaponRange;
             destination.VerticalFixed = source.VerticalFixed;
@@ -247,7 +247,7 @@ namespace FFTPatcher.Datatypes
 
             destination.HitEnemies = source.HitEnemies;
             destination.HitAllies = source.HitAllies;
-            destination.Blank8 = source.Blank8;
+            destination.TopDownTarget = source.TopDownTarget;
             destination.FollowTarget = source.FollowTarget;
             destination.RandomFire = source.RandomFire;
             destination.LinearAttack = source.LinearAttack;
@@ -281,8 +281,8 @@ namespace FFTPatcher.Datatypes
         public bool[] ToBoolArray()
         {
             return new bool[32] { 
-                Blank6, Blank7, WeaponRange, VerticalFixed, VerticalTolerance, WeaponStrike, Auto, TargetSelf,
-                HitEnemies, HitAllies, Blank8, FollowTarget, RandomFire, LinearAttack, ThreeDirections, HitCaster,
+                ForceSelfTarget, Blank7, WeaponRange, VerticalFixed, VerticalTolerance, WeaponStrike, Auto, TargetSelf,
+                HitEnemies, HitAllies, TopDownTarget, FollowTarget, RandomFire, LinearAttack, ThreeDirections, HitCaster,
                 Reflect, Arithmetick, Silence, Mimic, NormalAttack, Perservere, ShowQuote, AnimateMiss,
                 CounterFlood, CounterMagic, Direct, Shirahadori, RequiresSword, RequiresMateriaBlade,Evadeable, Targeting };
         }
@@ -293,8 +293,8 @@ namespace FFTPatcher.Datatypes
             result[0] = Range;
             result[1] = Effect;
             result[2] = Vertical;
-            result[3] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Blank6, Blank7, WeaponRange, VerticalFixed, VerticalTolerance, WeaponStrike, Auto, !TargetSelf );
-            result[4] = PatcherLib.Utilities.Utilities.ByteFromBooleans( !HitEnemies, !HitAllies, Blank8, !FollowTarget, RandomFire, LinearAttack, ThreeDirections, !HitCaster );
+            result[3] = PatcherLib.Utilities.Utilities.ByteFromBooleans(ForceSelfTarget, Blank7, WeaponRange, VerticalFixed, VerticalTolerance, WeaponStrike, Auto, !TargetSelf);
+            result[4] = PatcherLib.Utilities.Utilities.ByteFromBooleans(!HitEnemies, !HitAllies, TopDownTarget, !FollowTarget, RandomFire, LinearAttack, ThreeDirections, !HitCaster);
             result[5] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Reflect, Arithmetick, !Silence, !Mimic, NormalAttack, Perservere, ShowQuote, AnimateMiss );
             result[6] = PatcherLib.Utilities.Utilities.ByteFromBooleans( CounterFlood, CounterMagic, Direct, Shirahadori, RequiresSword, RequiresMateriaBlade, Evadeable, !Targeting );
             result[7] = Elements.ToByte();
@@ -333,7 +333,7 @@ namespace FFTPatcher.Datatypes
             reader.ReadStartElement();
             reader.ReadEndElement();
 
-            Blank6 = reader.ReadElementContentAsBoolean();
+            ForceSelfTarget = reader.ReadElementContentAsBoolean();
             Blank7 = reader.ReadElementContentAsBoolean();
             WeaponRange = reader.ReadElementContentAsBoolean();
             VerticalFixed = reader.ReadElementContentAsBoolean();
@@ -344,7 +344,7 @@ namespace FFTPatcher.Datatypes
 
             HitEnemies = reader.ReadElementContentAsBoolean();
             HitAllies = reader.ReadElementContentAsBoolean();
-            Blank8 = reader.ReadElementContentAsBoolean();
+            TopDownTarget = reader.ReadElementContentAsBoolean();
             FollowTarget = reader.ReadElementContentAsBoolean();
             RandomFire = reader.ReadElementContentAsBoolean();
             LinearAttack = reader.ReadElementContentAsBoolean();
@@ -395,7 +395,7 @@ namespace FFTPatcher.Datatypes
             writer.WriteEndAttribute();
             writer.WriteEndElement();
 
-            writer.WriteValueElement( Strings.Blank6, Blank6 );
+            writer.WriteValueElement( Strings.ForceSelfTarget, ForceSelfTarget );
             writer.WriteValueElement( Strings.Blank7, Blank7 );
             writer.WriteValueElement( Strings.WeaponRange, WeaponRange );
             writer.WriteValueElement( Strings.VerticalFixed, VerticalFixed );
@@ -406,7 +406,7 @@ namespace FFTPatcher.Datatypes
 
             writer.WriteValueElement( Strings.HitEnemies, HitEnemies );
             writer.WriteValueElement( Strings.HitAllies, HitAllies );
-            writer.WriteValueElement( Strings.Blank8, Blank8 );
+            writer.WriteValueElement( Strings.TopDownTarget, TopDownTarget );
             writer.WriteValueElement( Strings.FollowTarget, FollowTarget );
             writer.WriteValueElement( Strings.RandomFire, RandomFire );
             writer.WriteValueElement( Strings.LinearAttack, LinearAttack );

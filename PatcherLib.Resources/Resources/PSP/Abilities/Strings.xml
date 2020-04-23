@@ -20,34 +20,34 @@
 <AbilityStrings>
   <AI>
     <!-- This list is used by the Abilities page -->
-    <string value="0" name="HP"/>
-    <string value="1" name="MP"/>
-    <string value="2" name="Cancel Status"/>
-    <string value="3" name="Add Status"/>
-    <string value="4" name="Stats"/>
-    <string value="5" name="Unequip"/>
-    <string value="6" name="Target Enemies"/>
-    <string value="7" name="Target Allies"/>
-    <string value="8" name="Line of Sight"/>
-    <string value="9" name="Reflectable"/>
-    <string value="10" name="Undead Reverse"/>
-    <string value="11" name="Unknown"/>
-    <string value="12" name="Allow randomly"/>
-    <string value="13" name="Unknown"/>
-    <string value="14" name="Unknown"/>
-    <string value="15" name="Silence"/>
-    <string value="16" name=""/>
-    <string value="17" name="Direct Attack"/>
-    <string value="18" name="Linear Attack"/>
-    <string value="19" name="Vertical Increase"/>
-    <string value="20" name="Triple Attack"/>
-    <string value="21" name="Triple Breath"/>
-    <string value="22" name="Magic Defense Up"/>
-    <string value="23" name="Defense Up"/>
+      <string value="0" name="Affect HP"/>
+      <string value="1" name="Affect MP"/>
+      <string value="2" name="Cancel Status"/>
+      <string value="3" name="Add Status"/>
+      <string value="4" name="Affect Stats"/>
+      <string value="5" name="Unequip"/>
+      <string value="6" name="Target Enemies"/>
+      <string value="7" name="Target Allies"/>
+      <string value="8" name="Target Map"/>
+      <string value="9" name="Reflectable"/>
+      <string value="10" name="Undead Reverse"/>
+      <string value="11" name="Check CT/Target"/>
+      <string value="12" name="Random Hits"/>
+      <string value="13" name="Affected by Faith"/>
+      <string value="14" name="Evadeable"/>
+      <string value="15" name="Ignore Silence"/>
+      <string value="16" name="Longbow Attack"/>
+      <string value="17" name="Stop at Obstacle"/>
+      <string value="18" name="Linear Attack"/>
+      <string value="19" name="Non Spear-Target"/>
+      <string value="20" name="3-Direction Melee"/>
+      <string value="21" name="3-Direction Ranged"/>
+      <string value="22" name="Magical Attack"/>
+      <string value="23" name="Physical Attack"/>
   </AI>
   <Attributes>
     <!-- This list is used by the Abilities page -->
-    <string value="0" name=""/>
+    <string value="0" name="Force Self-Target"/>
     <string value="1" name=""/>
     <string value="2" name="Weapon Range"/>
     <string value="3" name="Vertical Fixed"/>
@@ -57,7 +57,7 @@
     <string value="7" name="Target Self"/>
     <string value="8" name="Hit Enemies"/>
     <string value="9" name="Hit Allies"/>
-    <string value="10" name=""/>
+    <string value="10" name="Top-Down Target"/>
     <string value="11" name="Follow Target"/>
     <string value="12" name="Random Fire"/>
     <string value="13" name="Linear Attack"/>

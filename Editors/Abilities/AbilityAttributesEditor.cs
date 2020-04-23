@@ -36,8 +36,8 @@ namespace FFTPatcher.Editors
         private static readonly List<string> FieldNames = new List<string>( new string[] {
             "Range", "Effect", "Vertical", "X", "Y", "InflictStatus", "CT", "MPCost" } );
         private static readonly List<string> FlagNames = new List<string>( new string[] {
-            "Blank6", "Blank7", "WeaponRange", "VerticalFixed", "VerticalTolerance", "WeaponStrike", "Auto", "TargetSelf",
-            "HitEnemies", "HitAllies", "Blank8", "FollowTarget", "RandomFire", "LinearAttack", "ThreeDirections", "HitCaster",
+            "ForceSelfTarget", "Blank7", "WeaponRange", "VerticalFixed", "VerticalTolerance", "WeaponStrike", "Auto", "TargetSelf",
+            "HitEnemies", "HitAllies", "TopDownTarget", "FollowTarget", "RandomFire", "LinearAttack", "ThreeDirections", "HitCaster",
             "Reflect", "Arithmetick", "Silence", "Mimic", "NormalAttack", "Perservere", "ShowQuote", "AnimateMiss",
             "CounterFlood", "CounterMagic", "Direct", "Shirahadori", "RequiresSword", "RequiresMateriaBlade", "Evadeable", "Targeting"} );
         private bool ignoreChanges = false;
