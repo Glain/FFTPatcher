@@ -440,7 +440,7 @@
             this.randomSuccessClassComboBox.FormattingEnabled = true;
             this.randomSuccessClassComboBox.Location = new System.Drawing.Point( 358, 188 );
             this.randomSuccessClassComboBox.Name = "randomSuccessClassComboBox";
-            this.randomSuccessClassComboBox.Size = new System.Drawing.Size( 69, 21 );
+            this.randomSuccessClassComboBox.Size = new System.Drawing.Size( 123, 21 );
             this.randomSuccessClassComboBox.TabIndex = 18;
             this.randomSuccessClassComboBox.Tag = "RandomSuccessClass";
             this.randomSuccessClassComboBox.SelectedIndexChanged += new System.EventHandler( this.randomSuccessClassComboBox_SelectedIndexChanged );
