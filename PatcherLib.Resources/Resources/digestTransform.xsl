@@ -578,7 +578,7 @@
           <th>Default</th>
           <th>New value</th>
         </tr>
-        <xsl:for-each select="Blank1|Blank2|Order|CT|Unknown12|Unknown1|Unknown2|Unknown3|Unknown4|Unknown5|Unknown6|Unknown13|Unknown14|Blank|Unknown15|Unknown7|Unknown8|Unknown9|CancelledByImmortal|Unknown11">
+        <xsl:for-each select="Blank1|Blank2|Order|CT|FreezeCT|Unknown1|Unknown2|Unknown3|CancelWhenHit|Unknown5|Unknown6|CountsAsKO|CanReact|Blank|IgnoreAttacks|Unknown7|Unknown8|Unknown9|CancelledByImmortal|LowerTargetPriority">
           <tr>
             <td>
               <xsl:value-of select="name(.)"/>
