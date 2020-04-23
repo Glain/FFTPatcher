@@ -82,8 +82,17 @@ namespace FFTorgASM
         public byte[] byteArray;
         public string name;
         public List<PatchedByteArray> content;
+        public bool isReference;
+        public VariableReference reference;
     }
-    
+
+    public struct VariableReference
+    {
+        public string name;
+        public string operatorSymbol;
+        public uint operand;
+    }
+
     public class AsmPatch : IList<PatchedByteArray>
     {
         List<PatchedByteArray> innerList;
@@ -92,7 +101,22 @@ namespace FFTorgASM
 
         public string Name { get; private set; }
         public string Description { get; private set; }
-        public IList<VariableType> Variables { get; private set; }
+
+        public IList<VariableType> _variables; 
+        public IList<VariableType> Variables
+        {
+            get
+            {
+                return _variables;
+            }
+            private set
+            {
+                _variables = value;
+                CreateVariableMap();
+            }
+        }
+        
+        public Dictionary<string, VariableType> VariableMap { get; private set; }
 
         private IEnumerator<PatchedByteArray> enumerator;
 
@@ -138,6 +162,30 @@ namespace FFTorgASM
                     }
                 }
             }
+        }
+
+        private void CreateVariableMap()
+        {
+            VariableMap = new Dictionary<string, VariableType>();
+            foreach (VariableType variable in Variables)
+            {
+                string name = variable.name;
+                if (!VariableMap.ContainsKey(name))
+                {
+                    VariableMap.Add(name, variable);
+                }
+            }
+        }
+
+        public int CountNonReferenceVariables()
+        {
+            int count = 0;
+            foreach (VariableType variable in Variables)
+            {
+                if (variable.isReference)
+                    count++;
+            }
+            return count;
         }
 
         public int IndexOf( PatchedByteArray item )

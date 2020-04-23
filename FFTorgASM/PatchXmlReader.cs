@@ -333,11 +333,38 @@ namespace FFTorgASM
                         patchedByteArrayList.Add(new PatchedByteArray(varSec, fileOffset, byteArray));
                     }
 
+                    bool isReference = false;
+                    string referenceName = "";
+                    string referenceOperatorSymbol = "";
+                    uint referenceOperand = 0;
+
+                    XmlAttribute attrReference = varNode.Attributes["reference"];
+                    XmlAttribute attrOperator = varNode.Attributes["operator"];
+                    XmlAttribute attrOperand = varNode.Attributes["operand"];
+                    
+                    if (attrReference != null)
+                    {
+                        isReference = true;
+                        referenceName = attrReference.InnerText;
+                        referenceOperatorSymbol = (attrOperator != null) ? attrOperator.InnerText : "";
+                        if (attrOperand != null)
+                        {
+                            //UInt32.Parse(defaultAttr.InnerText, System.Globalization.NumberStyles.HexNumber);
+                            uint.TryParse(attrOperand.InnerText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.CurrentCulture, out referenceOperand);
+                        }
+                    }
+
                     VariableType vType = new VariableType();
                     vType.numBytes = numBytes;
                     vType.byteArray = byteArray;
                     vType.name = varName;
                     vType.content = patchedByteArrayList;
+                    vType.isReference = isReference;
+                    vType.reference = new VariableReference();
+                    vType.reference.name = referenceName;
+                    vType.reference.operatorSymbol = referenceOperatorSymbol;
+                    vType.reference.operand = referenceOperand;
+
                     variables.Add( vType );
                 }
 

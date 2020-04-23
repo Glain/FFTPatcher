@@ -69,11 +69,14 @@ namespace FFTorgASM
             {
             	AsmPatch patch = ( clb_Patches.SelectedItem as AsmPatch );
             	//Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes();
-                Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].byteArray;
+                //VariableType selectedVariable = patch.Variables[variableComboBox.SelectedIndex];
+                VariableType selectedVariable = patch.VariableMap[(string)variableComboBox.SelectedItem];
 
+                byte[] byteArray = selectedVariable.byteArray;
+                
                 // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
                 ignoreChanges = true;
-                variableSpinner.Maximum = (decimal)Math.Pow(256, patch.Variables[variableComboBox.SelectedIndex].numBytes) - 1;
+                variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.numBytes) - 1;
                 ignoreChanges = false;
 
                 variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
@@ -85,17 +88,60 @@ namespace FFTorgASM
         	AsmPatch patch = (clb_Patches.SelectedItem as AsmPatch);
             if ( !ignoreChanges )
             {
-                UInt32 def = (UInt32)variableSpinner.Value;
-                for (int i=0; i < patch.Variables[variableComboBox.SelectedIndex].numBytes; i++)
+                UInt32 newValue = (UInt32)variableSpinner.Value;
+                //VariableType variable = patch.Variables[variableComboBox.SelectedIndex];
+                VariableType variable = patch.VariableMap[(string)variableComboBox.SelectedItem];
+                UpdateVariable(variable, newValue);
+            }
+        }
+
+        private void UpdateVariable(VariableType variable, UInt32 newValue)
+        {
+            for (int i = 0; i < variable.numBytes; i++)
+            {
+                //patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
+                byte byteValue = (byte)((newValue >> (i * 8)) & 0xff);
+                variable.byteArray[i] = byteValue;
+                foreach (PatchedByteArray patchedByteArray in variable.content)
                 {
-                	//patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
-                    byte byteValue = (byte)((def >> (i * 8)) & 0xff);
-                    patch.Variables[variableComboBox.SelectedIndex].byteArray[i] = byteValue;
-                    foreach (PatchedByteArray patchedByteArray in patch.Variables[variableComboBox.SelectedIndex].content)
-                    {
-                        patchedByteArray.GetBytes()[i] = byteValue;
-                    }
+                    patchedByteArray.GetBytes()[i] = byteValue;
                 }
+            }
+        }
+
+        private void UpdateReferenceVariableValues(AsmPatch patch)
+        {
+            foreach (VariableType variable in patch.Variables)
+            {
+                if (variable.isReference)
+                    UpdateReferenceVariableValue(variable, patch);
+            }
+        }
+
+        private void UpdateReferenceVariableValue(VariableType variable, AsmPatch patch)
+        {
+            if (variable.isReference)
+            {
+                byte[] referenceBytes = patch.VariableMap[variable.reference.name].byteArray;
+                uint value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
+
+                switch (variable.reference.operatorSymbol)
+                {
+                    case "+":
+                        value += variable.reference.operand;
+                        break;
+                    case "-":
+                        value -= variable.reference.operand;
+                        break;
+                    case "*":
+                        value *= variable.reference.operand;
+                        break;
+                    case "/":
+                        value /= variable.reference.operand;
+                        break;
+                }
+
+                UpdateVariable(variable, value);
             }
         }
 
@@ -234,17 +280,33 @@ namespace FFTorgASM
                 int index = clb_Patches.SelectedIndex;
                 txt_Messages.Text = (index >= 0) ? patchMessages[index] : "";
                 
-                if (p.Variables.Count > 0)
+                //if (p.Variables.Count > 0)
+                if (p.CountNonReferenceVariables() > 0)
                 {
                     ignoreChanges = true;
                     variableComboBox.Items.Clear();
-                    p.Variables.ForEach(varType => variableComboBox.Items.Add(varType.name));
+                    //p.Variables.ForEach(varType => variableComboBox.Items.Add(varType.name));
+                    bool foundFirst = false;
+                    VariableType firstNonReferenceVariable = p.Variables[0];
+                    foreach (VariableType variable in p.Variables)
+                    {
+                        if (!variable.isReference)
+                        {
+                            variableComboBox.Items.Add(variable.name);
+                            if (!foundFirst)
+                            {
+                                firstNonReferenceVariable = variable;
+                                foundFirst = true;
+                            }
+                        }
+                    }
                     variableComboBox.SelectedIndex = 0;
 
                     //variableSpinner.Value = p.Variables[0].content.Value.GetBytes()[0];
                     //Byte[] byteArray = p.Variables[0].content.Value.GetBytes();
-                    byte[] byteArray = p.Variables[0].byteArray;
-                    variableSpinner.Maximum = (decimal)Math.Pow(256, p.Variables[0].numBytes) - 1;
+                    //byte[] byteArray = p.Variables[0].byteArray;
+                    byte[] byteArray = firstNonReferenceVariable.byteArray;
+                    variableSpinner.Maximum = (decimal)Math.Pow(256, firstNonReferenceVariable.numBytes) - 1;
                     variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
 
                     variableSpinner.Visible = true;
@@ -420,6 +482,7 @@ namespace FFTorgASM
 
         private void ModifyPatch(AsmPatch patch)
         {
+            UpdateReferenceVariableValues(patch);
             foreach (PatchedByteArray patchedByteArray in patch)
             {
                 if (patchedByteArray.IsAsm)
@@ -431,7 +494,7 @@ namespace FFTorgASM
                         string strPrefix = "";
                         foreach (VariableType variable in variables)
                         {
-                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
                             content = strPrefix + content;
                         }
                     }
