@@ -29,6 +29,7 @@ namespace FFTPatcher.Editors
             listBox1.ContextMenu.Popup += new EventHandler(ContextMenu_Popup);
 
             listBox1.KeyDown += new KeyEventHandler(itemListBox_KeyDown);
+            listBox1.IncludePrefix = true;
 
             propositionEditor1.DataChanged += editor_DataChanged;
         }
