@@ -56,6 +56,22 @@ namespace FFTorgASM
                     hideInDefault = true;
             }
 
+            bool hasDefaultSector = false;
+            PsxIso.Sectors defaultSector = (PsxIso.Sectors)0;
+            XmlAttribute attrDefaultFile = node.Attributes["file"];
+            XmlAttribute attrDefaultSector = node.Attributes["sector"];
+
+            if (attrDefaultFile != null)
+            {
+                defaultSector = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), attrDefaultFile.InnerText);
+                hasDefaultSector = true;
+            }
+            else if (attrDefaultSector != null)
+            {
+                defaultSector = (PsxIso.Sectors)Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber);
+                hasDefaultSector = true;
+            }
+
             XmlNodeList currentLocs = node.SelectNodes( "Location" );
             List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count );
             List<bool> isDataSectionList = new List<bool>( currentLocs.Count );
@@ -84,11 +100,15 @@ namespace FFTorgASM
                 {
                     sector = (PsxIso.Sectors)Int32.Parse( sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber );
                 }
+                else if (hasDefaultSector)
+                {
+                    sector = defaultSector;
+                }
                 else
                 {
-                    throw new Exception();
+                    throw new Exception("Error in patch XML: Invalid file/sector!");
                 }
-                
+
                 bool asmMode = false;
                 bool markedAsData = false;
                 if (modeAttribute != null)
