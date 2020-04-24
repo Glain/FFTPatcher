@@ -790,27 +790,6 @@
             </PalettedImage4bppSectioned>
         </Repeat>
     </Section>
-    <!--
-    <Section Name="WLDFACE.BIN (Sets)" Filename="WLDFACE.BIN" Filesize="131072">
-        <Repeat Number="4" Offset="32768" PaletteOffset="32768">
-            <PalettedImage4bpp>
-                <Name>WLDFACE.BIN</Name>
-                <Width>256</Width>
-                <Height>240</Height>
-                <Sector>EVENT_WLDFACE_BIN</Sector>
-                <PaletteCount>64</PaletteCount>
-                <PalettePosition>
-                    <Offset>30720</Offset>
-                    <Length>32</Length>
-                </PalettePosition>
-                <Position>
-                    <Offset>0</Offset>
-                    <Length>30720</Length>
-                </Position>    
-            </PalettedImage4bpp>
-        </Repeat>
-    </Section>
-    -->
     <Section Name="WLDFACE.BIN" Filename="WLDFACE.BIN" Filesize="131072">
         <Names>
             <Name>Ramza (Chapter 1)</Name>
@@ -1152,6 +1131,25 @@
             </PalettedImage4bppSectioned>
         </Repeat>
     </Section>
+    <Section Name="WLDFACE.BIN (Sets)" Filename="WLDFACE.BIN" Filesize="131072">
+        <Repeat Number="4" Offset="32768" PaletteOffset="32768">
+            <PalettedImage4bpp>
+                <Name>WLDFACE.BIN</Name>
+                <Width>256</Width>
+                <Height>240</Height>
+                <Sector>EVENT_WLDFACE_BIN</Sector>
+                <PaletteCount>64</PaletteCount>
+                <PalettePosition>
+                    <Offset>30720</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>0</Offset>
+                    <Length>30720</Length>
+                </Position>
+            </PalettedImage4bpp>
+        </Repeat>
+    </Section>
     <Section Name="WLDFACE4.BIN" Filename="WLDFACE4.BIN" Filesize="32768">
         <Names>
             <Name>Delita (Holy Knight)</Name>
@@ -1214,6 +1212,23 @@
                 </PalettedImage4bppSectioned>
             </Repeat>
         </Repeat>
+    </Section>
+    <Section Name="WLDFACE4.BIN (Set)" Filename="WLDFACE4.BIN" Filesize="32768">
+        <PalettedImage4bpp>
+            <Name>WLDFACE4.BIN</Name>
+            <Width>256</Width>
+            <Height>240</Height>
+            <Sector>EVENT_WLDFACE4_BIN</Sector>
+            <PaletteCount>64</PaletteCount>
+            <PalettePosition>
+                <Offset>30720</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>0</Offset>
+                <Length>30720</Length>
+            </Position>
+        </PalettedImage4bpp>
     </Section>
     <Section Name="OPNTEX.BIN" Filename="OPNTEX.BIN" Filesize="995328">
         <Names>
