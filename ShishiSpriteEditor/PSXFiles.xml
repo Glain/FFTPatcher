@@ -675,9 +675,8 @@
             <Name>Behemoth</Name>
             <Name>Dragon</Name>
             <Name>Hydra</Name>
-            <Name>Holy Dragon</Name>
             <Name>Byblos</Name>
-            <Name>Elidibs</Name>
+            <Name>Serpentarius</Name>
             <Name>Archaic Demon</Name>
             <Name>Worker 8</Name>
         </Names>
@@ -755,22 +754,6 @@
                 </PalettedImage4bppSectioned>
             </Repeat>
         </Repeat>
-        <PalettedImage4bppSectioned>
-            <Name>Holy Dragon</Name>
-            <Width>48</Width>
-            <Height>48</Height>
-            <NumBytesBetweenRows>128</NumBytesBetweenRows>
-            <Sector>EVENT_UNIT_BIN</Sector>
-            <PaletteCount>1</PaletteCount>
-            <PalettePosition>
-                <Offset>65344</Offset>
-                <Length>32</Length>
-            </PalettePosition>
-            <Position>
-                <Offset>44104</Offset>
-                <Length>24</Length>
-            </Position>
-        </PalettedImage4bppSectioned>
         <Repeat Number="4" Offset="24" PaletteOffset="96">
             <PalettedImage4bppSectioned>
                 <Name>UNIT.BIN</Name>
@@ -789,6 +772,24 @@
                 </Position>
             </PalettedImage4bppSectioned>
         </Repeat>
+    </Section>
+    <Section Name="UNIT.BIN (Extra Palettes)" Filename="UNIT.BIN" Filesize="65536">
+        <PalettedImage4bppSectioned>
+            <Name>Holy Dragon</Name>
+            <Width>48</Width>
+            <Height>48</Height>
+            <NumBytesBetweenRows>128</NumBytesBetweenRows>
+            <Sector>EVENT_UNIT_BIN</Sector>
+            <PaletteCount>1</PaletteCount>
+            <PalettePosition>
+                <Offset>65344</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>44104</Offset>
+                <Length>24</Length>
+            </Position>
+        </PalettedImage4bppSectioned>
     </Section>
     <Section Name="WLDFACE.BIN" Filename="WLDFACE.BIN" Filesize="131072">
         <Names>
@@ -952,6 +953,31 @@
             <Name>(Unused)</Name>
             <Name>(Unused)</Name>
             <Name>(Unused)</Name>
+        </Names>
+        <Repeat Number="4" Offset="32768" PaletteOffset="32768">
+            <Repeat Number="5" Offset="6144" PaletteOffset="256">
+                <Repeat Number="8" Offset="16" PaletteOffset="32">
+                    <PalettedImage4bppSectioned>
+                        <Name>WLDFACE.BIN</Name>
+                        <Width>32</Width>
+                        <Height>48</Height>
+                        <NumBytesBetweenRows>128</NumBytesBetweenRows>
+                        <Sector>EVENT_WLDFACE_BIN</Sector>
+                        <PalettePosition>
+                            <Offset>30720</Offset>
+                            <Length>32</Length>
+                        </PalettePosition>
+                        <Position>
+                            <Offset>0</Offset>
+                            <Length>16</Length>
+                        </Position>
+                    </PalettedImage4bppSectioned>
+                </Repeat>
+            </Repeat>
+        </Repeat>
+    </Section>
+    <Section Name="WLDFACE.BIN (Extra Palettes)" Filename="WLDFACE.BIN" Filesize="131072">
+        <Names>
             <Name>Chocobo</Name>
             <Name>Goblin</Name>
             <Name>Bomb</Name>
@@ -977,27 +1003,6 @@
             <Name>Steel Giant?</Name>
             <Name>Steel Giant?</Name>
         </Names>
-        <Repeat Number="4" Offset="32768" PaletteOffset="32768">
-            <Repeat Number="5" Offset="6144" PaletteOffset="256">
-                <Repeat Number="8" Offset="16" PaletteOffset="32">
-                    <PalettedImage4bppSectioned>
-                        <Name>WLDFACE.BIN</Name>
-                        <Width>32</Width>
-                        <Height>48</Height>
-                        <NumBytesBetweenRows>128</NumBytesBetweenRows>
-                        <Sector>EVENT_WLDFACE_BIN</Sector>
-                        <PalettePosition>
-                            <Offset>30720</Offset>
-                            <Length>32</Length>
-                        </PalettePosition>
-                        <Position>
-                            <Offset>0</Offset>
-                            <Length>16</Length>
-                        </Position>
-                    </PalettedImage4bppSectioned>
-                </Repeat>
-            </Repeat>
-        </Repeat>
         <PalettedImage4bppSectioned>
             <Width>32</Width>
             <Height>48</Height>
