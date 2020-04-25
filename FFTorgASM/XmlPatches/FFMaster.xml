@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+
+  <Patch name="Formula 1E, 1F, 5E, 5F, 60 ((MA+Y)*MA/2) becomes (([STAT XX]+Y)*[STAT XX]/2)">
+    <Description>Use http://www.ffhacktics.com/wiki/Formula_Hacking for reference on which stat is used. 
+Default is 36, PA.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="36" offset="11ECD8,11ECCC"/>
+  </Patch>
+
+
+  <Patch name="Formulas 4E and 4F becomes Dmg_(Casters Brave+Casters Faith)">
+    <Location file="BATTLE_BIN" offset="11FE38">
+      24004390
+      26004490
+    </Location>
+    <Location file="BATTLE_BIN" offset="11FE48">
+      21186400
+    </Location>
+  </Patch>
+
+
+  <Patch name="MA accuracy checks use MA * 2 instead">
+    <Location file="BATTLE_BIN" offset="11ED94">
+      1980013C
+      21104200
+      D03823A4
+    </Location>
+  </Patch>
+
+
+  <Patch name="Dmg_(TargetCurHP-1) becomes Dmg_(CasterMaxHP-CasterCurrentHP)">
+    <Location file="BATTLE_BIN" offset="11F708">
+      A9600508
+      00000000
+      1980033C
+      902D638C
+    </Location>
+    <Location file="BATTLE_BIN" offset="F12A4">
+      2A006296
+      28006196
+      00000000
+      C4190608
+      22104100
+    </Location>
+  </Patch>
+
+
+  <Patch name="Formula 29(Steal Heart) requires same gender">
+    <Location file="BATTLE_BIN" offset="122974">
+      05004310
+    </Location>
+  </Patch>
+
+
+  <Patch name="Formula 37 becomes Dmg_[(0...(Y-1)+ZZ)*PA">
+    <Description>Change variable ZZ to whatever value you want (in hex). For example, 0A = 10 in formula.</Description>
+    <Variable name="ZZ" file="BATTLE_BIN" default="0A" offset="11F958"/>
+  </Patch>
+
+
+  <Patch name="Jump formula becomes WP*[STAT ZZ]*(XX)/(YY)">
+    <Description>Change variable ZZ according to what stat you want to use in formula. 
+Use http://www.ffhacktics.com/wiki/Formula_Hacking as a reference. 
+Default is 18 - Jump</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="03" offset="F13E4"/>
+    <Variable name="YY" file="BATTLE_BIN" default="02" offset="F13F0"/>
+    <Variable name="ZZ" file="BATTLE_BIN" default="18" offset="F13E0"/>
+    <Location file="BATTLE_BIN" offset="11EED4">
+      F8600508
+      00000324
+      40180200
+    </Location>
+    <Location file="BATTLE_BIN" offset="11EEF4">
+      F8600508
+      01000324
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13E1">
+      004290
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13E5">
+      000124
+      18002200
+      12100000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13F1">
+      000124
+      1A004100
+      12100000
+      03000310
+      00000000
+      BF170608
+      00000000
+      B7170608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Damage Split returns 25% of damage instead of 50%">
+    <Location file="BATTLE_BIN" offset="126358">
+      82
+    </Location>
+  </Patch>
+
+
+  <Patch name="Statii gives 50% bonus damage">
+    <Description>This is an extension to Razele's performing damage bonus hack. Change XX to whatever status(es) you want. 
+For example, if you made XX = 18, units with Undead or Charging would both gain 50% damage bonus. 
+However, a unit with both Undead and Charging would still only receive 50% bonus damage. IT DOES NOT STACK.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="18" offset="11F3DC"/>
+  </Patch>
+
+
+  <Patch name="Statii removes evasion">
+    <Description>This is an extension to Razele's performing evasion hack. Change XX to whatever status(es) you want. 
+For example, if you made XX = 03, units with either defending or performing would lose all evasion.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="03" offset="11E444"/>
+  </Patch>
+
+
+  <Patch name="Darkness status reduces accuracy by XX%">
+    <Description>Set XX to the percentage decrease you want (in hex). 
+For example, XX = 32 will mean a 50% decrease in accuracy while the unit is blinded.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="32" offset="F12D0"/>
+    <Location file="BATTLE_BIN" offset="11E340">
+      10
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E064">
+      AE600508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F12B8">
+      583F2290
+      59006392
+      1980013C
+      20006330
+      02000310
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F12D1">
+      004224
+      1B140608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Change reaction activation chance to XX% constant">
+    <Description>Set XX to the percent chance you want (in hex). For example, XX = 10 will mean 16% chance for reactions to activate.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="10" offset="126144,126398"/>
+    <Location file="BATTLE_BIN" offset="126145">
+      000324
+    </Location>
+    <Location file="BATTLE_BIN" offset="126399">
+      000524
+    </Location>
+  </Patch>
+
+
+  <Patch name="The two support spaces below Non-charge increase damage/healing done by/to unit by XX/(100-YY)% (Hex subtraction!)">
+    <Description>The empty space just below Non-Charge increases damage/healing done by the unit by XX%. 
+Setting XX = 14 will mean a 20% damage/healing increase.
+The empty space after that decreases all damage/healing done to the unit by (x100-xYY)% (Hex subtraction!)
+Setting it to EC will mean a 20% damage/healing decrease. Be careful with the subtraction.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="14" offset="F1304"/>
+    <Variable name="YY" file="BATTLE_BIN" default="EC" offset="F1320"/>
+    <Location file="BATTLE_BIN" offset="11F580">
+      BA600508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F12E8">
+        64000324
+        1980043C
+        942D848C
+        12400000
+        92008490
+        00000000
+        02008430
+        02000410
+        00000000
+        14006324
+        1980043C
+        982D848C
+        00000000
+        92008490
+        00000000
+        01008430
+        02000410
+        00000000
+        ECFF6324
+        00000421
+        18006400
+        12180000
+        64000424
+        00000000
+        1A006400
+        1980033C
+        902D638C
+        62190608
+        00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Blank reaction between Counter and Distribute makes evasion for sides and back equal to front evasion">
+    <Description>If you use the weapon guard innate hack, this means the unit can use weapon guard from the back and sides!</Description>
+    <Location file="BATTLE_BIN" offset="11E6F4">
+      D9600508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1364">
+      8D00A290
+      00000000
+      04004230
+      01000210
+      00006290
+      2330C600
+      000066A0
+      C0150608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Reactions do not need Critical status">
+    <Description>XX status(es) still require Critical status. The rest do not.
+# 0x40 = HP Restore
+# 0x20 = MP Restore
+# 0x10 = Critical Quick
+# 0x08 = Meatbone Slash
+For example, if you only want MP Restore and Critical Quick to activate without being in critical status, then XX = 48, since HP Restore and Meatbone Slash are the ones you want to still require Critical status.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="48" offset="F1388"/>
+    <Location file="BATTLE_BIN" offset="125F0C">
+      E2600508
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1388">
+      48006230
+      04000214
+      00000000
+      5A008290
+      00000000
+      01000224
+      C5330608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="YZ Movement Ability becomes Flee">
+    <Description>Add X to move when unit is in critical. FIXED branching/load issue thanks to Raijinili!!
+
+Y and Z are the offsets that determine the skill this replaces; see https://ffhacktics.com/wiki/Formula_Hacking. Default is the unused Silent Walk, 95, 02</Description>
+    <Variable name="X Movement Added" file="BATTLE_BIN" default="04" offset="F13DC"/>
+    <Variable name="Y" file="BATTLE_BIN" default="95" offset="F13B4"/>
+    <Variable name="Z" file="BATTLE_BIN" default="02" offset="F13BC"/>
+    <Location file="BATTLE_BIN" offset="10D860">
+      ED600508
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13B5">
+      002292
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13BD">
+      004230
+      07000210
+      3A003092
+      5A002292
+      00000000
+      01004230
+      02000210
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13DD">
+      001026
+      1AD20508
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Short Charge rounds CT down instead of up">
+    <Description>For example, in FFTPatcher, you have a spell with CT = 3. Normally, Short Charge will halve it, and round up, meaning that the spell is now CT = 2. 
+With this hack, Short Charge will now round down, so the spell is now CT = 1 (cast as soon as everyone who has 100 speed has had a turn). 
+As a special case, a spell with original CT = 1 + Short Charge + this hack will be effectively a spell with Non-Charge, since the CT is now 0. 
+So if you really want to use this, remember this special case.</Description>
+    <Location file="BATTLE_BIN" offset="11AA78">
+      00
+    </Location>
+    <Location file="BATTLE_BIN" offset="115868">
+      00
+    </Location>
+  </Patch>
+
+
+  <Patch name="Not moving and not acting bonus CT edit">
+    <Description>Change variables to desired values (in hex). 0A = 10 bonus CT</Description>
+    <Variable name="Bonus CT for not Moving" file="BATTLE_BIN" default="14" offset="11CCDC"/>
+    <Variable name="Bonus CT for not Acting" file="BATTLE_BIN" default="14" offset="11CCE8"/>
+  </Patch>
+
+
+  <Patch name="Haste is 25% speed bonus">
+    <Location file="BATTLE_BIN" offset="11B9F8">
+      82
+    </Location>
+  </Patch>
+
+
+  <Patch name="Slow is 25% speed loss">
+    <Location file="BATTLE_BIN" offset="11B9EC">
+      82
+    </Location>
+  </Patch>
+
+
+  <Patch name="Abandon increases evasion by 50%">
+    <Location file="BATTLE_BIN" offset="11E3C0">
+        DC386290
+        00000000
+        82280200
+        23104500
+    </Location>
+  </Patch>
+
+
+  <Patch name="Minimum and Maximum Brave for all units">
+    <Description>XX = minimum, YY = maximum</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="14" offset="F1414"/>
+    <Variable name="YY" file="BATTLE_BIN" default="50" offset="F142C"/>
+    <Location file="EVENT_REQUIRE_OUT" offset="50CC">
+      05610508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1415">
+      000324
+      2A106600
+      03000214
+      00000000
+      21306000
+      10610508
+    </Location>
+    <Location file="BATTLE_BIN" offset="F142D">
+      000324
+      2A10C300
+      02000214
+      00000000
+      21306000
+      2300E6a0
+      2400E6a0
+      35100708
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Minimum and Maximum Faith for all units">
+    <Description>XX = minimum, YY = maximum</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="14" offset="F1450"/>
+    <Variable name="YY" file="BATTLE_BIN" default="50" offset="F1468"/>
+    <Location file="EVENT_REQUIRE_OUT" offset="50EC">
+      14610508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1451">
+      000324
+      2A286900
+      03000514
+      00000000
+      21486000
+      1F610508
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1469">
+      000324
+      2A282301
+      02000514
+      00000000
+      21486000
+      2500E9A0
+      1000422C
+      3D100708
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Katana break chance constant">
+    <Description>This sets all Katana to XX% break when a Draw Out is used. 00 for 0% break chance, 64 for 100% break chance. 
+NOTE: If you set a formula other than the Draw Out ones, the Katana will still break at 100% chance!</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="50" offset="120984"/>
+    <Location file="BATTLE_BIN" offset="120985">
+      000524
+    </Location>
+  </Patch>
+
+
+  <Patch name="Ability CT reduced by (Stat XX)/YY">
+    <Description>XX = Stat to be used - http://ffhacktics.com/wiki/Formula_Hacking
+YY = divider constant number
+This hack reduces ALL ability CT by XX/YY, rounded down. If the CT of an ability is lower than XX/YY, it will be forced to be 1 CT. 
+Abilities with 0 CT will not be affected. For example, I have a spell with 6 CT, X = 37, Y = 05. If I have 10 MA and the divider is 5, the final CT of the spell is then 6 - 2 = 4. 
+THIS HAPPENS BEFORE SHORT CHARGE.
+Does not affect Charge (Archer skillset), does affect skills with Performing flagged (Sing/Dance).</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="37" offset="F1418,F1458"/>
+    <Variable name="YY" file="BATTLE_BIN" default="05" offset="F1420,F145C"/>
+    <Location file="BATTLE_BIN" offset="11AA48">
+      05610508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1414">
+      0C008290
+      37000392
+      0A000210
+      05001024
+      1A007000
+      12800000
+      2A180202
+      04000314
+      00000000
+      01000224
+      94060608
+      05008390
+      23105000
+      94060608
+      05008390
+    </Location>
+    <Location file="BATTLE_BIN" offset="115848">
+      12610508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1450">
+      0C004390
+      37007792
+      0A000310
+      05001224
+      1A00F202
+      12900000
+      2AB84302
+      04001714
+      00000000
+      01000324
+      14F20508
+      05004290
+      23187200
+      14F20508
+      05004290
+    </Location>
+  </Patch>
+
+
+  <Patch name="Throw Item Range edit">
+    <Description>Change variable to desired item throw distance. Defaults to 03 (vanilla is 04)</Description>
+    <Variable name="Throw Item Distance" file="BATTLE_BIN" default="03" offset="113978"/>
+  </Patch>
+
+
+  <Patch name="Short Charge affects Charge skillset">
+    <Description>Change both variables to 00 if you want the game to round CT down instead of up</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="01" offset="F1508"/>
+    <Variable name="YY" file="BATTLE_BIN" default="01" offset="F1538"/>
+    <Location file="BATTLE_BIN" offset="1157C8">
+      46610508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11AADC">
+      37610508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F14DC">
+      C0010824
+      18008800
+      12480000
+      1980083C
+      CC080825
+      21400901
+      92000891
+      00000000
+      08000831
+      02000810
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1509">
+      001026
+      42801000
+      C805060C
+      21280002
+      B9060608
+      00000000
+      21082200
+      92006292
+      180D3290
+      08004230
+      02000210
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F1539">
+      005226
+      F4F10508
+      42901200
+    </Location>
+  </Patch>
+
+
+  <Patch name="Oil hack">
+    <Description>Oil status grants weakness to element(s), overrides Absorb/Null/Half element
+X's = Element(s) not affected by Oil
+Y's = Element(s) affected by Oil
+
+
+TABLE
+0x80 = Fire
+0x40 = Lightning
+0x20 = Ice
+0x10 = Wind
+0x08 = Earth
+0x04 = Water
+0x02 = Holy
+0x01 = Dark
+
+
+For example, if you want Oil to grant weakness to Fire/Holy/Dark, then X's = 7C and Y's = 83
+
+For those who want to mess with the effects more:
+X1 = Elements to ignore Absorb on target
+X2 = Elements to ignore Null/Half on target
+Y1 = Elements to grant Weak on target
+Y2 = Elements that will remove Oil</Description>
+    <Variable name="X1" file="BATTLE_BIN" default="7F" offset="11DEBC"/>
+    <Variable name="X2" file="BATTLE_BIN" default="7F" offset="11DEE4"/>
+    <Variable name="Y1" file="BATTLE_BIN" default="80" offset="11DF38"/>
+    <Variable name="Y2" file="BATTLE_BIN" default="80" offset="120020"/>
+    <Location file="BATTLE_BIN" offset="11DE98">
+      1980023C
+      982D428C
+      E8FFBD27
+      5A004590
+      1000BFAF
+      8000A130
+      6D004590
+      02002010
+      9C014194
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DEBD">
+      00A530
+      24188500
+      02006010
+      00042334
+      9C0143A4
+      5A004190
+      6E004590
+      80002130
+      02002010
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DEE5">
+      00A530
+      24188500
+      05006010
+      00000000
+      9013060C
+      00000000
+      D6130608
+      00000000
+      6F004590
+      02002010
+      90014194
+      0300A530
+      24188500
+      02006010
+      43080100
+      900141A4
+      5A004190
+      70004590
+      80002130
+      02002010
+      90014194
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DF39">
+      00A534
+      24188500
+      05006010
+      40080100
+      9C014394
+      900141A4
+      00086334
+      9C0143A4
+      1000BF8F
+      1800BD27
+      0800E003
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Reis formulas (Dragon hit only) becomes (R/S/M of choice)-hit only">
+    <Description>Change variables to determine what is required to be affected. 
+See https://ffhacktics.com/wiki/Formula_Hacking for details.
+Default is Monster Skill. 
+Example: changing 92 to 06, and 80 to 20, will make Reis formula work with monsters only.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="92" offset="1205C8"/>
+    <Variable name="YY" file="BATTLE_BIN" default="80" offset="1205D0"/>
+    <Location file="BATTLE_BIN" offset="1205BC">
+      1980023C
+      982D428C
+      E8FFBD27
+    </Location>
+    <Location file="BATTLE_BIN" offset="1205C9">
+      004290
+      1000BFAF
+    </Location>
+    <Location file="BATTLE_BIN" offset="1205D1">
+      004230
+      00000000
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="AI teleports XX spaces further than max move">
+    <Description>Note that they can fail the teleport same as the player, but they are unaware of this. 
+This hack only makes them think their move is increased, it's not an AI rewrite to consider probabilities of failure.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="02" offset="F13A8"/>
+    <Location file="BATTLE_BIN" offset="12D2E8">
+      E8600508
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13A0">
+      3A008290
+      1A80013C
+    </Location>
+    <Location file="BATTLE_BIN" offset="F13A9">
+      004224
+      BC500608
+      00000000
+    </Location>
+  </Patch>
+
+
+  <Patch name="Wall does nothing and AI attacks units with Wall status">
+    <Description>This makes the status itself blank, but allows the CT to be used elsewhere, or you can code your own status effect if you really wanted to.</Description>
+    <Location file="BATTLE_BIN" offset="124AE2">
+      00
+    </Location>
+    <Location file="BATTLE_BIN" offset="137F56">
+      00
+    </Location>
+  </Patch>
+
+
+  <Patch name="Sound Test">
+    <Description>Change Ramza's name to PolkaPolka in the New Game screen to enable the sound test.</Description>
+    <Location file="OPEN_OPEN_BIN" offset="441c">
+      00001724
+    </Location>
+    <Location file="OPEN_OPEN_BIN" offset="4434">
+      94CB0108
+      00000000
+    </Location>
+    <Location file="OPEN_OPEN_BIN" offset="5C88">
+      D4
+    </Location>
+    <Location file="OPEN_OPEN_BIN" offset="5CBC">
+      02
+    </Location>
+    <Location file="OPEN_OPEN_BIN" offset="BE50">
+      1000038E
+      03001714
+      05000234
+      0FAD0108
+      00000000
+      10AD0108
+      00000000
+    </Location>
+    <Location file="OPEN_OPEN_BIN" offset="CFAC">
+      19 32 2F 2E 24
+      19 32 2F 2E 24
+    </Location>
+    <Location file="OPEN_OPEN_BIN" offset="4580">
+      7C F5 04 08
+    </Location>
+    <Location file="WORLD_WORLD_BIN" offset="5D5F0">
+      00 00 05 36
+      00 00 A3 90
+      07 80 01 3C
+      AC 3F 21 34
+      21 08 24 00
+      00 00 22 90
+      00 00 00 00
+      06 00 62 14
+      0A 00 02 34
+      01 00 84 24
+      0A 00 82 28
+      F5 FF A0 14
+      01 00 A5 24
+      0A 00 02 34
+      09 00 82 14
+      05 00 02 34
+      10 00 02 AE
+      00 00 04 34
+      FA 0E 01 0C
+      60 00 05 34
+      A4 9F 01 0C
+      20 00 04 34
+      89 AD 01 08
+      01 00 17 24
+      BC 66 01 0C
+      00 00 04 34
+      62 AD 01 08
+      00 00 00 00
+    </Location>
+  </Patch>
+
+</Patches>

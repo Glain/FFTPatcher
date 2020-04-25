@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+
+  <Patch name="Guns take bow accuracy penalty at night">
+    <Location file="BATTLE_BIN" offset="11E768">
+      F6
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E76C">
+      03
+    </Location>
+  </Patch>
+
+
+  <Patch name="Don't Act/Deep Water cancels W/S-EV.  Don't Move cancels C/A-EV">
+    <Description>This is only for physical damage</Description>
+    <Location file="BATTLE_BIN" offset="11DFB8">
+      06
+    </Location>
+    <Location file="BATTLE_BIN" offset="11DFC0">
+      5C008290
+      00000000
+      08004230
+      28004014
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E070">
+      5C4D0508
+    </Location>
+    <Location file="BATTLE_BIN" offset="EC570">
+      C304060C
+      00000000
+      05004014
+      1980043C
+      982D848C
+      01000721
+      1D140608
+      1D008390
+      6D140608
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E40C">
+      10
+    </Location>
+  </Patch>
+
+
+  <Patch name="Abandon sets C-EV to XX% instead of 2x">
+    <Description>Intended to work with Xif's global C-EV hack and the above DM hack. Default is X = 3C, aka 60%.</Description>
+    <Variable name="XX" file="BATTLE_BIN" default="3C" offset="11E3C4"/>
+    <Location file="BATTLE_BIN" offset="11E394">
+      0E
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E3B4">
+      06
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E3C0">
+      E1
+    </Location>
+    <Location file="BATTLE_BIN" offset="11E3C5">
+      000234
+      000062A0
+      00000000
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1215D0">
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Reaction stacking hack">
+    <Description>Can use additional reactions in entd. Fixed by Emmy.</Description>
+    <Location file="SCUS_942_21" offset="4C050">
+      00000000
+    </Location>
+  </Patch>
+
+</Patches>

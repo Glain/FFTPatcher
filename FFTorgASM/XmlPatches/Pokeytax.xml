@@ -99,8 +99,8 @@ XX = status bit, per http://www.ffhacktics.com/wiki/Formula_Hacking (e.g. Faith 
 YY = 1C, 1D, 1E, 1F, 20 (corresponding to status bits - e.g. Faith + Reflect = $20)
 </Description>
 
-<Location file="BATTLE_BIN" offset="124021">000234</Location><Variable name="X" file="BATTLE_BIN" offset="124020"/>
-<Location file="BATTLE_BIN" offset="124029">0062A0</Location><Variable name="Y" file="BATTLE_BIN" offset="124028"/>
+<Location file="BATTLE_BIN" offset="124021">000234</Location><Variable name="XX" file="BATTLE_BIN" offset="124020"/>
+<Location file="BATTLE_BIN" offset="124029">0062A0</Location><Variable name="YY" file="BATTLE_BIN" offset="124028"/>
 </Patch>
 
 
@@ -111,8 +111,8 @@ XX = status bit, per http://www.ffhacktics.com/wiki/Formula_Hacking (e.g. Faith 
 YY = 1C, 1D, 1E, 1F, 20 (corresponding to status bits - e.g. Faith + Reflect = $20)
 </Description>
 
-<Location file="BATTLE_BIN" offset="124039">000234</Location><Variable name="X" file="BATTLE_BIN" offset="124038"/>
-<Location file="BATTLE_BIN" offset="124041">0062A0</Location><Variable name="Y" file="BATTLE_BIN" offset="124040"/>
+<Location file="BATTLE_BIN" offset="124039">000234</Location><Variable name="XX" file="BATTLE_BIN" offset="124038"/>
+<Location file="BATTLE_BIN" offset="124041">0062A0</Location><Variable name="YY" file="BATTLE_BIN" offset="124040"/>
 </Patch>
 
 
@@ -123,9 +123,9 @@ XX = status bit, per http://www.ffhacktics.com/wiki/Formula_Hacking (e.g. Faith 
 YY = 1C, 1D, 1E, 1F, 20 (corresponding to status bits - e.g. Faith + Reflect = $20)
 </Description>
 
-<Variable name="X" file="BATTLE_BIN" offset="124050"/>
+<Variable name="XX" file="BATTLE_BIN" offset="124050"/>
 <Location file="BATTLE_BIN" offset="124051">000234</Location>
-<Variable name="Y" file="BATTLE_BIN" offset="124058"/>
+<Variable name="YY" file="BATTLE_BIN" offset="124058"/>
 <Location file="BATTLE_BIN" offset="124059">0062A0</Location>
 </Patch>
 
@@ -137,8 +137,8 @@ XX = status bit, per http://www.ffhacktics.com/wiki/Formula_Hacking (e.g. Faith 
 YY = 1C, 1D, 1E, 1F, 20 (corresponding to status bits - e.g. Faith + Reflect = $20)
 </Description>
 
-<Location file="BATTLE_BIN" offset="124069">000234</Location><Variable name="X" file="BATTLE_BIN" offset="124068"/>
-<Location file="BATTLE_BIN" offset="12406d">0062A0</Location><Variable name="Y" file="BATTLE_BIN" offset="12406c"/>
+<Location file="BATTLE_BIN" offset="124069">000234</Location><Variable name="XX" file="BATTLE_BIN" offset="124068"/>
+<Location file="BATTLE_BIN" offset="12406d">0062A0</Location><Variable name="YY" file="BATTLE_BIN" offset="12406c"/>
 </Patch>
 
 
