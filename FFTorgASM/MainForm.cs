@@ -163,6 +163,7 @@ namespace FFTorgASM
             //Patchlist.AllCheckedPatches = clb_Patches.CheckedItems;
 
             lsb_FilesList.Items.Clear();
+            lsb_FilesList.BackColors = new Color[files.Length + 1];
             lsb_FilesList.Items.Add("All");
             lsb_FilesList.SelectedIndices.Clear();
             //LoadFile(files[lsb_FilesList.FocusedItem.Index]);
@@ -171,6 +172,7 @@ namespace FFTorgASM
                 files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1);
                 lsb_FilesList.Items.Add(files[i]);
 
+                lsb_FilesList.BackColors[i + 1] = Color.White;
                 if (!Patchlist.LoadedCorrectly[i])
                     //lsb_FilesList.Items[i + 1].BackColor = Color.Red;
                     lsb_FilesList.BackColors[i + 1] = Color.Red;

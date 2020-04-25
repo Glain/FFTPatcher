@@ -29,7 +29,8 @@ namespace PatcherLib.Controls
                     int backColorCount = backColors.Length;
                     Color[] newBackColors = new Color[Items.Count];
                     for (int index = 0; index < Items.Count; index++)
-                        backColors[index] = (index < backColorCount) ? backColors[index] : Color.White;
+                        newBackColors[index] = (index < backColorCount) ? backColors[index] : Color.White;
+                    backColors = newBackColors;
                 }
 
                 return backColors; 
