@@ -224,7 +224,7 @@ namespace FFTPatcher.Editors
         	        	        	"",
         	        	        	"",
         	        	        	"",
-        	        	        	"Cancel when Hit",
+        	        	        	"",
         	        	        	"",
         	        	        	"",
         	        	        	"Counts as KO",

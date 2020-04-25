@@ -35,7 +35,7 @@ namespace FFTPatcher.Datatypes
         public bool Blank;
         public bool CanReact;
         private static readonly string[] digestableProperties = new string[] {
-            "Blank1", "Blank2", "Order", "CT", "FreezeCT", "Unknown1", "Unknown2", "Unknown3", "CancelWhenHit",
+            "Blank1", "Blank2", "Order", "CT", "FreezeCT", "Unknown1", "Unknown2", "Unknown3", "Unknown4",
             "Unknown5", "Unknown6", "CountsAsKO", "CanReact", "Blank", "IgnoreAttacks", "IgnoredIfMount", "Unknown8",
             "Unknown9", "CancelledByImmortal", "LowerTargetPriority", "Cancels", "CantStackOn" };
         public bool FreezeCT;
@@ -50,7 +50,7 @@ namespace FFTPatcher.Datatypes
         public bool LowerTargetPriority;
         public bool Unknown2;
         public bool Unknown3;
-        public bool CancelWhenHit;
+        public bool Unknown4;
         public bool Unknown5;
         public bool Unknown6;
         public bool IgnoredIfMount;
@@ -99,7 +99,7 @@ namespace FFTPatcher.Datatypes
                     Unknown1 != Default.Unknown1 ||
                     Unknown2 != Default.Unknown2 ||
                     Unknown3 != Default.Unknown3 ||
-                    CancelWhenHit != Default.CancelWhenHit ||
+                    Unknown4 != Default.Unknown4 ||
                     Unknown5 != Default.Unknown5 ||
                     Unknown6 != Default.Unknown6 ||
                     IgnoredIfMount != Default.IgnoredIfMount ||
@@ -137,7 +137,7 @@ namespace FFTPatcher.Datatypes
             Order = bytes[2];
             CT = bytes[3];
 
-            PatcherLib.Utilities.Utilities.CopyByteToBooleans(bytes[4], ref FreezeCT, ref Unknown1, ref Unknown2, ref Unknown3, ref CancelWhenHit, ref Unknown5, ref Unknown6, ref CountsAsKO);
+            PatcherLib.Utilities.Utilities.CopyByteToBooleans(bytes[4], ref FreezeCT, ref Unknown1, ref Unknown2, ref Unknown3, ref Unknown4, ref Unknown5, ref Unknown6, ref CountsAsKO);
             PatcherLib.Utilities.Utilities.CopyByteToBooleans(bytes[5], ref CanReact, ref Blank, ref IgnoreAttacks, ref IgnoredIfMount, ref Unknown8, ref Unknown9, ref CancelledByImmortal, ref LowerTargetPriority);
             CanReact = !CanReact;
             Cancels = new Statuses( bytes.Sub( 6, 10 ), defaults == null ? null : defaults.Cancels );
@@ -164,7 +164,7 @@ namespace FFTPatcher.Datatypes
             destination.Unknown1 = source.Unknown1;
             destination.Unknown2 = source.Unknown2;
             destination.Unknown3 = source.Unknown3;
-            destination.CancelWhenHit = source.CancelWhenHit;
+            destination.Unknown4 = source.Unknown4;
             destination.Unknown5 = source.Unknown5;
             destination.Unknown6 = source.Unknown6;
             destination.IgnoredIfMount = source.IgnoredIfMount;
@@ -182,7 +182,7 @@ namespace FFTPatcher.Datatypes
         public bool[] ToBoolArray()
         {
             return new bool[16] {
-                FreezeCT, Unknown1, Unknown2, Unknown3, CancelWhenHit, Unknown5, Unknown6, CountsAsKO,
+                FreezeCT, Unknown1, Unknown2, Unknown3, Unknown4, Unknown5, Unknown6, CountsAsKO,
                 CanReact, Blank, IgnoreAttacks, IgnoredIfMount, Unknown8, Unknown9, CancelledByImmortal, LowerTargetPriority };
         }
 
@@ -193,7 +193,7 @@ namespace FFTPatcher.Datatypes
             result.Add( Blank2 );
             result.Add( Order );
             result.Add( CT );
-            result.Add(PatcherLib.Utilities.Utilities.ByteFromBooleans(FreezeCT, Unknown1, Unknown2, Unknown3, CancelWhenHit, Unknown5, Unknown6, CountsAsKO));
+            result.Add(PatcherLib.Utilities.Utilities.ByteFromBooleans(FreezeCT, Unknown1, Unknown2, Unknown3, Unknown4, Unknown5, Unknown6, CountsAsKO));
             result.Add(PatcherLib.Utilities.Utilities.ByteFromBooleans(!CanReact, Blank, IgnoreAttacks, IgnoredIfMount, Unknown8, Unknown9, CancelledByImmortal, LowerTargetPriority));
             result.AddRange( Cancels.ToByteArray() );
             result.AddRange( CantStackOn.ToByteArray() );
