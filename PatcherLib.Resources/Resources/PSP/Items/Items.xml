@@ -62,7 +62,7 @@
   <Item offset="39" name="Kotetsu"/>
   <Item offset="40" name="Osafune"/>
   <Item offset="41" name="Murasame"/>
-  <Item offset="42" name="Ama-no-Murakamo"/>
+  <Item offset="42" name="Ama-no-Murakumo"/>
   <Item offset="43" name="Kiyomori"/>
   <Item offset="44" name="Muramasa"/>
   <Item offset="45" name="Kiku-ichimonji"/>
@@ -201,7 +201,7 @@
   <Item offset="178" name="Golden Armor"/>
   <Item offset="179" name="Diamond Armor"/>
   <Item offset="180" name="Platinum Armor"/>
-  <Item offset="181" name="Carabiner Mail"/>
+  <Item offset="181" name="Carabineer Mail"/>
   <Item offset="182" name="Crystal Mail"/>
   <Item offset="183" name="Genji Armor"/>
   <Item offset="184" name="Mirror Mail"/>
@@ -254,7 +254,7 @@
   <Item offset="231" name="Mage's Cloak"/>
   <Item offset="232" name="Elven Cloak"/>
   <Item offset="233" name="Vampire Cape"/>
-  <Item offset="234" name="Featherweave Cape"/>
+  <Item offset="234" name="Featherweave Cloak"/>
   <Item offset="235" name="Invisibility Cloak"/>
   <Item offset="236" name="Chantage"/>
   <Item offset="237" name="Cherche"/>
