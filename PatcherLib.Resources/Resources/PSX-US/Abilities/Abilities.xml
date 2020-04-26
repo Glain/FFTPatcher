@@ -248,7 +248,7 @@
   <Ability value="227" name="Confuse 2"/>
   <Ability value="228" name="Sleep 2"/>
   <Ability value="229" name="Ultima  "/> <!-- leave trailing space -->
-  <Ability value="230" name="All-Ultima"/>
+  <Ability value="230" name="All-ultima"/>
   <Ability value="231" name="Mute"/>
   <Ability value="232" name="Despair 2"/>
   <Ability value="233" name="Return 2"/>
@@ -274,9 +274,9 @@
   <Ability value="253" name="Dragon Power Up"/>
   <Ability value="254" name="Dragon Level Up"/>
   <Ability value="255" name="Holy Bracelet"/>
-  <Ability value="256" name="Shock  "/> <!-- leave trailing space -->
+  <Ability value="256" name="Shock!"/>
   <Ability value="257" name="Braver"/>
-  <Ability value="258" name="Cross Slash"/>
+  <Ability value="258" name="Cross-slash"/>
   <Ability value="259" name="Blade Beam"/>
   <Ability value="260" name="Climhazzard"/>
   <Ability value="261" name="Meteorain"/>
@@ -335,8 +335,8 @@
   <Ability value="314" name="Please Eat"/>
   <Ability value="315" name="Leaf Dance"/>
   <Ability value="316" name="Protect Spirit"/>
-  <Ability value="317" name="Calm Spirit"/>
-  <Ability value="318" name="Life Spirit"/>
+  <Ability value="317" name="Clam Spirit"/>
+  <Ability value="318" name="Spirit of Life"/>
   <Ability value="319" name="Magic Spirit"/>
   <Ability value="320" name="Shake Off"/>
   <Ability value="321" name="Wave Around"/>
@@ -365,7 +365,7 @@
   <Ability value="344" name="Dark Whisper"/>
   <Ability value="345" name="Snake Carrier"/>
   <Ability value="346" name="Poison Frog"/>
-  <Ability value="347" name="Midgar Zolom"/>
+  <Ability value="347" name="Midgar Swarm"/>
   <Ability value="348" name="Lifebreak"/>
   <Ability value="349" name="Nanoflare"/>
   <Ability value="350" name="Grand Cross"/>
@@ -424,14 +424,14 @@
   <Ability value="403" name="Vertical Jump6"/>
   <Ability value="404" name="Vertical Jump7"/>
   <Ability value="405" name="Vertical Jump8"/>
-  <Ability value="406" name="Charge +1"/>
-  <Ability value="407" name="Charge +2"/>
-  <Ability value="408" name="Charge +3"/>
-  <Ability value="409" name="Charge +4"/>
-  <Ability value="410" name="Charge +5"/>
-  <Ability value="411" name="Charge +7"/>
-  <Ability value="412" name="Charge +10"/>
-  <Ability value="413" name="Charge +20"/>
+  <Ability value="406" name="Charge+1"/>
+  <Ability value="407" name="Charge+2"/>
+  <Ability value="408" name="Charge+3"/>
+  <Ability value="409" name="Charge+4"/>
+  <Ability value="410" name="Charge+5"/>
+  <Ability value="411" name="Charge+7"/>
+  <Ability value="412" name="Charge+10"/>
+  <Ability value="413" name="Charge+20"/>
   <Ability value="414" name="CT"/>
   <Ability value="415" name="Level"/>
   <Ability value="416" name="Exp"/>
@@ -475,18 +475,18 @@
   <Ability value="454" name="Equip Armor"/>
   <Ability value="455" name="Equip Shield"/>
   <Ability value="456" name="Equip Sword"/>
-  <Ability value="457" name="Equip Katana"/>
+  <Ability value="457" name="Equip Knife"/>
   <Ability value="458" name="Equip Crossbow"/>
   <Ability value="459" name="Equip Spear"/>
   <Ability value="460" name="Equip Axe"/>
   <Ability value="461" name="Equip Gun"/>
   <Ability value="462" name="Half of MP"/>
-  <Ability value="463" name="Gained JP-UP"/>
-  <Ability value="464" name="Gained EXP-UP"/>
+  <Ability value="463" name="Gained Jp UP"/>
+  <Ability value="464" name="Gained Exp UP"/>
   <Ability value="465" name="Attack UP"/>
   <Ability value="466" name="Defense UP"/>
-  <Ability value="467" name="Magic Att. UP"/>
-  <Ability value="468" name="Magic Def. UP"/>
+  <Ability value="467" name="Magic AttackUP"/>
+  <Ability value="468" name="Magic DefendUP"/>
   <Ability value="469" name="Concentrate"/>
   <Ability value="470" name="Train"/>
   <Ability value="471" name="Secret Hunt"/>
@@ -504,24 +504,24 @@
   <Ability value="483" name="Non-charge"/>
   <Ability value="484" name="                   "/> <!-- leave trailing space -->
   <Ability value="485" name="                    "/> <!-- leave trailing space -->
-  <Ability value="486" name="Move +1"/>
-  <Ability value="487" name="Move +2"/>
-  <Ability value="488" name="Move +3"/>
-  <Ability value="489" name="Jump +1"/>
-  <Ability value="490" name="Jump +2"/>
-  <Ability value="491" name="Jump +3"/>
+  <Ability value="486" name="Move+1"/>
+  <Ability value="487" name="Move+2"/>
+  <Ability value="488" name="Move+3"/>
+  <Ability value="489" name="Jump+1"/>
+  <Ability value="490" name="Jump+2"/>
+  <Ability value="491" name="Jump+3"/>
   <Ability value="492" name="Ignore Height"/>
   <Ability value="493" name="Move-HP Up"/>
   <Ability value="494" name="Move-MP Up"/>
   <Ability value="495" name="Move-Get Exp"/>
   <Ability value="496" name="Move-Get Jp"/>
-  <Ability value="497" name="Cannot enter water"/>
+  <Ability value="497" name="(Cannot enter water)"/>
   <Ability value="498" name="Teleport"/>
   <Ability value="499" name="Teleport 2"/>
   <Ability value="500" name="Any Weather"/>
   <Ability value="501" name="Any Ground"/>
-  <Ability value="502" name="Walk on Water"/>
-  <Ability value="503" name="Move in Water"/>
+  <Ability value="502" name="Move in Water (Walk*)"/>
+  <Ability value="503" name="Walk on Water (Move*)"/>
   <Ability value="504" name="Move on Lava"/>
   <Ability value="505" name="Move Underwater"/>
   <Ability value="506" name="Float  "/> <!-- leave trailing space -->
