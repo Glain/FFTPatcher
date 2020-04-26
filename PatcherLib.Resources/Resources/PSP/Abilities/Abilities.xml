@@ -101,7 +101,7 @@
   <Ability value="78" name="Osafune"/>
   <Ability value="79" name="Murasame"/>
   <Ability value="80" name="Ama-no-Murakumo"/>
-  <Ability value="81" name="Kiyomuri"/>
+  <Ability value="81" name="Kiyomori"/>
   <Ability value="82" name="Muramasa"/>
   <Ability value="83" name="Kiku-ichimonji"/>
   <Ability value="84" name="Masamune"/>
@@ -367,8 +367,8 @@
   <Ability value="344" name="Dark Whisper"/>
   <Ability value="345" name="Snakecharm"/>
   <Ability value="346" name="Poisonous Frog"/>
-  <Ability value="347" name="Migardsormr"/>
-  <Ability value="348" name="Kerma"/>
+  <Ability value="347" name="Midgardsormr"/>
+  <Ability value="348" name="Karma"/>
   <Ability value="349" name="Nanoflare"/>
   <Ability value="350" name="Grand Cross"/>
   <Ability value="351" name="Destroy"/>
@@ -517,7 +517,7 @@
   <Ability value="494" name="Manafont"/>
   <Ability value="495" name="Accrue EXP"/>
   <Ability value="496" name="Accrue JP"/>
-  <Ability value="497" name="Cannot enter water"/>
+  <Ability value="497" name="(Cannot enter water)"/>
   <Ability value="498" name="Teleport"/>
   <Ability value="499" name="Master Teleportation"/>
   <Ability value="500" name="Ignore Weather"/>
