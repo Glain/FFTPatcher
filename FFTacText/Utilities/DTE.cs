@@ -18,9 +18,9 @@ namespace FFTPatcher.TextEditor
                 get { return message; }
             }
 
-            public DteException( IFile failedFile )
+            public DteException(IFile failedFile)
             {
-                message = string.Format( "DTE for {0} failed." + Environment.NewLine + "The ISO has NOT been modified.", failedFile.DisplayName );
+                message = string.Format("DTE for {0} failed." + Environment.NewLine + "The ISO has NOT been modified.", failedFile.DisplayName);
             }
         }
 
@@ -117,20 +117,14 @@ namespace FFTPatcher.TextEditor
             new PatchedByteArray( PsxIso.Sectors.SCUS_942_21, 0x22a30, scus2.ToArray() ),
             new PatchedByteArray( PsxIso.Sectors.SCUS_942_21, 0x22848, scus3.ToArray() ) }.AsReadOnly();
 
-        public static bool DoesPsxIsoHaveDtePatches( System.IO.Stream iso )
+        public static bool DoesPsxIsoHaveDtePatches(System.IO.Stream iso)
         {
-            var matchBytes = Encoding.UTF8.GetBytes( FFTText.CharmapHeader );
-            var isoBytes = PsxIso.GetBlock( iso, new PsxIso.KnownPosition( (PsxIso.Sectors)FFTText.PsxCharmapSector, 0,
-                matchBytes.Length ) ); 
-            if (Utilities.CompareArrays( matchBytes, isoBytes ))
-                return true;
-
             foreach (var pba in psxDtePatches)
             {
                 byte[] patchBytes = pba.GetBytes();
                 byte[] streambytes =
-                    PsxIso.GetBlock( iso, new PsxIso.KnownPosition( (PsxIso.Sectors)pba.Sector, (int)pba.Offset, patchBytes.Length ) );
-                if (!Utilities.CompareArrays( patchBytes, streambytes ))
+                    PsxIso.GetBlock(iso, new PsxIso.KnownPosition((PsxIso.Sectors)pba.Sector, (int)pba.Offset, patchBytes.Length));
+                if (!Utilities.CompareArrays(patchBytes, streambytes))
                 {
                     return false;
                 }
@@ -139,45 +133,45 @@ namespace FFTPatcher.TextEditor
             return true;
         }
 
-        public static bool DoesPspIsoHaveNonDefaultFont( System.IO.Stream iso, PatcherLib.Iso.PspIso.PspIsoInfo info )
+        public static bool DoesPspIsoHaveNonDefaultFont(System.IO.Stream iso, PatcherLib.Iso.PspIso.PspIsoInfo info)
         {
-            IList<byte> fontBytes = PspIso.GetBlock( iso, info, DTE.PspFontSection[0] );
-            IList<byte> widthBytes = PspIso.GetBlock( iso, info, DTE.PspFontWidths[0] );
+            IList<byte> fontBytes = PspIso.GetBlock(iso, info, DTE.PspFontSection[0]);
+            IList<byte> widthBytes = PspIso.GetBlock(iso, info, DTE.PspFontWidths[0]);
             IList<byte> defaultFontBytes = TextUtilities.PSPFont.ToByteArray();
             IList<byte> defaultWidthBytes = TextUtilities.PSPFont.ToWidthsByteArray();
 
             return
-                !Utilities.CompareArrays( fontBytes, defaultFontBytes ) ||
-                !Utilities.CompareArrays( widthBytes, defaultWidthBytes );
+                !Utilities.CompareArrays(fontBytes, defaultFontBytes) ||
+                !Utilities.CompareArrays(widthBytes, defaultWidthBytes);
         }
 
-        private static Set<string> GetDteGroups( FFTFont font, GenericCharMap charmap, IList<string> charset )
+        private static Set<string> GetDteGroups(FFTFont font, GenericCharMap charmap, IList<string> charset)
         {
-            var f = new FFTFont( font.ToByteArray(), font.ToWidthsByteArray() );
-            List<int> widths = new List<int>( 2200 );
-            f.Glyphs.ForEach( g => widths.Add( g.Width ) );
-            List<string> realCharSet = new List<string>( charset );
-            realCharSet.Add( " " );
-            widths.Add( 4 );
-            return TextUtilities.GetGroups( charmap, realCharSet, widths );
+            var f = new FFTFont(font.ToByteArray(), font.ToWidthsByteArray());
+            List<int> widths = new List<int>(2200);
+            f.Glyphs.ForEach(g => widths.Add(g.Width));
+            List<string> realCharSet = new List<string>(charset);
+            realCharSet.Add(" ");
+            widths.Add(4);
+            return TextUtilities.GetGroups(charmap, realCharSet, widths);
         }
 
         /// <summary>
         /// Gets a set of groups that are candidates for DTE encoding
         /// </summary>
-        public static Set<string> GetDteGroups( Context context )
+        public static Set<string> GetDteGroups(Context context)
         {
             return context == Context.US_PSP ? GetPspDteGroups() : GetPsxDteGroups();
         }
 
         private static Set<string> GetPsxDteGroups()
         {
-            return GetDteGroups( new FFTFont( PSXResources.Binaries.Font, PSXResources.Binaries.FontWidths ), TextUtilities.PSXMap, PSXResources.CharacterSet );
+            return GetDteGroups(new FFTFont(PSXResources.Binaries.Font, PSXResources.Binaries.FontWidths), TextUtilities.PSXMap, PSXResources.CharacterSet);
         }
 
         private static Set<string> GetPspDteGroups()
         {
-            return GetDteGroups( new FFTFont( PSPResources.Binaries.Font, PSXResources.Binaries.FontWidths ), TextUtilities.PSPMap, PSPResources.CharacterSet );
+            return GetDteGroups(new FFTFont(PSPResources.Binaries.Font, PSXResources.Binaries.FontWidths), TextUtilities.PSPMap, PSPResources.CharacterSet);
         }
 
 
@@ -185,26 +179,29 @@ namespace FFTPatcher.TextEditor
         /// Generates a list of patches for PSP based on the set of DTE encodings passed.
         /// Generates font patches and ASM patches.
         /// </summary>
-        public static IList<PatchedByteArray> GeneratePspDtePatches( IEnumerable<KeyValuePair<string, byte>> dteEncodings )
+        public static IList<PatchedByteArray> GeneratePspDtePatches(IEnumerable<KeyValuePair<string, byte>> dteEncodings)
         {
             var charSet = PSPResources.CharacterSet;
-            FFTFont font = new FFTFont( PSPResources.Binaries.Font, PSPResources.Binaries.FontWidths );
+            FFTFont font = new FFTFont(PSPResources.Binaries.Font, PSPResources.Binaries.FontWidths);
 
             byte[] fontBytes;
             byte[] widthBytes;
 
-            GenerateFontBinPatches( dteEncodings, font, charSet, out fontBytes, out widthBytes );
+            GenerateFontBinPatches(dteEncodings, font, charSet, out fontBytes, out widthBytes);
 
-            widthBytes = widthBytes.Sub( MinDteByte, MaxDteByte ).ToArray();
-            fontBytes = fontBytes.Sub( MinDteByte * characterSize, (MaxDteByte + 1) * characterSize - 1 ).ToArray();
+            fontBytes = fontBytes.Sub(MinDteByte * characterSize, (MaxDteByte + 1) * characterSize - 1).ToArray();
             var widths = PspFontWidths;
             var fontDteSection = PspFontDteSection;
             return
                 new PatchedByteArray[] {
                     fontDteSection[0].GetPatchedByteArray(fontBytes),
                     fontDteSection[1].GetPatchedByteArray(fontBytes),
+                    new PatchedByteArray(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x27b80c+MinDteByte*characterSize, fontBytes),
+                    new PatchedByteArray(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2f73b8+MinDteByte*characterSize, fontBytes),
                     widths[0].GetPatchedByteArray(widthBytes),
                     widths[1].GetPatchedByteArray(widthBytes),
+                    new PatchedByteArray(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x293f40, widthBytes),
+                    new PatchedByteArray(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x30fac0, widthBytes)
                 };
         }
 
@@ -233,8 +230,8 @@ namespace FFTPatcher.TextEditor
             get
             {
                 return new PspIso.KnownPosition[] {
-                    new PspIso.KnownPosition(PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x293F40+MinDteByte, MaxDteByte-MinDteByte+1),
-                    new PspIso.KnownPosition(PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x30FAC0+MinDteByte, MaxDteByte-MinDteByte+1) };
+                    new PspIso.KnownPosition(PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x293F40, 2200),
+                    new PspIso.KnownPosition(PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x30FAC0, 2200) };
 
             }
         }
@@ -243,36 +240,35 @@ namespace FFTPatcher.TextEditor
         /// Generates a list of patches for PSX based on the set of DTE encodings passed.
         /// Generates font patches and ASM patches.
         /// </summary>
-        public static IList<PatchedByteArray> GeneratePsxDtePatches( IEnumerable<KeyValuePair<string, byte>> dteEncodings )
+        public static IList<PatchedByteArray> GeneratePsxDtePatches(IEnumerable<KeyValuePair<string, byte>> dteEncodings)
         {
             // BATTLE.BIN -> 0xE7614
             // FONT.BIN -> 0
             // WORLD.BIN -> 0x5B8F8
 
             var charSet = PSXResources.CharacterSet;
-            FFTFont font = new FFTFont( PSXResources.Binaries.Font, PSXResources.Binaries.FontWidths );
+            FFTFont font = new FFTFont(PSXResources.Binaries.Font, PSXResources.Binaries.FontWidths);
 
             byte[] fontBytes;
             byte[] widthBytes;
 
-            GenerateFontBinPatches( dteEncodings, font, charSet, out fontBytes, out widthBytes );
+            GenerateFontBinPatches(dteEncodings, font, charSet, out fontBytes, out widthBytes);
 
-            fontBytes = fontBytes.Sub( MinDteByte * characterSize, (MaxDteByte + 1) * characterSize - 1 ).ToArray();
-            widthBytes = widthBytes.Sub( MinDteByte, MaxDteByte ).ToArray();
+            fontBytes = fontBytes.Sub(MinDteByte * characterSize, (MaxDteByte + 1) * characterSize - 1).ToArray();
             // widths:
             // 0x363234 => 1510 = BATTLE.BIN
             // 0xBD84908 => 84497 = WORLD.BIN
 
             var result = new List<PatchedByteArray>();
-            result.AddRange( psxDtePatches );
-            result.AddRange( new PatchedByteArray[] {
+            result.AddRange(psxDtePatches);
+            result.AddRange(new PatchedByteArray[] {
                     new PatchedByteArray(PsxIso.Sectors.BATTLE_BIN, 0xE7614+MinDteByte*characterSize, fontBytes),
                     new PatchedByteArray(PsxIso.Sectors.EVENT_FONT_BIN, 0x00+MinDteByte*characterSize, fontBytes),
                     new PatchedByteArray(PsxIso.Sectors.WORLD_WORLD_BIN, 0x5B8f8+MinDteByte*characterSize, fontBytes),
-                    new PatchedByteArray(PsxIso.Sectors.BATTLE_BIN, 0xFF0FC+MinDteByte, widthBytes),
-                    new PatchedByteArray(PsxIso.Sectors.WORLD_WORLD_BIN, 0x733E0+MinDteByte, widthBytes),
+                    new PatchedByteArray(PsxIso.Sectors.BATTLE_BIN, 0xFF0FC, widthBytes),
+                    new PatchedByteArray(PsxIso.Sectors.WORLD_WORLD_BIN, 0x733E0, widthBytes),
                     PsxDteTable.GetPatchedByteArray(GeneratePsxLookupTable(dteEncodings, charSet).ToArray())
-                } );
+                });
 
             return result;
         }
@@ -282,7 +278,7 @@ namespace FFTPatcher.TextEditor
         {
             get
             {
-                return new PsxIso.KnownPosition( PsxIso.Sectors.SCUS_942_21, 0x228E0, (MaxDteByte - MinDteByte + 1) * 2 );
+                return new PsxIso.KnownPosition(PsxIso.Sectors.SCUS_942_21, 0x228E0, (MaxDteByte - MinDteByte + 1) * 2);
             }
         }
 
@@ -290,9 +286,9 @@ namespace FFTPatcher.TextEditor
         /// Generates a list of patches based on the set of DTE encodings passed.
         /// Generates font patches and ASM patches.
         /// </summary>
-        public static IList<PatchedByteArray> GenerateDtePatches( Context context, IEnumerable<KeyValuePair<string, byte>> dteEncodings )
+        public static IList<PatchedByteArray> GenerateDtePatches(Context context, IEnumerable<KeyValuePair<string, byte>> dteEncodings)
         {
-            return context == Context.US_PSP ? GeneratePspDtePatches( dteEncodings ) : GeneratePsxDtePatches( dteEncodings );
+            return context == Context.US_PSP ? GeneratePspDtePatches(dteEncodings) : GeneratePsxDtePatches(dteEncodings);
         }
 
         /// <summary>
@@ -304,25 +300,25 @@ namespace FFTPatcher.TextEditor
 
             for (byte b = MaxDteByte; b >= 0xB6; b--)
             {
-                result.Push( b );
+                result.Push(b);
             }
-            result.Push( 0xb4 );
-            result.Push( 0xb3 );
+            result.Push(0xb4);
+            result.Push(0xb3);
             for (byte b = 0xB1; b >= 0x94; b--)
             {
-                result.Push( b );
+                result.Push(b);
             }
-            result.Push( 0x92 );
-            result.Push( 0x90 );
-            result.Push( 0x8F );
-            result.Push( 0x8C );
+            result.Push(0x92);
+            result.Push(0x90);
+            result.Push(0x8F);
+            result.Push(0x8C);
             for (byte b = 0x8A; b >= 0x60; b--)
             {
-                result.Push( b );
+                result.Push(b);
             }
             for (byte b = 0x5E; b >= MinDteByte; b--)
             {
-                result.Push( b );
+                result.Push(b);
             }
             //result.Push( 0x45 );
             //result.Push( 0x43 );
@@ -338,16 +334,16 @@ namespace FFTPatcher.TextEditor
 
         private static IList<byte> GeneratePsxLookupTable(
             IEnumerable<KeyValuePair<string, byte>> dteEncodings,
-            IList<string> baseCharSet )
+            IList<string> baseCharSet)
         {
             // 2 bytes per lookup pair
             byte[] result = new byte[(MaxDteByte - MinDteByte + 1) * 2];
 
             foreach (var kvp in dteEncodings)
             {
-                var b = TextUtilities.PSXMap.StringToByteArray( kvp.Key, 0xFE )      // Get the pair to store
-                    .Sub( 0, 1 );                                       // Get 2 bytes
-                b.CopyTo( result, (kvp.Value - MinDteByte) * 2 ); // Store them in the DTE array
+                var b = TextUtilities.PSXMap.StringToByteArray(kvp.Key, 0xFE)      // Get the pair to store
+                    .Sub(0, 1);                                       // Get 2 bytes
+                b.CopyTo(result, (kvp.Value - MinDteByte) * 2); // Store them in the DTE array
             }
 
             return result;
@@ -358,16 +354,16 @@ namespace FFTPatcher.TextEditor
             FFTFont baseFont,
             IList<string> baseCharSet,
             out byte[] fontBytes,
-            out byte[] widthBytes )
+            out byte[] widthBytes)
         {
             // Make a copy of the font
             FFTFont font =
-                new FFTFont( baseFont.ToByteArray(), baseFont.ToWidthsByteArray() );
+                new FFTFont(baseFont.ToByteArray(), baseFont.ToWidthsByteArray());
 
-            IList<string> charSet = new List<string>( baseCharSet );
-            charSet.Add( " " );
-            var myGlyphs = new List<Glyph>( font.Glyphs );
-            myGlyphs.Add( new Glyph( 0, 4, new byte[14 * 10 / 4] ) );
+            IList<string> charSet = new List<string>(baseCharSet);
+            charSet.Add(" ");
+            var myGlyphs = new List<Glyph>(font.Glyphs);
+            myGlyphs.Add(new Glyph(0, 4, new byte[14 * 10 / 4]));
 
             foreach (var kvp in dteEncodings)
             {
@@ -421,28 +417,28 @@ namespace FFTPatcher.TextEditor
         }
 
 
-        public static IList<byte> GenerateTable( IEnumerable<KeyValuePair<string, byte>> dteEncodings, GenericCharMap charmap )
+        public static IList<byte> GenerateTable(IEnumerable<KeyValuePair<string, byte>> dteEncodings, GenericCharMap charmap)
         {
-            Dictionary<int, string> dict = new Dictionary<int, string>( charmap );
+            Dictionary<int, string> dict = new Dictionary<int, string>(charmap);
             foreach (var kvp in dteEncodings)
             {
                 dict[kvp.Value] = kvp.Key;
             }
-            List<KeyValuePair<int, string>> list = new List<KeyValuePair<int, string>>( dict );
-            list.Sort( ( a, b ) => a.Key.CompareTo( b.Key ) );
+            List<KeyValuePair<int, string>> list = new List<KeyValuePair<int, string>>(dict);
+            list.Sort((a, b) => a.Key.CompareTo(b.Key));
 
             StringBuilder result = new StringBuilder();
             foreach (var kvp in list)
             {
-                result.AppendFormat( "{0:X2}={1}", kvp.Key, kvp.Value );
-                result.Append( Environment.NewLine );
+                result.AppendFormat("{0:X2}={1}", kvp.Key, kvp.Value);
+                result.Append(Environment.NewLine);
             }
 
-            Encoding e = Encoding.GetEncoding( "shift_jis" );
-            return e.GetBytes( result.ToString() );
+            Encoding e = Encoding.GetEncoding("shift_jis");
+            return e.GetBytes(result.ToString());
         }
 
-        public static GenericCharMap GenerateCharMap( IEnumerable<KeyValuePair<int, string>> table )
+        public static GenericCharMap GenerateCharMap(IEnumerable<KeyValuePair<int, string>> table)
         {
             Dictionary<int, string> b = new Dictionary<int, string>();
             foreach (var kvp in table)
@@ -450,37 +446,37 @@ namespace FFTPatcher.TextEditor
                 b[kvp.Key] = kvp.Value;
             }
 
-            GenericCharMap map = new NonDefaultCharMap( b );
+            GenericCharMap map = new NonDefaultCharMap(b);
 
             return map;
         }
 
-        public static GenericCharMap GenerateCharMap( System.IO.StreamReader reader )
+        public static GenericCharMap GenerateCharMap(System.IO.StreamReader reader)
         {
             Dictionary<int, string> table = new Dictionary<int, string>();
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                string[] lineSplit = line.Split( new char[] { '=' }, 2 );
-                table[Int32.Parse( lineSplit[0], System.Globalization.NumberStyles.HexNumber )] = lineSplit[1];
+                string[] lineSplit = line.Split(new char[] { '=' }, 2);
+                table[Int32.Parse(lineSplit[0], System.Globalization.NumberStyles.HexNumber)] = lineSplit[1];
             }
 
-            return GenerateCharMap( table );
+            return GenerateCharMap(table);
         }
 
-        public static GenericCharMap GenerateCharMap( string filename )
+        public static GenericCharMap GenerateCharMap(string filename)
         {
-            using (System.IO.Stream stream = System.IO.File.OpenRead( filename ))
+            using (System.IO.Stream stream = System.IO.File.OpenRead(filename))
             {
-                return GenerateCharMap( stream );
+                return GenerateCharMap(stream);
             }
         }
 
-        public static GenericCharMap GenerateCharMap( System.IO.Stream file )
+        public static GenericCharMap GenerateCharMap(System.IO.Stream file)
         {
-            using (System.IO.StreamReader reader = new System.IO.StreamReader( file ))
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(file))
             {
-                return GenerateCharMap( reader );
+                return GenerateCharMap(reader);
             }
         }
 
