@@ -1,346 +1,173 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <PSX>
-  <QuickEdit>
-	<AbilityDescriptions>
-      <File>
-        <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
-        <Section>15</Section>
-        <Offset>265</Offset>
-      </File>
-      <File>
-        <Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
-        <Section>15</Section>
-        <Offset>0</Offset>
-      </File>
-      <File>
-        <Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
-        <Section>15</Section>
-        <Offset>0</Offset>
-      </File>
-      <File>
-        <Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-        <Section>15</Section>
-        <Offset>0</Offset>
-      </File>
-      <MainFile>
-        <Guid>{DB6D00B3-5992-4F8D-ABB7-0F566D14A01D}</Guid>
-        <Section>15</Section>
-        <Offset>0</Offset>
-        <Length>512</Length>
-      </MainFile>
-    </AbilityDescriptions>
-	<AbilityNames>
-      <File>
-        <Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-        <Section>14</Section>
-        <Offset>0</Offset>
-      </File>
-      <File>
-        <Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-        <Section>14</Section>
-        <Offset>0</Offset>
-      </File>
-      <MainFile>
-        <Guid>{DFD34E73-17DD-4416-AB4F-2F03FCE3FA2D}</Guid>
-        <Section>0</Section>
-        <Offset>0</Offset>
-        <Length>512</Length>
-      </MainFile>
-    </AbilityNames>
-	<AbilityQuotes>
-      <MainFile>
-        <Guid>{75CA7D0F-7752-477C-9133-26317BF788E7}</Guid>
-        <Section>0</Section>
-        <Offset>0</Offset>
-        <Length>512</Length>
-      </MainFile>
-    </AbilityQuotes>
-	<BattleMenus>
-		<File>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>10</Section>
-			<Offset>0</Offset>
-		</File>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>10</Section>
-			<Offset>0</Offset>
-			<Length>11</Length>
-		</MainFile>
-	</BattleMenus>
-	<BattleUnitScreenHelp>
-		<MainFile>
-			<Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-			<Length>14</Length>
-		</MainFile>
-	</BattleUnitScreenHelp>
-	<BirthdayEntry>
-		<MainFile>
-			<Guid>{FBFFD898-2E12-4E3C-B73D-CA6FA6997F42}</Guid>
-			<Section>23</Section>
-			<Offset>0</Offset>
-			<Length>16</Length>
-		</MainFile>
-	</BirthdayEntry>
-	<BookOfEnavia>
-		<MainFile>
-			<Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
-			<Section>3</Section>
-			<Offset>0</Offset>
-			<Length>217</Length>
-		</MainFile>
-	</BookOfEnavia>
-	<BraveFaithLeavingQuotes>
-		<MainFile>
-			<Guid>{A45B2DE6-520A-4484-A208-6F7895798869}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-			<Length>172</Length>
-		</MainFile>
-	</BraveFaithLeavingQuotes>
-	<BraveFaithWarningQuotes>
-		<MainFile>
-			<Guid>{A45B2DE6-520A-4484-A208-6F7895798869}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-			<Length>172</Length>
-		</MainFile>
-	</BraveFaithWarningQuotes>
-	<BraveStory>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>4</Section>
-			<Offset>0</Offset>
-			<Length>64</Length>
-		</MainFile>
-	</BraveStory>
-	<CharacterBios1>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>6</Section>
-			<Offset>0</Offset>
-			<Length>256</Length>
-		</MainFile>
-	</CharacterBios1>
-	<CharacterBios2>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>7</Section>
-			<Offset>0</Offset>
-			<Length>256</Length>
-		</MainFile>
-	</CharacterBios2>
-	<CharacterBios3>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>8</Section>
-			<Offset>0</Offset>
-			<Length>256</Length>
-		</MainFile>
-	</CharacterBios3>
-	<CharacterBios4>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>9</Section>
-			<Offset>0</Offset>
-			<Length>256</Length>
-		</MainFile>
-	</CharacterBios4>
-	<ConfirmationMessages>
-		<File>
-			<Guid>{140908D5-11FF-4B72-9826-DA2142D76A23}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-		</File>
-		<File>
-			<Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-			<Section>4</Section>
-			<Offset>0</Offset>
-		</File>
-		<File>
-			<Guid>{D7A6956F-6E93-4449-9E52-F6C0BE824F2F}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-		</File>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>18</Section>
-			<Offset>0</Offset>
-			<Length>31</Length>
-		</MainFile>
-	</ConfirmationMessages>
-	<DiaryOfNanai>
-		<MainFile>
-			<Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-			<Length>168</Length>
-		</MainFile>
-	</DiaryOfNanai>
-	<DismissQuotes>
-		<File>
-			<Guid>{162DC5BF-983B-4E04-972E-C51B51EE1DCA}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-		</File>
-		<MainFile>
-			<Guid>{A45B2DE6-520A-4484-A208-6F7895798869}</Guid>
-			<Section>3</Section>
-			<Offset>0</Offset>
-			<Length>172</Length>
-		</MainFile>
-	</DismissQuotes>
-	<ErrandCompletionNotes>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>10</Section>
-			<Offset>0</Offset>
-			<Length>96</Length>
-		</MainFile>
-	</ErrandCompletionNotes>
-	<ErrandNames>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>26</Section>
-			<Offset>0</Offset>
-			<Length>96</Length>
-		</MainFile>
-	</ErrandNames>
-	<ErrandObjectives>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>31</Section>
-			<Offset>0</Offset>
-			<Length>96</Length>
-		</MainFile>
-	</ErrandObjectives>
-	<ErrandOutcomes>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>12</Section>
-			<Offset>0</Offset>
-			<Length>96</Length>
-		</MainFile>
-	</ErrandOutcomes>
-	<ErrandRewards>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>15</Section>
-			<Offset>0</Offset>
-			<Length>77</Length>
-		</MainFile>
-	</ErrandRewards>
-	<ErrorBattleMessages>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-			<Length>38</Length>
-		</MainFile>
-	</ErrorBattleMessages>
-	<Facts>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>19</Section>
-			<Offset>0</Offset>
-			<Length>24</Length>
-		</MainFile>
-		<File>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>11</Section>
-			<Offset>0</Offset>
-		</File>
-	</Facts>
-	<GermonikScriptures>
-		<MainFile>
-			<Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
-			<Section>4</Section>
-			<Offset>0</Offset>
-			<Length>39</Length>
-		</MainFile>
-	</GermonikScriptures>
-	<Help>
-		<File>
-			<Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-		</File>
-		<File>
-			<Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-		</File>
-		<File>
-			<Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-		</File>
-		<MainFile>
-			<Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
-			<Section>11</Section>
-			<Offset>0</Offset>
-			<Length>40</Length>
-		</MainFile>
-	</Help>
-	<HelpBattleMessages>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>16</Section>
-			<Offset>0</Offset>
-			<Length>20</Length>
-		</MainFile>
-	</HelpBattleMessages>
-	<HelpText>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>11</Section>
-			<Offset>0</Offset>
-			<Length>2</Length>
-		</MainFile>
-	</HelpText>
-    <ItemDescriptions>
-      <File>
-        <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
-        <Section>13</Section>
-        <Offset>0</Offset>
-      </File>
-      <File>
-        <Guid>{E2BC5BE9-EBF9-4B1D-B533-1FEF6EC8C50C}</Guid>
-        <Section>13</Section>
-        <Offset>0</Offset>
-      </File>
-      <File>
-        <Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
-        <Section>13</Section>
-        <Offset>0</Offset>
-      </File>
-      <File>
-        <Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-        <Section>13</Section>
-        <Offset>0</Offset>
-      </File>
-      <MainFile>
-        <Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
-        <Section>13</Section>
-        <Offset>0</Offset>
-        <Length>256</Length>
-      </MainFile>
-    </ItemDescriptions>
-    <ItemNames>
-      <File>
-        <Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-        <Section>7</Section>
-        <Offset>0</Offset>
-      </File>
-      <MainFile>
-        <Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-        <Section>7</Section>
-        <Offset>0</Offset>
-        <Length>256</Length>
-      </MainFile>
-    </ItemNames>
+  <!--
+
+Text - Units Leaving because of Low Brave or High Faith 1 - 24 Join.LZW (3)
+Generics
+
+Text - Units Leaving because of Low Brave 25-76 Join.LZW (3)
+1 Ramza
+2 Ramza
+3 Ramza
+4 Delita (Guest Delita)
+5 Delita (Guest Delita?)
+6 Delita
+7 Algus (Guest Algus)
+8 Zalbag
+9 Dycedarg
+A Larg
+B Goltana
+C Ovelia (Guest Ovelia)
+D Orlandu
+E Funeral
+F Reis
+10 Zalmo
+11 Gafgarion
+12 Malak
+13 Simon
+14 Alma
+15 Olan
+16 Mustadio
+17 Gafgarion (Guest Gafgarion)
+18 Draclau
+19 Rafa (Guest Rafa)
+1A Malak
+1B Elmdor
+1C Teta
+1D Barinten
+1E Agrias
+1F Beowulf (Guest Beowulf?)
+20 Wiegraf
+21 Balmafula
+22 Mustadio (Guest Mustadio)
+23 Rudvich
+24 Vormav
+25 Rofel
+26 Izlude
+27 Kletian
+28 Wiegraf
+29 Rafa
+2A Meliadoul
+2B Balk
+2C Alma (Guest Alma? "Graveyard of Airships")
+2D Celia
+2E Lede
+2F Meliadoul (Enemy Meliadoul)
+30 Alma (Guest Alma)
+31 Ajora
+32 Cloud
+33 Zombie Zalbag
+34 Agrias (Guest Agrias)
+
+Units Leaving because of High Faith 99-150 Join.LZW (3)
+1 Ramza
+2 Ramza
+3 Ramza
+4 Delita (Guest Delita)
+5 Delita (Guest Delita?)
+6 Delita
+7 Algus (Guest Algus)
+8 Zalbag
+9 Dycedarg
+A Larg
+B Goltana
+C Ovelia (Guest Ovelia)
+D Orlandu
+E Funeral
+F Reis
+10 Zalmo
+11 Gafgarion
+12 Malak
+13 Simon
+14 Alma
+15 Olan
+16 Mustadio
+17 Gafgarion (Guest Gafgarion)
+18 Draclau
+19 Rafa (Guest Rafa)
+1A Malak
+1B Elmdor
+1C Teta
+1D Barinten
+1E Agrias
+1F Beowulf (Both Beowulfs)
+20 Wiegraf
+21 Balmafula
+22 Mustadio (Guest Mustadio)
+23 Rudvich
+24 Vormav
+25 Rofel
+26 Izlude
+27 Kletian
+28 Wiegraf
+29 Rafa
+2A Meliadoul
+2B Balk
+2C Alma (Guest Alma? "Graveyard of Airships")
+2D Celia
+2E Lede
+2F Meliadoul (Enemy Meliadoul)
+30 Alma (Guest Alma)
+31 Ajora
+32 Cloud
+33 Zombie Zalbag
+34 Agrias (Guest Agrias)
+
+Unit Quotes 2-53 Wldhelp.LZW
+1 Ramza
+2 Ramza
+3 Ramza
+4 Delita (Guest Delita)
+5 Delita (Guest Delita?)
+6 Delita
+7 Algus (Guest Algus)
+8 Zalbag
+9 Dycedarg
+A Larg
+B Goltana
+C Ovelia (Guest Ovelia)
+D Orlandu
+E Funeral
+F Reis
+10 Zalmo
+11 Gafgarion
+12 Malak
+13 Simon
+14 Alma
+15 Olan
+16 Mustadio
+17 Gafgarion (Guest Gafgarion)
+18 Draclau
+19 Rafa (Guest Rafa)
+1A Malak
+1B Elmdor
+1C Teta
+1D Barinten
+1E Agrias
+1F Beowulf (Both Beowulfs)
+20 Wiegraf
+21 Balmafula
+22 Mustadio (Guest Mustadio)
+23 Rudvich
+24 Vormav
+25 Rofel
+26 Izlude
+27 Kletian
+28 Wiegraf
+29 Rafa
+2A Meliadoul
+2B Balk
+2C Alma (Guest Alma? "Graveyard of Airships")
+2D Celia
+2E Lede
+2F Meliadoul (Enemy Meliadoul)
+30 Alma (Guest Alma)
+31 Ajora
+32 Cloud
+33 Zombie Zalbag
+34 Agrias (Guest Agrias)
+-->
+<QuickEdit>
     <JobDescriptions>
       <File>
         <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
@@ -395,167 +222,74 @@
         <Section>0</Section>
         <Offset>0</Offset>
       </File>
+
       <MainFile>
         <Guid>{A45B2DE6-520A-4484-A208-6F7895798869}</Guid>
         <Section>4</Section>
         <Offset>0</Offset>
         <Length>155</Length>
       </MainFile>
+
     </JobNames>
-	<JobRequirements>
+    <ItemDescriptions>
+      <File>
+        <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
+        <Section>13</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{E2BC5BE9-EBF9-4B1D-B533-1FEF6EC8C50C}</Guid>
+        <Section>13</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
+        <Section>13</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
+        <Section>13</Section>
+        <Offset>0</Offset>
+      </File>
       <MainFile>
-        <Guid>{248AAA33-B58B-4072-AFBD-BBC5ED5B5DB7}</Guid>
+        <Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
+        <Section>13</Section>
+        <Offset>0</Offset>
+        <Length>256</Length>
+      </MainFile>
+    </ItemDescriptions>
+    <ItemNames>
+      <File>
+        <Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
+        <Section>7</Section>
+        <Offset>0</Offset>
+      </File>
+      <MainFile>
+        <Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
+        <Section>7</Section>
+        <Offset>0</Offset>
+        <Length>256</Length>
+      </MainFile>
+    </ItemNames>
+    <SkillsetNames>
+      <MainFile>
+        <Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
+        <Section>22</Section>
+        <Offset>0</Offset>
+        <Length>189</Length>
+      </MainFile>
+      <File>
+        <Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
+        <Section>22</Section>
+        <Offset>0</Offset>
+      </File>
+      <File>
+        <Guid>{908FEAF1-B00F-4201-B574-DB1E5E5AAF3A}</Guid>
         <Section>0</Section>
         <Offset>0</Offset>
-        <Length>94</Length>
-      </MainFile>
-    </JobRequirements>
-	<LocationDescriptions>
-		<MainFile>
-			<Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-			<Section>16</Section>
-			<Offset>0</Offset>
-			<Length>44</Length>
-		</MainFile>
-	</LocationDescriptions>
-	<LocationNames>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>18</Section>
-			<Offset>0</Offset>
-			<Length>44</Length>
-		</MainFile>
-	</LocationNames>
-	<MapDescriptions>
-		<MainFile>
-			<Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-			<Section>17</Section>
-			<Offset>0</Offset>
-			<Length>116</Length>
-		</MainFile>
-	</MapDescriptions>
-	<MapLocations>
-		<MainFile>
-			<Guid>{AD068B24-812B-4DFD-893E-DA321A6F7EA6}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>44</Length>
-		</MainFile>
-	</MapLocations>
-	<MapMenu>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>20</Section>
-			<Offset>0</Offset>
-			<Length>1</Length>
-		</MainFile>
-	</MapMenu>
-	<MapNames>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>21</Section>
-			<Offset>0</Offset>
-			<Length>115</Length>
-		</MainFile>
-	</MapNames>
-	<MenuOptionsHelp>
-		<File>
-			<Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-		</File>
-		<File>
-			<Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-		</File>
-		<MainFile>
-			<Guid>{E2BC5BE9-EBF9-4B1D-B533-1FEF6EC8C50C}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-			<Length>155</Length>
-		</MainFile>
-	</MenuOptionsHelp>
-	<MFictionNovel>
-		<MainFile>
-			<Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>204</Length>
-		</MainFile>
-	</MFictionNovel>
-	<MiscWorldMenuText>
-		<MainFile>
-			<Guid>{DC61A2C7-A43B-464E-8431-40401636A218}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>31</Length>
-		</MainFile>
-	</MiscWorldMenuText>
-	<Person>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>30</Section>
-			<Offset>0</Offset>
-			<Length>1024</Length>
-		</MainFile>
-	</Person>
-	<PostActionBattleMessages>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>3</Section>
-			<Offset>0</Offset>
-			<Length>80</Length>
-		</MainFile>
-	</PostActionBattleMessages>
-	<Propositions>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-			<Length>96</Length>
-		</MainFile>
-	</Propositions>
-	<Record>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>29</Section>
-			<Offset>0</Offset>
-			<Length>64</Length>
-		</MainFile>
-	</Record>
-	<Rumors>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>64</Length>
-		</MainFile>
-	</Rumors>
-	<RumorNames>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>25</Section>
-			<Offset>0</Offset>
-			<Length>64</Length>
-		</MainFile>
-	</RumorNames>
-	<SaveScreenText>
-		<MainFile>
-			<Guid>{E9CAD776-9944-4ED4-BBB4-A53F10424279}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>26</Length>
-		</MainFile>
-	</SaveScreenText>
-	<ShopText>
-		<MainFile>
-			<Guid>{CE15EBFC-E888-43D2-B79B-211148F74409}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>73</Length>
-		</MainFile>
-	</ShopText>
+      </File>
+    </SkillsetNames>
     <SkillsetDescriptions>
       <File>
         <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
@@ -579,226 +313,71 @@
         <Length>188</Length>
       </MainFile>
     </SkillsetDescriptions>
-    <SkillsetNames>
-      <MainFile>
+    <AbilityNames>
+      <File>
         <Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-        <Section>22</Section>
+        <Section>14</Section>
         <Offset>0</Offset>
-        <Length>189</Length>
-      </MainFile>
+      </File>
       <File>
         <Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-        <Section>22</Section>
+        <Section>14</Section>
+        <Offset>0</Offset>
+      </File>
+      <MainFile>
+        <Guid>{DFD34E73-17DD-4416-AB4F-2F03FCE3FA2D}</Guid>
+        <Section>0</Section>
+        <Offset>0</Offset>
+        <Length>512</Length>
+      </MainFile>
+    </AbilityNames>
+    <AbilityDescriptions>
+      <File>
+        <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
+        <Section>15</Section>
+        <Offset>265</Offset>
+      </File>
+      <File>
+        <Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
+        <Section>15</Section>
         <Offset>0</Offset>
       </File>
       <File>
-        <Guid>{908FEAF1-B00F-4201-B574-DB1E5E5AAF3A}</Guid>
-        <Section>0</Section>
+        <Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
+        <Section>15</Section>
         <Offset>0</Offset>
       </File>
-    </SkillsetNames>
-	<SoundTestComments>
-		<MainFile>
-			<Guid>{FBFFD898-2E12-4E3C-B73D-CA6FA6997F42}</Guid>
-			<Section>25</Section>
-			<Offset>0</Offset>
-			<Length>96</Length>
-		</MainFile>
-	</SoundTestComments>
-	<SoundTestTrackNames>
-		<MainFile>
-			<Guid>{FBFFD898-2E12-4E3C-B73D-CA6FA6997F42}</Guid>
-			<Section>24</Section>
-			<Offset>0</Offset>
-			<Length>97</Length>
-		</MainFile>
-	</SoundTestTrackNames>
-	<StatusDescriptions>
-		<MainFile>
-			<Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
-			<Section>20</Section>
-			<Offset>0</Offset>
-			<Length>40</Length>
-		</MainFile>
-	</StatusDescriptions>
-	<StatusNames>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>17</Section>
-			<Offset>0</Offset>
-			<Length>40</Length>
-		</MainFile>
-	</StatusNames>
-	<SummonDrawOut>
-		<MainFile>
-			<Guid>{CFE9A6B2-3919-4B32-B76A-6BEAC2CA604F}</Guid>
-			<Section>23</Section>
-			<Offset>0</Offset>
-			<Length>27</Length>
-		</MainFile>
-	</SummonDrawOut>
-	<TavernText>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>23</Section>
-			<Offset>0</Offset>
-			<Length>272</Length>
-		</MainFile>
-	</TavernText>
-	<TerrainDescriptions>
-		<MainFile>
-			<Guid>{2C0D8754-9784-4D2B-A62E-58BC3296F6A1}</Guid>
-			<Section>11</Section>
-			<Offset>0</Offset>
-			<Length>64</Length>
-		</MainFile>
-	</TerrainDescriptions>
-	<TestBook>
-		<MainFile>
-			<Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
-			<Section>5</Section>
-			<Offset>0</Offset>
-			<Length>14</Length>
-		</MainFile>
-	</TestBook>
-	<TreasureNames>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>28</Section>
-			<Offset>0</Offset>
-			<Length>47</Length>
-		</MainFile>
-	</TreasureNames>
-	<Treasures>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>3</Section>
-			<Offset>0</Offset>
-			<Length>47</Length>
-		</MainFile>
-	</Treasures>
-	<Tutorial1>
-		<MainFile>
-			<Guid>{FCE3E502-3376-46F3-8125-4EDB249FF357}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>17</Length>
-		</MainFile>
-	</Tutorial1>
-	<Tutorial2>
-		<MainFile>
-			<Guid>{670BEC0B-133F-4827-A804-377CCEB6E739}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>24</Length>
-		</MainFile>
-	</Tutorial2>
-	<Tutorial3>
-		<MainFile>
-			<Guid>{D6B7BD17-E5F8-486F-B9BD-16D8E6C5E491}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>51</Length>
-		</MainFile>
-	</Tutorial3>
-	<Tutorial4>
-		<MainFile>
-			<Guid>{D0FCE958-0809-4700-82E4-D6FEC8B41789}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>11</Length>
-		</MainFile>
-	</Tutorial4>
-	<Tutorial5>
-		<MainFile>
-			<Guid>{DC145D80-91F6-430F-9841-B4679CF814DC}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>24</Length>
-		</MainFile>
-	</Tutorial5>
-	<Tutorial6>
-		<MainFile>
-			<Guid>{BAAFFAFB-F5F7-4316-9B90-BE6C1FB7969B}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>8</Length>
-		</MainFile>
-	</Tutorial6>
-	<Tutorial7>
-		<MainFile>
-			<Guid>{63E43E07-AD69-4A49-BC3D-767E44638A25}</Guid>
-			<Section>0</Section>
-			<Offset>0</Offset>
-			<Length>6</Length>
-		</MainFile>
-	</Tutorial7>
-	<TutorialMenu>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>16</Section>
-			<Offset>0</Offset>
-			<Length>41</Length>
-		</MainFile>
-	</TutorialMenu>
-	<UnexploredLandNames>
-		<MainFile>
-			<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>27</Section>
-			<Offset>0</Offset>
-			<Length>16</Length>
-		</MainFile>
-	</UnexploredLandNames>
-	<UnexploredLands>
-		<MainFile>
-			<Guid>{496CDC15-60A7-4016-80A7-49136EDBBDD9}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-			<Length>16</Length>
-		</MainFile>
-	</UnexploredLands>
-	<UnitNames>
-	  	<File>
-	  		<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>8</Section>
-			<Offset>0</Offset>
-		</File>
-	  	<File>
-	  		<Guid>{5AD4F95A-0C00-445D-8A29-EA4E09B9553F}</Guid>
-			<Section>9</Section>
-			<Offset>0</Offset>
-		</File>
-		<File>
-	  		<Guid>{FBFFD898-2E12-4E3C-B73D-CA6FA6997F42}</Guid>
-			<Section>8</Section>
-			<Offset>0</Offset>
-		</File>
-	  	<MainFile>
-	    	<Guid>{4C29FBA2-B49B-4BA7-8880-E785A61743FB}</Guid>
-			<Section>1</Section>
-			<Offset>0</Offset>
-			<Length>1024</Length>
-	  	</MainFile>
-	</UnitNames>
-	<UnitQuotes>
-		<MainFile>
-			<Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
-			<Section>20</Section>
-			<Offset>0</Offset>
-			<Length>768</Length>
-		</MainFile>
-	</UnitQuotes>
-	<Wyuvle>
-		<MainFile>
-			<Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
-			<Section>2</Section>
-			<Offset>0</Offset>
-			<Length>186</Length>
-		</MainFile>
-	</Wyuvle>
+      <File>
+        <Guid>{D1CA95EC-FAE1-41DD-AFB1-EF2EF2563025}</Guid>
+        <Section>15</Section>
+        <Offset>0</Offset>
+      </File>
+      <MainFile>
+        <Guid>{DB6D00B3-5992-4F8D-ABB7-0F566D14A01D}</Guid>
+        <Section>15</Section>
+        <Offset>0</Offset>
+        <Length>512</Length>
+      </MainFile>
+    </AbilityDescriptions>
+    <JobRequirements>
+      <MainFile>
+        <Guid>{248AAA33-B58B-4072-AFBD-BBC5ED5B5DB7}</Guid>
+        <Section>0</Section>
+        <Offset>0</Offset>
+        <Length>94</Length>
+      </MainFile>
+    </JobRequirements>
+    <AbilityQuotes>
+      <MainFile>
+        <Guid>{75CA7D0F-7752-477C-9133-26317BF788E7}</Guid>
+        <Section>0</Section>
+        <Offset>0</Offset>
+        <Length>512</Length>
+      </MainFile>
+    </AbilityQuotes>
   </QuickEdit>
   <Files>
-      <SectionedFile>
+    <SectionedFile>
       <DisplayName>ATCHELP.LZW</DisplayName>
       <Guid>{8BF49EAB-6D21-44C6-B63F-F6315AAEFD9B}</Guid>
       <Size>90325</Size>
@@ -2210,10 +1789,10 @@
           <entry value="63" name="Things Obtained"/>
         </Section>
         <Section value="5" entries="41" empty="true" name="" dte="false"/>
-        <Section value="6" entries="256" empty="true" name="Character Bios 1" dte="false"/>
-        <Section value="7" entries="256" empty="true" name="Character Bios 2" dte="false"/>
-        <Section value="8" entries="256" empty="true" name="Character Bios 3" dte="false"/>
-        <Section value="9" entries="256" empty="true" name="Character Bios 4" dte="false"/>
+        <Section value="6" entries="256" empty="true" name="Character Bios" dte="false"/>
+        <Section value="7" entries="256" empty="true" name="Character Bios" dte="false"/>
+        <Section value="8" entries="256" empty="true" name="Character Bios" dte="false"/>
+        <Section value="9" entries="256" empty="true" name="Character Bios" dte="false"/>
 
         <Section value="10" entries="96" empty="true" name="Errand Completion Notes" dte="false"/>
         <Section value="11" entries="24" empty="true" dte="false" name="Facts"/>
@@ -2348,7 +1927,7 @@
       </Sections>
     </OneShotFile>
 
-      <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO1.MES</DisplayName>
       <Guid>{FCE3E502-3376-46F3-8125-4EDB249FF357}</Guid>
       <Size>2186</Size>
@@ -2356,11 +1935,11 @@
         <Sector filename="MENU_TUTO1_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="17" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="17" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
-      <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO2.MES</DisplayName>
       <Guid>{670BEC0B-133F-4827-A804-377CCEB6E739}</Guid>
       <Size>5052</Size>
@@ -2368,11 +1947,11 @@
         <Sector filename="MENU_TUTO2_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="24" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="24" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
-    <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO3.MES</DisplayName>
       <Guid>{D6B7BD17-E5F8-486F-B9BD-16D8E6C5E491}</Guid>
       <Size>5406</Size>
@@ -2380,11 +1959,11 @@
         <Sector filename="MENU_TUTO3_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="51" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="51" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
-      <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO4.MES</DisplayName>
       <Guid>{D0FCE958-0809-4700-82E4-D6FEC8B41789}</Guid>
       <Size>3103</Size>
@@ -2392,11 +1971,11 @@
         <Sector filename="MENU_TUTO4_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="11" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="11" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
-      <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO5.MES</DisplayName>
       <Guid>{DC145D80-91F6-430F-9841-B4679CF814DC}</Guid>
       <Size>4815</Size>
@@ -2404,11 +1983,11 @@
         <Sector filename="MENU_TUTO5_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="24" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="24" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
-      <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO6.MES</DisplayName>
       <Guid>{BAAFFAFB-F5F7-4316-9B90-BE6C1FB7969B}</Guid>
       <Size>1924</Size>
@@ -2416,11 +1995,11 @@
         <Sector filename="MENU_TUTO6_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="8" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="8" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
-      <CompressibleOneShotFile>
+    <OneShotFile>
       <DisplayName>TUTO7.MES</DisplayName>
       <Guid>{63E43E07-AD69-4A49-BC3D-767E44638A25}</Guid>
       <Size>725</Size>
@@ -2428,9 +2007,9 @@
         <Sector filename="MENU_TUTO7_MES" offset="0"/>
       </Sectors>
       <Sections count="1">
-        <Section value="0" entries="6" empty="true" name="" dte="true" compressible="true"/>
+        <Section value="0" entries="6" empty="true" name="" dte="true"/>
       </Sections>
-    </CompressibleOneShotFile>
+    </OneShotFile>
 
     <OneShotFile>
       <DisplayName>WORLD.BIN 01</DisplayName>
