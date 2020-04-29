@@ -491,7 +491,7 @@
   <Effect value="1D6" name="Virgo's Glow"/>
   <Effect value="1D7" name="Scorpio's Glow"/>
   <Effect value="1D8" name="Capricorn's Glow"/>
-  <Effect value="1D9" name="Saggitarius' electricity recharge"/>
+  <Effect value="1D9" name="Sagittarius' electricity recharge"/>
   <Effect value="1DA" name="Velius' Death"/>
   <Effect value="1DB" name="Zalera's Death"/>
   <Effect value="1DC" name="Hashmalum's Death"/>
@@ -504,7 +504,7 @@
   <Effect value="1E3" name="Exploding Smash (Mustadio's House; Worker 8)"/>
   <Effect value="1E4" name="Stone Glow (higher altitude)"/>
   <Effect value="1E5" name="Virgo's Holy Angel Revive"/>
-  <Effect value="1E6" name="Summon Ultimate"/>
+  <Effect value="1E6" name="Summon Altima"/>
 
 
 
