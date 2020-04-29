@@ -14,12 +14,12 @@ copy /y TextCompression\FFTTextCompression.rc TextCompression\FFTTextCompression
 ..\utils\sed -r "s/[0-9]+([,\.])[0-9]+([,\.])[[0-9]+([,\.])[[0-9]+/1\10\20\3%BUILDNUMBER%/" TextCompression\FFTTextCompression.rc.old > TextCompression\FFTTextCompression.rc
 del TextCompression\FFTTextCompression.rc.old
 
-echo Building FFTTextCompression.dll
-cd %solutiondir%
-cd TextCompression
-vcbuild /clean TextCompression.vcproj Release > nul
-vcbuild TextCompression.vcproj Release > nul
-copy /y %solutiondir%\TextCompression\Release\FFTTextCompression.dll %solutiondir%\FFTacText\Resources
+rem echo Building FFTTextCompression.dll
+rem cd %solutiondir%
+rem cd TextCompression
+rem vcbuild /clean TextCompression.vcproj Release > nul
+rem vcbuild TextCompression.vcproj Release > nul
+rem copy /y %solutiondir%\TextCompression\Release\FFTTextCompression.dll %solutiondir%\FFTacText\Resources
 
 rem build solution
 cd ..

@@ -84,11 +84,11 @@ namespace FFTPatcher.TextEditor
 
         #region Constructors (1)
 
-        [DllImport( "kernel32" )]
-        private static extern IntPtr LoadLibrary( string lpFileName );
+        //[DllImport( "kernel32" )]
+        //private static extern IntPtr LoadLibrary( string lpFileName );
 
-        [DllImport( "kernel32.dll", SetLastError = true )]
-        private static extern bool FreeLibrary( IntPtr hModule );
+        //[DllImport( "kernel32.dll", SetLastError = true )]
+        //private static extern bool FreeLibrary( IntPtr hModule );
 
         static TextUtilities()
         {
@@ -103,6 +103,7 @@ namespace FFTPatcher.TextEditor
             PSXMap = new PSXCharMap( psx );
             PSPMap = new PSPCharMap( psp );
 
+            /*
             // Extract the DLL to the temp folder
             string dir = Path.Combine( Path.GetTempPath(), Path.GetRandomFileName() );
             Directory.CreateDirectory( dir );
@@ -126,6 +127,7 @@ namespace FFTPatcher.TextEditor
                         catch { }
                     }
                 };
+            */
         }
 
         #endregion Constructors
@@ -559,13 +561,19 @@ namespace FFTPatcher.TextEditor
             }
         }
 
-
+        /*
         [DllImport( "FFTTextCompression.dll" )]
         static extern void CompressSection( byte[] input, int inputLength, byte[] output, ref int outputPosition );
 
         private static void CompressSection( IList<byte> bytes, byte[] output, ref int outputPosition )
         {
             CompressSection( bytes.ToArray(), bytes.Count, output, ref outputPosition );
+        }
+        */
+
+        private static int CompressSection(IList<byte> bytes, byte[] output, int outputPosition)
+        {
+            return FFTPatcher.TextEditor.TextCompression.CompressSection(bytes.ToArray(), bytes.Count, output, outputPosition);
         }
 
         private static void ProcessPointer( IList<byte> bytes, out int length, out int jump )
@@ -598,7 +606,8 @@ namespace FFTPatcher.TextEditor
 
                 if ( allowedSections == null || allowedSections[section] )
                 {
-                    CompressSection( charmap.StringsToByteArray( sections[section], terminator ), result, ref pos );
+                    //CompressSection( charmap.StringsToByteArray( sections[section], terminator ), result, ref pos );
+                    pos = CompressSection(charmap.StringsToByteArray(sections[section], terminator), result, pos);
                 }
                 else
                 {
