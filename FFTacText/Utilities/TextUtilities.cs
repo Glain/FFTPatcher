@@ -594,24 +594,35 @@ namespace FFTPatcher.TextEditor
         public static CompressionResult Compress( IList<IList<string>> sections, byte terminator, GenericCharMap charmap, IList<bool> allowedSections )
         {
             int length = 0;
-            sections.ForEach( s => length += charmap.StringsToByteArray( s, terminator ).Length );
+            //sections.ForEach( s => length += charmap.StringsToByteArray( s, terminator ).Length );
+
+            int sectionCount = sections.Count;
+            byte[][] sectionBytes = new byte[sectionCount][];
+            for (int section = 0; section < sectionCount; section++)
+            {
+                byte[] bytes = charmap.StringsToByteArray(sections[section], terminator);
+                length += bytes.Length;
+                sectionBytes[section] = bytes;
+            }
 
             byte[] result = new byte[length];
-            int[] lengths = new int[sections.Count];
+            int[] lengths = new int[sectionCount];
 
             int pos = 0;
-            for( int section = 0; section < sections.Count; section++ )
+            for (int section = 0; section < sectionCount; section++)
             {
                 int oldPos = pos;
 
                 if ( allowedSections == null || allowedSections[section] )
                 {
                     //CompressSection( charmap.StringsToByteArray( sections[section], terminator ), result, ref pos );
-                    pos = CompressSection(charmap.StringsToByteArray(sections[section], terminator), result, pos);
+                    //pos = CompressSection(charmap.StringsToByteArray(sections[section], terminator), result, pos);
+                    pos = CompressSection(sectionBytes[section], result, pos);
                 }
                 else
                 {
-                    byte[] secResult = charmap.StringsToByteArray( sections[section], terminator );
+                    //byte[] secResult = charmap.StringsToByteArray( sections[section], terminator );
+                    byte[] secResult = sectionBytes[section];
                     secResult.CopyTo( result, pos );
                     pos += secResult.Length;
                 }
