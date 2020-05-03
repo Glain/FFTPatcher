@@ -1084,7 +1084,7 @@ F Reis
           <includeResource name="PatcherLib.PSXResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
           <entry value="512" name=""/>
         </Section>
-        <Section value="15" entries="77" empty="true" name="Errand rewards" compressible="true" dte="true"/>
+        <Section value="15" entries="77" empty="true" name="Errand rewards" compressible="false" dte="true"/>
         <Section value="16" entries="41" empty="true" name="Tutorial menu" compressible="true" dte="true"/>
         <Section value="17" entries="1" empty="true" compressible="false" dte="true" hide="true"/>
         <Section value="18" entries="44" empty="false" name="Location names" compressible="true" dte="true">

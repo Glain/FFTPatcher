@@ -945,7 +945,7 @@
         <Section value="14" entries="512" empty="false" dte="true" compressible="false" name="Ability names">
           <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
         </Section>
-          <Section value="15" entries="77" empty="false" dte="true" compressible="true" name="Feat rewards">
+          <Section value="15" entries="77" empty="false" dte="true" compressible="false" name="Feat rewards">
               <includeResource name="PatcherLib.PSPResources+Lists.Artefacts" start="0" end="30" offset="46"/>
               <includeResource name="PatcherLib.PSPResources+Lists.Wonders" start="0" end="15" offset="27"/>
           </Section>
