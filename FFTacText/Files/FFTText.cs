@@ -338,7 +338,7 @@ namespace FFTPatcher.TextEditor
             filesList.Sort((a, b) => a.DisplayName.CompareTo(b.DisplayName));
             if (quickEdit != null)
             {
-                filesList.Add(quickEdit);
+                filesList.Insert(0, quickEdit);
             }
             Files = filesList.AsReadOnly();
             CharMap = filesList[0].CharMap;
