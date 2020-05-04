@@ -46,6 +46,9 @@ namespace FFTPatcher.SpriteEditor
             numericUpDown2.ValueChanged += numericUpDown2_SelectedIndexChanged;
             tabControl1.SelectedIndexChanged += new EventHandler(tabControl1_SelectedIndexChanged);
 
+            spriteViewer1.SpriteDragEnter += sprite_DragEnter;
+            spriteViewer1.SpriteDragDrop += sprite_DragDrop;
+
             InitZoomComboBox();
             UpdateZoom();
         }
@@ -211,6 +214,30 @@ namespace FFTPatcher.SpriteEditor
 
             if (currentSequences != null)
                 UpdateAnimation();
+        }
+
+        public event DragEventHandler SpriteDragEnter;
+        protected virtual void OnSpriteDragEnter(DragEventArgs e)
+        {
+            DragEventHandler handler = SpriteDragEnter;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void sprite_DragEnter(object sender, DragEventArgs e)
+        {
+            OnSpriteDragEnter(e);
+        }
+
+        public event DragEventHandler SpriteDragDrop;
+        protected virtual void OnSpriteDragDrop(DragEventArgs e)
+        {
+            DragEventHandler handler = SpriteDragDrop;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void sprite_DragDrop(object sender, DragEventArgs e)
+        {
+            OnSpriteDragDrop(e);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
