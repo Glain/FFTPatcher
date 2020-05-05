@@ -30,6 +30,8 @@ namespace FFTPatcher.TextEditor
     /// </summary>
     partial class StringListEditor : UserControl
     {
+        private const string FFTFontFilename = "Altima_8.ttf";
+
         private IFile boundFile;
         private int boundSection;
 
@@ -40,6 +42,21 @@ namespace FFTPatcher.TextEditor
         public const int TextColumnIndex = 2;
 #endif
 
+        private System.Drawing.Text.PrivateFontCollection fonts = new System.Drawing.Text.PrivateFontCollection();
+        private Font ArialFont = new Font("Arial Unicode MS", 9);
+
+        private Font fftFont = null;
+        private Font FFTFont
+        {
+            get
+            {
+                if (fftFont == null)
+                    LoadFFTFont();
+
+                return fftFont;
+            }
+        }
+        
         /// <summary>
         /// Gets the current row.
         /// </summary>
@@ -59,12 +76,23 @@ namespace FFTPatcher.TextEditor
             dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;
             dataGridView.CellValidating += new DataGridViewCellValidatingEventHandler( dataGridView_CellValidating );
             dataGridView.CellValidated += new DataGridViewCellEventHandler( dataGridView_CellValidated );
-            textColumn.DefaultCellStyle.Font = new Font( "Arial Unicode MS", 9 );
+            textColumn.DefaultCellStyle.Font = ArialFont;
 #if !MEASURESTRINGS
             dataGridView.Columns.Remove(widthColumn);
 #else
-            widthColumn.DefaultCellStyle.Font = new Font( "Arial Unicode MS", 9 );
+            widthColumn.DefaultCellStyle.Font = ArialFont;
 #endif
+        }
+
+        private void LoadFFTFont()
+        {
+            fonts.AddFontFile(FFTFontFilename);
+            fftFont = new Font(fonts.Families[0], 12);
+        }
+        
+        public void UpdateTextFont(bool useFFTFont)
+        {
+            textColumn.DefaultCellStyle.Font = useFFTFont ? FFTFont : ArialFont;
         }
 
         private void dataGridView_CellValidating( object sender, DataGridViewCellValidatingEventArgs e )

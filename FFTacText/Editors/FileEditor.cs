@@ -52,6 +52,11 @@ namespace FFTPatcher.TextEditor.Editors
             stringListEditor1.CellValidating += new DataGridViewCellValidatingEventHandler( stringListEditor1_CellValidating );
         }
 
+        public void UpdateTextFont(bool useFFTFont)
+        {
+            stringListEditor1.UpdateTextFont(useFFTFont);
+        }
+
         private void stringListEditor1_CellValidating( object sender, DataGridViewCellValidatingEventArgs e )
         {
             e.Cancel = !boundFile.CharMap.ValidateString( e.FormattedValue.ToString(), boundFile.SelectedTerminator );
@@ -91,6 +96,11 @@ namespace FFTPatcher.TextEditor.Editors
                 BindTo(boundFile);
                 //AbstractFile.ConstructFile(f.Layout.FileType, f.CharMap, f.Layout, 
             }
+        }
+
+        private void chk_UseFFTFont_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateTextFont(chk_UseFFTFont.Checked);
         }
 
         private void fileNotesTextBox_TextChanged( object sender, EventArgs e )

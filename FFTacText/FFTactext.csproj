@@ -162,6 +162,9 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Files.cd" />
+    <None Include="Altima_8.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="zipResources.bat" />
     <Compile Include="Utilities\CharMap.cs" />
     <Compile Include="Utilities\Resources.cs" />
