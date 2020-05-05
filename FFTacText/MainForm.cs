@@ -46,8 +46,21 @@ namespace FFTPatcher.TextEditor
             saveMenuItem.Click += new EventHandler( saveMenuItem_Click );
             openMenuItem.Click += new EventHandler( openMenuItem_Click );
             menuItem2.Click += new EventHandler( menuItem2_Click );
+            generateResourcesZipMenuItem.Click += new EventHandler(generateResourcesZipMenuItem_Click);
             fileMenuItem.Popup += new EventHandler(menuItem_Popup);
             isoMenuItem.Popup += new EventHandler(menuItem_Popup);
+        }
+
+        private void GenerateResourcesZip()
+        {
+            saveFileDialog.FileName = "Resources.zip";
+            saveFileDialog.OverwritePrompt = true;
+            saveFileDialog.Filter = "ZIP file (*.zip)|*.zip";
+            saveFileDialog.CheckFileExists = false;
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                internalFile.GenerateResourcesZip(saveFileDialog.FileName);
+            }
         }
 
         void menuItem_Popup(object sender, EventArgs e)
@@ -79,6 +92,11 @@ namespace FFTPatcher.TextEditor
                         Filename = saveFileDialog.FileName
                     } );
             }
+        }
+
+        void generateResourcesZipMenuItem_Click(object sender, EventArgs e)
+        {
+            GenerateResourcesZip();
         }
 
         void worker_RunWorkerCompleted( object sender, RunWorkerCompletedEventArgs e )
@@ -186,6 +204,7 @@ namespace FFTPatcher.TextEditor
                     textMenuItem.Enabled = true;
                     fileEditor1.Enabled = true;
                     helpMenuItem.Enabled = true;
+                    generateResourcesZipMenuItem.Enabled = true;
                     Cursor = Cursors.Default;
                 };
             worker.RunWorkerCompleted +=
@@ -210,6 +229,7 @@ namespace FFTPatcher.TextEditor
             textMenuItem.Enabled = false;
             fileEditor1.Enabled = false;
             helpMenuItem.Enabled = false;
+            generateResourcesZipMenuItem.Enabled = false;
             Cursor = Cursors.WaitCursor;
             worker.RunWorkerAsync();
         }
@@ -267,6 +287,7 @@ namespace FFTPatcher.TextEditor
                 saveMenuItem.Enabled = true;
                 menuItem2.Enabled = true;
                 allowedSymbolsMenuItem.Enabled = true;
+                generateResourcesZipMenuItem.Enabled = true;
             };
 
             if ( this.InvokeRequired )

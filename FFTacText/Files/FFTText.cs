@@ -328,6 +328,116 @@ namespace FFTPatcher.TextEditor
             File.WriteAllText(filepath, sb.ToString());
         }
 
+        public void GenerateResourcesZip(string filepath)
+        {
+            Dictionary<string, AbstractFile> files = new Dictionary<string, AbstractFile>(Files.Count);
+            foreach (IFile file in Files)
+            {
+                if (file is AbstractFile)
+                    files.Add(file.DisplayName, (AbstractFile)file);
+            }
+
+            Dictionary<string, IList<byte>> zipFileContents = new Dictionary<string, IList<byte>>();
+            IDictionary<string, IList<byte>> defaultZipFileContents = PatcherLib.ResourcesClass.DefaultZipFileContents;
+            foreach (KeyValuePair<string, IList<byte>> entry in defaultZipFileContents)
+            {
+                zipFileContents.Add(entry.Key, GetResourcesBytes(entry.Key, entry.Value, files));
+            }
+
+            PatcherLib.ResourcesClass.GenerateResourcesZip(filepath, zipFileContents);
+        }
+
+        private IList<byte> GetResourcesBytes(string xmlFilename, IList<byte> defaultBytes, IDictionary<string, AbstractFile> files)
+        {
+            IList<byte> result = null;
+            string[] section = null;
+
+            if (Filetype == Context.US_PSP)
+            {
+                switch (xmlFilename)
+                {
+                    case PatcherLib.ResourcesClass.Paths.PSP.AbilitiesNamesXML:
+                        section = PatcherLib.ResourcesClass.EnforceUniqueStrings(files["BOOT.BIN 3"].Sections[0]);
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(section, "Abilities", "Ability", "name", "value", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.ChroniclesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionString(files["WORLD.LZW"].Sections[27], "Wonders", "Entry", null, "value", false),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionString(files["WORLD.LZW"].Sections[28], "Artefacts", "Entry", null, "value", false)
+                        }, "Chron");
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.ItemsXML:
+                        section = PatcherLib.ResourcesClass.EnforceUniqueStrings(files["BOOT.BIN[28E5EC]"].Sections[7]);
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(section, "Items", "Item", "name", "offset", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.JobsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN 2"].Sections[0], "Jobs", "Job", "name", "offset", true);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.MapNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[21], "MapNames", "Map", null, "value", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.PropositionsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[26], "Errands", "entry", "name", "value", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.SkillSetsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN 1"].Sections[0], "SkillSets", "SkillSet", "name", "byte", true);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.StatusNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN[28E5EC]"].Sections[17], "Statuses", "Status", "name", "offset", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.UnitNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN[29E334]"].Sections[1], "Names", "n", null, "id", false);
+                        break;
+                    default:
+                        result = defaultBytes;
+                        break;
+                }
+            }
+            else if (Filetype == Context.US_PSX)
+            {
+                switch (xmlFilename)
+                {
+                    case PatcherLib.ResourcesClass.Paths.PSX.AbilitiesNamesXML:
+                        section = PatcherLib.ResourcesClass.EnforceUniqueStrings(files["WORLD.BIN 03"].Sections[0]);
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(section, "Abilities", "Ability", "name", "value", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.BraveStoryXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionString(files["WORLD.LZW"].Sections[27], "UnexploredLands", "entry", "Name", "value", false),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionString(files["WORLD.LZW"].Sections[28], "Treasures", "entry", "Name", "value", false)
+                        }, "BS");
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.ItemsXML:
+                        section = PatcherLib.ResourcesClass.EnforceUniqueStrings(files["WORLD.LZW"].Sections[7]);
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(section, "Items", "Item", "name", "offset", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.JobsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.BIN 02"].Sections[0], "Jobs", "Job", "name", "offset", true);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.MapNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[21], "MapNames", "Map", null, "value", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.PropositionsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[26], "Propositions", "entry", "name", "value", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.SkillSetsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BATTLE.BIN"].Sections[22], "SkillSets", "SkillSet", "name", "byte", true);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.StatusNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BATTLE.BIN"].Sections[17], "Statuses", "Status", "name", "offset", false);
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.UnitNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["ATTACK.OUT"].Sections[1], "Names", "n", null, "id", false);
+                        break;
+                    default:
+                        result = defaultBytes;
+                        break;
+                }
+            }
+
+            return result;
+        }
+
         public IList<IFile> Files { get; private set; }
 
         internal FFTText(Context context, IDictionary<Guid, ISerializableFile> files, QuickEdit quickEdit)

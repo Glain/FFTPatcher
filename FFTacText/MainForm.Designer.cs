@@ -68,6 +68,7 @@ namespace FFTPatcher.TextEditor
             this.helpMenuItem = new System.Windows.Forms.MenuItem();
             this.allowedSymbolsMenuItem = new System.Windows.Forms.MenuItem();
             this.aboutMenuItem = new System.Windows.Forms.MenuItem();
+            this.generateResourcesZipMenuItem = new System.Windows.Forms.MenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -77,6 +78,7 @@ namespace FFTPatcher.TextEditor
             separator3 = new System.Windows.Forms.MenuItem();
             separator4 = new System.Windows.Forms.MenuItem();
             separator5 = new System.Windows.Forms.MenuItem();
+            System.Windows.Forms.MenuItem separatorGenerateResourcesZip = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // separator2
@@ -98,6 +100,11 @@ namespace FFTPatcher.TextEditor
             // 
             separator5.Index = 3;
             separator5.Text = "-";
+            //
+            // separatorGenerateResourcesZip
+            //
+            separatorGenerateResourcesZip.Index = 4;
+            separatorGenerateResourcesZip.Text = "-";
             // 
             // mainMenu
             // 
@@ -114,6 +121,8 @@ namespace FFTPatcher.TextEditor
             this.openMenuItem,
             this.saveMenuItem,
             separator2,
+            this.generateResourcesZipMenuItem,
+            separatorGenerateResourcesZip,
             this.exitMenuItem});
             this.fileMenuItem.Text = "File";
             // 
@@ -127,10 +136,16 @@ namespace FFTPatcher.TextEditor
             this.saveMenuItem.Enabled = false;
             this.saveMenuItem.Index = 1;
             this.saveMenuItem.Text = "&Save .ffttext...";
+            //
+            // generateResourcesZipMenuItem
+            //
+            this.generateResourcesZipMenuItem.Enabled = false;
+            this.generateResourcesZipMenuItem.Index = 3;
+            this.generateResourcesZipMenuItem.Text = "Generate Resources.zip";
             // 
             // exitMenuItem
             // 
-            this.exitMenuItem.Index = 3;
+            this.exitMenuItem.Index = 5;
             this.exitMenuItem.Text = "E&xit";
             // 
             // isoMenuItem
@@ -247,6 +262,7 @@ namespace FFTPatcher.TextEditor
         private System.Windows.Forms.MenuItem importPsxIsoMenuItem;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem importPspIsoMenuItem;
+        private System.Windows.Forms.MenuItem generateResourcesZipMenuItem;
 
     }
 }

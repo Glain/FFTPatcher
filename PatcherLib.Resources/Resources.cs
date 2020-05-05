@@ -232,19 +232,127 @@ namespace PatcherLib
 
         public static void GenerateDefaultResourcesZip(string filename)
         {
+            GenerateResourcesZip(filename, DefaultZipFileContents);
+        }
+
+        public static void GenerateResourcesZip(string filename, IDictionary<string, IList<byte>> contents)
+        {
             using (FileStream stream = File.Open(filename, FileMode.Create, FileAccess.ReadWrite))
             using (ZipOutputStream output = new ZipOutputStream(stream))
             {
-                foreach ( var kvp in DefaultZipFileContents )
+                foreach (var kvp in contents)
                 {
-                    ZipEntry ze = new ZipEntry( kvp.Key );
+                    ZipEntry ze = new ZipEntry(kvp.Key);
                     IList<byte> bytes = kvp.Value;
                     ze.Size = bytes.Count;
-                    output.PutNextEntry( ze );
-                    output.Write( bytes.ToArray(), 0, bytes.Count );
+                    output.PutNextEntry(ze);
+                    output.Write(bytes.ToArray(), 0, bytes.Count);
                 }
             }
         }
+
+        public static string[] EnforceUniqueStrings(IList<string> strings)
+        {
+            int count = strings.Count;
+            string[] result = new string[count];
+
+            for (int index = 0; index < count; index++)
+            {
+                result[index] = strings[index];
+                for (int innerIndex = 0; innerIndex < index; innerIndex++)
+                {
+                    while (result[index].Equals(result[innerIndex]))
+                    {
+                        result[index] += " ";
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public static string GenerateXMLSectionString(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        {
+            int index = 0;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            sb.AppendFormat("<{0}>{1}", sectionTitle, Environment.NewLine);
+            foreach (string entry in section)
+            {
+                string valueString = isValueHex ? index.ToString("X2") : index.ToString();
+
+                if (string.IsNullOrEmpty(attributeTitle))
+                    sb.AppendFormat("    <{0} {3}=\"{1}\">{2}</{0}>{4}", entryTitle, valueString, entry, valueTitle, Environment.NewLine);
+                else
+                    sb.AppendFormat("    <{0} {4}=\"{1}\" {2}=\"{3}\"/>{5}", entryTitle, valueString, attributeTitle, entry, valueTitle, Environment.NewLine);
+
+                index++;
+            }
+            sb.AppendFormat("</{0}>{1}", sectionTitle, Environment.NewLine);
+
+            return sb.ToString();
+        }
+
+        public static string GenerateXMLString(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        {
+            return GenerateXMLString(new string[1] { GenerateXMLSectionString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex) }, null);
+        }
+
+        public static string GenerateXMLString(IEnumerable<string> sections, string outerTitle)
+        {
+            bool hasOuterNode = !string.IsNullOrEmpty(outerTitle);
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
+
+            if (hasOuterNode)
+                sb.AppendFormat("<{0}>{1}", outerTitle, Environment.NewLine);
+            
+            foreach (string section in sections)
+            {
+                sb.Append(section);
+            }
+
+            if (hasOuterNode)
+                sb.AppendFormat("</{0}>{1}", outerTitle, Environment.NewLine);
+
+            return sb.ToString();
+        }
+
+        public static byte[] GenerateXMLBytes(IEnumerable<string> sections, string outerTitle)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(sections, outerTitle));
+        }
+
+        public static byte[] GenerateXMLBytes(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
+        }
+
+        /*
+        public static string GenerateXMLString(IEnumerable<IEnumerable<string>> sections, string outerTitle, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        {
+            List<string> sectionList = new List<string>();
+            foreach (IEnumerable<string> section in sections)
+            {
+                sectionList.Add(GenerateXMLSectionString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
+            }
+
+            return GenerateXMLString(sectionList, outerTitle);
+        }
+
+        public static string GenerateXMLString(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        {
+            IEnumerable<string>[] sections = new IEnumerable<string>[1] { section };
+            return GenerateXMLString(sections, null, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex);
+        }
+
+        public static byte[] GenerateXMLBytes(IEnumerable<IEnumerable<string>> entries, string outerTitle, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(entries, outerTitle, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
+        }
+        */
 
         public static class Paths
         {
