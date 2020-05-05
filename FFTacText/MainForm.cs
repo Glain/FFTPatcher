@@ -100,15 +100,15 @@ namespace FFTPatcher.TextEditor
             }
         }
 
-        void generateResourcesZipMenuItem_Click(object sender, EventArgs e)
+        private void generateResourcesZipMenuItem_Click(object sender, EventArgs e)
         {
             GenerateResourcesZip();
         }
 
-        void regulateNewlinesMenuItem_Click(object sender, EventArgs e)
+        private void regulateNewlinesMenuItem_Click(object sender, EventArgs e)
         {
             RegulateNewlines();
-            fileEditor1.Refresh();
+            fileEditor1.RefreshText();
         }
 
         void worker_RunWorkerCompleted( object sender, RunWorkerCompletedEventArgs e )
