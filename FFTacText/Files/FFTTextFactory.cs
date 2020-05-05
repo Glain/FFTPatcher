@@ -506,7 +506,7 @@ namespace FFTPatcher.TextEditor
         private static IList<string> GetSectionNames(XmlNode sectionsNode)
         {
             List<string> result = new List<string>();
-            int count = 1;
+            int count = 0;
             foreach (XmlNode section in sectionsNode.SelectNodes("Section"))
             {
                 XmlAttribute nameAttr = section.Attributes["name"];
