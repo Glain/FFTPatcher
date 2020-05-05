@@ -179,7 +179,7 @@ namespace FFTPatcher.SpriteEditor
                 for (int index = 0; index < listCount; index++)
                 {
                     string addend = (list[index].Name == null) ? "" : (" - " + list[index].Name);
-                    ddl_Entry.Items.Add((index + 1) + addend);
+                    ddl_Entry.Items.Add((index) + addend);
                 }
                 ddl_Entry.SelectedIndex = 0;
 
