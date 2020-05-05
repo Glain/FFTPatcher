@@ -438,6 +438,45 @@ namespace FFTPatcher.TextEditor
             return result;
         }
 
+        public void RegulateNewlines()
+        {
+            string newNewline = String.Format("{{Newline}}{0}", Environment.NewLine);
+
+            foreach (IFile file in Files)
+            {
+                if (file is QuickEdit)
+                {
+                    QuickEdit quickEdit = (QuickEdit)file;
+                    int numSections = quickEdit.NumberOfSections;
+                    for (int sectionIndex = 0; sectionIndex < numSections; sectionIndex++)
+                    {
+                        int numEntries = quickEdit.SectionLengths[sectionIndex];
+                        for (int entryIndex = 0; entryIndex < numEntries; entryIndex++)
+                        {
+                            if (!string.IsNullOrEmpty(quickEdit[sectionIndex, entryIndex]))
+                            {
+                                quickEdit.UpdateEntry(sectionIndex, entryIndex, quickEdit[sectionIndex, entryIndex].Replace("\r", "").Replace("\n", "").Replace("{Newline}", newNewline));
+                            }
+                        }
+                    }
+                }
+                if (file is AbstractFile)
+                {
+                    AbstractFile aFile = (AbstractFile)file;
+                    foreach (IList<string> section in aFile.Sections)
+                    {
+                        for (int index = 0; index < section.Count; index++)
+                        {
+                            if (!string.IsNullOrEmpty(section[index]))
+                            {
+                                section[index] = section[index].Replace("\r", "").Replace("\n", "").Replace("{Newline}", newNewline);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public IList<IFile> Files { get; private set; }
 
         internal FFTText(Context context, IDictionary<Guid, ISerializableFile> files, QuickEdit quickEdit)

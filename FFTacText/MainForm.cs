@@ -47,6 +47,7 @@ namespace FFTPatcher.TextEditor
             openMenuItem.Click += new EventHandler( openMenuItem_Click );
             menuItem2.Click += new EventHandler( menuItem2_Click );
             generateResourcesZipMenuItem.Click += new EventHandler(generateResourcesZipMenuItem_Click);
+            regulateNewlinesMenuItem.Click += new EventHandler(regulateNewlinesMenuItem_Click);
             fileMenuItem.Popup += new EventHandler(menuItem_Popup);
             isoMenuItem.Popup += new EventHandler(menuItem_Popup);
         }
@@ -61,6 +62,11 @@ namespace FFTPatcher.TextEditor
             {
                 internalFile.GenerateResourcesZip(saveFileDialog.FileName);
             }
+        }
+
+        private void RegulateNewlines()
+        {
+            internalFile.RegulateNewlines();
         }
 
         void menuItem_Popup(object sender, EventArgs e)
@@ -97,6 +103,12 @@ namespace FFTPatcher.TextEditor
         void generateResourcesZipMenuItem_Click(object sender, EventArgs e)
         {
             GenerateResourcesZip();
+        }
+
+        void regulateNewlinesMenuItem_Click(object sender, EventArgs e)
+        {
+            RegulateNewlines();
+            fileEditor1.Refresh();
         }
 
         void worker_RunWorkerCompleted( object sender, RunWorkerCompletedEventArgs e )
@@ -205,6 +217,8 @@ namespace FFTPatcher.TextEditor
                     fileEditor1.Enabled = true;
                     helpMenuItem.Enabled = true;
                     generateResourcesZipMenuItem.Enabled = true;
+                    editMenuItem.Enabled = true;
+                    regulateNewlinesMenuItem.Enabled = true;
                     Cursor = Cursors.Default;
                 };
             worker.RunWorkerCompleted +=
@@ -230,6 +244,8 @@ namespace FFTPatcher.TextEditor
             fileEditor1.Enabled = false;
             helpMenuItem.Enabled = false;
             generateResourcesZipMenuItem.Enabled = false;
+            editMenuItem.Enabled = false;
+            regulateNewlinesMenuItem.Enabled = false;
             Cursor = Cursors.WaitCursor;
             worker.RunWorkerAsync();
         }
@@ -288,6 +304,8 @@ namespace FFTPatcher.TextEditor
                 menuItem2.Enabled = true;
                 allowedSymbolsMenuItem.Enabled = true;
                 generateResourcesZipMenuItem.Enabled = true;
+                editMenuItem.Enabled = true;
+                regulateNewlinesMenuItem.Enabled = true;
             };
 
             if ( this.InvokeRequired )

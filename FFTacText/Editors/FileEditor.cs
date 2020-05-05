@@ -40,6 +40,11 @@ namespace FFTPatcher.TextEditor.Editors
             ignoreChanges = false;
         }
 
+        public void Refresh()
+        {
+            BindTo(boundFile);
+        }
+
         public FileEditor()
         {
             InitializeComponent();

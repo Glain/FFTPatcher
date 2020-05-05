@@ -62,6 +62,8 @@ namespace FFTPatcher.TextEditor
             this.generateResourcesZipMenuItem = new System.Windows.Forms.MenuItem();
             this.separatorGenerateResourcesZip = new System.Windows.Forms.MenuItem();
             this.exitMenuItem = new System.Windows.Forms.MenuItem();
+            this.editMenuItem = new System.Windows.Forms.MenuItem();
+            this.regulateNewlinesMenuItem = new System.Windows.Forms.MenuItem();
             this.isoMenuItem = new System.Windows.Forms.MenuItem();
             this.importPsxIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.importPspIsoMenuItem = new System.Windows.Forms.MenuItem();
@@ -105,6 +107,7 @@ namespace FFTPatcher.TextEditor
             // 
             this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.fileMenuItem,
+            this.editMenuItem,
             this.isoMenuItem,
             this.textMenuItem,
             this.helpMenuItem});
@@ -148,9 +151,23 @@ namespace FFTPatcher.TextEditor
             this.exitMenuItem.Index = 5;
             this.exitMenuItem.Text = "E&xit";
             // 
+            // editMenuItem
+            // 
+            this.editMenuItem.Enabled = false;
+            this.editMenuItem.Index = 1;
+            this.editMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.regulateNewlinesMenuItem});
+            this.editMenuItem.Text = "Edit";
+            // 
+            // regulateNewlinesMenuItem
+            // 
+            this.regulateNewlinesMenuItem.Enabled = false;
+            this.regulateNewlinesMenuItem.Index = 0;
+            this.regulateNewlinesMenuItem.Text = "Regulate Newlines";
+            // 
             // isoMenuItem
             // 
-            this.isoMenuItem.Index = 1;
+            this.isoMenuItem.Index = 2;
             this.isoMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.importPsxIsoMenuItem,
             separator4,
@@ -178,12 +195,12 @@ namespace FFTPatcher.TextEditor
             // textMenuItem
             // 
             this.textMenuItem.Enabled = false;
-            this.textMenuItem.Index = 2;
+            this.textMenuItem.Index = 3;
             this.textMenuItem.Text = "Text";
             // 
             // helpMenuItem
             // 
-            this.helpMenuItem.Index = 3;
+            this.helpMenuItem.Index = 4;
             this.helpMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.allowedSymbolsMenuItem,
             separator3,
@@ -264,6 +281,8 @@ namespace FFTPatcher.TextEditor
         private System.Windows.Forms.MenuItem importPspIsoMenuItem;
         private System.Windows.Forms.MenuItem generateResourcesZipMenuItem;
         private System.Windows.Forms.MenuItem separatorGenerateResourcesZip;
+        private System.Windows.Forms.MenuItem editMenuItem;
+        private System.Windows.Forms.MenuItem regulateNewlinesMenuItem;
 
     }
 }
