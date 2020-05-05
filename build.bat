@@ -38,8 +38,8 @@ echo Copying Example.xml
 copy /y FFTorgASM\bin\x86\Release\Example.xml %OUTPUTDIR% > nul
 echo Copying Razele.xml
 copy /y FFTorgASM\bin\x86\Release\Razele.xml %OUTPUTDIR% > nul
-echo Copying Zodiac.xml
-copy /y FFTorgASM\bin\x86\Release\Zodiac.xml %OUTPUTDIR% > nul
+echo Copying Xifanie.xml
+copy /y FFTorgASM\bin\x86\Release\Xifanie.xml %OUTPUTDIR% > nul
 echo Copying nates1984.xml
 copy /y FFTorgASM\bin\x86\Release\nates1984.xml %OUTPUTDIR% > nul
 echo Copying PatcherLib.dll

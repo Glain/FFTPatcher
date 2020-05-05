@@ -125,6 +125,6 @@ Help needed:
 Thanks to:
   Gomtuu: His page helped me understand the text compression algorithm and how
     the double-byte characters were processed. http://gomtuu.org/fft/
-  Zodiac: Got me started with a list of text locations in the Playstation version.
+  Xifanie: Got me started with a list of text locations in the Playstation version.
   Phoenix (SadNES cITy): Explained how sadNES implemented DTE in the Italian 
     translation. Gave me the asm used for graphical DTE on PSX.
