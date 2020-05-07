@@ -1173,52 +1173,52 @@ SKP:  j       0x80180848            #   Skip this ability
     <Location file="BATTLE_BIN" offset="15BB85" mode="DATA" offsetMode="RAM" label="address_calc_skip_type">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB86" mode="DATA" offsetMode="RAM" label="address_is_dialog_text_unskippable">
+    <Location mode="DATA" label="address_is_dialog_text_unskippable">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB87" mode="DATA" offsetMode="RAM" label="address_are_effects_unskippable">
+    <Location mode="DATA" label="address_are_effects_unskippable">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB88" mode="DATA" offsetMode="RAM" label="address_is_event">
+    <Location mode="DATA" label="address_is_event">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB89" mode="DATA" offsetMode="RAM" label="address_is_skipping_effect_targets">
+    <Location mode="DATA" label="address_is_skipping_effect_targets">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB8A" mode="DATA" offsetMode="RAM" label="address_is_skipping_effect">
+    <Location mode="DATA" label="address_is_skipping_effect">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB8B" mode="DATA" offsetMode="RAM" label="address_run_next_wait">
+    <Location mode="DATA" label="address_run_next_wait">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB8C" mode="DATA" offsetMode="RAM" label="address_pathing_direction_map">
+    <Location mode="DATA" label="address_pathing_direction_map">
         03010002
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB90" mode="DATA" offsetMode="RAM" label="address_event_last_camera_instruction_pointer">
+    <Location mode="DATA" label="address_event_last_camera_instruction_pointer">
         00000000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB94" mode="DATA" offsetMode="RAM" label="address_event_last_focus_instruction_pointer">
+    <Location mode="DATA" label="address_event_last_focus_instruction_pointer">
         00000000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB98" mode="DATA" offsetMode="RAM" label="address_event_choice_message_id">
+    <Location mode="DATA" label="address_event_choice_message_id">
         0000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB9A" mode="DATA" offsetMode="RAM" label="address_event_choice_message_id_display_message">
+    <Location offset="" mode="DATA" offsetMode="RAM" label="address_event_choice_message_id_display_message">
         0000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB9C" mode="DATA" offsetMode="RAM" label="address_event_skip_type">
+    <Location mode="DATA" label="address_event_skip_type">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB9D" mode="DATA" offsetMode="RAM" label="address_event_old_skip_type">
+    <Location mode="DATA" label="address_event_old_skip_type">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB9E" mode="DATA" offsetMode="RAM" label="address_is_mid_battle">
+    <Location mode="DATA" label="address_is_mid_battle">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BB9F" mode="DATA" offsetMode="RAM" label="address_is_mid_battle_event">
+    <Location mode="DATA" label="address_is_mid_battle_event">
         00
     </Location>
-    <Location file="BATTLE_BIN" offset="15BBA0" mode="DATA" offsetMode="RAM" label="address_can_skip_instruction_array">
+    <Location mode="DATA" label="address_can_skip_instruction_array">
         FFFF2F86
         DE018FE1
         C180A00E
@@ -1228,7 +1228,7 @@ SKP:  j       0x80180848            #   Skip this ability
         00000000
         00004000
     </Location>
-    <Location file="BATTLE_BIN" offset="15BBC0" mode="DATA" offsetMode="RAM" label="address_can_total_skip_instruction_array">
+    <Location mode="DATA" label="address_can_total_skip_instruction_array">
         FFFFFFFF
         FFFFFFFD
         CFFFBFFF
