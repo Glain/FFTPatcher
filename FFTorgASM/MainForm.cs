@@ -428,8 +428,7 @@ namespace FFTorgASM
 
                             ramOffset = ramOffset | 0x80000000;     // KSEG0
 
-                            bool markedAsData = asmPatch.isDataSectionList[byteArrayIndex];
-                            if (!markedAsData)
+                            if (!patchedByteArray.MarkedAsData)
                             {
                                 ASMCheckResult result = asmUtility.CheckASMFromBytes(bytes, ramOffset, true, false, asmCheckConditions);
                                 if (result.IsASM)

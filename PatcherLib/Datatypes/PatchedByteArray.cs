@@ -156,6 +156,7 @@ namespace PatcherLib.Datatypes
         public Enum SectorEnum { get; protected set; }
 
         public bool IsAsm { get; set; }
+        public bool MarkedAsData { get; set; }
         public string AsmText { get; set; }
         public long RamOffset { get; set; }
         public string ErrorText { get; set; }

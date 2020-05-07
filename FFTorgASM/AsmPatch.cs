@@ -30,7 +30,7 @@ namespace FFTorgASM
 
         private InputFilePatch patch;
         public FileAsmPatch( string name, string description, InputFilePatch patch )
-            : base( name, description, new PatchedByteArray[] { patch }, new bool[] { false }, false )
+            : base( name, description, new PatchedByteArray[] { patch }, false )
         {
             this.patch = patch;
         }
@@ -97,7 +97,6 @@ namespace FFTorgASM
     {
         List<PatchedByteArray> innerList;
         List<PatchedByteArray> varInnerList;
-        public List<bool> isDataSectionList;
 
         public string Name { get; private set; }
         public string Description { get; private set; }
@@ -127,7 +126,7 @@ namespace FFTorgASM
             return true;
         }
 
-        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList, bool hideInDefault )
+        public AsmPatch( string name, string description, IEnumerable<PatchedByteArray> patches, bool hideInDefault )
         {
             enumerator = new AsmPatchEnumerator( this );
             this.Name = name;
@@ -135,12 +134,11 @@ namespace FFTorgASM
             innerList = new List<PatchedByteArray>( patches );
             Variables = new VariableType[0];
             varInnerList = new List<PatchedByteArray>();
-            this.isDataSectionList = new List<bool>(isDataSectionList);
             this.HideInDefault = hideInDefault;
         }
 
-        public AsmPatch(string name, string description, IEnumerable<PatchedByteArray> patches, IEnumerable<bool> isDataSectionList, bool hideInDefault, IList<VariableType> variables)
-            : this( name, description, patches, isDataSectionList, hideInDefault )
+        public AsmPatch(string name, string description, IEnumerable<PatchedByteArray> patches, bool hideInDefault, IList<VariableType> variables)
+            : this( name, description, patches, hideInDefault )
         {
         	VariableType[] myVars = new VariableType[variables.Count];
             variables.CopyTo( myVars, 0 );
