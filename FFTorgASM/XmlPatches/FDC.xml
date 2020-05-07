@@ -74,4 +74,33 @@
     </Location>
   </Patch>
 
+    <Patch name="Items can now give negative PA/MA/SP/MV/JP (v2)" file="SCUS_942_21">
+        <Description>
+            Simply put, if you want -1 SP on armor, you type in FF for SP.
+            NOTE: It also sets the rollover boundary for PA/MA/SP/MV/JP at 127.  Thus, do not try making items with +/-127 PA.
+        </Description>
+        <Location offset="4CEDB,4CEDF,4CF0F,4CF33,4D07F,4D083">80</Location>
+        <Location offset="4CEE4,4CF18,4CF3C,4D088">20</Location>
+        <Location offset="4CEE8">
+            00 00 00 00
+            00 00 00 00
+        </Location>
+        <Location offset="4CEF4">00000000</Location>
+        <Location offset="4CF13,4CF37">82</Location>
+        <Location offset="4CF1C,4CF40">
+            01 00 62 28
+            02 00 40 10
+        </Location>
+        <Location offset="4CF28,4CF4C,4D0A4,4D0B8">01</Location>
+        <Location offset="4D094">
+            01 00 62 28
+            08 00 40 10
+        </Location>
+        <Location offset="4D0A8">
+            20 10 60 00
+            01 00 42 28
+            02 00 40 10
+        </Location>
+    </Patch>
+
 </Patches>
