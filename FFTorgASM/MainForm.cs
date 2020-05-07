@@ -523,12 +523,16 @@ namespace FFTorgASM
                     }
                 }
             }
+
+            PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
         }
         private void PatchSaveStbutton_Click(object sender, EventArgs e)
         {
             //Patchbutton copy. Modify to patch byte array right to savestate.
             saveFileDialog1.Filter = "PSV files (*.psv)|*.psv|All files (*.*)|*.*";
             saveFileDialog1.FileName = string.Empty;
+
+            StringBuilder sbResultMessage = new StringBuilder();
 
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -547,7 +551,28 @@ namespace FFTorgASM
                         }
                     }
 
-                    PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
+                    PatchPsxSaveStateResult patchResult = PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
+
+                    sbResultMessage.AppendLine("Complete!");
+                    sbResultMessage.AppendLine();
+                    if (patchResult.UnsupportedFiles.Count > 0)
+                    {
+                        sbResultMessage.AppendLine("Files not supported for savestate patching:");
+                        foreach (PsxIso.Sectors sector in patchResult.UnsupportedFiles)
+                        {
+                            sbResultMessage.AppendFormat("\t{0}{1}", Enum.GetName(typeof(PsxIso.Sectors), sector), Environment.NewLine);
+                        }
+                        sbResultMessage.AppendLine();
+                    }
+                    if (patchResult.AbsentFiles.Count > 0)
+                    {
+                        sbResultMessage.AppendLine("Files not present in savestate:");
+                        foreach (PsxIso.Sectors sector in patchResult.AbsentFiles)
+                        {
+                            sbResultMessage.AppendFormat("\t{0}{1}", Enum.GetName(typeof(PsxIso.Sectors), sector), Environment.NewLine);
+                        }
+                        sbResultMessage.AppendLine();
+                    }
 
                     /*
                     foreach (AsmPatch patch in clb_Patches.CheckedItems)
@@ -557,6 +582,8 @@ namespace FFTorgASM
                     */
                 }
             }
+
+            PatcherLib.MyMessageBox.Show(this, sbResultMessage.ToString(), "Complete!", MessageBoxButtons.OK);
         }
 
         private void clb_Patches_DragEnter( object sender, DragEventArgs e )
