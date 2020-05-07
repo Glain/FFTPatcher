@@ -36,7 +36,7 @@ namespace FFTorgASM
                 patches = GetPatches( doc.SelectSingleNode( "/Patches" ), xmlFilename, asmUtility );
                 return true;
             }
-            catch ( Exception )
+            catch ( Exception ex )
             {
                 patches = null;
                 return false;
@@ -103,27 +103,10 @@ namespace FFTorgASM
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
-
-                bool isSpecific = false;
-                string strSpecificAttr = (attrSpecific != null) ? attrSpecific.InnerText : "";
-                string[] strSpecifics = ASMStringHelper.RemoveSpaces(strSpecificAttr).Split(',');
-                List<SpecificLocation> specifics = new List<SpecificLocation>();
-
                 bool ignoreOffsetMode = false;
+                bool isSpecific = false;
 
-                if (!string.IsNullOrEmpty(strSpecificAttr))
-                {
-                    foreach (string strSpecific in strSpecifics)
-                    {
-                        string[] strSpecificData = strSpecific.Split(':');
-                        string strSector = strSpecificData[0];
-                        string strSpecificOffset = strSpecificData[1];
-                        int sectorNum = 0;
-                        bool isSectorNumeric = int.TryParse(strSector, out sectorNum);
-                        PsxIso.Sectors specificSector = isSectorNumeric ? (PsxIso.Sectors)sectorNum : (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), strSector);
-                        specifics.Add(new SpecificLocation(specificSector, strSpecificOffset));
-                    }
-                }
+                List<SpecificLocation> specifics = FillSpecificAttributeData(attrSpecific, defaultSector);
 
                 if (specifics.Count > 0)
                 {
@@ -221,8 +204,6 @@ namespace FFTorgASM
                 try
                 {
                     ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
-                    //string file = isSpecific ? specifics[0].File : ((fileAttribute != null) ? fileAttribute.InnerText : "");
-                    //ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + file);
                 }
                 catch (Exception)
                 {
@@ -299,7 +280,6 @@ namespace FFTorgASM
                             try
                             {
                                 ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
-                                //ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + specifics[offsetIndex].File);
                             }
                             catch (Exception)
                             {
@@ -362,6 +342,22 @@ namespace FFTorgASM
                 List<bool> isDataSectionList;
                 bool hideInDefault;
 
+                bool hasDefaultSector = false;
+                PsxIso.Sectors defaultSector = (PsxIso.Sectors)0;
+                XmlAttribute attrDefaultFile = node.Attributes["file"];
+                XmlAttribute attrDefaultSector = node.Attributes["sector"];
+
+                if (attrDefaultFile != null)
+                {
+                    defaultSector = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), attrDefaultFile.InnerText);
+                    hasDefaultSector = true;
+                }
+                else if (attrDefaultSector != null)
+                {
+                    defaultSector = (PsxIso.Sectors)Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber);
+                    hasDefaultSector = true;
+                }
+
                 List<VariableType> variables = new List<VariableType>();
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
@@ -373,30 +369,68 @@ namespace FFTorgASM
 
                     XmlAttribute fileAttribute = varNode.Attributes["file"];
                     XmlAttribute sectorAttribute = varNode.Attributes["sector"];
+                    XmlAttribute attrSpecific = varNode.Attributes["specific"];
 
-                    PsxIso.Sectors varSec = (PsxIso.Sectors)0;
-                    if (fileAttribute != null)
+                    //PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
+                    //UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
+                    //string strOffsetAttr = varNode.Attributes["offset"].InnerText;
+                    XmlAttribute offsetAttribute = varNode.Attributes["offset"];
+                    string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
+                    string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
+                    bool ignoreOffsetMode = false;
+                    bool isSpecific = false;
+
+                    List<SpecificLocation> specifics = FillSpecificAttributeData(attrSpecific, defaultSector);
+
+                    if (specifics.Count > 0)
                     {
-                        varSec = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), fileAttribute.InnerText);
+                        isSpecific = true;
+                        List<string> newStrOffsets = new List<string>(specifics.Count);
+                        foreach (SpecificLocation specific in specifics)
+                            newStrOffsets.Add(specific.OffsetString);
+                        strOffsets = newStrOffsets.ToArray();
+                    }
+                    else if ((string.IsNullOrEmpty(strOffsetAttr)) && (variables.Count > 0) && (variables[variables.Count - 1].content.Count > 0))
+                    {
+                        // No offset defined -- offset is (last patch offset) + (last patch size)
+                        int lastIndex = variables[variables.Count - 1].content.Count - 1;
+                        PatchedByteArray lastPatchedByteArray = variables[variables.Count - 1].content[lastIndex];
+                        long offset = lastPatchedByteArray.Offset + lastPatchedByteArray.GetBytes().Length;
+                        string strOffset = offset.ToString("X");
+                        strOffsets = new string[1] { strOffset };
+                        ignoreOffsetMode = true;
+                    }
+
+                    PsxIso.Sectors sector = (PsxIso.Sectors)0;
+                    if (isSpecific)
+                    {
+                        sector = specifics[0].Sector;
+                    }
+                    else if (fileAttribute != null)
+                    {
+                        sector = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), fileAttribute.InnerText);
                     }
                     else if (sectorAttribute != null)
                     {
-                        varSec = (PsxIso.Sectors)Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber);
+                        sector = (PsxIso.Sectors)Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber);
+                    }
+                    else if (hasDefaultSector)
+                    {
+                        sector = defaultSector;
+                    }
+                    else if ((variables.Count > 0) && (variables[variables.Count - 1].content.Count > 0))
+                    {
+                        int lastIndex = variables[variables.Count - 1].content.Count - 1;
+                        sector = (PsxIso.Sectors)(variables[variables.Count - 1].content[lastIndex].Sector);
                     }
                     else
                     {
-                        throw new Exception();
+                        throw new Exception("Error in patch XML: Invalid file/sector!");
                     }
-
-                    //PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
-                    
-                    //UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
-                    string strOffsetAttr = varNode.Attributes["offset"].InnerText;
-                    string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
 
                     XmlAttribute offsetModeAttribute = varNode.Attributes["offsetMode"];
                     bool isRamOffset = false;
-                    if (offsetModeAttribute != null)
+                    if ((!ignoreOffsetMode) && (offsetModeAttribute != null))
                     {
                         if (offsetModeAttribute.InnerText.ToLower().Trim() == "ram")
                             isRamOffset = true;
@@ -405,7 +439,8 @@ namespace FFTorgASM
                     Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
                     try
                     {
-                        ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + fileAttribute.InnerText);
+                        ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
+                        //ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + fileAttribute.InnerText);
                     }
                     catch (Exception)
                     {
@@ -425,6 +460,8 @@ namespace FFTorgASM
                     }
 
                     List<PatchedByteArray> patchedByteArrayList = new List<PatchedByteArray>();
+                    int offsetIndex = 0;
+
                     foreach (string strOffset in strOffsets)
                     {
                         UInt32 offset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
@@ -445,7 +482,25 @@ namespace FFTorgASM
 
                         //ramOffset = ramOffset | 0x80000000;     // KSEG0
 
-                        patchedByteArrayList.Add(new PatchedByteArray(varSec, fileOffset, byteArray));
+                        patchedByteArrayList.Add(new PatchedByteArray(sector, fileOffset, byteArray));
+
+                        offsetIndex++;
+                        if (offsetIndex < strOffsets.Length)
+                        {
+                            if (isSpecific)
+                            {
+                                sector = specifics[offsetIndex].Sector;
+
+                                try
+                                {
+                                    ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
+                                }
+                                catch (Exception)
+                                {
+                                    ftrOffset = null;
+                                }
+                            }
+                        }
                     }
 
                     bool isReference = false;
@@ -510,6 +565,45 @@ namespace FFTorgASM
 
             return result.AsReadOnly();
 
+        }
+
+        private static List<SpecificLocation> FillSpecificAttributeData(XmlAttribute attrSpecific, PsxIso.Sectors defaultSector)
+        {
+            string strSpecificAttr = (attrSpecific != null) ? attrSpecific.InnerText : "";
+            string[] strSpecifics = ASMStringHelper.RemoveSpaces(strSpecificAttr).Split(',');
+            List<SpecificLocation> specifics = new List<SpecificLocation>();
+
+            PsxIso.Sectors lastSector = defaultSector;
+            if (!string.IsNullOrEmpty(strSpecificAttr))
+            {
+                foreach (string strSpecific in strSpecifics)
+                {
+                    string[] strSpecificData = strSpecific.Split(':');
+
+                    string strSector = "";
+                    string strSpecificOffset = strSpecificData[0];
+                    if (strSpecificData.Length > 1)
+                    {
+                        strSector = strSpecificData[0];
+                        strSpecificOffset = strSpecificData[1];
+                    }
+
+                    PsxIso.Sectors specificSector;
+                    if (string.IsNullOrEmpty(strSector))
+                        specificSector = lastSector;
+                    else
+                    {
+                        int sectorNum = 0;
+                        bool isSectorNumeric = int.TryParse(strSector, out sectorNum);
+                        specificSector = isSectorNumeric ? (PsxIso.Sectors)sectorNum : (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), strSector);
+                    }
+
+                    lastSector = specificSector;
+                    specifics.Add(new SpecificLocation(specificSector, strSpecificOffset));
+                }
+            }
+
+            return specifics;
         }
 
         private static byte[] GetBytes( string byteText )
