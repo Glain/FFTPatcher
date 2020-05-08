@@ -21,15 +21,9 @@ namespace FFTorgASM
         private bool ignoreChanges = true;
 
         ASMEncodingUtility asmUtility;
-
-        public PatchList Patchlist;
-        public int numberoffiles;
+        public PatchList patchList;
 
         public bool skipchecked;
-
-        //string[] PatchFiles;
-
-        private string[] patchMessages;
 
         public MainForm()
         {
@@ -38,7 +32,7 @@ namespace FFTorgASM
             asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
             versionLabel.Text = string.Format( "v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString() );
 
-            ReloadFiles();
+            LoadFiles();
 
             patchButton.Click += new EventHandler( patchButton_Click );
             reloadButton.Click += new EventHandler( reloadButton_Click );
@@ -138,19 +132,18 @@ namespace FFTorgASM
 
         private void reloadButton_Click(object sender, EventArgs e)
         {
-            ReloadFiles();
+            LoadFiles();
         }
 
-        private void ReloadFiles()
+        private void LoadFiles(IList<string> fileList = null)
         {
-            string[] files = Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly);
-
+            string[] files = (fileList == null) ? Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
             lsb_FilesList.SelectedIndices.Clear();
 
             clb_Patches.Items.Clear();
             ClearCurrentPatch();
 
-            Patchlist = new PatchList(files, asmUtility);
+            patchList = new PatchList(files, asmUtility);
             //Patchlist.AllCheckedPatches = clb_Patches.CheckedItems;
 
             lsb_FilesList.Items.Clear();
@@ -164,14 +157,11 @@ namespace FFTorgASM
                 lsb_FilesList.Items.Add(files[i]);
 
                 lsb_FilesList.BackColors[i + 1] = Color.White;
-                if (!Patchlist.LoadedCorrectly[i])
+                if (!patchList.LoadedCorrectly[i])
                     //lsb_FilesList.Items[i + 1].BackColor = Color.Red;
                     lsb_FilesList.BackColors[i + 1] = Color.Red;
             }
             //LoadFiles( files );
-            
-            numberoffiles = files.Length;
-
             //lsb_FilesList.SelectedIndices.Add(0);
         }
 
@@ -183,23 +173,22 @@ namespace FFTorgASM
             ClearCurrentPatch();
 
             bool somethingchecked = false;
-
-
             int selectedIndex = lsb_FilesList.SelectedIndex;
 
             if (lsb_FilesList.SelectedItem == null)
                 return;
+
             //if ALL
             if (selectedIndex == 0)
             {
-                LoadPatches(Patchlist.AllPatches);
+                LoadPatches(patchList.AllPatches);
+                clb_Patches.BackColors = patchList.BackgroundColors[selectedIndex];
 
                 for (int i = 0; i < clb_Patches.Items.Count; i++)
                 {
                     if (selectedIndex == 0)
                     {
-
-                        if (Patchlist.AllCheckStates[i] == CheckState.Checked)
+                        if (patchList.AllCheckStates[i] == CheckState.Checked)
                         {
                             clb_Patches.SetItemChecked(i, true);
                             somethingchecked = true;
@@ -207,7 +196,7 @@ namespace FFTorgASM
                     }
                     else
                     {
-                        if (Patchlist.FilePatches[selectedIndex].PatchCheckStates[i] == CheckState.Checked)
+                        if (patchList.FilePatches[selectedIndex].PatchCheckStates[i] == CheckState.Checked)
                         {
                             clb_Patches.SetItemChecked(i, true);
                             somethingchecked = true;
@@ -219,16 +208,16 @@ namespace FFTorgASM
             else //if NOT ALL
             {
 
-                if (Patchlist.FilePatches[selectedIndex - 1] != null)
+                if (patchList.FilePatches[selectedIndex - 1] != null)
                 {
-                    LoadPatches(Patchlist.FilePatches[selectedIndex - 1].Patches);
+                    LoadPatches(patchList.FilePatches[selectedIndex - 1].Patches);
+                    clb_Patches.BackColors = patchList.BackgroundColors[selectedIndex];
 
-
-                    for (int i = 0; i < Patchlist.FilePatches[selectedIndex - 1].PatchCheckStates.Length; i++)
+                    for (int i = 0; i < patchList.FilePatches[selectedIndex - 1].PatchCheckStates.Length; i++)
                     {
                         if (clb_Patches.Items.Count > i)
                         {
-                            if (Patchlist.FilePatches[selectedIndex - 1].PatchCheckStates[i] == CheckState.Checked)
+                            if (patchList.FilePatches[selectedIndex - 1].PatchCheckStates[i] == CheckState.Checked)
                             {
                                 clb_Patches.SetItemChecked(i, true);
                                 somethingchecked = true;
@@ -247,8 +236,10 @@ namespace FFTorgASM
                     PatcherLib.MyMessageBox.Show(this, "Error", lsb_FilesList.SelectedItem + " did not load correctly!", MessageBoxButtons.OK);   
                 }
             }
+
             clb_Patches.ItemCheck += new ItemCheckEventHandler(clb_Patches_ItemCheck);
             skipchecked = false;
+
             if (somethingchecked)
             {
                 PatchSaveStbutton.Enabled = true;
@@ -259,7 +250,6 @@ namespace FFTorgASM
                 PatchSaveStbutton.Enabled = false;
                 patchButton.Enabled = false;
             }
-            
         }
 
         void clb_Patches_SelectedIndexChanged( object sender, EventArgs e )
@@ -338,9 +328,9 @@ namespace FFTorgASM
             if (selectedIndex != 0)
             {
                 //Set indiivdual list
-                Patchlist.FilePatches[selectedIndex - 1].PatchCheckStates[e.Index] = e.NewValue;
+                patchList.FilePatches[selectedIndex - 1].PatchCheckStates[e.Index] = e.NewValue;
                 //Set Master List
-                Patchlist.SetMasterListCheckState(selectedIndex - 1, e.Index, e.NewValue);
+                patchList.SetMasterListCheckState(selectedIndex - 1, e.Index, e.NewValue);
                 //Patchlist.Files[lsb_FilesList.SelectedIndex - 1].CheckedPatches = clb_Patches.CheckedItems;
             }
             else //If ALL
@@ -348,8 +338,8 @@ namespace FFTorgASM
                 int ALLindex = e.Index;
                 int patchindex = ALLindex;
 
-                Patchlist.SetPatchCheckState(ALLindex, e.NewValue);
-                Patchlist.AllCheckStates[e.Index] = e.NewValue;
+                patchList.SetPatchCheckState(ALLindex, e.NewValue);
+                patchList.AllCheckStates[e.Index] = e.NewValue;
             }
         }
 
@@ -363,51 +353,6 @@ namespace FFTorgASM
                 clb_Patches.Items.AddRange(this.patches);
                 //patchButton.Enabled = false;
             }
-
-            CheckPatches();
-        }
-
-        private void CheckPatches()
-        {
-            List<Color> bgColors = new List<Color>();
-
-            for (int index = 0; index < clb_Patches.Items.Count; index++)
-            {
-                Color color = clb_Patches.BackColor;
-
-                object objPatch = clb_Patches.Items[index];
-                if (objPatch != null)
-                {
-                    AsmPatch asmPatch = (AsmPatch)objPatch;
-
-                    if (!string.IsNullOrEmpty(asmPatch.ErrorText))
-                    {
-                        color = Color.FromArgb(225, 125, 125);
-                    }
-                }
-
-                bgColors.Add(color);
-            }
-
-            clb_Patches.BackColors = bgColors.ToArray();
-        }
-
-        private void LoadFiles(IList<string> files)
-        {
-            List<AsmPatch> result = new List<AsmPatch>();
-            foreach ( string file in files )
-            {
-                IList<AsmPatch> tryPatches;
-                if ( PatchXmlReader.TryGetPatches( File.ReadAllText( file, Encoding.UTF8 ), file, asmUtility, out tryPatches ) )
-                {
-                    result.AddRange( tryPatches );
-                }
-                else
-                {
-                   // MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
-                }
-            }
-            LoadPatches( result );
         }
 
         private void ClearCurrentPatch()
@@ -453,14 +398,14 @@ namespace FFTorgASM
 
             if (selectedFileIndex <= 0)
             {
-                for (int index = 0; index < Patchlist.FilePatches.Length; index++)
+                for (int index = 0; index < patchList.FilePatches.Length; index++)
                 {
-                    resultList.AddRange(Patchlist.FilePatches[index].Patches);
+                    resultList.AddRange(patchList.FilePatches[index].Patches);
                 }
             }
             else
             {
-                resultList = Patchlist.FilePatches[selectedFileIndex - 1].Patches;
+                resultList = patchList.FilePatches[selectedFileIndex - 1].Patches;
             }
 
             return resultList;
@@ -626,6 +571,7 @@ namespace FFTorgASM
             public CheckState[] AllCheckStates;
             public CheckedListBox.CheckedItemCollection AllCheckedPatches;
             public bool[] LoadedCorrectly;
+            public Color[][] BackgroundColors;
 
             public PatchList(string[] files, ASMEncodingUtility asmUtility)
             {
@@ -633,30 +579,49 @@ namespace FFTorgASM
                 LoadedCorrectly = new bool[files.Length];
                 IList<AsmPatch> tryPatches;
 
-                int i = 0;
-                foreach (string file in files)
+                List<Color> allColorList = new List<Color>();
+                Color normalColor = Color.White;
+                Color errorColor = Color.FromArgb(225, 125, 125);
+                BackgroundColors = new Color[files.Length + 1][];
+
+                for (int index = 0; index < files.Length; index++)
                 {
+                    string file = files[index];
+                    List<Color> fileColorList = new List<Color>();
+
                     if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
                     {
+                        FilePatches[index] = new PatchFile(tryPatches.Count);
+                        FilePatches[index].filename = file;
+
                         //AllPatches.AddRange(tryPatches);
+                        //FilePatches[i].Patches.AddRange(tryPatches);
+
                         foreach (AsmPatch patch in tryPatches)
                         {
+                            Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+                            FilePatches[index].Patches.Add(patch);
+                            fileColorList.Add(bgColor);
+
                             if (!patch.HideInDefault)
+                            {
                                 AllPatches.Add(patch);
+                                allColorList.Add(bgColor);
+                            }
                         }
 
-                        FilePatches[i] = new PatchFile(tryPatches.Count);
-                        FilePatches[i].filename = file;
-                        FilePatches[i].Patches.AddRange(tryPatches);
-                        LoadedCorrectly[i] = true;
+                        LoadedCorrectly[index] = true;
                     }
                     else
                     {
-                        LoadedCorrectly[i] = false;
+                        LoadedCorrectly[index] = false;
                         //MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
                     }
-                    i++;
+
+                    BackgroundColors[index + 1] = fileColorList.ToArray();
                 }
+
+                BackgroundColors[0] = allColorList.ToArray();
 
                 AllCheckStates = new CheckState[AllPatches.Count];
                 for (int j = 0; j < AllCheckStates.Length; j++)
