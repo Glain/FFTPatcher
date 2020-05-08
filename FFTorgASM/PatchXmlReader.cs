@@ -326,6 +326,8 @@ namespace FFTorgASM
                 rootHideInDefault = (attrHideInDefault.InnerText.ToLower().Trim() == "true");
             }
 
+            string shortXmlFilename = xmlFilename.Substring(xmlFilename.LastIndexOf("\\") + 1);
+
             XmlNodeList patchNodes = rootNode.SelectNodes( "Patch" );
             List<AsmPatch> result = new List<AsmPatch>( patchNodes.Count );
             foreach ( XmlNode node in patchNodes )
@@ -536,7 +538,7 @@ namespace FFTorgASM
                 }
 
                 GetPatch(node, xmlFilename, asmUtility, variables, out name, out description, out staticPatches, out hideInDefault);
-                result.Add( new AsmPatch( name, description, staticPatches, (hideInDefault | rootHideInDefault), variables ) );
+                result.Add(new AsmPatch(name, shortXmlFilename, description, staticPatches, (hideInDefault | rootHideInDefault), variables));
             }
 
             patchNodes = rootNode.SelectNodes( "ImportFilePatch" );
@@ -556,7 +558,7 @@ namespace FFTorgASM
                 UInt32 offset = UInt32.Parse( theRealNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
                 UInt32 expectedLength = UInt32.Parse( theRealNode.Attributes["expectedLength"].InnerText, System.Globalization.NumberStyles.HexNumber );
 
-                result.Add( new FileAsmPatch( name, description, new InputFilePatch( sector, offset, expectedLength ) ) );
+                result.Add(new FileAsmPatch(name, shortXmlFilename, description, new InputFilePatch(sector, offset, expectedLength)));
 
             }
 

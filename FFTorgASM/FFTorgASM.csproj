@@ -62,11 +62,11 @@
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ConflictChecker\FileWrite.cs" />
-    <Compile Include="FreeSpace.cs">
+    <Compile Include="FreeSpaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FreeSpace.Designer.cs">
-      <DependentUpon>FreeSpace.cs</DependentUpon>
+    <Compile Include="FreeSpaceForm.Designer.cs">
+      <DependentUpon>FreeSpaceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HexNumericUpDown.cs">
       <SubType>Component</SubType>
@@ -84,8 +84,8 @@
     <EmbeddedResource Include="ConflictChecker\ConflictChecker.resx">
       <DependentUpon>ConflictChecker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FreeSpace.resx">
-      <DependentUpon>FreeSpace.cs</DependentUpon>
+    <EmbeddedResource Include="FreeSpaceForm.resx">
+      <DependentUpon>FreeSpaceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

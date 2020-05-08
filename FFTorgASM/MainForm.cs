@@ -253,8 +253,7 @@ namespace FFTorgASM
                 else
                 {
                     clb_Patches.Items.Clear();
-                    MessageBox.Show(lsb_FilesList.SelectedItem + " did not load correctly!");
-                    
+                    PatcherLib.MyMessageBox.Show(this, "Error", lsb_FilesList.SelectedItem + " did not load correctly!", MessageBoxButtons.OK);   
                 }
             }
             clb_Patches.ItemCheck += new ItemCheckEventHandler(clb_Patches_ItemCheck);
@@ -508,6 +507,26 @@ namespace FFTorgASM
             }
         }
 
+        private List<AsmPatch> GetCurrentFilePatches()
+        {
+            List<AsmPatch> resultList = new List<AsmPatch>();
+            int selectedFileIndex = lsb_FilesList.SelectedIndex;
+
+            if (selectedFileIndex <= 0)
+            {
+                for (int index = 0; index < Patchlist.FilePatches.Length; index++)
+                {
+                    resultList.AddRange(Patchlist.FilePatches[index].Patches);
+                }
+            }
+            else
+            {
+                resultList = Patchlist.FilePatches[selectedFileIndex - 1].Patches;
+            }
+
+            return resultList;
+        }
+
         void patchButton_Click( object sender, EventArgs e )
         {
             saveFileDialog1.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
@@ -639,8 +658,8 @@ namespace FFTorgASM
 
         private void btn_ViewFreeSpace_Click(object sender, EventArgs e)
         {
-            FreeSpace FS = new FreeSpace();
-            FS.Show();
+            FreeSpaceForm freeSpaceForm = new FreeSpaceForm(GetCurrentFilePatches());
+            freeSpaceForm.Show();
         }
 
         public class PatchList
