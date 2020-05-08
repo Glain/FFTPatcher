@@ -270,7 +270,7 @@ namespace FFTorgASM
                 textBox1.Text = p.Description;
 
                 int index = clb_Patches.SelectedIndex;
-                txt_Messages.Text = (index >= 0) ? patchMessages[index] : "";
+                txt_Messages.Text = p.ErrorText;
                 
                 //if (p.Variables.Count > 0)
                 if (p.CountNonReferenceVariables() > 0)
@@ -370,39 +370,26 @@ namespace FFTorgASM
         private void CheckPatches()
         {
             List<Color> bgColors = new List<Color>();
-            List<string> messages = new List<string>();
 
             for (int index = 0; index < clb_Patches.Items.Count; index++)
             {
                 Color color = clb_Patches.BackColor;
-                StringBuilder sbMessage = new StringBuilder();
 
                 object objPatch = clb_Patches.Items[index];
                 if (objPatch != null)
                 {
                     AsmPatch asmPatch = (AsmPatch)objPatch;
-                    int byteArrayIndex = 0;
-                    foreach (PatchedByteArray patchedByteArray in asmPatch)
+
+                    if (!string.IsNullOrEmpty(asmPatch.ErrorText))
                     {
-                        if (byteArrayIndex >= asmPatch.NonVariableCount)
-                            break;
-
-                        if (!string.IsNullOrEmpty(patchedByteArray.ErrorText))
-                        {
-                            color = Color.FromArgb(225, 125, 125);
-                            sbMessage.Append(patchedByteArray.ErrorText);
-                        }
-
-                        byteArrayIndex++;
+                        color = Color.FromArgb(225, 125, 125);
                     }
                 }
 
                 bgColors.Add(color);
-                messages.Add(sbMessage.ToString());
             }
 
             clb_Patches.BackColors = bgColors.ToArray();
-            patchMessages = messages.ToArray();
         }
 
         private void LoadFiles(IList<string> files)

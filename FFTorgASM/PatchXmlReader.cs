@@ -22,6 +22,24 @@ namespace FFTorgASM
         }
     }
 
+    public class GetPatchResult
+    {
+        public string Name { get; set; }
+        public string Description {get; set; }
+        public IList<PatchedByteArray> StaticPatches { get; set; }
+        public bool HideInDefault { get; set; }
+        public string ErrorText { get; set; }
+
+        public GetPatchResult(string Name, string Description, IList<PatchedByteArray> StaticPatches, bool HideInDefault, string ErrorText)
+        {
+            this.Name = Name;
+            this.Description = Description;
+            this.StaticPatches = StaticPatches;
+            this.HideInDefault = HideInDefault;
+            this.ErrorText = ErrorText;
+        }
+    }
+    
     static class PatchXmlReader
     {
         public static readonly System.Text.RegularExpressions.Regex stripRegex = 
@@ -43,24 +61,24 @@ namespace FFTorgASM
             }
         }
 
-        private static void GetPatchNameAndDescription( XmlNode node, out string name, out string description )
+        private static KeyValuePair<string, string> GetPatchNameAndDescription( XmlNode node )
         {
-            name = node.Attributes["name"].InnerText;
+            string name = node.Attributes["name"].InnerText;
             XmlNode descriptionNode = node.SelectSingleNode( "Description" );
-            description = name;
+            string description = name;
             if ( descriptionNode != null )
             {
                 description = descriptionNode.InnerText;
             }
 
+            return new KeyValuePair<string, string>(name, description);
         }
 
-        private static void GetPatch( XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, List<VariableType> variables,
-            out string name, out string description, out IList<PatchedByteArray> staticPatches, out bool hideInDefault)
+        private static GetPatchResult GetPatch(XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, List<VariableType> variables)
         {
-            GetPatchNameAndDescription( node, out name, out description );
+            KeyValuePair<string, string> nameDesc = GetPatchNameAndDescription( node );
 
-            hideInDefault = false;
+            bool hideInDefault = false;
             XmlAttribute attrHideInDefault = node.Attributes["hideInDefault"];
             if (attrHideInDefault != null)
             {
@@ -86,6 +104,7 @@ namespace FFTorgASM
 
             XmlNodeList currentLocs = node.SelectNodes( "Location" );
             List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count );
+            StringBuilder sbOuterErrorText = new StringBuilder();
 
             foreach ( XmlNode location in currentLocs )
             {
@@ -278,6 +297,9 @@ namespace FFTorgASM
                         }
                     }
 
+                    if (!string.IsNullOrEmpty(errorText))
+                        sbOuterErrorText.Append(errorText);
+
                     PatchedByteArray patchedByteArray = new PatchedByteArray(sector, fileOffset, bytes);
                     patchedByteArray.IsAsm = asmMode;
                     patchedByteArray.MarkedAsData = markedAsData;
@@ -333,7 +355,7 @@ namespace FFTorgASM
                 patches.Add(new STRPatchedByteArray(sector, filename));
             }
 
-            staticPatches = patches.AsReadOnly();
+            return new GetPatchResult(nameDesc.Key, nameDesc.Value, patches.AsReadOnly(), hideInDefault, sbOuterErrorText.ToString());
         }
 
         public static IList<AsmPatch> GetPatches( XmlNode rootNode, string xmlFilename, ASMEncodingUtility asmUtility )
@@ -354,11 +376,6 @@ namespace FFTorgASM
                 XmlAttribute ignoreNode = node.Attributes["ignore"];
                 if ( ignoreNode != null && Boolean.Parse( ignoreNode.InnerText ) )
                     continue;
-
-                string name;
-                string description;
-                IList<PatchedByteArray> staticPatches;
-                bool hideInDefault;
 
                 bool hasDefaultSector = false;
                 PsxIso.Sectors defaultSector = (PsxIso.Sectors)0;
@@ -556,17 +573,20 @@ namespace FFTorgASM
                     variables.Add( vType );
                 }
 
-                GetPatch(node, xmlFilename, asmUtility, variables, out name, out description, out staticPatches, out hideInDefault);
-                result.Add(new AsmPatch(name, shortXmlFilename, description, staticPatches, (hideInDefault | rootHideInDefault), variables));
+                GetPatchResult getPatchResult = GetPatch(node, xmlFilename, asmUtility, variables);
+                AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, getPatchResult.StaticPatches, 
+                    (getPatchResult.HideInDefault | rootHideInDefault), variables);
+                asmPatch.ErrorText = getPatchResult.ErrorText;
+                result.Add(asmPatch);
             }
 
             patchNodes = rootNode.SelectNodes( "ImportFilePatch" );
             foreach ( XmlNode node in patchNodes )
             {
-                string name;
-                string description;
+                KeyValuePair<string, string> nameDesc = GetPatchNameAndDescription(node);
 
-                GetPatchNameAndDescription(node, out name, out description);
+                string name = nameDesc.Key;
+                string description = nameDesc.Value;
 
                 XmlNodeList fileNodes = node.SelectNodes( "ImportFile" );
                 if ( fileNodes.Count != 1 ) continue;

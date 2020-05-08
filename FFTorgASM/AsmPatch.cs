@@ -123,6 +123,8 @@ namespace FFTorgASM
 
         public bool HideInDefault { get; private set; }
 
+        public string ErrorText { get; set; }
+
         public virtual bool ValidatePatch()
         {
             return true;
