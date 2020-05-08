@@ -174,7 +174,7 @@ IJED: nop
     <Location file="BATTLE_BIN" offset="179EE0" mode="ASM" offsetMode="RAM">
     .eqv %max_horiz, 0x0008
     .eqv %max_verti, 0x0010
-      ssl a1,v1,0x01			#Vertical increment by 2, height goes in 0.5 step.
+      sll a1,v1,0x01			#Vertical increment by 2, height goes in 0.5 step.
       addu s0,a1,s0			#Vertical accumulator.
       sltiu a1,s0,%max_verti		#Check if current vertical is higher than max vertical.
       bne a1,zero,IJS1
