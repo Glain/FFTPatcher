@@ -17,13 +17,12 @@ namespace FFTorgASM
 {
     public partial class MainForm : Form
     {
-        AsmPatch[] patches;
+        private ASMEncodingUtility asmUtility;
+        private PatchData patchData;
+        private AsmPatch[] patches;
+
         private bool ignoreChanges = true;
-
-        ASMEncodingUtility asmUtility;
-        public PatchList patchList;
-
-        public bool skipchecked;
+        private bool skipCheckEventHandler = false;
 
         public MainForm()
         {
@@ -34,10 +33,10 @@ namespace FFTorgASM
 
             LoadFiles();
 
-            patchButton.Click += new EventHandler( patchButton_Click );
+            btnPatch.Click += new EventHandler( btnPatch_Click );
             reloadButton.Click += new EventHandler( reloadButton_Click );
             clb_Patches.ItemCheck += new ItemCheckEventHandler( clb_Patches_ItemCheck );
-            patchButton.Enabled = false;
+            btnPatch.Enabled = false;
             clb_Patches.SelectedIndexChanged += new EventHandler( clb_Patches_SelectedIndexChanged );
             variableSpinner.ValueChanged += new EventHandler( variableSpinner_ValueChanged );
             variableComboBox.SelectedIndexChanged += new EventHandler(variableComboBox_SelectedIndexChanged);
@@ -48,43 +47,10 @@ namespace FFTorgASM
             //lsb_FilesList.Columns.Add("", -2, HorizontalAlignment.Left);
         }
 
-        void variableComboBox_SelectedIndexChanged( object sender, EventArgs e )
-        {
-            if ( !ignoreChanges )
-            {
-            	AsmPatch patch = ( clb_Patches.SelectedItem as AsmPatch );
-            	//Byte[] byteArray = patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes();
-                //VariableType selectedVariable = patch.Variables[variableComboBox.SelectedIndex];
-                VariableType selectedVariable = patch.VariableMap[(string)variableComboBox.SelectedItem];
-
-                byte[] byteArray = selectedVariable.byteArray;
-                
-                // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
-                ignoreChanges = true;
-                variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.numBytes) - 1;
-                ignoreChanges = false;
-
-                variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
-            }
-        }
-
-        void variableSpinner_ValueChanged( object sender, EventArgs e )
-        {
-        	AsmPatch patch = (clb_Patches.SelectedItem as AsmPatch);
-            if ( !ignoreChanges )
-            {
-                UInt32 newValue = (UInt32)variableSpinner.Value;
-                //VariableType variable = patch.Variables[variableComboBox.SelectedIndex];
-                VariableType variable = patch.VariableMap[(string)variableComboBox.SelectedItem];
-                UpdateVariable(variable, newValue);
-            }
-        }
-
         private void UpdateVariable(VariableType variable, UInt32 newValue)
         {
             for (int i = 0; i < variable.numBytes; i++)
             {
-                //patch.Variables[variableComboBox.SelectedIndex].content.Value.GetBytes()[i] = (Byte)((def >> (i * 8)) & 0xff);
                 byte byteValue = (byte)((newValue >> (i * 8)) & 0xff);
                 variable.byteArray[i] = byteValue;
                 foreach (PatchedByteArray patchedByteArray in variable.content)
@@ -130,11 +96,6 @@ namespace FFTorgASM
             }
         }
 
-        private void reloadButton_Click(object sender, EventArgs e)
-        {
-            LoadFiles();
-        }
-
         private void LoadFiles(IList<string> fileList = null)
         {
             string[] files = (fileList == null) ? Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
@@ -143,215 +104,33 @@ namespace FFTorgASM
             clb_Patches.Items.Clear();
             ClearCurrentPatch();
 
-            patchList = new PatchList(files, asmUtility);
-            //Patchlist.AllCheckedPatches = clb_Patches.CheckedItems;
+            patchData = new PatchData(files, asmUtility);
 
             lsb_FilesList.Items.Clear();
             lsb_FilesList.BackColors = new Color[files.Length + 1];
             lsb_FilesList.Items.Add("All");
             lsb_FilesList.SelectedIndices.Clear();
-            //LoadFile(files[lsb_FilesList.FocusedItem.Index]);
+
             for (int i = 0; i < files.Length; i++)
             {
                 files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1);
                 lsb_FilesList.Items.Add(files[i]);
 
                 lsb_FilesList.BackColors[i + 1] = Color.White;
-                if (!patchList.LoadedCorrectly[i])
+                if (!patchData.LoadedCorrectly[i])
                     //lsb_FilesList.Items[i + 1].BackColor = Color.Red;
                     lsb_FilesList.BackColors[i + 1] = Color.Red;
             }
-            //LoadFiles( files );
-            //lsb_FilesList.SelectedIndices.Add(0);
         }
 
-        private void lsb_FilesList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            skipchecked = true;
-            clb_Patches.ItemCheck -= new ItemCheckEventHandler(clb_Patches_ItemCheck);
-
-            ClearCurrentPatch();
-
-            bool somethingchecked = false;
-            int selectedIndex = lsb_FilesList.SelectedIndex;
-
-            if (lsb_FilesList.SelectedItem == null)
-                return;
-
-            //if ALL
-            if (selectedIndex == 0)
-            {
-                LoadPatches(patchList.AllPatches);
-                clb_Patches.BackColors = patchList.BackgroundColors[selectedIndex];
-
-                for (int i = 0; i < clb_Patches.Items.Count; i++)
-                {
-                    if (selectedIndex == 0)
-                    {
-                        if (patchList.AllCheckStates[i] == CheckState.Checked)
-                        {
-                            clb_Patches.SetItemChecked(i, true);
-                            somethingchecked = true;
-                        }
-                    }
-                    else
-                    {
-                        if (patchList.FilePatches[selectedIndex].PatchCheckStates[i] == CheckState.Checked)
-                        {
-                            clb_Patches.SetItemChecked(i, true);
-                            somethingchecked = true;
-                        }
-
-                    }
-                }
-            }
-            else //if NOT ALL
-            {
-
-                if (patchList.FilePatches[selectedIndex - 1] != null)
-                {
-                    LoadPatches(patchList.FilePatches[selectedIndex - 1].Patches);
-                    clb_Patches.BackColors = patchList.BackgroundColors[selectedIndex];
-
-                    for (int i = 0; i < patchList.FilePatches[selectedIndex - 1].PatchCheckStates.Length; i++)
-                    {
-                        if (clb_Patches.Items.Count > i)
-                        {
-                            if (patchList.FilePatches[selectedIndex - 1].PatchCheckStates[i] == CheckState.Checked)
-                            {
-                                clb_Patches.SetItemChecked(i, true);
-                                somethingchecked = true;
-                            }
-                            else
-                            {
-                                clb_Patches.SetItemChecked(i, false);
-                            }
-                        }
-
-                    }
-                }
-                else
-                {
-                    clb_Patches.Items.Clear();
-                    PatcherLib.MyMessageBox.Show(this, "Error", lsb_FilesList.SelectedItem + " did not load correctly!", MessageBoxButtons.OK);   
-                }
-            }
-
-            clb_Patches.ItemCheck += new ItemCheckEventHandler(clb_Patches_ItemCheck);
-            skipchecked = false;
-
-            if (somethingchecked)
-            {
-                PatchSaveStbutton.Enabled = true;
-                patchButton.Enabled = true;
-            }
-            else
-            {
-                PatchSaveStbutton.Enabled = false;
-                patchButton.Enabled = false;
-            }
-        }
-
-        void clb_Patches_SelectedIndexChanged( object sender, EventArgs e )
-        {
-            AsmPatch p = clb_Patches.SelectedItem as AsmPatch;
-            if (p != null)
-            {
-                textBox1.Text = p.Description;
-
-                int index = clb_Patches.SelectedIndex;
-                txt_Messages.Text = p.ErrorText;
-                
-                //if (p.Variables.Count > 0)
-                if (p.CountNonReferenceVariables() > 0)
-                {
-                    ignoreChanges = true;
-                    variableComboBox.Items.Clear();
-                    //p.Variables.ForEach(varType => variableComboBox.Items.Add(varType.name));
-                    bool foundFirst = false;
-                    VariableType firstNonReferenceVariable = p.Variables[0];
-                    foreach (VariableType variable in p.Variables)
-                    {
-                        if (!variable.isReference)
-                        {
-                            variableComboBox.Items.Add(variable.name);
-                            if (!foundFirst)
-                            {
-                                firstNonReferenceVariable = variable;
-                                foundFirst = true;
-                            }
-                        }
-                    }
-                    variableComboBox.SelectedIndex = 0;
-
-                    //variableSpinner.Value = p.Variables[0].content.Value.GetBytes()[0];
-                    //Byte[] byteArray = p.Variables[0].content.Value.GetBytes();
-                    //byte[] byteArray = p.Variables[0].byteArray;
-                    byte[] byteArray = firstNonReferenceVariable.byteArray;
-                    variableSpinner.Maximum = (decimal)Math.Pow(256, firstNonReferenceVariable.numBytes) - 1;
-                    variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
-
-                    variableSpinner.Visible = true;
-                    ignoreChanges = false;
-                    variableComboBox.Visible = true;
-                }
-                else
-                {
-                    variableSpinner.Visible = false;
-                    ignoreChanges = true;
-                    variableComboBox.Visible = false;
-                }
-            }
-        }
-
-        void clb_Patches_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            if ((skipchecked) || (lsb_FilesList.SelectedItem == null))
-                return;
-
-            if (e.CurrentValue == CheckState.Unchecked && e.NewValue == CheckState.Checked &&
-                !(clb_Patches.Items[e.Index] as AsmPatch).ValidatePatch())
-            {
-                e.NewValue = CheckState.Unchecked;
-            }
-
-            patchButton.Enabled = (clb_Patches.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked) &&
-                                  !(clb_Patches.CheckedItems.Count == 1 && e.NewValue == CheckState.Unchecked);
-
-            PatchSaveStbutton.Enabled = (clb_Patches.CheckedItems.Count > 0 || e.NewValue == CheckState.Checked) &&
-                                 !(clb_Patches.CheckedItems.Count == 1 && e.NewValue == CheckState.Unchecked);
-
-
-            int selectedIndex = lsb_FilesList.SelectedIndex;
-
-            //if NOT ALL
-            if (selectedIndex != 0)
-            {
-                //Set indiivdual list
-                patchList.FilePatches[selectedIndex - 1].PatchCheckStates[e.Index] = e.NewValue;
-                //Set Master List
-                patchList.SetMasterListCheckState(selectedIndex - 1, e.Index, e.NewValue);
-                //Patchlist.Files[lsb_FilesList.SelectedIndex - 1].CheckedPatches = clb_Patches.CheckedItems;
-            }
-            else //If ALL
-            {
-                int ALLindex = e.Index;
-                int patchindex = ALLindex;
-
-                patchList.SetPatchCheckState(ALLindex, e.NewValue);
-                patchList.AllCheckStates[e.Index] = e.NewValue;
-            }
-        }
-
-        private void LoadPatches( IList<AsmPatch> patches )
+        private void LoadPatches(IList<AsmPatch> patches)
         {
             clb_Patches.Items.Clear();
             if (patches != null)
             {
                 this.patches = patches.ToArray();
-               
+
                 clb_Patches.Items.AddRange(this.patches);
-                //patchButton.Enabled = false;
             }
         }
 
@@ -398,20 +177,187 @@ namespace FFTorgASM
 
             if (selectedFileIndex <= 0)
             {
-                for (int index = 0; index < patchList.FilePatches.Length; index++)
+                for (int index = 0; index < patchData.FilePatches.Length; index++)
                 {
-                    resultList.AddRange(patchList.FilePatches[index].Patches);
+                    resultList.AddRange(patchData.FilePatches[index].Patches);
                 }
             }
             else
             {
-                resultList = patchList.FilePatches[selectedFileIndex - 1].Patches;
+                resultList = patchData.FilePatches[selectedFileIndex - 1].Patches;
             }
 
             return resultList;
         }
 
-        void patchButton_Click( object sender, EventArgs e )
+        private List<AsmPatch> GetCurrentFileSelectedPatches()
+        {
+            List<AsmPatch> resultList = new List<AsmPatch>();
+            int selectedFileIndex = lsb_FilesList.SelectedIndex;
+            List<AsmPatch> asmPatchList = (selectedFileIndex <= 0) ? patchData.AllShownPatches : patchData.FilePatches[selectedFileIndex - 1].Patches;
+
+            foreach (AsmPatch patch in asmPatchList)
+            {
+                if (patchData.SelectedPatches.Contains(patch))
+                    resultList.Add(patch);
+            }
+
+            return resultList;
+        }
+
+        private void reloadButton_Click(object sender, EventArgs e)
+        {
+            LoadFiles();
+        }
+
+        private void variableComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!ignoreChanges)
+            {
+                AsmPatch patch = (clb_Patches.SelectedItem as AsmPatch);
+                VariableType selectedVariable = patch.VariableMap[(string)variableComboBox.SelectedItem];
+
+                byte[] byteArray = selectedVariable.byteArray;
+
+                // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
+                ignoreChanges = true;
+                variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.numBytes) - 1;
+                ignoreChanges = false;
+
+                variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+            }
+        }
+
+        private void variableSpinner_ValueChanged(object sender, EventArgs e)
+        {
+            AsmPatch patch = (clb_Patches.SelectedItem as AsmPatch);
+            if (!ignoreChanges)
+            {
+                UInt32 newValue = (UInt32)variableSpinner.Value;
+                VariableType variable = patch.VariableMap[(string)variableComboBox.SelectedItem];
+                UpdateVariable(variable, newValue);
+            }
+        }
+
+        private void lsb_FilesList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ClearCurrentPatch();
+            int selectedIndex = lsb_FilesList.SelectedIndex;
+
+            if (lsb_FilesList.SelectedItem == null)
+                return;
+
+            if (selectedIndex == 0)
+            {
+                LoadPatches(patchData.AllShownPatches);
+                clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
+            }
+            else if (patchData.FilePatches[selectedIndex - 1] != null)
+            {
+                LoadPatches(patchData.FilePatches[selectedIndex - 1].Patches);
+                clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
+            }
+            else
+            {
+                clb_Patches.Items.Clear();
+                PatcherLib.MyMessageBox.Show(this, "Error", lsb_FilesList.SelectedItem + " did not load correctly!", MessageBoxButtons.OK);
+            }
+
+            patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
+
+            skipCheckEventHandler = true;
+            for (int index = 0; index < clb_Patches.Items.Count; index++)
+            {
+                AsmPatch asmPatch = (AsmPatch)(clb_Patches.Items[index]);
+                clb_Patches.SetItemChecked(index, patchData.SelectedPatches.Contains(asmPatch));
+            }
+
+            skipCheckEventHandler = false;
+
+            bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            btnPatch.Enabled = enablePatchButtons;
+            btnPatchSaveState.Enabled = enablePatchButtons;
+        }
+
+        private void clb_Patches_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AsmPatch p = clb_Patches.SelectedItem as AsmPatch;
+            if (p != null)
+            {
+                textBox1.Text = p.Description;
+
+                int index = clb_Patches.SelectedIndex;
+                txt_Messages.Text = p.ErrorText;
+                
+                //if (p.Variables.Count > 0)
+                if (p.CountNonReferenceVariables() > 0)
+                {
+                    ignoreChanges = true;
+                    variableComboBox.Items.Clear();
+                    
+                    bool foundFirst = false;
+                    VariableType firstNonReferenceVariable = p.Variables[0];
+                    foreach (VariableType variable in p.Variables)
+                    {
+                        if (!variable.isReference)
+                        {
+                            variableComboBox.Items.Add(variable.name);
+                            if (!foundFirst)
+                            {
+                                firstNonReferenceVariable = variable;
+                                foundFirst = true;
+                            }
+                        }
+                    }
+                    variableComboBox.SelectedIndex = 0;
+
+                    byte[] byteArray = firstNonReferenceVariable.byteArray;
+                    variableSpinner.Maximum = (decimal)Math.Pow(256, firstNonReferenceVariable.numBytes) - 1;
+                    variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+
+                    variableSpinner.Visible = true;
+                    ignoreChanges = false;
+                    variableComboBox.Visible = true;
+                }
+                else
+                {
+                    variableSpinner.Visible = false;
+                    ignoreChanges = true;
+                    variableComboBox.Visible = false;
+                }
+            }
+        }
+
+        private void clb_Patches_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if ((skipCheckEventHandler) || (lsb_FilesList.SelectedItem == null))
+                return;
+
+            int selectedIndex = lsb_FilesList.SelectedIndex;
+            AsmPatch asmPatch = clb_Patches.Items[e.Index] as AsmPatch;
+
+            if ((e.CurrentValue == CheckState.Unchecked) && (e.NewValue == CheckState.Checked) && (!asmPatch.ValidatePatch()))
+            {
+                e.NewValue = CheckState.Unchecked;
+            }
+
+            if (e.NewValue == CheckState.Checked)
+            {
+                patchData.SelectedPatches.Add(asmPatch);
+            }
+            else if (e.NewValue == CheckState.Unchecked)
+            {
+                if (patchData.SelectedPatches.Contains(asmPatch))
+                    patchData.SelectedPatches.Remove(asmPatch);
+            }
+
+            patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
+            bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            btnPatch.Enabled = enablePatchButtons;
+            btnPatchSaveState.Enabled = enablePatchButtons;
+        }
+
+        private void btnPatch_Click(object sender, EventArgs e)
         {
             saveFileDialog1.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
             saveFileDialog1.FileName = string.Empty;
@@ -429,7 +375,8 @@ namespace FFTorgASM
 
             PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
         }
-        private void PatchSaveStbutton_Click(object sender, EventArgs e)
+
+        private void btnPatchSaveState_Click(object sender, EventArgs e)
         {
             //Patchbutton copy. Modify to patch byte array right to savestate.
             saveFileDialog1.Filter = "PSV files (*.psv)|*.psv|All files (*.*)|*.*";
@@ -439,15 +386,12 @@ namespace FFTorgASM
 
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                //byte[] filecopy = File.ReadAllBytes(saveFileDialog1.FileName);
-
                 using (BinaryReader reader = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
                 {
                     List<PatchedByteArray> patches = new List<PatchedByteArray>();
                     foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
                     {
                         ModifyPatch(asmPatch);
-                        //patchList.AddRange(patch);
                         foreach (PatchedByteArray innerPatch in asmPatch)
                         {
                             patches.Add(innerPatch);
@@ -476,13 +420,6 @@ namespace FFTorgASM
                         }
                         sbResultMessage.AppendLine();
                     }
-
-                    /*
-                    foreach (AsmPatch patch in clb_Patches.CheckedItems)
-                    {
-                        PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patch);
-                    }
-                    */
                 }
             }
 
@@ -504,6 +441,7 @@ namespace FFTorgASM
                 e.Effect = DragDropEffects.None;
             }
         }
+
         private void clb_Patches_DragDrop( object sender, DragEventArgs e )
         {
             if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
@@ -544,153 +482,6 @@ namespace FFTorgASM
         {
             FreeSpaceForm freeSpaceForm = new FreeSpaceForm(GetCurrentFilePatches());
             freeSpaceForm.Show();
-        }
-
-        public class PatchList
-        {
-            public class PatchFile
-            {
-                public string filename;
-                public CheckedListBox.CheckedItemCollection FileCheckedPatches;
-                public CheckState[] PatchCheckStates;
-                public List<AsmPatch> Patches = new List<AsmPatch>();
-
-                public PatchFile(int count)
-                {
-                    PatchCheckStates = new CheckState[count];
-
-                    for (int i = 0; i < PatchCheckStates.Length; i++)
-                    {
-                        PatchCheckStates[i] = CheckState.Unchecked;
-                    }
-                }
-            }
-
-            public PatchFile[] FilePatches;
-            public List<AsmPatch> AllPatches = new List<AsmPatch>();
-            public CheckState[] AllCheckStates;
-            public CheckedListBox.CheckedItemCollection AllCheckedPatches;
-            public bool[] LoadedCorrectly;
-            public Color[][] BackgroundColors;
-
-            public PatchList(string[] files, ASMEncodingUtility asmUtility)
-            {
-                FilePatches = new PatchFile[files.Length];
-                LoadedCorrectly = new bool[files.Length];
-                IList<AsmPatch> tryPatches;
-
-                List<Color> allColorList = new List<Color>();
-                Color normalColor = Color.White;
-                Color errorColor = Color.FromArgb(225, 125, 125);
-                BackgroundColors = new Color[files.Length + 1][];
-
-                for (int index = 0; index < files.Length; index++)
-                {
-                    string file = files[index];
-                    List<Color> fileColorList = new List<Color>();
-
-                    if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
-                    {
-                        FilePatches[index] = new PatchFile(tryPatches.Count);
-                        FilePatches[index].filename = file;
-
-                        //AllPatches.AddRange(tryPatches);
-                        //FilePatches[i].Patches.AddRange(tryPatches);
-
-                        foreach (AsmPatch patch in tryPatches)
-                        {
-                            Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
-                            FilePatches[index].Patches.Add(patch);
-                            fileColorList.Add(bgColor);
-
-                            if (!patch.HideInDefault)
-                            {
-                                AllPatches.Add(patch);
-                                allColorList.Add(bgColor);
-                            }
-                        }
-
-                        LoadedCorrectly[index] = true;
-                    }
-                    else
-                    {
-                        LoadedCorrectly[index] = false;
-                        //MessageBox.Show(file.Substring(file.LastIndexOf("\\")) + " Did not load correctly");
-                    }
-
-                    BackgroundColors[index + 1] = fileColorList.ToArray();
-                }
-
-                BackgroundColors[0] = allColorList.ToArray();
-
-                AllCheckStates = new CheckState[AllPatches.Count];
-                for (int j = 0; j < AllCheckStates.Length; j++)
-                {
-                    AllCheckStates[j] = new CheckState();
-                    AllCheckStates[j] = CheckState.Unchecked;
-                }
-            }
-
-            public void SetAllCheckStates()
-            {
-                int i = 0;
-                foreach (PatchFile file in FilePatches)
-                {
-                    if (file != null)
-                    {
-                        foreach (CheckState check in file.PatchCheckStates)
-                        {
-                            AllCheckStates[i] = check;
-                            i++;
-                        }
-                    }
-
-                }
-            }
-            //saves in allcheckstates array
-            public void SetMasterListCheckState(int FileIndex, int patchindex, CheckState check)
-            {
-
-                for (int i = 0; i < AllCheckStates.Length; i++)
-                {
-                    if (FilePatches[i] != null)
-                    {
-                        if (FileIndex > i)
-                        {
-                            patchindex += FilePatches[i].PatchCheckStates.Length;
-                        }
-                        else
-                        {
-                            AllCheckStates[patchindex] = check;
-                            return;
-                        }
-                    }
-                }
-
-
-            }
-
-            //saves in the individual files array of patch states
-            public void SetPatchCheckState(int index, CheckState check)
-            {
-                for (int i = 0; i < FilePatches.Length; i++)
-                {
-                    if (FilePatches[i] != null)
-                    {
-                        if (FilePatches[i].PatchCheckStates.Length - 1 < index)
-                        {
-
-                            index -= FilePatches[i].PatchCheckStates.Length;
-                        }
-                        else
-                        {
-                            FilePatches[i].PatchCheckStates[index] = check;
-                            return;
-                        }
-                    }
-
-                }
-            }
         }
     }
 }
