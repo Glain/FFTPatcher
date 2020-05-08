@@ -31,15 +31,6 @@ namespace FFTorgASM
 
         private string[] patchMessages;
 
-        private HashSet<ASMCheckCondition> asmCheckConditions = new HashSet<ASMCheckCondition>()
-        {
-            ASMCheckCondition.LoadDelay,
-            ASMCheckCondition.UnalignedOffset,
-            ASMCheckCondition.MultCountdown,
-            ASMCheckCondition.StackPointerOffset4,
-            ASMCheckCondition.BranchInBranchDelaySlot
-        };
-
         public MainForm()
         {
             InitializeComponent();
@@ -393,52 +384,13 @@ namespace FFTorgASM
                     int byteArrayIndex = 0;
                     foreach (PatchedByteArray patchedByteArray in asmPatch)
                     {
-                        //if (byteArrayIndex >= (asmPatch.Count - asmPatch.Variables.Count))
                         if (byteArrayIndex >= asmPatch.NonVariableCount)
                             break;
-
-                        bool canLoadBytes = true;
-                        byte[] bytes = null;
-                        try
-                        {
-                            bytes = patchedByteArray.GetBytes();
-                        }
-                        catch (Exception)
-                        {
-                            canLoadBytes = false;
-                        }
 
                         if (!string.IsNullOrEmpty(patchedByteArray.ErrorText))
                         {
                             color = Color.FromArgb(225, 125, 125);
                             sbMessage.Append(patchedByteArray.ErrorText);
-                        }
-
-                        if (canLoadBytes)
-                        {
-                            UInt32 ramOffset = 0;
-                            try
-                            {
-                                PsxIso.FileToRamOffsets ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_"
-                                    + Enum.GetName(typeof(PsxIso.Sectors), patchedByteArray.Sector));
-                                ramOffset = (UInt32)patchedByteArray.Offset + (UInt32)ftrOffset;
-                            }
-                            catch (Exception) { }
-
-                            ramOffset = ramOffset | 0x80000000;     // KSEG0
-
-                            if (!patchedByteArray.MarkedAsData)
-                            {
-                                ASMCheckResult result = asmUtility.CheckASMFromBytes(bytes, ramOffset, true, false, asmCheckConditions);
-                                if (result.IsASM)
-                                {
-                                    if (!string.IsNullOrEmpty(result.ErrorText))
-                                    {
-                                        color = Color.FromArgb(225, 125, 125);
-                                        sbMessage.Append(result.ErrorText);
-                                    }
-                                }
-                            }
                         }
 
                         byteArrayIndex++;

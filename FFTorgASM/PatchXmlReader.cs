@@ -259,6 +259,25 @@ namespace FFTorgASM
                         bytes = GetBytes(content);
                     }
 
+                    if (!markedAsData)
+                    {
+                        ASMCheckResult checkResult = asmUtility.CheckASMFromBytes(bytes, ramOffset, true, false, new HashSet<ASMCheckCondition>() {
+                            ASMCheckCondition.LoadDelay,
+                            ASMCheckCondition.UnalignedOffset,
+                            ASMCheckCondition.MultCountdown,
+                            ASMCheckCondition.StackPointerOffset4,
+                            ASMCheckCondition.BranchInBranchDelaySlot
+                        });
+
+                        if (checkResult.IsASM)
+                        {
+                            if (!string.IsNullOrEmpty(checkResult.ErrorText))
+                            {
+                                errorText += checkResult.ErrorText;
+                            }
+                        }
+                    }
+
                     PatchedByteArray patchedByteArray = new PatchedByteArray(sector, fileOffset, bytes);
                     patchedByteArray.IsAsm = asmMode;
                     patchedByteArray.MarkedAsData = markedAsData;
