@@ -224,6 +224,7 @@
             this.clb_Patches.Name = "clb_Patches";
             this.clb_Patches.Size = new System.Drawing.Size(351, 319);
             this.clb_Patches.TabIndex = 0;
+            this.clb_Patches.CheckOnClick = true;
             this.clb_Patches.DragDrop += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragDrop);
             this.clb_Patches.DragEnter += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragEnter);
             // 
