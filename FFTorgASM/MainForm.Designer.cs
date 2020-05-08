@@ -44,6 +44,7 @@
             this.txt_Messages = new System.Windows.Forms.TextBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
+            this.btn_UncheckAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -118,7 +119,7 @@
             // checkAllButton
             // 
             this.checkAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkAllButton.Location = new System.Drawing.Point(399, 355);
+            this.checkAllButton.Location = new System.Drawing.Point(318, 355);
             this.checkAllButton.Name = "checkAllButton";
             this.checkAllButton.Size = new System.Drawing.Size(75, 23);
             this.checkAllButton.TabIndex = 9;
@@ -150,8 +151,8 @@
             // 
             // lsb_FilesList
             // 
-            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             //this.lsb_FilesList.LabelWrap = false;
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
             //this.lsb_FilesList.MultiSelect = false;
@@ -217,20 +218,32 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.clb_Patches.BackColors = null;
             this.clb_Patches.FormattingEnabled = true;
+            this.clb_Patches.IncludePrefix = true;
             this.clb_Patches.IntegralHeight = false;
             this.clb_Patches.Location = new System.Drawing.Point(204, 30);
             this.clb_Patches.Name = "clb_Patches";
             this.clb_Patches.Size = new System.Drawing.Size(351, 319);
             this.clb_Patches.TabIndex = 0;
-            this.clb_Patches.IncludePrefix = true;
             this.clb_Patches.DragDrop += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragDrop);
             this.clb_Patches.DragEnter += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragEnter);
+            // 
+            // btn_UncheckAll
+            // 
+            this.btn_UncheckAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_UncheckAll.Location = new System.Drawing.Point(399, 355);
+            this.btn_UncheckAll.Name = "btn_UncheckAll";
+            this.btn_UncheckAll.Size = new System.Drawing.Size(75, 23);
+            this.btn_UncheckAll.TabIndex = 16;
+            this.btn_UncheckAll.Text = "Uncheck all";
+            this.btn_UncheckAll.UseVisualStyleBackColor = true;
+            this.btn_UncheckAll.Click += new System.EventHandler(this.btn_UncheckAll_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.btn_UncheckAll);
             this.Controls.Add(this.txt_Messages);
             this.Controls.Add(this.btn_ViewFreeSpace);
             this.Controls.Add(this.lsb_FilesList);
@@ -273,6 +286,7 @@
         private System.Windows.Forms.Button btn_OpenConflictChecker;
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;
+        private System.Windows.Forms.Button btn_UncheckAll;
     }
 }
 

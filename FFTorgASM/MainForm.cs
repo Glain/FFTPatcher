@@ -462,6 +462,16 @@ namespace FFTorgASM
             }
         }
 
+        private void btn_UncheckAll_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < clb_Patches.Items.Count; i++)
+            {
+                // never check a FileAsmPatch
+                if (!(clb_Patches.Items[i] is FileAsmPatch) || clb_Patches.GetItemChecked(i))
+                    clb_Patches.SetItemChecked(i, false);
+            }
+        }
+
         private void toggleButton_Click( object sender, EventArgs e )
         {
             for ( int i = 0; i < clb_Patches.Items.Count; i++ )
