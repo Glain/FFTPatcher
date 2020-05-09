@@ -45,3 +45,6 @@ Icon
 
 *.suo
 *.gz
+
+*.csproj.user
+staging2.bat
