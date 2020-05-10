@@ -2685,86 +2685,28 @@ Examples:
   </Patch>
 
 
-<Patch name="Weapon Strike Fix (Version 1)">
-<Description>In FFTP, If the Blank Box under Hit Allies are checked for that ability as well as 'Weapon Strike' The ability will ignore the weapon's elemental and only take elemental damage from the ability. Else, it will stack the elemental damage from bothe the weapon and the ability.
-</Description>
-<Location file="BATTLE_BIN" offset="E92AC">
-1980103C
-F7380482
-04390582
-F4380682
-2000C630
-0200C01C
-00000000
-25208500
-043904A2
-E8FFBD27
-1000BFAF
-F81B0608
-00000000
-</Location>
-<Location file="BATTLE_BIN" offset="11FFD8">
-AB400508
-00000000
-</Location>
-    
-      <Patch name="Guests in Randoms &amp; Unit Restrictions">
-    <Description>Allows you to bring uncontrollable guests into battle, and allows you to choose which units can not be added to the squad formation screen depending on the given event.</Description>
-    <Location file="BATTLE_BIN" offset="E9820">
-      FCFFA5AF
-      F8FFA6AF
-      F4FFA7AF
-      F0FFA8AF
-      00008290
-      FF000334
-      11004310
-      1580033C
-      16000524
-      0580063C
-      B877C694
-      0E00A010
-      A4086794
-      04000834
-      0400C710
-      00000000
-      FFFFA524
-      13420508
-      06006324
-      06000011
-      A6086590
-      01006324
-      FCFFA214
-      FFFF0825
-      23420508
-      FF000334
-      01008390
-      FCFFA58F
-      F8FFA68F
-      F4FFA78F
-      F0FFA88F
-      430C0708
-      FF000234
-      00000C3000000900040000000F00040000001E00040700002100040700002700040700002E00040700003D00040000004600040000004E00040000007600173400007900173400008000173400008B0034000000960022340000A10022000000000119000000140119000000D4011F000000D7011F000000DA011F000000DD011F000000
-    </Location>
-    <Location file="EVENT_ATTACK_OUT" offset="4104">
-      08420508
-      00000000
-      0C006210
-      1400222A
-    </Location>
-    <Location file="EVENT_ATTACK_OUT" offset="47EC">
-      24B85202
-    </Location>
-    <Location file="EVENT_ATTACK_OUT" offset="9BCC">
-      1400222A
-    </Location>
-    <Location file="SCUS_942_21" offset="4B8F0">
-      1000622E
-      02004010
-      84000334
-      08000334
-    </Location>
-  </Patch>
-</Patch>
+    <Patch name="Weapon Strike Fix (Version 1)">
+        <Description>In FFTP, If the Blank Box under Hit Allies are checked for that ability as well as 'Weapon Strike' The ability will ignore the weapon's elemental and only take elemental damage from the ability. Else, it will stack the elemental damage from bothe the weapon and the ability.
+        </Description>
+        <Location file="BATTLE_BIN" offset="E92AC">
+        1980103C
+        F7380482
+        04390582
+        F4380682
+        2000C630
+        0200C01C
+        00000000
+        25208500
+        043904A2
+        E8FFBD27
+        1000BFAF
+        F81B0608
+        00000000
+        </Location>
+        <Location file="BATTLE_BIN" offset="11FFD8">
+        AB400508
+        00000000
+        </Location>
+    </Patch>
 
 </Patches>

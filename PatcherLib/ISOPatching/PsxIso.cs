@@ -26,6 +26,18 @@ using PatcherLib.Datatypes;
 
 namespace PatcherLib.Iso
 {
+    public class PatchPsxSaveStateResult
+    {
+        public HashSet<PsxIso.Sectors> UnsupportedFiles;
+        public HashSet<PsxIso.Sectors> AbsentFiles;
+
+        public PatchPsxSaveStateResult()
+        {
+            UnsupportedFiles = new HashSet<PsxIso.Sectors>();
+            AbsentFiles = new HashSet<PsxIso.Sectors>();
+        }
+    }
+
     public static class PsxIso
     {
         #region Public Properties (19)
@@ -117,8 +129,10 @@ namespace PatcherLib.Iso
             return ReadFile( iso, knownPositions.Sector, knownPositions.StartLocation, knownPositions.Length );
         }
 
-        public static void PatchPsxSaveState(BinaryReader reader, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
+        public static PatchPsxSaveStateResult PatchPsxSaveState(BinaryReader reader, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
         {
+            PatchPsxSaveStateResult result = new PatchPsxSaveStateResult();
+
             Stream stream = reader.BaseStream;
             HashSet<Sectors> LoadedFiles = new HashSet<Sectors>();
             HashSet<Sectors> FailedFiles = new HashSet<Sectors>();
@@ -142,7 +156,7 @@ namespace PatcherLib.Iso
                     catch (Exception)
                     {
                         FailedFiles.Add(sector);
-                        MessageBox.Show(sector.ToString() + " is not supported for savestate patching");
+                        result.UnsupportedFiles.Add(sector);
                         valid = false;
                         continue;
                     }
@@ -161,7 +175,7 @@ namespace PatcherLib.Iso
                             if (checkValue.Value[index] != buffer[index])
                             {
                                 FailedFiles.Add(sector);
-                                MessageBox.Show(sector.ToString() + " is not present in savestate");
+                                result.AbsentFiles.Add(sector);
                                 valid = false;
                                 break;
                             }
@@ -174,6 +188,8 @@ namespace PatcherLib.Iso
                     }
                 }
             }
+
+            return result;
         }
 
         private static int FindRamToPsvOffset(Stream psv)

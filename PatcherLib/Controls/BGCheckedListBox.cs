@@ -21,7 +21,7 @@ namespace PatcherLib.Controls
 
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
-            Color backColor = ((backColors != null) && (e.Index < backColors.Length)) ? backColors[e.Index] : BackColor;
+            Color backColor = ((backColors != null) && (e.Index >= 0) && (e.Index < backColors.Length)) ? backColors[e.Index] : BackColor;
 
             DrawItemEventArgs e2 =
                 new DrawItemEventArgs

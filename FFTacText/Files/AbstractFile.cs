@@ -164,7 +164,7 @@ namespace FFTPatcher.TextEditor
 
         public GenericCharMap CharMap { get; private set; }
 
-        protected IList<IList<string>> Sections { get; set; }
+        public IList<IList<string>> Sections { get; protected set; }
 
         public IList<IList<string>> EntryNames { get; private set; }
 

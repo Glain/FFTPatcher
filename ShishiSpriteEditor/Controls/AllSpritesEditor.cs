@@ -55,6 +55,9 @@ namespace FFTPatcher.SpriteEditor
         {
             InitializeComponent();
             Enabled = false;
+
+            spriteEditor1.SpriteDragEnter += sprite_DragEnter;
+            spriteEditor1.SpriteDragDrop += sprite_DragDrop;
         }
 
         public void ReloadCurrentSprite(bool updateAnimationTab = true)
@@ -63,6 +66,30 @@ namespace FFTPatcher.SpriteEditor
             {
                 spriteEditor1.ReloadSprite(updateAnimationTab);
             }
+        }
+
+        public event DragEventHandler SpriteDragEnter;
+        protected virtual void OnSpriteDragEnter(DragEventArgs e)
+        {
+            DragEventHandler handler = SpriteDragEnter;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void sprite_DragEnter(object sender, DragEventArgs e)
+        {
+            OnSpriteDragEnter(e);
+        }
+
+        public event DragEventHandler SpriteDragDrop;
+        protected virtual void OnSpriteDragDrop(DragEventArgs e)
+        {
+            DragEventHandler handler = SpriteDragDrop;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void sprite_DragDrop(object sender, DragEventArgs e)
+        {
+            OnSpriteDragDrop(e);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

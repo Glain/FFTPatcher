@@ -156,6 +156,7 @@ namespace PatcherLib.Datatypes
         public Enum SectorEnum { get; protected set; }
 
         public bool IsAsm { get; set; }
+        public bool MarkedAsData { get; set; }
         public string AsmText { get; set; }
         public long RamOffset { get; set; }
         public string ErrorText { get; set; }
@@ -219,5 +220,30 @@ namespace PatcherLib.Datatypes
         }
 
 		#endregion Constructors 
+
+        public bool IsPatchEqual(PatchedByteArray patchedByteArray)
+        {
+            if (patchedByteArray == null)
+                return false;
+            
+            if ((Sector != patchedByteArray.Sector) || (Offset != patchedByteArray.Offset))
+                return false;
+
+            byte[] compareBytes = patchedByteArray.GetBytes();
+
+            if ((bytes == null) || (compareBytes == null))
+                return false;
+
+            if (bytes.Length != compareBytes.Length)
+                return false;
+
+            for (int index = 0; index < bytes.Length; index++)
+            {
+                if (bytes[index] != compareBytes[index])
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

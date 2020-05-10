@@ -40,11 +40,21 @@ namespace FFTPatcher.TextEditor.Editors
             ignoreChanges = false;
         }
 
+        public void RefreshText()
+        {
+            BindTo(boundFile);
+        }
+
         public FileEditor()
         {
             InitializeComponent();
             sectionComboBox.SelectedIndexChanged += new EventHandler( sectionComboBox_SelectedIndexChanged );
             stringListEditor1.CellValidating += new DataGridViewCellValidatingEventHandler( stringListEditor1_CellValidating );
+        }
+
+        public void UpdateTextFont(bool useFFTFont)
+        {
+            stringListEditor1.UpdateTextFont(useFFTFont);
         }
 
         private void stringListEditor1_CellValidating( object sender, DataGridViewCellValidatingEventArgs e )
@@ -86,6 +96,11 @@ namespace FFTPatcher.TextEditor.Editors
                 BindTo(boundFile);
                 //AbstractFile.ConstructFile(f.Layout.FileType, f.CharMap, f.Layout, 
             }
+        }
+
+        private void chk_UseFFTFont_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateTextFont(chk_UseFFTFont.Checked);
         }
 
         private void fileNotesTextBox_TextChanged( object sender, EventArgs e )

@@ -100,7 +100,7 @@ Changes since v0.236:
   Added direct patching of Playstation ISOs. You'll need the external CD-Tool 
     program from http://www.nobis-crew.org/cd-tool/. Place CD-Tool.exe in the 
     same folder as FFTPatcher.
-  Updated Ability and Item formulas with a more correct list provided by Zodiac
+  Updated Ability and Item formulas with a more correct list provided by Xifanie
   Added "Second Table ID" value to the Item editors
   Added some text to the Ability editor giving information about formula 
     variables
@@ -113,7 +113,7 @@ Changes since v0.236:
     portrait"
   Added option to the sprite manager to show the frames of animation for the 
     current sprite
-  Thanks to Archael7 and Zodiac for beta testing v0.266.
+  Thanks to Archael7 and Xifanie for beta testing v0.266.
   
 Changes since v0.205:
   Fixed bug in sprite viewer when loading a BMP with an invalid palette

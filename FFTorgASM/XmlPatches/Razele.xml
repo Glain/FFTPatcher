@@ -14,9 +14,9 @@
   <Patch name="Jump damage bonus applies only to users of Weapon Type Y.">
     <Description>
       Weapon Type List:
-        00 = Fists
-        01 = Daggers
-        02 = Ninjato
+        00 = Fist
+        01 = Knife
+        02 = Ninja Sword
         03 = Sword
         04 = Knight Sword
         05 = Katana
@@ -30,9 +30,9 @@
         0D = Instrument
         0E = Book
         0F = Spear
-        10 = Stick/Pole
+        10 = Stick
         11 = Bag
-        12 = Carpet/Veil
+        12 = Cloth
     </Description>
     <Variable name="Y" file="BATTLE_BIN" default="0F" offset="11eeb8"/>
   </Patch>
@@ -640,9 +640,9 @@
     <Description>
       Blade Grasp now only blocks weapons with ID W through W + X - 1 and weapons with ID Y through Y + Z - 1.
       Weapon Type List:
-        00 = Fists
-        01 = Daggers
-        02 = Ninjato
+        00 = Fist
+        01 = Knife
+        02 = Ninja Sword
         03 = Sword
         04 = Knight Sword
         05 = Katana
@@ -656,12 +656,12 @@
         0D = Instrument
         0E = Book
         0F = Spear
-        10 = Stick/Pole
+        10 = Stick
         11 = Bag
-        12 = Carpet/Veil
+        12 = Cloth
         20 = Shuriken
         21 = Bomb
-      For example, if I want to block only bladed weapons, then I want to block Daggers through Axes and Spears.  This means I need to block IDs 01-06 and 0F.  Thus, W = 01, X = 06, Y = 0F, Z = 01.
+      For example, if I want to block only bladed weapons, then I want to block Knives through Axes and Spears.  This means I need to block IDs 01-06 and 0F.  Thus, W = 01, X = 06, Y = 0F, Z = 01.
     </Description>
     <Location file="BATTLE_BIN" offset="126054">564E0508</Location>
     <Location file="BATTLE_BIN" offset="12605C">20</Location>
@@ -715,7 +715,7 @@
     <Location file="BATTLE_BIN" offset="11F336">20</Location>
   </Patch>
 
-  <Patch name="All monsters can use Beastmaster moves.">
+  <Patch name="All monsters can use Monster Skill moves.">
     <Location file="BATTLE_BIN" offset="11B634">01000234</Location> 
     <Location file="BATTLE_BIN" offset="133960">
       00000000
@@ -754,9 +754,9 @@
     <Description>
       Require Weapons now only requires weapons with ID X through X + Y - 1.
       Weapon Type List:
-        00 = Fists
-        01 = Daggers
-        02 = Ninjato
+        00 = Fist
+        01 = Knife
+        02 = Ninja Sword
         03 = Sword
         04 = Knight Sword
         05 = Katana
@@ -770,9 +770,9 @@
         0D = Instrument
         0E = Book
         0F = Spear
-        10 = Stick/Pole
+        10 = Stick
         11 = Bag
-        12 = Carpet/Veil
+        12 = Cloth
       For example, if I want Require Ranged, then I want to accept Gun through Bow.  This means I need to let IDs 0A-0C.  Thus, X = 0A, Y = 03.
     </Description>
     <Variable name="X" file="SCUS_942_21" default="03" offset="4CE64"/>            

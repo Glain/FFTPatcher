@@ -81,11 +81,14 @@ namespace FFTPatcher.SpriteEditor
             office2007ColorPicker1.Color = Color.Black;
             office2007ColorPicker1.Location = new Point( 3, Height - office2007ColorPicker1.Height - 3 );
             office2007ColorPicker1.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
+            panel1.AllowDrop = true;
             panel1.Bounds = new Rectangle( 0, 0, Size.Width, office2007ColorPicker1.Location.Y - 3 );
             panel1.AutoScroll = true;
             panel1.BackColor = Color.Black;
             panel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             panel1.Controls.Add( pictureBox1 );
+            panel1.DragDrop += new System.Windows.Forms.DragEventHandler(sprite_DragDrop);
+            panel1.DragEnter += new System.Windows.Forms.DragEventHandler(sprite_DragEnter);
             Controls.Add( panel1 );
 
             cmbZoom = new ComboBox();
@@ -113,7 +116,31 @@ namespace FFTPatcher.SpriteEditor
 
 		#endregion Constructors 
 
-        #region Event Handlers (2)
+        #region Event Handlers (4)
+
+        public event DragEventHandler SpriteDragEnter;
+        protected virtual void OnSpriteDragEnter(DragEventArgs e)
+        {
+            DragEventHandler handler = SpriteDragEnter;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void sprite_DragEnter(object sender, DragEventArgs e)
+        {
+            OnSpriteDragEnter(e);
+        }
+
+        public event DragEventHandler SpriteDragDrop;
+        protected virtual void OnSpriteDragDrop(DragEventArgs e)
+        {
+            DragEventHandler handler = SpriteDragDrop;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void sprite_DragDrop(object sender, DragEventArgs e)
+        {
+            OnSpriteDragDrop(e);
+        }
 
         private void office2007ColorPicker1_SelectedColorChanged(object sender, System.EventArgs e)
         {

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.patchButton = new System.Windows.Forms.Button();
+            this.btnPatch = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.reloadButton = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -36,7 +36,7 @@
             this.versionLabel = new System.Windows.Forms.Label();
             this.toggleButton = new System.Windows.Forms.Button();
             this.checkAllButton = new System.Windows.Forms.Button();
-            this.PatchSaveStbutton = new System.Windows.Forms.Button();
+            this.btnPatchSaveState = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lsb_FilesList = new PatcherLib.Controls.BGListBox();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
@@ -44,18 +44,19 @@
             this.txt_Messages = new System.Windows.Forms.TextBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
+            this.btn_UncheckAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
-            // patchButton
+            // btnPatch
             // 
-            this.patchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.patchButton.Location = new System.Drawing.Point(480, 628);
-            this.patchButton.Name = "patchButton";
-            this.patchButton.Size = new System.Drawing.Size(75, 23);
-            this.patchButton.TabIndex = 1;
-            this.patchButton.Text = "Patch ISO...";
-            this.patchButton.UseVisualStyleBackColor = true;
+            this.btnPatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPatch.Location = new System.Drawing.Point(480, 628);
+            this.btnPatch.Name = "btnPatch";
+            this.btnPatch.Size = new System.Drawing.Size(75, 23);
+            this.btnPatch.TabIndex = 1;
+            this.btnPatch.Text = "Patch ISO...";
+            this.btnPatch.UseVisualStyleBackColor = true;
             // 
             // saveFileDialog1
             // 
@@ -118,7 +119,7 @@
             // checkAllButton
             // 
             this.checkAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkAllButton.Location = new System.Drawing.Point(399, 355);
+            this.checkAllButton.Location = new System.Drawing.Point(318, 355);
             this.checkAllButton.Name = "checkAllButton";
             this.checkAllButton.Size = new System.Drawing.Size(75, 23);
             this.checkAllButton.TabIndex = 9;
@@ -126,17 +127,17 @@
             this.checkAllButton.UseVisualStyleBackColor = true;
             this.checkAllButton.Click += new System.EventHandler(this.checkAllButton_Click);
             // 
-            // PatchSaveStbutton
+            // btnPatchSaveState
             // 
-            this.PatchSaveStbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.PatchSaveStbutton.Enabled = false;
-            this.PatchSaveStbutton.Location = new System.Drawing.Point(332, 628);
-            this.PatchSaveStbutton.Name = "PatchSaveStbutton";
-            this.PatchSaveStbutton.Size = new System.Drawing.Size(142, 23);
-            this.PatchSaveStbutton.TabIndex = 10;
-            this.PatchSaveStbutton.Text = "Patch to PSX Savestate";
-            this.PatchSaveStbutton.UseVisualStyleBackColor = true;
-            this.PatchSaveStbutton.Click += new System.EventHandler(this.PatchSaveStbutton_Click);
+            this.btnPatchSaveState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPatchSaveState.Enabled = false;
+            this.btnPatchSaveState.Location = new System.Drawing.Point(332, 628);
+            this.btnPatchSaveState.Name = "btnPatchSaveState";
+            this.btnPatchSaveState.Size = new System.Drawing.Size(142, 23);
+            this.btnPatchSaveState.TabIndex = 10;
+            this.btnPatchSaveState.Text = "Patch to PSX Savestate";
+            this.btnPatchSaveState.UseVisualStyleBackColor = true;
+            this.btnPatchSaveState.Click += new System.EventHandler(this.btnPatchSaveState_Click);
             // 
             // label1
             // 
@@ -150,8 +151,8 @@
             // 
             // lsb_FilesList
             // 
-            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             //this.lsb_FilesList.LabelWrap = false;
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
             //this.lsb_FilesList.MultiSelect = false;
@@ -217,34 +218,47 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.clb_Patches.BackColors = null;
             this.clb_Patches.FormattingEnabled = true;
+            this.clb_Patches.IncludePrefix = true;
             this.clb_Patches.IntegralHeight = false;
             this.clb_Patches.Location = new System.Drawing.Point(204, 30);
             this.clb_Patches.Name = "clb_Patches";
             this.clb_Patches.Size = new System.Drawing.Size(351, 319);
             this.clb_Patches.TabIndex = 0;
-            this.clb_Patches.IncludePrefix = true;
+            this.clb_Patches.CheckOnClick = true;
             this.clb_Patches.DragDrop += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragDrop);
             this.clb_Patches.DragEnter += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragEnter);
+            // 
+            // btn_UncheckAll
+            // 
+            this.btn_UncheckAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_UncheckAll.Location = new System.Drawing.Point(399, 355);
+            this.btn_UncheckAll.Name = "btn_UncheckAll";
+            this.btn_UncheckAll.Size = new System.Drawing.Size(75, 23);
+            this.btn_UncheckAll.TabIndex = 16;
+            this.btn_UncheckAll.Text = "Uncheck all";
+            this.btn_UncheckAll.UseVisualStyleBackColor = true;
+            this.btn_UncheckAll.Click += new System.EventHandler(this.btn_UncheckAll_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.btn_UncheckAll);
             this.Controls.Add(this.txt_Messages);
             this.Controls.Add(this.btn_ViewFreeSpace);
             this.Controls.Add(this.lsb_FilesList);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.variableSpinner);
             this.Controls.Add(this.btn_OpenConflictChecker);
-            this.Controls.Add(this.PatchSaveStbutton);
+            this.Controls.Add(this.btnPatchSaveState);
             this.Controls.Add(this.checkAllButton);
             this.Controls.Add(this.toggleButton);
             this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.variableComboBox);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.reloadButton);
-            this.Controls.Add(this.patchButton);
+            this.Controls.Add(this.btnPatch);
             this.Controls.Add(this.clb_Patches);
             this.MinimumSize = new System.Drawing.Size(583, 743);
             this.Name = "MainForm";
@@ -258,7 +272,7 @@
         #endregion
 
         private PatcherLib.Controls.ModifiedBGCheckedListBox clb_Patches;
-        private System.Windows.Forms.Button patchButton;
+        private System.Windows.Forms.Button btnPatch;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button reloadButton;
         private System.Windows.Forms.TextBox textBox1;
@@ -267,12 +281,13 @@
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.Button toggleButton;
         private System.Windows.Forms.Button checkAllButton;
-        private System.Windows.Forms.Button PatchSaveStbutton;
+        private System.Windows.Forms.Button btnPatchSaveState;
         private System.Windows.Forms.Label label1;
         private PatcherLib.Controls.BGListBox lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;
+        private System.Windows.Forms.Button btn_UncheckAll;
     }
 }
 

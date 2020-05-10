@@ -187,6 +187,7 @@ namespace FFTPatcher
             // 
             // scusCheckedListBox
             // 
+            this.scusCheckedListBox.CheckOnClick = true;
             this.scusCheckedListBox.FormattingEnabled = true;
             this.scusCheckedListBox.Items.AddRange(new object[] {
             "Abilities",
@@ -221,6 +222,7 @@ namespace FFTPatcher
             // 
             // battleCheckedListBox
             // 
+            this.battleCheckedListBox.CheckOnClick = true;
             this.battleCheckedListBox.FormattingEnabled = true;
             this.battleCheckedListBox.Items.AddRange(new object[] {
             "Ability Effects",

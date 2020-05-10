@@ -29,6 +29,12 @@ namespace FFTPatcher.TextEditor.Files
             }
         }
 
+        // Only updates QuickEdit entry and does not percolate changes to other files.
+        public void UpdateEntry(int section, int entry, string value)
+        {
+            sections[section][entry] = value;
+        }
+
         public IList<int> SectionLengths { get; private set; }
 
         private IList<IList<string>> sections;
