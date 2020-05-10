@@ -53,15 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsmPatch.cs" />
-    <Compile Include="ConflictChecker\Conflict.cs" />
-    <Compile Include="ConflictChecker\ConflictChecker.cs">
+    <Compile Include="ConflictCheckerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConflictChecker\ConflictChecker.Designer.cs">
-      <DependentUpon>ConflictChecker.cs</DependentUpon>
+    <Compile Include="ConflictCheckerForm.Designer.cs">
+      <DependentUpon>ConflictCheckerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="ConflictChecker\FileWrite.cs" />
+    <Compile Include="FreeSpace.cs" />
     <Compile Include="FreeSpaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,13 +76,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConflictChecker\Patch.cs" />
     <Compile Include="PatchData.cs" />
     <Compile Include="PatchXmlReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ConflictChecker\ConflictChecker.resx">
-      <DependentUpon>ConflictChecker.cs</DependentUpon>
+    <EmbeddedResource Include="ConflictCheckerForm.resx">
+      <DependentUpon>ConflictCheckerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FreeSpaceForm.resx">
       <DependentUpon>FreeSpaceForm.cs</DependentUpon>
@@ -179,9 +177,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -484,8 +484,8 @@ namespace FFTorgASM
 
         private void btn_OpenConflictChecker_Click(object sender, EventArgs e)
         {
-            ConflictChecker C = new ConflictChecker();
-            C.Show();
+            ConflictCheckerForm conflictCheckerForm = new ConflictCheckerForm(GetCurrentFilePatches());
+            conflictCheckerForm.Show();
         }
 
         private void btn_ViewFreeSpace_Click(object sender, EventArgs e)
