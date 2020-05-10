@@ -58,7 +58,7 @@ namespace FFTPatcher.Editors
             System.Windows.Forms.Label jobsUnlockedLabel;
             System.Windows.Forms.Label unitIdLabel;
             System.Windows.Forms.Label jobLabel;
-            System.Windows.Forms.Label spriteSetLabel;
+            System.Windows.Forms.Label unitLabel;
             System.Windows.Forms.Label braveryLabel;
             System.Windows.Forms.Label faithLabel;
             System.Windows.Forms.Label birthdayLabel;
@@ -135,7 +135,7 @@ namespace FFTPatcher.Editors
             jobsUnlockedLabel = new System.Windows.Forms.Label();
             unitIdLabel = new System.Windows.Forms.Label();
             jobLabel = new System.Windows.Forms.Label();
-            spriteSetLabel = new System.Windows.Forms.Label();
+            unitLabel = new System.Windows.Forms.Label();
             braveryLabel = new System.Windows.Forms.Label();
             faithLabel = new System.Windows.Forms.Label();
             birthdayLabel = new System.Windows.Forms.Label();
@@ -305,14 +305,14 @@ namespace FFTPatcher.Editors
             jobLabel.TabIndex = 31;
             jobLabel.Text = "Job";
             // 
-            // spriteSetLabel
+            // unitLabel
             // 
-            spriteSetLabel.AutoSize = true;
-            spriteSetLabel.Location = new System.Drawing.Point(2, 6);
-            spriteSetLabel.Name = "spriteSetLabel";
-            spriteSetLabel.Size = new System.Drawing.Size(53, 13);
-            spriteSetLabel.TabIndex = 17;
-            spriteSetLabel.Text = "Sprite Set";
+            unitLabel.AutoSize = true;
+            unitLabel.Location = new System.Drawing.Point(2, 6);
+            unitLabel.Name = "unitLabel";
+            unitLabel.Size = new System.Drawing.Size(53, 13);
+            unitLabel.TabIndex = 17;
+            unitLabel.Text = "Unit";
             // 
             // braveryLabel
             // 
@@ -913,7 +913,7 @@ namespace FFTPatcher.Editors
             "Load Formation",
             "Has ??? stats",
             "",
-            "Save Formation"});
+            "Save as Guest"});
             this.flags1CheckedListBox.Location = new System.Drawing.Point(295, 3);
             this.flags1CheckedListBox.Name = "flags1CheckedListBox";
             this.flags1CheckedListBox.Size = new System.Drawing.Size(121, 124);
@@ -1032,7 +1032,7 @@ namespace FFTPatcher.Editors
             this.Controls.Add(unitIdLabel);
             this.Controls.Add(this.flags2CheckedListBox);
             this.Controls.Add(jobLabel);
-            this.Controls.Add(spriteSetLabel);
+            this.Controls.Add(unitLabel);
             this.Controls.Add(this.spriteSetComboBox);
             this.Controls.Add(braveryLabel);
             this.Controls.Add(this.jobComboBox);
