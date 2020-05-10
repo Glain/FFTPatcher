@@ -260,14 +260,14 @@
   <Effect value="0EF" name="Confuse 2"/>
   <Effect value="0F0" name="Sleep 2"/>
   <Effect value="0F1" name="Ultima (lvl2)"/>
-  <Effect value="0F2" name="All-Ultima"/>
+  <Effect value="0F2" name="All-ultima"/>
   <Effect value="0F3" name="Mute"/>
   <Effect value="0F4" name="Despair 2"/>
   <Effect value="0F5" name="Return 2"/>
-  <Effect value="0F6" name="Shock (M. Sword)"/>
+  <Effect value="0F6" name="Shock!"/>
   <Effect value="0F7" name="Braver"/>
   <Effect value="0F8" name="Blade Beam"/>
-  <Effect value="0F9" name="Cross Slash"/>
+  <Effect value="0F9" name="Cross-slash"/>
   
   
   
@@ -382,12 +382,12 @@
   <Effect value="169" name="Straight Dash"/>
   <Effect value="16A" name="Nose Bracelet"/>
   <Effect value="16B" name="Oink"/>
-  <Effect value="16C" name="Pooh"/>
+  <Effect value="16C" name="Pooh-"/>
   <Effect value="16D" name="Please Eat"/>
   <Effect value="16E" name="Leaf Dance"/>
   <Effect value="16F" name="Protect Spirit"/>
-  <Effect value="170" name="Calm Spirit"/>
-  <Effect value="171" name="Life Spirit"/>
+  <Effect value="170" name="Clam Spirit"/>
+  <Effect value="171" name="Spirit of Life"/>
   <Effect value="172" name="Magic Spirit"/>
   <Effect value="173" name="Shake Off"/>
   <Effect value="174" name="Wave Around"/>
@@ -491,7 +491,7 @@
   <Effect value="1D6" name="Virgo's Glow"/>
   <Effect value="1D7" name="Scorpio's Glow"/>
   <Effect value="1D8" name="Capricorn's Glow"/>
-  <Effect value="1D9" name="Saggitarius' electricity recharge"/>
+  <Effect value="1D9" name="Sagittarius' electricity recharge"/>
   <Effect value="1DA" name="Velius' Death"/>
   <Effect value="1DB" name="Zalera's Death"/>
   <Effect value="1DC" name="Hashmalum's Death"/>
@@ -504,7 +504,7 @@
   <Effect value="1E3" name="Exploding Smash (Mustadio's House; Worker 8)"/>
   <Effect value="1E4" name="Stone Glow (higher altitude)"/>
   <Effect value="1E5" name="Virgo's Holy Angel Revive"/>
-  <Effect value="1E6" name="Summon Ultimate"/>
+  <Effect value="1E6" name="Summon Altima"/>
 
 
 

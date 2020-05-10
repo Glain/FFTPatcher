@@ -34,7 +34,7 @@
   <SkillSet byte="0D" name="Summon Magic"/>
   <SkillSet byte="0E" name="Steal"/>
   <SkillSet byte="0F" name="Talk Skill"/>
-  <SkillSet byte="10" name="Ying-Yang Magic"/>
+  <SkillSet byte="10" name="Yin Yang Magic"/>
   <SkillSet byte="11" name="Elemental"/>
   <SkillSet byte="12" name="Jump"/>
   <SkillSet byte="13" name="Draw Out"/>
@@ -60,11 +60,11 @@
   <SkillSet byte="27" name="Dark Sword"/>
   <SkillSet byte="28" name="Holy Sword"/>
   <SkillSet byte="29" name="Limit"/>
-  <SkillSet byte="2A" name="White-Aid"/>
+  <SkillSet byte="2A" name="White-aid"/>
   <SkillSet byte="2B" name="Dragon"/>
   <SkillSet byte="2C" name="Breath"/>
   <SkillSet byte="2D" name="Truth"/>
-  <SkillSet byte="2E" name="Un-Truth"/>
+  <SkillSet byte="2E" name="Un-truth"/>
   <SkillSet byte="2F" name="Starry Heaven"/>
   <SkillSet byte="30" name="Holy Sword"/>
   <SkillSet byte="31" name="Holy Magic"/>
@@ -120,12 +120,12 @@
   <SkillSet byte="9C" name="Charge"/>
   <SkillSet byte="9D" name="Black Magic"/>
   <SkillSet byte="9E" name="Time Magic"/>
-  <SkillSet byte="9F" name="Ying-Yang Magic"/>
+  <SkillSet byte="9F" name="Yin Yang Magic"/>
   <SkillSet byte="A0" name="Summon Magic"/>
   <SkillSet byte="A1" name="Item"/>
   <SkillSet byte="A2" name="White Magic"/>
   <SkillSet byte="A3" name="Black Magic"/>
-  <SkillSet byte="A4" name="Ying-Yang Magic"/>
+  <SkillSet byte="A4" name="Yin Yang Magic"/>
 
   <SkillSet byte="AA" name="Byblos"/>
   <SkillSet byte="AB" name="Work"/>

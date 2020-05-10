@@ -59,7 +59,7 @@
   <Job offset="24" name="Divine Knight"/>
   <Job offset="25" name="Divine Knight"/>
   <Job offset="26" name="Nightblade"/>
-  <Job offset="27" name="Sorceror"/>
+  <Job offset="27" name="Sorcerer"/>
   <Job offset="28" name="White Knight"/>
   <Job offset="29" name="Skyseer"/>
   <Job offset="2A" name="Divine Knight"/>
@@ -172,7 +172,7 @@
   <Job offset="97" name="Serpentarius"/>
   <Job offset="98" name="Holy Dragon"/>
   <Job offset="99" name="Archaeodaemon"/>
-  <Job offset="9A" name="Ultima Daemon"/>
+  <Job offset="9A" name="Ultima Demon"/>
 
   <Job offset="A0" name="Dark Knight"/>
   <Job offset="A1" name="Onion Knight"/>

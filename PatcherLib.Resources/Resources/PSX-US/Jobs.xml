@@ -57,7 +57,7 @@
   <Job offset="24" name="Divine Knight"/>
   <Job offset="25" name="Divine Knight"/>
   <Job offset="26" name="Knight Blade"/>
-  <Job offset="27" name="Sorcerer"/>
+  <Job offset="27" name="Sorceror"/>
   <Job offset="28" name="White Knight"/>
   <Job offset="29" name="Heaven Knight"/>
   <Job offset="2A" name="Divine Knight"/>
@@ -75,7 +75,6 @@
   <Job offset="36" name="Priest"/>
   <Job offset="37" name="Wizard"/>
   <Job offset="38" name="Oracle"/>
-  <Job offset="39" name="Oracle"/>
 
   <Job offset="3C" name="Warlock"/>
   <Job offset="3D" name="Knight"/>
@@ -165,7 +164,7 @@
   
   <Job offset="96" name="Apanda"/>
   <Job offset="97" name="Serpentarius"/>
-  
+  <Job offset="98" name="Holy Dragon"/>
   <Job offset="99" name="Archaic Demon"/>
   <Job offset="9A" name="Ultima Demon"/>
   
