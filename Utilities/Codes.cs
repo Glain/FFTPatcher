@@ -37,6 +37,14 @@ namespace FFTPatcher
         private const string euHeader = "_S ULES-00850\n_G Final Fantasy Tactics: The War of the Lions";
         private const string usHeader = "_S ULUS-10297\n_G Final Fantasy Tactics: The War of the Lions";
 
+        private static Dictionary<CodeEnabledOnlyWhen, string> ConditionalCodeMap = new Dictionary<CodeEnabledOnlyWhen, string>
+        {
+            { CodeEnabledOnlyWhen.Battle, "D0067000 8888" },
+            { CodeEnabledOnlyWhen.World, "D0067000 8A44" },
+            { CodeEnabledOnlyWhen.AttackOut, "D01BF004 8016" },
+            { CodeEnabledOnlyWhen.RequireOut, "D01BF020 5F88" }
+        };
+
 		#endregion Instance Variables 
 
 		#region Public Methods (3) 
@@ -228,7 +236,9 @@ namespace FFTPatcher
         {
             Any = 0,
             Battle = 1,
-            World = 2
+            World = 2,
+            AttackOut = 3,
+            RequireOut = 4
         }
 
         private static IList<string> GeneratePSXCodes(IList<byte> oldBytes, IList<byte> newBytes, UInt32 offset, CodeEnabledOnlyWhen when)
@@ -270,13 +280,14 @@ namespace FFTPatcher
             codes.Sort((s, t) => s.Substring(2).CompareTo(t.Substring(2)));
 
             // Insert conditionals if necessary
-            const string worldConditional = "7013B900 F400";
-            const string battleConditional = "7014E61C F400";
+            //const string worldConditional = "7013B900 F400";
+            //const string battleConditional = "7014E61C F400";
 
             if (when != CodeEnabledOnlyWhen.Any)
             {
-                string conditional =
-                    when == CodeEnabledOnlyWhen.Battle ? battleConditional : worldConditional;
+                //string conditional = (when == CodeEnabledOnlyWhen.Battle) ? battleConditional : worldConditional;
+                string conditional = ConditionalCodeMap[when];
+
                 List<string> realCodes = new List<string>(codes.Count * 2);
                 foreach (string code in codes)
                 {
