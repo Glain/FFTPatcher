@@ -131,7 +131,7 @@ namespace FFTorgASM
                             PatchRange conflictRange = new PatchRange(conflictPatchedByteArray);
                             if (range.HasOverlap(conflictRange))
                             {
-                                bool isInFreeSpace = FreeSpace.HasPsxFreeSpaceOverlap(range);
+                                bool isInFreeSpace = FreeSpace.IsContainedWithinPsxFreeSpace(range);
 
                                 PatchRangeConflict patchConflict = new PatchRangeConflict(range, conflictPatch, conflictRange, isInFreeSpace);
                                 PatchRangeConflict reversePatchConflict = new PatchRangeConflict(conflictRange, patch, range, isInFreeSpace);

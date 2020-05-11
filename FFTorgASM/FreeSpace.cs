@@ -39,5 +39,16 @@ namespace FFTorgASM
 
             return false;
         }
+
+        public static bool IsContainedWithinPsxFreeSpace(PatchRange range)
+        {
+            foreach (PatchRange freeSpaceRange in PsxRanges)
+            {
+                if (range.IsContainedWithin(freeSpaceRange))
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

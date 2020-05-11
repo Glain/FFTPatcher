@@ -32,5 +32,15 @@ namespace PatcherLib.Datatypes
         {
             return HasOverlap(new PatchRange(patchedByteArray));
         }
+
+        public bool IsContainedWithin(PatchRange range)
+        {
+            return ((Sector == range.Sector) && (StartOffset >= range.StartOffset) && (EndOffset <= range.EndOffset));
+        }
+
+        public bool IsContainedWithin(PatchedByteArray patchedByteArray)
+        {
+            return IsContainedWithin(new PatchRange(patchedByteArray));
+        }
     }
 }
