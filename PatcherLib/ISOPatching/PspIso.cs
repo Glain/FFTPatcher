@@ -506,6 +506,14 @@ namespace PatcherLib.Iso
 
         public static IList<KnownPosition> Propositions { get; private set; }
 
+        public static IList<KnownPosition> JobFormationSpritesJobCheckID { get; private set; }
+        public static IList<KnownPosition> JobFormationSprites1 { get; private set; }
+        public static IList<KnownPosition> JobFormationSprites2 { get; private set; }
+        public static IList<KnownPosition> JobFormationSprites2A { get; private set; }
+        public static IList<KnownPosition> JobFormationSprites2B { get; private set; }
+        public static IList<KnownPosition> JobFormationSprites2C { get; private set; }
+        public static IList<KnownPosition> JobFormationSprites2D { get; private set; }
+
         static PspIso()
         {
             Propositions = new KnownPosition[] {
@@ -576,6 +584,37 @@ namespace PatcherLib.Iso
             StoreInventories = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2DC8D0, 0x200),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2DC8D0, 0x200)}.AsReadOnly();
+
+            JobFormationSpritesJobCheckID = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x18D7D8, 1),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x18D7D8, 1)
+            }.AsReadOnly();
+
+            JobFormationSprites1 = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2DCF08, 0x4A),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2DCF08, 0x4A)
+            }.AsReadOnly();
+
+            JobFormationSprites2 = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x29D1F0, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x29D1F0, 0x94)
+            }.AsReadOnly();
+            JobFormationSprites2A = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2D7594, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2D7594, 0x94)
+            }.AsReadOnly();
+            JobFormationSprites2B = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2F57CC, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2F57CC, 0x94)
+            }.AsReadOnly();
+            JobFormationSprites2C = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x31134C, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x31134C, 0x94)
+            }.AsReadOnly();
+            JobFormationSprites2D = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x312DB0, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x312DB0, 0x94)
+            }.AsReadOnly();
 
             ENTD1 = new KnownPosition( FFTPack.Files.BATTLE_ENTD1_ENT, 0, 81920 );
             ENTD2 = new KnownPosition( FFTPack.Files.BATTLE_ENTD2_ENT, 0, 81920 );

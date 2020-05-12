@@ -88,6 +88,8 @@ namespace PatcherLib
             Binaries.FontWidths = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.FontWidths].AsReadOnly();
             Binaries.InflictStatuses = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.InflictStatuses].AsReadOnly();
             Binaries.JobLevels = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.JobLevels].AsReadOnly();
+            Binaries.JobFormationSprites1 = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.JobFormationSprites1].AsReadOnly();
+            Binaries.JobFormationSprites2 = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.JobFormationSprites2].AsReadOnly();
             Binaries.Jobs = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.Jobs].AsReadOnly();
             Binaries.MonsterSkills = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.MonsterSkills].AsReadOnly();
             Binaries.OldItemAttributes = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.Binaries.OldItemAttributes].AsReadOnly();

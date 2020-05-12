@@ -69,7 +69,8 @@ namespace FFTPatcher.Editors
                 hpGrowthSpinner, hpMultiplierSpinner, mpGrowthSpinner, mpMultiplierSpinner,
                 speedGrowthSpinner, speedMultiplierSpinner, paGrowthSpinner, paMultiplierSpinner,
                 maGrowthSpinner, maMultiplierSpinner, moveSpinner, jumpSpinner,
-                cevSpinner, mPortraitSpinner, mPaletteSpinner, mGraphicSpinner };
+                cevSpinner, mPortraitSpinner, mPaletteSpinner, mGraphicSpinner, 
+                spinner_FormationSprites1, spinner_FormationSprites2 };
             comboBoxes = new ComboBoxWithDefault[] {
                 skillsetComboBox, innateAComboBox, innateBComboBox, innateCComboBox, innateDComboBox };
 
@@ -151,6 +152,8 @@ namespace FFTPatcher.Editors
             innateStatusesEditor.Statuses = job.PermanentStatus;
             statusImmunityEditor.Statuses = job.StatusImmunity;
             startingStatusesEditor.Statuses = job.StartingStatus;
+
+            pnl_FormationSprites.Visible = (job.Value < 0x4A);
 
             ignoreChanges = false;
             absorbElementsEditor.ResumeLayout();

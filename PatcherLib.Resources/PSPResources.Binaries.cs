@@ -28,6 +28,8 @@ namespace PatcherLib
             public static IList<byte> FontWidths { get; internal set; }
             public static IList<byte> ICON0 { get; internal set; }
             public static IList<byte> InflictStatuses { get; internal set; }
+            public static IList<byte> JobFormationSprites1 { get; internal set; }
+            public static IList<byte> JobFormationSprites2 { get; internal set; }
             public static IList<byte> JobLevels { get; internal set; }
             public static IList<byte> Jobs { get; internal set; }
             public static IList<byte> MonsterSkills { get; internal set; }

@@ -101,6 +101,8 @@
     <None Include="Resources\ENTD2.ENT" />
     <None Include="Resources\ENTD3.ENT" />
     <None Include="Resources\ENTD4.ENT" />
+    <None Include="Resources\JobFormationSprites1.bin" />
+    <None Include="Resources\JobFormationSprites2.bin" />
     <None Include="Resources\MoveFind.bin" />
     <None Include="Resources\Propositions.bin" />
     <None Include="Resources\PSP\bin\AbilityAnimations.bin" />

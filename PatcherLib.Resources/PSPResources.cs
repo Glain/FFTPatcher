@@ -98,6 +98,8 @@ namespace PatcherLib
             Binaries.ICON0 = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.ICON0].AsReadOnly();
             Binaries.InflictStatuses = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.InflictStatuses].AsReadOnly();
             Binaries.JobLevels = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.JobLevels].AsReadOnly();
+            Binaries.JobFormationSprites1 = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.JobFormationSprites1].AsReadOnly();
+            Binaries.JobFormationSprites2 = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.JobFormationSprites2].AsReadOnly();
             Binaries.Jobs = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.Jobs].AsReadOnly();
             Binaries.MonsterSkills = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.MonsterSkills].AsReadOnly();
             Binaries.NewItemAttributes = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.NewItemAttributes].AsReadOnly();

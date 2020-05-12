@@ -80,53 +80,69 @@ namespace PatcherLib.Iso
 
         public static KnownPosition StoreInventories { get; private set; }
 
+        public static KnownPosition AbilityAnimations { get; private set; }
+
+        public static KnownPosition Propositions { get; private set; }
+
+        public static KnownPosition JobFormationSpritesJobCheckID { get; private set; }
+        public static KnownPosition JobFormationSprites1 { get; private set; }
+        public static KnownPosition JobFormationSprites2 { get; private set; }
+        public static KnownPosition JobFormationSprites2A { get; private set; }
+        public static KnownPosition JobFormationSprites2B { get; private set; }
+        public static KnownPosition JobFormationSprites2C { get; private set; }
+        public static KnownPosition JobFormationSprites2D { get; private set; }
+
         public static KnownPosition NumberOfSectorsBigEndian { get; private set; }
         public static KnownPosition NumberOfSectorsLittleEndian { get; private set; }
 
-
-        public static KnownPosition AbilityAnimations { get; private set; }
-        public static KnownPosition Propositions { get; private set; }
         #endregion Public Properties
 
         #region Constructors (1)
 
         static PsxIso()
         {
-            Propositions = new KnownPosition( Sectors.WORLD_WLDCORE_BIN, 0x36380, 0xA7C );
-            Abilities = new KnownPosition( Sectors.SCUS_942_21, 0x4F3F0, 9414 );
-            AbilityEffects = new KnownPosition( Sectors.BATTLE_BIN, 0x14F3F0, 0x2E0 );
-            ItemAbilityEffects = new KnownPosition( Sectors.BATTLE_BIN, 0x14F6D0, 0x1C );
-            ReactionAbilityEffects = new KnownPosition( Sectors.BATTLE_BIN, 0x014F73C, 0x40 );
-            ActionEvents = new KnownPosition( Sectors.SCUS_942_21, 0x564B4, 224 );
-            InflictStatuses = new KnownPosition( Sectors.SCUS_942_21, 0x547C4, 0x300 );
-            Jobs = new KnownPosition( Sectors.SCUS_942_21, 0x518B8, 0x1E00 );
-            JobLevels = new KnownPosition( Sectors.SCUS_942_21, 0x568C4, 0xD0 );
-            MonsterSkills = new KnownPosition( Sectors.SCUS_942_21, 0x563C4, 0xF0 );
-            OldItemAttributes = new KnownPosition( Sectors.SCUS_942_21, 0x54AC4, 0x7D0 );
-            OldItems = new KnownPosition( Sectors.SCUS_942_21, 0x536B8, 0x110A );
-            PoachProbabilities = new KnownPosition( Sectors.SCUS_942_21, 0x56864, 0x60 );
-            StatusAttributes = new KnownPosition( Sectors.SCUS_942_21, 0x565E4, 0x280 );
-            SkillSets = new KnownPosition( Sectors.SCUS_942_21, 0x55294, 0x1130 );
-            ENTD1 = new KnownPosition( Sectors.BATTLE_ENTD1_ENT, 0, 81920 );
-            ENTD2 = new KnownPosition( Sectors.BATTLE_ENTD2_ENT, 0, 81920 );
-            ENTD3 = new KnownPosition( Sectors.BATTLE_ENTD3_ENT, 0, 81920 );
-            ENTD4 = new KnownPosition( Sectors.BATTLE_ENTD4_ENT, 0, 81920 );
-            MoveFindItems = new KnownPosition( Sectors.BATTLE_BIN, 0x8EE74, 0x800 );
-            StoreInventories = new KnownPosition( Sectors.WORLD_WORLD_BIN, 0xAD844, 0x200 );
-            NumberOfSectorsBigEndian = new KnownPosition( (Sectors)16, 0x54, 4 );
-            NumberOfSectorsLittleEndian = new KnownPosition( (Sectors)16, 0x50, 4 );
+            Propositions = new KnownPosition(Sectors.WORLD_WLDCORE_BIN, 0x36380, 0xA7C);
+            Abilities = new KnownPosition(Sectors.SCUS_942_21, 0x4F3F0, 9414);
+            AbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x14F3F0, 0x2E0);
+            ItemAbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x14F6D0, 0x1C);
+            ReactionAbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x014F73C, 0x40);
+            ActionEvents = new KnownPosition(Sectors.SCUS_942_21, 0x564B4, 224);
+            InflictStatuses = new KnownPosition(Sectors.SCUS_942_21, 0x547C4, 0x300);
+            Jobs = new KnownPosition(Sectors.SCUS_942_21, 0x518B8, 0x1E00);
+            JobLevels = new KnownPosition(Sectors.SCUS_942_21, 0x568C4, 0xD0);
+            MonsterSkills = new KnownPosition(Sectors.SCUS_942_21, 0x563C4, 0xF0);
+            OldItemAttributes = new KnownPosition(Sectors.SCUS_942_21, 0x54AC4, 0x7D0);
+            OldItems = new KnownPosition(Sectors.SCUS_942_21, 0x536B8, 0x110A);
+            PoachProbabilities = new KnownPosition(Sectors.SCUS_942_21, 0x56864, 0x60);
+            StatusAttributes = new KnownPosition(Sectors.SCUS_942_21, 0x565E4, 0x280);
+            SkillSets = new KnownPosition(Sectors.SCUS_942_21, 0x55294, 0x1130);
+            ENTD1 = new KnownPosition(Sectors.BATTLE_ENTD1_ENT, 0, 81920);
+            ENTD2 = new KnownPosition(Sectors.BATTLE_ENTD2_ENT, 0, 81920);
+            ENTD3 = new KnownPosition(Sectors.BATTLE_ENTD3_ENT, 0, 81920);
+            ENTD4 = new KnownPosition(Sectors.BATTLE_ENTD4_ENT, 0, 81920);
+            MoveFindItems = new KnownPosition(Sectors.BATTLE_BIN, 0x8EE74, 0x800);
+            StoreInventories = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAD844, 0x200);
+            JobFormationSpritesJobCheckID = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0x458B0, 1);
+            JobFormationSprites1 = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xADE34, 0x4A);
+            JobFormationSprites2 = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAA168, 0x94);
+            JobFormationSprites2A = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAA8B8, 0x94);
+            JobFormationSprites2B = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0x74B14, 0x94);
+            JobFormationSprites2C = new KnownPosition(Sectors.EVENT_ATTACK_OUT, 0x16BB0, 0x94);
+            JobFormationSprites2D = new KnownPosition(Sectors.EVENT_REQUIRE_OUT, 0x11B3C, 0x94);
+            NumberOfSectorsBigEndian = new KnownPosition((Sectors)16, 0x54, 4);
+            NumberOfSectorsLittleEndian = new KnownPosition((Sectors)16, 0x50, 4);
 
             // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
-            AbilityAnimations = new KnownPosition( Sectors.BATTLE_BIN, 0x2CE10, 0x552 );
+            AbilityAnimations = new KnownPosition(Sectors.BATTLE_BIN, 0x2CE10, 0x552);
         }
 
         #endregion Constructors
 
         #region Public Methods (3)
 
-        public static byte[] GetBlock( Stream iso, KnownPosition knownPositions )
+        public static byte[] GetBlock(Stream iso, KnownPosition knownPositions)
         {
-            return ReadFile( iso, knownPositions.Sector, knownPositions.StartLocation, knownPositions.Length );
+            return ReadFile(iso, knownPositions.Sector, knownPositions.StartLocation, knownPositions.Length);
         }
 
         public static PatchPsxSaveStateResult PatchPsxSaveState(BinaryReader reader, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
@@ -148,7 +164,7 @@ namespace PatcherLib.Iso
                 {
                     bool valid = true;
                     int ramOffset = 0;
-                    
+
                     try
                     {
                         ramOffset = (int)(PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + filename.ToUpper().Trim());
@@ -160,7 +176,7 @@ namespace PatcherLib.Iso
                         valid = false;
                         continue;
                     }
-                    
+
                     int startOffset = ramOffset + ramToPsvOffset;
 
                     if (!LoadedFiles.Contains(sector))
@@ -202,49 +218,49 @@ namespace PatcherLib.Iso
             return position + 12;
         }
 
-        public static void PatchPsxIso( Stream iso, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches )
+        public static void PatchPsxIso(Stream iso, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
         {
             foreach (var patch in patches)
             {
-                PatchPsxIso( iso, patch );
+                PatchPsxIso(iso, patch);
             }
         }
 
-        public static void PatchPsxIso( Stream iso, PatcherLib.Datatypes.PatchedByteArray patch )
+        public static void PatchPsxIso(Stream iso, PatcherLib.Datatypes.PatchedByteArray patch)
         {
             if (patch is STRPatchedByteArray)
             {
-                PatchPsxIso( iso, (STRPatchedByteArray)patch );
+                PatchPsxIso(iso, (STRPatchedByteArray)patch);
             }
             else
             {
-                IsoPatch.PatchFileAtSector( IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector,
-                    patch.Offset, patch.GetBytes(), true );
+                IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector,
+                    patch.Offset, patch.GetBytes(), true);
             }
         }
 
-        public static void PatchPsxIso( Stream iso, PatcherLib.Datatypes.STRPatchedByteArray patch )
+        public static void PatchPsxIso(Stream iso, PatcherLib.Datatypes.STRPatchedByteArray patch)
         {
-            ReplaceStrFile( iso, (Sectors)patch.Sector, patch.GetBytes() );
+            ReplaceStrFile(iso, (Sectors)patch.Sector, patch.GetBytes());
         }
 
-        public static byte[] ReadFile( Stream iso, Sectors file, int offset, int length )
+        public static byte[] ReadFile(Stream iso, Sectors file, int offset, int length)
         {
-            return IsoPatch.ReadFile( IsoPatch.IsoType.Mode2Form1, iso, (int)file, offset, length );
+            return IsoPatch.ReadFile(IsoPatch.IsoType.Mode2Form1, iso, (int)file, offset, length);
         }
 
-        public static byte[] ReadFile( Stream iso, KnownPosition pos )
+        public static byte[] ReadFile(Stream iso, KnownPosition pos)
         {
-            return ReadFile( iso, pos.Sector, pos.StartLocation, pos.Length );
+            return ReadFile(iso, pos.Sector, pos.StartLocation, pos.Length);
         }
 
-        public static void ReplaceStrFile( Stream iso, Sectors file, IList<byte> bytes )
+        public static void ReplaceStrFile(Stream iso, Sectors file, IList<byte> bytes)
         {
             const int bytesPerSector = 2336;
             const int bytesPerSectorM2 = 2352;
             if (bytes.Count % bytesPerSector != 0)
             {
-                throw new ArgumentException( string.Format( "new STR file length must be a multiple of {0}", bytesPerSector ) );
+                throw new ArgumentException(string.Format("new STR file length must be a multiple of {0}", bytesPerSector));
             }
 
             int numSectors = bytes.Count / bytesPerSector;
@@ -256,14 +272,14 @@ namespace PatcherLib.Iso
             for (int i = 0; i < numSectors; i++)
             {
                 int outputSector = startSector + i;
-                iso.Seek( outputSector * bytesPerSectorM2, SeekOrigin.Begin );
+                iso.Seek(outputSector * bytesPerSectorM2, SeekOrigin.Begin);
 
                 // Keep the first 16 bytes from the original image
                 // It contains  the 00FFFFFF FFFFFFFF FFFFFF00 and MM:SS:FF bytes
-                iso.Read( tempSector, 0, (bytesPerSectorM2 - bytesPerSector) );
+                iso.Read(tempSector, 0, (bytesPerSectorM2 - bytesPerSector));
 
                 // Copy the 2336 bytes from the input file to the buffer
-                bytes.Sub( i * bytesPerSector, (i + 1) * bytesPerSector - 1 ).CopyTo( tempSector, (bytesPerSectorM2 - bytesPerSector) );
+                bytes.Sub(i * bytesPerSector, (i + 1) * bytesPerSector - 1).CopyTo(tempSector, (bytesPerSectorM2 - bytesPerSector));
 
                 // The output from MC32.EXE doesn't have these bytes set properly:
                 tempSector[16] = 0x01;
@@ -273,17 +289,17 @@ namespace PatcherLib.Iso
                 {
                     // Video or Data
                     // NOT audio, so need to update the 280 byte ecc/edc block
-                    IsoPatch.GenerateEccEdc( tempSector, IsoPatch.IsoType.Mode2Form1 );
+                    IsoPatch.GenerateEccEdc(tempSector, IsoPatch.IsoType.Mode2Form1);
                 }
                 else
                 {
                     // CDXA M2F2
-                    IsoPatch.GenerateEccEdc( tempSector, IsoPatch.IsoType.Mode2Form2 );
+                    IsoPatch.GenerateEccEdc(tempSector, IsoPatch.IsoType.Mode2Form2);
                 }
 
                 // Finished mucking with the sector, write it back to the ISO
-                iso.Seek( outputSector * bytesPerSectorM2, SeekOrigin.Begin );
-                iso.Write( tempSector, 0, bytesPerSectorM2 );
+                iso.Seek(outputSector * bytesPerSectorM2, SeekOrigin.Begin);
+                iso.Write(tempSector, 0, bytesPerSectorM2);
             }
         }
 
@@ -308,8 +324,8 @@ namespace PatcherLib.Iso
             public static KeyValuePair<int, byte[]> EVENT_CARD_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x42, 0x41, 0x53, 0x43 });
 
             public static KeyValuePair<int, byte[]> EVENT_HELPMENU_OUT = new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x04, 0x75, 0xa5, 0x24 });
-            public static KeyValuePair<int, byte[]> EVENT_JOBSTTS_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }); 
-            
+            public static KeyValuePair<int, byte[]> EVENT_JOBSTTS_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 });
+
             public static KeyValuePair<int, byte[]> Get(PsxIso.Sectors sector)
             {
                 return (KeyValuePair<int, byte[]>)typeof(FileCheckValue).GetField(sector.ToString()).GetValue(null);
@@ -2979,26 +2995,26 @@ namespace PatcherLib.Iso
             {
                 get { return length; }
             }
-            public KnownPosition( Sectors sector, int startLocation, int length )
+            public KnownPosition(Sectors sector, int startLocation, int length)
             {
                 Sector = sector;
                 StartLocation = startLocation;
                 this.length = length;
             }
 
-            public override PatcherLib.Datatypes.PatchedByteArray GetPatchedByteArray( byte[] bytes )
+            public override PatcherLib.Datatypes.PatchedByteArray GetPatchedByteArray(byte[] bytes)
             {
-                return new PatcherLib.Datatypes.PatchedByteArray( Sector, StartLocation, bytes );
+                return new PatcherLib.Datatypes.PatchedByteArray(Sector, StartLocation, bytes);
             }
 
-            public override byte[] ReadIso( Stream iso )
+            public override byte[] ReadIso(Stream iso)
             {
-                return PsxIso.ReadFile( iso, this );
+                return PsxIso.ReadFile(iso, this);
             }
 
-            public override void PatchIso( Stream iso, IList<byte> bytes )
+            public override void PatchIso(Stream iso, IList<byte> bytes)
             {
-                PsxIso.PatchPsxIso( iso, GetPatchedByteArray( bytes.ToArray() ) );
+                PsxIso.PatchPsxIso(iso, GetPatchedByteArray(bytes.ToArray()));
             }
 
             public override PatcherLib.Iso.KnownPosition AddOffset(int offset, int length)

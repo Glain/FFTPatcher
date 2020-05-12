@@ -330,30 +330,6 @@ namespace PatcherLib
             return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
         }
 
-        /*
-        public static string GenerateXMLString(IEnumerable<IEnumerable<string>> sections, string outerTitle, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
-        {
-            List<string> sectionList = new List<string>();
-            foreach (IEnumerable<string> section in sections)
-            {
-                sectionList.Add(GenerateXMLSectionString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
-            }
-
-            return GenerateXMLString(sectionList, outerTitle);
-        }
-
-        public static string GenerateXMLString(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
-        {
-            IEnumerable<string>[] sections = new IEnumerable<string>[1] { section };
-            return GenerateXMLString(sections, null, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex);
-        }
-
-        public static byte[] GenerateXMLBytes(IEnumerable<IEnumerable<string>> entries, string outerTitle, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
-        {
-            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(entries, outerTitle, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
-        }
-        */
-
         public static class Paths
         {
             public const string AbilityFormulasXML = "AbilityFormulas.xml";
@@ -362,6 +338,8 @@ namespace PatcherLib
             private const string ENTD2 = "ENTD2.ENT";
             private const string ENTD3 = "ENTD3.ENT";
             private const string ENTD4 = "ENTD4.ENT";
+            private const string JobFormationSprites1 = "JobFormationSprites1.bin";
+            private const string JobFormationSprites2 = "JobFormationSprites2.bin";
             private const string MoveFindBin = "MoveFind.bin";
             private const string ReactionEffects = "ReactionEffects.bin";
             private const string Propositions = "Propositions.bin";
@@ -387,6 +365,8 @@ namespace PatcherLib
                     public const string FontWidths = "PSP/bin/FontWidths.bin";
                     public const string ICON0 = "PSP/bin/ICON0";
                     public const string InflictStatuses = "PSP/bin/InflictStatuses.bin";
+                    public const string JobFormationSprites1 = Paths.JobFormationSprites1;
+                    public const string JobFormationSprites2 = Paths.JobFormationSprites2;
                     public const string JobLevels = "PSP/bin/JobLevels.bin";
                     public const string Jobs = "PSP/bin/Jobs.bin";
                     public const string MonsterSkills = "PSP/bin/MonsterSkills.bin";
@@ -421,8 +401,6 @@ namespace PatcherLib
 
             public static class PSX
             {
-
-
                 public static class Binaries
                 {
                     public const string ENTD1 = Paths.ENTD1;
@@ -441,6 +419,8 @@ namespace PatcherLib
                     public const string FontWidths = "PSX-US/bin/FontWidths.bin";
                     public const string SCEAP = "PSX-US/bin/SCEAP.DAT.patched.bin";
                     public const string InflictStatuses = "PSX-US/bin/InflictStatuses.bin";
+                    public const string JobFormationSprites1 = Paths.JobFormationSprites1;
+                    public const string JobFormationSprites2 = Paths.JobFormationSprites2;
                     public const string JobLevels = "PSX-US/bin/JobLevels.bin";
                     public const string Jobs = "PSX-US/bin/Jobs.bin";
                     public const string MonsterSkills = "PSX-US/bin/MonsterSkills.bin";

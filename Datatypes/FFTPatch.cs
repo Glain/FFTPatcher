@@ -46,6 +46,8 @@ namespace FFTPatcher.Datatypes
             ElementName.PSPItems, "pspItems", 
             ElementName.PSPItemAttributes, "pspItemAttributes", 
             ElementName.Jobs, "jobs", 
+            ElementName.JobFormationSprites1, "jobFormationSprites1",
+            ElementName.JobFormationSprites2, "jobFormationSprites2",
             ElementName.JobLevels, "jobLevels",
             ElementName.SkillSets, "skillSets", 
             ElementName.MonsterSkills, "monsterSkills", 
@@ -116,6 +118,14 @@ namespace FFTPatcher.Datatypes
                 }
             }
 
+            string name_jobFormationSprites1 = elementNames[ElementName.JobFormationSprites1];
+            string name_jobFormationSprites2 = elementNames[ElementName.JobFormationSprites2];
+
+            if (!fileList.ContainsKey(name_jobFormationSprites1))
+                fileList[name_jobFormationSprites1] = PSXResources.Binaries.JobFormationSprites1.ToArray();
+            if (!fileList.ContainsKey(name_jobFormationSprites2))
+                fileList[name_jobFormationSprites2] = PSXResources.Binaries.JobFormationSprites2.ToArray();
+
             File.Delete( filename );
 
             if( fileList["type"].ToUTF8String() == Context.US_PSX.ToString() )
@@ -124,9 +134,9 @@ namespace FFTPatcher.Datatypes
                 amBytes.AddRange( PSPResources.Binaries.ActionEvents.Sub( 0xE0, 0xE2 ) );
                 fileList["actionMenus"] = amBytes.ToArray();
 
-                AllJobs aj = new AllJobs( Context.US_PSX, fileList["jobs"] );
+                AllJobs aj = new AllJobs( Context.US_PSX, fileList["jobs"], fileList[name_jobFormationSprites1], fileList[name_jobFormationSprites2] );
                 List<Job> jobs = new List<Job>( aj.Jobs );
-                AllJobs defaultPspJobs = new AllJobs( Context.US_PSP, PSPResources.Binaries.Jobs );
+                AllJobs defaultPspJobs = new AllJobs( Context.US_PSP, PSPResources.Binaries.Jobs, PSPResources.Binaries.JobFormationSprites1, PSPResources.Binaries.JobFormationSprites2 );
                 for( int i = 0; i < jobs.Count; i++ )
                 {
                     jobs[i].Equipment.Unknown1 = defaultPspJobs.Jobs[i].Equipment.Unknown1;
@@ -296,6 +306,8 @@ namespace FFTPatcher.Datatypes
                     PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.MoveFindItems),
                     PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.StoreInventories),
                     PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.Propositions),
+                    PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.JobFormationSprites1),
+                    PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.JobFormationSprites2),
                     AllPropositions.IsoHasBuggyLevelBonuses(stream, Context.US_PSX)
                     );
                 FireDataChangedEvent();
@@ -334,6 +346,8 @@ namespace FFTPatcher.Datatypes
                     PatcherLib.Iso.PspIso.GetBlock( stream, info, PatcherLib.Iso.PspIso.MoveFindItems[0] ),
                     PatcherLib.Iso.PspIso.GetBlock( stream, info, PatcherLib.Iso.PspIso.StoreInventories[0] ),
                     PatcherLib.Iso.PspIso.GetBlock( stream, info, PatcherLib.Iso.PspIso.Propositions[0] ),
+                    PatcherLib.Iso.PspIso.GetBlock(stream, info, PatcherLib.Iso.PspIso.JobFormationSprites1[0]),
+                    PatcherLib.Iso.PspIso.GetBlock(stream, info, PatcherLib.Iso.PspIso.JobFormationSprites2[0]),
                     AllPropositions.IsoHasBuggyLevelBonuses(stream, Context.US_PSP)) ;
                 FireDataChangedEvent();
             }
@@ -376,7 +390,7 @@ namespace FFTPatcher.Datatypes
                     ItemAttributes = new AllItemAttributes(
                         PSPResources.Binaries.OldItemAttributes,
                         PSPResources.Binaries.NewItemAttributes );
-                    Jobs = new AllJobs( Context, PSPResources.Binaries.Jobs );
+                    Jobs = new AllJobs( Context, PSPResources.Binaries.Jobs, PSPResources.Binaries.JobFormationSprites1, PSPResources.Binaries.JobFormationSprites2 );
                     JobLevels = new JobLevels( Context, PSPResources.Binaries.JobLevels,
                         new JobLevels( Context, PSPResources.Binaries.JobLevels ) );
                     SkillSets = new AllSkillSets( Context, PSPResources.Binaries.SkillSets,
@@ -396,7 +410,7 @@ namespace FFTPatcher.Datatypes
                     AbilityAnimations = new AllAnimations( Context, PSXResources.Binaries.AbilityAnimations, PSXResources.Binaries.AbilityAnimations );
                     Items = new AllItems( PSXResources.Binaries.OldItems, null );
                     ItemAttributes = new AllItemAttributes( PSXResources.Binaries.OldItemAttributes, null );
-                    Jobs = new AllJobs( Context, PSXResources.Binaries.Jobs );
+                    Jobs = new AllJobs( Context, PSXResources.Binaries.Jobs, PSXResources.Binaries.JobFormationSprites1, PSXResources.Binaries.JobFormationSprites2 );
                     JobLevels = new JobLevels( Context, PSXResources.Binaries.JobLevels,
                         new JobLevels( Context, PSXResources.Binaries.JobLevels ) );
                     SkillSets = new AllSkillSets( Context, PSXResources.Binaries.SkillSets,
@@ -486,7 +500,10 @@ namespace FFTPatcher.Datatypes
             IList<byte> entd1, IList<byte> entd2, IList<byte> entd3, IList<byte> entd4, IList<byte> entd5,
             IList<byte> moveFind,
             IList<byte> inventories, 
-            IList<byte> propositions, bool brokenLevelBonuses )
+            IList<byte> propositions, 
+            IList<byte> jobFormationSprites1,
+            IList<byte> jobFormationSprites2,
+            bool brokenLevelBonuses )
         {
             try
             {
@@ -495,7 +512,7 @@ namespace FFTPatcher.Datatypes
                 var AbilityAnimations = new AllAnimations( Context, abilityAnimations, psp ? PSPResources.Binaries.AbilityAnimations : PSXResources.Binaries.AbilityAnimations );
                 var Items = new AllItems( oldItems, newItems != null ? newItems : null );
                 var ItemAttributes = new AllItemAttributes( oldItemAttributes, newItemAttributes != null ? newItemAttributes : null );
-                var Jobs = new AllJobs( Context, jobs );
+                var Jobs = new AllJobs( Context, jobs, jobFormationSprites1, jobFormationSprites2 );
                 var JobLevels = new JobLevels( Context, jobLevels,
                     new JobLevels( Context, Context == Context.US_PSP ? PSPResources.Binaries.JobLevels : PSXResources.Binaries.JobLevels ) );
                 var SkillSets = new AllSkillSets( Context, skillSets,
@@ -572,7 +589,10 @@ namespace FFTPatcher.Datatypes
                     psp ? ( GetZipEntry( file, elementNames[ElementName.ENTD5], false ) ?? defaults[ElementName.ENTD5] ) : null,
                     GetZipEntry( file, elementNames[ElementName.MoveFindItems], false ) ?? defaults[ElementName.MoveFindItems],
                     GetZipEntry( file, elementNames[ElementName.StoreInventories], false ) ?? defaults[ElementName.StoreInventories],
-                    propsZipEntry ?? defaults[ElementName.Propositions], buggy );
+                    propsZipEntry ?? defaults[ElementName.Propositions], 
+                    GetZipEntry(file, elementNames[ElementName.JobFormationSprites1], false) ?? defaults[ElementName.JobFormationSprites1],
+                    GetZipEntry(file, elementNames[ElementName.JobFormationSprites2], false) ?? defaults[ElementName.JobFormationSprites2],
+                    buggy );
             }
         }
 
@@ -608,12 +628,14 @@ namespace FFTPatcher.Datatypes
             IList<byte> moveFind = GetFromNodeOrReturnDefault( rootNode, "moveFindItems", psp ? PSPResources.Binaries.MoveFind : PSXResources.Binaries.MoveFind );
             IList<byte> inventories = GetFromNodeOrReturnDefault( rootNode, "storeInventories", psp ? PSPResources.Binaries.StoreInventories : PSXResources.Binaries.StoreInventories );
             IList<byte> propositions = GetFromNodeOrReturnDefault( rootNode, "propositions", psp ? PSPResources.Binaries.Propositions : PSXResources.Binaries.Propositions );
+            IList<byte> jobFormationSprites1 = GetFromNodeOrReturnDefault(rootNode, elementNames[ElementName.JobFormationSprites1], psp ? PSPResources.Binaries.JobFormationSprites1 : PSXResources.Binaries.JobFormationSprites1);
+            IList<byte> jobFormationSprites2 = GetFromNodeOrReturnDefault(rootNode, elementNames[ElementName.JobFormationSprites2], psp ? PSPResources.Binaries.JobFormationSprites2 : PSXResources.Binaries.JobFormationSprites2);
 
             LoadDataFromBytes( abilities, abilityEffects, itemAbilityEffects, reactionAbilityEffects, abilityAnimations,
                 oldItems, oldItemAttributes, newItems, newItemAttributes,
                 jobs, jobLevels, skillSets, monsterSkills, actionMenus, statusAttributes,
                 inflictStatuses, poach, entd1, entd2, entd3, entd4, entd5,
-                moveFind, inventories, propositions, true );
+                moveFind, inventories, propositions, jobFormationSprites1, jobFormationSprites2, true );
         }
 
         private static string ReadString( FileStream stream, int length )
@@ -667,6 +689,9 @@ namespace FFTPatcher.Datatypes
                 WriteFileToZip( stream, elementNames[ElementName.MoveFindItems], MoveFind.ToByteArray() );
                 WriteFileToZip( stream, elementNames[ElementName.StoreInventories], StoreInventories.ToByteArray() );
                 WriteFileToZip( stream, elementNames[ElementName.Propositions], Propositions.ToByteArray() );
+                WriteFileToZip(stream, elementNames[ElementName.JobFormationSprites1], Jobs.ToFormationSprites1ByteArray());
+                WriteFileToZip(stream, elementNames[ElementName.JobFormationSprites2], Jobs.ToFormationSprites2ByteArray());
+
                 if (!AllPropositions.CanFixBuggyLevelBonuses( destinationContext ))
                 {
                     WriteFileToZip( stream, "BuggyPropositions", new byte[0] );
@@ -696,6 +721,8 @@ namespace FFTPatcher.Datatypes
             { ElementName.PSPItems, null },
             { ElementName.PSPItemAttributes, null },
             { ElementName.Jobs, PSXResources.Binaries.Jobs },
+            { ElementName.JobFormationSprites1, PSXResources.Binaries.JobFormationSprites1 },
+            { ElementName.JobFormationSprites2, PSXResources.Binaries.JobFormationSprites2 },
             { ElementName.JobLevels, PSXResources.Binaries.JobLevels},
             { ElementName.SkillSets, PSXResources.Binaries.SkillSets },
             { ElementName.MonsterSkills, PSXResources.Binaries.MonsterSkills},
@@ -722,6 +749,8 @@ namespace FFTPatcher.Datatypes
             { ElementName.PSPItems, PSPResources.Binaries.NewItems },
             { ElementName.PSPItemAttributes, PSPResources.Binaries.NewItemAttributes },
             { ElementName.Jobs, PSPResources.Binaries.Jobs },
+            { ElementName.JobFormationSprites1, PSPResources.Binaries.JobFormationSprites1 },
+            { ElementName.JobFormationSprites2, PSPResources.Binaries.JobFormationSprites2 },
             { ElementName.JobLevels, PSPResources.Binaries.JobLevels},
             { ElementName.SkillSets, PSPResources.Binaries.SkillSets },
             { ElementName.MonsterSkills, PSPResources.Binaries.MonsterSkills},
@@ -750,6 +779,8 @@ namespace FFTPatcher.Datatypes
             PSPItems,
             PSPItemAttributes,
             Jobs,
+            JobFormationSprites1,
+            JobFormationSprites2,
             JobLevels,
             SkillSets,
             MonsterSkills,

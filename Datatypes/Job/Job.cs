@@ -91,40 +91,87 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        public AllJobs( IList<byte> bytes )
-            : this( Context.US_PSP, bytes )
+        public AllJobs( IList<byte> bytes, IList<byte> formationBytes1, IList<byte> formationBytes2 )
+            : this( Context.US_PSP, bytes, formationBytes1, formationBytes2 )
         {
         }
 
-        public AllJobs( Context context, IList<byte> bytes )
+        public AllJobs(Context context, IList<byte> bytes, IList<byte> formationBytes1, IList<byte> formationBytes2)
         {
             int numJobs = context == Context.US_PSP ? 0xA9 : 0xA0;
             int jobLength = context == Context.US_PSP ? 49 : 48;
-            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.Jobs : PSXResources.Binaries.Jobs;
+
+            IList<byte> defaultBytes = (context == Context.US_PSP) ? PSPResources.Binaries.Jobs : PSXResources.Binaries.Jobs;
+            IList<byte> defaultFormationBytes1 = (context == Context.US_PSP) ? PSPResources.Binaries.JobFormationSprites1 : PSXResources.Binaries.JobFormationSprites1;
+            IList<byte> defaultFormationBytes2 = (context == Context.US_PSP) ? PSPResources.Binaries.JobFormationSprites2 : PSXResources.Binaries.JobFormationSprites2;
+
             Jobs = new Job[numJobs];
             for( int i = 0; i < numJobs; i++ )
             {
                 Jobs[i] = new Job( context, (byte)i, Names[i], bytes.Sub( i * jobLength, (i + 1) * jobLength - 1 ),
                     new Job( context, (byte)i, Names[i], defaultBytes.Sub( i * jobLength, (i + 1) * jobLength - 1 ) ) );
+
+                if (i < 0x4A)
+                {
+                    Jobs[i].FormationSprites1 = formationBytes1[i];
+                    Jobs[i].FormationSprites2 = formationBytes2[i * 2];
+                    Jobs[i].Default.FormationSprites1 = defaultFormationBytes1[i];
+                    Jobs[i].Default.FormationSprites2 = defaultFormationBytes2[i * 2];
+                }
             }
         }
 
 		#endregion Constructors 
 
-		#region Public Methods (5) 
+        #region Private Methods
 
-        public override IList<PatchedByteArray> GetPatches( Context context )
+        private bool RequiresJobCheckIDPatch()
         {
-            var result = new List<PatchedByteArray>( 2 );
+            for (int index = 0x35; index < 0x4A; index++)
+            {
+                if (Jobs[index].RequiresJobCheckIDPatch())
+                    return true;
+            }
 
-            var bytes = ToByteArray( context );
+            return false;
+        }
+
+        #endregion
+
+        #region Public Methods (6)
+
+        public override IList<PatchedByteArray> GetPatches(Context context)
+        {
+            List<PatchedByteArray> result = new List<PatchedByteArray>(2);
+            byte[] bytes = ToByteArray( context );
+            byte[] bytesFormationSprite1 = ToFormationSprites1ByteArray();
+            byte[] bytesFormationSprite2 = ToFormationSprites2ByteArray();
+
             if ( context == Context.US_PSX )
             {
                 result.Add(PatcherLib.Iso.PsxIso.Jobs.GetPatchedByteArray(bytes));
+                result.Add(PatcherLib.Iso.PsxIso.JobFormationSprites1.GetPatchedByteArray(bytesFormationSprite1));
+                result.Add(PatcherLib.Iso.PsxIso.JobFormationSprites2.GetPatchedByteArray(bytesFormationSprite2));
+                result.Add(PatcherLib.Iso.PsxIso.JobFormationSprites2A.GetPatchedByteArray(bytesFormationSprite2));
+                result.Add(PatcherLib.Iso.PsxIso.JobFormationSprites2B.GetPatchedByteArray(bytesFormationSprite2));
+                result.Add(PatcherLib.Iso.PsxIso.JobFormationSprites2C.GetPatchedByteArray(bytesFormationSprite2));
+                result.Add(PatcherLib.Iso.PsxIso.JobFormationSprites2D.GetPatchedByteArray(bytesFormationSprite2));
+
+                if (RequiresJobCheckIDPatch())
+                    result.Add(PatcherLib.Iso.PsxIso.JobFormationSpritesJobCheckID.GetPatchedByteArray(new byte[1] { 0x4A }));
             }
             else if ( context == Context.US_PSP )
             {
                 PatcherLib.Iso.PspIso.Jobs.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytes)));
+                PatcherLib.Iso.PspIso.JobFormationSprites1.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytesFormationSprite1)));
+                PatcherLib.Iso.PspIso.JobFormationSprites2.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytesFormationSprite2)));
+                PatcherLib.Iso.PspIso.JobFormationSprites2A.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytesFormationSprite2)));
+                PatcherLib.Iso.PspIso.JobFormationSprites2B.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytesFormationSprite2)));
+                PatcherLib.Iso.PspIso.JobFormationSprites2C.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytesFormationSprite2)));
+                PatcherLib.Iso.PspIso.JobFormationSprites2D.ForEach(kl => result.Add(kl.GetPatchedByteArray(bytesFormationSprite2)));
+
+                if (RequiresJobCheckIDPatch())
+                    PatcherLib.Iso.PspIso.JobFormationSpritesJobCheckID.ForEach(kl => result.Add(kl.GetPatchedByteArray(new byte[1] { 0x4A })));
             }
 
             return result;
@@ -144,6 +191,29 @@ namespace FFTPatcher.Datatypes
             }
 
             return result.ToArray();
+        }
+
+        public byte[] ToFormationSprites1ByteArray()
+        {
+            byte[] result = new byte[0x4A];
+            for (int index = 0; index < 0x4A; index++)
+            {
+                result[index] = Jobs[index].FormationSprites1;
+            }
+
+            return result;
+        }
+
+        public byte[] ToFormationSprites2ByteArray()
+        {
+            byte[] result = new byte[0x94];
+            for (int index = 0; index < 0x4A; index++)
+            {
+                result[(index * 2)] = Jobs[index].FormationSprites2;
+                result[(index * 2) + 1] = 0;
+            }
+
+            return result;
         }
 
         public void WriteXmlDigest( System.Xml.XmlWriter writer )
@@ -177,14 +247,37 @@ namespace FFTPatcher.Datatypes
 
         IList<string> IGenerateCodes.GenerateCodes(Context context)
         {
+            List<string> codeList = new List<string>();
+            byte[] formationSprites2ByteArray = this.ToFormationSprites2ByteArray();
+
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.Jobs, this.ToByteArray(), 0x277988 );
+                codeList.AddRange(Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.Jobs, this.ToByteArray(), 0x277988 ));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites1, this.ToFormationSprites1ByteArray(), 0x2E0EB4));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x2A119C));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x2DB540));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x2F9778));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x3152F8));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x316D5C));
+
+                if (RequiresJobCheckIDPatch())
+                    codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, new byte[1] { 0x35 }, new byte[1] { 0x4A }, 0x191784));
             }
-            else
+            else if (context == Context.US_PSX)
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.Jobs, this.ToByteArray( Context.US_PSX ), 0x0610B8 );
+                codeList.AddRange(Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.Jobs, this.ToByteArray( Context.US_PSX ), 0x0610B8 ));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites1, this.ToFormationSprites1ByteArray(), 0x18DE34, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x18A168, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x18A8B8, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x154B14, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x1D5BB0, Codes.CodeEnabledOnlyWhen.AttackOut));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x1D0B3C, Codes.CodeEnabledOnlyWhen.RequireOut));
+
+                if (RequiresJobCheckIDPatch())
+                    codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, new byte[1] { 0x35 }, new byte[1] { 0x4A }, 0x1258B0, Codes.CodeEnabledOnlyWhen.World));
             }
+
+            return codeList;
         }
 
         #endregion
@@ -201,7 +294,8 @@ namespace FFTPatcher.Datatypes
             "SkillSet", "HPConstant", "HPMultiplier", "MPConstant", "MPMultiplier", "SpeedConstant", "SpeedMultiplier",
             "PAConstant", "PAMultiplier", "MAConstant", "MAMultiplier", "Move", "Jump", "CEvade", "MPortrait",
             "MPalette", "MGraphic", "InnateA", "InnateB", "InnateC", "InnateD", "AbsorbElement", "CancelElement",
-            "HalfElement", "WeakElement", "Equipment", "PermanentStatus", "StartingStatus", "StatusImmunity" };
+            "HalfElement", "WeakElement", "Equipment", "PermanentStatus", "StartingStatus", "StatusImmunity", 
+            "FormationSprites1", "FormationSprites2" };
 
 		#endregion Instance Variables 
 
@@ -222,6 +316,10 @@ namespace FFTPatcher.Datatypes
 
         public Equipment Equipment { get; private set; }
 
+        public byte FormationSprites1 { get; set; }
+
+        public byte FormationSprites2 { get; set; }
+
         public Elements HalfElement { get; private set; }
 
         /// <summary>
@@ -232,8 +330,8 @@ namespace FFTPatcher.Datatypes
         {
             get
             {
-                return Default != null &&
-                    (CEvade != Default.CEvade ||
+                return Default != null && (
+                    CEvade != Default.CEvade ||
                     HPConstant != Default.HPConstant ||
                     HPMultiplier != Default.HPMultiplier ||
                     InnateA.Offset != Default.InnateA.Offset ||
@@ -258,11 +356,13 @@ namespace FFTPatcher.Datatypes
                     CancelElement.ToByte() != Default.CancelElement.ToByte() ||
                     HalfElement.ToByte() != Default.HalfElement.ToByte() ||
                     WeakElement.ToByte() != Default.WeakElement.ToByte() ||
+                    (FormationSprites1 != Default.FormationSprites1) ||
+                    (FormationSprites2 != Default.FormationSprites2) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( PermanentStatus.ToByteArray(), Default.PermanentStatus.ToByteArray() ) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( Equipment.ToByteArray( FFTPatch.Context ), Default.Equipment.ToByteArray( FFTPatch.Context ) ) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( StartingStatus.ToByteArray(), Default.StartingStatus.ToByteArray() ) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( StatusImmunity.ToByteArray(), Default.StatusImmunity.ToByteArray() )
-                    );
+                );
             }
         }
 
@@ -428,6 +528,8 @@ namespace FFTPatcher.Datatypes
             destination.MPortrait = source.MPortrait;
             destination.MPalette = source.MPalette;
             destination.MGraphic = source.MGraphic;
+            destination.FormationSprites1 = source.FormationSprites1;
+            destination.FormationSprites2 = source.FormationSprites2;
         }
 
         public void CopyTo( Job destination )
@@ -479,6 +581,11 @@ namespace FFTPatcher.Datatypes
         public override string ToString()
         {
             return (HasChanged ? "*" : "") + Value.ToString( "X2" ) + " " + Name;
+        }
+
+        public bool RequiresJobCheckIDPatch()
+        {
+            return ((Value >= 0x35) && (Value < 0x4A) && ((FormationSprites1 != Default.FormationSprites1) || (FormationSprites2 != Default.FormationSprites2)));
         }
 
 		#endregion Public Methods 
