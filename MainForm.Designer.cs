@@ -69,8 +69,8 @@ namespace FFTPatcher
             this.psxMenu = new System.Windows.Forms.MenuItem();
             this.patchPsxIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.openPatchedPsxIso = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.men_PatchPSXSavestate = new System.Windows.Forms.MenuItem();
+            this.separator_PSXMenu = new System.Windows.Forms.MenuItem();
+            this.menuItem_PatchPSXSavestate = new System.Windows.Forms.MenuItem();
             this.pspMenu = new System.Windows.Forms.MenuItem();
             this.patchPspIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.cheatdbMenuItem = new System.Windows.Forms.MenuItem();
@@ -208,8 +208,8 @@ namespace FFTPatcher
             this.psxMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.patchPsxIsoMenuItem,
             this.openPatchedPsxIso,
-            this.menuItem1,
-            this.men_PatchPSXSavestate});
+            this.separator_PSXMenu,
+            this.menuItem_PatchPSXSavestate});
             this.psxMenu.Text = "PS&X";
             // 
             // patchPsxIsoMenuItem
@@ -225,14 +225,15 @@ namespace FFTPatcher
             // 
             // menuItem1
             // 
-            this.menuItem1.Index = 2;
-            this.menuItem1.Text = " ";
+            this.separator_PSXMenu.Index = 2;
+            this.separator_PSXMenu.Text = "-";
             // 
-            // men_PatchPSXSavestate
+            // menuItem_PatchPSXSavestate
             // 
-            this.men_PatchPSXSavestate.Index = 3;
-            this.men_PatchPSXSavestate.Text = "Patch PSX Savestate";
-            this.men_PatchPSXSavestate.Click += new System.EventHandler(this.men_PatchPSXSavestate_Click);
+            this.menuItem_PatchPSXSavestate.Enabled = false;
+            this.menuItem_PatchPSXSavestate.Index = 3;
+            this.menuItem_PatchPSXSavestate.Text = "Patch PSX Savestate";
+            this.menuItem_PatchPSXSavestate.Click += new System.EventHandler(this.menuItem_PatchPSXSaveState_Click);
             // 
             // pspMenu
             // 
@@ -353,8 +354,8 @@ namespace FFTPatcher
         private System.Windows.Forms.MenuItem psxMenu;
         private System.Windows.Forms.MenuItem pspMenu;
         private System.Windows.Forms.MenuItem openPatchedPspItem;
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem men_PatchPSXSavestate;
+        private System.Windows.Forms.MenuItem separator_PSXMenu;
+        private System.Windows.Forms.MenuItem menuItem_PatchPSXSavestate;
 
     }
 }

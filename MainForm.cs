@@ -242,7 +242,7 @@ namespace FFTPatcher
         void fileMenuItem_Popup( object sender, EventArgs e )
         {
             openMenuItem.Enabled = true;
-            saveAsPspMenuItem.Enabled = fftPatchEditor1.Enabled && FFTPatch.Context == Context.US_PSX;
+            saveAsPspMenuItem.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
             saveMenuItem.Enabled = fftPatchEditor1.Enabled;
         }
 
@@ -392,6 +392,7 @@ namespace FFTPatcher
         {
             openPatchedPsxIso.Enabled = true;
             patchPsxIsoMenuItem.Enabled = fftPatchEditor1.Enabled && FFTPatch.Context == Context.US_PSX;
+            menuItem_PatchPSXSavestate.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
         }
 
         private void rebuildFFTPackMenuItem_Click( object sender, EventArgs e )
@@ -544,13 +545,12 @@ namespace FFTPatcher
             }
         }
 
-        private void men_PatchPSXSavestate_Click(object sender, EventArgs e)
+        private void menuItem_PatchPSXSaveState_Click(object sender, EventArgs e)
         {
             PatchPSXForm.patchISO = false;
-             DoWorkEventHandler doWork =
+            DoWorkEventHandler doWork =
                 delegate( object sender1, DoWorkEventArgs args )
                 {
-                    
                     PsxIso.PatchPsxSavestate( sender1 as BackgroundWorker, args, PatchPSXForm );
                 };
             ProgressChangedEventHandler progress =
@@ -574,7 +574,6 @@ namespace FFTPatcher
                         HandleException( args.Error );
                     }
                 };
-
 
             if (PatchPSXForm.CustomShowDialog( this ) == DialogResult.OK)
             {
@@ -606,7 +605,5 @@ namespace FFTPatcher
             //    }
             //}
         }
-
-
     }
 }
