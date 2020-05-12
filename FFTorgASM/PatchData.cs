@@ -45,11 +45,10 @@ namespace FFTorgASM
             {
                 string file = files[index];
                 List<Color> fileColorList = new List<Color>();
+                FilePatches[index] = new PatchFile(file);
 
                 if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
                 {
-                    FilePatches[index] = new PatchFile(file);
-
                     foreach (AsmPatch patch in tryPatches)
                     {
                         Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;

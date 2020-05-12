@@ -107,7 +107,8 @@ namespace FFTorgASM
             patchData = new PatchData(files, asmUtility);
 
             lsb_FilesList.Items.Clear();
-            lsb_FilesList.BackColors = new Color[files.Length + 1];
+            //lsb_FilesList.BackColors = new Color[files.Length + 1];
+            lsb_FilesList.SetColorCapacity(files.Length + 1);
             lsb_FilesList.Items.Add("All");
             lsb_FilesList.SelectedIndices.Clear();
 
@@ -116,10 +117,12 @@ namespace FFTorgASM
                 files[i] = files[i].Substring(files[i].LastIndexOf("\\") + 1);
                 lsb_FilesList.Items.Add(files[i]);
 
-                lsb_FilesList.BackColors[i + 1] = Color.White;
+                //lsb_FilesList.BackColors[i + 1] = Color.White;
+                //lsb_FilesList.SetBackColor(i + 1, Color.White);
                 if (!patchData.LoadedCorrectly[i])
                     //lsb_FilesList.Items[i + 1].BackColor = Color.Red;
-                    lsb_FilesList.BackColors[i + 1] = Color.Red;
+                    //lsb_FilesList.BackColors[i + 1] = Color.Red;
+                    lsb_FilesList.SetBackColor(i + 1, Color.FromArgb(225, 125, 125));
             }
         }
 
@@ -252,17 +255,17 @@ namespace FFTorgASM
                 LoadPatches(patchData.AllShownPatches);
                 clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
             }
-            else if (patchData.FilePatches[selectedIndex - 1] != null)
+            else if (!patchData.LoadedCorrectly[selectedIndex - 1])
+            {
+                clb_Patches.Items.Clear();
+                PatcherLib.MyMessageBox.Show(this, lsb_FilesList.SelectedItem + " did not load correctly!", "Error", MessageBoxButtons.OK);
+            }
+            else
             {
                 LoadPatches(patchData.FilePatches[selectedIndex - 1].Patches);
                 clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
             }
-            else
-            {
-                clb_Patches.Items.Clear();
-                PatcherLib.MyMessageBox.Show(this, "Error", lsb_FilesList.SelectedItem + " did not load correctly!", MessageBoxButtons.OK);
-            }
-
+            
             patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
 
             skipCheckEventHandler = true;
