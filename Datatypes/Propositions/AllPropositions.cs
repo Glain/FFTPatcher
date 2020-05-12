@@ -466,7 +466,8 @@ namespace FFTPatcher.Datatypes
 
         public static bool CanFixBuggyLevelBonuses( Context context )
         {
-            return context == Context.US_PSX;
+            //return context == Context.US_PSX;
+            return true;
         }
 
         public static bool IsoHasBuggyLevelBonuses( System.IO.Stream iso, Context context )

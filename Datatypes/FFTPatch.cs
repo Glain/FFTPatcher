@@ -246,6 +246,23 @@ namespace FFTPatcher.Datatypes
             }
         }
 
+        public static void LoadPatch(string filename)
+        {
+            try
+            {
+                LoadNewStylePatch(filename);
+            }
+            catch (Exception)
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filename);
+                LoadOldStylePatch(doc);
+            }
+
+            FireDataChangedEvent();
+        }
+
+        /*
         /// <summary>
         /// Reads an XML fftpatch file.
         /// </summary>
@@ -264,6 +281,7 @@ namespace FFTPatcher.Datatypes
             }
             FireDataChangedEvent();
         }
+        */
 
         /// <summary>
         /// Builds a new (unmodified) patch from a context.
@@ -526,8 +544,8 @@ namespace FFTPatcher.Datatypes
                 var MoveFind = new AllMoveFindItems( Context, moveFind, new AllMoveFindItems( Context, psp ? PSPResources.Binaries.MoveFind : PSXResources.Binaries.MoveFind ) );
                 var StoreInventories = new AllStoreInventories( Context, inventories, psp ? PSPResources.Binaries.StoreInventories : PSXResources.Binaries.StoreInventories );
                 var Propositions = new AllPropositions( propositions, psp ? PSPResources.Binaries.Propositions : PSXResources.Binaries.Propositions, brokenLevelBonuses );
-                FFTPatch.Propositions = Propositions;
 
+                FFTPatch.Propositions = Propositions;
                 FFTPatch.Abilities = Abilities;
                 FFTPatch.AbilityAnimations = AbilityAnimations;
                 FFTPatch.Items = Items;
@@ -562,7 +580,8 @@ namespace FFTPatcher.Datatypes
 
                 var buggyzipEntry = GetZipEntry( file, "BuggyPropositions", false );
                 var propsZipEntry = GetZipEntry(file, elementNames[ElementName.Propositions], false);
-                bool buggy = (buggyzipEntry != null && propsZipEntry != null) || propsZipEntry == null;
+                bool buggy = false;
+                //bool buggy = (buggyzipEntry != null && propsZipEntry != null) || propsZipEntry == null;
                 
                 LoadDataFromBytes(
                     GetZipEntry( file, elementNames[ElementName.Abilities], false ) ?? defaults[ElementName.Abilities],
