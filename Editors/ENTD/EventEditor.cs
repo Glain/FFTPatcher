@@ -184,13 +184,22 @@ namespace FFTPatcher.Editors
             	bool useOccupiedColor = canCheckOccupied ? _isPositionOccupied[e.Index] : false;
             	
                 EventUnit unit = unitSelectorListBox.Items[e.Index] as EventUnit;
-                using( Brush textBrush = new SolidBrush( useOccupiedColor ? Color.Red : e.ForeColor ) )
+                Color foreColor = useOccupiedColor ? Color.Red : e.ForeColor;
+
+                using( Brush textBrush = new SolidBrush( foreColor ) )
               	using( Brush backBrush = new SolidBrush( e.BackColor ) )
                 {
                     e.Graphics.FillRectangle( backBrush, e.Bounds );
-                    e.Graphics.DrawString( (unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, textBrush, e.Bounds.X + 0, e.Bounds.Y + 0 );
-                    e.Graphics.DrawString( unit.SpecialName.Name, e.Font, textBrush, e.Bounds.X + columnWidths[0], e.Bounds.Y + 0 );
-                    e.Graphics.DrawString( unit.Job.Name, e.Font, textBrush, e.Bounds.X + columnWidths[0] + columnWidths[1], e.Bounds.Y + 0 );
+
+                    //e.Graphics.DrawString((unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, textBrush, e.Bounds.X + 0, e.Bounds.Y + 0);
+                    TextRenderer.DrawText(e.Graphics, (unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, new Point(e.Bounds.X + 0, e.Bounds.Y + 0), foreColor);
+                    if (unit.SpriteSet.Value > 0)
+                    {
+                        //e.Graphics.DrawString(unit.SpecialName.Name, e.Font, textBrush, e.Bounds.X + columnWidths[0], e.Bounds.Y + 0);
+                        TextRenderer.DrawText(e.Graphics, unit.SpecialName.Name, e.Font, new Point(e.Bounds.X + columnWidths[0], e.Bounds.Y + 0), foreColor);
+                        //e.Graphics.DrawString(unit.Job.Name, e.Font, textBrush, e.Bounds.X + columnWidths[0] + columnWidths[1], e.Bounds.Y + 0);
+                        TextRenderer.DrawText(e.Graphics, unit.Job.Name, e.Font, new Point(e.Bounds.X + columnWidths[0] + columnWidths[1], e.Bounds.Y + 0), foreColor);
+                    }
                     if( (e.State & DrawItemState.Focus) == DrawItemState.Focus )
                     {
                         e.DrawFocusRectangle();
