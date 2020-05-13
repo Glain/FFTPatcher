@@ -329,7 +329,7 @@ namespace FFTPatcher.SpriteEditor
 
                 if (depth > 0)
                 {
-                    imageNode["Name"].InnerText = (inIndex < names.Count) ? names[inIndex] : imageNode["Name"].InnerText + " (" + (inIndex + 1) + ")";
+                    imageNode["Name"].InnerText = (inIndex < names.Count) ? names[inIndex] : imageNode["Name"].InnerText + " (" + (inIndex) + ")";
 
                     XmlNode palettePositionNode = imageNode["PalettePosition"];
                     if (palettePositionNode != null)

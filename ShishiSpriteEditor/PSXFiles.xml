@@ -147,7 +147,7 @@
     </Section>
     <Section Name="WLDTEX.TM2" Filename="WLDTEX.TM2" Filesize="274432">
         <StupidTM2Image>
-            <Name>WLDTEX (1)</Name>
+            <Name>WLDTEX (0)</Name>
             <Width>128</Width>
             <Height>256</Height>
             <Sector>WORLD_WLDTEX_TM2</Sector>
@@ -368,7 +368,7 @@
             </Position>
         </PalettedImage4bpp>
         <StupidTM2Image4bpp>
-            <Name>WLDTEX (3)</Name>
+            <Name>WLDTEX (2)</Name>
             <Width>256</Width>
             <Height>256</Height>
             <Sector>WORLD_WLDTEX_TM2</Sector>
