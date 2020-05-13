@@ -63,6 +63,7 @@ namespace FFTPatcher.Editors
             jobsListBox.SelectedIndexChanged += jobsListBox_SelectedIndexChanged;
             jobsListBox.SelectedIndex = 0;
             jobEditor.Job = jobsListBox.SelectedItem as Job;
+            jobsListBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -87,6 +88,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             jobsListBox.TopIndex = top;
             jobsListBox.EndUpdate();
+            jobsListBox.SetChangedColor();
         }
 
         private void jobEditor_SkillSetClicked( object sender, LabelClickedEventArgs e )

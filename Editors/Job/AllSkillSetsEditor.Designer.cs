@@ -48,7 +48,7 @@ namespace FFTPatcher.Editors
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel panel;
-            this.skillSetListBox = new PatcherLib.Controls.ModifiedListBox();
+            this.skillSetListBox = new FFTPatcher.Controls.EnhancedListBox();
             this.skillSetEditor = new FFTPatcher.Editors.SkillSetEditor();
             panel = new System.Windows.Forms.Panel();
             panel.SuspendLayout();
@@ -100,7 +100,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private PatcherLib.Controls.ModifiedListBox skillSetListBox;
+        private FFTPatcher.Controls.EnhancedListBox skillSetListBox;
         private SkillSetEditor skillSetEditor;
     }
 }

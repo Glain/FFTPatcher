@@ -70,6 +70,7 @@ namespace FFTPatcher.Editors
             listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
             listBox.SelectedIndex = 0;
             statusAttributeEditor.StatusAttribute = listBox.SelectedItem as StatusAttribute;
+            listBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -90,6 +91,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             listBox.TopIndex = top;
             listBox.EndUpdate();
+            listBox.SetChangedColor();
         }
 
         private void ContextMenu_Popup(object sender, EventArgs e)

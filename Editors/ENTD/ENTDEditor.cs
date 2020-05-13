@@ -67,6 +67,8 @@ namespace FFTPatcher.Editors
             eventListBox.SelectedIndex = 0;
             eventEditor1.Event = eventListBox.SelectedItem as Event;
             eventListBox.SelectedIndexChanged += eventListBox_SelectedIndexChanged;
+
+            eventListBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -87,6 +89,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             eventListBox.TopIndex = top;
             eventListBox.EndUpdate();
+            eventListBox.SetChangedColor();
         }
 
         private void eventListBox_MouseDown( object sender, MouseEventArgs e )

@@ -70,6 +70,7 @@ namespace FFTPatcher.Editors
             mapListBox.SelectedIndexChanged += mapListBox_SelectedIndexChanged;
             mapListBox.SelectedIndex = 0;
             mapMoveFindItemEditor1.MapMoveFindItems = mapListBox.SelectedItem as MapMoveFindItems;
+            mapListBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -90,6 +91,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             mapListBox.TopIndex = top;
             mapListBox.EndUpdate();
+            mapListBox.SetChangedColor();
         }
 
         private void ContextMenu_Popup(object sender, EventArgs e)

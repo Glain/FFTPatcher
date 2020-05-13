@@ -77,6 +77,8 @@ namespace FFTPatcher.Editors
             abilitiesListBox.SelectedIndexChanged += abilitiesListBox_SelectedIndexChanged;
             abilitiesListBox.SelectedIndex = 0;
             abilityEditor.Ability = abilitiesListBox.SelectedItem as Ability;
+
+            abilitiesListBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -99,6 +101,8 @@ namespace FFTPatcher.Editors
 
             abilitiesListBox.TopIndex = top;
             abilitiesListBox.EndUpdate();
+
+            abilitiesListBox.SetChangedColor();
         }
 
         private void abilityEditor_InflictStatusLabelClicked( object sender, LabelClickedEventArgs e )

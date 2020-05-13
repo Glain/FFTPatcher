@@ -68,6 +68,7 @@ namespace FFTPatcher.Editors
             skillSetListBox.SelectedIndexChanged += skillSetListBox_SelectedIndexChanged;
             skillSetListBox.SelectedIndex = 0;
             skillSetEditor.SkillSet = skillSetListBox.SelectedItem as SkillSet;
+            skillSetListBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -102,6 +103,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             skillSetListBox.TopIndex = top;
             skillSetListBox.EndUpdate();
+            skillSetListBox.SetChangedColor();
         }
 
         void skillSetListBox_MouseDown( object sender, MouseEventArgs e )

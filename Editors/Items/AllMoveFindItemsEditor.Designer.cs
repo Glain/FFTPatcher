@@ -49,7 +49,7 @@ namespace FFTPatcher.Editors
         {
             System.Windows.Forms.Panel panel;
             this.mapMoveFindItemEditor1 = new FFTPatcher.Editors.MapMoveFindItemEditor();
-            this.mapListBox = new PatcherLib.Controls.ModifiedListBox();
+            this.mapListBox = new FFTPatcher.Controls.EnhancedListBox();
             panel = new System.Windows.Forms.Panel();
             panel.SuspendLayout();
             this.SuspendLayout();
@@ -99,7 +99,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private PatcherLib.Controls.ModifiedListBox mapListBox;
+        private FFTPatcher.Controls.EnhancedListBox mapListBox;
         private MapMoveFindItemEditor mapMoveFindItemEditor1;
     }
 }

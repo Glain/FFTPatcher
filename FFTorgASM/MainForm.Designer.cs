@@ -38,7 +38,7 @@
             this.checkAllButton = new System.Windows.Forms.Button();
             this.btnPatchSaveState = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.lsb_FilesList = new PatcherLib.Controls.BGListBox();
+            this.lsb_FilesList = new PatcherLib.Controls.ColorListBox();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
             this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
             this.txt_Messages = new System.Windows.Forms.TextBox();
@@ -283,7 +283,7 @@
         private System.Windows.Forms.Button checkAllButton;
         private System.Windows.Forms.Button btnPatchSaveState;
         private System.Windows.Forms.Label label1;
-        private PatcherLib.Controls.BGListBox lsb_FilesList;
+        private PatcherLib.Controls.ColorListBox lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;

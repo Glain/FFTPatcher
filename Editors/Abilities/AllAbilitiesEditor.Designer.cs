@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-            this.abilitiesListBox = new PatcherLib.Controls.ModifiedListBox();
+            this.abilitiesListBox = new FFTPatcher.Controls.EnhancedListBox();
             this.abilityEditor = new FFTPatcher.Editors.AbilityEditor();
             this.SuspendLayout();
             // 
@@ -90,7 +90,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private PatcherLib.Controls.ModifiedListBox abilitiesListBox;
+        private FFTPatcher.Controls.EnhancedListBox abilitiesListBox;
         private AbilityEditor abilityEditor;
     }
 }

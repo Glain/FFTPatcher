@@ -55,10 +55,13 @@
     <Compile Include="Controls\BGCheckedListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\BGListBox.cs">
+    <Compile Include="Controls\ColorListBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ModifiedBGCheckedListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ModifiedColorListBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ModifiedListBox.cs">

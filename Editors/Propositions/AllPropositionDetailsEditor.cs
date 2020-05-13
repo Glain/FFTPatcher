@@ -44,6 +44,7 @@ namespace FFTPatcher.Editors
                 props.Prices,
                 props.SmallBonuses,
                 props.LargeBonuses );
+            listBox1.SetChangedColors();
         }
 
         private void editor_DataChanged(object sender, EventArgs e)
@@ -67,6 +68,7 @@ namespace FFTPatcher.Editors
             props.Propositions.ForEach( p => listBox1.Items.Add( p ) );
             listBox1.SelectedIndex = index;
             listBox1.EndUpdate();
+            listBox1.SetChangedColor();
         }
 
         protected override void OnVisibleChanged( EventArgs e )

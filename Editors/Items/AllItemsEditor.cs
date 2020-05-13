@@ -76,6 +76,7 @@ namespace FFTPatcher.Editors
             itemListBox.SelectedIndexChanged += itemListBox_SelectedIndexChanged;
             itemListBox.SelectedIndex = 0;
             itemEditor.Item = itemListBox.SelectedItem as Item;
+            itemListBox.SetChangedColors();
         }
 
 		#endregion Public Methods 
@@ -90,6 +91,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             itemListBox.TopIndex = top;
             itemListBox.EndUpdate();
+            itemListBox.SetChangedColor();
         }
 
         private void itemEditor_InflictStatusClicked( object sender, LabelClickedEventArgs e )

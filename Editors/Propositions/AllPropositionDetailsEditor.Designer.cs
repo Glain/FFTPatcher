@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new PatcherLib.Controls.ModifiedListBox();
+            this.listBox1 = new FFTPatcher.Controls.EnhancedListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.propositionEditor1 = new FFTPatcher.Editors.PropositionEditor();
             this.panel1.SuspendLayout();
@@ -82,7 +82,7 @@
 
         #endregion
 
-        private PatcherLib.Controls.ModifiedListBox listBox1;
+        private FFTPatcher.Controls.EnhancedListBox listBox1;
         private PropositionEditor propositionEditor1;
         private System.Windows.Forms.Panel panel1;
     }
