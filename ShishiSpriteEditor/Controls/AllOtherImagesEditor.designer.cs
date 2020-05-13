@@ -35,10 +35,10 @@
             this.ddl_Entry = new System.Windows.Forms.ComboBox();
             this.lbl_Entry = new System.Windows.Forms.Label();
             this.pnl_Palette = new System.Windows.Forms.Panel();
+            this.cmbZoom = new System.Windows.Forms.ComboBox();
             this.chk_8bpp = new System.Windows.Forms.CheckBox();
             this.lbl_Palette = new System.Windows.Forms.Label();
             this.ddl_Palette = new System.Windows.Forms.ComboBox();
-            this.cmbZoom = new System.Windows.Forms.ComboBox();
             this.comboBox1 = new FFTPatcher.SpriteEditor.SeparatorComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -70,7 +70,6 @@
             this.panel1.TabIndex = 2;
             this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.panel1_DragDrop);
             this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.panel1_DragEnter);
-            //this.panel1.SizeChanged += panel1_SizeChanged;
             // 
             // imageSizeLabel
             // 
@@ -83,6 +82,7 @@
             // 
             // pnl_Parameters
             // 
+            this.pnl_Parameters.Controls.Add(this.cmbZoom);
             this.pnl_Parameters.Controls.Add(this.ddl_Entry);
             this.pnl_Parameters.Controls.Add(this.lbl_Entry);
             this.pnl_Parameters.Controls.Add(this.pnl_Palette);
@@ -112,7 +112,6 @@
             // 
             // pnl_Palette
             // 
-            this.pnl_Palette.Controls.Add(this.cmbZoom);
             this.pnl_Palette.Controls.Add(this.chk_8bpp);
             this.pnl_Palette.Controls.Add(this.lbl_Palette);
             this.pnl_Palette.Controls.Add(this.ddl_Palette);
@@ -120,6 +119,15 @@
             this.pnl_Palette.Name = "pnl_Palette";
             this.pnl_Palette.Size = new System.Drawing.Size(470, 42);
             this.pnl_Palette.TabIndex = 5;
+            // 
+            // cmbZoom
+            // 
+            this.cmbZoom.FormattingEnabled = true;
+            this.cmbZoom.Location = new System.Drawing.Point(388, 1);
+            this.cmbZoom.Name = "cmbZoom";
+            this.cmbZoom.Size = new System.Drawing.Size(78, 21);
+            this.cmbZoom.TabIndex = 5;
+            this.cmbZoom.SelectedIndexChanged += cmbZoom_SelectedIndexChanged;
             // 
             // chk_8bpp
             // 
@@ -150,15 +158,6 @@
             this.ddl_Palette.Size = new System.Drawing.Size(69, 21);
             this.ddl_Palette.TabIndex = 1;
             this.ddl_Palette.SelectedIndexChanged += new System.EventHandler(this.ddl_Palette_SelectedIndexChanged);
-            // 
-            // cmbZoom
-            // 
-            this.cmbZoom.FormattingEnabled = true;
-            this.cmbZoom.Location = new System.Drawing.Point(389, 5);
-            this.cmbZoom.Name = "cmbZoom";
-            this.cmbZoom.Size = new System.Drawing.Size(78, 21);
-            this.cmbZoom.TabIndex = 5;
-            this.cmbZoom.SelectedIndexChanged += cmbZoom_SelectedIndexChanged;
             // 
             // comboBox1
             // 
