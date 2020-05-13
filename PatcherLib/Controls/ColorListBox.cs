@@ -66,14 +66,21 @@ namespace PatcherLib.Controls
             colors = newColors;
         }
 
+        public void SetColor(Color foreColor, Color backColor)
+        {
+            SetColor(SelectedIndex, foreColor, backColor);
+        }
+
         public void SetColor(int index, Color foreColor, Color backColor)
         {
-            Colors[index] = new ColorPair(foreColor, backColor);
+            if (index >= 0)
+                Colors[index] = new ColorPair(foreColor, backColor);
         }
 
         public void SetDefaultColor(int index)
         {
-            Colors[index] = defaultColorPair;
+            if (index >= 0)
+                Colors[index] = defaultColorPair;
         }
 
         public void SetForeColor(int index, Color foreColor)
@@ -91,7 +98,6 @@ namespace PatcherLib.Controls
             int index = e.Index;
             Graphics graphics = e.Graphics;
             ColorPair colorPair = ((colors != null) && (index < colors.Length) && (index >= 0)) ? colors[index] : new ColorPair(ForeColor, BackColor);
-            //Color backColor = ((backColors != null) && (e.Index < backColors.Length)) ? backColors[e.Index] : BackColor;
 
             bool isSelected = ((e.State & DrawItemState.Selected) == DrawItemState.Selected);
 
