@@ -205,7 +205,7 @@ namespace FFTPatcher.SpriteEditor
                 ddl_Palette.Items.Clear();
                 for (int index = 0; index < im.PaletteCount; index++)
                 {
-                    ddl_Palette.Items.Add((index + 1));
+                    ddl_Palette.Items.Add(index);
                 }
                 ddl_Palette.SelectedIndex = im.CurrentPalette;
 
@@ -293,7 +293,7 @@ namespace FFTPatcher.SpriteEditor
                     ddl_Palette.Items.Clear();
                     for (int index = 0; index < upperIndexBound; index++)
                     {
-                        ddl_Palette.Items.Add((index + 1));
+                        ddl_Palette.Items.Add(index);
                     }
                     ddl_Palette.SelectedIndex = im.CurrentPalette;
 
