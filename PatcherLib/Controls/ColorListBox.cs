@@ -9,7 +9,7 @@ namespace PatcherLib.Controls
 {
     public partial class ColorListBox : ListBox
     {
-        internal class ColorPair
+        private class ColorPair
         {
             public Color ForeColor { get; set; }
             public Color BackColor { get; set; }

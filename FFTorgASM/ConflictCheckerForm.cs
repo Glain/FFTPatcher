@@ -17,7 +17,7 @@ namespace FFTorgASM
 {
     public partial class ConflictCheckerForm : Form
     {
-        internal class PatchRangeConflict
+        private class PatchRangeConflict
         {
             public PatchRange Range { get; set; }
             public AsmPatch ConflictPatch { get; set; }
@@ -34,7 +34,7 @@ namespace FFTorgASM
             }
         }
 
-        internal class ConflictCheckResult
+        private class ConflictCheckResult
         {
             public List<AsmPatch> PatchList { get; set; }
             public Dictionary<AsmPatch, List<PatchRangeConflict>> ConflictMap { get; set; }

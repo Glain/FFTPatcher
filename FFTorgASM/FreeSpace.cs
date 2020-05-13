@@ -10,7 +10,7 @@ namespace FFTorgASM
 {
     public static class FreeSpace
     {
-        internal enum PsxFreeSpaceLocation
+        private enum PsxFreeSpaceLocation
         {
             BATTLE_BIN = 0,
             WORLD_BIN = 1,
