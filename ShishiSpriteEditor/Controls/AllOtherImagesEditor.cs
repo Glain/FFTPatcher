@@ -178,8 +178,13 @@ namespace FFTPatcher.SpriteEditor
                 ddl_Entry.Items.Clear();
                 for (int index = 0; index < listCount; index++)
                 {
-                    string addend = (list[index].Name == null) ? "" : (" - " + list[index].Name);
-                    ddl_Entry.Items.Add((index) + addend);
+                    //string addend = (list[index].Name == null) ? "" : (" - " + list[index].Name);
+                    //string name = list.HideEntryIndex ? addend : ((index) + addend);
+
+                    bool hasVisibleName = !string.IsNullOrEmpty(list[index].Name);
+                    bool hideEntryIndex = list.HideEntryIndex && (hasVisibleName);
+                    string name = string.Format("{0}{1}", (hideEntryIndex ? "" : ((index).ToString() + " - ")), (list[index].Name ?? ""));
+                    ddl_Entry.Items.Add(name);
                 }
                 ddl_Entry.SelectedIndex = 0;
 

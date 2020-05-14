@@ -7,6 +7,7 @@ namespace FFTPatcher.SpriteEditor.DataTypes.OtherImages
     public class AbstractImageList : IEnumerable<AbstractImage>
     {
         public string Name { get; set; }
+        public bool HideEntryIndex { get; set; }
         public List<AbstractImage> Images { get; set; }
 
         public AbstractImage this[int index]
