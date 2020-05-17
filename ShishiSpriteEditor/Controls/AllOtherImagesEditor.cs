@@ -173,6 +173,8 @@ namespace FFTPatcher.SpriteEditor
             }
 
             int listCount = list.Count;
+            string entryHexFormatString = (listCount > 255) ? "X4" : "X2";
+
             if (listCount > 1)
             {
                 ddl_Entry.Items.Clear();
@@ -183,7 +185,7 @@ namespace FFTPatcher.SpriteEditor
 
                     bool hasVisibleName = !string.IsNullOrEmpty(list[index].Name);
                     bool hideEntryIndex = list.HideEntryIndex && (hasVisibleName);
-                    string name = string.Format("{0}{1}", (hideEntryIndex ? "" : ((index).ToString() + " - ")), (list[index].Name ?? ""));
+                    string name = string.Format("{0}{1}", (hideEntryIndex ? "" : ((index).ToString(entryHexFormatString) + " - ")), (list[index].Name ?? ""));
                     ddl_Entry.Items.Add(name);
                 }
                 ddl_Entry.SelectedIndex = 0;
