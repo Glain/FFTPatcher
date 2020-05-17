@@ -148,6 +148,12 @@ namespace PatcherLib.Iso
             return GetFileFromFFTPack(stream, (Files)index, fftPackLength);
         }
 
+        public static byte[] TryGetFileFromIso(Stream stream, PatcherLib.Iso.PspIso.PspIsoInfo info, Files file, int start, int length)
+        {
+            stream.Seek(info[PspIso.Sectors.PSP_GAME_USRDIR_fftpack_bin] * 2048, SeekOrigin.Begin);
+            return TryGetFileFromFFTPack(stream, file, info.GetFileSize(PspIso.Sectors.PSP_GAME_USRDIR_fftpack_bin), start, length);
+        }
+
         public static byte[] GetFileFromIso( Stream stream, PatcherLib.Iso.PspIso.PspIsoInfo info, Files file, int start, int length )
         {
             stream.Seek( info[PspIso.Sectors.PSP_GAME_USRDIR_fftpack_bin] * 2048, SeekOrigin.Begin );
@@ -190,6 +196,26 @@ namespace PatcherLib.Iso
                 stream.Seek( pos, SeekOrigin.Begin );
             }
             return end;
+        }
+
+        private static byte[] TryGetFileFromFFTPack(Stream stream, Files file, long fftpackLength, int start, int length)
+        {
+            long pos = stream.Position;
+            UInt32 fileStart = GetStartPosition(stream, file, fftpackLength);
+
+            UInt32 fileEnd = GetEndPosition(stream, file, fftpackLength);
+
+            UInt32 fileLength = fileEnd - fileStart;
+            length = Math.Min((int)fileLength, length);
+            //if (start > fileLength) throw new ArgumentOutOfRangeException("start", "start longer than file length");
+            //if (length > fileLength) throw new ArgumentOutOfRangeException("length", "length longer than file length");
+
+            byte[] result = new byte[length];
+            stream.Seek(fileStart + start + pos, SeekOrigin.Begin);
+            stream.Read(result, 0, length);
+            stream.Seek(pos, SeekOrigin.Begin);
+
+            return result;
         }
 
         private static byte[] GetFileFromFFTPack( Stream stream, Files file, long fftpackLength, int start, int length )

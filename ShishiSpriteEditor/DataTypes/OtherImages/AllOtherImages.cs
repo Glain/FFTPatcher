@@ -74,7 +74,7 @@ namespace FFTPatcher.SpriteEditor
         }
 
 
-
+        private static byte[] Effect_FrameDataOffsetByteSequence = new byte[4] { 0x28, 0x00, 0x00, 0x00 };
 
         private AllOtherImages(List<AbstractImageList> images)
         {
@@ -428,20 +428,6 @@ namespace FFTPatcher.SpriteEditor
 
             for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
             {
-                string strEffectNumber = effectIndex.ToString("000");
-                string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
-
-                PatcherLib.Iso.PsxIso.Sectors sector = (PatcherLib.Iso.PsxIso.Sectors)0;
-
-                try
-                {
-                    sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorName);
-                }
-                catch (Exception) { }
-
-                if (sector == 0)
-                    continue;
-
                 int effectByteCount = effectFileBytes.SubLength((effectIndex * 8) + 4, 4).ToIntLE();
                 if (effectByteCount == 0)
                     continue;
@@ -449,36 +435,13 @@ namespace FFTPatcher.SpriteEditor
                 uint headerLocation = headerLocationBytes.SubLength((effectIndex * 4), 4).ToUInt32();
                 int headerOffset = (int)(headerLocation - 0x801C2500U);
 
-                int frameDataOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, headerOffset, 4).ToIntLE() + headerOffset;
-                int frameDataSectionCount = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, frameDataOffset, 2).ToIntLE();
-                int firstFrameDataPointerOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, frameDataOffset + 4 + (2 * frameDataSectionCount), 2).ToIntLE() + frameDataOffset + 4;
-                int firstFrameTexturePageHeader = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, firstFrameDataPointerOffset, 2).ToIntLE();
-
-                int colorDepthCode = (firstFrameTexturePageHeader & 0x0180) >> 7;
-                if (colorDepthCode > 1)     // Invalid code
-                    continue;
-
-                bool is4bpp = (colorDepthCode == 0);
-                int paletteOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, headerOffset + 0x24, 4).ToIntLE() + headerOffset;
-
-                int secondSetPaletteOffset = paletteOffset + 0x200;
-                int imageSizeDataOffset = paletteOffset + 0x400;
-                int graphicsOffset = paletteOffset + 0x404;
-
-                byte[] imageSizeData = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, imageSizeDataOffset, 4);
-                int imageSizeCombinedValue = imageSizeData.Sub(0, 2).ToIntLE();
-                int rowBytes = (imageSizeData[3] != 0) ? 256 : 128;
-                int height = imageSizeCombinedValue >> ((imageSizeData[3] != 0) ? 8 : 7);
-                int width = is4bpp ? (rowBytes * 2) : rowBytes;
-                int imageSize = rowBytes * height;
-                int fileSize = graphicsOffset + imageSize;
-                string name = String.Format("{0} {1}", effectIndex.ToString("X3"), effectNames[effectIndex]);
-                string fileName = String.Format("E{0}.BIN", strEffectNumber);
-
-                PatcherLib.Iso.PsxIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, graphicsOffset, imageSize);
-                PatcherLib.Iso.PsxIso.KnownPosition palettePosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
-
-                images.Add(GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, sector, graphicsPosition, palettePosition));
+                try
+                {
+                    AbstractImage image = GetPSXEffectImage(iso, effectIndex, effectNames[effectIndex], headerOffset);
+                    if (image != null)
+                        images.Add(image);
+                }
+                catch (Exception) { }
             }
 
             return images;
@@ -491,68 +454,155 @@ namespace FFTPatcher.SpriteEditor
             const int effectCount = 512;
             IList<string> effectNames = PatcherLib.PSPResources.Lists.AbilityEffects;
             PatcherLib.Iso.PspIso.PspIsoInfo pspIsoInfo = PatcherLib.Iso.PspIso.PspIsoInfo.GetPspIsoInfo(iso);
-            byte[] subroutineEndByteSequence = new byte[8] { 0x08, 0x00, 0xE0, 0x03, 0x00, 0x00, 0x00, 0x00 };
-            byte[] frameDataOffsetByteSequence = new byte[4] { 0x28, 0x00, 0x00, 0x00 };
+            //byte[] subroutineEndByteSequence = new byte[8] { 0x08, 0x00, 0xE0, 0x03, 0x00, 0x00, 0x00, 0x00 };
+            //byte[] frameDataOffsetByteSequence = new byte[4] { 0x28, 0x00, 0x00, 0x00 };
 
             for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
             {
-                string strEffectNumber = effectIndex.ToString("000");
-                string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
-
-                PatcherLib.Iso.FFTPack.Files fftPack = (PatcherLib.Iso.FFTPack.Files)3;
-
                 try
                 {
-                    fftPack = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), sectorName);
+                    AbstractImage effectImage = GetPSPEffectImage(iso, effectIndex, effectNames[effectIndex], pspIsoInfo);
+                    if (effectImage != null)
+                        images.Add(effectImage);
                 }
                 catch (Exception) { }
-
-                byte[] fileBytes = PatcherLib.Iso.PspIso.GetFile(iso, pspIsoInfo, fftPack);
-                if (fileBytes.Length == 0)
-                    continue;
-
-                int headerOffset = 0;
-                int lastMatchIndex = fileBytes.LastIndexOf(subroutineEndByteSequence);
-
-                if (lastMatchIndex >= 0)
-                {
-                    int lastMatchIndex2 = fileBytes.Sub(lastMatchIndex + 8).IndexOf(frameDataOffsetByteSequence) + lastMatchIndex + 4;
-                    headerOffset = (lastMatchIndex2 >= 0) ? (lastMatchIndex2 + 4) : lastMatchIndex + 8;
-                }
-
-                int frameDataOffset = fileBytes.SubLength(headerOffset, 4).ToIntLE() + headerOffset;
-                int frameDataSectionCount = fileBytes.SubLength(frameDataOffset, 2).ToIntLE();
-                int firstFrameDataPointerOffset = fileBytes.SubLength(frameDataOffset + 4 + (2 * frameDataSectionCount), 2).ToIntLE() + frameDataOffset + 4;
-                int firstFrameTexturePageHeader = fileBytes.SubLength(firstFrameDataPointerOffset, 2).ToIntLE();
-
-                int colorDepthCode = (firstFrameTexturePageHeader & 0x0180) >> 7;
-                if (colorDepthCode > 1)     // Invalid code
-                    continue;
-
-                bool is4bpp = (colorDepthCode == 0);
-                int paletteOffset = fileBytes.SubLength(headerOffset + 0x24, 4).ToIntLE() + headerOffset;
-
-                int secondSetPaletteOffset = paletteOffset + 0x200;
-                int imageSizeDataOffset = paletteOffset + 0x400;
-                int graphicsOffset = paletteOffset + 0x404;
-
-                byte[] imageSizeData = fileBytes.SubLength(imageSizeDataOffset, 4).ToArray();
-                int imageSizeCombinedValue = imageSizeData.Sub(0, 2).ToIntLE();
-                int rowBytes = (imageSizeData[3] != 0) ? 256 : 128;
-                int height = imageSizeCombinedValue >> ((imageSizeData[3] != 0) ? 8 : 7);
-                int width = is4bpp ? (rowBytes * 2) : rowBytes;
-                int imageSize = rowBytes * height;
-                int fileSize = graphicsOffset + imageSize;
-                string name = String.Format("{0} {1}", effectIndex.ToString("X3"), effectNames[effectIndex]);
-                string fileName = String.Format("E{0}.BIN", strEffectNumber);
-
-                PatcherLib.Iso.PspIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, graphicsOffset, imageSize);
-                PatcherLib.Iso.PspIso.KnownPosition palettePosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
-
-                images.Add(GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, fftPack, graphicsPosition, palettePosition));
             }
 
             return images;
+        }
+
+        public static AbstractImage GetPSXEffectImage(Stream iso, int effectIndex)
+        {
+            byte[] headerLocationBytes = PatcherLib.Iso.PsxIso.ReadFile(iso, PatcherLib.Iso.PsxIso.Sectors.BATTLE_BIN, 0x14D8D0 + (effectIndex * 8) + 4, 4);
+            uint headerLocation = headerLocationBytes.ToUInt32();
+            int headerOffset = (int)(headerLocation - 0x801C2500U);
+
+            return GetPSXEffectImage(iso, effectIndex, PatcherLib.PSXResources.Lists.AbilityEffects[effectIndex], headerOffset);
+        }
+
+        public static AbstractImage GetPSXEffectImage(Stream iso, int effectIndex, string effectName, int headerOffset)
+        {
+            string strEffectNumber = effectIndex.ToString("000");
+            string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
+
+            PatcherLib.Iso.PsxIso.Sectors sector = (PatcherLib.Iso.PsxIso.Sectors)0;
+
+            try
+            {
+                sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorName);
+            }
+            catch (Exception) { }
+
+            if (sector == 0)
+                return null;
+
+            /*
+            int effectByteCount = effectFileBytes.SubLength((effectIndex * 8) + 4, 4).ToIntLE();
+            if (effectByteCount == 0)
+                return null;
+
+            uint headerLocation = headerLocationBytes.SubLength((effectIndex * 4), 4).ToUInt32();
+            int headerOffset = (int)(headerLocation - 0x801C2500U);
+            */
+
+            int frameDataOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, headerOffset, 4).ToIntLE() + headerOffset;
+            int frameDataSectionCount = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, frameDataOffset, 2).ToIntLE();
+            int firstFrameDataPointerOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, frameDataOffset + 4 + (2 * frameDataSectionCount), 2).ToIntLE() + frameDataOffset + 4;
+            int firstFrameTexturePageHeader = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, firstFrameDataPointerOffset, 2).ToIntLE();
+
+            int colorDepthCode = (firstFrameTexturePageHeader & 0x0180) >> 7;
+            if (colorDepthCode > 1)     // Invalid code
+                return null;
+
+            bool is4bpp = (colorDepthCode == 0);
+            int paletteOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, headerOffset + 0x24, 4).ToIntLE() + headerOffset;
+
+            int secondSetPaletteOffset = paletteOffset + 0x200;
+            int imageSizeDataOffset = paletteOffset + 0x400;
+            int graphicsOffset = paletteOffset + 0x404;
+
+            byte[] imageSizeData = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, imageSizeDataOffset, 4);
+            int imageSizeCombinedValue = imageSizeData.Sub(0, 2).ToIntLE();
+            int rowBytes = (imageSizeData[3] != 0) ? 256 : 128;
+            int height = imageSizeCombinedValue >> ((imageSizeData[3] != 0) ? 8 : 7);
+            int width = is4bpp ? (rowBytes * 2) : rowBytes;
+            int imageSize = rowBytes * height;
+            int fileSize = graphicsOffset + imageSize;
+            string name = String.Format("{0} {1}", effectIndex.ToString("X3"), effectName);
+            string fileName = String.Format("E{0}.BIN", strEffectNumber);
+
+            PatcherLib.Iso.PsxIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, graphicsOffset, imageSize);
+            PatcherLib.Iso.PsxIso.KnownPosition palettePosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
+
+            return GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, sector, graphicsPosition, palettePosition);
+        }
+
+        public static AbstractImage GetPSPEffectImage(Stream iso, int effectIndex)
+        {
+            return GetPSPEffectImage(iso, effectIndex, PatcherLib.PSPResources.Lists.AbilityEffects[effectIndex], PatcherLib.Iso.PspIso.PspIsoInfo.GetPspIsoInfo(iso));
+        }
+
+        public static AbstractImage GetPSPEffectImage(Stream iso, int effectIndex, string effectName, PatcherLib.Iso.PspIso.PspIsoInfo pspIsoInfo)
+        {
+            string strEffectNumber = effectIndex.ToString("000");
+            string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
+
+            PatcherLib.Iso.FFTPack.Files fftPack = (PatcherLib.Iso.FFTPack.Files)3;
+
+            try
+            {
+                fftPack = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), sectorName);
+            }
+            catch (Exception) { }
+
+            byte[] fileBytes = PatcherLib.Iso.PspIso.GetFile(iso, pspIsoInfo, fftPack);
+            //byte[] fileBytes = PatcherLib.Iso.FFTPack.TryGetFileFromIso(iso, pspIsoInfo, fftPack, 0, 0x5800);
+            if (fileBytes.Length == 0)
+                return null;
+
+            /*
+            int headerOffset = 0;
+            int lastMatchIndex = fileBytes.LastIndexOf(subroutineEndByteSequence);
+            if (lastMatchIndex >= 0)
+            {
+                int lastMatchIndex2 = fileBytes.Sub(lastMatchIndex + 8).IndexOf(frameDataOffsetByteSequence) + lastMatchIndex + 4;
+                headerOffset = (lastMatchIndex2 >= 0) ? (lastMatchIndex2 + 4) : (lastMatchIndex + 8);
+            }
+            */
+
+            int headerOffset = fileBytes.IndexOf(Effect_FrameDataOffsetByteSequence);
+
+            int frameDataOffset = fileBytes.SubLength(headerOffset, 4).ToIntLE() + headerOffset;
+            int frameDataSectionCount = fileBytes.SubLength(frameDataOffset, 2).ToIntLE();
+            int firstFrameDataPointerOffset = fileBytes.SubLength(frameDataOffset + 4 + (2 * frameDataSectionCount), 2).ToIntLE() + frameDataOffset + 4;
+            int firstFrameTexturePageHeader = fileBytes.SubLength(firstFrameDataPointerOffset, 2).ToIntLE();
+
+            int colorDepthCode = (firstFrameTexturePageHeader & 0x0180) >> 7;
+            if (colorDepthCode > 1)     // Invalid code
+                return null;
+
+            bool is4bpp = (colorDepthCode == 0);
+            int paletteOffset = fileBytes.SubLength(headerOffset + 0x24, 4).ToIntLE() + headerOffset;
+
+            int secondSetPaletteOffset = paletteOffset + 0x200;
+            int imageSizeDataOffset = paletteOffset + 0x400;
+            int graphicsOffset = paletteOffset + 0x404;
+
+            byte[] imageSizeData = fileBytes.SubLength(imageSizeDataOffset, 4).ToArray();
+            //byte[] imageSizeData = PatcherLib.Iso.FFTPack.TryGetFileFromIso(iso, pspIsoInfo, fftPack, imageSizeDataOffset, 4);
+            int imageSizeCombinedValue = imageSizeData.Sub(0, 2).ToIntLE();
+            int rowBytes = (imageSizeData[3] != 0) ? 256 : 128;
+            int height = imageSizeCombinedValue >> ((imageSizeData[3] != 0) ? 8 : 7);
+            int width = is4bpp ? (rowBytes * 2) : rowBytes;
+            int imageSize = rowBytes * height;
+            int fileSize = graphicsOffset + imageSize;
+            string name = String.Format("{0} {1}", effectIndex.ToString("X3"), effectName);
+            string fileName = String.Format("E{0}.BIN", strEffectNumber);
+
+            PatcherLib.Iso.PspIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, graphicsOffset, imageSize);
+            PatcherLib.Iso.PspIso.KnownPosition palettePosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
+
+            return GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, fftPack, graphicsPosition, palettePosition);
         }
 
         public static AbstractImage GetPalettedImage(bool is4bpp, string name, int width, int height, string fileName, int fileSize, Enum sector,
