@@ -528,6 +528,66 @@ namespace PatcherLib.Utilities
             return result;
         }
 
+        // Returns an Int32 interpreting the bytes as a little-endian value.
+        public static int ToIntLE(this IList<byte> bytes)
+        {
+            int result = 0;
+            int shiftAmount = 0;
+            int endIndex = Math.Min(bytes.Count, 4);
+
+            for (int index = 0; index < endIndex; index++)
+            {
+                result |= (bytes[index] << shiftAmount);
+                shiftAmount += 8;
+            }
+
+            return result;
+        }
+
+        public static int IndexOf(this IList<byte> bytes, IList<byte> searchBytes)
+        {
+            return FindIndexOf(bytes, searchBytes, false);
+        }
+
+        public static int LastIndexOf(this IList<byte> bytes, IList<byte> searchBytes)
+        {
+            return FindIndexOf(bytes, searchBytes, true);
+        }
+
+        private static int FindIndexOf(this IList<byte> bytes, IList<byte> searchBytes, bool findLastIndex)
+        {
+            if ((bytes == null) || (searchBytes == null))
+                return -1;
+            else if (bytes.Count == 0)
+                return -1;
+            else if (searchBytes.Count == 0)
+                return findLastIndex ? (bytes.Count - 1) : 0;
+            
+            int lastFoundIndex = -1;
+            int searchByteIndex = 0;
+            for (int index = 0; index < bytes.Count; index++)
+            {
+                if (bytes[index] == searchBytes[searchByteIndex])
+                {
+                    searchByteIndex++;
+                    if (searchByteIndex >= searchBytes.Count)
+                    {
+                        lastFoundIndex = index + 1 - searchBytes.Count;
+                        searchByteIndex = 0;
+
+                        if (!findLastIndex)
+                            break;
+                    }
+                }
+                else
+                {
+                    searchByteIndex = 0;
+                }
+            }
+
+            return lastFoundIndex;
+        }
+
         /// <summary>
         /// Converts this to a string.
         /// </summary>

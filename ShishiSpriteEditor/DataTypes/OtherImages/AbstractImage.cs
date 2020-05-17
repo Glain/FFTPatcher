@@ -159,7 +159,7 @@ namespace FFTPatcher.SpriteEditor
 
         // For selecting one palette to load/save
         public int PaletteCount { get; set; }
-        public int DefaultPalette { get; protected set; }
+        public int DefaultPalette { get; set; }
         public int CurrentPalette { get; set; }
 
         System.Drawing.Bitmap cachedImage;

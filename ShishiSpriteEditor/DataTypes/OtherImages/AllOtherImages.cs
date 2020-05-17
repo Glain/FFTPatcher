@@ -95,6 +95,8 @@ namespace FFTPatcher.SpriteEditor
                 images.ForEach( i => total += i.Count );
             }
 
+            HashSet<string> usedFilenameSet = new HashSet<string>();
+
             foreach (AbstractImageList imgList in images)
             {
                 foreach (AbstractImage img in imgList)
@@ -102,8 +104,13 @@ namespace FFTPatcher.SpriteEditor
                     string name = string.Empty;
                     name = img.GetSaveFileName();
 
-                    name = Path.Combine( path, name );
-                    if (File.Exists( name ))
+                    while (usedFilenameSet.Contains(name))
+                    {
+                        name = name.Replace(".", "_.");
+                    }
+
+                    string filePath = Path.Combine(path, name);
+                    if (File.Exists(filePath))
                     {
                         if (img.CanSelectPalette() && (img.PaletteCount > 1))
                         {
@@ -114,16 +121,17 @@ namespace FFTPatcher.SpriteEditor
                             img4bpp.ImportExport8bpp = true;
                             img4bpp.CurrentPalette = Math.Max(0, img4bpp.CurrentPalette - 15);
 
-                            img.WriteImageToIso(iso, name);
+                            img.WriteImageToIso(iso, filePath);
 
                             img4bpp.ImportExport8bpp = importExport8bpp;
                             img4bpp.CurrentPalette = currentPalette;
                         }
                         else
                         {
-                            img.WriteImageToIso(iso, name);
+                            img.WriteImageToIso(iso, filePath);
                         }
 
+                        usedFilenameSet.Add(name);
                         imagesProcessed++;
                     }
                     if (progress)
@@ -174,6 +182,8 @@ namespace FFTPatcher.SpriteEditor
                 Directory.CreateDirectory( path );
             }
 
+            HashSet<string> usedFilenameSet = new HashSet<string>();
+
             foreach (AbstractImageList imgList in images)
             {
                 foreach (AbstractImage img in imgList)
@@ -193,6 +203,11 @@ namespace FFTPatcher.SpriteEditor
 
                     if (!string.IsNullOrEmpty( name ))
                     {
+                        while (usedFilenameSet.Contains(name))
+                        {
+                            name = name.Replace(".", "_.");
+                        }
+
                         //Bitmap bmp = img.GetImageFromIso( iso );
                         //bmp.Save( Path.Combine( path, name ), System.Drawing.Imaging.ImageFormat.Bmp );
                         string fullPath = Path.Combine(path, name);
@@ -217,7 +232,8 @@ namespace FFTPatcher.SpriteEditor
                                 img.SaveImage(iso, s);
                             }
                         }
-                        
+
+                        usedFilenameSet.Add(name);
                         imagesProcessed++;
                     }
 
@@ -237,26 +253,29 @@ namespace FFTPatcher.SpriteEditor
         }
 
         // 0, 135
-        private static List<AbstractImageList> BuildPsxImages()
+        private static List<AbstractImageList> BuildPsxImages(Stream iso)
         {
-            return BuildImages(Settings.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
+            return BuildImages(iso, Settings.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
             //return BuildImages(Resources.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
         }
 
-        private static List<AbstractImageList> BuildPspImages()
+        private static List<AbstractImageList> BuildPspImages(Stream iso)
         {
-            return BuildImages(Settings.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]"); 
+            return BuildImages(iso, Settings.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]"); 
             //return BuildImages(Resources.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]");
         }
 
-        private static List<AbstractImageList> BuildImages(string xmlFile, string xpath)
+        private static List<AbstractImageList> BuildImages(Stream iso, string xmlFile, string xpath)
         {
             List<AbstractImageList> result = new List<AbstractImageList>();
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xmlFile);
             foreach (XmlNode sectionNode in doc.SelectNodes(xpath))
             {
-                result.Add(GetImagesFromNode(doc, sectionNode));
+                if (sectionNode.Attributes["Effects"] == null)
+                    result.Add(GetImagesFromNode(doc, sectionNode));
+                else
+                    result.Add(GetEffectImages(iso, (xmlFile == Settings.PSPFiles)));
             }
 
             return result;
@@ -266,6 +285,16 @@ namespace FFTPatcher.SpriteEditor
         {
             AbstractImageList result = new AbstractImageList();
             result.Name = (node.Attributes["Name"] == null) ? "" : node.Attributes["Name"].InnerText;
+
+            bool hideEntryIndex = false;
+            XmlAttribute attrHideEntryIndex = node.Attributes["HideEntryIndex"];
+            if (attrHideEntryIndex != null)
+            {
+                string attrHideEntryIndexText = attrHideEntryIndex.InnerText;
+                bool.TryParse(attrHideEntryIndexText, out hideEntryIndex);
+            }
+            result.HideEntryIndex = hideEntryIndex;
+            
             int totalIndex = 0;
             List<string> names = new List<string>();
 
@@ -370,14 +399,197 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        public static AllOtherImages GetPsx()
+        public static AbstractImageList GetEffectImages(Stream iso, bool isPsp)
         {
-            return new AllOtherImages(BuildPsxImages());
+            AbstractImageList result = new AbstractImageList();
+            result.Name = "Effects";
+            result.HideEntryIndex = true;
+
+            if (isPsp)
+            {
+                result.Images.AddRange(GetPSPEffectImages(iso));
+            }
+            else
+            {
+                result.Images.AddRange(GetPSXEffectImages(iso));
+            }
+            
+            return result;
         }
 
-        public static AllOtherImages GetPsp()
+        public static List<AbstractImage> GetPSXEffectImages(Stream iso)
         {
-            return new AllOtherImages(BuildPspImages());
+            List<AbstractImage> images = new List<AbstractImage>();
+
+            const int effectCount = 512;
+            byte[] effectFileBytes = PatcherLib.Iso.PsxIso.ReadFile(iso, PatcherLib.Iso.PsxIso.Sectors.BATTLE_BIN, 0x14E3E8, effectCount * 8);
+            byte[] headerLocationBytes = PatcherLib.Iso.PsxIso.ReadFile(iso, PatcherLib.Iso.PsxIso.Sectors.BATTLE_BIN, 0x14D8D0, effectCount * 4);
+            IList<string> effectNames = PatcherLib.PSXResources.Lists.AbilityEffects;
+
+            for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+            {
+                string strEffectNumber = effectIndex.ToString("000");
+                string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
+
+                PatcherLib.Iso.PsxIso.Sectors sector = (PatcherLib.Iso.PsxIso.Sectors)0;
+
+                try
+                {
+                    sector = (PatcherLib.Iso.PsxIso.Sectors)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.Sectors), sectorName);
+                }
+                catch (Exception) { }
+
+                if (sector == 0)
+                    continue;
+
+                int effectByteCount = effectFileBytes.SubLength((effectIndex * 8) + 4, 4).ToIntLE();
+                if (effectByteCount == 0)
+                    continue;
+
+                uint headerLocation = headerLocationBytes.SubLength((effectIndex * 4), 4).ToUInt32();
+                int headerOffset = (int)(headerLocation - 0x801C2500U);
+
+                int frameDataOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, headerOffset, 4).ToIntLE() + headerOffset;
+                int frameDataSectionCount = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, frameDataOffset, 2).ToIntLE();
+                int firstFrameDataPointerOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, frameDataOffset + 4 + (2 * frameDataSectionCount), 2).ToIntLE() + frameDataOffset + 4;
+                int firstFrameTexturePageHeader = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, firstFrameDataPointerOffset, 2).ToIntLE();
+
+                int colorDepthCode = (firstFrameTexturePageHeader & 0x0180) >> 7;
+                if (colorDepthCode > 1)     // Invalid code
+                    continue;
+
+                bool is4bpp = (colorDepthCode == 0);
+                int paletteOffset = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, headerOffset + 0x24, 4).ToIntLE() + headerOffset;
+
+                int secondSetPaletteOffset = paletteOffset + 0x200;
+                int imageSizeDataOffset = paletteOffset + 0x400;
+                int graphicsOffset = paletteOffset + 0x404;
+
+                byte[] imageSizeData = PatcherLib.Iso.PsxIso.ReadFile(iso, sector, imageSizeDataOffset, 4);
+                int imageSizeCombinedValue = imageSizeData.Sub(0, 2).ToIntLE();
+                int rowBytes = (imageSizeData[3] != 0) ? 256 : 128;
+                int height = imageSizeCombinedValue >> ((imageSizeData[3] != 0) ? 8 : 7);
+                int width = is4bpp ? (rowBytes * 2) : rowBytes;
+                int imageSize = rowBytes * height;
+                int fileSize = graphicsOffset + imageSize;
+                string name = String.Format("{0} {1}", effectIndex.ToString("X3"), effectNames[effectIndex]);
+                string fileName = String.Format("E{0}.BIN", strEffectNumber);
+
+                PatcherLib.Iso.PsxIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, graphicsOffset, imageSize);
+                PatcherLib.Iso.PsxIso.KnownPosition palettePosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
+
+                images.Add(GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, sector, graphicsPosition, palettePosition));
+            }
+
+            return images;
+        }
+
+        public static List<AbstractImage> GetPSPEffectImages(Stream iso)
+        {
+            List<AbstractImage> images = new List<AbstractImage>();
+
+            const int effectCount = 512;
+            IList<string> effectNames = PatcherLib.PSPResources.Lists.AbilityEffects;
+            PatcherLib.Iso.PspIso.PspIsoInfo pspIsoInfo = PatcherLib.Iso.PspIso.PspIsoInfo.GetPspIsoInfo(iso);
+            byte[] subroutineEndByteSequence = new byte[8] { 0x08, 0x00, 0xE0, 0x03, 0x00, 0x00, 0x00, 0x00 };
+            byte[] frameDataOffsetByteSequence = new byte[4] { 0x28, 0x00, 0x00, 0x00 };
+
+            for (int effectIndex = 0; effectIndex < effectCount; effectIndex++)
+            {
+                string strEffectNumber = effectIndex.ToString("000");
+                string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
+
+                PatcherLib.Iso.FFTPack.Files fftPack = (PatcherLib.Iso.FFTPack.Files)3;
+
+                try
+                {
+                    fftPack = (PatcherLib.Iso.FFTPack.Files)Enum.Parse(typeof(PatcherLib.Iso.FFTPack.Files), sectorName);
+                }
+                catch (Exception) { }
+
+                byte[] fileBytes = PatcherLib.Iso.PspIso.GetFile(iso, pspIsoInfo, fftPack);
+                if (fileBytes.Length == 0)
+                    continue;
+
+                int headerOffset = 0;
+                int lastMatchIndex = fileBytes.LastIndexOf(subroutineEndByteSequence);
+
+                if (lastMatchIndex >= 0)
+                {
+                    int lastMatchIndex2 = fileBytes.Sub(lastMatchIndex + 8).IndexOf(frameDataOffsetByteSequence) + lastMatchIndex + 4;
+                    headerOffset = (lastMatchIndex2 >= 0) ? (lastMatchIndex2 + 4) : lastMatchIndex + 8;
+                }
+
+                int frameDataOffset = fileBytes.SubLength(headerOffset, 4).ToIntLE() + headerOffset;
+                int frameDataSectionCount = fileBytes.SubLength(frameDataOffset, 2).ToIntLE();
+                int firstFrameDataPointerOffset = fileBytes.SubLength(frameDataOffset + 4 + (2 * frameDataSectionCount), 2).ToIntLE() + frameDataOffset + 4;
+                int firstFrameTexturePageHeader = fileBytes.SubLength(firstFrameDataPointerOffset, 2).ToIntLE();
+
+                int colorDepthCode = (firstFrameTexturePageHeader & 0x0180) >> 7;
+                if (colorDepthCode > 1)     // Invalid code
+                    continue;
+
+                bool is4bpp = (colorDepthCode == 0);
+                int paletteOffset = fileBytes.SubLength(headerOffset + 0x24, 4).ToIntLE() + headerOffset;
+
+                int secondSetPaletteOffset = paletteOffset + 0x200;
+                int imageSizeDataOffset = paletteOffset + 0x400;
+                int graphicsOffset = paletteOffset + 0x404;
+
+                byte[] imageSizeData = fileBytes.SubLength(imageSizeDataOffset, 4).ToArray();
+                int imageSizeCombinedValue = imageSizeData.Sub(0, 2).ToIntLE();
+                int rowBytes = (imageSizeData[3] != 0) ? 256 : 128;
+                int height = imageSizeCombinedValue >> ((imageSizeData[3] != 0) ? 8 : 7);
+                int width = is4bpp ? (rowBytes * 2) : rowBytes;
+                int imageSize = rowBytes * height;
+                int fileSize = graphicsOffset + imageSize;
+                string name = String.Format("{0} {1}", effectIndex.ToString("X3"), effectNames[effectIndex]);
+                string fileName = String.Format("E{0}.BIN", strEffectNumber);
+
+                PatcherLib.Iso.PspIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, graphicsOffset, imageSize);
+                PatcherLib.Iso.PspIso.KnownPosition palettePosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
+
+                images.Add(GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, fftPack, graphicsPosition, palettePosition));
+            }
+
+            return images;
+        }
+
+        public static AbstractImage GetPalettedImage(bool is4bpp, string name, int width, int height, string fileName, int fileSize, Enum sector,
+            PatcherLib.Iso.KnownPosition graphicsPosition, PatcherLib.Iso.KnownPosition palettePosition)
+        {
+            if (is4bpp)
+            {
+                PalettedImage4bpp image = new PalettedImage4bpp(name, width, height, 32, Palette.ColorDepth._16bit, graphicsPosition, palettePosition);
+                image.PaletteCount = 16;
+                image.DefaultPalette = 0;
+                image.CurrentPalette = 0;
+                image.OriginalFilename = fileName;
+                image.Filesize = fileSize;
+                image.Sector = sector;
+                return image;
+            }
+            else
+            {
+                PalettedImage8bpp image = new PalettedImage8bpp(name, width, height, 1, Palette.ColorDepth._16bit, graphicsPosition, palettePosition);
+                image.PaletteCount = 0;
+                image.DefaultPalette = 0;
+                image.CurrentPalette = 0;
+                image.OriginalFilename = fileName;
+                image.Filesize = fileSize;
+                image.Sector = sector;
+                return image;
+            }
+        }
+
+        public static AllOtherImages GetPsx(Stream iso)
+        {
+            return new AllOtherImages(BuildPsxImages(iso));
+        }
+
+        public static AllOtherImages GetPsp(Stream iso)
+        {
+            return new AllOtherImages(BuildPspImages(iso));
         }
 
         public static AllOtherImages FromIso( Stream iso )
@@ -385,12 +597,12 @@ namespace FFTPatcher.SpriteEditor
             if ( iso.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode2Form1] == 0 )
             {
                 // assume psx
-                return GetPsx();
+                return GetPsx(iso);
             }
             else if ( iso.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode1] == 0 )
             {
                 // assume psp
-                return GetPsp();
+                return GetPsp(iso);
             }
             else
             {
