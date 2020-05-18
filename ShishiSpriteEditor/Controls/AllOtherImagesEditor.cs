@@ -106,8 +106,25 @@ namespace FFTPatcher.SpriteEditor
 
         public bool ImportEntireFile(string path)
         {
-            AbstractImage abIm = GetImageFromComboBoxItem();
+            AbstractImageList list = GetImageListFromComboBoxItem();
+            int listIndex = (list.Count == 1) ? 0 : ddl_Entry.SelectedIndex;
+            AbstractImage abIm = list[listIndex];
             bool result = abIm.ImportEntireFile(iso, path);
+
+            if (abIm.IsEffect)
+            {
+                Type type = abIm.Sector.GetType();
+
+                if (type == typeof(PatcherLib.Iso.PsxIso.Sectors))
+                {
+                    list.Images[listIndex] = AllOtherImages.GetPSXEffectImage(iso, abIm.EffectIndex);
+                }
+                else if ((type == typeof(PatcherLib.Iso.PspIso.Sectors)) || (type == typeof(PatcherLib.Iso.FFTPack.Files)))
+                {
+                    list.Images[listIndex] = AllOtherImages.GetPSPEffectImage(iso, abIm.EffectIndex);
+                }
+            }
+
             RefreshPictureBox(true);
             return result;
         }

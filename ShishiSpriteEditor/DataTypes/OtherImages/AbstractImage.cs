@@ -162,6 +162,9 @@ namespace FFTPatcher.SpriteEditor
         public int DefaultPalette { get; set; }
         public int CurrentPalette { get; set; }
 
+        public bool IsEffect { get; set; }
+        public int EffectIndex { get; set; }
+
         System.Drawing.Bitmap cachedImage;
         bool cachedImageDirty = true;
 

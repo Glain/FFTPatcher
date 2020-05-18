@@ -534,7 +534,7 @@ namespace FFTPatcher.SpriteEditor
             PatcherLib.Iso.PsxIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, graphicsOffset, imageSize);
             PatcherLib.Iso.PsxIso.KnownPosition palettePosition = new PatcherLib.Iso.PsxIso.KnownPosition(sector, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
 
-            return GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, sector, graphicsPosition, palettePosition);
+            return GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, sector, graphicsPosition, palettePosition, true, effectIndex);
         }
 
         public static AbstractImage GetPSPEffectImage(Stream iso, int effectIndex)
@@ -602,11 +602,11 @@ namespace FFTPatcher.SpriteEditor
             PatcherLib.Iso.PspIso.KnownPosition graphicsPosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, graphicsOffset, imageSize);
             PatcherLib.Iso.PspIso.KnownPosition palettePosition = new PatcherLib.Iso.PspIso.KnownPosition(fftPack, (is4bpp ? secondSetPaletteOffset : paletteOffset), (is4bpp ? 32 : 512));
 
-            return GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, fftPack, graphicsPosition, palettePosition);
+            return GetPalettedImage(is4bpp, name, width, height, fileName, fileSize, fftPack, graphicsPosition, palettePosition, true, effectIndex);
         }
 
         public static AbstractImage GetPalettedImage(bool is4bpp, string name, int width, int height, string fileName, int fileSize, Enum sector,
-            PatcherLib.Iso.KnownPosition graphicsPosition, PatcherLib.Iso.KnownPosition palettePosition)
+            PatcherLib.Iso.KnownPosition graphicsPosition, PatcherLib.Iso.KnownPosition palettePosition, bool isEffect = false, int effectIndex = 0)
         {
             if (is4bpp)
             {
@@ -617,6 +617,8 @@ namespace FFTPatcher.SpriteEditor
                 image.OriginalFilename = fileName;
                 image.Filesize = fileSize;
                 image.Sector = sector;
+                image.IsEffect = isEffect;
+                image.EffectIndex = effectIndex;
                 return image;
             }
             else
@@ -628,6 +630,8 @@ namespace FFTPatcher.SpriteEditor
                 image.OriginalFilename = fileName;
                 image.Filesize = fileSize;
                 image.Sector = sector;
+                image.IsEffect = isEffect;
+                image.EffectIndex = effectIndex;
                 return image;
             }
         }
