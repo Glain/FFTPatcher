@@ -236,6 +236,8 @@ namespace ASMEncoding.Helpers
             List<string> result = new List<string>();
 
             hexString = Regex.Replace(hexString, @"\s+", "");
+            hexString = Regex.Replace(hexString, "(?s)<!--.*?-->", "");
+
             int pos = 0;
             int length = hexString.Length;
 
