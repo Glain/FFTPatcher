@@ -223,7 +223,7 @@ namespace FFTPatcher
             this.openPatchedPsxIso.Index = 1;
             this.openPatchedPsxIso.Text = "Open patched ISO...";
             // 
-            // menuItem1
+            // separator_PSXMenu
             // 
             this.separator_PSXMenu.Index = 2;
             this.separator_PSXMenu.Text = "-";
