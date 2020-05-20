@@ -263,7 +263,9 @@ namespace ASMEncoding.Helpers
             else if ((val.StartsWith("-")) && (val.Length > 1))
             {
                 string str_uvalue = val.Substring(1);
-                if (ASMStringHelper.StringIsNumeric(str_uvalue))
+                bool isNumeric = ASMStringHelper.StringIsNumeric(str_uvalue);
+                ASMDebugHelper.assert(isNumeric, "Could not parse negative value: " + val);
+                if (isNumeric)
                 {
                     uint uvalue = Convert.ToUInt32(str_uvalue);
                     if (uvalue == 0)
@@ -272,7 +274,9 @@ namespace ASMEncoding.Helpers
                         return (uint)(0x100000000 - uvalue);
                 }
                 else
+                {
                     return 0;
+                }
             }
             else
                 return LabelToUnsigned(val, skipLabelAssertion);
