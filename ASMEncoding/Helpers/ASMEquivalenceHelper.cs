@@ -59,7 +59,9 @@ namespace ASMEncoding.Helpers
                 {
                     foreach (KeyValuePair<string, string> eqv in eqvDict)
                     {
-                        newLine = newLine.Replace(eqv.Key, eqv.Value);
+                        //newLine = newLine.Replace(eqv.Key, eqv.Value);
+                        newLine = System.Text.RegularExpressions.Regex.Replace(newLine, System.Text.RegularExpressions.Regex.Escape(eqv.Key), eqv.Value.Replace("$", "$$"), 
+                            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
                     }
                 }
 
