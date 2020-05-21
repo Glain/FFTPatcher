@@ -118,6 +118,11 @@ namespace ASMEncoding
             return _helper[EncodingMode].CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions);
         }
 
+        public byte[] UpdateJumps(byte[] bytes, uint pc, bool littleEndian, IEnumerable<BlockMove> blockMoves)
+        {
+            return _helper[EncodingMode].UpdateJumps(bytes, pc, littleEndian, blockMoves);
+        }
+
         public string ReplaceLabelsInHex(string hex, bool littleEndian)
         {
             return _helper[EncodingMode].ReplaceLabelsInHex(hex, littleEndian);

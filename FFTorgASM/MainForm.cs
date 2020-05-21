@@ -49,6 +49,12 @@ namespace FFTorgASM
 
         private void UpdateVariable(VariableType variable, UInt32 newValue)
         {
+            AsmPatch.UpdateVariable(variable, newValue);
+        }
+
+        /*
+        private void UpdateVariable(VariableType variable, UInt32 newValue)
+        {
             for (int i = 0; i < variable.numBytes; i++)
             {
                 byte byteValue = (byte)((newValue >> (i * 8)) & 0xff);
@@ -95,6 +101,7 @@ namespace FFTorgASM
                 UpdateVariable(variable, value);
             }
         }
+        */
 
         private void LoadFiles(IList<string> fileList = null)
         {
@@ -146,6 +153,7 @@ namespace FFTorgASM
             variableComboBox.Visible = false;
         }
 
+        /*
         private void ModifyPatch(AsmPatch patch)
         {
             UpdateReferenceVariableValues(patch);
@@ -168,8 +176,34 @@ namespace FFTorgASM
                     }
 
                     encodeContent = strPrefix + patchedByteArray.AsmText;
-                    patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
+                    //patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
+
+                    byte[] bytes = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes;
+
+                    if ((!patchedByteArray.IsMoveSimple) && (patch.blockMoveList.Count > 0))
+                    {
+                        bytes = asmUtility.UpdateJumps(bytes, (uint)patchedByteArray.RamOffset, true, patch.blockMoveList);
+                    }
+                    
+                    patchedByteArray.SetBytes(bytes);
                 }
+            }
+        }
+        */
+
+        private void SavePatchXML()
+        {
+            string xml = PatchXmlReader.CreatePatchXML(GetCurrentFileSelectedPatches());
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.CheckFileExists = false;
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                File.WriteAllText(saveFileDialog.FileName, xml, Encoding.UTF8);
+                PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
             }
         }
 
@@ -370,7 +404,8 @@ namespace FFTorgASM
                 {
                     foreach ( AsmPatch patch in clb_Patches.CheckedItems )
                     {
-                        ModifyPatch(patch);
+                        //ModifyPatch(patch);
+                        patch.Update(asmUtility);
                         PatcherLib.Iso.PsxIso.PatchPsxIso( file, patch );
                     }
                 }
@@ -394,7 +429,8 @@ namespace FFTorgASM
                     List<PatchedByteArray> patches = new List<PatchedByteArray>();
                     foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
                     {
-                        ModifyPatch(asmPatch);
+                        //ModifyPatch(asmPatch);
+                        asmPatch.Update(asmUtility);
                         foreach (PatchedByteArray innerPatch in asmPatch)
                         {
                             patches.Add(innerPatch);
@@ -410,7 +446,7 @@ namespace FFTorgASM
                         sbResultMessage.AppendLine("Files not supported for savestate patching:");
                         foreach (PsxIso.Sectors sector in patchResult.UnsupportedFiles)
                         {
-                            sbResultMessage.AppendFormat("\t{0}{1}", Enum.GetName(typeof(PsxIso.Sectors), sector), Environment.NewLine);
+                            sbResultMessage.AppendFormat("\t{0}{1}", PsxIso.GetSectorName(sector), Environment.NewLine);
                         }
                         sbResultMessage.AppendLine();
                     }
@@ -419,7 +455,7 @@ namespace FFTorgASM
                         sbResultMessage.AppendLine("Files not present in savestate:");
                         foreach (PsxIso.Sectors sector in patchResult.AbsentFiles)
                         {
-                            sbResultMessage.AppendFormat("\t{0}{1}", Enum.GetName(typeof(PsxIso.Sectors), sector), Environment.NewLine);
+                            sbResultMessage.AppendFormat("\t{0}{1}", PsxIso.GetSectorName(sector), Environment.NewLine);
                         }
                         sbResultMessage.AppendLine();
                     }
@@ -485,6 +521,11 @@ namespace FFTorgASM
             }
         }
 
+        private void btn_SavePatchXML_Click(object sender, EventArgs e)
+        {
+            SavePatchXML();
+        }
+
         private void btn_OpenConflictChecker_Click(object sender, EventArgs e)
         {
             ConflictCheckerForm conflictCheckerForm = new ConflictCheckerForm(GetCurrentFilePatches());
@@ -493,7 +534,7 @@ namespace FFTorgASM
 
         private void btn_ViewFreeSpace_Click(object sender, EventArgs e)
         {
-            FreeSpaceForm freeSpaceForm = new FreeSpaceForm(GetCurrentFilePatches());
+            FreeSpaceForm freeSpaceForm = new FreeSpaceForm(GetCurrentFilePatches(), asmUtility);
             freeSpaceForm.Show();
         }
     }

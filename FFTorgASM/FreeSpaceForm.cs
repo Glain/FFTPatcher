@@ -16,20 +16,23 @@ namespace FFTorgASM
 {
     public partial class FreeSpaceForm : Form
     {
+        ASMEncoding.ASMEncodingUtility asmUtility;
         List<AsmPatch> patchList;
         Dictionary<PatchedByteArray, AsmPatch> innerPatchMap;
         Dictionary<PatchRange, List<PatchedByteArray>> patchRangeMap;
         Dictionary<PatchRange, HashSet<AsmPatch>> outerPatchRangeMap;
+        Dictionary<DataGridViewRow, PatchedByteArray> rowPatchMap;
 
-        public FreeSpaceForm(List<AsmPatch> patchList)
+        public FreeSpaceForm(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
         {
             InitializeComponent();
-            Init(patchList);
+            Init(patchList, asmUtility);
         }
 
-        private void Init(List<AsmPatch> patchList)
+        private void Init(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
         {
             this.patchList = patchList;
+            this.asmUtility = asmUtility;
 
             innerPatchMap = new Dictionary<PatchedByteArray, AsmPatch>();
             patchRangeMap = new Dictionary<PatchRange, List<PatchedByteArray>>();
@@ -37,7 +40,9 @@ namespace FFTorgASM
 
             foreach (AsmPatch patch in patchList)
             {
-                foreach (PatchedByteArray patchedByteArray in patch)
+                List<PatchedByteArray> combinedPatchList = patch.GetCombinedPatchList();
+
+                foreach (PatchedByteArray patchedByteArray in combinedPatchList)
                 {
                     if (patchedByteArray is InputFilePatch)
                         continue;
@@ -80,9 +85,21 @@ namespace FFTorgASM
             }
         }
 
+        private void Reload()
+        {
+            Init(patchList, asmUtility);
+            LoadItems(Filelistbox.SelectedIndex);
+        }
+
         private void LoadItems(int freeSpacePositionIndex)
         {
+            if (freeSpacePositionIndex < 0)
+                return;
+
             dgv_FreeSpace.Rows.Clear();
+            txtAddress.Clear();
+
+            rowPatchMap = new Dictionary<DataGridViewRow, PatchedByteArray>();
 
             PatchRange range = FreeSpace.PsxRanges[freeSpacePositionIndex];
             if (!patchRangeMap.ContainsKey(range))
@@ -103,23 +120,84 @@ namespace FFTorgASM
                 long nextPatchLocation = (index < (patchedByteArrayList.Count - 1)) ? patchedByteArrayList[index + 1].Offset : range.EndOffset;
                 long spaceToNextPatch = nextPatchLocation - nextAddress;
                 bool isSpaceToNextPatchNegative = (spaceToNextPatch < 0);
-                string strSpaceToNextPatch = isSpaceToNextPatchNegative ? ("-" + (-spaceToNextPatch).ToString("X")) : spaceToNextPatch.ToString("X");
+                //string strSpaceToNextPatch = isSpaceToNextPatchNegative ? ("-" + (-spaceToNextPatch).ToString("X")) : spaceToNextPatch.ToString("X");
 
-                dgv_FreeSpace.Rows.Add(index, patchedByteArray.Offset.ToString("X"), length.ToString("X"), nextAddress.ToString("X"), strSpaceToNextPatch, asmPatch.Filename, asmPatch.Name);
+                //dgv_FreeSpace.Rows.Add(index, patchedByteArray.Offset.ToString("X"), length.ToString("X"), nextAddress.ToString("X"), strSpaceToNextPatch, asmPatch.Filename, asmPatch.Name);
+                dgv_FreeSpace.Rows.Add(index, patchedByteArray.Offset, length, nextAddress, spaceToNextPatch, asmPatch.Filename, asmPatch.Name);
 
                 if (isSpaceToNextPatchNegative)
                 {
                     dgv_FreeSpace.Rows[index].Cells[4].Style.BackColor = Color.FromArgb(225, 125, 125);
                 }
+
+                rowPatchMap.Add(dgv_FreeSpace.Rows[index], patchedByteArray);
             }
 
             lbl_NumberOfPatches.Text = asmPatchSet.Count.ToString();
             lbl_NumberOfWrites.Text = patchedByteArrayList.Count.ToString();
         }
 
+        private void dgv_FreeSpace_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if ((e.ColumnIndex >= 1) && (e.ColumnIndex <= 4) && (e.Value != null))
+            {
+                long value = 0L;
+                if (long.TryParse(e.Value.ToString(), out value))
+                {
+                    e.Value = (value < 0) ? ("-" + (-value).ToString("X")) : value.ToString("X");
+                    e.FormattingApplied = true;
+                }
+            }
+        }
+
         private void Filelistbox_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadItems(Filelistbox.SelectedIndex);
+        }
+
+        private void dgv_FreeSpace_SelectionChanged(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection selectedRows = dgv_FreeSpace.SelectedRows;
+            if (selectedRows.Count > 0)
+            {
+                DataGridViewRow row = selectedRows[0];
+                long offset = (long)(row.Cells[1].Value);
+                txtAddress.Text = offset.ToString("X");
+                txtAddress.BackColor = Color.White;
+            }
+        }
+
+        private void btnMove_Click(object sender, EventArgs e)
+        {
+            long newOffset = 0U;
+
+            if (long.TryParse(txtAddress.Text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out newOffset))
+            {
+                DataGridViewSelectedRowCollection selectedRows = dgv_FreeSpace.SelectedRows;
+                if (selectedRows.Count > 0)
+                {
+                    DataGridViewRow row = selectedRows[0];
+                    long offset = (long)(row.Cells[1].Value);
+
+                    if (offset != newOffset)
+                    {
+                        PatchedByteArray patchedByteArray = rowPatchMap[row];
+                        AsmPatch asmPatch = innerPatchMap[patchedByteArray];
+                        long moveOffset = newOffset - offset;
+
+                        MovePatchRange movePatchRange = new MovePatchRange(new PatchRange(patchedByteArray), moveOffset);
+                        asmPatch.MoveBlock(asmUtility, movePatchRange);
+                        asmPatch.Update(asmUtility);
+
+                        txtAddress.BackColor = Color.White;
+                        Reload();
+                    }
+                }
+            }
+            else
+            {
+                txtAddress.BackColor = Color.FromArgb(225, 125, 125);
+            }
         }
     }
 }

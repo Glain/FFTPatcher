@@ -421,11 +421,11 @@ namespace PatcherLib.Iso
             {
                 if (Sector.HasValue)
                 {
-                    return new PatchedByteArray( Sector, StartLocation, bytes );
+                    return new PatchedByteArray( Sector, (uint)StartLocation, bytes );
                 }
                 else if (FFTPack.HasValue)
                 {
-                    return new PatchedByteArray( FFTPack, StartLocation, bytes );
+                    return new PatchedByteArray( FFTPack, (uint)StartLocation, bytes );
                 }
                 else
                 {

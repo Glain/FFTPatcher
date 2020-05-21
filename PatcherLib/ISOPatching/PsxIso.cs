@@ -218,6 +218,48 @@ namespace PatcherLib.Iso
             return position + 12;
         }
 
+        public static uint GetRamOffset(int sector, bool useKSeg0 = true)
+        {
+            return GetRamOffset((PsxIso.Sectors)sector, useKSeg0);
+        }
+
+        public static uint GetRamOffset(PsxIso.Sectors sector, bool useKSeg0 = true)
+        {
+            return GetRamOffset(sector, 0, useKSeg0);
+        }
+
+        public static uint GetRamOffset(int sector, uint offset, bool useKSeg0)
+        {
+            return GetRamOffset((PsxIso.Sectors)sector, offset, useKSeg0);
+        }
+
+        public static uint GetRamOffset(PsxIso.Sectors sector, uint offset, bool useKSeg0)
+        {
+            string sectorName = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), sector);
+            uint fileToRamOffset = 0;
+            try
+            {
+                fileToRamOffset = (uint)(PatcherLib.Iso.PsxIso.FileToRamOffsets)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.FileToRamOffsets), "OFFSET_" + sectorName.ToUpper().Trim());
+            }
+            catch (Exception) { }
+
+            if (useKSeg0)
+                fileToRamOffset |= 0x80000000U;
+
+            return offset + fileToRamOffset;
+        }
+
+        public static string GetSectorName(int sector)
+        {
+            return GetSectorName((PsxIso.Sectors)sector);
+        }
+
+        public static string GetSectorName(PsxIso.Sectors sector)
+        {
+            string name = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), sector);
+            return name ?? ((int)sector).ToString();
+        }
+
         public static void PatchPsxIso(Stream iso, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
         {
             foreach (var patch in patches)

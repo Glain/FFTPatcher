@@ -149,7 +149,7 @@ namespace PatcherLib.Datatypes
 
         private byte[] bytes;
 
-        public long Offset { get; protected set; }
+        public long Offset { get; set; }
 
         public int Sector { get; protected set; }
 
@@ -157,6 +157,9 @@ namespace PatcherLib.Datatypes
 
         public bool IsAsm { get; set; }
         public bool MarkedAsData { get; set; }
+        public bool IsCheckedAsm { get; set; }
+        public bool IsSequentialOffset { get; set; }
+        public bool IsMoveSimple { get; set; }
         public string AsmText { get; set; }
         public long RamOffset { get; set; }
         public string ErrorText { get; set; }
@@ -244,6 +247,21 @@ namespace PatcherLib.Datatypes
             }
 
             return true;
+        }
+
+        public PatchedByteArray Copy()
+        {
+            PatchedByteArray result = new PatchedByteArray(Sector, Offset, bytes);
+            result.IsAsm = IsAsm;
+            result.MarkedAsData = MarkedAsData;
+            result.IsCheckedAsm = IsCheckedAsm;
+            result.IsSequentialOffset = IsSequentialOffset;
+            result.IsMoveSimple = IsMoveSimple;
+            result.AsmText = AsmText;
+            result.RamOffset = RamOffset;
+            result.ErrorText = ErrorText;
+            result.Label = Label;
+            return result;
         }
     }
 }

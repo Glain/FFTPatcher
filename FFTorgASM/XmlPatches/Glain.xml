@@ -6,7 +6,8 @@
       (0x16b is the last row, last column in the ENTD for a unit, in the Unknown box, two underneath
        the top value that has its own row.)
     </Description>
-    <Location file="BATTLE_BIN" offset="F59BC" mode="ASM">  
+    <Location file="BATTLE_BIN" offset="F59BC" mode="ASM">
+     @find_compare_value:
       lbu     t6,0x016b(t5)             # Load 0x016b from unit
       lui     t0,0x8005
       bne     t6,zero,SKP               # If not zero, jump to SKP (don't use shop availability)
@@ -18,10 +19,10 @@ SKP:  sltiu   t7,t6,1
       addu    t6,t6,t7                  # If value = 0, set value = 1
     </Location>
     <Location file="SCUS_942_21" offset="4D49C" mode="ASM">
-      sw      ra,0x94(sp)
-      move    t5,a0
-      jal     0x8015c9bc                # Jump to new routine
-      li      v0,0x20
+        sw      ra,0x94(sp)
+        move    t5,a0
+        jal     @find_compare_value                # Jump to new routine
+        li      v0,0x20
     </Location>
     <Location file="SCUS_942_21" offset="4D52C" mode="ASM">
       nop
@@ -34,19 +35,20 @@ SKP:  sltiu   t7,t6,1
     <Description>
       Random unit gear based on story progression
     </Description>
-    <Location file="BATTLE_BIN" offset="F59BC" mode="ASM">  
-      lui     t6,0x8005
-      lbu     t6,0x78d8(t6)         # Load shop availability from memory
-      nop
-      sltiu   t7,t6,1               
-      jr      ra
-      addu    t6,t6,t7              # If value = 0, set value = 1
+    <Location file="BATTLE_BIN" offset="F59BC" mode="ASM">
+      @find_compare_value:
+        lui     t6,0x8005
+        lbu     t6,0x78d8(t6)         # Load shop availability from memory
+        nop
+        sltiu   t7,t6,1
+        jr      ra
+        addu    t6,t6,t7              # If value = 0, set value = 1
     </Location>
     <Location file="SCUS_942_21" offset="4D49C" mode="ASM">
-      sw      ra,0x94(sp)
-      move    t5,a0
-      jal     0x8015c9bc            # Jump to new routine
-      li      v0,0x20
+        sw      ra,0x94(sp)
+        move    t5,a0
+        jal     @find_compare_value            # Jump to new routine
+        li      v0,0x20
     </Location>
     <Location file="SCUS_942_21" offset="4D52C" mode="ASM">
       nop
@@ -673,7 +675,8 @@ SKP:  move    t4,v1
         bne     v0, zero, swordskill_end            # Branch to end if evaded
         nop
 
-        lbu     s1, 0x8015cbcf                      # Load "Use MA?" option
+        #lbu     s1, 0x8015cbcf                      # Load "Use MA?" option
+        li      s1, %UseMA
         nop
 
         bne     s1, zero, swordskill_load_MA
@@ -798,7 +801,7 @@ SKP:  move    t4,v1
     <Location file="BATTLE_BIN" offset="120338" mode="ASM">
       li      v0, 0x81              # Drain routine: Return 0x81 as success
     </Location>
-    <Variable name="Use MA? (0 = No, 1 = Yes)" file="BATTLE_BIN" offset="F5BCF" bytes="1" default="00" />
+    <Variable name="Use MA" file="BATTLE_BIN" offset="F5BCF" bytes="1" default="00" />
   </Patch>
   <Patch name="Apply defense (v2): Item (Unknown 1) = Physical damage reduction (%); (Unknown 2) = Magical damage reduction (%)">
     <Description>
@@ -808,32 +811,8 @@ SKP:  move    t4,v1
       If an ability is flagged with both (this shouldn't happen, really), both damage reduction percentages (physical AND magical) will be applied 
       (the sum of the two)!
     </Description>
-    <Location file="BATTLE_BIN" offset="1249F0" mode="ASM">
-        j       0x8015d230
-    </Location>
-    <Location file="BATTLE_BIN" offset="F6230" mode="ASM">
-        addiu   sp, sp, -8
-        sw      ra, 4(sp)
-        
-        jal     0x80159130              # Call new defense routine
-        nop
-        
-        lhu     t0, 0x8015cd30          # Check for "All formulas apply elemental (v2)" patch
-        li      t1, 0xfff8
-        
-        bne     t0, t1, def_tail_end
-        nop
-        
-        jal     0x8015cd30              # If using "All formulas apply elemental (v2)" patch, call appropriate routine
-        nop
-        
-    def_tail_end:
-        lw      ra, 4(sp)
-        addiu   sp, sp, 8
-        jr      ra
-        nop
-    </Location>
     <Location file="BATTLE_BIN" offset="F2130" mode="ASM">
+     @defense:
       lui     t0,0x8019
       lw      t1,0x2d98(t0)         # Target unit
       lhu     t2,0x38d6(t0)         # Ability ID
@@ -906,18 +885,39 @@ LCH:  sltiu   t6,v1,7
       jr      ra                    # Return defense tally (v0)
       sh      t4,6(t2)              # Save new returned HP healing
     </Location>
+    <Location file="BATTLE_BIN" offset="F6230" mode="ASM">
+        @defense_outer:
+        addiu   sp, sp, -8
+        sw      ra, 4(sp)
+
+        jal     @defense                    # Call new defense routine
+        nop
+
+        lhu     t0, @formula_tail           # Check for "All formulas apply elemental (v2)" patch
+        li      t1, 0xfff8
+
+        bne     t0, t1, def_tail_end
+        nop
+
+        jal     @formula_tail               # If using "All formulas apply elemental (v2)" patch, call appropriate routine
+        nop
+
+        def_tail_end:
+        lw      ra, 4(sp)
+        addiu   sp, sp, 8
+        jr      ra
+        nop
+    </Location>
+    <Location file="BATTLE_BIN" offset="1249F0" mode="ASM">
+        j       @defense_outer
+    </Location>
   </Patch>
   <Patch name="Crystals can include special job abilities (Base job matching check removed)">
     <Description>
       Crystals can contain abilities from special jobs regardless of the inheriting unit's base job. However, the inheriting unit's base job would have to include the ability AT THE SAME INDEX in order to learn it. (e.g. Ramza could learn Night Sword from Gafgarion's crystal if it was Gafgarion's 10th ability  and Ramza's 02 Squire class also contained Night Sword as the 10th ability.)
     </Description>
-    <Location file="BATTLE_BIN" offset="1196E8" mode="ASM">
-      bne     t3,t3,0x80180880      #   Wiped out base job check, so won't skip consideration
-    </Location>
-    <Location file="BATTLE_BIN" offset="1197F4" mode="ASM">
-      j       0x8015cb50            #   Jump to new code (replaces nop)
-    </Location>
     <Location file="BATTLE_BIN" offset="F5B50" mode="ASM">
+     @crystal_mod:
       bne     s5, zero, CON         #   If we're not considering the base job, skip this code
       nop
  
@@ -946,6 +946,12 @@ CON:  j       0x801807f8            #   Save this ability to the crystal
 SKP:  j       0x80180848            #   Skip this ability
       nop
     </Location>
+      <Location file="BATTLE_BIN" offset="1196E8" mode="ASM">
+          bne     t3,t3,0x80180880      #   Wiped out base job check, so won't skip consideration
+      </Location>
+      <Location file="BATTLE_BIN" offset="1197F4" mode="ASM">
+          j       @crystal_mod          #   Jump to new code (replaces nop)
+      </Location>
   </Patch>
   <Patch name="Hide excessive HP/MP recovery">
     <Description>
@@ -1496,7 +1502,8 @@ SKP:  j       0x80180848            #   Skip this ability
         #   Returns:
         #       v0 = New CT value
         @find_ability_ct:
-                lbu     t1, 0x8015d28f
+                #lbu     t1, 0x8015d28f
+                li      t1, %CTFactor
                 move    v0, a0              #   Default: Keep CT the same
         
                 sltu    t0, a1, t1          #   If (Speed is less than (CT Factor)), return with no change
@@ -1547,7 +1554,7 @@ SKP:  j       0x80180848            #   Skip this ability
         4B 10 83
         4C 80 84
     </Location>
-    <Location file="BATTLE_BIN" offset="15D374" mode="ASM" offsetMode="RAM">
+    <Location file="BATTLE_BIN" mode="ASM">
         .label  @address_geomancy_tile_array, 0x8005e9d0
         .label  @address_caster_tile_type, 0x801938cd
         .label  @address_ability_id, 0x801938d6
@@ -1567,7 +1574,8 @@ SKP:  j       0x80180848            #   Skip this ability
                 la      t2, @address_geomancy_properties_array
                 addu    t1, t1, t2                                  #   Address for geomancy property
                 
-                addiu   t0, t0, -126                                #   EntryID = LookupID - 126
+                #addiu   t0, t0, -126                                #   EntryID = LookupID - 126
+                addiu   t0, t0, -%GeomancyAbilityID
                 
                 lbu     t2, 0(t1)                                   #   Inflict Status ID
                 lbu     t3, 1(t1)                                   #   Element
@@ -2007,7 +2015,8 @@ SKP:  j       0x80180848            #   Skip this ability
     <Location file="BATTLE_BIN" offset="1593B0" mode="ASM" offsetMode="RAM">
         @check_button_win:
                 lw      t0, 0x80045944
-                lhu     t1, 0x801593ae
+                #lhu     t1, 0x801593ae
+                li      t1, %Buttons
                 la      v1, 0x80049a18
                 and     t0, t0, t1              
                 bne     t0, t1, check_button_win_end
@@ -2484,10 +2493,8 @@ SKP:  j       0x80180848            #   Skip this ability
         For magic evade, change '0x80188510' to '0x801885b8'. To overwrite
         a different formula, change the first offset.
     </Description>
-    <Location file="BATTLE_BIN" offset="122124" mode="ASM">
-      j       0x8015cb00            # Jump to new section
-    </Location>
     <Location file="BATTLE_BIN" offset="F5B00" mode="ASM">
+     @formula_11:
       addiu   sp,sp,-0x18
       sw      ra,0x0010(sp)
       jal     0x80188510            # Physical Evade
@@ -2515,6 +2522,9 @@ END:  lw      ra,0x10(sp)
       jr      ra
       nop
     </Location>
+      <Location file="BATTLE_BIN" offset="122124" mode="ASM">
+          j       @formula_11            # Jump to new section
+      </Location>
   </Patch>
   <Patch name="Formulas [17], [3e], and [44] can be elementally canceled">
     <Description>

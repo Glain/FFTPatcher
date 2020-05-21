@@ -26,6 +26,26 @@ namespace ASMEncoding
 
 namespace ASMEncoding.Helpers
 {
+    public class BlockMove
+    {
+        public uint Location { get; set; }
+        public uint EndLocation { get; set; }
+        public long Offset { get; set; }
+
+        public BlockMove() { }
+        public BlockMove(uint Location, uint EndLocation, long Offset)
+        {
+            this.Location = Location;
+            this.EndLocation = EndLocation;
+            this.Offset = Offset;
+        }
+
+        public bool IsEqual(BlockMove blockMove)
+        {
+            return ((blockMove.Location == Location) && (blockMove.EndLocation == EndLocation) && (blockMove.Offset == Offset));
+        }
+    }
+
     public class ASMCheckHelper
     {
         private StringBuilder _errorTextBuilder;
@@ -387,6 +407,68 @@ namespace ASMEncoding.Helpers
             };
         }
 
+        public byte[] UpdateJumps(byte[] bytes, uint pc, bool littleEndian, IEnumerable<BlockMove> blockMoves)
+        {
+            int byteCount = bytes.Length;
+            if (byteCount < 4)
+                return bytes;
+
+            byte[] resultBytes = new byte[byteCount];
+            int startIndex = 0;
+            byte[] asmBytes = bytes;
+
+            if (byteCount > 4)
+            {
+                uint offsetBytes = pc % 4;
+                if (offsetBytes != 0)
+                {
+                    uint skipBytes = 4 - offsetBytes;
+                    pc = pc + skipBytes;
+                    startIndex += (int)skipBytes;
+                    int length = (int)(bytes.Length - skipBytes);
+                    byte[] newBytes = new byte[length];
+                    Array.Copy(bytes, skipBytes, newBytes, 0, length);
+                    Array.Copy(bytes, 0, resultBytes, 0, startIndex);
+                    asmBytes = newBytes;
+                }
+            }
+
+            uint[] instructions = ASMValueHelper.GetUintArrayFromBytes(asmBytes, littleEndian);
+            
+            int numInstructions = instructions.Length;
+            uint[] newInstructions = new uint[numInstructions];
+
+            for (int index = 0; index < numInstructions; index++)
+            {
+                uint uBinaryLine = instructions[index];
+                uint opcode = (uBinaryLine >> 26);
+                uint newInstruction = uBinaryLine;
+
+                // Is unconditional jump literal command J or JAL
+                if ((opcode & 0x3E) == 0x02)  // ((opcode & 0b111110) == 0b000010)
+                {
+                    uint jumpAddress = (((uBinaryLine & 0x03FFFFFFU) << 2) | (pc & 0xF0000000U));
+
+                    foreach (BlockMove blockMove in blockMoves)
+                    {
+                        if ((jumpAddress >= blockMove.Location) && (jumpAddress < blockMove.EndLocation))
+                        {
+                            uint newJumpAddress = (uint)(jumpAddress + blockMove.Offset);
+                            newInstruction = (opcode << 26) | ((newJumpAddress >> 2) & 0x03FFFFFFU);
+                        }
+                    }
+                }
+
+                byte[] newBytes = ASMValueHelper.ConvertUIntToBytes(newInstruction, littleEndian);
+                Array.Copy(newBytes, 0, resultBytes, (index * 4) + startIndex, 4);
+            }
+
+            for (int index = (numInstructions * 4) + startIndex; index < byteCount; index++)
+                resultBytes[index] = bytes[index];
+
+            return resultBytes;
+        }
+
         private string[] GetASMLines(string asm, uint pc, bool littleEndian, bool useRegAliases, bool reEncode = true)
         {
             string asmText = reEncode ? GetASMText(asm, pc, littleEndian, useRegAliases) : asm;
@@ -574,6 +656,22 @@ namespace ASMEncoding.Helpers
                 case "jr":
                 case "jal":
                 case "jalr":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private bool IsUnconditionalJumpToLiteral(string command)
+        {
+            if (string.IsNullOrEmpty(command))
+                return false;
+
+            string commandLower = command.ToLower().Trim();
+            switch (commandLower)
+            {
+                case "j":
+                case "jal":
                     return true;
                 default:
                     return false;

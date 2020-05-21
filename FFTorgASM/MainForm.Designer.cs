@@ -45,6 +45,7 @@
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             this.btn_UncheckAll = new System.Windows.Forms.Button();
+            this.btn_SavePatchXML = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,7 +136,7 @@
             this.btnPatchSaveState.Name = "btnPatchSaveState";
             this.btnPatchSaveState.Size = new System.Drawing.Size(142, 23);
             this.btnPatchSaveState.TabIndex = 10;
-            this.btnPatchSaveState.Text = "Patch to PSX Savestate";
+            this.btnPatchSaveState.Text = "Patch to pSX Savestate";
             this.btnPatchSaveState.UseVisualStyleBackColor = true;
             this.btnPatchSaveState.Click += new System.EventHandler(this.btnPatchSaveState_Click);
             // 
@@ -151,16 +152,13 @@
             // 
             // lsb_FilesList
             // 
-            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            //this.lsb_FilesList.LabelWrap = false;
+            this.lsb_FilesList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.lsb_FilesList.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.lsb_FilesList.Location = new System.Drawing.Point(12, 30);
-            //this.lsb_FilesList.MultiSelect = false;
             this.lsb_FilesList.Name = "lsb_FilesList";
-            this.lsb_FilesList.Size = new System.Drawing.Size(186, 319);
+            this.lsb_FilesList.Size = new System.Drawing.Size(186, 316);
             this.lsb_FilesList.TabIndex = 13;
-            //this.lsb_FilesList.UseCompatibleStateImageBehavior = false;
-            //this.lsb_FilesList.View = System.Windows.Forms.View.List;
             this.lsb_FilesList.SelectedIndexChanged += new System.EventHandler(this.lsb_FilesList_SelectedIndexChanged);
             // 
             // btn_OpenConflictChecker
@@ -217,6 +215,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.clb_Patches.BackColors = null;
+            this.clb_Patches.CheckOnClick = true;
             this.clb_Patches.FormattingEnabled = true;
             this.clb_Patches.IncludePrefix = true;
             this.clb_Patches.IntegralHeight = false;
@@ -224,7 +223,6 @@
             this.clb_Patches.Name = "clb_Patches";
             this.clb_Patches.Size = new System.Drawing.Size(351, 319);
             this.clb_Patches.TabIndex = 0;
-            this.clb_Patches.CheckOnClick = true;
             this.clb_Patches.DragDrop += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragDrop);
             this.clb_Patches.DragEnter += new System.Windows.Forms.DragEventHandler(this.clb_Patches_DragEnter);
             // 
@@ -239,11 +237,23 @@
             this.btn_UncheckAll.UseVisualStyleBackColor = true;
             this.btn_UncheckAll.Click += new System.EventHandler(this.btn_UncheckAll_Click);
             // 
+            // btn_SavePatchXML
+            // 
+            this.btn_SavePatchXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_SavePatchXML.Location = new System.Drawing.Point(144, 657);
+            this.btn_SavePatchXML.Name = "btn_SavePatchXML";
+            this.btn_SavePatchXML.Size = new System.Drawing.Size(104, 23);
+            this.btn_SavePatchXML.TabIndex = 17;
+            this.btn_SavePatchXML.Text = "Save Patch .XML";
+            this.btn_SavePatchXML.UseVisualStyleBackColor = true;
+            this.btn_SavePatchXML.Click += new System.EventHandler(this.btn_SavePatchXML_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.btn_SavePatchXML);
             this.Controls.Add(this.btn_UncheckAll);
             this.Controls.Add(this.txt_Messages);
             this.Controls.Add(this.btn_ViewFreeSpace);
@@ -288,6 +298,7 @@
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;
         private System.Windows.Forms.Button btn_UncheckAll;
+        private System.Windows.Forms.Button btn_SavePatchXML;
     }
 }
 

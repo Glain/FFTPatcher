@@ -105,12 +105,19 @@ namespace FFTorgASM
         {
             List<AsmPatch> resultPatchList = new List<AsmPatch>();
             Dictionary<AsmPatch, List<PatchRangeConflict>> conflictMap = new Dictionary<AsmPatch, List<PatchRangeConflict>>();
+            Dictionary<AsmPatch, List<PatchedByteArray>> combinedPatchListMap = new Dictionary<AsmPatch, List<PatchedByteArray>>();
+
+            foreach (AsmPatch patch in patchList)
+            {
+                combinedPatchListMap[patch] = patch.GetCombinedPatchList();
+            }
 
             for (int patchIndex = 0; patchIndex < patchList.Count; patchIndex++)
             {
                 AsmPatch patch = patchList[patchIndex];
 
-                foreach (PatchedByteArray patchedByteArray in patch)
+                List<PatchedByteArray> combinedPatchList = combinedPatchListMap[patch];
+                foreach (PatchedByteArray patchedByteArray in combinedPatchList)
                 {
                     if (patchedByteArray is InputFilePatch)
                         continue;
@@ -120,7 +127,8 @@ namespace FFTorgASM
                     {
                         AsmPatch conflictPatch = patchList[conflictPatchIndex];
 
-                        foreach (PatchedByteArray conflictPatchedByteArray in conflictPatch)
+                        List<PatchedByteArray> conflictCombinedPatchList = combinedPatchListMap[conflictPatch];
+                        foreach (PatchedByteArray conflictPatchedByteArray in conflictCombinedPatchList)
                         {
                             if (conflictPatchedByteArray is InputFilePatch)
                                 continue;
@@ -204,7 +212,8 @@ namespace FFTorgASM
             foreach (PatchRangeConflict conflict in conflictList)
             {
                 PsxIso.Sectors sector = (PsxIso.Sectors)(conflict.ConflictRange.Sector);
-                string strSector = Enum.GetName(typeof(PsxIso.Sectors), sector);
+                //string strSector = Enum.GetName(typeof(PsxIso.Sectors), sector);
+                string strSector = PatcherLib.Iso.PsxIso.GetSectorName(sector);
 
                 // Patch #, Sector, Location, Conflict Location
                 ListViewItem item = new ListViewItem();

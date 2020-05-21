@@ -9,19 +9,20 @@ namespace PatcherLib.Datatypes
     public class PatchRange
     {
         public int Sector { get; set; }
-        public long StartOffset { get; set; }
-        public long EndOffset { get; set; }
+        public uint StartOffset { get; set; }
+        public uint EndOffset { get; set; }
 
-        public PatchRange(int sector, long startOffset, long endOffset)
+        public PatchRange(int sector, uint startOffset, uint endOffset)
         {
             this.Sector = sector;
             this.StartOffset = startOffset;
             this.EndOffset = endOffset;
         }
 
-        public PatchRange(PsxIso.Sectors sector, long startOffset, long endOffset) : this((int)sector, startOffset, endOffset) { }
-        public PatchRange(PspIso.Sectors sector, long startOffset, long endOffset) : this((int)sector, startOffset, endOffset) { }
-        public PatchRange(PatchedByteArray patchedByteArray): this(patchedByteArray.Sector, patchedByteArray.Offset, (patchedByteArray.Offset + patchedByteArray.GetBytes().Length - 1)) { }
+        public PatchRange(PsxIso.Sectors sector, uint startOffset, uint endOffset) : this((int)sector, startOffset, endOffset) { }
+        public PatchRange(PspIso.Sectors sector, uint startOffset, uint endOffset) : this((int)sector, startOffset, endOffset) { }
+        public PatchRange(PatchedByteArray patchedByteArray) : this(patchedByteArray.Sector, (uint)patchedByteArray.Offset, (uint)(patchedByteArray.Offset + patchedByteArray.GetBytes().Length - 1)) { }
+        public PatchRange(PatchRange range) : this(range.Sector, range.StartOffset, range.EndOffset) { }
 
         public bool HasOverlap(PatchRange range)
         {
@@ -41,6 +42,23 @@ namespace PatcherLib.Datatypes
         public bool IsContainedWithin(PatchedByteArray patchedByteArray)
         {
             return IsContainedWithin(new PatchRange(patchedByteArray));
+        }
+    }
+
+    public class MovePatchRange : PatchRange
+    {
+        public long MoveOffset { get; set; }
+
+        public MovePatchRange(int sector, uint startOffset, uint endOffset, long moveOffset)
+            : base(sector, startOffset, endOffset)
+        {
+            this.MoveOffset = moveOffset;
+        }
+
+        public MovePatchRange(PatchRange range, long moveOffset)
+            : base(range)
+        {
+            this.MoveOffset = moveOffset;
         }
     }
 }

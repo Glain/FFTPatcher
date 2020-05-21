@@ -118,11 +118,13 @@ namespace FFTorgASM
                 XmlAttribute replaceLabelsAttribute = location.Attributes["replaceLabels"];
                 XmlAttribute attrLabel = location.Attributes["label"];
                 XmlAttribute attrSpecific = location.Attributes["specific"];
+                XmlAttribute attrMovable = location.Attributes["movable"];
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
                 bool ignoreOffsetMode = false;
                 bool isSpecific = false;
+                bool isSequentialOffset = false;
 
                 List<SpecificLocation> specifics = FillSpecificAttributeData(attrSpecific, defaultSector);
 
@@ -142,6 +144,7 @@ namespace FFTorgASM
                     string strOffset = offset.ToString("X");
                     strOffsets = new string[1] { strOffset };
                     ignoreOffsetMode = true;
+                    isSequentialOffset = true;
                 }
 
                 PsxIso.Sectors sector = (PsxIso.Sectors)0;
@@ -218,6 +221,12 @@ namespace FFTorgASM
                     label = attrLabel.InnerText.Replace(" ", "");
                 }
 
+                bool isMoveSimple = asmMode;
+                if (attrMovable != null)
+                {
+                    bool.TryParse(attrMovable.InnerText, out isMoveSimple);
+                }
+
                 Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
                 try
                 {
@@ -256,18 +265,19 @@ namespace FFTorgASM
                     {
                         string encodeContent = content;
 
-                        string strPrefix = "";
+                        StringBuilder sbPrefix = new StringBuilder();
                         foreach (PatchedByteArray currentPatchedByteArray in patches)
                         {
                             if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
-                                strPrefix += String.Format(".label @{0}, {1}\r\n", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset);
+                                sbPrefix.Append(String.Format(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine));
                         }
                         foreach (VariableType variable in variables)
                         {
-                            strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
+                            sbPrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), 
+                                AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
                         }
 
-                        encodeContent = strPrefix + content;
+                        encodeContent = sbPrefix.ToString() + content;
 
                         ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, ramOffset);
                         bytes = result.EncodedBytes;
@@ -278,6 +288,7 @@ namespace FFTorgASM
                         bytes = GetBytes(content);
                     }
 
+                    bool isCheckedAsm = false;
                     if (!markedAsData)
                     {
                         ASMCheckResult checkResult = asmUtility.CheckASMFromBytes(bytes, ramOffset, true, false, new HashSet<ASMCheckCondition>() {
@@ -290,6 +301,7 @@ namespace FFTorgASM
 
                         if (checkResult.IsASM)
                         {
+                            isCheckedAsm = true;
                             if (!string.IsNullOrEmpty(checkResult.ErrorText))
                             {
                                 errorText += checkResult.ErrorText;
@@ -303,6 +315,9 @@ namespace FFTorgASM
                     PatchedByteArray patchedByteArray = new PatchedByteArray(sector, fileOffset, bytes);
                     patchedByteArray.IsAsm = asmMode;
                     patchedByteArray.MarkedAsData = markedAsData;
+                    patchedByteArray.IsCheckedAsm = isCheckedAsm;
+                    patchedByteArray.IsSequentialOffset = isSequentialOffset;
+                    patchedByteArray.IsMoveSimple = isMoveSimple;
                     patchedByteArray.AsmText = asmMode ? content : "";
                     patchedByteArray.RamOffset = ramOffset;
                     patchedByteArray.ErrorText = errorText;
@@ -398,7 +413,7 @@ namespace FFTorgASM
                 {
                 	XmlAttribute numBytesAttr = varNode.Attributes["bytes"];
                     string strNumBytes = (numBytesAttr == null) ? "1" : numBytesAttr.InnerText;
-                    char numBytes = (char)(UInt32.Parse(strNumBytes) & 0xff);
+                    byte numBytes = (byte)(UInt32.Parse(strNumBytes) & 0xff);
                 	
                     string varName = varNode.Attributes["name"].InnerText;
 
@@ -603,6 +618,23 @@ namespace FFTorgASM
 
             return result.AsReadOnly();
 
+        }
+
+        public static string CreatePatchXML(IEnumerable<AsmPatch> patches)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
+            sb.AppendLine("<Patches>");
+
+            foreach (AsmPatch patch in patches)
+            {
+                sb.Append(patch.CreateXML());
+            }
+
+            sb.AppendLine("</Patches>");
+
+            return sb.ToString();
         }
 
         private static List<SpecificLocation> FillSpecificAttributeData(XmlAttribute attrSpecific, PsxIso.Sectors defaultSector)

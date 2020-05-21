@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PatcherLib.Datatypes;
+using PatcherLib.Utilities;
 
 namespace FFTorgASM
 {
@@ -78,7 +79,7 @@ namespace FFTorgASM
 
     public struct VariableType
     {
-    	public char numBytes;
+    	public byte numBytes;
         public byte[] byteArray;
         public string name;
         public List<PatchedByteArray> content;
@@ -119,6 +120,8 @@ namespace FFTorgASM
         
         public Dictionary<string, VariableType> VariableMap { get; private set; }
 
+        public List<ASMEncoding.Helpers.BlockMove> blockMoveList { get; set; }
+
         private IEnumerator<PatchedByteArray> enumerator;
 
         public bool HideInDefault { get; private set; }
@@ -139,6 +142,7 @@ namespace FFTorgASM
             innerList = new List<PatchedByteArray>( patches );
             Variables = new VariableType[0];
             varInnerList = new List<PatchedByteArray>();
+            blockMoveList = new List<ASMEncoding.Helpers.BlockMove>();
             this.HideInDefault = hideInDefault;
         }
 
@@ -281,7 +285,331 @@ namespace FFTorgASM
         {
             return Name;
         }
-        
+
+        public void Update(ASMEncoding.ASMEncodingUtility asmUtility)
+        {
+            UpdateReferenceVariableValues();
+
+            List<PatchedByteArray> allPatches = GetAllPatches();
+            foreach (PatchedByteArray patchedByteArray in allPatches)
+            {
+                if (patchedByteArray.IsAsm)
+                {
+                    string encodeContent = patchedByteArray.AsmText;
+                    //string strPrefix = "";
+                    //IList<VariableType> variables = Variables;
+
+                    System.Text.StringBuilder sbPrefix = new System.Text.StringBuilder();
+                    foreach (PatchedByteArray currentPatchedByteArray in allPatches)
+                    {
+                        if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
+                            sbPrefix.AppendFormat(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine);
+                    }
+                    foreach (VariableType variable in Variables)
+                    {
+                        sbPrefix.AppendFormat(".eqv %{0}, {1}{2}", ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""),
+                            AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine);
+                    }
+
+                    encodeContent = sbPrefix.ToString() + patchedByteArray.AsmText;
+                    //patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
+
+                    byte[] bytes = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes;
+
+                    if ((!patchedByteArray.IsMoveSimple) && (blockMoveList.Count > 0))
+                    {
+                        bytes = asmUtility.UpdateJumps(bytes, (uint)patchedByteArray.RamOffset, true, blockMoveList);
+                    }
+
+                    patchedByteArray.SetBytes(bytes);
+                }
+            }
+        }
+
+        private void UpdateReferenceVariableValues()
+        {
+            foreach (VariableType variable in Variables)
+            {
+                if (variable.isReference)
+                    UpdateReferenceVariableValue(variable);
+            }
+        }
+
+        private void UpdateReferenceVariableValue(VariableType variable)
+        {
+            if (variable.isReference)
+            {
+                byte[] referenceBytes = VariableMap[variable.reference.name].byteArray;
+                uint value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
+
+                switch (variable.reference.operatorSymbol)
+                {
+                    case "+":
+                        value += variable.reference.operand;
+                        break;
+                    case "-":
+                        value -= variable.reference.operand;
+                        break;
+                    case "*":
+                        value *= variable.reference.operand;
+                        break;
+                    case "/":
+                        value /= variable.reference.operand;
+                        break;
+                }
+
+                UpdateVariable(variable, value);
+            }
+        }
+
+        public static void UpdateVariable(VariableType variable, UInt32 newValue)
+        {
+            for (int i = 0; i < variable.numBytes; i++)
+            {
+                byte byteValue = (byte)((newValue >> (i * 8)) & 0xff);
+                variable.byteArray[i] = byteValue;
+                foreach (PatchedByteArray patchedByteArray in variable.content)
+                {
+                    patchedByteArray.GetBytes()[i] = byteValue;
+                }
+            }
+        }
+
+        public List<PatchedByteArray> GetAllPatches()
+        {
+            List<PatchedByteArray> allPatches = new List<PatchedByteArray>(Count);
+            allPatches.AddRange(innerList);
+            allPatches.AddRange(varInnerList);
+            return allPatches;
+        }
+
+        // Get patched byte array list with sequential patches combined into the same patch.
+        public List<PatchedByteArray> GetCombinedPatchList()
+        {
+            List<PatchedByteArray> resultList = new List<PatchedByteArray>();
+            bool isSequential = false;
+
+            if (innerList.Count > 0)
+            {
+                PatchedByteArray currentPatch = null;
+                List<byte> bytes = null;
+                //foreach (PatchedByteArray patchedByteArray in innerList)
+                for (int index = 0; index < innerList.Count; index++)
+                {
+                    PatchedByteArray patchedByteArray = innerList[index];
+
+                    if (patchedByteArray is InputFilePatch)
+                        continue;
+
+                    isSequential = patchedByteArray.IsSequentialOffset;
+
+                    if (currentPatch == null)
+                    {
+                        currentPatch = patchedByteArray.Copy();
+                        bytes = new List<byte>(currentPatch.GetBytes());
+                    }
+                    else if (isSequential)
+                    {
+                        //List<byte> bytes = new List<byte>(currentPatch.GetBytes());
+                        bytes.AddRange(patchedByteArray.GetBytes());
+                        //currentPatch.SetBytes(bytes.ToArray());
+                    }
+                    else
+                    {
+                        currentPatch.SetBytes(bytes.ToArray());
+                        resultList.Add(currentPatch);
+                        currentPatch = patchedByteArray.Copy();
+                        bytes = new List<byte>(currentPatch.GetBytes());
+                    }
+                }
+
+                if (isSequential)
+                {
+                    currentPatch.SetBytes(bytes.ToArray());
+                    resultList.Add(currentPatch);
+                }
+            }
+
+            resultList.AddRange(varInnerList);
+
+            return resultList;
+        }
+
+        public void MoveBlock(ASMEncoding.ASMEncodingUtility utility, MovePatchRange movePatchRange)
+        {
+            MoveBlocks(utility, new MovePatchRange[1] { movePatchRange });
+        }
+
+        public void MoveBlocks(ASMEncoding.ASMEncodingUtility utility, IEnumerable<MovePatchRange> movePatchRanges)
+        {
+            /*
+            Dictionary<PatchRange, bool> isSequentialAdd = new Dictionary<PatchRange, bool>();
+            foreach (KeyValuePair<PatchRange, uint> blockMove in blockMoves)
+            {
+                isSequentialAdd[blockMove.Key] = false;
+            }
+            */
+            List<ASMEncoding.Helpers.BlockMove> blockMoves = new List<ASMEncoding.Helpers.BlockMove>();
+            foreach (MovePatchRange patchRange in movePatchRanges)
+            {
+                //PatchRange patchRange = movePair.Key;
+                /*
+                string sectorName = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchRange.Sector);
+                int fileToRamOffset = 0;
+                try
+                {
+                    fileToRamOffset = (int)(PatcherLib.Iso.PsxIso.FileToRamOffsets)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.FileToRamOffsets), "OFFSET_" + sectorName.ToUpper().Trim());
+                }
+                catch (Exception) { }
+                */
+
+                uint fileToRamOffset = PatcherLib.Iso.PsxIso.GetRamOffset(patchRange.Sector);
+                ASMEncoding.Helpers.BlockMove blockMove = new ASMEncoding.Helpers.BlockMove();
+                blockMove.Location = (uint)patchRange.StartOffset + fileToRamOffset;
+                blockMove.EndLocation = (uint)patchRange.EndOffset + fileToRamOffset;
+                blockMove.Offset = patchRange.MoveOffset;
+                blockMoves.Add(blockMove);
+            }
+
+            List<PatchedByteArray> allPatchList = GetAllPatches();
+            //foreach (PatchedByteArray patchedByteArray in innerList)
+            foreach (PatchedByteArray patchedByteArray in allPatchList)
+            {
+                if (patchedByteArray is InputFilePatch)
+                    continue;
+
+                byte[] bytes = patchedByteArray.GetBytes();
+
+                foreach (MovePatchRange patchRange in movePatchRanges)
+                {
+                    //PatchRange patchRange = movePair.Key;
+                    //uint offset = movePair.Value;
+
+                    //if ((patchedByteArray.RamOffset == blockMove.Location) && ((patchedByteArray.RamOffset + bytes.Length) == blockMove.EndLocation))
+                    //if (patchedByteArray.RamOffset == blockMove.Location)
+                    //PatchRange patchRange = new PatchRange(patchedByteArray);
+                    //PatchRange patchRange2 = new PatchRange(
+                    //if (
+                    //if (blockMove.Key
+                    if (patchRange.HasOverlap(patchedByteArray))
+                    {
+                        patchedByteArray.Offset += patchRange.MoveOffset; // offset;
+                        patchedByteArray.RamOffset += patchRange.MoveOffset; // offset;
+                        //isSequentialAdd[patchRange] = true;
+                    }
+                    /*
+                    else if ((isSequentialAdd[patchRange]) && (patchedByteArray.IsSequentialOffset))
+                    {
+                        patchedByteArray.Offset += offset;
+                        patchedByteArray.RamOffset += offset;
+                        //patchRange.EndOffset += (uint)bytes.Length;
+                    }
+                    else
+                    {
+                        isSequentialAdd[patchRange] = false;
+                    }
+                    */
+                }
+
+                if ((patchedByteArray.IsCheckedAsm) && (!patchedByteArray.IsMoveSimple))
+                {
+                    byte[] newBytes = utility.UpdateJumps(bytes, (uint)patchedByteArray.RamOffset, true, blockMoves);
+                    patchedByteArray.SetBytes(newBytes);
+                }
+            }
+
+            foreach (ASMEncoding.Helpers.BlockMove blockMove in blockMoves)
+            {
+                bool isAlreadyPresent = false;
+                foreach (ASMEncoding.Helpers.BlockMove listBlockMove in blockMoveList)
+                {
+                    if (blockMove.IsEqual(listBlockMove))
+                    {
+                        isAlreadyPresent = true;
+                        break;
+                    }
+                }
+
+                if (!isAlreadyPresent)
+                {
+                    blockMoveList.Add(blockMove);
+                }
+            }
+        }
+
+        public string CreateXML()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendFormat("    <Patch name=\"{0}\">{1}", Name, Environment.NewLine);
+
+            if (!string.IsNullOrEmpty(Description))
+            {
+                sb.AppendFormat("        <Description>{0}</Description>{1}", Description, Environment.NewLine);
+            }
+
+            foreach (PatchedByteArray patchedByteArray in innerList)
+            {
+                byte[] bytes = patchedByteArray.GetBytes();
+                int byteCount = bytes.Length;
+
+                List<uint> fourByteSets = new List<uint>(ASMEncoding.Helpers.ASMValueHelper.GetUintArrayFromBytes(bytes, false));
+
+                //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
+                string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
+                sb.AppendFormat("        <Location file=\"{0}\"{1}{2}>{3}", file, 
+                    (patchedByteArray.IsSequentialOffset ? "" : String.Format(" offset=\"{0}\"", patchedByteArray.Offset.ToString("X"))), 
+                    (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""), Environment.NewLine);
+
+                foreach (uint fourByteSet in fourByteSets)
+                {
+                    sb.AppendFormat("            {0}{1}", fourByteSet.ToString("X8"), Environment.NewLine);
+                }
+
+                int remainingBytes = byteCount % 4;
+                if (remainingBytes > 0)
+                {
+                    int remainingBytesIndex = byteCount - remainingBytes;
+                    System.Text.StringBuilder sbRemainingBytes = new System.Text.StringBuilder(remainingBytes * 2);
+                    for (int index = remainingBytesIndex; index < byteCount; index++)
+                    {
+                        sbRemainingBytes.Append(bytes[index].ToString("X2"));
+                    }
+                    sb.AppendFormat("            {0}{1}", sbRemainingBytes.ToString(), Environment.NewLine);
+                }
+
+                sb.AppendLine("        </Location>");
+            }
+
+            foreach (VariableType variable in Variables)
+            {
+                int value = variable.byteArray.ToIntLE();
+                System.Text.StringBuilder sbSpecific = new System.Text.StringBuilder();
+                int patchCount = variable.content.Count;
+
+                for (int index = 0; index < patchCount; index++)
+                {
+                    PatchedByteArray patchedByteArray = variable.content[index];
+                    //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
+                    string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
+                    sbSpecific.AppendFormat("{0}:{1}{2}", file, patchedByteArray.Offset.ToString("X"), ((index < (patchCount - 1)) ? "," : ""));
+                }
+
+                string strVariableReference = "";
+                if (variable.isReference)
+                {
+                    strVariableReference = String.Format(" reference=\"{0}\" operator=\"{1}\" operand=\"{2}\"", variable.reference.name, variable.reference.operand, variable.reference.operatorSymbol);
+                }
+
+                string strDefault = variable.isReference ? "" : String.Format(" default=\"{0}\"", value.ToString("X"));
+
+                sb.AppendFormat("        <Variable name=\"{0}\" specific=\"{1}\" bytes=\"{2}\"{3}{4} />{5}",
+                    variable.name, sbSpecific.ToString(), variable.numBytes, strDefault, strVariableReference, Environment.NewLine);
+            }
+
+            sb.AppendLine("    </Patch>");
+            return sb.ToString();
+        }
+
 		// Returns combined value of byte array (little endian)
 		public static UInt32 GetUnsignedByteArrayValue_LittleEndian(Byte[] bytes)
         {
