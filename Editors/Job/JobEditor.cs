@@ -29,7 +29,8 @@ namespace FFTPatcher.Editors
     {
 		#region Instance Variables (5) 
 
-        private ComboBoxWithDefault[] comboBoxes;
+        private ComboBoxWithDefault[] valueComboBoxes;
+        private ComboBoxWithDefault[] indexComboBoxes;
         private bool ignoreChanges;
         private Job job;
         private Context ourContext = Context.Default;
@@ -69,18 +70,26 @@ namespace FFTPatcher.Editors
                 hpGrowthSpinner, hpMultiplierSpinner, mpGrowthSpinner, mpMultiplierSpinner,
                 speedGrowthSpinner, speedMultiplierSpinner, paGrowthSpinner, paMultiplierSpinner,
                 maGrowthSpinner, maMultiplierSpinner, moveSpinner, jumpSpinner,
-                cevSpinner, mPortraitSpinner, mPaletteSpinner, mGraphicSpinner, 
+                cevSpinner, mPaletteSpinner, 
                 spinner_FormationSprites1, spinner_FormationSprites2 };
-            comboBoxes = new ComboBoxWithDefault[] {
-                skillsetComboBox, innateAComboBox, innateBComboBox, innateCComboBox, innateDComboBox };
+            valueComboBoxes = new ComboBoxWithDefault[] {
+                skillsetComboBox, innateAComboBox, innateBComboBox, innateCComboBox, innateDComboBox,
+            };
+            indexComboBoxes = new ComboBoxWithDefault[] {
+                cmb_MPortrait, cmb_MType
+            };
 
             foreach( NumericUpDownWithDefault spinner in spinners )
             {
                 spinner.ValueChanged += spinner_ValueChanged;
             }
-            foreach( ComboBoxWithDefault comboBox in comboBoxes )
+            foreach (ComboBoxWithDefault comboBox in valueComboBoxes)
             {
-                comboBox.SelectedIndexChanged += comboBox_SelectedIndexChanged;
+                comboBox.SelectedIndexChanged += valueComboBox_SelectedIndexChanged;
+            }
+            foreach (ComboBoxWithDefault comboBox in indexComboBoxes)
+            {
+                comboBox.SelectedIndexChanged += indexComboBox_SelectedIndexChanged;
             }
 
             absorbElementsEditor.DataChanged += OnDataChanged;
@@ -123,6 +132,32 @@ namespace FFTPatcher.Editors
                     cb.Items.Clear();
                     cb.Items.AddRange( AllAbilities.DummyAbilities );
                 }
+
+                cmb_MPortrait.Items.Clear();
+                cmb_MType.Items.Clear();
+                System.Collections.Generic.IList<string> spriteNames = (ourContext == Context.US_PSX) ? PSXResources.Lists.SpriteFiles : PSPResources.Lists.SpriteFiles;
+                int spriteNameCount = spriteNames.Count;
+                cmb_MPortrait.Items.Add("00");
+                cmb_MType.Items.Add("00");
+                for (int index = 0; index < spriteNameCount; index++)
+                {
+                    string spriteName = spriteNames[index];
+
+                    cmb_MPortrait.Items.Add(String.Format("{0} {1}", (index + 1).ToString("X2"), spriteName));
+                    if ((index >= 0x85) && (index <= 0x99))
+                    {
+                        cmb_MType.Items.Add(String.Format("{0} {1}", (index - 0x84).ToString("X2"), spriteName));
+                    }
+                }
+                for (int index = cmb_MType.Items.Count; index <= spriteNameCount; index++)
+                {
+                    cmb_MType.Items.Add(index.ToString("X2"));
+                }
+                for (int index = (spriteNameCount + 1); index < 0x100; index++)
+                {
+                    cmb_MPortrait.Items.Add(index.ToString("X2"));
+                    cmb_MType.Items.Add(index.ToString("X2"));
+                }
             }
 
             skillsetComboBox.SetValueAndDefault( job.SkillSet, job.Default.SkillSet );
@@ -137,6 +172,8 @@ namespace FFTPatcher.Editors
             innateBComboBox.SetValueAndDefault( job.InnateB, job.Default.InnateB );
             innateCComboBox.SetValueAndDefault( job.InnateC, job.Default.InnateC );
             innateDComboBox.SetValueAndDefault( job.InnateD, job.Default.InnateD );
+            cmb_MPortrait.SetValueAndDefault(cmb_MPortrait.Items[job.MPortrait], cmb_MPortrait.Items[job.Default.MPortrait]);
+            cmb_MType.SetValueAndDefault(cmb_MType.Items[job.MGraphic], cmb_MPortrait.Items[job.Default.MGraphic]);
 
             absorbElementsEditor.SetValueAndDefaults( job.AbsorbElement, job.Default.AbsorbElement );
             halfElementsEditor.SetValueAndDefaults( job.HalfElement, job.Default.HalfElement);
@@ -169,9 +206,29 @@ namespace FFTPatcher.Editors
 
 		#endregion Public Methods 
 
-		#region Private Methods (3) 
+		#region Private Methods
 
-        private void comboBox_SelectedIndexChanged( object sender, EventArgs e )
+        private void ChangeValueFromComboBox(ComboBoxWithDefault control, bool useIndex)
+        {
+            if (!ignoreChanges)
+            {
+                ReflectionHelpers.SetFieldOrProperty(job, control.Tag.ToString(), (useIndex ? (byte)(control.SelectedIndex) : control.SelectedItem));
+                OnDataChanged(this, System.EventArgs.Empty);
+            }
+        }
+
+        private void valueComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeValueFromComboBox((sender as ComboBoxWithDefault), false);
+        }
+
+        private void indexComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeValueFromComboBox((sender as ComboBoxWithDefault), true);
+        }
+
+        /*
+        private void valueComboBox_SelectedIndexChanged( object sender, EventArgs e )
         {
             if( !ignoreChanges )
             {
@@ -180,6 +237,7 @@ namespace FFTPatcher.Editors
                 OnDataChanged( this, System.EventArgs.Empty );
             }
         }
+        */
 
         private void skillSetLabel_Click( object sender, EventArgs e )
         {

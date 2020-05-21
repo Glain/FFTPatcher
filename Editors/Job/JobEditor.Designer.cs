@@ -67,9 +67,7 @@ namespace FFTPatcher.Editors
             System.Windows.Forms.Label innateBLabel;
             System.Windows.Forms.Label innateCLabel;
             System.Windows.Forms.Label innateDLabel;
-            System.Windows.Forms.Label hLabel1;
             System.Windows.Forms.Label hLabel2;
-            System.Windows.Forms.Label hLabel3;
             System.Windows.Forms.Label lbl_h_FormationSprites1;
             System.Windows.Forms.Label lbl_h_FormationSprites2;
             this.skillsetComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
@@ -86,13 +84,11 @@ namespace FFTPatcher.Editors
             this.moveSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.jumpSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.cevSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
-            this.mPortraitSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.mPaletteSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.innateAComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.innateBComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.innateCComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.innateDComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
-            this.mGraphicSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.startingStatusesEditor = new FFTPatcher.Editors.StatusesEditor();
             this.statusImmunityEditor = new FFTPatcher.Editors.StatusesEditor();
             this.innateStatusesEditor = new FFTPatcher.Editors.StatusesEditor();
@@ -106,6 +102,8 @@ namespace FFTPatcher.Editors
             this.spinner_FormationSprites2 = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.lblFormationSprites = new System.Windows.Forms.Label();
             this.pnl_FormationSprites = new System.Windows.Forms.Panel();
+            this.cmb_MType = new FFTPatcher.Controls.ComboBoxWithDefault();
+            this.cmb_MPortrait = new FFTPatcher.Controls.ComboBoxWithDefault();
             hpGrowthLabel = new System.Windows.Forms.Label();
             hpMultiplierLabel = new System.Windows.Forms.Label();
             mpGrowthLabel = new System.Windows.Forms.Label();
@@ -126,9 +124,7 @@ namespace FFTPatcher.Editors
             innateBLabel = new System.Windows.Forms.Label();
             innateCLabel = new System.Windows.Forms.Label();
             innateDLabel = new System.Windows.Forms.Label();
-            hLabel1 = new System.Windows.Forms.Label();
             hLabel2 = new System.Windows.Forms.Label();
-            hLabel3 = new System.Windows.Forms.Label();
             lbl_h_FormationSprites1 = new System.Windows.Forms.Label();
             lbl_h_FormationSprites2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.hpGrowthSpinner)).BeginInit();
@@ -144,9 +140,7 @@ namespace FFTPatcher.Editors
             ((System.ComponentModel.ISupportInitialize)(this.moveSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.jumpSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cevSpinner)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mPortraitSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mPaletteSpinner)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mGraphicSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites2)).BeginInit();
             this.pnl_FormationSprites.SuspendLayout();
@@ -274,27 +268,27 @@ namespace FFTPatcher.Editors
             mPortraitLabel.AutoSize = true;
             mPortraitLabel.Location = new System.Drawing.Point(3, 300);
             mPortraitLabel.Name = "mPortraitLabel";
-            mPortraitLabel.Size = new System.Drawing.Size(58, 13);
+            mPortraitLabel.Size = new System.Drawing.Size(84, 13);
             mPortraitLabel.TabIndex = 35;
-            mPortraitLabel.Text = "M. Portrait:";
+            mPortraitLabel.Text = "Monster Portrait:";
             // 
             // mPaletteLabel
             // 
             mPaletteLabel.AutoSize = true;
             mPaletteLabel.Location = new System.Drawing.Point(3, 321);
             mPaletteLabel.Name = "mPaletteLabel";
-            mPaletteLabel.Size = new System.Drawing.Size(58, 13);
+            mPaletteLabel.Size = new System.Drawing.Size(84, 13);
             mPaletteLabel.TabIndex = 36;
-            mPaletteLabel.Text = "M. Palette:";
+            mPaletteLabel.Text = "Monster Palette:";
             // 
             // mGraphicLabel
             // 
             mGraphicLabel.AutoSize = true;
             mGraphicLabel.Location = new System.Drawing.Point(3, 342);
             mGraphicLabel.Name = "mGraphicLabel";
-            mGraphicLabel.Size = new System.Drawing.Size(62, 13);
+            mGraphicLabel.Size = new System.Drawing.Size(75, 13);
             mGraphicLabel.TabIndex = 37;
-            mGraphicLabel.Text = "M. Graphic:";
+            mGraphicLabel.Text = "Monster Type:";
             // 
             // innateALabel
             // 
@@ -332,15 +326,6 @@ namespace FFTPatcher.Editors
             innateDLabel.TabIndex = 41;
             innateDLabel.Text = "Innate:";
             // 
-            // hLabel1
-            // 
-            hLabel1.AutoSize = true;
-            hLabel1.Location = new System.Drawing.Point(224, 300);
-            hLabel1.Name = "hLabel1";
-            hLabel1.Size = new System.Drawing.Size(13, 13);
-            hLabel1.TabIndex = 42;
-            hLabel1.Text = "h";
-            // 
             // hLabel2
             // 
             hLabel2.AutoSize = true;
@@ -349,15 +334,6 @@ namespace FFTPatcher.Editors
             hLabel2.Size = new System.Drawing.Size(13, 13);
             hLabel2.TabIndex = 43;
             hLabel2.Text = "h";
-            // 
-            // hLabel3
-            // 
-            hLabel3.AutoSize = true;
-            hLabel3.Location = new System.Drawing.Point(224, 342);
-            hLabel3.Name = "hLabel3";
-            hLabel3.Size = new System.Drawing.Size(13, 13);
-            hLabel3.TabIndex = 44;
-            hLabel3.Text = "h";
             // 
             // lbl_h_FormationSprites1
             // 
@@ -568,21 +544,6 @@ namespace FFTPatcher.Editors
             this.cevSpinner.Tag = "CEvade";
             this.cevSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // mPortraitSpinner
-            // 
-            this.mPortraitSpinner.Hexadecimal = true;
-            this.mPortraitSpinner.Location = new System.Drawing.Point(177, 298);
-            this.mPortraitSpinner.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.mPortraitSpinner.Name = "mPortraitSpinner";
-            this.mPortraitSpinner.Size = new System.Drawing.Size(47, 20);
-            this.mPortraitSpinner.TabIndex = 14;
-            this.mPortraitSpinner.Tag = "MPortrait";
-            this.mPortraitSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // mPaletteSpinner
             // 
             this.mPaletteSpinner.Hexadecimal = true;
@@ -633,21 +594,6 @@ namespace FFTPatcher.Editors
             this.innateDComboBox.Size = new System.Drawing.Size(121, 21);
             this.innateDComboBox.TabIndex = 20;
             this.innateDComboBox.Tag = "InnateD";
-            // 
-            // mGraphicSpinner
-            // 
-            this.mGraphicSpinner.Hexadecimal = true;
-            this.mGraphicSpinner.Location = new System.Drawing.Point(177, 340);
-            this.mGraphicSpinner.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.mGraphicSpinner.Name = "mGraphicSpinner";
-            this.mGraphicSpinner.Size = new System.Drawing.Size(47, 20);
-            this.mGraphicSpinner.TabIndex = 16;
-            this.mGraphicSpinner.Tag = "MGraphic";
-            this.mGraphicSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // startingStatusesEditor
             // 
@@ -794,6 +740,28 @@ namespace FFTPatcher.Editors
             this.pnl_FormationSprites.Size = new System.Drawing.Size(260, 26);
             this.pnl_FormationSprites.TabIndex = 58;
             // 
+            // cmb_MType
+            // 
+            this.cmb_MType.BackColor = System.Drawing.SystemColors.Window;
+            this.cmb_MType.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.cmb_MType.FormattingEnabled = true;
+            this.cmb_MType.Location = new System.Drawing.Point(103, 339);
+            this.cmb_MType.Name = "cmb_MType";
+            this.cmb_MType.Size = new System.Drawing.Size(121, 21);
+            this.cmb_MType.TabIndex = 59;
+            this.cmb_MType.Tag = "MGraphic";
+            // 
+            // cmb_MPortrait
+            // 
+            this.cmb_MPortrait.BackColor = System.Drawing.SystemColors.Window;
+            this.cmb_MPortrait.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.cmb_MPortrait.FormattingEnabled = true;
+            this.cmb_MPortrait.Location = new System.Drawing.Point(103, 297);
+            this.cmb_MPortrait.Name = "cmb_MPortrait";
+            this.cmb_MPortrait.Size = new System.Drawing.Size(121, 21);
+            this.cmb_MPortrait.TabIndex = 60;
+            this.cmb_MPortrait.Tag = "MPortrait";
+            // 
             // JobEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -801,6 +769,8 @@ namespace FFTPatcher.Editors
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.cmb_MPortrait);
+            this.Controls.Add(this.cmb_MType);
             this.Controls.Add(this.pnl_FormationSprites);
             this.Controls.Add(this.skillSetLabel);
             this.Controls.Add(this.startingStatusesEditor);
@@ -811,9 +781,7 @@ namespace FFTPatcher.Editors
             this.Controls.Add(this.halfElementsEditor);
             this.Controls.Add(this.cancelElementsEditor);
             this.Controls.Add(this.absorbElementsEditor);
-            this.Controls.Add(hLabel3);
             this.Controls.Add(hLabel2);
-            this.Controls.Add(hLabel1);
             this.Controls.Add(innateDLabel);
             this.Controls.Add(innateCLabel);
             this.Controls.Add(innateBLabel);
@@ -834,13 +802,11 @@ namespace FFTPatcher.Editors
             this.Controls.Add(mpGrowthLabel);
             this.Controls.Add(hpMultiplierLabel);
             this.Controls.Add(hpGrowthLabel);
-            this.Controls.Add(this.mGraphicSpinner);
             this.Controls.Add(this.innateDComboBox);
             this.Controls.Add(this.innateCComboBox);
             this.Controls.Add(this.innateBComboBox);
             this.Controls.Add(this.innateAComboBox);
             this.Controls.Add(this.mPaletteSpinner);
-            this.Controls.Add(this.mPortraitSpinner);
             this.Controls.Add(this.cevSpinner);
             this.Controls.Add(this.jumpSpinner);
             this.Controls.Add(this.moveSpinner);
@@ -870,9 +836,7 @@ namespace FFTPatcher.Editors
             ((System.ComponentModel.ISupportInitialize)(this.moveSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.jumpSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cevSpinner)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mPortraitSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mPaletteSpinner)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mGraphicSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites2)).EndInit();
             this.pnl_FormationSprites.ResumeLayout(false);
@@ -898,13 +862,11 @@ namespace FFTPatcher.Editors
         private FFTPatcher.Controls.NumericUpDownWithDefault moveSpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault jumpSpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault cevSpinner;
-        private FFTPatcher.Controls.NumericUpDownWithDefault mPortraitSpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault mPaletteSpinner;
         private FFTPatcher.Controls.ComboBoxWithDefault innateAComboBox;
         private FFTPatcher.Controls.ComboBoxWithDefault innateBComboBox;
         private FFTPatcher.Controls.ComboBoxWithDefault innateCComboBox;
         private FFTPatcher.Controls.ComboBoxWithDefault innateDComboBox;
-        private FFTPatcher.Controls.NumericUpDownWithDefault mGraphicSpinner;
         private ElementsEditor absorbElementsEditor;
         private ElementsEditor cancelElementsEditor;
         private ElementsEditor halfElementsEditor;
@@ -918,5 +880,7 @@ namespace FFTPatcher.Editors
         private Controls.NumericUpDownWithDefault spinner_FormationSprites2;
         private System.Windows.Forms.Label lblFormationSprites;
         private System.Windows.Forms.Panel pnl_FormationSprites;
+        private Controls.ComboBoxWithDefault cmb_MType;
+        private Controls.ComboBoxWithDefault cmb_MPortrait;
     }
 }
