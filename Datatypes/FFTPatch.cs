@@ -195,6 +195,8 @@ namespace FFTPatcher.Datatypes
 
         public AllPropositions Propositions { get; private set; }
 
+        public bool HasBuggyPropositionLevelBonuses { get; private set; }
+
 		#endregion Public Properties 
 
         #region Constructors
@@ -596,6 +598,8 @@ namespace FFTPatcher.Datatypes
                 default:
                     throw new ArgumentException();
             }
+
+            HasBuggyPropositionLevelBonuses = false;
         }
 
         private void LoadDataFromBytes(
@@ -653,6 +657,8 @@ namespace FFTPatcher.Datatypes
                 this.ENTDs = ENTDs;
                 this.MoveFind = MoveFind;
                 this.StoreInventories = StoreInventories;
+
+                this.HasBuggyPropositionLevelBonuses = brokenLevelBonuses;
             }
             catch( Exception )
             {
@@ -672,8 +678,8 @@ namespace FFTPatcher.Datatypes
 
                 var buggyzipEntry = GetZipEntry( file, "BuggyPropositions", false );
                 var propsZipEntry = GetZipEntry(file, elementNames[ElementName.Propositions], false);
-                bool buggy = false;
-                //bool buggy = (buggyzipEntry != null && propsZipEntry != null) || propsZipEntry == null;
+                //bool buggy = false;
+                bool buggy = (buggyzipEntry != null && propsZipEntry != null) || propsZipEntry == null;
                 
                 LoadDataFromBytes(
                     GetZipEntry( file, elementNames[ElementName.Abilities], false ) ?? defaults[ElementName.Abilities],
@@ -790,7 +796,7 @@ namespace FFTPatcher.Datatypes
                 WriteFileToZip(stream, elementNames[ElementName.JobFormationSprites1], Jobs.ToFormationSprites1ByteArray());
                 WriteFileToZip(stream, elementNames[ElementName.JobFormationSprites2], Jobs.ToFormationSprites2ByteArray());
 
-                if (!AllPropositions.CanFixBuggyLevelBonuses( destinationContext ))
+                if ((!AllPropositions.CanFixBuggyLevelBonuses( destinationContext )) || ((!Propositions.HasChanged) && (HasBuggyPropositionLevelBonuses)))
                 {
                     WriteFileToZip( stream, "BuggyPropositions", new byte[0] );
                 }
