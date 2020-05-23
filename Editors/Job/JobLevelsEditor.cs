@@ -63,7 +63,7 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( JobLevels levels )
+        public void UpdateView( JobLevels levels, Context context )
         {
             this.levels = levels;
             foreach( Control c in Controls )
@@ -85,13 +85,13 @@ namespace FFTPatcher.Editors
                 levels.Thief, levels.Orator, levels.Mystic, levels.Geomancer,
                 levels.Dragoon, levels.Samurai, levels.Ninja, levels.Arithmetician,
                 levels.Bard, levels.Dancer, levels.Mime } );
-            if( FFTPatch.Context == Context.US_PSP )
+            if( context == Context.US_PSP )
             {
                 reqs.Add( levels.DarkKnight );
                 reqs.Add( levels.OnionKnight );
                 reqs.Add( levels.Unknown );
             }
-            IList<string> names = FFTPatch.Context == Context.US_PSP ? PSPResources.Lists.JobNames : PSXResources.Lists.JobNames;
+            IList<string> names = context == Context.US_PSP ? PSPResources.Lists.JobNames : PSXResources.Lists.JobNames;
             IList<string> sideNames = names.Sub( 0x4B, 0x5D );
             IList<string> topNames = names.Sub( 0x4A, 0x5D );
             for ( int i = 0; i < sideNames.Count; i++ )
@@ -101,7 +101,7 @@ namespace FFTPatcher.Editors
             }
             verticalLabels[topNames.Count - 1].Text = topNames[topNames.Count - 1];
 
-            bool psp = FFTPatch.Context == Context.US_PSP;
+            bool psp = context == Context.US_PSP;
             if ( psp )
             {
                 darkKnightLabel.Text = names[0xA0];
@@ -117,7 +117,8 @@ namespace FFTPatcher.Editors
             onionKnightLabel.Visible = psp;
             onionKnightVerticalLabel.Visible = psp;
 
-            requirementsEditor1.Requirements = reqs;
+            //requirementsEditor1.Requirements = reqs;
+            requirementsEditor1.SetRequirements(reqs, context);
         }
 
 		#endregion Public Methods 

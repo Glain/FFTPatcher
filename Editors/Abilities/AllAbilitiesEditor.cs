@@ -65,18 +65,22 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllAbilities allAbilities )
+        public void UpdateView( AllAbilities allAbilities, Context context )
         {
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 cbAbility = null;
             }
             abilitiesListBox.SelectedIndexChanged -= abilitiesListBox_SelectedIndexChanged;
             abilitiesListBox.DataSource = allAbilities.Abilities;
             abilitiesListBox.SelectedIndexChanged += abilitiesListBox_SelectedIndexChanged;
             abilitiesListBox.SelectedIndex = 0;
-            abilityEditor.Ability = abilitiesListBox.SelectedItem as Ability;
+
+            //abilityEditor.UpdateView(context);
+            Ability ability = abilitiesListBox.SelectedItem as Ability;
+            //abilityEditor.Ability = ability;
+            abilityEditor.SetAbility(ability, context);
 
             abilitiesListBox.SetChangedColors();
         }
@@ -150,7 +154,7 @@ namespace FFTPatcher.Editors
         {
             if( TypesMatch() )
             {
-                cbAbility.CopyAllTo( abilitiesListBox.SelectedItem as Ability );
+                cbAbility.CopyAllTo( (abilitiesListBox.SelectedItem as Ability), ourContext );
                 abilityEditor.Ability = null;
                 abilityEditor.Ability = abilitiesListBox.SelectedItem as Ability;
                 abilityEditor.Invalidate(true);
@@ -177,7 +181,7 @@ namespace FFTPatcher.Editors
         {
             if( TypesMatch() )
             {
-                cbAbility.CopySpecificTo( abilitiesListBox.SelectedItem as Ability );
+                cbAbility.CopySpecificTo( (abilitiesListBox.SelectedItem as Ability), ourContext );
                 abilityEditor.Ability = null;
                 abilityEditor.Ability = abilitiesListBox.SelectedItem as Ability;
                 abilityEditor.Invalidate(true);

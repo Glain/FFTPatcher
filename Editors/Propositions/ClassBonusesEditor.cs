@@ -28,8 +28,7 @@ namespace FFTPatcher.Editors
         private Context ourContext = Context.Default;
         bool ignoreChanges = false;
 
-        public void UpdateView( 
-            AllPropositions props )
+        public void UpdateView( AllPropositions props, Context context )
         {
             ignoreChanges = true;
             allProps = props;
@@ -40,7 +39,7 @@ namespace FFTPatcher.Editors
             bfnBonuses = props.BraveFaithBonuses;
             bfnBonusesDefault = props.Default.BraveFaithBonuses;
 
-            UpdateRowHeaders( FFTPatch.Context );
+            UpdateRowHeaders(context);
 
             foreach (PropositionClass clas in (PropositionClass[])Enum.GetValues( typeof( PropositionClass ) ))
             {
@@ -267,7 +266,7 @@ namespace FFTPatcher.Editors
             {
                 DataGridViewRow destEntry = dataGridView1.CurrentRow;
                 CopyFromRow(destEntry.Index, copiedEntry);
-                UpdateView(allProps);
+                UpdateView(allProps, ourContext);
                 dataGridView1.Invalidate();
             }
         }

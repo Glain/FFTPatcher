@@ -11,13 +11,16 @@ namespace FFTPatcher.Editors.Items
             InitializeComponent();
         }
 
-        public void UpdateView( AllStoreInventories inventories )
+        public void UpdateView( AllStoreInventories inventories, AllItems items, PatcherLib.Datatypes.Context context )
         {
             comboBox1.SelectedIndexChanged -= comboBox1_SelectedIndexChanged;
             comboBox1.DataSource = inventories.Stores.ToArray();
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             comboBox1.SelectedIndex = 0;
-            storeInventoryEditor1.StoreInventory = inventories.Stores[0];
+
+            storeInventoryEditor1.Items = items;
+            //storeInventoryEditor1.StoreInventory = inventories.Stores[0];
+            storeInventoryEditor1.SetStoreInventory(inventories.Stores[0], context);
         }
 
         private void comboBox1_SelectedIndexChanged( object sender, EventArgs e )

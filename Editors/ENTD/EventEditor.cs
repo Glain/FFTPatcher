@@ -46,17 +46,7 @@ namespace FFTPatcher.Editors
             get { return evt; }
             set
             {
-                if( value == null )
-                {
-                    evt = null;
-                    Enabled = false;
-                }
-                else if( value != evt )
-                {
-                    evt = value;
-                    UpdateView();
-                    Enabled = true;
-                }
+                SetEvent(value, ourContext);
             }
         }
 
@@ -79,13 +69,28 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
-        public void UpdateView()
+        public void SetEvent(Event value, Context context)
         {
-            if( ourContext != FFTPatch.Context )
+            if (value == null)
             {
-                ourContext = FFTPatch.Context;
+                evt = null;
+                Enabled = false;
+            }
+            else if (value != evt)
+            {
+                evt = value;
+                UpdateView(context);
+                Enabled = true;
+            }
+        }
+
+        public void UpdateView(Context context)
+        {
+            if( ourContext != context )
+            {
+                ourContext = context;
                 ClipBoardUnit = null;
                 unitSelectorListBox.ContextMenu.MenuItems[1].Enabled = false;
             }
@@ -94,8 +99,10 @@ namespace FFTPatcher.Editors
             DetermineColumnWidths();
             unitSelectorListBox.DataSource = evt.Units;
             unitSelectorListBox.SelectedIndex = 0;
-            eventUnitEditor.EventUnit = unitSelectorListBox.SelectedItem as EventUnit;
-            eventUnitEditor.UpdateView();
+            //eventUnitEditor.EventUnit = unitSelectorListBox.SelectedItem as EventUnit;
+            //eventUnitEditor.UpdateView(ourContext);
+            eventUnitEditor.SetEventUnit(unitSelectorListBox.SelectedItem as EventUnit, context);
+            eventUnitEditor.UpdateView(context);
             eventUnitEditor.ResumeLayout();
             eventUnitEditor_DataChanged( eventUnitEditor, EventArgs.Empty );
         }
@@ -144,7 +151,7 @@ namespace FFTPatcher.Editors
             {
                 ClipBoardUnit.CopyTo( unitSelectorListBox.SelectedItem as EventUnit );
                 eventUnitEditor.EventUnit = unitSelectorListBox.SelectedItem as EventUnit;
-                eventUnitEditor.UpdateView();
+                eventUnitEditor.UpdateView(ourContext);
                 eventUnitEditor_DataChanged( eventUnitEditor, EventArgs.Empty );
             }
         }

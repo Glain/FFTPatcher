@@ -32,6 +32,7 @@ namespace FFTPatcher.Editors
             "Blank1", "Blank2", "Blank3", "Blank4" };
         private bool ignoreChanges = false;
         private InflictStatus status;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
 
 		#endregion Instance Variables 
 
@@ -42,17 +43,7 @@ namespace FFTPatcher.Editors
             get { return status; }
             set
             {
-                if( value == null )
-                {
-                    status = null;
-                    this.Enabled = false;
-                }
-                else if( value != status )
-                {
-                    status = value;
-                    this.Enabled = true;
-                    UpdateView();
-                }
+                SetInflictStatus(value, ourContext);
             }
         }
 
@@ -69,7 +60,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (2) 
+		#region Private Methods 
 
         private void flagsCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
@@ -80,20 +71,38 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView()
+        public void SetInflictStatus(InflictStatus value, PatcherLib.Datatypes.Context context)
+        {
+            if (value == null)
+            {
+                status = null;
+                this.Enabled = false;
+            }
+            else if (value != status)
+            {
+                status = value;
+                this.Enabled = true;
+                UpdateView(context);
+            }
+        }
+
+        public void UpdateView(PatcherLib.Datatypes.Context context)
         {
             ignoreChanges = true;
             SuspendLayout();
             flagsCheckedListBox.SuspendLayout();
             inflictStatusesEditor.SuspendLayout();
 
+            ourContext = context;
+
             if( status.Default != null )
             {
                 flagsCheckedListBox.SetValuesAndDefaults( ReflectionHelpers.GetFieldsOrProperties<bool>( status, flags ), status.Default.ToBoolArray() );
             }
 
-            inflictStatusesEditor.Statuses = status.Statuses;
-            inflictStatusesEditor.UpdateView();
+            //inflictStatusesEditor.Statuses = status.Statuses;
+            inflictStatusesEditor.SetStatuses(status.Statuses, context);
+            inflictStatusesEditor.UpdateView(context);
 
             inflictStatusesEditor.ResumeLayout();
             flagsCheckedListBox.ResumeLayout();

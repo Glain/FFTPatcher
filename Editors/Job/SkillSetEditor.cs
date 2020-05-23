@@ -44,17 +44,7 @@ namespace FFTPatcher.Editors
             get { return skillSet; }
             set
             {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    skillSet = null;
-                }
-                else if( skillSet != value )
-                {
-                    this.Enabled = true;
-                    skillSet = value;
-                    UpdateView();
-                }
+                SetSkillSet(value, ourContext);
             }
         }
 
@@ -77,29 +67,44 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
-        public void UpdateView()
+        public void SetSkillSet(SkillSet value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                skillSet = null;
+            }
+            else if (skillSet != value)
+            {
+                this.Enabled = true;
+                skillSet = value;
+                UpdateView(context);
+            }
+        }
+
+        public void UpdateView(Context context)
         {        	
             this.ignoreChanges = true;
             this.SuspendLayout();
             actionGroupBox.SuspendLayout();
             theRestGroupBox.SuspendLayout();
 
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 
                 foreach( ComboBoxWithDefault actionComboBox in actionComboBoxes )
                 {
                     actionComboBox.Items.Clear();
-                    actionComboBox.Items.AddRange( AllAbilities.DummyAbilities );
+                    actionComboBox.Items.AddRange( AllAbilities.GetDummyAbilities(context) );
                     actionComboBox.SelectedIndexChanged += actionComboBox_SelectedIndexChanged;
                 }
                 foreach( ComboBoxWithDefault theRestComboBox in theRestComboBoxes )
                 {
                     theRestComboBox.Items.Clear();
-                    theRestComboBox.Items.AddRange( AllAbilities.DummyAbilities );
+                    theRestComboBox.Items.AddRange( AllAbilities.GetDummyAbilities(context) );
                     theRestComboBox.SelectedIndexChanged += theRestComboBox_SelectedIndexChanged;
                 }
             }

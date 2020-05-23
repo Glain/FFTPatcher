@@ -26,7 +26,7 @@ namespace FFTPatcher.Editors
 {
     public partial class AllItemsEditor : UserControl
     {
-        #region Instance Variables (5)
+        #region Instance Variables
 
         private Item copiedItem;
 
@@ -37,7 +37,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        #region Constructors (1)
+        #region Constructors
 
         public AllItemsEditor()
         {
@@ -69,13 +69,17 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllItems items )
+        public void UpdateView( AllItems items, AllStoreInventories storeInventories, Context context )
         {
+            ourContext = context;
             itemListBox.SelectedIndexChanged -= itemListBox_SelectedIndexChanged;
             itemListBox.DataSource = items.Items;
             itemListBox.SelectedIndexChanged += itemListBox_SelectedIndexChanged;
             itemListBox.SelectedIndex = 0;
-            itemEditor.Item = itemListBox.SelectedItem as Item;
+            itemEditor.BuildItemNameLists(context);
+            itemEditor.StoreInventories = storeInventories;
+            //itemEditor.Item = itemListBox.SelectedItem as Item;
+            itemEditor.SetItem(itemListBox.SelectedItem as Item, context);
             itemListBox.SetChangedColors();
         }
 
@@ -181,7 +185,7 @@ namespace FFTPatcher.Editors
             {
                 Item destItem = itemListBox.SelectedItem as Item;
                 copiedItem.CopyCommonTo(destItem);
-                itemEditor.UpdateView();
+                itemEditor.UpdateView(ourContext);
                 itemEditor_DataChanged(itemEditor, EventArgs.Empty);
             }
         }
@@ -193,7 +197,7 @@ namespace FFTPatcher.Editors
                 Item destItem = itemListBox.SelectedItem as Item;
                 copiedItem.CopyAllTo(destItem);
                 itemEditor.Item = destItem;
-                itemEditor.UpdateView();
+                itemEditor.UpdateView(ourContext);
                 itemEditor.Invalidate(true);
                 itemEditor_DataChanged(itemEditor, EventArgs.Empty);
             }

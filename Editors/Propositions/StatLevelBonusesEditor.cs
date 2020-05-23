@@ -34,8 +34,7 @@ namespace FFTPatcher.Editors
         const int faithBonusesFirstRow = 5;
         const int levelBonusesFirstRow = 10;
 
-        public void UpdateView(
-            AllPropositions props )
+        public void UpdateView(AllPropositions props, Context context)
         {
             ignoreChanges = true;
             this.props = props;
@@ -48,7 +47,7 @@ namespace FFTPatcher.Editors
             faithBonuses = props.FaithStatBonuses;
             faithBonusesDefault = props.Default.FaithStatBonuses;
 
-            UpdateRowHeaders( FFTPatch.Context );
+            UpdateRowHeaders( context );
 
             foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
             {
@@ -418,7 +417,7 @@ namespace FFTPatcher.Editors
             {
                 DataGridViewRow destEntry = dataGridView1.CurrentRow;
                 CopyFromRow(destEntry.Index, copiedEntry);
-                UpdateView(props);
+                UpdateView(props, ourContext);
                 dataGridView1.Invalidate();
             }
         }

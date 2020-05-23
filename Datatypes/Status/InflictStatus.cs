@@ -45,58 +45,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Instance Variables 
 
-		#region Public Properties (8) 
-
-        public string CorrespondingAbilities
-        {
-            get
-            {
-                List<string> result = new List<string>();
-                foreach( Ability a in FFTPatch.Abilities.Abilities )
-                {
-                    if( a.Attributes != null && a.Attributes.Formula.Value != 0x02 && a.Attributes.InflictStatus == Value )
-                    {
-                        result.Add( a.ToString() );
-                    }
-                }
-
-                return string.Join( ", ", result.ToArray() );
-            }
-        }
-
-        public string CorrespondingChemistItems
-        {
-            get
-            {
-                List<string> result = new List<string>();
-                foreach( Item i in FFTPatch.Items.Items )
-                {
-                    if( i is ChemistItem && (i as ChemistItem).InflictStatus == Value )
-                    {
-                        result.Add( i.ToString() );
-                    }
-                }
-
-                return string.Join( ", ", result.ToArray() );
-            }
-        }
-
-        public string CorrespondingWeapons
-        {
-            get
-            {
-                List<string> result = new List<string>();
-                foreach( Item i in FFTPatch.Items.Items )
-                {
-                    if( i is Weapon && (i as Weapon).Formula.Value != 0x02 && (i as Weapon).InflictStatus == Value )
-                    {
-                        result.Add( i.ToString() );
-                    }
-                }
-
-                return string.Join( ", ", result.ToArray() );
-            }
-        }
+		#region Public Properties
 
         public InflictStatus Default { get; private set; }
 
@@ -145,7 +94,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Constructors 
 
-		#region Public Methods (5) 
+		#region Public Methods
 
         public static void Copy( InflictStatus source, InflictStatus destination )
         {
@@ -184,6 +133,48 @@ namespace FFTPatcher.Datatypes
             return (HasChanged ? "*" : "") + Value.ToString( "X2" );
         }
 
+        public string GetCorrespondingAbilities(FFTPatch FFTPatch)
+        {
+            List<string> result = new List<string>();
+            foreach (Ability a in FFTPatch.Abilities.Abilities)
+            {
+                if (a.Attributes != null && a.Attributes.Formula.Value != 0x02 && a.Attributes.InflictStatus == Value)
+                {
+                    result.Add(a.ToString());
+                }
+            }
+
+            return string.Join(", ", result.ToArray());
+        }
+
+        public string GetCorrespondingChemistItems(FFTPatch FFTPatch)
+        {
+            List<string> result = new List<string>();
+            foreach (Item i in FFTPatch.Items.Items)
+            {
+                if (i is ChemistItem && (i as ChemistItem).InflictStatus == Value)
+                {
+                    result.Add(i.ToString());
+                }
+            }
+
+            return string.Join(", ", result.ToArray());
+        }
+
+        public string GetCorrespondingWeapons(FFTPatch FFTPatch)
+        {
+            List<string> result = new List<string>();
+            foreach (Item i in FFTPatch.Items.Items)
+            {
+                if (i is Weapon && (i as Weapon).Formula.Value != 0x02 && (i as Weapon).InflictStatus == Value)
+                {
+                    result.Add(i.ToString());
+                }
+            }
+
+            return string.Join(", ", result.ToArray());
+        }
+
 		#endregion Public Methods 
     }
 
@@ -215,9 +206,9 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (1) 
 
-        public AllInflictStatuses( IList<byte> bytes )
+        public AllInflictStatuses( IList<byte> bytes, Context context )
         {
-            IList<byte> defaultBytes = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.InflictStatuses : PSXResources.Binaries.InflictStatuses;
+            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.InflictStatuses : PSXResources.Binaries.InflictStatuses;
             InflictStatuses = new InflictStatus[0x80];
             for( int i = 0; i < 0x80; i++ )
             {
@@ -258,7 +249,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -271,9 +262,9 @@ namespace FFTPatcher.Datatypes
                         writer.WriteStartElement( i.GetType().Name );
                         writer.WriteAttributeString( "value", i.Value.ToString( "X2" ) );
                         DigestGenerator.WriteXmlDigest( i, writer, false, false );
-                        writer.WriteElementString( "CorrespondingAbilities", i.CorrespondingAbilities );
-                        writer.WriteElementString( "CorrespondingChemistItems", i.CorrespondingChemistItems );
-                        writer.WriteElementString( "CorrespondingWeapons", i.CorrespondingWeapons );
+                        writer.WriteElementString( "CorrespondingAbilities", i.GetCorrespondingAbilities(FFTPatch) );
+                        writer.WriteElementString( "CorrespondingChemistItems", i.GetCorrespondingChemistItems(FFTPatch) );
+                        writer.WriteElementString( "CorrespondingWeapons", i.GetCorrespondingWeapons(FFTPatch) );
                         writer.WriteEndElement();
                     }
                 }

@@ -55,11 +55,11 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( AllItemAttributes attributes )
+        public void UpdateView( AllItemAttributes attributes, Context context )
         {
-            if ( ourContext != FFTPatch.Context )
+            if ( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 ClipBoardAttributes = null;
                 offsetListBox.ContextMenu.MenuItems[1].Enabled = false;
             }
@@ -68,7 +68,8 @@ namespace FFTPatcher.Editors
             offsetListBox.DataSource = attributes.ItemAttributes;
             offsetListBox.SelectedIndexChanged += offsetListBox_SelectedIndexChanged;
             offsetListBox.SelectedIndex = 0;
-            itemAttributeEditor.ItemAttributes = offsetListBox.SelectedItem as ItemAttributes;
+            //itemAttributeEditor.ItemAttributes = offsetListBox.SelectedItem as ItemAttributes;
+            itemAttributeEditor.SetItemAttributes(offsetListBox.SelectedItem as ItemAttributes, context);
         }
 
 		#endregion Public Methods 

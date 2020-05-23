@@ -30,14 +30,15 @@ namespace FFTPatcher
 {
     public partial class MainForm : Form
     {
-        #region Instance Variables (2)
+        #region Instance Variables
 
         private PatchPSPForm patchPspForm = null;
         private PatchPSXForm patchPsxForm = null;
+        private FFTPatch fftPatch = null;
 
         #endregion Instance Variables
 
-        #region Private Properties (2)
+        #region Private Properties
 
         private PatchPSPForm PatchPSPForm
         {
@@ -60,6 +61,18 @@ namespace FFTPatcher
                     patchPsxForm = new PatchPSXForm();
                 }
                 return patchPsxForm;
+            }
+        }
+
+        private FFTPatch FFTPatch
+        {
+            get
+            {
+                if (fftPatch == null)
+                {
+                    fftPatch = new FFTPatch();
+                }
+                return fftPatch;
             }
         }
 
@@ -142,7 +155,7 @@ namespace FFTPatcher
 
         #endregion Public Methods
 
-        #region Private Methods (20)
+        #region Private Methods
 
         private void aboutMenuItem_Click( object sender, EventArgs e )
         {
@@ -158,7 +171,7 @@ namespace FFTPatcher
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( saveFileDialog.FileName );
 
-                TryAndHandle( delegate() { Codes.SaveToFile( saveFileDialog.FileName ); }, false );
+                TryAndHandle( delegate() { Codes.SaveToFile( saveFileDialog.FileName, FFTPatch ); }, false );
             }
         }
 
@@ -248,12 +261,16 @@ namespace FFTPatcher
 
         private void newPSPMenuItem_Click( object sender, System.EventArgs e )
         {
-            FFTPatch.New( Context.US_PSP );
+            //FFTPatch.New( Context.US_PSP );
+            fftPatch = new FFTPatch(Context.US_PSP);
+            fftPatchEditor1.LoadFFTPatch(FFTPatch);
         }
 
         private void newPSXMenuItem_Click( object sender, System.EventArgs e )
         {
-            FFTPatch.New( Context.US_PSX );
+            //FFTPatch.New( Context.US_PSX );
+            fftPatch = new FFTPatch(Context.US_PSX);
+            fftPatchEditor1.LoadFFTPatch(FFTPatch);
         }
 
         private void openMenuItem_Click( object sender, System.EventArgs e )
@@ -263,7 +280,10 @@ namespace FFTPatcher
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( openFileDialog.FileName );
 
-                TryAndHandle( delegate() { FFTPatch.LoadPatch( openFileDialog.FileName ); }, true );
+                TryAndHandle( delegate() { 
+                    FFTPatch.LoadPatch( openFileDialog.FileName );
+                    fftPatchEditor1.LoadFFTPatch(FFTPatch);
+                }, true );
             }
         }
 
@@ -275,7 +295,10 @@ namespace FFTPatcher
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( openFileDialog.FileName );
 
-                TryAndHandle( delegate() { FFTPatch.OpenPatchedPspIso( openFileDialog.FileName ); }, true );
+                TryAndHandle( delegate() { 
+                    FFTPatch.OpenPatchedPspIso( openFileDialog.FileName );
+                    fftPatchEditor1.LoadFFTPatch(FFTPatch);
+                }, true );
             }
         }
 
@@ -285,7 +308,10 @@ namespace FFTPatcher
             if (openFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( openFileDialog.FileName );
-                TryAndHandle( delegate() { FFTPatch.OpenPatchedPsxIso( openFileDialog.FileName ); }, true );
+                TryAndHandle( delegate() { 
+                    FFTPatch.OpenPatchedPsxIso( openFileDialog.FileName );
+                    fftPatchEditor1.LoadFFTPatch(FFTPatch);
+                }, true );
             }
         }
 
@@ -294,7 +320,7 @@ namespace FFTPatcher
             DoWorkEventHandler doWork =
                 delegate( object sender1, DoWorkEventArgs args )
                 {
-                    PspIso.PatchISO( sender1 as BackgroundWorker, args, PatchPSPForm );
+                    PspIso.PatchISO( FFTPatch, sender1 as BackgroundWorker, args, PatchPSPForm );
                 };
             ProgressChangedEventHandler progress =
                 delegate( object sender2, ProgressChangedEventArgs args )
@@ -321,7 +347,7 @@ namespace FFTPatcher
                     }
                 };
 
-            if (PatchPSPForm.CustomShowDialog( this ) == DialogResult.OK)
+            if (PatchPSPForm.CustomShowDialog( this, FFTPatch ) == DialogResult.OK)
             {
                 patchPsxBackgroundWorker.ProgressChanged += progress;
                 patchPsxBackgroundWorker.RunWorkerCompleted += completed;
@@ -342,7 +368,7 @@ namespace FFTPatcher
             DoWorkEventHandler doWork =
                 delegate( object sender1, DoWorkEventArgs args )
                 {
-                    PsxIso.PatchPsxIso( sender1 as BackgroundWorker, args, PatchPSXForm );
+                    PsxIso.PatchPsxIso( FFTPatch, sender1 as BackgroundWorker, args, PatchPSXForm );
                 };
             ProgressChangedEventHandler progress =
                 delegate( object sender2, ProgressChangedEventArgs args )
@@ -367,7 +393,7 @@ namespace FFTPatcher
                 };
 
 
-            if (PatchPSXForm.CustomShowDialog( this ) == DialogResult.OK)
+            if (PatchPSXForm.CustomShowDialog( this, FFTPatch ) == DialogResult.OK)
             {
                 patchPsxBackgroundWorker.ProgressChanged += progress;
                 patchPsxBackgroundWorker.RunWorkerCompleted += completed;
@@ -467,6 +493,7 @@ namespace FFTPatcher
                 {
                     FFTPatch.ConvertPsxPatchToPsp( fn );
                     FFTPatch.LoadPatch( fn );
+                    fftPatchEditor1.LoadFFTPatch(FFTPatch);
                 }
             }
         }
@@ -551,7 +578,7 @@ namespace FFTPatcher
             DoWorkEventHandler doWork =
                 delegate( object sender1, DoWorkEventArgs args )
                 {
-                    PsxIso.PatchPsxSavestate( sender1 as BackgroundWorker, args, PatchPSXForm );
+                    PsxIso.PatchPsxSavestate( FFTPatch, sender1 as BackgroundWorker, args, PatchPSXForm );
                 };
             ProgressChangedEventHandler progress =
                 delegate( object sender2, ProgressChangedEventArgs args )
@@ -575,7 +602,7 @@ namespace FFTPatcher
                     }
                 };
 
-            if (PatchPSXForm.CustomShowDialog( this ) == DialogResult.OK)
+            if (PatchPSXForm.CustomShowDialog( this, FFTPatch ) == DialogResult.OK)
             {
                 patchPsxBackgroundWorker.ProgressChanged += progress;
                 patchPsxBackgroundWorker.RunWorkerCompleted += completed;

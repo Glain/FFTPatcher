@@ -102,7 +102,7 @@ namespace FFTPatcher.Datatypes
         }
 
 
-        public void WriteXmlDigest(System.Xml.XmlWriter writer)
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             throw new NotImplementedException();
         }

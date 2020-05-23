@@ -29,7 +29,9 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class AbilityAttributes : BaseDataType, PatcherLib.Datatypes.IChangeable, ISupportDigest, ISupportDefault<AbilityAttributes>
     {
-		#region Instance Variables (42) 
+		#region Instance Variables
+
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
 
         public bool AnimateMiss;
         public bool Arithmetick;
@@ -169,12 +171,13 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (2) 
+		#region Constructors
 
-        public AbilityAttributes( string name, UInt16 offset, IList<byte> second )
+        public AbilityAttributes( string name, UInt16 offset, IList<byte> second, PatcherLib.Datatypes.Context context )
         {
             Name = name;
             Offset = offset;
+            ourContext = context;
 
             Range = second[0];
             Effect = second[1];
@@ -206,8 +209,8 @@ namespace FFTPatcher.Datatypes
             MPCost = second[13];
         }
 
-        public AbilityAttributes( string name, UInt16 offset, IList<byte> second, AbilityAttributes defaults )
-            : this( name, offset, second )
+        public AbilityAttributes( string name, UInt16 offset, IList<byte> second, AbilityAttributes defaults, PatcherLib.Datatypes.Context context )
+            : this( name, offset, second, context )
         {
             if( defaults != null )
             {
@@ -216,8 +219,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        internal AbilityAttributes()
+        internal AbilityAttributes(PatcherLib.Datatypes.Context context)
         {
+            ourContext = context;
         }
 
 		#endregion Constructors 
@@ -310,7 +314,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Methods 
     
-        protected override void ReadXml( System.Xml.XmlReader reader )
+        protected override void ReadXml(System.Xml.XmlReader reader)
         {
             reader.ReadStartElement();
 
@@ -326,7 +330,7 @@ namespace FFTPatcher.Datatypes
 
             reader.MoveToAttribute( "value" );
             byte formulaValue = (byte)reader.ReadContentAsInt();
-            Formula = FFTPatch.Context == PatcherLib.Datatypes.Context.US_PSP ? 
+            Formula = (ourContext == PatcherLib.Datatypes.Context.US_PSP) ? 
                 AbilityFormula.PSPAbilityFormulaHash[formulaValue] : 
                 AbilityFormula.PSXAbilityFormulaHash[formulaValue];
             reader.MoveToElement();

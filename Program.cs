@@ -43,14 +43,14 @@ namespace FFTPatcher
             dummy = PSPResources.Lists.AbilityAttributes;
             dummy = PSXResources.Lists.AbilityAttributes;
             dummy = FFTPatchEditor.ToolTip;
-            dummy = SkillSet.DummySkillSets;
+            dummy = SkillSet.GetDummySkillSets(PatcherLib.Datatypes.Context.US_PSX);
             dummy = AllMonsterSkills.PSXNames;
-            dummy = AllJobs.Names;
+            dummy = AllJobs.GetNames(PatcherLib.Datatypes.Context.US_PSX);
             dummy = ActionMenuEntry.AllActionMenuEntries;
-            dummy = ShopAvailability.AllAvailabilities;
-            dummy = SpriteSet.SpriteSets;
-            dummy = SpecialName.SpecialNames;
-            dummy = Event.EventNames;
+            dummy = ShopAvailability.GetAllAvailabilities(PatcherLib.Datatypes.Context.US_PSX);
+            dummy = SpriteSet.GetSpriteSets(PatcherLib.Datatypes.Context.US_PSX);
+            dummy = SpecialName.GetSpecialNames(PatcherLib.Datatypes.Context.US_PSX);
+            dummy = Event.GetEventNames(PatcherLib.Datatypes.Context.US_PSX);
 
             Application.Run(new MainForm());
         }

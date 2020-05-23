@@ -72,13 +72,13 @@ namespace FFTPatcher.Datatypes
             armorDigestableProperties.Add( "MPBonus" );
         }
 
-        public Armor( UInt16 offset, IList<byte> itemBytes, IList<byte> armorBytes )
-            : this( offset, itemBytes, armorBytes, null )
+        public Armor(UInt16 offset, IList<byte> itemBytes, IList<byte> armorBytes, PatcherLib.Datatypes.Context context)
+            : this( offset, itemBytes, armorBytes, null, context )
         {
         }
 
-        public Armor( UInt16 offset, IList<byte> itemBytes, IList<byte> armorBytes, Armor defaults )
-            : base( offset, itemBytes, defaults )
+        public Armor( UInt16 offset, IList<byte> itemBytes, IList<byte> armorBytes, Armor defaults, PatcherLib.Datatypes.Context context )
+            : base( offset, itemBytes, defaults, context )
         {
             ArmorDefault = defaults;
             HPBonus = armorBytes[0];

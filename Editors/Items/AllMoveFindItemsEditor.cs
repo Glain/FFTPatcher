@@ -28,6 +28,7 @@ namespace FFTPatcher.Editors
         #region Instance Variables (3)
 
         private MapMoveFindItems copiedEntry;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
         const int cloneIndex = 0;
         const int pasteIndex = 1;
 
@@ -63,13 +64,15 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllMoveFindItems items )
+        public void UpdateView( AllMoveFindItems items, PatcherLib.Datatypes.Context context )
         {
+            ourContext = context;
             mapListBox.SelectedIndexChanged -= mapListBox_SelectedIndexChanged;
             mapListBox.DataSource = items.MoveFindItems;
             mapListBox.SelectedIndexChanged += mapListBox_SelectedIndexChanged;
             mapListBox.SelectedIndex = 0;
-            mapMoveFindItemEditor1.MapMoveFindItems = mapListBox.SelectedItem as MapMoveFindItems;
+            //mapMoveFindItemEditor1.MapMoveFindItems = mapListBox.SelectedItem as MapMoveFindItems;
+            mapMoveFindItemEditor1.SetMapMoveFindItems(mapListBox.SelectedItem as MapMoveFindItems, context);
             mapListBox.SetChangedColors();
         }
 
@@ -119,7 +122,7 @@ namespace FFTPatcher.Editors
                 MapMoveFindItems destEntry = mapListBox.SelectedItem as MapMoveFindItems;
                 copiedEntry.CopyTo(destEntry);
                 mapMoveFindItemEditor1.MapMoveFindItems = destEntry;
-                mapMoveFindItemEditor1.UpdateView();
+                mapMoveFindItemEditor1.UpdateView(ourContext);
                 mapMoveFindItemEditor1.Invalidate(true);
                 mapMoveFindItemEditor1_DataChanged(mapMoveFindItemEditor1, EventArgs.Empty);
             }

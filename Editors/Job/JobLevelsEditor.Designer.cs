@@ -781,7 +781,7 @@ namespace FFTPatcher.Editors
             this.requirementsEditor1.Location = new System.Drawing.Point( 101, 103 );
             this.requirementsEditor1.Margin = new System.Windows.Forms.Padding( 0 );
             this.requirementsEditor1.Name = "requirementsEditor1";
-            this.requirementsEditor1.Requirements = null;
+            //this.requirementsEditor1.Requirements = null;
             this.requirementsEditor1.Size = new System.Drawing.Size( 508, 488 );
             this.requirementsEditor1.TabIndex = 70;
             // 

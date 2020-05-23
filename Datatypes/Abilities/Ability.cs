@@ -56,7 +56,9 @@ namespace FFTPatcher.Datatypes
     {
         public static ushort ItemEffectPrefixValue = 0x0800;
 
-		#region Instance Variables (13) 
+		#region Instance Variables
+
+        private Context ourContext = Context.Default;
 
         private bool displayAbilityName;
         private bool blank1;
@@ -270,7 +272,10 @@ namespace FFTPatcher.Datatypes
             {
                 return (UInt16)(IsItem ? Item.Offset : 0);
             }
-            set { Item = Item.GetItemAtOffset( value ); }
+        }
+        public void SetItemOffset(UInt16 value, Context context)
+        {
+            Item = Item.GetItemAtOffset(value, context);
         }
 
         public UInt16 JPCost { get; set; }
@@ -309,13 +314,14 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (4) 
 
-        public Ability( string name, UInt16 offset )
+        public Ability( string name, UInt16 offset, Context context )
         {
             Name = name;
             Offset = offset;
+            ourContext = context;
         }
 
-        private Ability( string name, UInt16 offset, IList<byte> first )
+        private Ability( string name, UInt16 offset, IList<byte> first, Context context )
         {
             Name = name;
             Offset = offset;
@@ -333,10 +339,12 @@ namespace FFTPatcher.Datatypes
 
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( first[7],
                 ref usedByEnemies, ref unknown2, ref unknown3, ref blank2, ref blank3, ref blank4, ref blank5, ref unknown4 );
+
+            ourContext = context;
         }
 
-        public Ability( string name, UInt16 offset, IList<byte> first, IList<byte> second )
-            : this( name, offset, first )
+        public Ability( string name, UInt16 offset, IList<byte> first, IList<byte> second, Context context )
+            : this( name, offset, first, context )
         {
             IsNormal = ((offset >= 0x000) && (offset <= 0x16F));
             IsItem = ((offset >= 0x170) && (offset <= 0x17D));
@@ -348,11 +356,12 @@ namespace FFTPatcher.Datatypes
 
             if( IsNormal )
             {
-                Attributes = new AbilityAttributes( name, offset, second );
+                Attributes = new AbilityAttributes( name, offset, second, context);
             }
             if( IsItem )
             {
-                ItemOffset = second[0];
+                //ItemOffset = second[0];
+                SetItemOffset(second[0], context);
             }
             if( IsThrowing )
             {
@@ -378,8 +387,8 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        public Ability( string name, UInt16 offset, IList<byte> first, IList<byte> second, Ability defaults )
-            : this( name, offset, first, second )
+        public Ability( string name, UInt16 offset, IList<byte> first, IList<byte> second, Ability defaults, Context context )
+            : this( name, offset, first, second, context )
         {
             Default = defaults;
             if( IsNormal )
@@ -393,15 +402,15 @@ namespace FFTPatcher.Datatypes
 
 		#region Public Methods (13) 
 
-        public static void CopyAll( Ability source, Ability destination )
+        public static void CopyAll( Ability source, Ability destination, Context context )
         {
-            CopySpecific( source, destination );
+            CopySpecific( source, destination, context );
             CopyCommon( source, destination );
         }
 
-        public void CopyAllTo( Ability destination )
+        public void CopyAllTo( Ability destination, Context context )
         {
-            CopyAll( this, destination );
+            CopyAll( this, destination, context );
         }
 
         public static void CopyCommon( Ability source, Ability destination )
@@ -429,7 +438,7 @@ namespace FFTPatcher.Datatypes
             CopyCommon( this, destination );
         }
 
-        public static void CopySpecific( Ability source, Ability destination )
+        public static void CopySpecific( Ability source, Ability destination, Context context )
         {
             if( (source.IsNormal ^ destination.IsNormal) ||
                 (source.IsItem ^ destination.IsItem) ||
@@ -447,7 +456,8 @@ namespace FFTPatcher.Datatypes
             }
             if( destination.IsItem )
             {
-                destination.ItemOffset = source.ItemOffset;
+                //destination.ItemOffset = source.ItemOffset;
+                destination.SetItemOffset(source.ItemOffset, context);
             }
             if( destination.IsThrowing )
             {
@@ -478,9 +488,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        public void CopySpecificTo( Ability destination )
+        public void CopySpecificTo( Ability destination, Context context )
         {
-            CopySpecific( this, destination );
+            CopySpecific( this, destination, context );
         }
 
         public bool[] PropertiesToBoolArray()
@@ -551,7 +561,7 @@ namespace FFTPatcher.Datatypes
         	//return (HasChanged ? "*" : "") + Offset.ToString( "X4" ) + " " + (displayAttack ? "Attack" : Name);
         }
 
-        public void WriteXmlDigest( XmlWriter writer )
+        public void WriteXmlDigest(XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -573,8 +583,8 @@ namespace FFTPatcher.Datatypes
                         (Attributes.Formula.Value != Attributes.Default.Formula.Value || Attributes.InflictStatus != Attributes.Default.InflictStatus) )
                     {
                         writer.WriteStartElement( "CastSpell" );
-                        writer.WriteAttributeString( "default", AllAbilities.Names[Attributes.Default.InflictStatus] );
-                        writer.WriteAttributeString( "value", AllAbilities.Names[Attributes.InflictStatus] );
+                        writer.WriteAttributeString( "default", AllAbilities.GetNames(FFTPatch.Context)[Attributes.Default.InflictStatus] );
+                        writer.WriteAttributeString( "value", AllAbilities.GetNames(FFTPatch.Context)[Attributes.InflictStatus] );
                         writer.WriteEndElement();
                     }
                     else if( Attributes.InflictStatus != Attributes.Default.InflictStatus )
@@ -748,18 +758,19 @@ namespace FFTPatcher.Datatypes
                 if ( IsItem )
                     effectIndex &= (ushort)~ItemEffectPrefixValue;
 
-                Effect = FFTPatch.Context == Context.US_PSP ? Effect.PSPEffects[effectIndex] : Effect.PSXEffects[effectIndex];
+                Effect = ourContext == Context.US_PSP ? Effect.PSPEffects[effectIndex] : Effect.PSXEffects[effectIndex];
             }
 
             if ( IsNormal )
             {
-                Attributes = new AbilityAttributes();
+                Attributes = new AbilityAttributes(ourContext);
                 ( (IXmlSerializable)Attributes ).ReadXml( reader );
 
             }
             else if ( IsItem )
             {
-                ItemOffset = (ushort)reader.ReadElementContentAsInt();
+                //ItemOffset = (ushort)reader.ReadElementContentAsInt();
+                SetItemOffset((ushort)reader.ReadElementContentAsInt(), ourContext);
             }
             else if ( IsThrowing )
             {

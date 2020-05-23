@@ -104,9 +104,9 @@ namespace FFTPatcher.Datatypes
 
         #endregion Static Fields
 
-        #region Static Properties (7)
+        #region Static Properties
 
-
+        /*
         public static Ability[] DummyAbilities
         {
             get
@@ -130,6 +130,7 @@ namespace FFTPatcher.Datatypes
                 return FFTPatch.Context == Context.US_PSP ? PSPNames : PSXNames;
             }
         }
+        */
 
         public static Ability[] PSPAbilities { get; private set; }
 
@@ -142,7 +143,22 @@ namespace FFTPatcher.Datatypes
 
         #endregion Static Properties
 
-        #region Properties (3)
+        public static Ability[] GetDummyAbilities(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPAbilities : PSXAbilities;
+        }
+
+        public static Ability[] GetEventAbilities(Context context)
+        {
+            return (context == Context.US_PSP) ? pspEventAbilites : psxEventAbilites;
+        }
+
+        public static IList<string> GetNames(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPNames : PSXNames;
+        }
+
+        #region Properties
 
 
         public Ability[] Abilities { get; private set; }
@@ -180,30 +196,30 @@ namespace FFTPatcher.Datatypes
 
             for( int i = 0; i < 512; i++ )
             {
-                PSPAbilities[i] = new Ability( PSPNames[i], (UInt16)i );
-                PSXAbilities[i] = new Ability( PSXNames[i], (UInt16)i );
-                pspEventAbilites[i] = new Ability( PSPNames[i], (UInt16)i );
-                psxEventAbilites[i] = new Ability( PSXNames[i], (UInt16)i );
+                PSPAbilities[i] = new Ability( PSPNames[i], (UInt16)i, Context.US_PSP );
+                PSXAbilities[i] = new Ability( PSXNames[i], (UInt16)i, Context.US_PSX );
+                pspEventAbilites[i] = new Ability(PSPNames[i], (UInt16)i, Context.US_PSP);
+                psxEventAbilites[i] = new Ability(PSXNames[i], (UInt16)i, Context.US_PSX);
             }
 
-            pspEventAbilites[510] = new Ability( "<Random>", 510 );
-            pspEventAbilites[511] = new Ability( "Nothing", 511 );
-            psxEventAbilites[510] = new Ability( "<Random>", 510 );
-            psxEventAbilites[511] = new Ability( "Nothing", 511 );
+            pspEventAbilites[510] = new Ability("<Random>", 510, Context.US_PSP);
+            pspEventAbilites[511] = new Ability("Nothing", 511, Context.US_PSX);
+            psxEventAbilites[510] = new Ability("<Random>", 510, Context.US_PSP);
+            psxEventAbilites[511] = new Ability("Nothing", 511, Context.US_PSX);
 
         }
 
         private IList<byte> defaultBytes;
 
-        public AllAbilities( IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects )
+        public AllAbilities( IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects, Context context )
         {
             AllEffects = new AllAbilityEffects( this );
-            this.defaultBytes = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.Abilities : PSXResources.Binaries.Abilities;
+            this.defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.Abilities : PSXResources.Binaries.Abilities;
             
-            IDictionary<UInt16, Effect> effects = FFTPatch.Context == Context.US_PSP ? Effect.PSPEffects : Effect.PSXEffects;
-            IList<byte> defaultEffects = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.AbilityEffects : PSXResources.Binaries.AbilityEffects;
-            IList<byte> defaultItemEffects = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.ItemAbilityEffects : PSXResources.Binaries.ItemAbilityEffects;
-            IList<byte> defaultReaction = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.ReactionAbilityEffects : PSXResources.Binaries.ReactionAbilityEffects;
+            IDictionary<UInt16, Effect> effects = context == Context.US_PSP ? Effect.PSPEffects : Effect.PSXEffects;
+            IList<byte> defaultEffects = context == Context.US_PSP ? PSPResources.Binaries.AbilityEffects : PSXResources.Binaries.AbilityEffects;
+            IList<byte> defaultItemEffects = context == Context.US_PSP ? PSPResources.Binaries.ItemAbilityEffects : PSXResources.Binaries.ItemAbilityEffects;
+            IList<byte> defaultReaction = context == Context.US_PSP ? PSPResources.Binaries.ReactionAbilityEffects : PSXResources.Binaries.ReactionAbilityEffects;
 
             Abilities = new Ability[512];
             DefaultAbilities = new Ability[512];
@@ -261,7 +277,7 @@ namespace FFTPatcher.Datatypes
                     defaultSecond = defaultBytes.Sub( 0x246C + i - 0x1A6, 0x246C + i - 0x1A6 );
                 }
 
-                Abilities[i] = new Ability( ((i == 0) ? "Attack" : Names[i]), i, first, second, new Ability( ((i == 0) ? "Attack" : Names[i]), i, defaultFirst, defaultSecond ) );
+                Abilities[i] = new Ability( ((i == 0) ? "Attack" : GetNames(context)[i]), i, first, second, new Ability( ((i == 0) ? "Attack" : GetNames(context)[i]), i, defaultFirst, defaultSecond, context ), context );
                 if( effect != null && defaultEffect != null )
                 {
                     Abilities[i].Effect = effect;
@@ -366,7 +382,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( XmlWriter writer )
+        public void WriteXmlDigest(XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -374,7 +390,7 @@ namespace FFTPatcher.Datatypes
                 writer.WriteAttributeString( "changed", HasChanged.ToString() );
                 foreach( Ability a in Abilities )
                 {
-                    a.WriteXmlDigest( writer );
+                    a.WriteXmlDigest( writer, FFTPatch );
                 }
                 writer.WriteEndElement();
             }

@@ -56,18 +56,19 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( AllSkillSets skills )
+        public void UpdateView( AllSkillSets skills, Context context )
         {
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 cbSkillSet = null;
             }
             skillSetListBox.SelectedIndexChanged -= skillSetListBox_SelectedIndexChanged;
             skillSetListBox.DataSource = skills.SkillSets;
             skillSetListBox.SelectedIndexChanged += skillSetListBox_SelectedIndexChanged;
             skillSetListBox.SelectedIndex = 0;
-            skillSetEditor.SkillSet = skillSetListBox.SelectedItem as SkillSet;
+            //skillSetEditor.SkillSet = skillSetListBox.SelectedItem as SkillSet;
+            skillSetEditor.SetSkillSet(skillSetListBox.SelectedItem as SkillSet, context);
             skillSetListBox.SetChangedColors();
         }
 
@@ -90,7 +91,7 @@ namespace FFTPatcher.Editors
             if( cbSkillSet != null )
             {
                 cbSkillSet.CopyTo( skillSetListBox.SelectedItem as SkillSet );
-                skillSetEditor.UpdateView();
+                skillSetEditor.UpdateView(ourContext);
                 skillSetEditor_DataChanged( skillSetEditor, EventArgs.Empty );
             }
         }

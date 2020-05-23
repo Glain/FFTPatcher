@@ -28,6 +28,7 @@ namespace FFTPatcher.Editors
         #region Instance Variables (3)
 
         private InflictStatus copiedEntry;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
         const int cloneIndex = 0;
         const int pasteIndex = 1;
 
@@ -69,13 +70,15 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllInflictStatuses statuses )
+        public void UpdateView( AllInflictStatuses statuses, PatcherLib.Datatypes.Context context )
         {
+            ourContext = context;
             offsetListBox.SelectedIndexChanged -= offsetListBox_SelectedIndexChanged;
             offsetListBox.DataSource = statuses.InflictStatuses;
             offsetListBox.SelectedIndexChanged += offsetListBox_SelectedIndexChanged;
             offsetListBox.SelectedIndex = 0;
-            inflictStatusEditor.InflictStatus = offsetListBox.SelectedItem as InflictStatus;
+            //inflictStatusEditor.InflictStatus = offsetListBox.SelectedItem as InflictStatus;
+            inflictStatusEditor.SetInflictStatus(offsetListBox.SelectedItem as InflictStatus, context);
         }
 
         private void ContextMenu_Popup(object sender, EventArgs e)
@@ -104,7 +107,7 @@ namespace FFTPatcher.Editors
                 copiedEntry.CopyTo(destEntry);
 
                 inflictStatusEditor.InflictStatus = destEntry;
-                inflictStatusEditor.UpdateView();
+                inflictStatusEditor.UpdateView(ourContext);
                 inflictStatusEditor.Invalidate(true);
                 inflictStatusEditor_DataChanged(inflictStatusEditor, EventArgs.Empty);
             }

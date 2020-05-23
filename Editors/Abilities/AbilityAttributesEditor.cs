@@ -53,17 +53,7 @@ namespace FFTPatcher.Editors
             get { return attributes; }
             set
             {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    attributes = null;
-                }
-                else if( attributes != value )
-                {
-                    attributes = value;
-                    UpdateView();
-                    this.Enabled = true;
-                }
+                SetAttributes(value, ourContext);
             }
         }
 
@@ -88,6 +78,21 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Constructors 
+
+        public void SetAttributes(AbilityAttributes value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                attributes = null;
+            }
+            else if (attributes != value)
+            {
+                attributes = value;
+                UpdateView(context);
+                this.Enabled = true;
+            }
+        }
 
 		#region Private Methods (6) 
 
@@ -136,19 +141,19 @@ namespace FFTPatcher.Editors
             }
         }
 
-        private void UpdateView()
+        private void UpdateView(Context context)
         {
             this.SuspendLayout();
             elementsEditor.SuspendLayout();
 
             ignoreChanges = true;
 
-            if( FFTPatch.Context != ourContext )
+            if( context != ourContext )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 flagsCheckedListBox.Items.Clear();
                 flagsCheckedListBox.Items.AddRange( ourContext == Context.US_PSP ? PSPResources.Lists.AbilityAttributes.ToArray() : PSXResources.Lists.AbilityAttributes.ToArray() );
-                formulaComboBox.DataSource = ourContext == Context.US_PSP ? AbilityFormula.PSPAbilityFormulas : AbilityFormula.PSXAbilityFormulas;
+                formulaComboBox.DataSource = new List<AbilityFormula>((ourContext == Context.US_PSP) ? AbilityFormula.PSPAbilityFormulas : AbilityFormula.PSXAbilityFormulas);
             }
 
             bool[] defaults = null;

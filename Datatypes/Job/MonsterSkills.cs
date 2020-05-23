@@ -77,26 +77,28 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (3) 
 
-        public MonsterSkill( IList<byte> bytes )
-            : this( 0, "", bytes, null )
+        public MonsterSkill(IList<byte> bytes, Context context)
+            : this( 0, "", bytes, null, context )
         {
         }
 
-        public MonsterSkill( byte value, string name, IList<byte> bytes )
-            : this( value, name, bytes, null )
+        public MonsterSkill(byte value, string name, IList<byte> bytes, Context context)
+            : this( value, name, bytes, null, context )
         {
         }
 
-        public MonsterSkill( byte value, string name, IList<byte> bytes, MonsterSkill defaults )
+        public MonsterSkill( byte value, string name, IList<byte> bytes, MonsterSkill defaults, Context context )
         {
+            Ability[] dummyAbilities = AllAbilities.GetDummyAbilities(context);
+
             Default = defaults;
             Name = name;
             Value = value;
             bool[] flags = PatcherLib.Utilities.Utilities.BooleansFromByteMSB( bytes[0] );
-            Ability1 = AllAbilities.DummyAbilities[flags[0] ? ( bytes[1] + 0x100 ) : bytes[1]];
-            Ability2 = AllAbilities.DummyAbilities[flags[1] ? ( bytes[2] + 0x100 ) : bytes[2]];
-            Ability3 = AllAbilities.DummyAbilities[flags[2] ? ( bytes[3] + 0x100 ) : bytes[3]];
-            Beastmaster = AllAbilities.DummyAbilities[flags[3] ? ( bytes[4] + 0x100 ) : bytes[4]];
+            Ability1 = dummyAbilities[flags[0] ? ( bytes[1] + 0x100 ) : bytes[1]];
+            Ability2 = dummyAbilities[flags[1] ? ( bytes[2] + 0x100 ) : bytes[2]];
+            Ability3 = dummyAbilities[flags[2] ? ( bytes[3] + 0x100 ) : bytes[3]];
+            Beastmaster = dummyAbilities[flags[3] ? ( bytes[4] + 0x100 ) : bytes[4]];
         }
 
 		#endregion Constructors 
@@ -147,7 +149,7 @@ namespace FFTPatcher.Datatypes
         #region Static Properties (3)
 
 
-        public static IList<string> Names { get { return FFTPatch.Context == Context.US_PSP ? PSPNames : PSXNames; } }
+        //public static IList<string> Names { get { return FFTPatch.Context == Context.US_PSP ? PSPNames : PSXNames; } }
 
         public static IList<string> PSPNames { get; private set; }
 
@@ -190,21 +192,26 @@ namespace FFTPatcher.Datatypes
             PSXNames = PSXResources.Lists.MonsterNames;
         }
 
-        public AllMonsterSkills( IList<byte> bytes )
+        public AllMonsterSkills( IList<byte> bytes, Context context )
         {
-            IList<byte> defaultBytes = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.MonsterSkills : PSXResources.Binaries.MonsterSkills;
+            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.MonsterSkills : PSXResources.Binaries.MonsterSkills;
 
             MonsterSkills = new MonsterSkill[48];
             for ( int i = 0; i < 48; i++ )
             {
-                MonsterSkills[i] = new MonsterSkill( (byte)( i + 0xB0 ), Names[i], bytes.Sub( 5 * i, 5 * i + 4 ),
-                    new MonsterSkill( (byte)( i + 0xB0 ), Names[i], defaultBytes.Sub( 5 * i, 5 * i + 4 ) ) );
+                MonsterSkills[i] = new MonsterSkill( (byte)( i + 0xB0 ), GetNames(context)[i], bytes.Sub( 5 * i, 5 * i + 4 ),
+                    new MonsterSkill( (byte)( i + 0xB0 ), GetNames(context)[i], defaultBytes.Sub( 5 * i, 5 * i + 4 ), context ), context );
             }
         }
 
         #endregion Constructors
 
-        #region Methods (5)
+        public static IList<string> GetNames(Context context) 
+        { 
+            return (context == Context.US_PSP) ? PSPNames : PSXNames; 
+        }
+
+        #region Methods
 
 
         public byte[] ToByteArray()
@@ -223,7 +230,7 @@ namespace FFTPatcher.Datatypes
             return ToByteArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if ( HasChanged )
             {

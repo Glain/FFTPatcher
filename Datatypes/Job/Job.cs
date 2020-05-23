@@ -33,14 +33,22 @@ namespace FFTPatcher.Datatypes
 
         private static Job[] pspJobs;
         private static Job[] psxJobs;
+        private Context context;
 
 		#endregion Instance Variables 
 
 		#region Public Properties (6) 
 
+        /*
         public static Job[] DummyJobs
         {
             get { return FFTPatch.Context == Context.US_PSP ? pspJobs : psxJobs; }
+        }
+        */
+
+        public static Job[] GetDummyJobs(Context context)
+        {
+            return (context == Context.US_PSP) ? pspJobs : psxJobs;
         }
 
         /// <summary>
@@ -57,9 +65,16 @@ namespace FFTPatcher.Datatypes
 
         public Job[] Jobs { get; private set; }
 
+        /*
         public static IList<string> Names
         {
             get { return FFTPatch.Context == Context.US_PSP ? PSPNames : PSXNames; }
+        }
+        */
+
+        public static IList<string> GetNames(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPNames : PSXNames;
         }
 
         public static IList<string> PSPNames { get; private set; }
@@ -108,8 +123,8 @@ namespace FFTPatcher.Datatypes
             Jobs = new Job[numJobs];
             for( int i = 0; i < numJobs; i++ )
             {
-                Jobs[i] = new Job( context, (byte)i, Names[i], bytes.Sub( i * jobLength, (i + 1) * jobLength - 1 ),
-                    new Job( context, (byte)i, Names[i], defaultBytes.Sub( i * jobLength, (i + 1) * jobLength - 1 ) ) );
+                Jobs[i] = new Job( context, (byte)i, GetNames(context)[i], bytes.Sub( i * jobLength, (i + 1) * jobLength - 1 ),
+                    new Job( context, (byte)i, GetNames(context)[i], defaultBytes.Sub( i * jobLength, (i + 1) * jobLength - 1 ) ) );
 
                 if (i < 0x4A)
                 {
@@ -216,7 +231,7 @@ namespace FFTPatcher.Datatypes
             return result;
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -288,8 +303,9 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class Job : IChangeable, ISupportDigest, ISupportDefault<Job>
     {
-		#region Instance Variables (1) 
+		#region Instance Variables
 
+        private Context ourContext = Context.Default;
         private static readonly string[] digestableAttributes = new string[] {
             "SkillSet", "HPConstant", "HPMultiplier", "MPConstant", "MPMultiplier", "SpeedConstant", "SpeedMultiplier",
             "PAConstant", "PAMultiplier", "MAConstant", "MAMultiplier", "Move", "Jump", "CEvade", "MPortrait",
@@ -359,7 +375,7 @@ namespace FFTPatcher.Datatypes
                     (FormationSprites1 != Default.FormationSprites1) ||
                     (FormationSprites2 != Default.FormationSprites2) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( PermanentStatus.ToByteArray(), Default.PermanentStatus.ToByteArray() ) ||
-                    !PatcherLib.Utilities.Utilities.CompareArrays( Equipment.ToByteArray( FFTPatch.Context ), Default.Equipment.ToByteArray( FFTPatch.Context ) ) ||
+                    !PatcherLib.Utilities.Utilities.CompareArrays( Equipment.ToByteArray(), Default.Equipment.ToByteArray() ) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( StartingStatus.ToByteArray(), Default.StartingStatus.ToByteArray() ) ||
                     !PatcherLib.Utilities.Utilities.CompareArrays( StatusImmunity.ToByteArray(), Default.StatusImmunity.ToByteArray() )
                 );
@@ -450,14 +466,17 @@ namespace FFTPatcher.Datatypes
         {
             Value = value;
             Name = name;
+            ourContext = context;
+
             int equipEnd = context == Context.US_PSP ? 13 : 12;
+            Ability[] dummyAbilities = AllAbilities.GetDummyAbilities(context);
 
             SkillSet = context == Context.US_PSP ? SkillSet.PSPSkills[bytes[0]] : SkillSet.PSXSkills[bytes[0]];
-            InnateA = AllAbilities.DummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[1], bytes[2] )];
-            InnateB = AllAbilities.DummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[3], bytes[4] )];
-            InnateC = AllAbilities.DummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[5], bytes[6] )];
-            InnateD = AllAbilities.DummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[7], bytes[8] )];
-            Equipment = new Equipment( bytes.Sub( 9, equipEnd ), defaults == null ? null : defaults.Equipment );
+            InnateA = dummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[1], bytes[2] )];
+            InnateB = dummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[3], bytes[4] )];
+            InnateC = dummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[5], bytes[6] )];
+            InnateD = dummyAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[7], bytes[8] )];
+            Equipment = new Equipment( bytes.Sub( 9, equipEnd ), defaults == null ? null : defaults.Equipment, context );
             HPConstant = bytes[equipEnd + 1];
             HPMultiplier = bytes[equipEnd + 2];
             MPConstant = bytes[equipEnd + 3];

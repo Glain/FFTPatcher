@@ -38,9 +38,16 @@ namespace FFTPatcher.Datatypes
 
         public string Name { get; private set; }
 
+        /*
         public static SpriteSet[] SpriteSets
         {
             get { return FFTPatch.Context == Context.US_PSP ? pspSpriteSets : psxSpriteSets; }
+        }
+        */
+
+        public static SpriteSet[] GetSpriteSets(Context context)
+        {
+            return (context == Context.US_PSP) ? pspSpriteSets : psxSpriteSets;
         }
 
         public byte Value { get; private set; }

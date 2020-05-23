@@ -77,13 +77,13 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( AllMonsterSkills skills )
+        public void UpdateView( AllMonsterSkills skills, PatcherLib.Datatypes.Context context )
         {
             dataGridView.DataSource = null;
             foreach( DataGridViewComboBoxColumn col in new DataGridViewComboBoxColumn[] { Ability1, Ability2, Ability3, Beastmaster } )
             {
                 col.Items.Clear();
-                col.Items.AddRange( AllAbilities.DummyAbilities );
+                col.Items.AddRange( AllAbilities.GetDummyAbilities(context) );
                 col.ValueType = typeof( Ability );
             }
             dataGridView.DataSource = skills.MonsterSkills;

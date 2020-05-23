@@ -12,7 +12,7 @@ namespace FFTPatcher
 {
     internal static class PsxIso
     {
-        public static void PatchPsxIso( BackgroundWorker backgroundWorker, DoWorkEventArgs e, IGeneratePatchList patchList )
+        public static void PatchPsxIso( FFTPatch FFTPatch, BackgroundWorker backgroundWorker, DoWorkEventArgs e, IGeneratePatchList patchList )
         {
             string filename = patchList.FileName;
             int numberOfTasks = patchList.PatchCount * 2;
@@ -148,7 +148,7 @@ namespace FFTPatcher
 
         }
 
-        public static void PatchPsxSavestate(BackgroundWorker backgroundWorker, DoWorkEventArgs e, IGeneratePatchList patchList)
+        public static void PatchPsxSavestate(FFTPatch FFTPatch, BackgroundWorker backgroundWorker, DoWorkEventArgs e, IGeneratePatchList patchList)
         {
             
             string filename = patchList.FileName;

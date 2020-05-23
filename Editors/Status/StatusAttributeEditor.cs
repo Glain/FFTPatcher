@@ -35,6 +35,7 @@ namespace FFTPatcher.Editors
             "CanReact", "Blank", "IgnoreAttacks", "IgnoredIfMount", "Unknown8", "Unknown9", "CancelledByImmortal", "LowerTargetPriority" };
         private NumericUpDownWithDefault[] spinners;
         private StatusAttribute statusAttribute;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
 
 		#endregion Instance Variables 
 
@@ -45,17 +46,7 @@ namespace FFTPatcher.Editors
             get { return statusAttribute; }
             set
             {
-                if( value == null )
-                {
-                    statusAttribute = null;
-                    this.Enabled = false;
-                }
-                else if( statusAttribute != value )
-                {
-                    statusAttribute = value;
-                    this.Enabled = true;
-                    UpdateView();
-                }
+                SetStatusAttribute(value, ourContext);
             }
         }
 
@@ -79,7 +70,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (3) 
+		#region Private Methods 
 
         private void checkedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
@@ -100,10 +91,27 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView()
+        public void SetStatusAttribute(StatusAttribute value, PatcherLib.Datatypes.Context context)
+        {
+            if (value == null)
+            {
+                statusAttribute = null;
+                this.Enabled = false;
+            }
+            else if (statusAttribute != value)
+            {
+                statusAttribute = value;
+                this.Enabled = true;
+                UpdateView(context);
+            }
+        }
+
+        public void UpdateView(PatcherLib.Datatypes.Context context)
         {
             this.ignoreChanges = true;
-            
+
+            ourContext = context;
+
             foreach( NumericUpDownWithDefault spinner in spinners )
             {
                 spinner.SetValueAndDefault(
@@ -116,11 +124,13 @@ namespace FFTPatcher.Editors
                 checkedListBox.SetValuesAndDefaults( ReflectionHelpers.GetFieldsOrProperties<bool>( statusAttribute, PropertyNames ), statusAttribute.Default.ToBoolArray() );
             }
 
-            cantStackStatusesEditor.Statuses = statusAttribute.CantStackOn;
-            cancelStatusesEditor.Statuses = statusAttribute.Cancels;
+            //cantStackStatusesEditor.Statuses = statusAttribute.CantStackOn;
+            //cancelStatusesEditor.Statuses = statusAttribute.Cancels;
+            cantStackStatusesEditor.SetStatuses(statusAttribute.CantStackOn, context);
+            cancelStatusesEditor.SetStatuses(statusAttribute.Cancels, context);
 
-            cantStackStatusesEditor.UpdateView();
-            cancelStatusesEditor.UpdateView();
+            cantStackStatusesEditor.UpdateView(context);
+            cancelStatusesEditor.UpdateView(context);
 
             this.ignoreChanges = false;
         }

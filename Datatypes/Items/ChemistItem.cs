@@ -78,13 +78,13 @@ namespace FFTPatcher.Datatypes
             chemistItemDigestableProperties.Add( "InflictStatus" );
         }
 
-        public ChemistItem( UInt16 offset, IList<byte> itemBytes, IList<byte> chemistBytes ) :
-            this( offset, itemBytes, chemistBytes, null )
+        public ChemistItem(UInt16 offset, IList<byte> itemBytes, IList<byte> chemistBytes, PatcherLib.Datatypes.Context context) :
+            this( offset, itemBytes, chemistBytes, null, context )
         {
         }
 
-        public ChemistItem( UInt16 offset, IList<byte> itemBytes, IList<byte> chemistBytes, ChemistItem defaults )
-            : base( offset, itemBytes, defaults )
+        public ChemistItem(UInt16 offset, IList<byte> itemBytes, IList<byte> chemistBytes, ChemistItem defaults, PatcherLib.Datatypes.Context context)
+            : base( offset, itemBytes, defaults, context )
         {
             ChemistItemDefault = defaults;
             Formula = chemistBytes[0];

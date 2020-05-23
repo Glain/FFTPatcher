@@ -40,25 +40,6 @@ namespace FFTPatcher.Editors
         public List<Requirements> Requirements
         {
             get { return requirements; }
-            set
-            {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    this.requirements = null;
-                    dataGridView1.DataSource = null;
-                }
-                else if( value != requirements )
-                {
-                    OnionKnight.Visible = FFTPatch.Context == Context.US_PSP;
-                    DarkKnight.Visible = FFTPatch.Context == Context.US_PSP;
-                    Unknown1.Visible = FFTPatch.Context == Context.US_PSP;
-                    Unknown2.Visible = FFTPatch.Context == Context.US_PSP;
-                    this.Enabled = true;
-                    this.requirements = value;
-                    dataGridView1.DataSource = value;
-                }
-            }
         }
 
 		#endregion Public Properties 
@@ -78,6 +59,27 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Constructors 
+
+        public void SetRequirements(List<Requirements> value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                this.requirements = null;
+                dataGridView1.DataSource = null;
+            }
+            else if (value != requirements)
+            {
+                bool isPsp = (context == Context.US_PSP);
+                OnionKnight.Visible = isPsp;
+                DarkKnight.Visible = isPsp;
+                Unknown1.Visible = isPsp;
+                Unknown2.Visible = isPsp;
+                this.Enabled = true;
+                this.requirements = value;
+                dataGridView1.DataSource = value;
+            }
+        }
 
 		#region Private Methods (7) 
 

@@ -179,7 +179,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Methods 
     
-        protected override void WriteXml( System.Xml.XmlWriter writer )
+        protected override void WriteXml(System.Xml.XmlWriter writer)
         {
             bool[] bools = ToBoolArray();
             System.Diagnostics.Debug.Assert( bools.Length == DigestableProperties.Count );
@@ -189,7 +189,7 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        protected override void ReadXml( System.Xml.XmlReader reader )
+        protected override void ReadXml(System.Xml.XmlReader reader)
         {
             reader.ReadStartElement();
             bool[] bools = new bool[8];

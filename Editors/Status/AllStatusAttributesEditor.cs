@@ -28,6 +28,7 @@ namespace FFTPatcher.Editors
         #region Instance Variables (3)
 
         private StatusAttribute copiedEntry;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
         const int cloneIndex = 0;
         const int pasteIndex = 1;
 
@@ -63,13 +64,15 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllStatusAttributes attributes )
+        public void UpdateView( AllStatusAttributes attributes, PatcherLib.Datatypes.Context context )
         {
+            ourContext = context;
             listBox.SelectedIndexChanged -= listBox_SelectedIndexChanged;
             listBox.DataSource = attributes.StatusAttributes;
             listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
             listBox.SelectedIndex = 0;
-            statusAttributeEditor.StatusAttribute = listBox.SelectedItem as StatusAttribute;
+            //statusAttributeEditor.StatusAttribute = listBox.SelectedItem as StatusAttribute;
+            statusAttributeEditor.SetStatusAttribute(listBox.SelectedItem as StatusAttribute, context);
             listBox.SetChangedColors();
         }
 
@@ -119,7 +122,7 @@ namespace FFTPatcher.Editors
                 StatusAttribute destEntry = listBox.SelectedItem as StatusAttribute;
                 copiedEntry.CopyTo(destEntry);
                 statusAttributeEditor.StatusAttribute = destEntry;
-                statusAttributeEditor.UpdateView();
+                statusAttributeEditor.UpdateView(ourContext);
                 statusAttributeEditor.Invalidate(true);
                 statusAttributeEditor_DataChanged(statusAttributeEditor, EventArgs.Empty);
             }

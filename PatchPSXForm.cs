@@ -203,7 +203,7 @@ namespace FFTPatcher
 
 		#region Public Methods (1) 
 
-        public DialogResult CustomShowDialog( IWin32Window owner )
+        public DialogResult CustomShowDialog( IWin32Window owner, FFTPatch FFTPatch )
         {
             scusCheckedListBox.SetItemChecked( (int)SCUSPatchable.Abilities, FFTPatch.Abilities.HasChanged );
             scusCheckedListBox.SetItemChecked( (int)SCUSPatchable.ActionMenus, FFTPatch.ActionMenus.HasChanged );

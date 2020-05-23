@@ -43,6 +43,7 @@ namespace FFTPatcher.Editors
             "Pole", "Bag", "Cloth", "Shield", "Helmet", "Hat", "HairAdornment", "Armor",
             "Clothing", "Robe", "Shoes", "Armguard", "Ring", "Armlet", "Cloak", "Perfume" };
         private object[] psxItems;
+        private Context context = Context.Default;
 
 		#endregion Instance Variables 
 
@@ -53,17 +54,7 @@ namespace FFTPatcher.Editors
             get { return equipment; }
             set
             {
-                if (value == null)
-                {
-                    this.Enabled = false;
-                    equipment = null;
-                }
-                else if (value != equipment)
-                {
-                    equipment = value;
-                    UpdateView();
-                    this.Enabled = true;
-                }
+                SetEquipment(value, context);
             }
         }
 
@@ -90,7 +81,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (2) 
+		#region Private Methods 
 
         private void equipmentCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -101,19 +92,36 @@ namespace FFTPatcher.Editors
             }
         }
 
-        private void UpdateView()
+        public void SetEquipment(Equipment value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                equipment = null;
+            }
+            else if (value != equipment)
+            {
+                equipment = value;
+                UpdateView(context);
+                this.Enabled = true;
+            }
+        }
+
+        private void UpdateView(Context context)
         {
             this.SuspendLayout();
             equipmentCheckedListBox.SuspendLayout();
 
+            this.context = context;
+
             ignoreChanges = true;
-            string[] fields = FFTPatch.Context == Context.US_PSP ? FieldNames : PSXFieldNames;
-            if( FFTPatch.Context == Context.US_PSP && equipmentCheckedListBox.Items.Count != pspItems.Length )
+            string[] fields = context == Context.US_PSP ? FieldNames : PSXFieldNames;
+            if( context == Context.US_PSP && equipmentCheckedListBox.Items.Count != pspItems.Length )
             {
                 equipmentCheckedListBox.Items.Clear();
                 equipmentCheckedListBox.Items.AddRange( pspItems );
             }
-            else if( FFTPatch.Context == Context.US_PSX && equipmentCheckedListBox.Items.Count != psxItems.Length )
+            else if( context == Context.US_PSX && equipmentCheckedListBox.Items.Count != psxItems.Length )
             {
                 equipmentCheckedListBox.Items.Clear();
                 equipmentCheckedListBox.Items.AddRange( psxItems );

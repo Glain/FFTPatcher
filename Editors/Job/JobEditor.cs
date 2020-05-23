@@ -45,17 +45,7 @@ namespace FFTPatcher.Editors
             get { return job; }
             set
             {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    job = null;
-                }
-                else if( job != value )
-                {
-                    job = value;
-                    UpdateView();
-                    this.Enabled = true;
-                }
+                SetJob(value, ourContext);
             }
         }
 
@@ -107,9 +97,24 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
-        public void UpdateView()
+        public void SetJob(Job value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                job = null;
+            }
+            else if (job != value)
+            {
+                job = value;
+                UpdateView(context);
+                this.Enabled = true;
+            }
+        }
+
+        public void UpdateView(Context context)
         {
             ignoreChanges = true;
             this.SuspendLayout();
@@ -122,15 +127,15 @@ namespace FFTPatcher.Editors
             statusImmunityEditor.SuspendLayout();
             startingStatusesEditor.SuspendLayout();
 
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 skillsetComboBox.Items.Clear();
-                skillsetComboBox.Items.AddRange( SkillSet.DummySkillSets );
+                skillsetComboBox.Items.AddRange( SkillSet.GetDummySkillSets(context) );
                 foreach( ComboBoxWithDefault cb in new ComboBoxWithDefault[] { innateAComboBox, innateBComboBox, innateCComboBox, innateDComboBox } )
                 {
                     cb.Items.Clear();
-                    cb.Items.AddRange( AllAbilities.DummyAbilities );
+                    cb.Items.AddRange( AllAbilities.GetDummyAbilities(context) );
                 }
 
                 cmb_MPortrait.Items.Clear();
@@ -181,14 +186,18 @@ namespace FFTPatcher.Editors
             weakElementsEditor.SetValueAndDefaults( job.WeakElement, job.Default.WeakElement );
 
             equipmentEditor.Equipment = null;
-            equipmentEditor.Equipment = job.Equipment;
+            //equipmentEditor.Equipment = job.Equipment;
+            equipmentEditor.SetEquipment(job.Equipment, context);
 
             innateStatusesEditor.Statuses = null;
-            startingStatusesEditor.Statuses = null;
             statusImmunityEditor.Statuses = null;
-            innateStatusesEditor.Statuses = job.PermanentStatus;
-            statusImmunityEditor.Statuses = job.StatusImmunity;
-            startingStatusesEditor.Statuses = job.StartingStatus;
+            startingStatusesEditor.Statuses = null;
+            //innateStatusesEditor.Statuses = job.PermanentStatus;
+            //statusImmunityEditor.Statuses = job.StatusImmunity;
+            //startingStatusesEditor.Statuses = job.StartingStatus;
+            innateStatusesEditor.SetStatuses(job.PermanentStatus, context);
+            statusImmunityEditor.SetStatuses(job.StatusImmunity, context);
+            startingStatusesEditor.SetStatuses(job.StartingStatus, context);
 
             pnl_FormationSprites.Visible = (job.Value < 0x4A);
 

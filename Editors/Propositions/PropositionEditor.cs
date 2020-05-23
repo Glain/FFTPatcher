@@ -17,11 +17,11 @@ namespace FFTPatcher.Editors
         private Proposition proposition;
         private Context ourContext = Context.Default;
         private UInt16[] prices;
-        public void BindTo( Proposition prop, IList<UInt16> prices, IList<UInt16> baseJpRewards, IList<UInt16> baseGilRewards )
+        public void BindTo( Proposition prop, IList<UInt16> prices, IList<UInt16> baseJpRewards, IList<UInt16> baseGilRewards, Context context )
         {
-            if (ourContext != FFTPatch.Context)
+            if (ourContext != context)
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 RegenerateContextSensitiveData();
             }
 
@@ -168,7 +168,7 @@ namespace FFTPatcher.Editors
 
             unlockedComboBox.BeginUpdate();
             unlockedComboBox.Items.Clear();
-            unlockedComboBox.Items.AddRange( ShopAvailability.AllAvailabilities.ToArray() );
+            unlockedComboBox.Items.AddRange( ShopAvailability.GetAllAvailabilities(ourContext).ToArray() );
             unlockedComboBox.EndUpdate();
 
             preferredStatsComboBox.BeginUpdate();

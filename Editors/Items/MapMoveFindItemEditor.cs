@@ -26,6 +26,7 @@ namespace FFTPatcher.Editors
 		#region Instance Variables (1) 
 
         private MapMoveFindItems mapMoveFindItems;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
 
 		#endregion Instance Variables 
 
@@ -36,17 +37,7 @@ namespace FFTPatcher.Editors
             get { return mapMoveFindItems; }
             set
             {
-                if ( value == null )
-                {
-                    this.Enabled = false;
-                    mapMoveFindItems = null;
-                }
-                else if ( mapMoveFindItems != value )
-                {
-                    mapMoveFindItems = value;
-                    this.Enabled = true;
-                    UpdateView();
-                }
+                SetMapMoveFindItems(value, ourContext);
             }
         }
 
@@ -65,21 +56,43 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (1) 
+		#region Methods 
 
-        public void UpdateView()
+        public void SetMapMoveFindItems(MapMoveFindItems value, PatcherLib.Datatypes.Context context)
         {
-            moveFindItemEditor1.MoveFindItem = mapMoveFindItems.Items[0];
-            moveFindItemEditor2.MoveFindItem = mapMoveFindItems.Items[1];
-            moveFindItemEditor3.MoveFindItem = mapMoveFindItems.Items[2];
-            moveFindItemEditor4.MoveFindItem = mapMoveFindItems.Items[3];
-
-            moveFindItemEditor1.UpdateView();
-            moveFindItemEditor2.UpdateView();
-            moveFindItemEditor3.UpdateView();
-            moveFindItemEditor4.UpdateView();
+            if (value == null)
+            {
+                this.Enabled = false;
+                mapMoveFindItems = null;
+            }
+            else if (mapMoveFindItems != value)
+            {
+                mapMoveFindItems = value;
+                this.Enabled = true;
+                UpdateView(context);
+            }
         }
 
-		#endregion Private Methods 
+        public void UpdateView(PatcherLib.Datatypes.Context context)
+        {
+            ourContext = context;
+
+            //moveFindItemEditor1.MoveFindItem = mapMoveFindItems.Items[0];
+            //moveFindItemEditor2.MoveFindItem = mapMoveFindItems.Items[1];
+            //moveFindItemEditor3.MoveFindItem = mapMoveFindItems.Items[2];
+            //moveFindItemEditor4.MoveFindItem = mapMoveFindItems.Items[3];
+
+            moveFindItemEditor1.SetMoveFindItem(mapMoveFindItems.Items[0], context);
+            moveFindItemEditor2.SetMoveFindItem(mapMoveFindItems.Items[1], context);
+            moveFindItemEditor3.SetMoveFindItem(mapMoveFindItems.Items[2], context);
+            moveFindItemEditor4.SetMoveFindItem(mapMoveFindItems.Items[3], context);
+
+            moveFindItemEditor1.UpdateView(context);
+            moveFindItemEditor2.UpdateView(context);
+            moveFindItemEditor3.UpdateView(context);
+            moveFindItemEditor4.UpdateView(context);
+        }
+
+		#endregion Methods 
     }
 }

@@ -62,12 +62,12 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (2) 
 
-        public AllItems( IList<byte> first )
-            : this( first, null )
+        public AllItems( IList<byte> first, Context context )
+            : this( first, null, context )
         {
         }
 
-        public AllItems( IList<byte> first, IList<byte> second )
+        public AllItems(IList<byte> first, IList<byte> second, Context context)
         {
             Items = new List<Item>();
             IList<byte> defaultFirst = second == null ? PSXResources.Binaries.OldItems : PSPResources.Binaries.OldItems;
@@ -81,7 +81,9 @@ namespace FFTPatcher.Datatypes
                     first.Sub( 0xC00 + i * 8, 0xC00 + (i + 1) * 8 - 1 ),
                     new Weapon( i,
                         defaultFirst.Sub( i * 12, (i + 1) * 12 - 1 ),
-                        defaultFirst.Sub( 0xC00 + i * 8, 0xC00 + (i + 1) * 8 - 1 ) ) ) );
+                        defaultFirst.Sub( 0xC00 + i * 8, 0xC00 + (i + 1) * 8 - 1 ),
+                        context),
+                        context) );
             }
             for( UInt16 i = 0x80; i < 0x90; i++ )
             {
@@ -92,7 +94,9 @@ namespace FFTPatcher.Datatypes
                     new Shield(
                         i,
                         defaultFirst.Sub( i * 12, (i + 1) * 12 - 1 ),
-                        defaultFirst.Sub( 0x1000 + (i - 0x80) * 2, 0x1000 + ((i - 0x80) + 1) * 2 - 1 ) ) ) );
+                        defaultFirst.Sub( 0x1000 + (i - 0x80) * 2, 0x1000 + ((i - 0x80) + 1) * 2 - 1 ),
+                        context),
+                        context) );
             }
             for( UInt16 i = 0x90; i < 0xD0; i++ )
             {
@@ -103,7 +107,9 @@ namespace FFTPatcher.Datatypes
                     new Armor(
                         i,
                         defaultFirst.Sub( i * 12, (i + 1) * 12 - 1 ),
-                        defaultFirst.Sub( 0x1020 + (i - 0x90) * 2, 0x1020 + ((i - 0x90) + 1) * 2 - 1 ) ) ) );
+                        defaultFirst.Sub( 0x1020 + (i - 0x90) * 2, 0x1020 + ((i - 0x90) + 1) * 2 - 1 ),
+                        context),
+                        context) );
             }
             for( UInt16 i = 0xD0; i < 0xF0; i++ )
             {
@@ -114,7 +120,9 @@ namespace FFTPatcher.Datatypes
                     new Accessory(
                         i,
                         defaultFirst.Sub( i * 12, (i + 1) * 12 - 1 ),
-                        defaultFirst.Sub( 0x10A0 + (i - 0xD0) * 2, 0x10A0 + ((i - 0xD0) + 1) * 2 - 1 ) ) ) );
+                        defaultFirst.Sub( 0x10A0 + (i - 0xD0) * 2, 0x10A0 + ((i - 0xD0) + 1) * 2 - 1 ),
+                        context),
+                        context) );
             }
             for( UInt16 i = 0xF0; i < 0xFE; i++ )
             {
@@ -125,7 +133,9 @@ namespace FFTPatcher.Datatypes
                     new ChemistItem(
                         i,
                         defaultFirst.Sub( i * 12, (i + 1) * 12 - 1 ),
-                        defaultFirst.Sub( 0x10E0 + (i - 0xF0) * 3, 0x10E0 + ((i - 0xF0) + 1) * 3 - 1 ) ) ) );
+                        defaultFirst.Sub( 0x10E0 + (i - 0xF0) * 3, 0x10E0 + ((i - 0xF0) + 1) * 3 - 1 ),
+                        context),
+                        context) );
             }
             afterPhoenixDown = new byte[0x18];
             for( int i = 0; i < 0x18; i++ )
@@ -143,7 +153,9 @@ namespace FFTPatcher.Datatypes
                         new Weapon(
                             (UInt16)(i + 0x100),
                             defaultSecond.Sub( i * 12, (i + 1) * 12 - 1 ),
-                            defaultSecond.Sub( 0x2D0 + i * 8, 0x2D0 + (i + 1) * 8 - 1 ) ) ) );
+                            defaultSecond.Sub( 0x2D0 + i * 8, 0x2D0 + (i + 1) * 8 - 1 ),
+                            context),
+                            context) );
                 }
                 for( UInt16 i = 0x20; i < 0x24; i++ )
                 {
@@ -154,7 +166,9 @@ namespace FFTPatcher.Datatypes
                         new Shield(
                             (UInt16)(i + 0x100),
                             defaultSecond.Sub( i * 12, (i + 1) * 12 - 1 ),
-                            defaultSecond.Sub( 0x3D0 + (i - 0x20) * 2, 0x3D0 + ((i - 0x20) + 1) * 2 - 1 ) ) ) );
+                            defaultSecond.Sub( 0x3D0 + (i - 0x20) * 2, 0x3D0 + ((i - 0x20) + 1) * 2 - 1 ),
+                            context),
+                            context) );
                 }
                 for( UInt16 i = 0x24; i < 0x34; i++ )
                 {
@@ -165,7 +179,9 @@ namespace FFTPatcher.Datatypes
                         new Armor(
                             (UInt16)(i + 0x100),
                             defaultSecond.Sub( i * 12, (i + 1) * 12 - 1 ),
-                            defaultSecond.Sub( 0x3D8 + (i - 0x24) * 2, 0x3D8 + ((i - 0x24) + 1) * 2 - 1 ) ) ) );
+                            defaultSecond.Sub( 0x3D8 + (i - 0x24) * 2, 0x3D8 + ((i - 0x24) + 1) * 2 - 1 ),
+                            context),
+                            context) );
                 }
                 for( UInt16 i = 0x34; i < 0x3C; i++ )
                 {
@@ -176,7 +192,9 @@ namespace FFTPatcher.Datatypes
                         new Accessory(
                             (UInt16)(i + 0x100),
                             defaultSecond.Sub( i * 12, (i + 1) * 12 - 1 ),
-                            defaultSecond.Sub( 0x3F8 + (i - 0x34) * 2, 0x3F8 + ((i - 0x34) + 1) * 2 - 1 ) ) ) );
+                            defaultSecond.Sub( 0x3F8 + (i - 0x34) * 2, 0x3F8 + ((i - 0x34) + 1) * 2 - 1 ),
+                            context),
+                            context) );
                 }
             }
         }
@@ -236,7 +254,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -256,8 +274,8 @@ namespace FFTPatcher.Datatypes
                                 (w.Formula.Value != w.WeaponDefault.Formula.Value || w.InflictStatus != w.WeaponDefault.InflictStatus) )
                             {
                                 writer.WriteStartElement( "CastSpell" );
-                                writer.WriteAttributeString( "default", AllAbilities.Names[w.WeaponDefault.InflictStatus] );
-                                writer.WriteAttributeString( "value", AllAbilities.Names[w.InflictStatus] );
+                                writer.WriteAttributeString( "default", AllAbilities.GetNames(FFTPatch.Context)[w.WeaponDefault.InflictStatus] );
+                                writer.WriteAttributeString( "value", AllAbilities.GetNames(FFTPatch.Context)[w.InflictStatus] );
                                 writer.WriteEndElement();
                             }
                             else if( w.InflictStatus != w.WeaponDefault.InflictStatus )

@@ -161,7 +161,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Methods 
     
-        protected override void ReadXml( System.Xml.XmlReader reader )
+        protected override void ReadXml(System.Xml.XmlReader reader)
         {
             reader.ReadStartElement();
             for ( int i = 0; i < DigestableProperties.Count; i++ )
@@ -172,7 +172,7 @@ namespace FFTPatcher.Datatypes
             reader.ReadEndElement();
         }
 
-        protected override void WriteXml( System.Xml.XmlWriter writer )
+        protected override void WriteXml(System.Xml.XmlWriter writer)
         {
             bool[] bools = ToBoolArray();
             System.Diagnostics.Debug.Assert( bools.Length == digestableProperties.Length );

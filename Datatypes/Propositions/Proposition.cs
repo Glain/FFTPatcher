@@ -304,7 +304,8 @@ namespace FFTPatcher.Datatypes
         }
 
         public string Name { get; private set; }
-        public Proposition( string name, IList<byte> bytes, Proposition _default )
+
+        public Proposition( string name, IList<byte> bytes, Proposition _default, Context context )
         {
             Default = _default;
             Name = name;
@@ -366,9 +367,19 @@ namespace FFTPatcher.Datatypes
                 (RandomSuccessClass)randomSuccessByte :
                 RandomSuccessClass.None;
 
-            WhenUnlocked = ShopAvailability.AllAvailabilities[bytes[21]];
+            WhenUnlocked = ShopAvailability.GetAllAvailabilities(context)[bytes[21]];
 
             PrereqByte = bytes[22];
+        }
+
+        public Proposition(string name, IList<byte> bytes, IList<byte> defaultBytes, Context context) :
+            this(name, bytes, new Proposition(name, defaultBytes, context), context)
+        {
+        }
+
+        public Proposition(string name, IList<byte> bytes, Context context)
+            : this(name, bytes, null as Proposition, context)
+        {
         }
 
         public RandomSuccessClass RandomSuccessClass { get; set; }
@@ -471,19 +482,10 @@ namespace FFTPatcher.Datatypes
         private byte[] idBytes = new byte[6];
         private byte dontCareByte = 0;
 
-        public Proposition( string name, IList<byte> bytes )
-            : this( name, bytes, null as Proposition)
-        {
-        }
         public override string ToString()
         {
             return (HasChanged ? "*" : "") + Name;
         }
 
-
-        public Proposition( string name, IList<byte> bytes, IList<byte> defaultBytes ) :
-            this( name, bytes, new Proposition( name, defaultBytes ) )
-        {
-        }
     }
 }

@@ -72,8 +72,11 @@ namespace FFTPatcher
         /// <summary>
         /// Gets all codes.
         /// </summary>
-        public static string GetAllCodes()
+        public static string GetAllCodes(FFTPatch FFTPatch)
         {
+            if (FFTPatch == null)
+                return string.Empty;
+
             StringBuilder sb = new StringBuilder();
 
             Context context = FFTPatch.Context;
@@ -144,9 +147,9 @@ namespace FFTPatcher
         /// <summary>
         /// Saves CWCheat codes to a file.
         /// </summary>
-        public static void SaveToFile( string path )
+        public static void SaveToFile( string path, FFTPatch FFTPatch )
         {
-            string codes = GetAllCodes();
+            string codes = GetAllCodes(FFTPatch);
             using (StreamWriter stream = new StreamWriter(path, false))
             {
                 stream.NewLine = "\n";

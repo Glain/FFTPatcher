@@ -26,8 +26,9 @@ namespace FFTPatcher.Editors
 {
     public partial class ItemAttributeEditor : BaseEditor
     {
-		#region Instance Variables (3) 
+		#region Instance Variables
 
+        private PatcherLib.Datatypes.Context ourContext; 
         private ItemAttributes attributes;
         private bool ignoreChanges = false;
         private NumericUpDownWithDefault[] spinners;
@@ -41,17 +42,7 @@ namespace FFTPatcher.Editors
             get { return attributes; }
             set
             {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    this.attributes = null;
-                }
-                else if( value != attributes )
-                {
-                    attributes = value;
-                    UpdateView();
-                    this.Enabled = true;
-                }
+                SetItemAttributes(value, ourContext);
             }
         }
 
@@ -81,9 +72,24 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
-        public void UpdateView()
+        public void SetItemAttributes(ItemAttributes value, PatcherLib.Datatypes.Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                this.attributes = null;
+            }
+            else if (value != attributes)
+            {
+                attributes = value;
+                UpdateView(context);
+                this.Enabled = true;
+            }
+        }
+
+        public void UpdateView(PatcherLib.Datatypes.Context context)
         {
             this.ignoreChanges = true;
             SuspendLayout();
@@ -106,9 +112,12 @@ namespace FFTPatcher.Editors
             statusImmunityEditor.Statuses = null;
             startingStatusesEditor.Statuses = null;
             permanentStatusesEditor.Statuses = null;
-            statusImmunityEditor.Statuses = attributes.StatusImmunity;
-            startingStatusesEditor.Statuses = attributes.StartingStatuses;
-            permanentStatusesEditor.Statuses = attributes.PermanentStatuses;
+            //statusImmunityEditor.Statuses = attributes.StatusImmunity;
+            //startingStatusesEditor.Statuses = attributes.StartingStatuses;
+            //permanentStatusesEditor.Statuses = attributes.PermanentStatuses;
+            statusImmunityEditor.SetStatuses(attributes.StatusImmunity, context);
+            startingStatusesEditor.SetStatuses(attributes.StartingStatuses, context);
+            permanentStatusesEditor.SetStatuses(attributes.PermanentStatuses, context);
 
             strongElementsEditor.SetValueAndDefaults( attributes.Strong, attributes.Default.Strong );
             weakElementsEditor.SetValueAndDefaults( attributes.Weak, attributes.Default.Weak );

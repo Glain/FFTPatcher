@@ -220,7 +220,7 @@ public string CustomICON0FileName
 
 		#region Public Methods (1) 
 
-        public DialogResult CustomShowDialog( IWin32Window owner )
+        public DialogResult CustomShowDialog( IWin32Window owner, FFTPatch FFTPatch )
         {
             bootBinCheckedListBox.SetItemChecked( (int)BootBinPatchable.Abilities, FFTPatch.Abilities.HasChanged );
             bootBinCheckedListBox.SetItemChecked( (int)BootBinPatchable.ActionMenus, FFTPatch.ActionMenus.HasChanged );

@@ -25,18 +25,17 @@ namespace FFTPatcher.Editors
 {
     public partial class FFTPatchEditor : UserControl
     {
-		#region Public Properties (1) 
+		#region Static Properties 
 
         public static ToolTip ToolTip { get; private set; }
 
-		#endregion Public Properties 
+		#endregion
 
-		#region Constructors (2) 
+		#region Constructors
 
         public FFTPatchEditor()
         {
             InitializeComponent();
-            FFTPatch.DataChanged += FFTPatch_DataChanged;
             this.Enabled = false;
 
             allAbilitiesEditor1.InflictStatusClicked += InflictStatusClicked;
@@ -52,29 +51,29 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (4) 
+		#region Methods
 
-        private void FFTPatch_DataChanged( object sender, System.EventArgs e )
+        public void LoadFFTPatch(FFTPatch FFTPatch)
         {
             this.Enabled = true;
-            allAbilitiesEditor1.UpdateView( FFTPatch.Abilities );
+            allAbilitiesEditor1.UpdateView( FFTPatch.Abilities, FFTPatch.Context );
             allActionMenusEditor1.UpdateView( FFTPatch.ActionMenus );
-            allInflictStatusesEditor1.UpdateView( FFTPatch.InflictStatuses );
-            allItemAttributesEditor1.UpdateView( FFTPatch.ItemAttributes );
-            allItemsEditor1.UpdateView( FFTPatch.Items );
-            allJobsEditor1.UpdateView( FFTPatch.Jobs );
-            allMonsterSkillsEditor1.UpdateView( FFTPatch.MonsterSkills );
-            allPoachProbabilitiesEditor1.UpdateView( FFTPatch.PoachProbabilities );
-            allSkillSetsEditor1.UpdateView( FFTPatch.SkillSets );
-            allStatusAttributesEditor1.UpdateView( FFTPatch.StatusAttributes );
-            jobLevelsEditor1.UpdateView( FFTPatch.JobLevels );
-            entdEditor1.UpdateView( FFTPatch.ENTDs );
-            allMoveFindItemsEditor1.UpdateView( FFTPatch.MoveFind );
-            allStoreInventoryEditor1.UpdateView( FFTPatch.StoreInventories );
+            allInflictStatusesEditor1.UpdateView(FFTPatch.InflictStatuses, FFTPatch.Context);
+            allItemAttributesEditor1.UpdateView( FFTPatch.ItemAttributes, FFTPatch.Context );
+            allItemsEditor1.UpdateView( FFTPatch.Items, FFTPatch.StoreInventories, FFTPatch.Context );
+            allJobsEditor1.UpdateView( FFTPatch.Jobs, FFTPatch.Context );
+            allMonsterSkillsEditor1.UpdateView( FFTPatch.MonsterSkills, FFTPatch.Context );
+            allPoachProbabilitiesEditor1.UpdateView( FFTPatch.PoachProbabilities, FFTPatch.Context );
+            allSkillSetsEditor1.UpdateView( FFTPatch.SkillSets, FFTPatch.Context );
+            allStatusAttributesEditor1.UpdateView(FFTPatch.StatusAttributes, FFTPatch.Context);
+            jobLevelsEditor1.UpdateView( FFTPatch.JobLevels, FFTPatch.Context );
+            entdEditor1.UpdateView( FFTPatch.ENTDs, FFTPatch.Context );
+            allMoveFindItemsEditor1.UpdateView(FFTPatch.MoveFind, FFTPatch.Context);
+            allStoreInventoryEditor1.UpdateView( FFTPatch.StoreInventories, FFTPatch.Items, FFTPatch.Context );
             allAnimationsEditor1.UpdateView(FFTPatch.AbilityAnimations);
-            allPropositionsEditor1.UpdateView( FFTPatch.Propositions );
+            allPropositionsEditor1.UpdateView( FFTPatch.Propositions, FFTPatch.Context );
 
-            codeCreator1.UpdateView();
+            codeCreator1.UpdateView(FFTPatch);
             codesTab.Text = FFTPatch.Context == Context.US_PSP ? "CWCheat" : "Gameshark";
             propositionsTabPage.Text = FFTPatch.Context == Context.US_PSP ? "Errands" : "Propositions";
         }
@@ -110,7 +109,7 @@ namespace FFTPatcher.Editors
             }
         }
 
-		#endregion Private Methods 
+		#endregion Methods 
 
     }
 }

@@ -95,7 +95,7 @@ namespace FFTPatcher.Datatypes
             get { return animations.Exists(a => a.HasChanged); }
         }
 
-        public void WriteXmlDigest(System.Xml.XmlWriter writer)
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             throw new NotImplementedException();
         }

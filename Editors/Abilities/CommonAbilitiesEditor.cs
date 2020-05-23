@@ -44,24 +44,14 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+		#region Public Properties
 
         public Ability Ability
         {
             get { return ability; }
             set
             {
-                if ( value == null )
-                {
-                    ability = null;
-                    Enabled = false;
-                }
-                else if( ability != value )
-                {
-                    ability = value;
-                    UpdateView();
-                    Enabled = true;
-                }
+                SetAbility(value, ourContext);
             }
         }
 
@@ -106,6 +96,21 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
+        public void SetAbility(Ability value, Context context)
+        {
+            if (value == null)
+            {
+                ability = null;
+                Enabled = false;
+            }
+            else if( ability != value )
+            {
+                ability = value;
+                UpdateView(context);
+                Enabled = true;
+            }
+        }
+
 		#region Private Methods (4) 
 
         private void CheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
@@ -135,14 +140,14 @@ namespace FFTPatcher.Editors
             ReflectionHelpers.SetFlag( ability, name, newValue );
         }
 
-        private void UpdateView()
+        private void UpdateView(Context context)
         {
             this.SuspendLayout();
             ignoreChanges = true;
 
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 aiCheckedListBox.Items.Clear();
                 aiCheckedListBox.Items.AddRange( ourContext == Context.US_PSP ? PSPResources.Lists.AbilityAI.ToArray() : PSXResources.Lists.AbilityAI.ToArray() );
                 abilityTypeComboBox.DataSource = ourContext == Context.US_PSP ? PSPResources.Lists.AbilityTypes : PSXResources.Lists.AbilityTypes;

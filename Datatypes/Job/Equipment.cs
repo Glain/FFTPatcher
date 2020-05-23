@@ -28,7 +28,9 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class Equipment : IChangeable, ISupportDigest, ISupportDefault<Equipment>
     {
-		#region Instance Variables (42) 
+		#region Instance Variables
+
+        private Context ourContext = Context.Default;
 
         public bool Armguard;
         public bool Armlet;
@@ -90,26 +92,27 @@ namespace FFTPatcher.Datatypes
 
         public IList<string> DigestableProperties
         {
-            get { return FFTPatch.Context == Context.US_PSP ? pspNames : psxNames; }
+            get { return ourContext == Context.US_PSP ? pspNames : psxNames; }
         }
 
         public bool HasChanged
         {
-            get { return Default != null && !PatcherLib.Utilities.Utilities.CompareArrays( ToByteArray( FFTPatch.Context ), Default.ToByteArray( FFTPatch.Context ) ); }
+            get { return Default != null && !PatcherLib.Utilities.Utilities.CompareArrays(ToByteArray(ourContext), Default.ToByteArray(ourContext)); }
         }
 
 		#endregion Public Properties 
 
 		#region Constructors (2) 
 
-        public Equipment( IList<byte> bytes )
-            : this( bytes, null )
+        public Equipment( IList<byte> bytes, Context context )
+            : this( bytes, null, context )
         {
         }
 
-        public Equipment( IList<byte> bytes, Equipment defaults )
+        public Equipment( IList<byte> bytes, Equipment defaults, Context context )
         {
             Default = defaults;
+            ourContext = context;
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( bytes[0], ref Unused, ref Knife, ref NinjaBlade, ref Sword, ref KnightsSword, ref Katana, ref Axe, ref Rod );
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( bytes[1], ref Staff, ref Flail, ref Gun, ref Crossbow, ref Bow, ref Instrument, ref Book, ref Polearm );
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( bytes[2], ref Pole, ref Bag, ref Cloth, ref Shield, ref Helmet, ref Hat, ref HairAdornment, ref Armor );
@@ -180,7 +183,7 @@ namespace FFTPatcher.Datatypes
         public override bool Equals( object obj )
         {
             return (obj is Equipment) &&
-                PatcherLib.Utilities.Utilities.CompareArrays( ToByteArray( FFTPatch.Context ), ( obj as Equipment ).ToByteArray( FFTPatch.Context ) );
+                PatcherLib.Utilities.Utilities.CompareArrays(ToByteArray(ourContext), (obj as Equipment).ToByteArray(ourContext));
         }
 
         public override int GetHashCode()
@@ -200,13 +203,7 @@ namespace FFTPatcher.Datatypes
 
         public byte[] ToByteArray()
         {
-            byte[] result = new byte[5];
-            result[0] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Unused, Knife, NinjaBlade, Sword, KnightsSword, Katana, Axe, Rod );
-            result[1] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Staff, Flail, Gun, Crossbow, Bow, Instrument, Book, Polearm );
-            result[2] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Pole, Bag, Cloth, Shield, Helmet, Hat, HairAdornment, Armor );
-            result[3] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Clothing, Robe, Shoes, Armguard, Ring, Armlet, Cloak, Perfume );
-            result[4] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Unknown1, Unknown2, Unknown3, FellSword, LipRouge, Unknown6, Unknown7, Unknown8 );
-            return result;
+            return ToByteArray(ourContext);
         }
 
         public byte[] ToByteArray( Context context )
@@ -216,14 +213,14 @@ namespace FFTPatcher.Datatypes
                 case Context.US_PSX:
                     return ToByteArrayPSX();
                 default:
-                    return ToByteArray();
+                    return ToByteArrayPSP();
             }
         }
 
         public override string ToString()
         {
             List<string> strings = new List<string>( 40 );
-            string[] names = FFTPatch.Context == Context.US_PSP ? pspNames : psxNames;
+            string[] names = ourContext == Context.US_PSP ? pspNames : psxNames;
             foreach( string name in names )
             {
                 if( ReflectionHelpers.GetFieldOrProperty<bool>( this, name ) )
@@ -236,7 +233,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Methods 
 
-		#region Private Methods (1) 
+		#region Private Methods 
 
         private byte[] ToByteArrayPSX()
         {
@@ -245,6 +242,17 @@ namespace FFTPatcher.Datatypes
             result[1] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Staff, Flail, Gun, Crossbow, Bow, Instrument, Book, Polearm );
             result[2] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Pole, Bag, Cloth, Shield, Helmet, Hat, HairAdornment, Armor );
             result[3] = PatcherLib.Utilities.Utilities.ByteFromBooleans( Clothing, Robe, Shoes, Armguard, Ring, Armlet, Cloak, Perfume );
+            return result;
+        }
+
+        private byte[] ToByteArrayPSP()
+        {
+            byte[] result = new byte[5];
+            result[0] = PatcherLib.Utilities.Utilities.ByteFromBooleans(Unused, Knife, NinjaBlade, Sword, KnightsSword, Katana, Axe, Rod);
+            result[1] = PatcherLib.Utilities.Utilities.ByteFromBooleans(Staff, Flail, Gun, Crossbow, Bow, Instrument, Book, Polearm);
+            result[2] = PatcherLib.Utilities.Utilities.ByteFromBooleans(Pole, Bag, Cloth, Shield, Helmet, Hat, HairAdornment, Armor);
+            result[3] = PatcherLib.Utilities.Utilities.ByteFromBooleans(Clothing, Robe, Shoes, Armguard, Ring, Armlet, Cloak, Perfume);
+            result[4] = PatcherLib.Utilities.Utilities.ByteFromBooleans(Unknown1, Unknown2, Unknown3, FellSword, LipRouge, Unknown6, Unknown7, Unknown8);
             return result;
         }
 

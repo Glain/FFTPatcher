@@ -58,7 +58,7 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (1) 
 
-        public ENTD( int start, IList<byte> bytes, ENTD defaults )
+        public ENTD( int start, IList<byte> bytes, ENTD defaults, Context context )
         {
             Default = defaults;
             Events = new Event[0x80];
@@ -67,7 +67,8 @@ namespace FFTPatcher.Datatypes
                 Events[i] = new Event(
                     i + start,
                     bytes.Sub( i * 16 * 40, (i + 1) * 16 * 40 - 1 ),
-                    defaults == null ? null : defaults.Events[i] );
+                    defaults == null ? null : defaults.Events[i],
+                    context);
             }
         }
 
@@ -134,25 +135,29 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (2) 
 
-        public AllENTDs( IList<byte> entd1, IList<byte> entd2, IList<byte> entd3, IList<byte> entd4 )
+        public AllENTDs( IList<byte> entd1, IList<byte> entd2, IList<byte> entd3, IList<byte> entd4, Context context )
         {
             ENTDs = new ENTD[4];
             ENTDs[0] = new ENTD(
                 0,
                 entd1,
-                new ENTD( 0, PSPResources.Binaries.ENTD1, null ) );
+                new ENTD( 0, PSPResources.Binaries.ENTD1, null, context ),
+                context);
             ENTDs[1] = new ENTD(
                 0x80,
                 entd2,
-                new ENTD( 0x80, PSPResources.Binaries.ENTD2, null ) );
+                new ENTD( 0x80, PSPResources.Binaries.ENTD2, null, context ),
+                context);
             ENTDs[2] = new ENTD(
                 0x100,
                 entd3,
-                new ENTD( 0x100, PSPResources.Binaries.ENTD3, null ) );
+                new ENTD( 0x100, PSPResources.Binaries.ENTD3, null, context ),
+                context);
             ENTDs[3] = new ENTD(
                 0x180,
                 entd4,
-                new ENTD( 0x180, PSPResources.Binaries.ENTD4, null ) );
+                new ENTD( 0x180, PSPResources.Binaries.ENTD4, null, context ),
+                context);
 
             Events = new List<Event>( 0x200 );
             foreach( ENTD e in ENTDs )
@@ -161,16 +166,17 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        public AllENTDs( IList<byte> entd1, IList<byte> entd2, IList<byte> entd3, IList<byte> entd4, IList<byte> entd5 )
-            : this( entd1, entd2, entd3, entd4 )
+        public AllENTDs( IList<byte> entd1, IList<byte> entd2, IList<byte> entd3, IList<byte> entd4, IList<byte> entd5, Context context )
+            : this( entd1, entd2, entd3, entd4, context )
         {
-            if( FFTPatch.Context == Context.US_PSP )
+            if( context == Context.US_PSP )
             {
                 PSPEvent = new List<Event>( 77 );
                 for( int i = 0; i < 77; i++ )
                 {
                     PSPEvent.Add( new Event( 0x200 + i, entd5.Sub( i * 16 * 40, (i + 1) * 16 * 40 - 1 ),
-                                  new Event( 0x200 + i, PSPResources.Binaries.ENTD5.Sub( i * 16 * 40, ( i + 1 ) * 16 * 40 - 1 ), null ) ) );
+                                  new Event( 0x200 + i, PSPResources.Binaries.ENTD5.Sub( i * 16 * 40, ( i + 1 ) * 16 * 40 - 1 ), null, context ),
+                                  context) );
                 }
 
                 Events.AddRange( PSPEvent );
@@ -224,7 +230,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -232,7 +238,7 @@ namespace FFTPatcher.Datatypes
                 writer.WriteAttributeString( "changed", HasChanged.ToString() );
                 foreach( Event e in Events )
                 {
-                    e.WriteXmlDigest( writer );
+                    e.WriteXmlDigest( writer, FFTPatch );
                 }
                 writer.WriteEndElement();
             }

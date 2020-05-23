@@ -29,7 +29,7 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class SkillSet : IChangeable, ISupportDigest, ISupportDefault<SkillSet>
     {
-		#region Instance Variables (3) 
+		#region Instance Variables
 
         private static readonly string[] digestableProperties = new string[22] {
             "Action1", "Action2", "Action3", "Action4", "Action5", "Action6", "Action7", "Action8", 
@@ -40,7 +40,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Instance Variables 
 
-		#region Public Properties (36) 
+		#region Public Properties 
 
         public Ability Action1 { get { return Actions[0]; } }
 
@@ -76,23 +76,6 @@ namespace FFTPatcher.Datatypes
 
         public Ability[] Actions { get; private set; }
 
-        public string CorrespondingJobs
-        {
-            get
-            {
-                List<string> result = new List<string>();
-                foreach( Job j in FFTPatch.Jobs.Jobs )
-                {
-                    if( j.SkillSet.Value == Value )
-                    {
-                        result.Add( j.ToString() );
-                    }
-                }
-
-                return string.Join( ", ", result.ToArray() );
-            }
-        }
-
         public SkillSet Default { get; private set; }
 
         public IList<string> DigestableProperties
@@ -100,6 +83,7 @@ namespace FFTPatcher.Datatypes
             get { return digestableProperties; }
         }
 
+        /*
         public static SkillSet[] DummySkillSets
         {
             get
@@ -111,6 +95,17 @@ namespace FFTPatcher.Datatypes
         public static SortedDictionary<byte, SkillSet> EventSkillSets
         {
             get { return FFTPatch.Context == Context.US_PSP ? pspEventSkills : psxEventSkills; }
+        }
+        */
+
+        public static SkillSet[] GetDummySkillSets(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPSkills : PSXSkills;
+        }
+
+        public static SortedDictionary<byte, SkillSet> GetEventSkillSets(Context context)
+        {
+            return (context == Context.US_PSP) ? pspEventSkills : psxEventSkills;
         }
 
         /// <summary>
@@ -201,8 +196,8 @@ namespace FFTPatcher.Datatypes
             psxEventSkills.Add( 0xFF, equal );
         }
 
-        public SkillSet( byte value, IList<byte> bytes )
-            : this( DummySkillSets[value].Name, value )
+        public SkillSet( byte value, IList<byte> bytes, Context context )
+            : this( GetDummySkillSets(context)[value].Name, value )
         {
             List<bool> actions = new List<bool>( 16 );
             actions.AddRange( PatcherLib.Utilities.Utilities.BooleansFromByteMSB( bytes[0] ) );
@@ -214,11 +209,11 @@ namespace FFTPatcher.Datatypes
 
             for( int i = 0; i < 16; i++ )
             {
-                Actions[i] = AllAbilities.DummyAbilities[(actions[i] ? (bytes[3 + i] + 0x100) : (bytes[3 + i]))];
+                Actions[i] = AllAbilities.GetDummyAbilities(context)[(actions[i] ? (bytes[3 + i] + 0x100) : (bytes[3 + i]))];
             }
             for( int i = 0; i < 6; i++ )
             {
-                TheRest[i] = AllAbilities.DummyAbilities[(theRest[i] ? (bytes[19 + i] + 0x100) : (bytes[19 + i]))];
+                TheRest[i] = AllAbilities.GetDummyAbilities(context)[(theRest[i] ? (bytes[19 + i] + 0x100) : (bytes[19 + i]))];
             }
         }
 
@@ -228,8 +223,8 @@ namespace FFTPatcher.Datatypes
             Value = value;
         }
 
-        public SkillSet( byte value, IList<byte> bytes, SkillSet defaults )
-            : this( value, bytes )
+        public SkillSet( byte value, IList<byte> bytes, SkillSet defaults, Context context )
+            : this( value, bytes, context )
         {
             Default = defaults;
         }
@@ -302,6 +297,20 @@ namespace FFTPatcher.Datatypes
             return (HasChanged ? "*" : "") + Value.ToString( "X2" ) + " " + Name;
         }
 
+        public string GetCorrespondingJobs(FFTPatch FFTPatch)
+        {
+            List<string> result = new List<string>();
+            foreach (Job j in FFTPatch.Jobs.Jobs)
+            {
+                if (j.SkillSet.Value == Value)
+                {
+                    result.Add(j.ToString());
+                }
+            }
+
+            return string.Join(", ", result.ToArray());
+        }
+
 		#endregion Public Methods 
     }
 
@@ -349,7 +358,7 @@ namespace FFTPatcher.Datatypes
             for( int i = 0; i < 176; i++ )
             {
                 tempSkills.Add( new SkillSet( (byte)i, bytes.Sub( 25 * i, 25 * i + 24 ),
-                    new SkillSet( (byte)i, defaultBytes.Sub( 25 * i, 25 * i + 24 ) ) ) );
+                    new SkillSet( (byte)i, defaultBytes.Sub( 25 * i, 25 * i + 24 ), context ), context ) );
             }
 
             if( context == Context.US_PSP )
@@ -357,7 +366,7 @@ namespace FFTPatcher.Datatypes
                 for( int i = 0xE0; i <= 0xE2; i++ )
                 {
                     tempSkills.Add( new SkillSet( (byte)i, bytes.Sub( 25 * (i - 0xE0 + 176), 25 * (i - 0xE0 + 176) + 24 ),
-                        new SkillSet( (byte)i, defaultBytes.Sub( 25 * (i - 0xE0 + 176), 25 * (i - 0xE0 + 176) + 24 ) ) ) );
+                        new SkillSet( (byte)i, defaultBytes.Sub( 25 * (i - 0xE0 + 176), 25 * (i - 0xE0 + 176) + 24 ), context ), context ) );
                 }
             }
 
@@ -406,7 +415,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -420,7 +429,7 @@ namespace FFTPatcher.Datatypes
                         writer.WriteAttributeString( "value", s.Value.ToString( "X2" ) );
                         writer.WriteAttributeString( "name", s.Name );
                         DigestGenerator.WriteXmlDigest( s, writer, false, false );
-                        writer.WriteElementString( "CorrespondingJobs", s.CorrespondingJobs );
+                        writer.WriteElementString( "CorrespondingJobs", s.GetCorrespondingJobs(FFTPatch) );
                         writer.WriteEndElement();
                     }
                 }

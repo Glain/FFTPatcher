@@ -30,6 +30,7 @@ namespace FFTPatcher.Editors
         private List<CustomSortedItemListBox> listBoxes;
         private Dictionary<Type, CustomSortedItemListBox> fromListBoxes;
         private Dictionary<Type, CustomSortedItemListBox> toListBoxes;
+        private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
 
         public StoreInventoryEditor()
         {
@@ -74,23 +75,31 @@ namespace FFTPatcher.Editors
             }
             set
             {
-                if ( value == null )
-                {
-                    Enabled = false;
-                    storeInventory = null;
-                }
-                else if (value != storeInventory)
-                {
-                    storeInventory = value;
-                    Enabled = true;
-                    UpdateView();
-                }
+                SetStoreInventory(value, ourContext);
             }
         }
 
+        public AllItems Items { get; set; }
 
-        private void UpdateView()
+        public void SetStoreInventory(StoreInventory value, PatcherLib.Datatypes.Context context)
         {
+            if (value == null)
+            {
+                Enabled = false;
+                storeInventory = null;
+            }
+            else if (value != storeInventory)
+            {
+                storeInventory = value;
+                Enabled = true;
+                UpdateView(context);
+            }
+        }
+
+        private void UpdateView(PatcherLib.Datatypes.Context context)
+        {
+            ourContext = context;
+
             storeInventory.DataChanged -= storeInventory_DataChanged;
             foreach ( var listbox in listBoxes )
             {
@@ -99,27 +108,29 @@ namespace FFTPatcher.Editors
                 listbox.Items.Clear();
             }
 
+            List<Item> dummyItems = Item.GetDummyItems(context);
+
             for ( int i = 0; i < 254; i++ )
             {
-                if ( StoreInventory[Item.DummyItems[i]] )
+                if (StoreInventory[dummyItems[i]])
                 {
-                    toListBoxes[FFTPatch.Items.Items[i].GetType()].Items.Add( Item.DummyItems[i] );
+                    toListBoxes[Items.Items[i].GetType()].Items.Add(dummyItems[i]);
                 }
                 else
                 {
-                    fromListBoxes[FFTPatch.Items.Items[i].GetType()].Items.Add( Item.DummyItems[i] );
+                    fromListBoxes[Items.Items[i].GetType()].Items.Add(dummyItems[i]);
                 }
             }
 
             for ( int i = 254; i < 256; i++ )
             {
-                if ( StoreInventory[Item.DummyItems[i]] )
+                if (StoreInventory[dummyItems[i]])
                 {
-                    toListBoxes[typeof( ChemistItem )].Items.Add( Item.DummyItems[i] );
+                    toListBoxes[typeof(ChemistItem)].Items.Add(dummyItems[i]);
                 }
                 else
                 {
-                    fromListBoxes[typeof( ChemistItem )].Items.Add( Item.DummyItems[i] );
+                    fromListBoxes[typeof(ChemistItem)].Items.Add(dummyItems[i]);
                 }
             }
             foreach ( var listbox in listBoxes )
@@ -145,7 +156,7 @@ namespace FFTPatcher.Editors
         {
             if (Visible && valueChangedOffScreen)
             {
-                UpdateView();
+                UpdateView(ourContext);
             }
             else if (!Visible)
             {
@@ -170,7 +181,7 @@ namespace FFTPatcher.Editors
         private void dualList_AfterAction(object sender, FFTPatcher.Controls.DualListActionEventArgs e)
         {
             Item i = e.Item as Item;
-            Type t = FFTPatch.Items.Items[i.Offset].GetType();
+            Type t = Items.Items[i.Offset].GetType();
             
             if (storeInventory[i] && !storeInventory.Default[i])
             {

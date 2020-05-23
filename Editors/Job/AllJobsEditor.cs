@@ -51,18 +51,19 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( AllJobs jobs )
+        public void UpdateView( AllJobs jobs, Context context )
         {
-            if( FFTPatch.Context != ourContext )
+            if( context != ourContext )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 cbJob = null;
             }
             jobsListBox.SelectedIndexChanged -= jobsListBox_SelectedIndexChanged;
             jobsListBox.DataSource = jobs.Jobs;
             jobsListBox.SelectedIndexChanged += jobsListBox_SelectedIndexChanged;
             jobsListBox.SelectedIndex = 0;
-            jobEditor.Job = jobsListBox.SelectedItem as Job;
+            //jobEditor.Job = jobsListBox.SelectedItem as Job;
+            jobEditor.SetJob(jobsListBox.SelectedItem as Job, context);
             jobsListBox.SetChangedColors();
         }
 
@@ -118,7 +119,7 @@ namespace FFTPatcher.Editors
             if( cbJob != null )
             {
                 cbJob.CopyTo( jobsListBox.SelectedItem as Job );
-                jobEditor.UpdateView();
+                jobEditor.UpdateView(ourContext);
                 jobEditor_DataChanged( jobEditor, EventArgs.Empty );
             }
         }

@@ -105,13 +105,13 @@ namespace FFTPatcher.Datatypes
                 "Force2Hands", "Elements"} );
         }
 
-        public Weapon( UInt16 offset, IList<byte> itemBytes, IList<byte> weaponBytes )
-            : this( offset, itemBytes, weaponBytes, null )
+        public Weapon(UInt16 offset, IList<byte> itemBytes, IList<byte> weaponBytes, PatcherLib.Datatypes.Context context)
+            : this( offset, itemBytes, weaponBytes, null, context )
         {
         }
 
-        public Weapon( UInt16 offset, IList<byte> itemBytes, IList<byte> weaponBytes, Weapon defaults )
-            : base( offset, itemBytes, defaults )
+        public Weapon( UInt16 offset, IList<byte> itemBytes, IList<byte> weaponBytes, Weapon defaults, PatcherLib.Datatypes.Context context )
+            : base( offset, itemBytes, defaults, context )
         {
             Range = weaponBytes[0];
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( weaponBytes[1], ref Striking, ref Lunging, ref Direct, ref Arc, ref TwoSwords, ref TwoHands, ref Throwable, ref Force2Hands );

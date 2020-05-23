@@ -72,13 +72,13 @@ namespace FFTPatcher.Datatypes
                 "PhysicalEvade", "MagicEvade" } );
         }
 
-        public Accessory( UInt16 offset, IList<byte> itemBytes, IList<byte> accessoryBytes )
-            : this( offset, itemBytes, accessoryBytes, null )
+        public Accessory(UInt16 offset, IList<byte> itemBytes, IList<byte> accessoryBytes, PatcherLib.Datatypes.Context context)
+            : this( offset, itemBytes, accessoryBytes, null, context )
         {
         }
 
-        public Accessory( UInt16 offset, IList<byte> itemBytes, IList<byte> accessoryBytes, Accessory defaults )
-            : base( offset, itemBytes, defaults )
+        public Accessory(UInt16 offset, IList<byte> itemBytes, IList<byte> accessoryBytes, Accessory defaults, PatcherLib.Datatypes.Context context)
+            : base( offset, itemBytes, defaults, context )
         {
             AccessoryDefault = defaults;
             PhysicalEvade = accessoryBytes[0];

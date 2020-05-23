@@ -38,7 +38,7 @@ namespace FFTPatcher.Editors
         private string[] itemBools = new string[] {
             "Weapon", "Shield", "Head", "Body",
             "Accessory", "Blank1", "Rare", "Blank2" };
-        private static List<string> itemFormulaItems;
+        private List<string> itemFormulaItems;
         private Context ourContext = Context.Default;
         private List<ItemSubType> pspItemTypes = new List<ItemSubType>( (ItemSubType[])Enum.GetValues( typeof( ItemSubType ) ) );
         private List<ItemSubType> psxItemTypes = new List<ItemSubType>( (ItemSubType[])Enum.GetValues( typeof( ItemSubType ) ) );
@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         private string[] weaponBools = new string[] {
             "Striking", "Lunging", "Direct", "Arc",
             "TwoSwords", "TwoHands", "Throwable", "Force2Hands" };
-        private static List<string> weaponCastSpellItems;
+        private List<string> weaponCastSpellItems;
         private ShopsFlags[] shops = new ShopsFlags[16] { 
             ShopsFlags.None,
             ShopsFlags.Lesalia, ShopsFlags.Riovanes, ShopsFlags.Igros, ShopsFlags.Lionel,
@@ -57,30 +57,22 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+		#region Public Properties
 
         public Item Item
         {
             get { return item; }
             set
             {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    this.item = null;
-                }
-                else if( value != item )
-                {
-                    this.item = value;
-                    this.Enabled = true;
-                    UpdateView();
-                }
+                SetItem(value, ourContext);
             }
         }
 
+        public AllStoreInventories StoreInventories { get; set; }
+            
 		#endregion Public Properties 
 
-		#region Constructors (2) 
+		#region Constructors
 
         public ItemEditor()
         {
@@ -127,7 +119,7 @@ namespace FFTPatcher.Editors
             weaponAttributesCheckedListBox.ItemCheck += weaponAttributesCheckedListBox_ItemCheck;
 
             shopAvailabilityComboBox.Items.Clear();
-            shopAvailabilityComboBox.Items.AddRange( ShopAvailability.AllAvailabilities.ToArray() );
+            //shopAvailabilityComboBox.Items.AddRange( ShopAvailability.AllAvailabilities.ToArray() );
             psxItemTypes.Remove( ItemSubType.LipRouge );
             psxItemTypes.Remove( ItemSubType.FellSword );
 
@@ -145,27 +137,42 @@ namespace FFTPatcher.Editors
             ignoreChanges = false;
         }
 
+        public void SetItem(Item value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                this.item = null;
+            }
+            else if (value != item)
+            {
+                this.item = value;
+                this.Enabled = true;
+                UpdateView(context);
+            }
+        }
+
         void storeInventoryCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
             if ( !ignoreChanges )
             {
                 if ( e.NewValue == CheckState.Checked )
                 {
-                    FFTPatch.StoreInventories.AddToInventory( shops[e.Index], item );
+                    StoreInventories.AddToInventory( shops[e.Index], item );
                 }
                 else if ( e.NewValue == CheckState.Unchecked )
                 {
-                    FFTPatch.StoreInventories.RemoveFromInventory( shops[e.Index], item );
+                    StoreInventories.RemoveFromInventory( shops[e.Index], item );
                 }
             }
         }
 
-        static ItemEditor()
+        public void BuildItemNameLists(Context context)
         {
             weaponCastSpellItems = new List<string>( 256 );
             for( int i = 0; i < 256; i++ )
             {
-                weaponCastSpellItems.Add( string.Format( "{0:X2} - {1}", i, AllAbilities.Names[i] ) );
+                weaponCastSpellItems.Add( string.Format( "{0:X2} - {1}", i, AllAbilities.GetNames(context)[i] ) );
             }
 
             itemFormulaItems = new List<string>( 256 );
@@ -236,7 +243,7 @@ namespace FFTPatcher.Editors
 
         private void itemAttributesLabel_Click( object sender, EventArgs e )
         {
-            if( ItemAttributesClicked != null && itemAttributesSpinner.Value <= (FFTPatch.Context == Context.US_PSP ? 0x64 : 0x4F) )
+            if( ItemAttributesClicked != null && itemAttributesSpinner.Value <= (ourContext == Context.US_PSP ? 0x64 : 0x4F) )
             {
                 ItemAttributesClicked( this, new LabelClickedEventArgs( (byte)itemAttributesSpinner.Value ) );
             }
@@ -271,7 +278,7 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView()
+        public void UpdateView(Context context)
         {
             ignoreChanges = true;
             SuspendLayout();
@@ -297,10 +304,10 @@ namespace FFTPatcher.Editors
             chemistItemPanel.Visible = item is ChemistItem;
             chemistItemPanel.Enabled = item is ChemistItem;
 
-            if( FFTPatch.Context == Context.US_PSP && ourContext != Context.US_PSP )
+            if (context == Context.US_PSP && ourContext != Context.US_PSP)
             {
-                itemTypeComboBox.DataSource = pspItemTypes;
-                weaponFormulaComboBox.DataSource = AbilityFormula.PSPAbilityFormulas;
+                itemTypeComboBox.DataSource = new List<ItemSubType>(pspItemTypes);
+                weaponFormulaComboBox.DataSource = new List<AbilityFormula>(AbilityFormula.PSPAbilityFormulas);
                 storeInventoryCheckedListBox.Items.Clear();
                 foreach ( ShopsFlags shop in shops )
                 {
@@ -310,10 +317,10 @@ namespace FFTPatcher.Editors
                 ourContext = Context.US_PSP;
 
             }
-            else if( FFTPatch.Context == Context.US_PSX && ourContext != Context.US_PSX )
+            else if (context == Context.US_PSX && ourContext != Context.US_PSX)
             {
-                itemTypeComboBox.DataSource = psxItemTypes;
-                weaponFormulaComboBox.DataSource = AbilityFormula.PSXAbilityFormulas;
+                itemTypeComboBox.DataSource = new List<ItemSubType>(psxItemTypes);
+                weaponFormulaComboBox.DataSource = new List<AbilityFormula>(AbilityFormula.PSXAbilityFormulas);
                 storeInventoryCheckedListBox.BeginUpdate();
                 storeInventoryCheckedListBox.Items.Clear();
                 foreach ( ShopsFlags shop in shops )
@@ -324,6 +331,9 @@ namespace FFTPatcher.Editors
 
                 ourContext = Context.US_PSX;
             }
+
+            shopAvailabilityComboBox.Items.Clear();
+            shopAvailabilityComboBox.Items.AddRange( ShopAvailability.GetAllAvailabilities(context).ToArray() );
 
             if( item is Weapon )
             {
@@ -431,8 +441,8 @@ namespace FFTPatcher.Editors
             {
                 storeInventoryCheckedListBox.Visible = true;
                 storeInventoryCheckedListBox.SetValuesAndDefaults(
-                    FFTPatch.StoreInventories.IsItemInShops(item, shops),
-                    FFTPatch.StoreInventories.Default.IsItemInShops(item, shops));
+                    StoreInventories.IsItemInShops(item, shops),
+                    StoreInventories.Default.IsItemInShops(item, shops));
             }
             else
             {

@@ -40,9 +40,16 @@ namespace FFTPatcher.Datatypes
 
         public Event Default { get; private set; }
 
+        /*
         public static IList<string> EventNames
         {
             get { return FFTPatch.Context == Context.US_PSP ? pspEventNames : psxEventNames; }
+        }
+        */
+
+        public static IList<string> GetEventNames(Context context)
+        {
+            return (context == Context.US_PSP) ? pspEventNames : psxEventNames;
         }
 
         /// <summary>
@@ -70,17 +77,18 @@ namespace FFTPatcher.Datatypes
             psxEventNames = PSXResources.Lists.EventNames;
         }
 
-        public Event( int value, IList<byte> bytes, Event defaults )
+        public Event( int value, IList<byte> bytes, Event defaults, Context context )
         {
             Value = value;
-            Name = EventNames[value];
+            Name = GetEventNames(context)[value];
             Default = defaults;
             Units = new EventUnit[16];
             for( int i = 0; i < 16; i++ )
             {
                 Units[i] = new EventUnit(
                     bytes.Sub( i * 40, (i + 1) * 40 - 1 ),
-                    defaults == null ? null : defaults.Units[i] );
+                    defaults == null ? null : defaults.Units[i],
+                    context);
             }
         }
 
@@ -128,7 +136,7 @@ namespace FFTPatcher.Datatypes
             return (HasChanged ? "*" : "") + string.Format( "{0:X3} {1}", Value, Name );
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {

@@ -271,17 +271,20 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (2) 
 
-        public EventUnit( IList<byte> bytes )
-            : this( bytes, null )
+        public EventUnit(IList<byte> bytes, PatcherLib.Datatypes.Context context)
+            : this( bytes, null, context )
         {
         }
 
-        public EventUnit( IList<byte> bytes, EventUnit defaults )
+        public EventUnit( IList<byte> bytes, EventUnit defaults, PatcherLib.Datatypes.Context context )
         {
-            SpriteSet = SpriteSet.SpriteSets[bytes[0]];
+            List<Item> eventItems = Item.GetEventItems(context);
+            Ability[] eventAbilities = AllAbilities.GetEventAbilities(context);
+
+            SpriteSet = SpriteSet.GetSpriteSets(context)[bytes[0]];
             Default = defaults;
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( bytes[1], ref Male, ref Female, ref Monster, ref JoinAfterEvent, ref LoadFormation, ref ZodiacMonster, ref Blank2, ref SaveFormation );
-            SpecialName = SpecialName.SpecialNames[bytes[2]];
+            SpecialName = SpecialName.GetSpecialNames(context)[bytes[2]];
             Level = bytes[3];
             Month = (Month)bytes[4];
             Day = bytes[5];
@@ -289,16 +292,16 @@ namespace FFTPatcher.Datatypes
             Faith = bytes[7];
             PrerequisiteJob = (PreRequisiteJob)bytes[8];
             PrerequisiteJobLevel = bytes[9];
-            Job = AllJobs.DummyJobs[bytes[10]];
-            SecondaryAction = SkillSet.EventSkillSets[bytes[11]];
-            Reaction = AllAbilities.EventAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[12], bytes[13] )];
-            Support = AllAbilities.EventAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[14], bytes[15] )];
-            Movement = AllAbilities.EventAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[16], bytes[17] )];
-            Head = Item.EventItems[bytes[18]];
-            Body = Item.EventItems[bytes[19]];
-            Accessory = Item.EventItems[bytes[20]];
-            RightHand = Item.EventItems[bytes[21]];
-            LeftHand = Item.EventItems[bytes[22]];
+            Job = AllJobs.GetDummyJobs(context)[bytes[10]];
+            SecondaryAction = SkillSet.GetEventSkillSets(context)[bytes[11]];
+            Reaction = eventAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[12], bytes[13] )];
+            Support = eventAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[14], bytes[15] )];
+            Movement = eventAbilities[PatcherLib.Utilities.Utilities.BytesToUShort( bytes[16], bytes[17] )];
+            Head = eventItems[bytes[18]];
+            Body = eventItems[bytes[19]];
+            Accessory = eventItems[bytes[20]];
+            RightHand = eventItems[bytes[21]];
+            LeftHand = eventItems[bytes[22]];
             Palette = bytes[23];
             bool dummy = false;
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( bytes[24], ref AlwaysPresent, ref RandomlyPresent, ref dummy, ref dummy, ref Control, ref Immortal, ref Blank6, ref Blank7 );
@@ -308,8 +311,8 @@ namespace FFTPatcher.Datatypes
             FacingDirection = (Facing)(bytes[27] & 0x7F);
             UpperLevel = (bytes[27] & 0x80) == 0x80;
             Experience = bytes[28];
-            SkillSet = SkillSet.EventSkillSets[bytes[29]];
-            WarTrophy = Item.EventItems[bytes[30]];
+            SkillSet = SkillSet.GetEventSkillSets(context)[bytes[29]];
+            WarTrophy = eventItems[bytes[30]];
             BonusMoney = bytes[31];
             UnitID = bytes[32];
             TargetX = bytes[33];

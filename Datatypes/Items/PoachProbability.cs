@@ -70,17 +70,17 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (2) 
 
-        public PoachProbability( string name, IList<byte> bytes )
-            : this( name, bytes, null )
+        public PoachProbability( string name, IList<byte> bytes, Context context )
+            : this( name, bytes, null, context )
         {
         }
 
-        public PoachProbability( string name, IList<byte> bytes, PoachProbability defaults )
+        public PoachProbability( string name, IList<byte> bytes, PoachProbability defaults, Context context )
         {
             Default = defaults;
             MonsterName = name;
-            Common = Item.GetItemAtOffset( bytes[0] );
-            Uncommon = Item.GetItemAtOffset( bytes[1] );
+            Common = Item.GetItemAtOffset( bytes[0], context );
+            Uncommon = Item.GetItemAtOffset( bytes[1], context );
         }
 
 		#endregion Constructors 
@@ -137,15 +137,15 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (1) 
 
-        public AllPoachProbabilities( IList<byte> bytes )
+        public AllPoachProbabilities( IList<byte> bytes, Context context )
         {
-            IList<byte> defaultBytes = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.PoachProbabilities : PSXResources.Binaries.PoachProbabilities;
+            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.PoachProbabilities : PSXResources.Binaries.PoachProbabilities;
 
             PoachProbabilities = new PoachProbability[48];
             for( int i = 0; i < 48; i++ )
             {
-                PoachProbabilities[i] = new PoachProbability( AllJobs.Names[i + 0x5E], bytes.Sub( i * 2, i * 2 + 1 ),
-                    new PoachProbability( AllJobs.Names[i + 0x5E], defaultBytes.Sub( i * 2, i * 2 + 1 ) ) );
+                PoachProbabilities[i] = new PoachProbability( AllJobs.GetNames(context)[i + 0x5E], bytes.Sub( i * 2, i * 2 + 1 ),
+                    new PoachProbability( AllJobs.GetNames(context)[i + 0x5E], defaultBytes.Sub( i * 2, i * 2 + 1 ), context ), context );
             }
         }
 
@@ -186,7 +186,7 @@ namespace FFTPatcher.Datatypes
             return ToByteArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {

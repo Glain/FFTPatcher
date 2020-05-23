@@ -16,6 +16,7 @@ namespace FFTPatcher.Editors
         const int pasteIndex = 1;
 
         private AllPropositions props;
+        public PatcherLib.Datatypes.Context Context { get; set; }
 
         public AllPropositionDetailsEditor()
         {
@@ -34,16 +35,18 @@ namespace FFTPatcher.Editors
             propositionEditor1.DataChanged += editor_DataChanged;
         }
 
-        public void UpdateView( AllPropositions props )
+        public void UpdateView( AllPropositions props, PatcherLib.Datatypes.Context context )
         {
             this.props = props;
+            this.Context = context;
             UpdateListBox();
             listBox1.SelectedIndex = 0;
             propositionEditor1.BindTo(
                 props.Propositions[0],
                 props.Prices,
                 props.SmallBonuses,
-                props.LargeBonuses );
+                props.LargeBonuses,
+                context);
             listBox1.SetChangedColors();
         }
 
@@ -84,7 +87,7 @@ namespace FFTPatcher.Editors
         {
             if (listBox1.SelectedIndex != -1)
             {
-                propositionEditor1.BindTo( props.Propositions[listBox1.SelectedIndex], props.Prices, props.SmallBonuses, props.LargeBonuses );
+                propositionEditor1.BindTo( props.Propositions[listBox1.SelectedIndex], props.Prices, props.SmallBonuses, props.LargeBonuses, Context );
             }
         }
 
@@ -115,7 +118,7 @@ namespace FFTPatcher.Editors
             {
                 Proposition destEntry = listBox1.SelectedItem as Proposition;
                 copiedEntry.CopyTo(destEntry);
-                propositionEditor1.BindTo(props.Propositions[listBox1.SelectedIndex], props.Prices, props.SmallBonuses, props.LargeBonuses);
+                propositionEditor1.BindTo(props.Propositions[listBox1.SelectedIndex], props.Prices, props.SmallBonuses, props.LargeBonuses, Context);
                 propositionEditor1.Invalidate(true);
                 editor_DataChanged(propositionEditor1, EventArgs.Empty);
             }

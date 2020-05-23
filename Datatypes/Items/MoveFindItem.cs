@@ -95,12 +95,12 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (2) 
 
-        public MoveFindItem( IList<byte> bytes )
+        public MoveFindItem( IList<byte> bytes, Context context )
         {
             X = (byte)( ( bytes[0] & 0xF0 ) >> 4 );
             Y = (byte)( bytes[0] & 0x0F );
-            CommonItem = Item.DummyItems[bytes[3]];
-            RareItem = Item.DummyItems[bytes[2]];
+            CommonItem = Item.GetDummyItems(context)[bytes[3]];
+            RareItem = Item.GetDummyItems(context)[bytes[2]];
             bool[] b = PatcherLib.Utilities.Utilities.BooleansFromByteMSB( bytes[1] );
             Unknown1 = b[0];
             Unknown2 = b[1];
@@ -112,8 +112,8 @@ namespace FFTPatcher.Datatypes
             Degenerator = b[7];
         }
 
-        public MoveFindItem( IList<byte> bytes, MoveFindItem def )
-            : this( bytes )
+        public MoveFindItem( IList<byte> bytes, MoveFindItem def, Context context )
+            : this( bytes, context )
         {
             this.Default = def;
         }
@@ -174,12 +174,12 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (2) 
 
-        public MapMoveFindItems( IList<byte> bytes, string name )
-            : this( bytes, name, null )
+        public MapMoveFindItems( IList<byte> bytes, string name, Context context )
+            : this( bytes, name, null, context )
         {
         }
 
-        public MapMoveFindItems( IList<byte> bytes, string name, MapMoveFindItems def )
+        public MapMoveFindItems( IList<byte> bytes, string name, MapMoveFindItems def, Context context )
         {
             Default = def;
             Name = name;
@@ -189,14 +189,14 @@ namespace FFTPatcher.Datatypes
             {
                 for ( int i = 0; i < 4; i++ )
                 {
-                    Items.Add( new MoveFindItem( bytes.Sub( i * 4, ( i + 1 ) * 4 - 1 ), def.Items[i] ) );
+                    Items.Add( new MoveFindItem( bytes.Sub( i * 4, ( i + 1 ) * 4 - 1 ), def.Items[i], context ) );
                 }
             }
             else
             {
                 for ( int i = 0; i < 4; i++ )
                 {
-                    Items.Add( new MoveFindItem( bytes.Sub( i * 4, ( i + 1 ) * 4 - 1 ) ) );
+                    Items.Add( new MoveFindItem( bytes.Sub( i * 4, ( i + 1 ) * 4 - 1 ), context ) );
                 }
             }
         }
@@ -238,7 +238,7 @@ namespace FFTPatcher.Datatypes
 
         #region IXmlDigest Members
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -259,6 +259,8 @@ namespace FFTPatcher.Datatypes
 
     public class AllMoveFindItems : PatchableFile, IChangeable, IXmlDigest, ISupportDefault<AllMoveFindItems>, IGenerateCodes
     {
+        private Context ourContext = Context.Default;
+
 		#region Public Properties (3) 
 
         public AllMoveFindItems Default { get; private set; }
@@ -282,6 +284,7 @@ namespace FFTPatcher.Datatypes
         public AllMoveFindItems( Context context, IList<byte> bytes, AllMoveFindItems def )
         {
             Default = def;
+            ourContext = context;
             const int numMaps = 128;
             IList<string> names = context == Context.US_PSP ? PSPResources.Lists.MapNames : PSXResources.Lists.MapNames;
 
@@ -290,14 +293,14 @@ namespace FFTPatcher.Datatypes
             {
                 for ( int i = 0; i < numMaps; i++ )
                 {
-                    moveFindItems.Add( new MapMoveFindItems( bytes.Sub( i * 4 * 4, ( i + 1 ) * 4 * 4 - 1 ), names[i] ) );
+                    moveFindItems.Add( new MapMoveFindItems( bytes.Sub( i * 4 * 4, ( i + 1 ) * 4 * 4 - 1 ), names[i], context ) );
                 }
             }
             else
             {
                 for ( int i = 0; i < numMaps; i++ )
                 {
-                    moveFindItems.Add( new MapMoveFindItems( bytes.Sub( i * 4 * 4, ( i + 1 ) * 4 * 4 - 1 ), names[i], def.MoveFindItems[i] ) );
+                    moveFindItems.Add( new MapMoveFindItems( bytes.Sub( i * 4 * 4, ( i + 1 ) * 4 * 4 - 1 ), names[i], def.MoveFindItems[i], context ) );
                 }
             }
             MoveFindItems = moveFindItems.ToArray();
@@ -326,7 +329,7 @@ namespace FFTPatcher.Datatypes
 
         public byte[] ToByteArray()
         {
-            int numMaps = FFTPatch.Context == Context.US_PSP ? 134 : 128;
+            int numMaps = ourContext == Context.US_PSP ? 134 : 128;
             List<byte> result = new List<byte>( 4 * 4 * numMaps );
             foreach ( MapMoveFindItems items in MoveFindItems )
             {
@@ -336,7 +339,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -344,7 +347,7 @@ namespace FFTPatcher.Datatypes
                 writer.WriteAttributeString( "changed", HasChanged.ToString() );
                 foreach( MapMoveFindItems m in MoveFindItems )
                 {
-                    m.WriteXmlDigest( writer );
+                    m.WriteXmlDigest( writer, FFTPatch );
                 }
                 writer.WriteEndElement();
             }

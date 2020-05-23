@@ -269,7 +269,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             writer.WriteStartElement( GetType().Name );
             writer.WriteAttributeString( "changed", HasChanged.ToString() );
@@ -332,6 +332,7 @@ namespace FFTPatcher.Datatypes
             "Squire", "Chemist", "Knight", "Archer", "Monk", "WhiteMage", "BlackMage", "TimeMage", "Summoner",
             "Thief", "Orator", "Mystic", "Geomancer", "Dragoon", "Samurai", "Ninja", "Arithmetician", "Bard",
             "Dancer", "Mime", "DarkKnight", "OnionKnight", "Unknown1", "Unknown2" };
+        private Context ourContext = Context.Default;
 
         #region Properties (26)
 
@@ -365,7 +366,7 @@ namespace FFTPatcher.Datatypes
             {
                 return
                     Default != null &&
-                    !PatcherLib.Utilities.Utilities.CompareArrays( ToByteArray( FFTPatch.Context ), Default.ToByteArray( FFTPatch.Context ) );
+                    !PatcherLib.Utilities.Utilities.CompareArrays(ToByteArray(ourContext), Default.ToByteArray(ourContext));
             }
         }
 
@@ -416,6 +417,8 @@ namespace FFTPatcher.Datatypes
 
         public Requirements( Context context, IList<byte> bytes, Requirements defaults )
         {
+            ourContext = context;
+
             Default = defaults;
             Squire = bytes[0].GetUpperNibble();
             Chemist = bytes[0].GetLowerNibble();

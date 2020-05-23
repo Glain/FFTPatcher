@@ -44,17 +44,7 @@ namespace FFTPatcher.Editors
             get { return statuses; }
             set
             {
-                if( value == null )
-                {
-                    this.Enabled = false;
-                    statuses = null;
-                }
-                else if( statuses != value )
-                {
-                    statuses = value;
-                    UpdateView();
-                    this.Enabled = true;
-                }
+                SetStatuses(value, ourContext);
             }
         }
 
@@ -70,7 +60,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (2) 
+		#region Methods 
 
         private void statusesCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
@@ -81,16 +71,31 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView()
+        public void SetStatuses(Statuses value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                statuses = null;
+            }
+            else if (statuses != value)
+            {
+                statuses = value;
+                UpdateView(context);
+                this.Enabled = true;
+            }
+        }
+
+        public void UpdateView(Context context)
         {
             this.SuspendLayout();
             statusesCheckedListBox.SuspendLayout();
 
             ignoreChanges = true;
 
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 statusesCheckedListBox.Items.Clear();
                 statusesCheckedListBox.Items.AddRange( ourContext == Context.US_PSP ? PSPResources.Lists.StatusNames.ToArray() : PSXResources.Lists.StatusNames.ToArray() );
             }

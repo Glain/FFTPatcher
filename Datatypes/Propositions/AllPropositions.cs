@@ -106,17 +106,18 @@ namespace FFTPatcher.Datatypes
         public const int NumPropositions = 96;
         public const int propLength = 23;
 
-        public AllPropositions( IList<byte> bytes, bool brokenLevelBonuses )
-            : this( bytes, null as AllPropositions, brokenLevelBonuses )
+        public AllPropositions( IList<byte> bytes, bool brokenLevelBonuses, Context context )
+            : this( bytes, null as AllPropositions, brokenLevelBonuses, context )
         {
         }
 
-        public AllPropositions( IList<byte> bytes, IList<byte> defaultBytes, bool brokenLevelBonuses )
-            : this( bytes, new AllPropositions( defaultBytes, brokenLevelBonuses ), brokenLevelBonuses )
+        public AllPropositions( IList<byte> bytes, IList<byte> defaultBytes, bool brokenLevelBonuses, Context context )
+            : this( bytes, new AllPropositions( defaultBytes, brokenLevelBonuses, context ), brokenLevelBonuses, context )
         {
         }
 
-        public bool MirrorLevelRanges { get { return !CanFixBuggyLevelBonuses( FFTPatch.Context ); } }
+        //public bool MirrorLevelRanges { get { return !CanFixBuggyLevelBonuses( FFTPatch.Context ); } }
+        public bool MirrorLevelRanges { get { return false; } }
 
         public IList<UInt16> Prices { get; private set; }
         public IList<UInt16> SmallBonuses { get; private set; }
@@ -165,24 +166,24 @@ namespace FFTPatcher.Datatypes
 
         public AllPropositions Default { get; private set; }
 
-        public AllPropositions( IList<byte> bytes, AllPropositions defaults, bool brokenLevelBonuses )
+        public AllPropositions( IList<byte> bytes, AllPropositions defaults, bool brokenLevelBonuses, Context context )
         {
             Default = defaults;
-            var names = FFTPatch.Context == Context.US_PSP ? PSPResources.Lists.Propositions : PSXResources.Lists.Propositions;
+            var names = context == Context.US_PSP ? PSPResources.Lists.Propositions : PSXResources.Lists.Propositions;
 
             List<Proposition> props = new List<Proposition>();
             if (defaults != null)
             {
                 for (int i = 0; i < NumPropositions; i++)
                 {
-                    props.Add( new Proposition( names[i], bytes.Sub( i * propLength, (i + 1) * propLength - 1 ), defaults.Propositions[i] ) );
+                    props.Add( new Proposition( names[i], bytes.Sub( i * propLength, (i + 1) * propLength - 1 ), defaults.Propositions[i], context ) );
                 }
             }
             else
             {
                 for (int i = 0; i < NumPropositions; i++)
                 {
-                    props.Add( new Proposition( names[i], bytes.Sub( i * propLength, (i + 1) * propLength - 1 ) ) );
+                    props.Add( new Proposition( names[i], bytes.Sub( i * propLength, (i + 1) * propLength - 1 ), context ) );
                 }
             }
 
@@ -310,7 +311,7 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             throw new NotImplementedException();
         }

@@ -237,12 +237,12 @@ namespace FFTPatcher.Datatypes
 
 		#region Constructors (1) 
 
-        public AllStatusAttributes( IList<byte> bytes )
+        public AllStatusAttributes( IList<byte> bytes, Context context )
         {
             StatusAttributes = new StatusAttribute[40];
-            IList<byte> defaultBytes = FFTPatch.Context == Context.US_PSP ? PSPResources.Binaries.StatusAttributes : PSXResources.Binaries.StatusAttributes;
+            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.StatusAttributes : PSXResources.Binaries.StatusAttributes;
 
-            IList<string> names = FFTPatch.Context == Context.US_PSP ? PSPResources.Lists.StatusNames : PSXResources.Lists.StatusNames;
+            IList<string> names = context == Context.US_PSP ? PSPResources.Lists.StatusNames : PSXResources.Lists.StatusNames;
             for( int i = 0; i < 40; i++ )
             {
                 StatusAttributes[i] =
@@ -288,7 +288,7 @@ namespace FFTPatcher.Datatypes
             return ToByteArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {

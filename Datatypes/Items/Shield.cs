@@ -72,13 +72,13 @@ namespace FFTPatcher.Datatypes
             shieldDigestableProperties.Add( "MagicBlockRate" );
         }
 
-        public Shield( UInt16 offset, IList<byte> itemBytes, IList<byte> shieldBytes )
-            : this( offset, itemBytes, shieldBytes, null )
+        public Shield( UInt16 offset, IList<byte> itemBytes, IList<byte> shieldBytes, PatcherLib.Datatypes.Context context )
+            : this( offset, itemBytes, shieldBytes, null, context )
         {
         }
 
-        public Shield( UInt16 offset, IList<byte> itemBytes, IList<byte> shieldBytes, Shield defaults )
-            : base( offset, itemBytes, defaults )
+        public Shield( UInt16 offset, IList<byte> itemBytes, IList<byte> shieldBytes, Shield defaults, PatcherLib.Datatypes.Context context )
+            : base( offset, itemBytes, defaults, context )
         {
             ShieldDefault = defaults;
             PhysicalBlockRate = shieldBytes[0];

@@ -53,11 +53,11 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( AllENTDs entds )
+        public void UpdateView( AllENTDs entds, Context context )
         {
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 ClipBoardEvent = null;
                 eventListBox.ContextMenu.MenuItems[1].Enabled = false;
             }
@@ -65,7 +65,8 @@ namespace FFTPatcher.Editors
             eventListBox.SelectedIndexChanged -= eventListBox_SelectedIndexChanged;
             eventListBox.DataSource = entds.Events;
             eventListBox.SelectedIndex = 0;
-            eventEditor1.Event = eventListBox.SelectedItem as Event;
+            //eventEditor1.Event = eventListBox.SelectedItem as Event;
+            eventEditor1.SetEvent(eventListBox.SelectedItem as Event, context);
             eventListBox.SelectedIndexChanged += eventListBox_SelectedIndexChanged;
 
             eventListBox.SetChangedColors();
@@ -111,7 +112,7 @@ namespace FFTPatcher.Editors
             {
                 ClipBoardEvent.CopyTo( eventListBox.SelectedItem as Event );
                 eventEditor1.Event = eventListBox.SelectedItem as Event;
-                eventEditor1.UpdateView();
+                eventEditor1.UpdateView(ourContext);
                 eventEditor1_DataChanged( eventEditor1, System.EventArgs.Empty );
             }
         }

@@ -24,6 +24,8 @@ namespace FFTPatcher.Editors
 {
     public partial class CodeCreator : UserControl
     {
+        private FFTPatcher.Datatypes.FFTPatch FFTPatch;
+
 		#region Constructors (1) 
 
         public CodeCreator()
@@ -35,18 +37,19 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView()
+        public void UpdateView(FFTPatcher.Datatypes.FFTPatch FFTPatch)
         {
+            this.FFTPatch = FFTPatch;
             OnVisibleChanged( EventArgs.Empty );
         }
 
 		#endregion Public Methods 
 
-		#region Protected Methods (1) 
+		#region Protected Methods 
 
         protected override void OnVisibleChanged( EventArgs e )
         {
-            textBox1.Text = Codes.GetAllCodes();
+            textBox1.Text = Codes.GetAllCodes(FFTPatch);
             base.OnVisibleChanged( e );
         }
 

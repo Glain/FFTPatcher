@@ -10,22 +10,22 @@ namespace FFTPatcher
 {
     internal static class PspIso
     {
-        public static void PatchISO( BackgroundWorker worker, DoWorkEventArgs args, IGeneratePatchList patches )
+        public static void PatchISO( FFTPatch FFTPatch, BackgroundWorker worker, DoWorkEventArgs args, IGeneratePatchList patches )
         {
-            PatchISO( patches.FileName, worker, patches );
+            PatchISO(FFTPatch, patches.FileName, worker, patches);
         }
 
         /// <summary>
         /// Patches the ISO.
         /// </summary>
         /// <param name="filename">The filename of the ISO to patch.</param>
-        public static void PatchISO( string filename, BackgroundWorker worker, IGeneratePatchList patches )
+        public static void PatchISO( FFTPatch FFTPatch, string filename, BackgroundWorker worker, IGeneratePatchList patches )
         {
             FileStream stream = null;
             try
             {
                 stream = new FileStream( filename, FileMode.Open );
-                PatchISO( stream, worker, patches );
+                PatchISO(FFTPatch, stream, worker, patches);
             }
             catch ( NotSupportedException )
             {
@@ -45,7 +45,7 @@ namespace FFTPatcher
         /// Patches the ISO.
         /// </summary>
         /// <param name="stream">The stream of the ISO to patch.</param>
-        public static void PatchISO( Stream stream, BackgroundWorker worker, IGeneratePatchList patchList )
+        public static void PatchISO( FFTPatch FFTPatch, Stream stream, BackgroundWorker worker, IGeneratePatchList patchList )
         {
             PatcherLib.Iso.PspIso.PspIsoInfo info = PatcherLib.Iso.PspIso.PspIsoInfo.GetPspIsoInfo( stream );
 

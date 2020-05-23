@@ -38,9 +38,16 @@ namespace FFTPatcher.Datatypes
 
         public string Name { get; private set; }
 
+        /*
         public static SpecialName[] SpecialNames
         {
             get { return FFTPatch.Context == Context.US_PSP ? pspNames : psxNames; }
+        }
+        */
+
+        public static SpecialName[] GetSpecialNames(Context context)
+        {
+            return (context == Context.US_PSP) ? pspNames : psxNames;
         }
 
         public byte Value { get; private set; }

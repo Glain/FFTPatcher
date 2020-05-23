@@ -71,7 +71,7 @@ namespace FFTPatcher.Editors
 
         bool ignoreChanges = false;
 
-        public void UpdateView( AllPropositions allProps )
+        public void UpdateView( AllPropositions allProps, PatcherLib.Datatypes.Context context )
         {
             ignoreChanges = true;
             props = allProps;
@@ -85,10 +85,10 @@ namespace FFTPatcher.Editors
                 jpMultiplierSpinners[i].SetValueAndDefault( allProps.JPMultipliers[i], allProps.Default.JPMultipliers[i] );
                 gilMultiplierSpinners[i].SetValueAndDefault( allProps.GilMultipliers[i], allProps.Default.GilMultipliers[i] );
             }
-            classBonusesEditor1.UpdateView( allProps );
-            statLevelBonusesEditor1.UpdateView( allProps );
+            classBonusesEditor1.UpdateView( allProps, context );
+            statLevelBonusesEditor1.UpdateView( allProps, context );
             additionalRewardsEditor1.UpdateView( allProps );
-            allPropositionDetailsEditor1.UpdateView( allProps );
+            allPropositionDetailsEditor1.UpdateView(allProps, context);
             ignoreChanges = false;
         }
 

@@ -27,7 +27,8 @@ namespace FFTPatcher.Datatypes
         /// Converts an object into its XML representation.
         /// </summary>
         /// <param name="writer">The stream to which the object is serialized.</param>
-        void WriteXmlDigest( XmlWriter writer );
+        //void WriteXmlDigest( XmlWriter writer );
+        void WriteXmlDigest(XmlWriter writer, FFTPatch FFTPatch);
         //void WriteXml( XmlWriter writer, bool changesOnly );
     }
 }

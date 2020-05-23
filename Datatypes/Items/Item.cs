@@ -66,6 +66,7 @@ namespace FFTPatcher.Datatypes
             get { return digestableProperties; }
         }
 
+        /*
         public static List<Item> DummyItems
         {
             get
@@ -73,12 +74,25 @@ namespace FFTPatcher.Datatypes
                 return FFTPatch.Context == Context.US_PSP ? PSPDummies : PSXDummies;
             }
         }
+        */
+
+        public static List<Item> GetDummyItems(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPDummies : PSXDummies;
+        }
 
         public byte EnemyLevel { get; set; }
 
+        /*
         public static List<Item> EventItems
         {
             get { return FFTPatch.Context == Context.US_PSP ? pspEventItems : psxEventItems; }
+        }
+        */
+
+        public static List<Item> GetEventItems(Context context)
+        {
+            return (context == Context.US_PSP) ? pspEventItems : psxEventItems;
         }
 
         [Hex]
@@ -116,12 +130,19 @@ namespace FFTPatcher.Datatypes
 
         public bool Head { get { return head; } set { head = value; } }
 
+        /*
         public static IList<string> ItemNames
         {
             get
             {
                 return FFTPatch.Context == Context.US_PSP ? PSPNames : PSXNames;
             }
+        }
+        */
+
+        public static IList<string> GetItemNames(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPNames : PSXNames;
         }
 
         public ItemSubType ItemType { get; set; }
@@ -215,9 +236,9 @@ namespace FFTPatcher.Datatypes
         {
         }
 
-        protected Item( UInt16 offset, IList<byte> bytes )
+        protected Item( UInt16 offset, IList<byte> bytes, Context context )
         {
-            Name = ItemNames[offset];
+            Name = GetItemNames(context)[offset];
             Offset = offset;
             Palette = bytes[0];
             Graphic = bytes[1];
@@ -228,12 +249,12 @@ namespace FFTPatcher.Datatypes
             Unknown1 = bytes[6];
             SIA = bytes[7];
             Price = PatcherLib.Utilities.Utilities.BytesToUShort( bytes[8], bytes[9] );
-            ShopAvailability = ShopAvailability.AllAvailabilities[bytes[10]];
+            ShopAvailability = ShopAvailability.GetAllAvailabilities(context)[bytes[10]];
             Unknown2 = bytes[11];
         }
 
-        protected Item( UInt16 offset, IList<byte> bytes, Item defaults )
-            : this( offset, bytes )
+        protected Item( UInt16 offset, IList<byte> bytes, Item defaults, Context context )
+            : this( offset, bytes, context )
         {
             Default = defaults;
         }
@@ -307,9 +328,9 @@ namespace FFTPatcher.Datatypes
             CopyCommon( this, destination );
         }
 
-        public static Item GetItemAtOffset( UInt16 offset )
+        public static Item GetItemAtOffset( UInt16 offset, Context context )
         {
-            return DummyItems.Find( i => i.Offset == offset );
+            return GetDummyItems(context).Find( i => i.Offset == offset );
         }
 
         public bool[] ToBoolArray()
@@ -366,50 +387,22 @@ namespace FFTPatcher.Datatypes
 
         #endregion Static Fields
 
-        #region Fields (3)
+        #region Fields
 
         private byte b;
         private string name;
         private string psxName;
+        private Context ourContext = Context.Default;
 
         #endregion Fields
 
-        #region Static Properties (1)
+        #region Static Properties
 
-
-        public static List<ShopAvailability> AllAvailabilities
-        {
-            get
-            {
-                if( all == null )
-                {
-                    all = new List<ShopAvailability>( 256 );
-                    for ( byte i = 0; i < PSPResources.Lists.ShopAvailabilities.Count; i++ )
-                    {
-                        ShopAvailability a = new ShopAvailability();
-                        a.b = i;
-                        a.name = PSPResources.Lists.ShopAvailabilities[i];
-                        a.psxName = PSXResources.Lists.ShopAvailabilities[i];
-                        all.Add( a );
-                    }
-                    for ( int i = PSPResources.Lists.ShopAvailabilities.Count; i <= 0xFF; i++ )
-                    {
-                        ShopAvailability a = new ShopAvailability();
-                        a.b = (byte)i;
-                        a.name = string.Format( "Unknown ({0})", i );
-                        a.psxName = a.name;
-                        all.Add( a );
-                    }
-                }
-
-                return all;
-            }
-        }
 
 
         #endregion Static Properties
 
-        #region Constructors (1)
+        #region Constructors
 
         private ShopAvailability()
         {
@@ -417,7 +410,35 @@ namespace FFTPatcher.Datatypes
 
         #endregion Constructors
 
-        #region Methods (2)
+        public static List<ShopAvailability> GetAllAvailabilities(Context context)
+        {
+            if (all == null)
+            {
+                all = new List<ShopAvailability>(256);
+                for (byte i = 0; i < PSPResources.Lists.ShopAvailabilities.Count; i++)
+                {
+                    ShopAvailability a = new ShopAvailability();
+                    a.b = i;
+                    a.name = PSPResources.Lists.ShopAvailabilities[i];
+                    a.psxName = PSXResources.Lists.ShopAvailabilities[i];
+                    a.ourContext = context;
+                    all.Add(a);
+                }
+                for (int i = PSPResources.Lists.ShopAvailabilities.Count; i <= 0xFF; i++)
+                {
+                    ShopAvailability a = new ShopAvailability();
+                    a.b = (byte)i;
+                    a.name = string.Format("Unknown ({0})", i);
+                    a.psxName = a.name;
+                    a.ourContext = context;
+                    all.Add(a);
+                }
+            }
+
+            return all;
+        }
+
+        #region Methods
 
 
         public byte ToByte()
@@ -429,7 +450,7 @@ namespace FFTPatcher.Datatypes
 
         public override string ToString()
         {
-            return FFTPatch.Context == Context.US_PSP ? name : psxName;
+            return ourContext == Context.US_PSP ? name : psxName;
         }
 
 

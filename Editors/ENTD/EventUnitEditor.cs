@@ -91,17 +91,7 @@ namespace FFTPatcher.Editors
             get { return eventUnit; }
             set
             {
-                if( value == null )
-                {
-                    eventUnit = null;
-                    Enabled = false;
-                }
-                else if( value != eventUnit )
-                {
-                    eventUnit = value;
-                    UpdateView();
-                    Enabled = true;
-                }
+                SetEventUnit(value, ourContext);
             }
         }
 
@@ -158,15 +148,30 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
-        public void UpdateView()
+        public void SetEventUnit(EventUnit value, Context context)
+        {
+            if (value == null)
+            {
+                eventUnit = null;
+                Enabled = false;
+            }
+            else if (value != eventUnit)
+            {
+                eventUnit = value;
+                UpdateView(context);
+                Enabled = true;
+            }
+        }
+
+        public void UpdateView(Context context)
         {
             ignoreChanges = true;
 
-            if( ourContext != FFTPatch.Context )
+            if( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 UpdateDataSources();
             }
 
@@ -297,18 +302,18 @@ namespace FFTPatcher.Editors
                 new ComboBoxWithDefault[] { rightHandComboBox, leftHandComboBox, headComboBox, bodyComboBox, accessoryComboBox, warTrophyComboBox } )
             {
                 itemComboBox.BindingContext = new BindingContext();
-                itemComboBox.DataSource = Item.EventItems;
+                itemComboBox.DataSource = Item.GetEventItems(ourContext);
             }
 
             primarySkillComboBox.BindingContext = new BindingContext();
-            primarySkillComboBox.DataSource = new List<SkillSet>( SkillSet.EventSkillSets.Values );
+            primarySkillComboBox.DataSource = new List<SkillSet>( SkillSet.GetEventSkillSets(ourContext).Values );
             secondaryActionComboBox.BindingContext = new BindingContext();
-            secondaryActionComboBox.DataSource = new List<SkillSet>( SkillSet.EventSkillSets.Values );
+            secondaryActionComboBox.DataSource = new List<SkillSet>( SkillSet.GetEventSkillSets(ourContext).Values );
             foreach( ComboBoxWithDefault abilityComboBox in
                 new ComboBoxWithDefault[] { reactionComboBox, supportComboBox, movementComboBox } )
             {
                 abilityComboBox.BindingContext = new BindingContext();
-                abilityComboBox.DataSource = AllAbilities.EventAbilities;
+                abilityComboBox.DataSource = AllAbilities.GetEventAbilities(ourContext);
             }
 
             faithComboBox.BindingContext = new BindingContext();
@@ -319,9 +324,9 @@ namespace FFTPatcher.Editors
             levelComboBox.DataSource = levelStrings;
             experienceComboBox.DataSource = byteNumberWithRandom;
 
-            spriteSetComboBox.DataSource = SpriteSet.SpriteSets;
-            specialNameComboBox.DataSource = SpecialName.SpecialNames;
-            jobComboBox.DataSource = AllJobs.DummyJobs;
+            spriteSetComboBox.DataSource = SpriteSet.GetSpriteSets(ourContext);
+            specialNameComboBox.DataSource = SpecialName.GetSpecialNames(ourContext);
+            jobComboBox.DataSource = AllJobs.GetDummyJobs(ourContext);
             monthComboBox.DataSource = Enum.GetValues( typeof( Month ) );
             teamColorComboBox.DataSource = Enum.GetValues( typeof( TeamColor ) );
             facingDirectionComboBox.DataSource = Enum.GetValues( typeof( Facing ) );

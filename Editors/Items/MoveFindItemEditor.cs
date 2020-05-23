@@ -30,17 +30,7 @@ namespace FFTPatcher.Editors
             get { return moveFindItem; }
             set
             {
-                if ( value == null )
-                {
-                    this.Enabled = false;
-                    moveFindItem = null;
-                }
-                else if ( moveFindItem != value )
-                {
-                    moveFindItem = value;
-                    this.Enabled = true;
-                    UpdateView();
-                }
+                SetMoveFindItem(value, ourContext);
             }
         }
 
@@ -60,7 +50,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Private Methods (6) 
+		#region Private Methods
 
         void commonComboBox_SelectedIndexChanged( object sender, EventArgs e )
         {
@@ -115,19 +105,34 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView()
+        public void SetMoveFindItem(MoveFindItem value, Context context)
+        {
+            if (value == null)
+            {
+                this.Enabled = false;
+                moveFindItem = null;
+            }
+            else if (moveFindItem != value)
+            {
+                moveFindItem = value;
+                this.Enabled = true;
+                UpdateView(context);
+            }
+        }
+
+        public void UpdateView(Context context)
         {
             ignoreChanges = true;
             this.SuspendLayout();
             trapsCheckedListBox.SuspendLayout();
 
-            if ( ourContext != FFTPatch.Context )
+            if ( ourContext != context )
             {
-                ourContext = FFTPatch.Context;
+                ourContext = context;
                 foreach ( ComboBoxWithDefault cb in new ComboBoxWithDefault[] { rareComboBox, commonComboBox } )
                 {
                     cb.Items.Clear();
-                    cb.Items.AddRange( Item.DummyItems.Sub( 0, 0xFF ).ToArray() );
+                    cb.Items.AddRange( Item.GetDummyItems(context).Sub( 0, 0xFF ).ToArray() );
                 }
             }
 

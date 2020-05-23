@@ -37,28 +37,11 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Instance Variables 
 
-		#region Public Properties (18) 
+		#region Public Properties
 
         public Elements Absorb { get; private set; }
 
         public Elements Cancel { get; private set; }
-
-        public string CorrespondingItems
-        {
-            get
-            {
-                List<string> result = new List<string>();
-                foreach( Item i in FFTPatch.Items.Items )
-                {
-                    if( i.SIA == this.Value )
-                    {
-                        result.Add( i.ToString() );
-                    }
-                }
-
-                return string.Join( ", ", result.ToArray() );
-            }
-        }
 
         public ItemAttributes Default { get; private set; }
 
@@ -144,7 +127,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Constructors 
 
-		#region Public Methods (4) 
+		#region Public Methods
 
         public static void Copy( ItemAttributes source, ItemAttributes destination )
         {
@@ -191,6 +174,20 @@ namespace FFTPatcher.Datatypes
         public override string ToString()
         {
             return (HasChanged ? "*" : "") + Value.ToString( "X2" );
+        }
+
+        public string GetCorrespondingItems(FFTPatch FFTPatch)
+        {
+            List<string> result = new List<string>();
+            foreach (Item i in FFTPatch.Items.Items)
+            {
+                if (i.SIA == this.Value)
+                {
+                    result.Add(i.ToString());
+                }
+            }
+
+            return string.Join(", ", result.ToArray());
         }
 
 		#endregion Public Methods 
@@ -289,7 +286,7 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
-        public void WriteXmlDigest( System.Xml.XmlWriter writer )
+        public void WriteXmlDigest(System.Xml.XmlWriter writer, FFTPatch FFTPatch)
         {
             if( HasChanged )
             {
@@ -302,7 +299,7 @@ namespace FFTPatcher.Datatypes
                         writer.WriteStartElement( attr.GetType().Name );
                         writer.WriteAttributeString( "value", attr.Value.ToString( "X2" ) );
                         DigestGenerator.WriteXmlDigest( attr, writer, false, false );
-                        writer.WriteElementString( "CorrespondingItems", attr.CorrespondingItems );
+                        writer.WriteElementString( "CorrespondingItems", attr.GetCorrespondingItems(FFTPatch) );
                         writer.WriteEndElement();
                     }
                 }

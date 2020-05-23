@@ -49,19 +49,7 @@ namespace FFTPatcher.Editors
             get { return ability; }
             set
             {
-                if (value == null)
-                {
-                    ability = value;
-                    abilityAttributesEditor.Attributes = null;
-                    commonAbilitiesEditor.Ability = null;
-                    Enabled = false;
-                }
-                else if( ability != value )
-                {
-                    ability = value;
-                    UpdateView();
-                    Enabled = true;
-                }
+                SetAbility(value, ourContext);
             }
         }
 
@@ -118,19 +106,37 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods 
 
-        public void UpdateView()
+        public void SetAbility(Ability value, Context context)
+        {
+            if (value == null)
+            {
+                ability = value;
+                abilityAttributesEditor.Attributes = null;
+                commonAbilitiesEditor.Ability = null;
+                Enabled = false;
+            }
+            else if (ability != value)
+            {
+                ability = value;
+                UpdateView(context);
+                Enabled = true;
+            }
+        }
+
+        public void UpdateView(Context context)
         {
             ignoreChanges = true;
 
-            commonAbilitiesEditor.Ability = ability;
+            commonAbilitiesEditor.SetAbility(ability, context);
 
             abilityAttributesEditor.Visible = ability.IsNormal;
             bool showEffect = ability.Effect != null && ability.Default.Effect != null;
             effectComboBox.Visible = showEffect;
             effectLabel.Visible = showEffect;
-            abilityAttributesEditor.Attributes = ability.Attributes;
+            //abilityAttributesEditor.Attributes = ability.Attributes;
+            abilityAttributesEditor.SetAttributes(ability.Attributes, context);
 
             foreach( NumericUpDownWithDefault spinner in spinners )
             {
@@ -148,21 +154,21 @@ namespace FFTPatcher.Editors
             abilityIdPanel.Visible = ability.IsOther;
             throwingPanel.Visible = ability.IsThrowing;
 
-            if( FFTPatch.Context == Context.US_PSP && ourContext != Context.US_PSP)
+            if( context == Context.US_PSP && ourContext != Context.US_PSP)
             {
                 ourContext = Context.US_PSP;
                 itemUseComboBox.Items.Clear();
                 itemUseComboBox.Items.AddRange( pspItems.ToArray() );
                 effectComboBox.DataSource = new List<Effect>( Effect.PSPEffects.Values );
-                throwingComboBox.DataSource = pspItemTypes;
+                throwingComboBox.DataSource = new List<ItemSubType>(pspItemTypes);
             }
-            else if( FFTPatch.Context == Context.US_PSX && ourContext != Context.US_PSX )
+            else if( context == Context.US_PSX && ourContext != Context.US_PSX )
             {
                 ourContext = Context.US_PSX;
                 itemUseComboBox.Items.Clear();
                 itemUseComboBox.Items.AddRange( psxItems.ToArray() );
                 effectComboBox.DataSource = new List<Effect>( Effect.PSXEffects.Values );
-                throwingComboBox.DataSource = psxItemTypes;
+                throwingComboBox.DataSource = new List<ItemSubType>(psxItemTypes);
             }
 
             if (showEffect)

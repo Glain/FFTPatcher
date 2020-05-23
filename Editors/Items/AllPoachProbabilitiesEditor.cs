@@ -65,12 +65,12 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods (1) 
 
-        public void UpdateView( AllPoachProbabilities probs )
+        public void UpdateView( AllPoachProbabilities probs, PatcherLib.Datatypes.Context context )
         {
             dataGridView.DataSource = null;
             CommonItem.Items.Clear();
             UncommonItem.Items.Clear();
-            foreach( Item i in Item.DummyItems )
+            foreach( Item i in Item.GetDummyItems(context) )
             {
                 if( i.Offset <= 0xFF )
                 {
