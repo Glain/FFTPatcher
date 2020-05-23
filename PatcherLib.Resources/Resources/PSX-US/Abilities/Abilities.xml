@@ -18,7 +18,7 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <Abilities>
-  <Ability value="0" name="&lt;Nothing&gt;"/>
+  <Ability value="0" name="Attack"/>
   <Ability value="1" name="Cure"/>
   <Ability value="2" name="Cure 2"/>
   <Ability value="3" name="Cure 3"/>

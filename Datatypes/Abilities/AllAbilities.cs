@@ -277,7 +277,7 @@ namespace FFTPatcher.Datatypes
                     defaultSecond = defaultBytes.Sub( 0x246C + i - 0x1A6, 0x246C + i - 0x1A6 );
                 }
 
-                Abilities[i] = new Ability( ((i == 0) ? "Attack" : GetNames(context)[i]), i, first, second, new Ability( ((i == 0) ? "Attack" : GetNames(context)[i]), i, defaultFirst, defaultSecond, context ), context );
+                Abilities[i] = new Ability(GetNames(context)[i], i, first, second, new Ability(GetNames(context)[i], i, defaultFirst, defaultSecond, context), context);
                 if( effect != null && defaultEffect != null )
                 {
                     Abilities[i].Effect = effect;

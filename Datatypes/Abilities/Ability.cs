@@ -97,8 +97,6 @@ namespace FFTPatcher.Datatypes
         private bool unknown2;
         private bool unknown3;
         private bool unknown4;
-        
-        //private bool displayAttack = false;
 
 		#endregion Instance Variables 
 
@@ -179,8 +177,6 @@ namespace FFTPatcher.Datatypes
         public byte ChargeBonus { get; set; }
 
         public byte ChargeCT { get; set; }
-        
-        //public bool DisplayAttack { get { return displayAttack; } set { displayAttack = value; } }
 
         public Ability Default { get; private set; }
 
@@ -558,7 +554,6 @@ namespace FFTPatcher.Datatypes
         public override string ToString()
         {
         	return (HasChanged ? "*" : "") + Offset.ToString( "X4" ) + " " + Name;
-        	//return (HasChanged ? "*" : "") + Offset.ToString( "X4" ) + " " + (displayAttack ? "Attack" : Name);
         }
 
         public void WriteXmlDigest(XmlWriter writer, FFTPatch FFTPatch)
