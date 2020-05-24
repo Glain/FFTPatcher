@@ -48,7 +48,7 @@ namespace FFTPatcher.Editors
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel panel;
-            this.offsetListBox = new System.Windows.Forms.ListBox();
+            this.offsetListBox = new FFTPatcher.Controls.EnhancedListBox();
             this.inflictStatusEditor = new FFTPatcher.Editors.InflictStatusEditor();
             panel = new System.Windows.Forms.Panel();
             panel.SuspendLayout();
@@ -100,6 +100,6 @@ namespace FFTPatcher.Editors
         #endregion
 
         private InflictStatusEditor inflictStatusEditor;
-        private System.Windows.Forms.ListBox offsetListBox;
+        private FFTPatcher.Controls.EnhancedListBox offsetListBox;
     }
 }

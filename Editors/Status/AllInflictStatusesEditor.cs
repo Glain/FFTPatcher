@@ -125,6 +125,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             offsetListBox.TopIndex = top;
             offsetListBox.EndUpdate();
+            offsetListBox.SetChangedColor();
         }
 
         private void offsetListBox_SelectedIndexChanged( object sender, EventArgs e )

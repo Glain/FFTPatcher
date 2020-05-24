@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-        	this.offsetListBox = new System.Windows.Forms.ListBox();
+            this.offsetListBox = new FFTPatcher.Controls.EnhancedListBox();
         	this.itemAttributeEditor = new FFTPatcher.Editors.ItemAttributeEditor();
         	this.SuspendLayout();
         	// 
@@ -87,7 +87,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private System.Windows.Forms.ListBox offsetListBox;
+        private FFTPatcher.Controls.EnhancedListBox offsetListBox;
         private ItemAttributeEditor itemAttributeEditor;
     }
 }

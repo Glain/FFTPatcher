@@ -90,6 +90,7 @@ namespace FFTPatcher.Editors
             cm.Refresh();
             offsetListBox.TopIndex = top;
             offsetListBox.EndUpdate();
+            offsetListBox.SetChangedColor();
         }
 
         void offsetListBox_MouseDown( object sender, MouseEventArgs e )
