@@ -129,8 +129,8 @@ namespace FFTPatcher.Editors
             weaponSpellStatusLabel.TabStop = false;
             itemAttributesLabel.Click += itemAttributesLabel_Click;
             itemAttributesLabel.TabStop = false;
-            weaponCastSpellComboBox.DataSource = weaponCastSpellItems;
-            chemistItemFormulaComboBox.DataSource = itemFormulaItems;
+            //weaponCastSpellComboBox.DataSource = weaponCastSpellItems;
+            //chemistItemFormulaComboBox.DataSource = itemFormulaItems;
             weaponElementsEditor.DataChanged += OnDataChanged;
 
             storeInventoryCheckedListBox.ItemCheck += new ItemCheckEventHandler( storeInventoryCheckedListBox_ItemCheck );
@@ -288,6 +288,9 @@ namespace FFTPatcher.Editors
             accessoryPanel.SuspendLayout();
             chemistItemPanel.SuspendLayout();
             storeInventoryCheckedListBox.BeginUpdate();
+
+            weaponCastSpellComboBox.DataSource = weaponCastSpellItems;
+            chemistItemFormulaComboBox.DataSource = itemFormulaItems;
 
             weaponPanel.Visible = item is Weapon;
             weaponPanel.Enabled = item is Weapon;
