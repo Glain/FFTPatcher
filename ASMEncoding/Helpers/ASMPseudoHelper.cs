@@ -76,7 +76,8 @@ namespace ASMEncoding.Helpers
 				case "jalr":
 					if (args.Length == 1)
 					{
-						parts[1] = args[0] + ",ra";
+						//parts[1] = args[0] + ",ra";
+                        parts[1] = "ra," + args[0];
 					}
 					result.Add(new EncodeLine(parts,index));
 					break;
