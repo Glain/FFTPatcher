@@ -21,6 +21,7 @@ using System;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
+using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
@@ -29,6 +30,8 @@ namespace FFTPatcher.Editors
         #region Instance Variables
 
         private Item copiedItem;
+        private AllInflictStatuses inflictStatuses;
+        private AllItemAttributes itemAttributes;
 
         const int cloneCommonIndex = 0;
         const int pasteCommonIndex = 1;
@@ -69,9 +72,12 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllItems items, AllStoreInventories storeInventories, Context context )
+        public void UpdateView( AllItems items, AllStoreInventories storeInventories, AllInflictStatuses inflictStatuses, AllItemAttributes itemAttributes, Context context )
         {
             ourContext = context;
+            this.inflictStatuses = inflictStatuses;
+            this.itemAttributes = itemAttributes;
+
             itemListBox.SelectedIndexChanged -= itemListBox_SelectedIndexChanged;
             itemListBox.DataSource = items.Items;
             itemListBox.SelectedIndexChanged += itemListBox_SelectedIndexChanged;
@@ -96,6 +102,9 @@ namespace FFTPatcher.Editors
             itemListBox.TopIndex = top;
             itemListBox.EndUpdate();
             itemListBox.SetChangedColor();
+
+            UpdateInflictStatus(itemListBox.SelectedIndex);
+            UpdateItemAttributes(itemListBox.SelectedIndex);
         }
 
         private void itemEditor_InflictStatusClicked( object sender, LabelClickedEventArgs e )
@@ -207,6 +216,49 @@ namespace FFTPatcher.Editors
         {
             Item destItem = itemListBox.SelectedItem as Item;
             return (copiedItem != null) ? (copiedItem.GetType() == destItem.GetType()) : false;
+        }
+
+        private void UpdateInflictStatus(int itemIndex)
+        {
+            if (itemIndex >= 0)
+            {
+                Item item = ((List<Item>)itemListBox.DataSource)[itemIndex];
+                if (item is Weapon)
+                {
+                    Weapon weapon = (Weapon)item;
+                    if (weapon.OldInflictStatus != weapon.InflictStatus)
+                    {
+                        inflictStatuses.InflictStatuses[weapon.OldInflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                    }
+
+                    if (weapon.Formula.Value == 2)
+                    {
+                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                    }
+                    else
+                    {
+                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Add(itemIndex);
+                    }
+
+                    weapon.OldInflictStatus = weapon.InflictStatus;
+                }
+            }
+        }
+
+        private void UpdateItemAttributes(int itemIndex)
+        {
+            if (itemIndex >= 0)
+            {
+                Item item = ((List<Item>)itemListBox.DataSource)[itemIndex];
+
+                if (item.OldSIA != item.SIA)
+                {
+                    itemAttributes.ItemAttributes[item.OldSIA].ReferencingItemIDs.Remove(itemIndex);
+                    itemAttributes.ItemAttributes[item.SIA].ReferencingItemIDs.Add(itemIndex);
+                }
+
+                item.OldSIA = item.SIA;
+            }
         }
 
 		#endregion Private Methods 

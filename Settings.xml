@@ -2,10 +2,26 @@
 <Settings>
     <ModifiedColor>
         <!-- Switch to false if you want no modified color -->
-        <UseModifiedColor Value="true" />
+        <UseColor Value="true" />
         
         <!-- Values are between 0 and 255 -->
         <BackgroundColor Red="175" Green="175" Blue="255" />
         <ForegroundColor Red="255" Green="255" Blue="255" />
     </ModifiedColor>
+    <UnreferencedColor>
+        <!-- Switch to false if you want no color for unreferenced entries -->
+        <UseColor Value="true" />
+
+        <!-- Values are between 0 and 255 -->
+        <BackgroundColor Red="125" Green="205" Blue="125" />
+        <ForegroundColor Red="255" Green="255" Blue="255" />
+    </UnreferencedColor>
+    <DuplicateColor>
+        <!-- Switch to false if you want no duplicate color for in use entries -->
+        <UseColor Value="true" />
+
+        <!-- Values are between 0 and 255 -->
+        <BackgroundColor Red="205" Green="125" Blue="125" />
+        <ForegroundColor Red="255" Green="255" Blue="255" />
+    </DuplicateColor>
 </Settings>

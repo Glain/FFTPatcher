@@ -68,8 +68,17 @@ namespace FFTPatcher.Editors
             offsetListBox.DataSource = attributes.ItemAttributes;
             offsetListBox.SelectedIndexChanged += offsetListBox_SelectedIndexChanged;
             offsetListBox.SelectedIndex = 0;
+
+            PatchUtility.CheckDuplicates<ItemAttributes>(attributes.ItemAttributes);
+            offsetListBox.SetChangedColors<ItemAttributes>();
+
             //itemAttributeEditor.ItemAttributes = offsetListBox.SelectedItem as ItemAttributes;
             itemAttributeEditor.SetItemAttributes(offsetListBox.SelectedItem as ItemAttributes, context);
+        }
+
+        public void UpdateListBox()
+        {
+            offsetListBox.SetChangedColors<ItemAttributes>();
         }
 
 		#endregion Public Methods 
@@ -86,11 +95,13 @@ namespace FFTPatcher.Editors
         {
             offsetListBox.BeginUpdate();
             int top = offsetListBox.TopIndex;
+            PatchUtility.CheckDuplicates<ItemAttributes>((ItemAttributes[])offsetListBox.DataSource);
             CurrencyManager cm = (CurrencyManager)BindingContext[offsetListBox.DataSource];
             cm.Refresh();
             offsetListBox.TopIndex = top;
             offsetListBox.EndUpdate();
-            offsetListBox.SetChangedColor();
+            //offsetListBox.SetChangedColor();
+            offsetListBox.SetChangedColors<ItemAttributes>();
         }
 
         void offsetListBox_MouseDown( object sender, MouseEventArgs e )

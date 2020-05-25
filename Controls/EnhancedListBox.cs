@@ -1,4 +1,5 @@
-﻿using PatcherLib.Datatypes;
+﻿using FFTPatcher.Datatypes;
+using PatcherLib.Datatypes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,27 +12,59 @@ namespace FFTPatcher.Controls
     {
         public void SetChangedColors()
         {
+            SetChangedColors<IChangeable>();
+        }
+
+        public void SetChangedColors<T>() where T : IChangeable
+        {
             if (Enabled)
             {
                 for (int index = 0; index < Items.Count; index++)
                 {
-                    SetChangedColor(index);
+                    SetChangedColor<T>(index);
                 }
             }
         }
 
         public void SetChangedColor()
         {
-            SetChangedColor(SelectedIndex);
+            SetChangedColor<IChangeable>();
+        }
+
+        public void SetChangedColor<T>() where T : IChangeable
+        {
+            SetChangedColor<T>(SelectedIndex);
         }
 
         public void SetChangedColor(int index)
         {
+            SetChangedColor<IChangeable>(index);
+        }
+
+        public void SetChangedColor<T>(int index) where T : IChangeable
+        {
             if ((Enabled) && (index >= 0) && (index < Items.Count))
             {
-                IChangeable item = (IChangeable)Items[index];
+                T item = (T)Items[index];
 
-                if (item.HasChanged)
+                bool useDuplicateColor = false;
+                bool useUnreferencedColor = false;
+                if (item is ICheckDuplicate<T>)
+                {
+                    ICheckDuplicate<T> checkItem = (ICheckDuplicate<T>)item;
+                    useUnreferencedColor = ((Settings.UnreferencedColor.UseColor) && (!checkItem.IsInUse));
+                    useDuplicateColor = ((Settings.DuplicateColor.UseColor) && (checkItem.IsInUse) && (checkItem.IsDuplicate));
+                }
+
+                if (useDuplicateColor)
+                {
+                    SetColor(index, Settings.DuplicateColor.ForegroundColor, Settings.DuplicateColor.BackgroundColor);
+                }
+                else if (useUnreferencedColor)
+                {
+                    SetColor(index, Settings.UnreferencedColor.ForegroundColor, Settings.UnreferencedColor.BackgroundColor);
+                }
+                else if ((item.HasChanged) && (Settings.ModifiedColor.UseColor))
                 {
                     SetColor(index, Settings.ModifiedColor.ForegroundColor, Settings.ModifiedColor.BackgroundColor);
                 }

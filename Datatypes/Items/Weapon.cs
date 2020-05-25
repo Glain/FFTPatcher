@@ -47,7 +47,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Instance Variables 
 
-		#region Public Properties (10) 
+		#region Public Properties
 
         public override IList<string> DigestableProperties
         {
@@ -83,6 +83,8 @@ namespace FFTPatcher.Datatypes
 
         [Hex]
         public byte InflictStatus { get; set; }
+
+        public byte OldInflictStatus { get; set; }
 
         public byte Range { get; set; }
 
@@ -127,6 +129,8 @@ namespace FFTPatcher.Datatypes
                 WeaponDefault = defaults;
                 Elements.Default = WeaponDefault.Elements;
             }
+
+            OldInflictStatus = InflictStatus;
         }
 
 		#endregion Constructors 
@@ -160,6 +164,7 @@ namespace FFTPatcher.Datatypes
             destination.WeaponPower = source.WeaponPower;
             destination.EvadePercentage = source.EvadePercentage;
             destination.InflictStatus = source.InflictStatus;
+            destination.OldInflictStatus = source.OldInflictStatus;
 
             source.Elements.CopyTo( destination.Elements );
         }

@@ -27,7 +27,7 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// Represents an item's attributes.
     /// </summary>
-    public class ItemAttributes : IChangeable, ISupportDigest, ISupportDefault<ItemAttributes>
+    public class ItemAttributes : IChangeable, ISupportDigest, ISupportDefault<ItemAttributes>, ICheckDuplicate<ItemAttributes>
     {
 		#region Instance Variables (1) 
 
@@ -51,6 +51,28 @@ namespace FFTPatcher.Datatypes
         }
 
         public Elements Half { get; private set; }
+
+        private HashSet<int> referencingItemIDs;
+        public HashSet<int> ReferencingItemIDs
+        {
+            get
+            {
+                if (referencingItemIDs == null)
+                    referencingItemIDs = new HashSet<int>();
+
+                return referencingItemIDs;
+            }
+        }
+
+        public bool IsInUse
+        {
+            get
+            {
+                return (ReferencingItemIDs.Count > 0);
+            }
+        }
+        public bool IsDuplicate { get; set; }
+        public int DuplicateIndex { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has changed.
@@ -169,6 +191,11 @@ namespace FFTPatcher.Datatypes
             result.Add( Strong.ToByte() );
 
             return result.ToArray();
+        }
+
+        public bool CheckDuplicate(ItemAttributes compareObject)
+        {
+            return PatcherLib.Utilities.Utilities.CompareArrays<byte>(ToByteArray(), compareObject.ToByteArray());
         }
 
         public override string ToString()

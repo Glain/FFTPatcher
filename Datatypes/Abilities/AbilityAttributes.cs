@@ -68,6 +68,9 @@ namespace FFTPatcher.Datatypes
         public bool Targeting;
         public bool TargetSelf;
         public bool ThreeDirections;
+
+        public byte OldInflictStatus;
+
         private static class Strings
         {
             public const string AnimateMiss = "AnimateMiss";
@@ -207,6 +210,8 @@ namespace FFTPatcher.Datatypes
             InflictStatus = second[11];
             CT = second[12];
             MPCost = second[13];
+
+            OldInflictStatus = InflictStatus;
         }
 
         public AbilityAttributes( string name, UInt16 offset, IList<byte> second, AbilityAttributes defaults, PatcherLib.Datatypes.Context context )
@@ -275,6 +280,8 @@ namespace FFTPatcher.Datatypes
             destination.RequiresMateriaBlade = source.RequiresMateriaBlade;
             destination.Evadeable = source.Evadeable;
             destination.Targeting = source.Targeting;
+
+            destination.OldInflictStatus = source.OldInflictStatus;
         }
 
         public void CopyTo( AbilityAttributes destination )

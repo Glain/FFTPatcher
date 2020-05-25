@@ -77,8 +77,15 @@ namespace FFTPatcher.Editors
             offsetListBox.DataSource = statuses.InflictStatuses;
             offsetListBox.SelectedIndexChanged += offsetListBox_SelectedIndexChanged;
             offsetListBox.SelectedIndex = 0;
+            PatchUtility.CheckDuplicates<InflictStatus>(statuses.InflictStatuses);
+            offsetListBox.SetChangedColors<InflictStatus>();
             //inflictStatusEditor.InflictStatus = offsetListBox.SelectedItem as InflictStatus;
             inflictStatusEditor.SetInflictStatus(offsetListBox.SelectedItem as InflictStatus, context);
+        }
+
+        public void UpdateListBox()
+        {
+            offsetListBox.SetChangedColors<InflictStatus>();
         }
 
         private void ContextMenu_Popup(object sender, EventArgs e)
@@ -121,11 +128,13 @@ namespace FFTPatcher.Editors
         {
             offsetListBox.BeginUpdate();
             var top = offsetListBox.TopIndex;
+            PatchUtility.CheckDuplicates<InflictStatus>((InflictStatus[])offsetListBox.DataSource);
             CurrencyManager cm = (CurrencyManager)BindingContext[offsetListBox.DataSource];
             cm.Refresh();
             offsetListBox.TopIndex = top;
             offsetListBox.EndUpdate();
-            offsetListBox.SetChangedColor();
+            //offsetListBox.SetChangedColor<InflictStatus>();
+            offsetListBox.SetChangedColors<InflictStatus>();
         }
 
         private void offsetListBox_SelectedIndexChanged( object sender, EventArgs e )

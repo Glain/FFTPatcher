@@ -42,6 +42,8 @@ namespace FFTPatcher.Editors
             allItemsEditor1.InflictStatusClicked += InflictStatusClicked;
             allItemsEditor1.ItemAttributesClicked += ItemAttributesClicked;
             allJobsEditor1.SkillSetClicked += SkillSetClicked;
+
+            tabControl.Selected += tabControl_Selected;
         }
 
         static FFTPatchEditor()
@@ -56,11 +58,14 @@ namespace FFTPatcher.Editors
         public void LoadFFTPatch(FFTPatch FFTPatch)
         {
             this.Enabled = true;
-            allAbilitiesEditor1.UpdateView( FFTPatch.Abilities, FFTPatch.Context );
+
+            PatchUtility.BuildReferenceList(FFTPatch.ItemAttributes, FFTPatch.InflictStatuses, FFTPatch.Abilities, FFTPatch.Items);
+
+            allAbilitiesEditor1.UpdateView( FFTPatch.Abilities, FFTPatch.InflictStatuses, FFTPatch.Context );
             allActionMenusEditor1.UpdateView( FFTPatch.ActionMenus );
             allInflictStatusesEditor1.UpdateView(FFTPatch.InflictStatuses, FFTPatch.Context);
             allItemAttributesEditor1.UpdateView( FFTPatch.ItemAttributes, FFTPatch.Context );
-            allItemsEditor1.UpdateView( FFTPatch.Items, FFTPatch.StoreInventories, FFTPatch.Context );
+            allItemsEditor1.UpdateView( FFTPatch.Items, FFTPatch.StoreInventories, FFTPatch.InflictStatuses, FFTPatch.ItemAttributes, FFTPatch.Context );
             allJobsEditor1.UpdateView( FFTPatch.Jobs, FFTPatch.Context );
             allMonsterSkillsEditor1.UpdateView( FFTPatch.MonsterSkills, FFTPatch.Context );
             allPoachProbabilitiesEditor1.UpdateView( FFTPatch.PoachProbabilities, FFTPatch.Context );
@@ -111,5 +116,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Methods 
 
+        void tabControl_Selected(object sender, TabControlEventArgs e)
+        {
+            if (e.TabPage == inflictStatusesTabPage)
+            {
+                allInflictStatusesEditor1.UpdateListBox();
+            }
+            else if (e.TabPage == itemAttributesTabPage)
+            {
+                allItemAttributesEditor1.UpdateListBox();
+            }
+        }
     }
 }

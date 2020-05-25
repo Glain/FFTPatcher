@@ -31,6 +31,8 @@ namespace FFTPatcher.Editors
         private Ability cbAbility;
         const int cloneCommonIndex = 0;
         private Context ourContext = Context.Default;
+        private AllInflictStatuses inflictStatuses;
+
         const int pasteAllIndex = 3;
         const int pasteCommonIndex = 1;
         const int pasteSpecificIndex = 2;
@@ -65,13 +67,16 @@ namespace FFTPatcher.Editors
             }
         }
 
-        public void UpdateView( AllAbilities allAbilities, Context context )
+        public void UpdateView( AllAbilities allAbilities, AllInflictStatuses allInflictStatuses, Context context )
         {
             if( ourContext != context )
             {
                 ourContext = context;
                 cbAbility = null;
             }
+
+            inflictStatuses = allInflictStatuses;
+
             abilitiesListBox.SelectedIndexChanged -= abilitiesListBox_SelectedIndexChanged;
             abilitiesListBox.DataSource = allAbilities.Abilities;
             abilitiesListBox.SelectedIndexChanged += abilitiesListBox_SelectedIndexChanged;
@@ -107,6 +112,7 @@ namespace FFTPatcher.Editors
             abilitiesListBox.EndUpdate();
 
             abilitiesListBox.SetChangedColor();
+            UpdateInflictStatus(abilitiesListBox.SelectedIndex);
         }
 
         private void abilityEditor_InflictStatusLabelClicked( object sender, LabelClickedEventArgs e )
@@ -212,6 +218,23 @@ namespace FFTPatcher.Editors
                 destinationAbility.IsOther ? AbType.Other :
                                             AbType.Throwing;
             return cbType != AbType.None && destType != AbType.None && cbType == destType;
+        }
+
+        private void UpdateInflictStatus(int abilityIndex)
+        {
+            if (abilityIndex >= 0)
+            {
+                Ability ability = ((Ability[])abilitiesListBox.DataSource)[abilityIndex];
+                AbilityAttributes abilityAttr = ability.Attributes;
+
+                if (abilityAttr.OldInflictStatus != abilityAttr.InflictStatus)
+                {
+                    inflictStatuses.InflictStatuses[abilityAttr.OldInflictStatus].ReferencingItemIDs.Remove(abilityIndex);
+                    inflictStatuses.InflictStatuses[abilityAttr.InflictStatus].ReferencingItemIDs.Add(abilityIndex);
+                }
+
+                abilityAttr.OldInflictStatus = abilityAttr.InflictStatus;
+            }
         }
 
 		#endregion Private Methods 

@@ -27,7 +27,7 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// Represents statuses an <see cref="Ability"/> inflicts or cancels on its target.
     /// </summary>
-    public class InflictStatus : ISupportDigest, ISupportDefault<InflictStatus>
+    public class InflictStatus : ISupportDigest, ISupportDefault<InflictStatus>, ICheckDuplicate<InflictStatus>
     {
 		#region Instance Variables (9) 
 
@@ -53,6 +53,40 @@ namespace FFTPatcher.Datatypes
         {
             get { return digestableProperties; }
         }
+
+        private HashSet<int> referencingAbilityIDs;
+        public HashSet<int> ReferencingAbilityIDs
+        {
+            get
+            {
+                if (referencingAbilityIDs == null)
+                    referencingAbilityIDs = new HashSet<int>();
+
+                return referencingAbilityIDs;
+            }
+        }
+
+        private HashSet<int> referencingItemIDs;
+        public HashSet<int> ReferencingItemIDs
+        {
+            get
+            {
+                if (referencingItemIDs == null)
+                    referencingItemIDs = new HashSet<int>();
+
+                return referencingItemIDs;
+            }
+        }
+
+        public bool IsInUse 
+        {
+            get
+            {
+                return ((ReferencingAbilityIDs.Count > 0) || (ReferencingItemIDs.Count > 0));
+            }
+        }
+        public bool IsDuplicate { get; set; }
+        public int DuplicateIndex { get; set; }
 
         public bool HasChanged
         {
@@ -126,6 +160,11 @@ namespace FFTPatcher.Datatypes
             result.Add( PatcherLib.Utilities.Utilities.ByteFromBooleans( AllOrNothing, Random, Separate, Cancel, Blank1, Blank2, Blank3, Blank4 ) );
             result.AddRange( Statuses.ToByteArray() );
             return result.ToArray();
+        }
+
+        public bool CheckDuplicate(InflictStatus compareObject)
+        {
+            return PatcherLib.Utilities.Utilities.CompareArrays<byte>(ToByteArray(), compareObject.ToByteArray());
         }
 
         public override string ToString()

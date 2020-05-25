@@ -11,13 +11,17 @@ namespace FFTPatcher
     {
         public class CombinedColor
         {
+            public bool UseColor { get; set; }
             public Color BackgroundColor { get; set; }
             public Color ForegroundColor { get; set; }
         }
 
         private static string _filename = "Settings.xml";
         private static Settings _instance = null;
-        private static CombinedColor _defaultColor = new CombinedColor() { BackgroundColor = Color.FromArgb(175, 175, 255), ForegroundColor = Color.White };
+
+        private static CombinedColor _defaultModifiedColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(175, 175, 255), ForegroundColor = Color.White };
+        private static CombinedColor _defaultUnreferencedColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(125, 205, 125), ForegroundColor = Color.White };
+        private static CombinedColor _defaultDuplicateColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(205, 125, 125), ForegroundColor = Color.White };
 
         private CombinedColor _modifiedColor;
         public static CombinedColor ModifiedColor 
@@ -25,6 +29,24 @@ namespace FFTPatcher
             get
             {
                 return GetSettings()._modifiedColor;
+            }
+        }
+
+        private CombinedColor _unreferencedColor;
+        public static CombinedColor UnreferencedColor
+        {
+            get
+            {
+                return GetSettings()._unreferencedColor;
+            }
+        }
+
+        private CombinedColor _duplicateColor;
+        public static CombinedColor DuplicateColor
+        {
+            get
+            {
+                return GetSettings()._duplicateColor;
             }
         }
 
@@ -42,27 +64,9 @@ namespace FFTPatcher
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(_filename);
 
-                bool useModifiedColor = true;
-                XmlNode modifiedColorNode = xmlDoc.SelectSingleNode("//ModifiedColor");
-                if (modifiedColorNode != null)
-                {
-                    XmlNode useModifiedColorNode = modifiedColorNode["UseModifiedColor"];
-                    if (useModifiedColorNode != null)
-                    {
-                        useModifiedColor = GetValueFromAttribute<bool>(useModifiedColorNode.Attributes["Value"]);
-                    }
-
-                    if (useModifiedColor)
-                    {
-                        XmlNode backgroundColorNode = modifiedColorNode["BackgroundColor"];
-                        XmlNode foregroundColorNode = modifiedColorNode["ForegroundColor"];
-                        instance._modifiedColor = new CombinedColor() { BackgroundColor = GetColorFromNode(backgroundColorNode), ForegroundColor = GetColorFromNode(foregroundColorNode) };
-                    }
-                    else
-                    {
-                        instance._modifiedColor = new CombinedColor() { BackgroundColor = SystemColors.Window, ForegroundColor = SystemColors.WindowText };
-                    }
-                }
+                instance._modifiedColor = GetCombinedColorFromNode(xmlDoc.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
+                instance._unreferencedColor = GetCombinedColorFromNode(xmlDoc.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
+                instance._duplicateColor = GetCombinedColorFromNode(xmlDoc.SelectSingleNode("//DuplicateColor"), _defaultDuplicateColor);
             }
 
             return instance;
@@ -71,8 +75,36 @@ namespace FFTPatcher
         private static Settings GetDefaultInstance()
         {
             return new Settings() {
-                _modifiedColor = _defaultColor 
+                _modifiedColor = _defaultModifiedColor,
+                _duplicateColor = _defaultDuplicateColor
             };
+        }
+
+        private static CombinedColor GetCombinedColorFromNode(XmlNode xmlNode, CombinedColor defaultColor)
+        {
+            bool useColor = true;
+
+            if (xmlNode != null)
+            {
+                XmlNode useColorNode = xmlNode["UseColor"];
+                if (useColorNode != null)
+                {
+                    useColor = GetValueFromAttribute<bool>(useColorNode.Attributes["Value"]);
+                }
+
+                if (useColor)
+                {
+                    XmlNode backgroundColorNode = xmlNode["BackgroundColor"];
+                    XmlNode foregroundColorNode = xmlNode["ForegroundColor"];
+                    return new CombinedColor() { UseColor = useColor, BackgroundColor = GetColorFromNode(backgroundColorNode), ForegroundColor = GetColorFromNode(foregroundColorNode) };
+                }
+                else
+                {
+                    return new CombinedColor() { UseColor = useColor, BackgroundColor = SystemColors.Window, ForegroundColor = SystemColors.WindowText };
+                }
+            }
+
+            return defaultColor;
         }
 
         private static Color GetColorFromNode(XmlNode node)

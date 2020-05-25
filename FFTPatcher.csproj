@@ -83,6 +83,7 @@
     <Compile Include="Datatypes\Abilities\Animation.cs" />
     <Compile Include="Datatypes\BaseDataType.cs" />
     <Compile Include="Datatypes\FFTPatch.cs" />
+    <Compile Include="Datatypes\ICheckDuplicate.cs" />
     <Compile Include="Datatypes\IGenerateCodes.cs" />
     <Compile Include="Datatypes\ISupportDefault.cs" />
     <Compile Include="Datatypes\Items\StoreInventory.cs" />
@@ -578,6 +579,7 @@
     <None Include="app.config" />
     <Compile Include="Utilities\Codes.cs" />
     <Compile Include="Utilities\DigestGenerator.cs" />
+    <Compile Include="Utilities\PatchUtility.cs" />
     <Compile Include="Utilities\PspIso.cs" />
     <Compile Include="Utilities\PsxIso.cs" />
   </ItemGroup>

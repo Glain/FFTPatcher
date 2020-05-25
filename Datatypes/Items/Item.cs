@@ -49,7 +49,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Instance Variables 
 
-		#region Public Properties (31) 
+		#region Public Properties
 
         public bool Accessory { get { return accessory; } set { accessory = value; } }
 
@@ -184,6 +184,8 @@ namespace FFTPatcher.Datatypes
 
         public bool Weapon { get { return weapon; } set { weapon = value; } }
 
+        public byte OldSIA { get; set; }
+
 		#endregion Public Properties 
 
 		#region Constructors (4) 
@@ -251,6 +253,8 @@ namespace FFTPatcher.Datatypes
             Price = PatcherLib.Utilities.Utilities.BytesToUShort( bytes[8], bytes[9] );
             ShopAvailability = ShopAvailability.GetAllAvailabilities(context)[bytes[10]];
             Unknown2 = bytes[11];
+
+            OldSIA = SIA;
         }
 
         protected Item( UInt16 offset, IList<byte> bytes, Item defaults, Context context )
@@ -321,6 +325,8 @@ namespace FFTPatcher.Datatypes
             destination.Price = source.Price;
             destination.ShopAvailability = source.ShopAvailability;
             destination.Unknown2 = source.Unknown2;
+
+            destination.OldSIA = source.OldSIA;
         }
 
         public void CopyCommonTo( Item destination )
