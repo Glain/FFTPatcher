@@ -221,8 +221,8 @@ namespace FFTPatcher.Datatypes
             faithBonuses = new TupleDictionary<BraveFaithNeutral, BraveFaithRange, byte>();
             levelBonuses = new TupleDictionary<BraveFaithNeutral, LevelRange, byte>();
 
-            int levelBonusesOffset = brokenLevelBonuses ? 0x9B4 : 0x9D4;
-            //int levelBonusesOffset = 0x9D4;
+            //int levelBonusesOffset = brokenLevelBonuses ? 0x9B4 : 0x9D4;
+            int levelBonusesOffset = 0x9D4;
             
             foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
             {

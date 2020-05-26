@@ -536,6 +536,7 @@ namespace FFTPatcher.Datatypes
         public void BuildFromContext(Context context)
         {
             Context = context;
+            HasBuggyPropositionLevelBonuses = true;
             switch( Context )
             {
                 case Context.US_PSP:
@@ -561,7 +562,7 @@ namespace FFTPatcher.Datatypes
                     ENTDs = new AllENTDs( PSPResources.Binaries.ENTD1, PSPResources.Binaries.ENTD2, PSPResources.Binaries.ENTD3, PSPResources.Binaries.ENTD4, PSPResources.Binaries.ENTD5, Context );
                     MoveFind = new AllMoveFindItems( Context, PSPResources.Binaries.MoveFind, new AllMoveFindItems( Context, PSPResources.Binaries.MoveFind ) );
                     StoreInventories = new AllStoreInventories( Context, PSPResources.Binaries.StoreInventories, PSPResources.Binaries.StoreInventories );
-                    Propositions = new AllPropositions( PSPResources.Binaries.Propositions, PSPResources.Binaries.Propositions, false, Context );
+                    Propositions = new AllPropositions(PSPResources.Binaries.Propositions, PSPResources.Binaries.Propositions, HasBuggyPropositionLevelBonuses, Context);
                     break;
                 case Context.US_PSX:
                     Abilities = new AllAbilities( PSXResources.Binaries.Abilities, PSXResources.Binaries.AbilityEffects, PSXResources.Binaries.ItemAbilityEffects, PSXResources.Binaries.ReactionAbilityEffects, Context );
@@ -581,13 +582,11 @@ namespace FFTPatcher.Datatypes
                     ENTDs = new AllENTDs( PSXResources.Binaries.ENTD1, PSXResources.Binaries.ENTD2, PSXResources.Binaries.ENTD3, PSXResources.Binaries.ENTD4, Context );
                     MoveFind = new AllMoveFindItems( Context, PSXResources.Binaries.MoveFind, new AllMoveFindItems( Context, PSXResources.Binaries.MoveFind ) );
                     StoreInventories = new AllStoreInventories( Context, PSXResources.Binaries.StoreInventories, PSXResources.Binaries.StoreInventories );
-                    Propositions = new AllPropositions( PSXResources.Binaries.Propositions, PSXResources.Binaries.Propositions, false, Context );
+                    Propositions = new AllPropositions(PSXResources.Binaries.Propositions, PSXResources.Binaries.Propositions, HasBuggyPropositionLevelBonuses, Context);
                     break;
                 default:
                     throw new ArgumentException();
             }
-
-            HasBuggyPropositionLevelBonuses = false;
         }
 
         private void LoadDataFromBytes(
