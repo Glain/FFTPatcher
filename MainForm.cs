@@ -83,6 +83,8 @@ namespace FFTPatcher
         public MainForm()
         {
             InitializeComponent();
+            Settings.LoadSettingsXml();
+
             openMenuItem.Click += openMenuItem_Click;
             saveMenuItem.Click += saveMenuItem_Click;
             saveAsPspMenuItem.Click += saveAsPspMenuItem_Click;
@@ -261,15 +263,13 @@ namespace FFTPatcher
 
         private void newPSPMenuItem_Click( object sender, System.EventArgs e )
         {
-            //FFTPatch.New( Context.US_PSP );
-            fftPatch = new FFTPatch(Context.US_PSP);
+            FFTPatch.BuildFromContext(Context.US_PSP);
             fftPatchEditor1.LoadFFTPatch(FFTPatch);
         }
 
         private void newPSXMenuItem_Click( object sender, System.EventArgs e )
         {
-            //FFTPatch.New( Context.US_PSX );
-            fftPatch = new FFTPatch(Context.US_PSX);
+            FFTPatch.BuildFromContext(Context.US_PSX);
             fftPatchEditor1.LoadFFTPatch(FFTPatch);
         }
 
@@ -280,8 +280,8 @@ namespace FFTPatcher
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( openFileDialog.FileName );
 
-                TryAndHandle( delegate() { 
-                    FFTPatch.LoadPatch( openFileDialog.FileName );
+                TryAndHandle( delegate() {
+                    FFTPatch.LoadPatch(openFileDialog.FileName);
                     fftPatchEditor1.LoadFFTPatch(FFTPatch);
                 }, true );
             }
@@ -295,8 +295,8 @@ namespace FFTPatcher
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( openFileDialog.FileName );
 
-                TryAndHandle( delegate() { 
-                    FFTPatch.OpenPatchedPspIso( openFileDialog.FileName );
+                TryAndHandle( delegate() {
+                    FFTPatch.OpenPatchedPspIso(openFileDialog.FileName);
                     fftPatchEditor1.LoadFFTPatch(FFTPatch);
                 }, true );
             }
@@ -308,8 +308,8 @@ namespace FFTPatcher
             if (openFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName( openFileDialog.FileName );
-                TryAndHandle( delegate() { 
-                    FFTPatch.OpenPatchedPsxIso( openFileDialog.FileName );
+                TryAndHandle( delegate() {
+                    FFTPatch.OpenPatchedPsxIso(openFileDialog.FileName);
                     fftPatchEditor1.LoadFFTPatch(FFTPatch);
                 }, true );
             }

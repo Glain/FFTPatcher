@@ -202,10 +202,6 @@ namespace FFTPatcher.Datatypes
         #region Constructors
 
         public FFTPatch() { }
-        public FFTPatch(Context context)
-        {
-            New(context);
-        }
 
         #endregion
 
@@ -537,17 +533,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-        /// <summary>
-        /// Builds a new (unmodified) patch from a context.
-        /// </summary>
-        private void New(Context context)
+        public void BuildFromContext(Context context)
         {
             Context = context;
-            BuildFromContext();
-        }
-
-        private void BuildFromContext()
-        {
             switch( Context )
             {
                 case Context.US_PSP:

@@ -16,7 +16,20 @@ namespace FFTPatcher
             public Color ForegroundColor { get; set; }
         }
 
-        private static string _filename = "Settings.xml";
+        private static string _settingsFilename = "Settings.xml";
+
+        private static XmlDocument settingsXml = null;
+        private static XmlDocument SettingsXml
+        {
+            get
+            {
+                if (settingsXml == null)
+                    settingsXml = GetSettingsXml(_settingsFilename);
+
+                return settingsXml;
+            }
+        }
+
         private static Settings _instance = null;
 
         private static CombinedColor _defaultModifiedColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(175, 175, 255), ForegroundColor = Color.White };
@@ -50,7 +63,28 @@ namespace FFTPatcher
             }
         }
 
-        public static Settings GetSettings()
+        private static XmlDocument GetSettingsXml(string filename = null)
+        {
+            filename = filename ?? _settingsFilename;
+
+            if (File.Exists(filename))
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(filename);
+                return xmlDoc;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static void LoadSettingsXml()
+        {
+            settingsXml = GetSettingsXml();
+        }
+
+        private static Settings GetSettings()
         {
             return _instance ?? (_instance = GetInstance());
         }
@@ -59,14 +93,11 @@ namespace FFTPatcher
         {
             Settings instance = GetDefaultInstance();
 
-            if (File.Exists(_filename))
+            if (settingsXml != null)
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(_filename);
-
-                instance._modifiedColor = GetCombinedColorFromNode(xmlDoc.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
-                instance._unreferencedColor = GetCombinedColorFromNode(xmlDoc.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
-                instance._duplicateColor = GetCombinedColorFromNode(xmlDoc.SelectSingleNode("//DuplicateColor"), _defaultDuplicateColor);
+                instance._modifiedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
+                instance._unreferencedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
+                instance._duplicateColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//DuplicateColor"), _defaultDuplicateColor);
             }
 
             return instance;
@@ -76,6 +107,7 @@ namespace FFTPatcher
         {
             return new Settings() {
                 _modifiedColor = _defaultModifiedColor,
+                _unreferencedColor = _defaultUnreferencedColor,
                 _duplicateColor = _defaultDuplicateColor
             };
         }
