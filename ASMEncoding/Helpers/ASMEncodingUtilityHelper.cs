@@ -72,18 +72,23 @@ namespace ASMEncoding
             _asmCheckHelper = new ASMCheckHelper(_asmEncoder, _asmDecoder);
         }
 
-        public void LoadEncodingModeFile(int encodingMode)
+        public void LoadEncodingModeFiles(int encodingMode)
         {
-            string filePath = "";
             switch (encodingMode)
             {
-                case ASMEncodingMode.Base: filePath = ASMDataFileMap.MIPS_Encoding; break;
-                case ASMEncodingMode.PSX: filePath = ASMDataFileMap.PSX_Encoding; break;
-                case ASMEncodingMode.PSP: filePath = ASMDataFileMap.PSP_Encoding; break;
+                case ASMEncodingMode.Base: 
+                    LoadEncodingFile(ASMDataFileMap.MIPS_Encoding); 
+                    break;
+                case ASMEncodingMode.PSX: 
+                    LoadEncodingFile(ASMDataFileMap.PSX_Encoding);
+                    break;
+                case ASMEncodingMode.PSP:
+                    LoadEncodingFile(ASMDataFileMap.MIPS_R2_Encoding);
+                    LoadEncodingFile(ASMDataFileMap.MIPS_FPU_Float_Encoding);
+                    LoadEncodingFile(ASMDataFileMap.PSP_Encoding);
+                    break;
                 default: break;
             }
-
-            LoadEncodingFile(filePath);
         }
 
         public void LoadEncodingFile(string filepath)

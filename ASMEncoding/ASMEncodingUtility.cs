@@ -22,8 +22,9 @@ namespace ASMEncoding
 
                 if (_helper[_encodingMode] == null)
                 {
-                    _helper[_encodingMode] = new ASMEncodingUtilityHelper(_helper[ASMEncodingMode.Base]);
-                    _helper[_encodingMode].LoadEncodingModeFile(_encodingMode);
+                    //_helper[_encodingMode] = new ASMEncodingUtilityHelper(_helper[ASMEncodingMode.Base]);
+                    _helper[_encodingMode] = new ASMEncodingUtilityHelper();
+                    _helper[_encodingMode].LoadEncodingModeFiles(_encodingMode);
                 }
             }
         }
