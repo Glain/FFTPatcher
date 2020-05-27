@@ -76,6 +76,9 @@ namespace FFTPatcher
             this.cheatdbMenuItem = new System.Windows.Forms.MenuItem();
             this.openPatchedPspItem = new System.Windows.Forms.MenuItem();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
+            this.editMenuItem = new System.Windows.Forms.MenuItem();
+            this.consolidateItemAttributesMenuItem = new System.Windows.Forms.MenuItem();
+            this.consolidateInflictStatusesMenuItem = new System.Windows.Forms.MenuItem();
             this.aboutMenuItem = new System.Windows.Forms.MenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -204,7 +207,7 @@ namespace FFTPatcher
             // 
             // psxMenu
             // 
-            this.psxMenu.Index = 1;
+            this.psxMenu.Index = 2;
             this.psxMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.patchPsxIsoMenuItem,
             this.openPatchedPsxIso,
@@ -237,7 +240,7 @@ namespace FFTPatcher
             // 
             // pspMenu
             // 
-            this.pspMenu.Index = 2;
+            this.pspMenu.Index = 3;
             this.pspMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.patchPspIsoMenuItem,
             this.cheatdbMenuItem,
@@ -268,13 +271,36 @@ namespace FFTPatcher
             // 
             this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.fileMenuItem,
+            this.editMenuItem,
             this.psxMenu,
             this.pspMenu,
             this.aboutMenuItem});
             // 
+            // editMenuItem
+            // 
+            this.editMenuItem.Index = 1;
+            this.editMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.consolidateItemAttributesMenuItem,
+            this.consolidateInflictStatusesMenuItem});
+            this.editMenuItem.Text = "Edit";
+            // 
+            // consolidateItemAttributesMenuItem
+            // 
+            this.consolidateItemAttributesMenuItem.Enabled = false;
+            this.consolidateItemAttributesMenuItem.Index = 0;
+            this.consolidateItemAttributesMenuItem.Text = "Consolidate Item Attributes";
+            this.consolidateItemAttributesMenuItem.Click += new System.EventHandler(this.consolidateItemAttributesMenuItem_Click);
+            // 
+            // consolidateInflictStatusesMenuItem
+            // 
+            this.consolidateInflictStatusesMenuItem.Enabled = false;
+            this.consolidateInflictStatusesMenuItem.Index = 1;
+            this.consolidateInflictStatusesMenuItem.Text = "Consolidate Inflict Statuses";
+            this.consolidateInflictStatusesMenuItem.Click += new System.EventHandler(this.consolidateInflictStatusesMenuItem_Click);
+            // 
             // aboutMenuItem
             // 
-            this.aboutMenuItem.Index = 3;
+            this.aboutMenuItem.Index = 4;
             this.aboutMenuItem.Text = "About...";
             // 
             // openFileDialog
@@ -356,6 +382,9 @@ namespace FFTPatcher
         private System.Windows.Forms.MenuItem openPatchedPspItem;
         private System.Windows.Forms.MenuItem separator_PSXMenu;
         private System.Windows.Forms.MenuItem menuItem_PatchPSXSavestate;
+        private System.Windows.Forms.MenuItem editMenuItem;
+        private System.Windows.Forms.MenuItem consolidateItemAttributesMenuItem;
+        private System.Windows.Forms.MenuItem consolidateInflictStatusesMenuItem;
 
     }
 }

@@ -121,6 +121,26 @@ namespace FFTPatcher.Editors
             }
         }
 
+        public void ConsolidateInflictStatuses()
+        {
+            PatchUtility.RepointInflictStatus(fftPatch.Items, fftPatch.Abilities, fftPatch.InflictStatuses);
+            allInflictStatusesEditor1.UpdateSelectedEntry();
+            allInflictStatusesEditor1.UpdateListBox();
+            allItemsEditor1.UpdateSelectedEntry();
+            allItemsEditor1.UpdateListBox();
+            allAbilitiesEditor1.UpdateSelectedEntry();
+            allAbilitiesEditor1.UpdateListBox();
+        }
+
+        public void ConsolidateItemAttributes()
+        {
+            PatchUtility.RepointItemAttributes(fftPatch.Items, fftPatch.ItemAttributes);
+            allItemAttributesEditor1.UpdateSelectedEntry();
+            allItemAttributesEditor1.UpdateListBox();
+            allItemsEditor1.UpdateSelectedEntry();
+            allItemsEditor1.UpdateListBox();
+        }
+
 		#endregion Methods 
 
         void tabControl_Selected(object sender, TabControlEventArgs e)

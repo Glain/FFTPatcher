@@ -105,6 +105,7 @@ namespace FFTPatcher
             openPatchedPsxIso.Click += new EventHandler( openPatchedPsxIso_Click );
 
             fileMenuItem.Popup += new EventHandler( fileMenuItem_Popup );
+            editMenuItem.Popup += new EventHandler(editMenuItem_Popup);
             psxMenu.Popup += new EventHandler( psxMenu_Popup );
             pspMenu.Popup += new EventHandler( pspMenu_Popup );
         }
@@ -259,6 +260,13 @@ namespace FFTPatcher
             openMenuItem.Enabled = true;
             saveAsPspMenuItem.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
             saveMenuItem.Enabled = fftPatchEditor1.Enabled;
+        }
+
+        private void editMenuItem_Popup(object sender, EventArgs e)
+        {
+            bool isEnabled = fftPatchEditor1.Enabled;
+            consolidateItemAttributesMenuItem.Enabled = isEnabled;
+            consolidateInflictStatusesMenuItem.Enabled = isEnabled;
         }
 
         private void newPSPMenuItem_Click( object sender, System.EventArgs e )
@@ -631,6 +639,24 @@ namespace FFTPatcher
             //        }
             //    }
             //}
+        }
+
+        private void consolidateItemAttributesMenuItem_Click(object sender, EventArgs e)
+        {
+            if ((MyMessageBox.Show(this, "Are you sure you want to Consolidate Item Attributes?  This will repoint all duplicate entries.", "Consolidate Item Attributes?", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)) == DialogResult.Yes)
+            {
+                fftPatchEditor1.ConsolidateItemAttributes();
+            }
+        }
+
+        private void consolidateInflictStatusesMenuItem_Click(object sender, EventArgs e)
+        {
+            if ((MyMessageBox.Show(this, "Are you sure you want to Consolidate Inflict Statuses?  This will repoint all duplicate entries.", "Consolidate Inflict Statuses?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)) == DialogResult.Yes)
+            {
+                fftPatchEditor1.ConsolidateInflictStatuses();
+            }
         }
     }
 }
