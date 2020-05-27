@@ -20,7 +20,7 @@
 <Abilities>
   <!-- This list is used by the Abilities, Animations, Jobs, Skill Sets,
        Monster Skills, and ENTD pages -->
-  <Ability value="0" name="Attack"/>
+  <Ability value="0" name="&lt;Nothing&gt;"/>
   <Ability value="1" name="Cure"/>
   <Ability value="2" name="Cura"/>
   <Ability value="3" name="Curaga"/>
