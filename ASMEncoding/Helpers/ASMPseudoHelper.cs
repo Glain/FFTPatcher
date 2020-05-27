@@ -102,7 +102,52 @@ namespace ASMEncoding.Helpers
 					result.Add(new EncodeLine(parts,index));
 					
 					break;
-					
+				
+                case "add":
+                case "addu":
+                case "and":
+                case "max":
+                case "nor":
+                case "or":
+                case "rotrv":
+                case "sllv":
+                case "slt":
+                case "sltu":
+                case "srav":
+                case "srlv":
+                case "sub":
+                case "subu":
+                case "xor":
+
+                    if (args.Length == 2)
+                    {
+                        parts[1] = args[0] + "," + parts[1];
+                    }
+
+                    result.Add(new EncodeLine(parts, index));
+                    break;
+
+
+                case "addi":
+                case "addiu":
+                case "andi":
+                case "ori":
+                case "rotr":
+                case "sll":
+                case "slti":
+                case "sltiu":
+                case "sra":
+                case "srl":
+                case "xori":
+
+                    if (args.Length == 2)
+                    {
+                        parts[1] = args[0] + "," + parts[1];
+                    }
+
+                    result.Add(new EncodeLine(parts, index));
+                    break;
+
 				case "bgt":
 				case "blt":
 				case "bge":
