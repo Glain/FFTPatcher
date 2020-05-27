@@ -106,6 +106,7 @@ namespace ASMEncoding.Helpers
                 case "add":
                 case "addu":
                 case "and":
+                case "min":
                 case "max":
                 case "nor":
                 case "or":
