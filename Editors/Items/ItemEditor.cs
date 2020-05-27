@@ -169,12 +169,22 @@ namespace FFTPatcher.Editors
 
         public void BuildItemNameLists(Context context)
         {
+            IList<string> abilityNames = AllAbilities.GetNames(context);
+
             weaponCastSpellItems = new List<string>( 256 );
             for( int i = 0; i < 256; i++ )
             {
-                weaponCastSpellItems.Add( string.Format( "{0:X2} - {1}", i, AllAbilities.GetNames(context)[i] ) );
+                weaponCastSpellItems.Add(string.Format("{0:X2} - {1}", i, abilityNames[i]));
             }
 
+            itemFormulaItems = new List<string>(256);
+            List<AbilityFormula> abilityFormulaList = (context == Context.US_PSP) ? AbilityFormula.PSPAbilityFormulas : AbilityFormula.PSXAbilityFormulas;
+            for (int index = 0; index < 256; index++)
+            {
+                itemFormulaItems.Add(abilityFormulaList[index].ToString());
+            }
+
+            /*
             itemFormulaItems = new List<string>( 256 );
             Dictionary<int, string> t = new Dictionary<int, string>( 5 );
             t.Add( 0x38, "Remove status" );
@@ -193,7 +203,7 @@ namespace FFTPatcher.Editors
                     itemFormulaItems.Add( string.Format( "{0:X2}", i ) );
                 }
             }
-
+            */
         }
 
         protected override void OnVisibleChanged(EventArgs e)

@@ -803,7 +803,7 @@ namespace FFTPatcher.Editors
         	this.chemistItemFormulaComboBox.FormattingEnabled = true;
         	this.chemistItemFormulaComboBox.Location = new System.Drawing.Point(86, 3);
         	this.chemistItemFormulaComboBox.Name = "chemistItemFormulaComboBox";
-        	this.chemistItemFormulaComboBox.Size = new System.Drawing.Size(211, 21);
+        	this.chemistItemFormulaComboBox.Size = new System.Drawing.Size(252, 21);
         	this.chemistItemFormulaComboBox.TabIndex = 0;
         	// 
         	// chemistItemSpellStatusLabel
