@@ -7,6 +7,18 @@ using System.Text;
 
 namespace FFTPatcher
 {
+    public class RepointEventArgs : EventArgs
+    {
+        public int OldID { get; set; }
+        public int NewID { get; set; }
+
+        public RepointEventArgs(int OldID, int NewID)
+        {
+            this.OldID = OldID;
+            this.NewID = NewID;
+        }
+    }
+
     public static class PatchUtility
     {
         public static void RepointInflictStatus(AllItems items, AllAbilities abilities, AllInflictStatuses allInflictStatuses)
@@ -30,19 +42,38 @@ namespace FFTPatcher
                         }
                     }
                 }
+                else if (item is ChemistItem)
+                {
+                    ChemistItem chemistItem = (ChemistItem)item;
+                    if (chemistItem.Formula != 2)
+                    {
+                        int newID = 0;
+                        if (repointMap.TryGetValue(chemistItem.InflictStatus, out newID))
+                        {
+                            chemistItem.InflictStatus = (byte)newID;
+                            chemistItem.OldInflictStatus = (byte)newID;
+                            allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
+                        }
+                    }
+                }
             }
 
             for (int abilityIndex = 0; abilityIndex < abilities.Abilities.Length; abilityIndex++)
             {
                 Ability ability = abilities.Abilities[abilityIndex];
-                AbilityAttributes abilityAttrs = ability.Attributes;
+                if (!ability.IsNormal)
+                    continue;
 
-                int newID = 0;
-                if (repointMap.TryGetValue(abilityAttrs.InflictStatus, out newID))
+                AbilityAttributes abilityAttrs = ability.Attributes;
+                if (abilityAttrs.Formula.Value != 2)
                 {
-                    abilityAttrs.InflictStatus = (byte)newID;
-                    abilityAttrs.OldInflictStatus = (byte)newID;
-                    allInflictStatuses.InflictStatuses[newID].ReferencingAbilityIDs.Add(abilityIndex);
+                    int newID = 0;
+                    if (repointMap.TryGetValue(abilityAttrs.InflictStatus, out newID))
+                    {
+                        abilityAttrs.InflictStatus = (byte)newID;
+                        abilityAttrs.OldInflictStatus = (byte)newID;
+                        allInflictStatuses.InflictStatuses[newID].ReferencingAbilityIDs.Add(abilityIndex);
+                    }
                 }
             }
 
@@ -69,14 +100,26 @@ namespace FFTPatcher
                         allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
                     }
                 }
+                else if (item is ChemistItem)
+                {
+                    ChemistItem chemistItem = (ChemistItem)item;
+                    if ((chemistItem.Formula != 2) && (chemistItem.InflictStatus == oldID))
+                    {
+                        chemistItem.InflictStatus = newID;
+                        chemistItem.OldInflictStatus = newID;
+                        allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
+                    }
+                }
             }
 
             for (int abilityIndex = 0; abilityIndex < abilities.Abilities.Length; abilityIndex++)
             {
                 Ability ability = abilities.Abilities[abilityIndex];
-                AbilityAttributes abilityAttrs = ability.Attributes;
+                if (!ability.IsNormal)
+                    continue;
 
-                if (abilityAttrs.InflictStatus == oldID)
+                AbilityAttributes abilityAttrs = ability.Attributes;
+                if ((abilityAttrs.Formula.Value != 2) && (abilityAttrs.InflictStatus == oldID))
                 {
                     abilityAttrs.InflictStatus = newID;
                     abilityAttrs.OldInflictStatus = newID;
@@ -143,14 +186,25 @@ namespace FFTPatcher
             {
                 Item item = items.Items[index];
 
-                itemAttributes.ItemAttributes[item.SIA].ReferencingItemIDs.Add(index);
+                if (item.SIA < itemAttributes.ItemAttributes.Length)
+                    itemAttributes.ItemAttributes[item.SIA].ReferencingItemIDs.Add(index);
 
                 if (item is Weapon)
                 {
                     Weapon weapon = (Weapon)item;
                     if (weapon.Formula.Value != 2)
                     {
-                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Add(index);
+                        if (weapon.InflictStatus < inflictStatuses.InflictStatuses.Length)
+                            inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Add(index);
+                    }
+                }
+                else if (item is ChemistItem)
+                {
+                    ChemistItem chemistItem = (ChemistItem)item;
+                    if (chemistItem.Formula != 2)
+                    {
+                        if (chemistItem.InflictStatus < inflictStatuses.InflictStatuses.Length)
+                            inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIDs.Add(index);
                     }
                 }
             }
@@ -160,7 +214,8 @@ namespace FFTPatcher
                 Ability ability = abilities.Abilities[index];
                 if (ability.IsNormal)
                 {
-                    inflictStatuses.InflictStatuses[ability.Attributes.InflictStatus].ReferencingAbilityIDs.Add(index);
+                    if ((ability.Attributes.Formula.Value != 2) && (ability.Attributes.InflictStatus < inflictStatuses.InflictStatuses.Length))
+                        inflictStatuses.InflictStatuses[ability.Attributes.InflictStatus].ReferencingAbilityIDs.Add(index);
                 }
             }
         }
@@ -171,6 +226,7 @@ namespace FFTPatcher
             {
                 T obj = objects[index];
                 obj.IsDuplicate = false;
+                obj.Index = index;
 
                 for (int innerIndex = 0; innerIndex < index; innerIndex++)
                 {

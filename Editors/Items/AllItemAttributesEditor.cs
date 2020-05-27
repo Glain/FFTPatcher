@@ -45,6 +45,8 @@ namespace FFTPatcher.Editors
         {
             InitializeComponent();
             itemAttributeEditor.DataChanged += new EventHandler( itemAttributeEditor_DataChanged );
+            itemAttributeEditor.RepointHandler += OnRepoint;
+
             offsetListBox.ContextMenu = new ContextMenu(
                 new MenuItem[] { new MenuItem( "Clone", CopyClickEventHandler ), new MenuItem( "Paste clone", PasteClickEventHandler ) } );
             offsetListBox.ContextMenu.MenuItems[1].Enabled = false;
@@ -76,9 +78,16 @@ namespace FFTPatcher.Editors
             itemAttributeEditor.SetItemAttributes(offsetListBox.SelectedItem as ItemAttributes, context);
         }
 
+        public void UpdateSelectedEntry()
+        {
+            itemAttributeEditor.UpdateView(ourContext);
+        }
+
         public void UpdateListBox()
         {
+            PatchUtility.CheckDuplicates<ItemAttributes>((ItemAttributes[])offsetListBox.DataSource);
             offsetListBox.SetChangedColors<ItemAttributes>();
+            offsetListBox.Invalidate();
         }
 
 		#endregion Public Methods 
@@ -140,5 +149,15 @@ namespace FFTPatcher.Editors
 		}
 
 		#endregion Private Methods 
+
+        public event System.EventHandler<RepointEventArgs> RepointHandler;
+        protected void OnRepoint(object sender, RepointEventArgs e)
+        {
+            if (RepointHandler != null)
+            {
+                e.OldID = offsetListBox.SelectedIndex;
+                RepointHandler(this, e);
+            }
+        }
     }
 }

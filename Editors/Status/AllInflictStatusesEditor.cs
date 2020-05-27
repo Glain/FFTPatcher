@@ -46,6 +46,7 @@ namespace FFTPatcher.Editors
         {
             InitializeComponent();
             inflictStatusEditor.DataChanged += new EventHandler( inflictStatusEditor_DataChanged );
+            inflictStatusEditor.RepointHandler += OnRepoint;
 
             offsetListBox.MouseDown += new MouseEventHandler(itemListBox_MouseDown);
             offsetListBox.ContextMenu = new ContextMenu(new MenuItem[] {
@@ -83,9 +84,16 @@ namespace FFTPatcher.Editors
             inflictStatusEditor.SetInflictStatus(offsetListBox.SelectedItem as InflictStatus, context);
         }
 
+        public void UpdateSelectedEntry()
+        {
+            inflictStatusEditor.UpdateView(ourContext);
+        }
+
         public void UpdateListBox()
         {
+            PatchUtility.CheckDuplicates<InflictStatus>((InflictStatus[])offsetListBox.DataSource);
             offsetListBox.SetChangedColors<InflictStatus>();
+            offsetListBox.Invalidate();
         }
 
         private void ContextMenu_Popup(object sender, EventArgs e)
@@ -143,5 +151,15 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Private Methods 
+
+        public event System.EventHandler<RepointEventArgs> RepointHandler;
+        protected void OnRepoint(object sender, RepointEventArgs e)
+        {
+            if (RepointHandler != null)
+            {
+                e.OldID = offsetListBox.SelectedIndex;
+                RepointHandler(this, e);
+            }
+        }
     }
 }

@@ -218,6 +218,16 @@ namespace FFTPatcher.Editors
             return (copiedItem != null) ? (copiedItem.GetType() == destItem.GetType()) : false;
         }
 
+        public void UpdateSelectedEntry()
+        {
+            itemEditor.UpdateView(ourContext);
+        }
+
+        public void UpdateListBox()
+        {
+            itemListBox.SetChangedColors();
+        }
+
         private void UpdateInflictStatus(int itemIndex)
         {
             if (itemIndex >= 0)
@@ -241,6 +251,25 @@ namespace FFTPatcher.Editors
                     }
 
                     weapon.OldInflictStatus = weapon.InflictStatus;
+                }
+                else if (item is ChemistItem)
+                {
+                    ChemistItem chemistItem = (ChemistItem)item;
+                    if (chemistItem.OldInflictStatus != chemistItem.InflictStatus)
+                    {
+                        inflictStatuses.InflictStatuses[chemistItem.OldInflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                    }
+
+                    if (chemistItem.Formula == 2)
+                    {
+                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                    }
+                    else
+                    {
+                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIDs.Add(itemIndex);
+                    }
+
+                    chemistItem.OldInflictStatus = chemistItem.InflictStatus;
                 }
             }
         }

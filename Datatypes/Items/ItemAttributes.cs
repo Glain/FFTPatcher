@@ -72,6 +72,7 @@ namespace FFTPatcher.Datatypes
             }
         }
         public bool IsDuplicate { get; set; }
+        public int Index { get; set; }
         public int DuplicateIndex { get; set; }
 
         /// <summary>

@@ -86,6 +86,7 @@ namespace FFTPatcher.Datatypes
             }
         }
         public bool IsDuplicate { get; set; }
+        public int Index { get; set; }
         public int DuplicateIndex { get; set; }
 
         public bool HasChanged
@@ -191,7 +192,7 @@ namespace FFTPatcher.Datatypes
             List<string> result = new List<string>();
             foreach (Item i in FFTPatch.Items.Items)
             {
-                if (i is ChemistItem && (i as ChemistItem).InflictStatus == Value)
+                if (i is ChemistItem && (i as ChemistItem).Formula != 0x02 && (i as ChemistItem).InflictStatus == Value)
                 {
                     result.Add(i.ToString());
                 }

@@ -44,6 +44,9 @@ namespace FFTPatcher.Editors
             allJobsEditor1.SkillSetClicked += SkillSetClicked;
 
             tabControl.Selected += tabControl_Selected;
+
+            allInflictStatusesEditor1.RepointHandler += OnInflictStatusRepoint;
+            allItemAttributesEditor1.RepointHandler += OnItemAttributesRepoint;
         }
 
         static FFTPatchEditor()
@@ -52,6 +55,8 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Constructors 
+
+        private FFTPatch fftPatch;
 
 		#region Methods
 
@@ -81,6 +86,8 @@ namespace FFTPatcher.Editors
             codeCreator1.UpdateView(FFTPatch);
             codesTab.Text = FFTPatch.Context == Context.US_PSP ? "CWCheat" : "Gameshark";
             propositionsTabPage.Text = FFTPatch.Context == Context.US_PSP ? "Errands" : "Propositions";
+
+            fftPatch = FFTPatch;
         }
 
         private void InflictStatusClicked( object sender, LabelClickedEventArgs e )
@@ -125,6 +132,32 @@ namespace FFTPatcher.Editors
             else if (e.TabPage == itemAttributesTabPage)
             {
                 allItemAttributesEditor1.UpdateListBox();
+            }
+        }
+
+        private void OnInflictStatusRepoint(object sender, RepointEventArgs e)
+        {
+            if (fftPatch != null)
+            {
+                PatchUtility.RepointSpecificInflictStatus(fftPatch.Items, fftPatch.Abilities, fftPatch.InflictStatuses, (byte)e.OldID, (byte)e.NewID);
+                allInflictStatusesEditor1.UpdateSelectedEntry();
+                allInflictStatusesEditor1.UpdateListBox();
+                allItemsEditor1.UpdateSelectedEntry();
+                allItemsEditor1.UpdateListBox();
+                allAbilitiesEditor1.UpdateSelectedEntry();
+                allAbilitiesEditor1.UpdateListBox();
+            }
+        }
+
+        private void OnItemAttributesRepoint(object sender, RepointEventArgs e)
+        {
+            if (fftPatch != null)
+            {
+                PatchUtility.RepointSpecificItemAttributes(fftPatch.Items, fftPatch.ItemAttributes, (byte)e.OldID, (byte)e.NewID);
+                allItemAttributesEditor1.UpdateSelectedEntry();
+                allItemAttributesEditor1.UpdateListBox();
+                allItemsEditor1.UpdateSelectedEntry();
+                allItemsEditor1.UpdateListBox();
             }
         }
     }

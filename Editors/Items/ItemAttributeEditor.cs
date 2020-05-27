@@ -92,6 +92,8 @@ namespace FFTPatcher.Editors
         public void UpdateView(PatcherLib.Datatypes.Context context)
         {
             this.ignoreChanges = true;
+            ourContext = context;
+
             SuspendLayout();
             statusImmunityEditor.SuspendLayout();
             startingStatusesEditor.SuspendLayout();
@@ -125,6 +127,29 @@ namespace FFTPatcher.Editors
             absorbElementsEditor.SetValueAndDefaults( attributes.Absorb, attributes.Default.Absorb );
             cancelElementsEditor.SetValueAndDefaults( attributes.Cancel, attributes.Default.Cancel );
 
+            if (attributes.IsInUse)
+            {
+                btnRepoint.Enabled = true;
+                spinner_Repoint.Enabled = true;
+            }
+            else
+            {
+                btnRepoint.Enabled = false;
+                spinner_Repoint.Enabled = false;
+            }
+
+            if (attributes.IsDuplicate)
+            {
+                spinner_Repoint.Value = attributes.DuplicateIndex;
+            }
+            else
+            {
+                spinner_Repoint.Value = attributes.Index;
+                btnRepoint.Enabled = false;
+            }
+
+            spinner_Repoint.Maximum = (context == PatcherLib.Datatypes.Context.US_PSX) ? 0x4f : 0x64;
+
             cancelElementsEditor.ResumeLayout();
             absorbElementsEditor.ResumeLayout();
             halfElementsEditor.ResumeLayout();
@@ -139,7 +164,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Public Methods 
 
-		#region Private Methods (1) 
+		#region Private Methods 
 
         private void spinner_ValueChanged( object sender, EventArgs e )
         {
@@ -151,6 +176,27 @@ namespace FFTPatcher.Editors
             }
         }
 
+        private void spinner_Repoint_ValueChanged(object sender, EventArgs e)
+        {
+            if (!ignoreChanges)
+            {
+                btnRepoint.Enabled = (spinner_Repoint.Value != attributes.Index);
+            }
+        }
+
 		#endregion Private Methods 
+
+        public event System.EventHandler<RepointEventArgs> RepointHandler;
+        protected void OnRepoint(object sender, RepointEventArgs e)
+        {
+            if (RepointHandler != null)
+            {
+                RepointHandler(this, e);
+            }
+        }
+        private void btnRepoint_Click(object sender, System.EventArgs e)
+        {
+            RepointHandler(this, new RepointEventArgs(-1, (int)spinner_Repoint.Value));
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace FFTPatcher.Datatypes
     {
         bool IsInUse { get; }
         bool IsDuplicate { get; set; }
+        int Index { get; set; }
         int DuplicateIndex { get; set; }
 
         bool CheckDuplicate(T compareObject);

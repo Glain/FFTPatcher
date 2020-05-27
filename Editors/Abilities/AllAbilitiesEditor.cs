@@ -220,6 +220,17 @@ namespace FFTPatcher.Editors
             return cbType != AbType.None && destType != AbType.None && cbType == destType;
         }
 
+        public void UpdateSelectedEntry()
+        {
+            abilityEditor.UpdateView(ourContext);
+            abilityEditor.UpdateAttributesView(ourContext);
+        }
+
+        public void UpdateListBox()
+        {
+            abilitiesListBox.SetChangedColors();
+        }
+
         private void UpdateInflictStatus(int abilityIndex)
         {
             if (abilityIndex >= 0)

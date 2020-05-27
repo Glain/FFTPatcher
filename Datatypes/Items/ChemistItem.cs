@@ -64,6 +64,8 @@ namespace FFTPatcher.Datatypes
         [Hex]
         public byte InflictStatus { get; set; }
 
+        public byte OldInflictStatus { get; set; }
+
         public byte X { get; set; }
 
 		#endregion Public Properties 
@@ -90,6 +92,8 @@ namespace FFTPatcher.Datatypes
             Formula = chemistBytes[0];
             X = chemistBytes[1];
             InflictStatus = chemistBytes[2];
+
+            OldInflictStatus = InflictStatus;
         }
 
 		#endregion Constructors 
@@ -112,6 +116,7 @@ namespace FFTPatcher.Datatypes
             destination.Formula = source.Formula;
             destination.X = source.X;
             destination.InflictStatus = source.InflictStatus;
+            destination.OldInflictStatus = source.OldInflictStatus;
         }
 
         public void CopyChemistItemTo( ChemistItem destination )

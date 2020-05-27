@@ -141,7 +141,7 @@ namespace FFTPatcher.Editors
             }
         }
 
-        private void UpdateView(Context context)
+        public void UpdateView(Context context)
         {
             this.SuspendLayout();
             elementsEditor.SuspendLayout();

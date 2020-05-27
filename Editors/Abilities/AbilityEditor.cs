@@ -189,6 +189,11 @@ namespace FFTPatcher.Editors
             ignoreChanges = false;
         }
 
+        public void UpdateAttributesView(Context context)
+        {
+            abilityAttributesEditor.UpdateView(context);
+        }
+
 		#endregion Public Methods 
 
 		#region Private Methods (3) 
