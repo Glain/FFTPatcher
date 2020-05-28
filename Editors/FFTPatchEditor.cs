@@ -44,6 +44,8 @@ namespace FFTPatcher.Editors
             allJobsEditor1.SkillSetClicked += SkillSetClicked;
 
             allItemAttributesEditor1.ItemClicked += ItemClicked;
+            allInflictStatusesEditor1.AbilityClicked += AbilityClicked;
+            allInflictStatusesEditor1.ItemClicked += ItemClicked;
 
             tabControl.Selected += tabControl_Selected;
 
@@ -121,6 +123,12 @@ namespace FFTPatcher.Editors
                 allSkillSetsEditor1.SelectedIndex = e.Value;
                 tabControl.SelectedTab = skillSetsPage;
             }
+        }
+
+        private void AbilityClicked(object sender, ReferenceEventArgs e)
+        {
+            allAbilitiesEditor1.SelectedIndex = e.Index;
+            tabControl.SelectedTab = abilitiesPage;
         }
 
         private void ItemClicked(object sender, ReferenceEventArgs e)

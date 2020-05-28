@@ -20,6 +20,8 @@
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib;
+using System;
+using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
@@ -56,11 +58,16 @@ namespace FFTPatcher.Editors
             InitializeComponent();
             flagsCheckedListBox.ItemCheck += flagsCheckedListBox_ItemCheck;
             inflictStatusesEditor.DataChanged += OnDataChanged;
+
+            lbl_AbilityUsage_2.Click += lbl_AbilityUsage_2_Click;
+            lbl_AbilityUsage_4.Click += lbl_AbilityUsage_4_Click;
+            lbl_ItemUsage_2.Click += lbl_ItemUsage_2_Click;
+            lbl_ItemUsage_4.Click += lbl_ItemUsage_4_Click;
         }
 
 		#endregion Constructors 
 
-		#region Private Methods 
+		#region Methods 
 
         private void flagsCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
@@ -131,6 +138,31 @@ namespace FFTPatcher.Editors
 
             spinner_Repoint.Maximum = 0x7f;
 
+            int abilityReferenceCount = status.ReferencingAbilityIDs.Count;
+            bool isAbilityUsagePanelVisible = (abilityReferenceCount > 0);
+            pnl_AbilityUsage.Visible = isAbilityUsagePanelVisible;
+            if (isAbilityUsagePanelVisible)
+            {
+                lbl_AbilityUsage_2.Text = abilityReferenceCount.ToString();
+                lbl_AbilityUsage_3.Text = (abilityReferenceCount == 0) ? "abilities" : ((abilityReferenceCount == 1) ? "ability: " : "abilities, e.g. ");
+
+                int abilityIndex = GetFirstReferencingAbilityIndex();
+                lbl_AbilityUsage_4.Text = String.Format("{0:X2} {1}", abilityIndex, AllAbilities.GetNames(context)[abilityIndex]);
+            }
+
+            int itemReferenceCount = status.ReferencingItemIndexes.Count;
+            bool isItemUsagePanelVisible = (itemReferenceCount > 0);
+            pnl_ItemUsage.Visible = isItemUsagePanelVisible;
+            if (isItemUsagePanelVisible)
+            {
+                lbl_ItemUsage_2.Text = itemReferenceCount.ToString();
+                lbl_ItemUsage_3.Text = (itemReferenceCount == 0) ? "items" : ((itemReferenceCount == 1) ? "item: " : "items, e.g. ");
+
+                int itemIndex = GetFirstReferencingItemIndex();
+                int itemID = (itemIndex > 0xFD) ? (itemIndex + 2) : itemIndex;
+                lbl_ItemUsage_4.Text = String.Format("{0:X2} {1}", itemID, Item.GetItemNames(context)[itemID]);
+            }
+
             //inflictStatusesEditor.Statuses = status.Statuses;
             inflictStatusesEditor.SetStatuses(status.Statuses, context);
             inflictStatusesEditor.UpdateView(context);
@@ -154,6 +186,52 @@ namespace FFTPatcher.Editors
             RepointHandler(this, new RepointEventArgs(-1, (int)spinner_Repoint.Value));
         }
 
-		#endregion Private Methods
+        private int GetFirstReferencingAbilityIndex()
+        {
+            List<int> referencingAbilityIndexList = new List<int>(status.ReferencingAbilityIDs);
+            referencingAbilityIndexList.Sort();
+            return referencingAbilityIndexList[0];
+        }
+
+        private int GetFirstReferencingItemIndex()
+        {
+            List<int> referencingItemIndexList = new List<int>(status.ReferencingItemIndexes);
+            referencingItemIndexList.Sort();
+            return referencingItemIndexList[0];
+        }
+
+        public event EventHandler<ReferenceEventArgs> AbilityClicked;
+        private void lbl_AbilityUsage_2_Click(object sender, EventArgs e)
+        {
+            if (AbilityClicked != null)
+            {
+                AbilityClicked(this, new ReferenceEventArgs(GetFirstReferencingAbilityIndex()));
+            }
+        }
+        private void lbl_AbilityUsage_4_Click(object sender, EventArgs e)
+        {
+            if (AbilityClicked != null)
+            {
+                AbilityClicked(this, new ReferenceEventArgs(GetFirstReferencingAbilityIndex(), status.ReferencingAbilityIDs));
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ItemClicked;
+        private void lbl_ItemUsage_2_Click(object sender, EventArgs e)
+        {
+            if (ItemClicked != null)
+            {
+                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex()));
+            }
+        }
+        private void lbl_ItemUsage_4_Click(object sender, EventArgs e)
+        {
+            if (ItemClicked != null)
+            {
+                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex(), status.ReferencingItemIndexes));
+            }
+        }
+
+        #endregion Methods
     }
 }

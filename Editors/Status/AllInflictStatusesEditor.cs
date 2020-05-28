@@ -57,6 +57,8 @@ namespace FFTPatcher.Editors
 
             offsetListBox.KeyDown += new KeyEventHandler(itemListBox_KeyDown);
 
+            inflictStatusEditor.AbilityClicked += OnAbilityClicked;
+            inflictStatusEditor.ItemClicked += OnItemClicked;
         }
 
 		#endregion Constructors 
@@ -159,6 +161,24 @@ namespace FFTPatcher.Editors
             {
                 e.OldID = offsetListBox.SelectedIndex;
                 RepointHandler(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> AbilityClicked;
+        private void OnAbilityClicked(object sender, ReferenceEventArgs e)
+        {
+            if (AbilityClicked != null)
+            {
+                AbilityClicked(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ItemClicked;
+        private void OnItemClicked(object sender, ReferenceEventArgs e)
+        {
+            if (ItemClicked != null)
+            {
+                ItemClicked(this, e);
             }
         }
     }

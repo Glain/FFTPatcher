@@ -57,6 +57,8 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
+        public int SelectedIndex { get { return abilitiesListBox.SelectedIndex; } set { abilitiesListBox.SelectedIndex = value; } }
+
 		#region Public Methods (2) 
 
         public void abilitiesListBox_MouseDown( object sender, MouseEventArgs e )
