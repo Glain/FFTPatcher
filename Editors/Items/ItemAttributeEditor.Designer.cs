@@ -68,6 +68,11 @@ namespace FFTPatcher.Editors
             this.btnRepoint = new System.Windows.Forms.Button();
             this.lblRepoint = new System.Windows.Forms.Label();
             this.spinner_Repoint = new System.Windows.Forms.NumericUpDown();
+            this.pnl_Usage = new System.Windows.Forms.Panel();
+            this.lbl_Usage_1 = new System.Windows.Forms.Label();
+            this.lbl_Usage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_Usage_3 = new System.Windows.Forms.Label();
+            this.lbl_Usage_4 = new System.Windows.Forms.LinkLabel();
             paLabel = new System.Windows.Forms.Label();
             maLabel = new System.Windows.Forms.Label();
             speedLabel = new System.Windows.Forms.Label();
@@ -79,6 +84,7 @@ namespace FFTPatcher.Editors
             ((System.ComponentModel.ISupportInitialize)(this.maSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Repoint)).BeginInit();
+            this.pnl_Usage.SuspendLayout();
             this.SuspendLayout();
             // 
             // paLabel
@@ -314,6 +320,54 @@ namespace FFTPatcher.Editors
             this.spinner_Repoint.TabIndex = 20;
             this.spinner_Repoint.ValueChanged += new System.EventHandler(this.spinner_Repoint_ValueChanged);
             // 
+            // pnl_Usage
+            // 
+            this.pnl_Usage.Controls.Add(this.lbl_Usage_4);
+            this.pnl_Usage.Controls.Add(this.lbl_Usage_3);
+            this.pnl_Usage.Controls.Add(this.lbl_Usage_2);
+            this.pnl_Usage.Controls.Add(this.lbl_Usage_1);
+            this.pnl_Usage.Location = new System.Drawing.Point(206, 171);
+            this.pnl_Usage.Name = "pnl_Usage";
+            this.pnl_Usage.Size = new System.Drawing.Size(289, 34);
+            this.pnl_Usage.TabIndex = 21;
+            // 
+            // lbl_Usage_1
+            // 
+            this.lbl_Usage_1.AutoSize = true;
+            this.lbl_Usage_1.Location = new System.Drawing.Point(6, 6);
+            this.lbl_Usage_1.Name = "lbl_Usage_1";
+            this.lbl_Usage_1.Size = new System.Drawing.Size(40, 13);
+            this.lbl_Usage_1.TabIndex = 0;
+            this.lbl_Usage_1.Text = "In use by";
+            // 
+            // lbl_Usage_2
+            // 
+            this.lbl_Usage_2.AutoSize = true;
+            this.lbl_Usage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_Usage_2.Location = new System.Drawing.Point(57, 6);
+            this.lbl_Usage_2.Name = "lbl_Usage_2";
+            this.lbl_Usage_2.Size = new System.Drawing.Size(20, 13);
+            this.lbl_Usage_2.TabIndex = 1;
+            this.lbl_Usage_2.Text = "0";
+            // 
+            // lbl_Usage_3
+            // 
+            this.lbl_Usage_3.AutoSize = true;
+            this.lbl_Usage_3.Location = new System.Drawing.Point(81, 6);
+            this.lbl_Usage_3.Name = "lbl_Usage_3";
+            this.lbl_Usage_3.Size = new System.Drawing.Size(58, 13);
+            this.lbl_Usage_3.TabIndex = 2;
+            this.lbl_Usage_3.Text = "items, e.g. ";
+            // 
+            // lbl_Usage_4
+            // 
+            this.lbl_Usage_4.AutoSize = true;
+            this.lbl_Usage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_Usage_4.Location = new System.Drawing.Point(139, 6);
+            this.lbl_Usage_4.Name = "lbl_Usage_4";
+            this.lbl_Usage_4.Size = new System.Drawing.Size(0, 13);
+            this.lbl_Usage_4.TabIndex = 3;
+            // 
             // ItemAttributeEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,6 +375,7 @@ namespace FFTPatcher.Editors
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.pnl_Usage);
             this.Controls.Add(this.spinner_Repoint);
             this.Controls.Add(this.lblRepoint);
             this.Controls.Add(this.btnRepoint);
@@ -350,6 +405,8 @@ namespace FFTPatcher.Editors
             ((System.ComponentModel.ISupportInitialize)(this.maSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.paSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Repoint)).EndInit();
+            this.pnl_Usage.ResumeLayout(false);
+            this.pnl_Usage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -373,5 +430,10 @@ namespace FFTPatcher.Editors
         private System.Windows.Forms.Button btnRepoint;
         private System.Windows.Forms.Label lblRepoint;
         private System.Windows.Forms.NumericUpDown spinner_Repoint;
+        private System.Windows.Forms.Panel pnl_Usage;
+        private System.Windows.Forms.LinkLabel lbl_Usage_4;
+        private System.Windows.Forms.Label lbl_Usage_3;
+        private System.Windows.Forms.LinkLabel lbl_Usage_2;
+        private System.Windows.Forms.Label lbl_Usage_1;
     }
 }

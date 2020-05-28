@@ -21,6 +21,7 @@ using System;
 using FFTPatcher.Controls;
 using FFTPatcher.Datatypes;
 using PatcherLib;
+using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
@@ -68,6 +69,9 @@ namespace FFTPatcher.Editors
             halfElementsEditor.DataChanged += OnDataChanged;
             absorbElementsEditor.DataChanged += OnDataChanged;
             cancelElementsEditor.DataChanged += OnDataChanged;
+
+            lbl_Usage_2.Click += lbl_Usage_2_Click;
+            lbl_Usage_4.Click += lbl_Usage_4_Click;
         }
 
 		#endregion Constructors 
@@ -150,6 +154,19 @@ namespace FFTPatcher.Editors
 
             spinner_Repoint.Maximum = (context == PatcherLib.Datatypes.Context.US_PSX) ? 0x4f : 0x64;
 
+            pnl_Usage.Visible = attributes.IsInUse;
+            if (attributes.IsInUse)
+            {
+                int referencingItemsCount = attributes.ReferencingItemIndexes.Count;
+
+                lbl_Usage_2.Text = referencingItemsCount.ToString();
+                lbl_Usage_3.Text = (referencingItemsCount == 0) ? "items" : ((referencingItemsCount == 1) ? "item: " : "items, e.g. ");
+
+                int itemIndex = GetFirstReferencingItemIndex();
+                int itemID = (itemIndex > 0xFD) ? (itemIndex + 2) : itemIndex;
+                lbl_Usage_4.Text = String.Format("{0:X2} {1}", itemID, Item.GetItemNames(context)[itemID]);
+            }
+
             cancelElementsEditor.ResumeLayout();
             absorbElementsEditor.ResumeLayout();
             halfElementsEditor.ResumeLayout();
@@ -184,6 +201,13 @@ namespace FFTPatcher.Editors
             }
         }
 
+        private int GetFirstReferencingItemIndex()
+        {
+            List<int> referencingItemIndexList = new List<int>(attributes.ReferencingItemIndexes);
+            referencingItemIndexList.Sort();
+            return referencingItemIndexList[0];
+        }
+
 		#endregion Private Methods 
 
         public event System.EventHandler<RepointEventArgs> RepointHandler;
@@ -197,6 +221,26 @@ namespace FFTPatcher.Editors
         private void btnRepoint_Click(object sender, System.EventArgs e)
         {
             RepointHandler(this, new RepointEventArgs(-1, (int)spinner_Repoint.Value));
+        }
+
+        public event EventHandler<ReferenceEventArgs> ItemClicked;
+        private void lbl_Usage_2_Click(object sender, EventArgs e)
+        {
+            int itemID = GetFirstReferencingItemIndex();
+
+            if (ItemClicked != null)
+            {
+                ItemClicked(this, new ReferenceEventArgs(itemID));
+            }
+        }
+        private void lbl_Usage_4_Click(object sender, EventArgs e)
+        {
+            int itemID = GetFirstReferencingItemIndex();
+
+            if (ItemClicked != null)
+            {
+                ItemClicked(this, new ReferenceEventArgs(itemID, attributes.ReferencingItemIndexes));
+            }
         }
     }
 }

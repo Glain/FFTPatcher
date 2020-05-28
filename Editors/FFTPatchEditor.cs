@@ -43,6 +43,8 @@ namespace FFTPatcher.Editors
             allItemsEditor1.ItemAttributesClicked += ItemAttributesClicked;
             allJobsEditor1.SkillSetClicked += SkillSetClicked;
 
+            allItemAttributesEditor1.ItemClicked += ItemClicked;
+
             tabControl.Selected += tabControl_Selected;
 
             allInflictStatusesEditor1.RepointHandler += OnInflictStatusRepoint;
@@ -119,6 +121,12 @@ namespace FFTPatcher.Editors
                 allSkillSetsEditor1.SelectedIndex = e.Value;
                 tabControl.SelectedTab = skillSetsPage;
             }
+        }
+
+        private void ItemClicked(object sender, ReferenceEventArgs e)
+        {
+            allItemsEditor1.SelectedIndex = e.Index;
+            tabControl.SelectedTab = itemsTabPage;
         }
 
         public void ConsolidateInflictStatuses()

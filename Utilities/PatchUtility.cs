@@ -7,6 +7,20 @@ using System.Text;
 
 namespace FFTPatcher
 {
+    public class ReferenceEventArgs : EventArgs
+    {
+        public int Index { get; set; }
+        public IEnumerable<int> ReferencingIndexes { get; set; }
+
+        public ReferenceEventArgs(int index) : this(index, null) { }
+
+        public ReferenceEventArgs(int Index, IEnumerable<int> ReferencingIndexes)
+        {
+            this.Index = Index;
+            this.ReferencingIndexes = ReferencingIndexes;
+        }
+    }
+
     public class RepointEventArgs : EventArgs
     {
         public int OldID { get; set; }
@@ -38,7 +52,7 @@ namespace FFTPatcher
                         {
                             weapon.InflictStatus = (byte)newID;
                             weapon.OldInflictStatus = (byte)newID;
-                            allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
+                            allInflictStatuses.InflictStatuses[newID].ReferencingItemIndexes.Add(itemIndex);
                         }
                     }
                 }
@@ -52,7 +66,7 @@ namespace FFTPatcher
                         {
                             chemistItem.InflictStatus = (byte)newID;
                             chemistItem.OldInflictStatus = (byte)newID;
-                            allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
+                            allInflictStatuses.InflictStatuses[newID].ReferencingItemIndexes.Add(itemIndex);
                         }
                     }
                 }
@@ -80,7 +94,7 @@ namespace FFTPatcher
             foreach (int index in repointMap.Keys)
             {
                 InflictStatus inflictStatus = allInflictStatuses.InflictStatuses[index];
-                inflictStatus.ReferencingItemIDs.Clear();
+                inflictStatus.ReferencingItemIndexes.Clear();
                 inflictStatus.ReferencingAbilityIDs.Clear();
             }
         }
@@ -97,7 +111,7 @@ namespace FFTPatcher
                     {
                         weapon.InflictStatus = newID;
                         weapon.OldInflictStatus = newID;
-                        allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
+                        allInflictStatuses.InflictStatuses[newID].ReferencingItemIndexes.Add(itemIndex);
                     }
                 }
                 else if (item is ChemistItem)
@@ -107,7 +121,7 @@ namespace FFTPatcher
                     {
                         chemistItem.InflictStatus = newID;
                         chemistItem.OldInflictStatus = newID;
-                        allInflictStatuses.InflictStatuses[newID].ReferencingItemIDs.Add(itemIndex);
+                        allInflictStatuses.InflictStatuses[newID].ReferencingItemIndexes.Add(itemIndex);
                     }
                 }
             }
@@ -127,7 +141,7 @@ namespace FFTPatcher
                 }
             }
 
-            allInflictStatuses.InflictStatuses[oldID].ReferencingItemIDs.Clear();
+            allInflictStatuses.InflictStatuses[oldID].ReferencingItemIndexes.Clear();
             allInflictStatuses.InflictStatuses[oldID].ReferencingAbilityIDs.Clear();
         }
 
@@ -143,13 +157,13 @@ namespace FFTPatcher
                 {
                     item.SIA = (byte)newID;
                     item.OldSIA = (byte)newID;
-                    allItemAttributes.ItemAttributes[newID].ReferencingItemIDs.Add(itemIndex);
+                    allItemAttributes.ItemAttributes[newID].ReferencingItemIndexes.Add(itemIndex);
                 }
             }
 
             foreach (int index in repointMap.Keys)
             {
-                allItemAttributes.ItemAttributes[index].ReferencingItemIDs.Clear();
+                allItemAttributes.ItemAttributes[index].ReferencingItemIndexes.Clear();
             }
         }
 
@@ -162,24 +176,24 @@ namespace FFTPatcher
                 {
                     item.SIA = newID;
                     item.OldSIA = newID;
-                    allItemAttributes.ItemAttributes[newID].ReferencingItemIDs.Add(itemIndex);
+                    allItemAttributes.ItemAttributes[newID].ReferencingItemIndexes.Add(itemIndex);
                 }
             }
 
-            allItemAttributes.ItemAttributes[oldID].ReferencingItemIDs.Clear();
+            allItemAttributes.ItemAttributes[oldID].ReferencingItemIndexes.Clear();
         }
 
         public static void BuildReferenceList(AllItemAttributes itemAttributes, AllInflictStatuses inflictStatuses, AllAbilities abilities, AllItems items)
         {
             foreach (ItemAttributes itemAttr in itemAttributes.ItemAttributes)
             {
-                itemAttr.ReferencingItemIDs.Clear();
+                itemAttr.ReferencingItemIndexes.Clear();
             }
 
             foreach (InflictStatus inflictStatus in inflictStatuses.InflictStatuses)
             {
                 inflictStatus.ReferencingAbilityIDs.Clear();
-                inflictStatus.ReferencingItemIDs.Clear();
+                inflictStatus.ReferencingItemIndexes.Clear();
             }
 
             for (int index = 0; index < items.Items.Count; index++)
@@ -187,7 +201,7 @@ namespace FFTPatcher
                 Item item = items.Items[index];
 
                 if (item.SIA < itemAttributes.ItemAttributes.Length)
-                    itemAttributes.ItemAttributes[item.SIA].ReferencingItemIDs.Add(index);
+                    itemAttributes.ItemAttributes[item.SIA].ReferencingItemIndexes.Add(index);
 
                 if (item is Weapon)
                 {
@@ -195,7 +209,7 @@ namespace FFTPatcher
                     if (weapon.Formula.Value != 2)
                     {
                         if (weapon.InflictStatus < inflictStatuses.InflictStatuses.Length)
-                            inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Add(index);
+                            inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIndexes.Add(index);
                     }
                 }
                 else if (item is ChemistItem)
@@ -204,7 +218,7 @@ namespace FFTPatcher
                     if (chemistItem.Formula != 2)
                     {
                         if (chemistItem.InflictStatus < inflictStatuses.InflictStatuses.Length)
-                            inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIDs.Add(index);
+                            inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIndexes.Add(index);
                     }
                 }
             }

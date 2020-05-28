@@ -51,6 +51,8 @@ namespace FFTPatcher.Editors
                 new MenuItem[] { new MenuItem( "Clone", CopyClickEventHandler ), new MenuItem( "Paste clone", PasteClickEventHandler ) } );
             offsetListBox.ContextMenu.MenuItems[1].Enabled = false;
             offsetListBox.MouseDown += new MouseEventHandler( offsetListBox_MouseDown );
+
+            itemAttributeEditor.ItemClicked += OnItemClicked;
         }
 
 		#endregion Constructors 
@@ -157,6 +159,15 @@ namespace FFTPatcher.Editors
             {
                 e.OldID = offsetListBox.SelectedIndex;
                 RepointHandler(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ItemClicked;
+        private void OnItemClicked(object sender, ReferenceEventArgs e)
+        {
+            if (ItemClicked != null)
+            {
+                ItemClicked(this, e);
             }
         }
     }

@@ -62,6 +62,8 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
+        public int SelectedIndex { get { return itemListBox.SelectedIndex; } set { itemListBox.SelectedIndex = value; } }
+
 		#region Public Methods (2) 
 
         public void itemListBox_MouseDown(object sender, MouseEventArgs e)
@@ -238,16 +240,16 @@ namespace FFTPatcher.Editors
                     Weapon weapon = (Weapon)item;
                     if (weapon.OldInflictStatus != weapon.InflictStatus)
                     {
-                        inflictStatuses.InflictStatuses[weapon.OldInflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                        inflictStatuses.InflictStatuses[weapon.OldInflictStatus].ReferencingItemIndexes.Remove(itemIndex);
                     }
 
                     if (weapon.Formula.Value == 2)
                     {
-                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIndexes.Remove(itemIndex);
                     }
                     else
                     {
-                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIDs.Add(itemIndex);
+                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIndexes.Add(itemIndex);
                     }
 
                     weapon.OldInflictStatus = weapon.InflictStatus;
@@ -257,16 +259,16 @@ namespace FFTPatcher.Editors
                     ChemistItem chemistItem = (ChemistItem)item;
                     if (chemistItem.OldInflictStatus != chemistItem.InflictStatus)
                     {
-                        inflictStatuses.InflictStatuses[chemistItem.OldInflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                        inflictStatuses.InflictStatuses[chemistItem.OldInflictStatus].ReferencingItemIndexes.Remove(itemIndex);
                     }
 
                     if (chemistItem.Formula == 2)
                     {
-                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIDs.Remove(itemIndex);
+                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIndexes.Remove(itemIndex);
                     }
                     else
                     {
-                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIDs.Add(itemIndex);
+                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIndexes.Add(itemIndex);
                     }
 
                     chemistItem.OldInflictStatus = chemistItem.InflictStatus;
@@ -282,8 +284,8 @@ namespace FFTPatcher.Editors
 
                 if (item.OldSIA != item.SIA)
                 {
-                    itemAttributes.ItemAttributes[item.OldSIA].ReferencingItemIDs.Remove(itemIndex);
-                    itemAttributes.ItemAttributes[item.SIA].ReferencingItemIDs.Add(itemIndex);
+                    itemAttributes.ItemAttributes[item.OldSIA].ReferencingItemIndexes.Remove(itemIndex);
+                    itemAttributes.ItemAttributes[item.SIA].ReferencingItemIndexes.Add(itemIndex);
                 }
 
                 item.OldSIA = item.SIA;

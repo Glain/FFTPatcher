@@ -52,15 +52,15 @@ namespace FFTPatcher.Datatypes
 
         public Elements Half { get; private set; }
 
-        private HashSet<int> referencingItemIDs;
-        public HashSet<int> ReferencingItemIDs
+        private HashSet<int> referencingItemIndexes;
+        public HashSet<int> ReferencingItemIndexes
         {
             get
             {
-                if (referencingItemIDs == null)
-                    referencingItemIDs = new HashSet<int>();
+                if (referencingItemIndexes == null)
+                    referencingItemIndexes = new HashSet<int>();
 
-                return referencingItemIDs;
+                return referencingItemIndexes;
             }
         }
 
@@ -68,7 +68,7 @@ namespace FFTPatcher.Datatypes
         {
             get
             {
-                return (ReferencingItemIDs.Count > 0);
+                return (ReferencingItemIndexes.Count > 0);
             }
         }
         public bool IsDuplicate { get; set; }
