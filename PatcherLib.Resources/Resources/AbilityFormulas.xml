@@ -20,9 +20,9 @@
 <AbilityFormulas>
   <Ability value="00">Dmg_[Weapon] PE</Ability>
   <Ability value="01">Dmg_[Weapon] PE</Ability>
-  <Ability value="02">Dmg_[Weapon] 25% Cast Spell Indexed As Status NS PE</Ability>
+  <Ability value="02">Dmg_[Weapon] 19% Cast Spell Indexed As Status NS PE</Ability>
   <Ability value="03">Dmg_(WP^2) NS NE</Ability>
-  <Ability value="04">Casts Ice, Fire, Bolt 1/2/3 depending on elemental NS NE</Ability>
+  <Ability value="04">Casts Ice, Fire, Bolt 1/2/3 depending on element NS NE</Ability>
   <Ability value="05">Dmg_[Weapon] PE</Ability>
   <Ability value="06">AbsorbHP_[Weapon] NS PE</Ability>
   <Ability value="07">Heal_[Weapon] NS NE</Ability>
@@ -113,8 +113,8 @@
   <Ability value="5C">Dragon: +Brave_(X) +PA/MA/SP(Y) NS NE</Ability>
   <Ability value="5D">Dragon: Set_Quick NS NE</Ability>
   <Ability value="5E">Dmg_((MA+Y)/2*MA) #Hit_(X+1) Status ME</Ability>
-  <Ability value="5F">Dmg_((MA+Y)/2*MA) #Hit_(X+1) Status ME</Ability>
-  <Ability value="60">Dmg_((MA+Y)/2*MA) #Hit_(X+1) Status NE</Ability>
+  <Ability value="5F">Dmg_((MA+Y)/2*MA) Status ME</Ability>
+  <Ability value="60">Dmg_((MA+Y)/2*MA) Status NE</Ability>
   <Ability value="61">-Brave_(Y) Hit_F(MA+X)% NS ME</Ability>
   <Ability value="62">-Brave_(Y) Hit_(MA+X)% NS ME</Ability>
   <Ability value="63">Dmg_(SP*WP) NS PE</Ability>
