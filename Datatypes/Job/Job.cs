@@ -83,7 +83,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (3) 
+		#region Constructors
 
         static AllJobs()
         {
@@ -111,14 +111,16 @@ namespace FFTPatcher.Datatypes
         {
         }
 
-        public AllJobs(Context context, IList<byte> bytes, IList<byte> formationBytes1, IList<byte> formationBytes2)
+        public AllJobs(Context context, IList<byte> bytes, IList<byte> formationBytes1, IList<byte> formationBytes2) : this(context, bytes, formationBytes1, formationBytes2, null, null, null) { }
+
+        public AllJobs(Context context, IList<byte> bytes, IList<byte> formationBytes1, IList<byte> formationBytes2, IList<byte> defaultBytes, IList<byte> defaultFormationBytes1, IList<byte> defaultFormationBytes2)
         {
             int numJobs = context == Context.US_PSP ? 0xA9 : 0xA0;
             int jobLength = context == Context.US_PSP ? 49 : 48;
 
-            IList<byte> defaultBytes = (context == Context.US_PSP) ? PSPResources.Binaries.Jobs : PSXResources.Binaries.Jobs;
-            IList<byte> defaultFormationBytes1 = (context == Context.US_PSP) ? PSPResources.Binaries.JobFormationSprites1 : PSXResources.Binaries.JobFormationSprites1;
-            IList<byte> defaultFormationBytes2 = (context == Context.US_PSP) ? PSPResources.Binaries.JobFormationSprites2 : PSXResources.Binaries.JobFormationSprites2;
+            defaultBytes = defaultBytes ?? ((context == Context.US_PSP) ? PSPResources.Binaries.Jobs : PSXResources.Binaries.Jobs);
+            defaultFormationBytes1 = defaultFormationBytes1 ?? ((context == Context.US_PSP) ? PSPResources.Binaries.JobFormationSprites1 : PSXResources.Binaries.JobFormationSprites1);
+            defaultFormationBytes2 = defaultFormationBytes2 ?? ((context == Context.US_PSP) ? PSPResources.Binaries.JobFormationSprites2 : PSXResources.Binaries.JobFormationSprites2);
 
             Jobs = new Job[numJobs];
             for( int i = 0; i < numJobs; i++ )
@@ -260,33 +262,33 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Jobs" : "\"Jobs";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             List<string> codeList = new List<string>();
             byte[] formationSprites2ByteArray = this.ToFormationSprites2ByteArray();
 
             if (context == Context.US_PSP)
             {
-                codeList.AddRange(Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.Jobs, this.ToByteArray(), 0x277988 ));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites1, this.ToFormationSprites1ByteArray(), 0x2E0EB4));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x2A119C));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x2DB540));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x2F9778));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x3152F8));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, PSPResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x316D5C));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.Jobs], this.ToByteArray(), 0x277988));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites1], this.ToFormationSprites1ByteArray(), 0x2E0EB4));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x2A119C));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x2DB540));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x2F9778));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x3152F8));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x316D5C));
 
                 if (RequiresJobCheckIDPatch())
                     codeList.AddRange(Codes.GenerateCodes(Context.US_PSP, new byte[1] { 0x35 }, new byte[1] { 0x4A }, 0x191784));
             }
             else if (context == Context.US_PSX)
             {
-                codeList.AddRange(Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.Jobs, this.ToByteArray( Context.US_PSX ), 0x0610B8 ));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites1, this.ToFormationSprites1ByteArray(), 0x18DE34, Codes.CodeEnabledOnlyWhen.World));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x18A168, Codes.CodeEnabledOnlyWhen.World));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x18A8B8, Codes.CodeEnabledOnlyWhen.World));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x154B14, Codes.CodeEnabledOnlyWhen.World));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x1D5BB0, Codes.CodeEnabledOnlyWhen.AttackOut));
-                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, PSXResources.Binaries.JobFormationSprites2, formationSprites2ByteArray, 0x1D0B3C, Codes.CodeEnabledOnlyWhen.RequireOut));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.Jobs], this.ToByteArray(Context.US_PSX), 0x0610B8));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites1], this.ToFormationSprites1ByteArray(), 0x18DE34, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x18A168, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x18A8B8, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x154B14, Codes.CodeEnabledOnlyWhen.World));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x1D5BB0, Codes.CodeEnabledOnlyWhen.AttackOut));
+                codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobFormationSprites2], formationSprites2ByteArray, 0x1D0B3C, Codes.CodeEnabledOnlyWhen.RequireOut));
 
                 if (RequiresJobCheckIDPatch())
                     codeList.AddRange(Codes.GenerateCodes(Context.US_PSX, new byte[1] { 0x35 }, new byte[1] { 0x4A }, 0x1258B0, Codes.CodeEnabledOnlyWhen.World));

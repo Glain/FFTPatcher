@@ -248,15 +248,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Store Inventories" : "\"Store Inventories";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes(Context.US_PSP, PatcherLib.PSPResources.Binaries.StoreInventories, this.ToByteArray(), 0x2e087c);
+                return Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.StoreInventories], this.ToByteArray(), 0x2e087c);
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PatcherLib.PSXResources.Binaries.StoreInventories, this.ToByteArray(), 0x18D840, Codes.CodeEnabledOnlyWhen.World );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.StoreInventories], this.ToByteArray(), 0x18D840, Codes.CodeEnabledOnlyWhen.World);
             }
         }
 

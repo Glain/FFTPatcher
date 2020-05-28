@@ -265,8 +265,10 @@ namespace FFTPatcher
         private void editMenuItem_Popup(object sender, EventArgs e)
         {
             bool isEnabled = fftPatchEditor1.Enabled;
-            consolidateItemAttributesMenuItem.Enabled = isEnabled;
-            consolidateInflictStatusesMenuItem.Enabled = isEnabled;
+            menuItem_SetCurrentDataAsDefaults.Enabled = isEnabled;
+            menuItem_RestoreDefaults.Enabled = isEnabled;
+            menuItem_ConsolidateItemAttributes.Enabled = isEnabled;
+            menuItem_ConsolidateInflictStatuses.Enabled = isEnabled;
         }
 
         private void newPSPMenuItem_Click( object sender, System.EventArgs e )
@@ -641,7 +643,19 @@ namespace FFTPatcher
             //}
         }
 
-        private void consolidateItemAttributesMenuItem_Click(object sender, EventArgs e)
+        private void menuItem_SetCurrentDataAsDefaults_Click(object sender, EventArgs e)
+        {
+            FFTPatch.SetCurrentDataAsDefault();
+            fftPatchEditor1.LoadFFTPatch(FFTPatch);
+        }
+
+        private void menuItem_RestoreDefaults_Click(object sender, EventArgs e)
+        {
+            FFTPatch.RestoreDefaults();
+            fftPatchEditor1.LoadFFTPatch(FFTPatch);
+        }
+
+        private void menuItem_ConsolidateItemAttributes_Click(object sender, EventArgs e)
         {
             if ((MyMessageBox.Show(this, "Are you sure you want to Consolidate Item Attributes?  This will repoint all duplicate entries.", "Consolidate Item Attributes?", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)) == DialogResult.Yes)
@@ -650,7 +664,7 @@ namespace FFTPatcher
             }
         }
 
-        private void consolidateInflictStatusesMenuItem_Click(object sender, EventArgs e)
+        private void menuItem_ConsolidateInflictStatuses_Click(object sender, EventArgs e)
         {
             if ((MyMessageBox.Show(this, "Are you sure you want to Consolidate Inflict Statuses?  This will repoint all duplicate entries.", "Consolidate Inflict Statuses?",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)) == DialogResult.Yes)

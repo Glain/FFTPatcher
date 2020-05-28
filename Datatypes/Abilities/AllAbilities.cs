@@ -182,7 +182,7 @@ namespace FFTPatcher.Datatypes
 
         #endregion Properties
 
-        #region Constructors (2)
+        #region Constructors
 
         static AllAbilities()
         {
@@ -211,15 +211,20 @@ namespace FFTPatcher.Datatypes
 
         private IList<byte> defaultBytes;
 
-        public AllAbilities( IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects, Context context )
+        public AllAbilities(IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects, Context context)
+            : this(bytes, effectsBytes, itemEffects, reactionEffects, null, null, null, null, context)
+        { }
+
+        public AllAbilities( IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects, 
+            IList<byte> defaultBytes, IList<byte> defaultEffects, IList<byte> defaultItemEffects, IList<byte> defaultReaction, Context context )
         {
             AllEffects = new AllAbilityEffects( this );
-            this.defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.Abilities : PSXResources.Binaries.Abilities;
+            this.defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.Abilities : PSXResources.Binaries.Abilities);
             
             IDictionary<UInt16, Effect> effects = context == Context.US_PSP ? Effect.PSPEffects : Effect.PSXEffects;
-            IList<byte> defaultEffects = context == Context.US_PSP ? PSPResources.Binaries.AbilityEffects : PSXResources.Binaries.AbilityEffects;
-            IList<byte> defaultItemEffects = context == Context.US_PSP ? PSPResources.Binaries.ItemAbilityEffects : PSXResources.Binaries.ItemAbilityEffects;
-            IList<byte> defaultReaction = context == Context.US_PSP ? PSPResources.Binaries.ReactionAbilityEffects : PSXResources.Binaries.ReactionAbilityEffects;
+            defaultEffects = defaultEffects ?? (context == Context.US_PSP ? PSPResources.Binaries.AbilityEffects : PSXResources.Binaries.AbilityEffects);
+            defaultItemEffects = defaultItemEffects ?? (context == Context.US_PSP ? PSPResources.Binaries.ItemAbilityEffects : PSXResources.Binaries.ItemAbilityEffects);
+            defaultReaction = defaultReaction ?? (context == Context.US_PSP ? PSPResources.Binaries.ReactionAbilityEffects : PSXResources.Binaries.ReactionAbilityEffects);
 
             Abilities = new Ability[512];
             DefaultAbilities = new Ability[512];
@@ -297,22 +302,22 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? PSPHeader : PSXHeader;
         }
 
-        public IList<string> GenerateCodes( Context context )
+        public IList<string> GenerateCodes( Context context, FFTPatch fftPatch )
         {
             List<string> result = new List<string>();
             if (context == Context.US_PSP)
             {
-                result.AddRange( Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.Abilities, this.ToByteArray(), 0x2754C0 ) );
-                result.AddRange( Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.AbilityEffects, this.ToEffectsByteArray(), 0x31B760 ) );
-                result.AddRange( Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.ItemAbilityEffects, this.ToItemEffectsByteArray(), 0x31B760 + 0x2E0) );
-                result.AddRange( Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.ReactionAbilityEffects, this.ToReactionEffectsByteArray(), 0x31B760 + 0x34C ) );
+                result.AddRange( Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.Abilities], this.ToByteArray(), 0x2754C0 ) );
+                result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.AbilityEffects], this.ToEffectsByteArray(), 0x31B760));
+                result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ItemAbilityEffects], this.ToItemEffectsByteArray(), 0x31B760 + 0x2E0));
+                result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ReactionAbilityEffects], this.ToReactionEffectsByteArray(), 0x31B760 + 0x34C));
             }
             else
             {
-                result.AddRange( Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.AbilityEffects, this.ToEffectsByteArray(), 0x1B63F0, Codes.CodeEnabledOnlyWhen.Battle ) );
-                result.AddRange( Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.ItemAbilityEffects, this.ToItemEffectsByteArray(), 0x1B66D0, Codes.CodeEnabledOnlyWhen.Battle ) );
-                result.AddRange( Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.ReactionAbilityEffects, this.ToReactionEffectsByteArray(), 0x1B673C, Codes.CodeEnabledOnlyWhen.Battle ) );
-                result.AddRange( Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.Abilities, this.ToByteArray(), 0x05EBF0 ) );
+                result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.Abilities], this.ToByteArray(), 0x05EBF0));
+                result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.AbilityEffects], this.ToEffectsByteArray(), 0x1B63F0, Codes.CodeEnabledOnlyWhen.Battle));
+                result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ItemAbilityEffects], this.ToItemEffectsByteArray(), 0x1B66D0, Codes.CodeEnabledOnlyWhen.Battle));
+                result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ReactionAbilityEffects], this.ToReactionEffectsByteArray(), 0x1B673C, Codes.CodeEnabledOnlyWhen.Battle));
             }
             return result.AsReadOnly();
         }

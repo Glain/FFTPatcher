@@ -77,8 +77,8 @@ namespace FFTPatcher
             this.openPatchedPspItem = new System.Windows.Forms.MenuItem();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.editMenuItem = new System.Windows.Forms.MenuItem();
-            this.consolidateItemAttributesMenuItem = new System.Windows.Forms.MenuItem();
-            this.consolidateInflictStatusesMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem_ConsolidateItemAttributes = new System.Windows.Forms.MenuItem();
+            this.menuItem_ConsolidateInflictStatuses = new System.Windows.Forms.MenuItem();
             this.aboutMenuItem = new System.Windows.Forms.MenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -86,6 +86,9 @@ namespace FFTPatcher
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.fftPatchEditor1 = new FFTPatcher.Editors.FFTPatchEditor();
+            this.menuItem_SetCurrentDataAsDefaults = new System.Windows.Forms.MenuItem();
+            this.menuItem_RestoreDefaults = new System.Windows.Forms.MenuItem();
+            this.separator_Edit1 = new System.Windows.Forms.MenuItem();
             separator1 = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
@@ -280,23 +283,26 @@ namespace FFTPatcher
             // 
             this.editMenuItem.Index = 1;
             this.editMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.consolidateItemAttributesMenuItem,
-            this.consolidateInflictStatusesMenuItem});
+            this.menuItem_SetCurrentDataAsDefaults,
+            this.menuItem_RestoreDefaults,
+            this.separator_Edit1,
+            this.menuItem_ConsolidateItemAttributes,
+            this.menuItem_ConsolidateInflictStatuses});
             this.editMenuItem.Text = "Edit";
             // 
-            // consolidateItemAttributesMenuItem
+            // menuItem_ConsolidateItemAttributes
             // 
-            this.consolidateItemAttributesMenuItem.Enabled = false;
-            this.consolidateItemAttributesMenuItem.Index = 0;
-            this.consolidateItemAttributesMenuItem.Text = "Consolidate Item Attributes";
-            this.consolidateItemAttributesMenuItem.Click += new System.EventHandler(this.consolidateItemAttributesMenuItem_Click);
+            this.menuItem_ConsolidateItemAttributes.Enabled = false;
+            this.menuItem_ConsolidateItemAttributes.Index = 3;
+            this.menuItem_ConsolidateItemAttributes.Text = "Consolidate Item Attributes";
+            this.menuItem_ConsolidateItemAttributes.Click += new System.EventHandler(this.menuItem_ConsolidateItemAttributes_Click);
             // 
-            // consolidateInflictStatusesMenuItem
+            // menuItem_ConsolidateInflictStatuses
             // 
-            this.consolidateInflictStatusesMenuItem.Enabled = false;
-            this.consolidateInflictStatusesMenuItem.Index = 1;
-            this.consolidateInflictStatusesMenuItem.Text = "Consolidate Inflict Statuses";
-            this.consolidateInflictStatusesMenuItem.Click += new System.EventHandler(this.consolidateInflictStatusesMenuItem_Click);
+            this.menuItem_ConsolidateInflictStatuses.Enabled = false;
+            this.menuItem_ConsolidateInflictStatuses.Index = 4;
+            this.menuItem_ConsolidateInflictStatuses.Text = "Consolidate Inflict Statuses";
+            this.menuItem_ConsolidateInflictStatuses.Click += new System.EventHandler(this.menuItem_ConsolidateInflictStatuses_Click);
             // 
             // aboutMenuItem
             // 
@@ -336,6 +342,25 @@ namespace FFTPatcher
             this.fftPatchEditor1.Name = "fftPatchEditor1";
             this.fftPatchEditor1.Size = new System.Drawing.Size(910, 557);
             this.fftPatchEditor1.TabIndex = 0;
+            // 
+            // menuItem_SetCurrentDataAsDefaults
+            // 
+            this.menuItem_SetCurrentDataAsDefaults.Enabled = false;
+            this.menuItem_SetCurrentDataAsDefaults.Index = 0;
+            this.menuItem_SetCurrentDataAsDefaults.Text = "Set Current Data as Defaults";
+            this.menuItem_SetCurrentDataAsDefaults.Click += new System.EventHandler(this.menuItem_SetCurrentDataAsDefaults_Click);
+            // 
+            // menuItem_RestoreDefaults
+            // 
+            this.menuItem_RestoreDefaults.Enabled = false;
+            this.menuItem_RestoreDefaults.Index = 1;
+            this.menuItem_RestoreDefaults.Text = "Restore Defaults";
+            this.menuItem_RestoreDefaults.Click += new System.EventHandler(this.menuItem_RestoreDefaults_Click);
+            // 
+            // separator_Edit1
+            // 
+            this.separator_Edit1.Index = 2;
+            this.separator_Edit1.Text = "-";
             // 
             // MainForm
             // 
@@ -383,8 +408,11 @@ namespace FFTPatcher
         private System.Windows.Forms.MenuItem separator_PSXMenu;
         private System.Windows.Forms.MenuItem menuItem_PatchPSXSavestate;
         private System.Windows.Forms.MenuItem editMenuItem;
-        private System.Windows.Forms.MenuItem consolidateItemAttributesMenuItem;
-        private System.Windows.Forms.MenuItem consolidateInflictStatusesMenuItem;
+        private System.Windows.Forms.MenuItem menuItem_ConsolidateItemAttributes;
+        private System.Windows.Forms.MenuItem menuItem_ConsolidateInflictStatuses;
+        private System.Windows.Forms.MenuItem menuItem_SetCurrentDataAsDefaults;
+        private System.Windows.Forms.MenuItem menuItem_RestoreDefaults;
+        private System.Windows.Forms.MenuItem separator_Edit1;
 
     }
 }

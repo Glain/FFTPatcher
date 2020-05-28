@@ -107,15 +107,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Ability Animations" : "\"Ability Animations";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PatcherLib.PSPResources.Binaries.AbilityAnimations, this.ToByteArray(), 0x3278F8 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.AbilityAnimations], this.ToByteArray(), 0x3278F8 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PatcherLib.PSXResources.Binaries.AbilityAnimations, this.ToByteArray(), 0x93E10, Codes.CodeEnabledOnlyWhen.Battle );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.AbilityAnimations], this.ToByteArray(), 0x93E10, Codes.CodeEnabledOnlyWhen.Battle);
             }
         }
 

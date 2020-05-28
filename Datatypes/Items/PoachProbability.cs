@@ -135,11 +135,13 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (1) 
+		#region Constructors
 
-        public AllPoachProbabilities( IList<byte> bytes, Context context )
+        public AllPoachProbabilities(IList<byte> bytes, Context context) : this(bytes, null, context) { }
+
+        public AllPoachProbabilities( IList<byte> bytes, IList<byte> defaultBytes, Context context )
         {
-            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.PoachProbabilities : PSXResources.Binaries.PoachProbabilities;
+            defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.PoachProbabilities : PSXResources.Binaries.PoachProbabilities);
 
             PoachProbabilities = new PoachProbability[48];
             for( int i = 0; i < 48; i++ )
@@ -214,15 +216,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Poaching" : "\"Poaching";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.PoachProbabilities, this.ToByteArray(), 0x27AFD0 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.Poaching], this.ToByteArray(), 0x27AFD0 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.PoachProbabilities, this.ToByteArray(), 0x066064 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.Poaching], this.ToByteArray(), 0x066064);
             }
         }
 

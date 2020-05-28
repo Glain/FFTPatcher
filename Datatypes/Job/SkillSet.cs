@@ -446,15 +446,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Skill Sets" : "\"Skill Sets";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.SkillSets, this.ToByteArray(), 0x2799E4 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.SkillSets], this.ToByteArray(), 0x2799E4 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.SkillSets, this.ToByteArray( Context.US_PSX ), 0x064A94 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.SkillSets], this.ToByteArray(Context.US_PSX), 0x064A94);
             }
         }
 

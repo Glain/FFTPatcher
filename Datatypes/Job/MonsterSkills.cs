@@ -192,9 +192,11 @@ namespace FFTPatcher.Datatypes
             PSXNames = PSXResources.Lists.MonsterNames;
         }
 
-        public AllMonsterSkills( IList<byte> bytes, Context context )
+        public AllMonsterSkills(IList<byte> bytes, Context context) : this(bytes, null, context) { }
+
+        public AllMonsterSkills( IList<byte> bytes, IList<byte> defaultBytes, Context context )
         {
-            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.MonsterSkills : PSXResources.Binaries.MonsterSkills;
+            defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.MonsterSkills : PSXResources.Binaries.MonsterSkills);
 
             MonsterSkills = new MonsterSkill[48];
             for ( int i = 0; i < 48; i++ )
@@ -277,15 +279,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Monster Skill Sets" : "\"Monster Skill Sets";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.MonsterSkills, this.ToByteArray(), 0x27AB60 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.MonsterSkills], this.ToByteArray(), 0x27AB60 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.MonsterSkills, this.ToByteArray(), 0x065BC4 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.MonsterSkills], this.ToByteArray(), 0x065BC4);
             }
         }
 

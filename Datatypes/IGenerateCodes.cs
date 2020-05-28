@@ -8,6 +8,6 @@ namespace FFTPatcher
     public interface IGenerateCodes
     {
         string GetCodeHeader( Context context );
-        IList<string> GenerateCodes( Context context );
+        IList<string> GenerateCodes( Context context, FFTPatcher.Datatypes.FFTPatch fftPatch );
     }
 }

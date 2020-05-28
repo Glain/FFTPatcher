@@ -60,18 +60,20 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (2) 
+		#region Constructors
 
         public AllItems( IList<byte> first, Context context )
             : this( first, null, context )
         {
         }
 
-        public AllItems(IList<byte> first, IList<byte> second, Context context)
+        public AllItems(IList<byte> first, IList<byte> second, Context context) : this(first, second, null, null, context) { }
+
+        public AllItems(IList<byte> first, IList<byte> second, IList<byte> defaultFirst, IList<byte> defaultSecond, Context context)
         {
             Items = new List<Item>();
-            IList<byte> defaultFirst = second == null ? PSXResources.Binaries.OldItems : PSPResources.Binaries.OldItems;
-            IList<byte> defaultSecond = second == null ? null : PSPResources.Binaries.NewItems;
+            defaultFirst = defaultFirst ?? (second == null ? PSXResources.Binaries.OldItems : PSPResources.Binaries.OldItems);
+            defaultSecond = defaultSecond ?? (second == null ? null : PSPResources.Binaries.NewItems);
 
             for( UInt16 i = 0; i < 0x80; i++ )
             {
@@ -303,18 +305,18 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Items" : "\"Items";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
                 List<string> strings = new List<string>();
-                strings.AddRange( Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.NewItems, this.ToSecondByteArray(), 0x25ADAC ) );
-                strings.AddRange( Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.OldItems, this.ToFirstByteArray(), 0x329288 ) );
+                strings.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.PSPItems], this.ToSecondByteArray(), 0x25ADAC));
+                strings.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.Items], this.ToFirstByteArray(), 0x329288));
                 return strings;
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.OldItems, this.ToFirstByteArray(), 0x062EB8 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.Items], this.ToFirstByteArray(), 0x062EB8);
             }
         }
 

@@ -229,11 +229,13 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (1) 
+		#region Constructors 
 
-        public AllActionMenus( IList<byte> bytes, Context context )
+        public AllActionMenus(IList<byte> bytes, Context context) : this(bytes, null, context) { }
+
+        public AllActionMenus( IList<byte> bytes, IList<byte> defaultBytes, Context context )
         {
-            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.ActionEvents : PSXResources.Binaries.ActionEvents;
+            defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.ActionEvents : PSXResources.Binaries.ActionEvents);
 
             List<ActionMenu> tempActions = new List<ActionMenu>();
             SkillSet[] dummySkillSets = SkillSet.GetDummySkillSets(context);
@@ -325,15 +327,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Action Menus" : "\"Action Menus";
         }
 
-        public IList<string> GenerateCodes(Context context)
+        public IList<string> GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.ActionEvents, this.ToByteArray(), 0x27AC50 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ActionMenus], this.ToByteArray(), 0x27AC50 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.ActionEvents, this.ToByteArray(), 0x065CB4 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ActionMenus], this.ToByteArray(), 0x065CB4);
             }
         }
 

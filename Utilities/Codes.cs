@@ -102,7 +102,7 @@ namespace FFTPatcher
             {
                 if ( gen != null )
                 {
-                    AddGroups( sb, 24, gen.GetCodeHeader( context ), gen.GenerateCodes( context ) );
+                    AddGroups( sb, 24, gen.GetCodeHeader( context ), gen.GenerateCodes( context, FFTPatch ) );
                 }
             }
             return sb.ToString();

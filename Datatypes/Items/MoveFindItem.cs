@@ -362,15 +362,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Move/Find Items" : "\"Move/Find Items";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.MoveFind, this.ToByteArray(), 0x274754 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.MoveFindItems], this.ToByteArray(), 0x274754 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.MoveFind, this.ToByteArray(), 0xF5E74, Codes.CodeEnabledOnlyWhen.Battle );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.MoveFindItems], this.ToByteArray(), 0xF5E74, Codes.CodeEnabledOnlyWhen.Battle);
             }
         }
 

@@ -235,12 +235,14 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (1) 
+		#region Constructors
 
-        public AllStatusAttributes( IList<byte> bytes, Context context )
+        public AllStatusAttributes(IList<byte> bytes, Context context) : this(bytes, null, context) { }
+
+        public AllStatusAttributes( IList<byte> bytes, IList<byte> defaultBytes, Context context )
         {
             StatusAttributes = new StatusAttribute[40];
-            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.StatusAttributes : PSXResources.Binaries.StatusAttributes;
+            defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.StatusAttributes : PSXResources.Binaries.StatusAttributes);
 
             IList<string> names = context == Context.US_PSP ? PSPResources.Lists.StatusNames : PSXResources.Lists.StatusNames;
             for( int i = 0; i < 40; i++ )
@@ -318,15 +320,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Status Effects" : "\"Status Effects";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.StatusAttributes, this.ToByteArray(), 0x27AD50 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.StatusAttributes], this.ToByteArray(), 0x27AD50 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.StatusAttributes, this.ToByteArray(), 0x065DE4 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.StatusAttributes], this.ToByteArray(), 0x065DE4);
             }
         }
 

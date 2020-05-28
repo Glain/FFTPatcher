@@ -299,15 +299,15 @@ namespace FFTPatcher.Datatypes
 
         }
 
-        public IList<string> GenerateCodes( PatcherLib.Datatypes.Context context )
+        public IList<string> GenerateCodes( PatcherLib.Datatypes.Context context, FFTPatch fftPatch )
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.Propositions, this.ToByteArray(), 0x2E9634 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.Propositions], this.ToByteArray(), 0x2E9634 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.Propositions, this.ToByteArray(), 0x9D380, Codes.CodeEnabledOnlyWhen.World );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.Propositions], this.ToByteArray(), 0x9D380, Codes.CodeEnabledOnlyWhen.World);
             }
         }
 

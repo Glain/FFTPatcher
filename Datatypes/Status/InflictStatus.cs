@@ -244,11 +244,13 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (1) 
+		#region Constructors
 
-        public AllInflictStatuses( IList<byte> bytes, Context context )
+        public AllInflictStatuses(IList<byte> bytes, Context context) : this(bytes, null, context) { }
+
+        public AllInflictStatuses( IList<byte> bytes, IList<byte> defaultBytes, Context context )
         {
-            IList<byte> defaultBytes = context == Context.US_PSP ? PSPResources.Binaries.InflictStatuses : PSXResources.Binaries.InflictStatuses;
+            defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.InflictStatuses : PSXResources.Binaries.InflictStatuses);
             InflictStatuses = new InflictStatus[0x80];
             for( int i = 0; i < 0x80; i++ )
             {
@@ -321,15 +323,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Inflict Statuses" : "\"Inflict Statuses";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.InflictStatuses, this.ToByteArray(), 0x32A394 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.InflictStatuses], this.ToByteArray(), 0x32A394 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.InflictStatuses, this.ToByteArray(), 0x063FC4 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.InflictStatuses], this.ToByteArray(), 0x063FC4);
             }
         }
 

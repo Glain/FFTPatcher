@@ -308,15 +308,15 @@ namespace FFTPatcher.Datatypes
             return context == Context.US_PSP ? "_C0 Job Levels" : "\"Job Levels";
         }
 
-        IList<string> IGenerateCodes.GenerateCodes(Context context)
+        IList<string> IGenerateCodes.GenerateCodes(Context context, FFTPatch fftPatch)
         {
             if (context == Context.US_PSP)
             {
-                return Codes.GenerateCodes( Context.US_PSP, PSPResources.Binaries.JobLevels, this.ToByteArray(), 0x27B030 );
+                return Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.JobLevels], this.ToByteArray(), 0x27B030 );
             }
             else
             {
-                return Codes.GenerateCodes( Context.US_PSX, PSXResources.Binaries.JobLevels, this.ToByteArray( Context.US_PSX ), 0x0660C4 );
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.JobLevels], this.ToByteArray(Context.US_PSX), 0x0660C4);
             }
         }
 
