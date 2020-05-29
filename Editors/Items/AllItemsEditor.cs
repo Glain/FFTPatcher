@@ -91,9 +91,19 @@ namespace FFTPatcher.Editors
             itemListBox.SetChangedColors();
         }
 
-		#endregion Public Methods 
+        public void SetListBoxHighlightedIndexes(IEnumerable<int> highlightedIndexes)
+        {
+            itemListBox.SetHighlightedIndexes(highlightedIndexes);
+        }
 
-		#region Private Methods (11) 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void ClearListBoxHighlightedIndexes()
+        {
+            itemListBox.ClearHighlightedIndexes();
+        }
 
         private void itemEditor_DataChanged( object sender, EventArgs e )
         {
@@ -179,7 +189,13 @@ namespace FFTPatcher.Editors
 
         private void itemListBox_KeyDown(object sender, KeyEventArgs args)
         {
-            if (args.KeyCode == Keys.C && args.Control)
+            if (args.KeyCode == Keys.Escape)
+            {
+                ClearListBoxHighlightedIndexes();
+                itemListBox.SetChangedColors();
+                itemListBox.Invalidate();
+            }
+            else if (args.KeyCode == Keys.C && args.Control)
                 copyAll(sender, args);
             else if (args.KeyCode == Keys.V && args.Control)
                 pasteAll(sender, args);

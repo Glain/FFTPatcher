@@ -10,6 +10,16 @@ namespace FFTPatcher.Controls
 {
     public class EnhancedListBox : PatcherLib.Controls.ModifiedColorListBox
     {
+        private HashSet<int> highlightedIndexes = new HashSet<int>();
+        public void ClearHighlightedIndexes()
+        {
+            highlightedIndexes.Clear();
+        }
+        public void SetHighlightedIndexes(IEnumerable<int> indexes)
+        {
+            highlightedIndexes = new HashSet<int>(indexes);
+        }
+
         public void SetChangedColors()
         {
             SetChangedColors<IChangeable>();
@@ -47,16 +57,25 @@ namespace FFTPatcher.Controls
             {
                 T item = (T)Items[index];
 
+                bool useHighlightColor = ((Settings.HighlightColor.UseColor) && (highlightedIndexes.Contains(index)));
                 bool useDuplicateColor = false;
                 bool useUnreferencedColor = false;
-                if (item is ICheckDuplicate<T>)
+
+                if (!useHighlightColor)
                 {
-                    ICheckDuplicate<T> checkItem = (ICheckDuplicate<T>)item;
-                    useUnreferencedColor = ((Settings.UnreferencedColor.UseColor) && (!checkItem.IsInUse));
-                    useDuplicateColor = ((Settings.DuplicateColor.UseColor) && (checkItem.IsInUse) && (checkItem.IsDuplicate));
+                    if (item is ICheckDuplicate<T>)
+                    {
+                        ICheckDuplicate<T> checkItem = (ICheckDuplicate<T>)item;
+                        useUnreferencedColor = ((Settings.UnreferencedColor.UseColor) && (!checkItem.IsInUse));
+                        useDuplicateColor = ((Settings.DuplicateColor.UseColor) && (checkItem.IsInUse) && (checkItem.IsDuplicate));
+                    }
                 }
 
-                if (useDuplicateColor)
+                if (useHighlightColor)
+                {
+                    SetColor(index, Settings.HighlightColor.ForegroundColor, Settings.HighlightColor.BackgroundColor);
+                }
+                else if (useDuplicateColor)
                 {
                     SetColor(index, Settings.DuplicateColor.ForegroundColor, Settings.DuplicateColor.BackgroundColor);
                 }

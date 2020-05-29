@@ -226,20 +226,16 @@ namespace FFTPatcher.Editors
         public event EventHandler<ReferenceEventArgs> ItemClicked;
         private void lbl_Usage_2_Click(object sender, EventArgs e)
         {
-            int itemID = GetFirstReferencingItemIndex();
-
             if (ItemClicked != null)
             {
-                ItemClicked(this, new ReferenceEventArgs(itemID));
+                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex(), attributes.ReferencingItemIndexes));
             }
         }
         private void lbl_Usage_4_Click(object sender, EventArgs e)
         {
-            int itemID = GetFirstReferencingItemIndex();
-
             if (ItemClicked != null)
             {
-                ItemClicked(this, new ReferenceEventArgs(itemID, attributes.ReferencingItemIndexes));
+                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex()));
             }
         }
     }

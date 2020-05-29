@@ -127,13 +127,25 @@ namespace FFTPatcher.Editors
 
         private void AbilityClicked(object sender, ReferenceEventArgs e)
         {
+            if (e.ReferencingIndexes != null)
+            {
+                allAbilitiesEditor1.SetListBoxHighlightedIndexes(e.ReferencingIndexes);
+            }
+
             allAbilitiesEditor1.SelectedIndex = e.Index;
+            allAbilitiesEditor1.UpdateListBox();
             tabControl.SelectedTab = abilitiesPage;
         }
 
         private void ItemClicked(object sender, ReferenceEventArgs e)
         {
+            if (e.ReferencingIndexes != null)
+            {
+                allItemsEditor1.SetListBoxHighlightedIndexes(e.ReferencingIndexes);
+            }
+
             allItemsEditor1.SelectedIndex = e.Index;
+            allItemsEditor1.UpdateListBox();
             tabControl.SelectedTab = itemsTabPage;
         }
 

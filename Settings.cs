@@ -35,6 +35,7 @@ namespace FFTPatcher
         private static CombinedColor _defaultModifiedColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(175, 175, 255), ForegroundColor = Color.White };
         private static CombinedColor _defaultUnreferencedColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(125, 205, 125), ForegroundColor = Color.White };
         private static CombinedColor _defaultDuplicateColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(205, 125, 125), ForegroundColor = Color.White };
+        private static CombinedColor _defaultHighlightColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White };
 
         private CombinedColor _modifiedColor;
         public static CombinedColor ModifiedColor 
@@ -60,6 +61,15 @@ namespace FFTPatcher
             get
             {
                 return GetSettings()._duplicateColor;
+            }
+        }
+
+        private CombinedColor _highlightColor;
+        public static CombinedColor HighlightColor
+        {
+            get
+            {
+                return GetSettings()._highlightColor;
             }
         }
 
@@ -98,6 +108,7 @@ namespace FFTPatcher
                 instance._modifiedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
                 instance._unreferencedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
                 instance._duplicateColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//DuplicateColor"), _defaultDuplicateColor);
+                instance._highlightColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//HighlightColor"), _defaultHighlightColor);
             }
 
             return instance;
@@ -108,7 +119,8 @@ namespace FFTPatcher
             return new Settings() {
                 _modifiedColor = _defaultModifiedColor,
                 _unreferencedColor = _defaultUnreferencedColor,
-                _duplicateColor = _defaultDuplicateColor
+                _duplicateColor = _defaultDuplicateColor,
+                _highlightColor = _defaultHighlightColor
             };
         }
 

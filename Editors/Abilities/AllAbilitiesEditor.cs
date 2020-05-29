@@ -21,6 +21,7 @@ using System;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
+using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
@@ -92,9 +93,19 @@ namespace FFTPatcher.Editors
             abilitiesListBox.SetChangedColors();
         }
 
+        public void SetListBoxHighlightedIndexes(IEnumerable<int> highlightedIndexes)
+        {
+            abilitiesListBox.SetHighlightedIndexes(highlightedIndexes);
+        }
+
 		#endregion Public Methods 
 
-		#region Private Methods (9) 
+		#region Private Methods
+
+        private void ClearListBoxHighlightedIndexes()
+        {
+            abilitiesListBox.ClearHighlightedIndexes();
+        }
 
         private void abilitiesListBox_SelectedIndexChanged( object sender, EventArgs e )
         {
@@ -147,7 +158,13 @@ namespace FFTPatcher.Editors
 
 		private void abilitiesListBox_KeyDown( object sender, KeyEventArgs args )
 		{
-			if (args.KeyCode == Keys.C && args.Control)
+            if (args.KeyCode == Keys.Escape)
+            {
+                ClearListBoxHighlightedIndexes();
+                abilitiesListBox.SetChangedColors();
+                abilitiesListBox.Invalidate();
+            }
+			else if (args.KeyCode == Keys.C && args.Control)
 				copyAll( sender, args );
 			else if (args.KeyCode == Keys.V && args.Control)
 				pasteAll( sender, args );

@@ -205,14 +205,14 @@ namespace FFTPatcher.Editors
         {
             if (AbilityClicked != null)
             {
-                AbilityClicked(this, new ReferenceEventArgs(GetFirstReferencingAbilityIndex()));
+                AbilityClicked(this, new ReferenceEventArgs(GetFirstReferencingAbilityIndex(), status.ReferencingAbilityIDs));
             }
         }
         private void lbl_AbilityUsage_4_Click(object sender, EventArgs e)
         {
             if (AbilityClicked != null)
             {
-                AbilityClicked(this, new ReferenceEventArgs(GetFirstReferencingAbilityIndex(), status.ReferencingAbilityIDs));
+                AbilityClicked(this, new ReferenceEventArgs(GetFirstReferencingAbilityIndex()));
             }
         }
 
@@ -221,14 +221,14 @@ namespace FFTPatcher.Editors
         {
             if (ItemClicked != null)
             {
-                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex()));
+                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex(), status.ReferencingItemIndexes));
             }
         }
         private void lbl_ItemUsage_4_Click(object sender, EventArgs e)
         {
             if (ItemClicked != null)
             {
-                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex(), status.ReferencingItemIndexes));
+                ItemClicked(this, new ReferenceEventArgs(GetFirstReferencingItemIndex()));
             }
         }
 

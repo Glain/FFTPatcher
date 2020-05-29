@@ -24,4 +24,12 @@
         <BackgroundColor Red="205" Green="125" Blue="125" />
         <ForegroundColor Red="255" Green="255" Blue="255" />
     </DuplicateColor>
+    <HighlightColor>
+        <!-- Switch to false if you want no color for highlighted entries -->
+        <UseColor Value="true" />
+
+        <!-- Values are between 0 and 255 -->
+        <BackgroundColor Red="225" Green="200" Blue="75" />
+        <ForegroundColor Red="255" Green="255" Blue="255" />
+    </HighlightColor>
 </Settings>
