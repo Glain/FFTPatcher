@@ -95,8 +95,8 @@ namespace FFTPatcher.Datatypes
     {
         Blue = 0,
         Red = 1,
-        LightBlue = 2,
-        Green = 3
+        Green = 2,
+        LightBlue = 3
     }
 
     /// <summary>

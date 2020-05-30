@@ -250,14 +250,19 @@ namespace FFTPatcher.Editors
 
         private void flagsCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
-            if (sender == flags1CheckedListBox)
-                ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.Flags1FieldNames[e.Index], e.NewValue == CheckState.Checked);
-            else if (sender == flags2CheckedListBox)
-                ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.Flags2FieldNames[e.Index], e.NewValue == CheckState.Checked);
-            else if (sender == clbAIFlags1)
-                ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.AIFlags1FieldNames[e.Index], e.NewValue == CheckState.Checked);
-            else if (sender == clbAIFlags2)
-                ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.AIFlags2FieldNames[e.Index], e.NewValue == CheckState.Checked);
+            if (!ignoreChanges)
+            {
+                if (sender == flags1CheckedListBox)
+                    ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.Flags1FieldNames[e.Index], e.NewValue == CheckState.Checked);
+                else if (sender == flags2CheckedListBox)
+                    ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.Flags2FieldNames[e.Index], e.NewValue == CheckState.Checked);
+                else if (sender == clbAIFlags1)
+                    ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.AIFlags1FieldNames[e.Index], e.NewValue == CheckState.Checked);
+                else if (sender == clbAIFlags2)
+                    ReflectionHelpers.SetFieldOrProperty(eventUnit, EventUnit.AIFlags2FieldNames[e.Index], e.NewValue == CheckState.Checked);
+
+                OnDataChanged(this, EventArgs.Empty);
+            }
         }
 
         private void levelComboBox_SelectedIndexChanged( object sender, EventArgs e )

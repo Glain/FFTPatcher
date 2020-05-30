@@ -32,4 +32,76 @@
         <BackgroundColor Red="225" Green="200" Blue="75" />
         <ForegroundColor Red="255" Green="255" Blue="255" />
     </HighlightColor>
+    
+    <!-- Color order for Team Colors is {Selected, Always Present, Not Always Present}. Teams are in the same order as in the ENTD tab: { Blue, Red, Green, LightBlue } -->
+    <TeamColors Use="true">
+        <Team>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="45" Green="65" Blue="245" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="75" Green="125" Blue="245" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="125" Green="175" Blue="245" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+        </Team>
+        <Team>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="205" Green="35" Blue="30" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="245" Green="95" Blue="90" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="245" Green="135" Blue="130" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+        </Team>
+        <Team>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="30" Green="135" Blue="30" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="70" Green="155" Blue="70" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="110" Green="175" Blue="110" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+        </Team>
+        <Team>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="30" Green="135" Blue="135" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="70" Green="165" Blue="165" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+            <Color>
+                <UseColor Value="true" />
+                <BackgroundColor Red="110" Green="195" Blue="195" />
+                <ForegroundColor Red="255" Green="255" Blue="255" />
+            </Color>
+        </Team>
+    </TeamColors>
 </Settings>

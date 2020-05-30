@@ -249,7 +249,7 @@ namespace FFTPatcher.Editors
             teamColorLabel.Name = "teamColorLabel";
             teamColorLabel.Size = new System.Drawing.Size(61, 13);
             teamColorLabel.TabIndex = 40;
-            teamColorLabel.Text = "Team Color";
+            teamColorLabel.Text = "Team";
             // 
             // hLabel2
             // 

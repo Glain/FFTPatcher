@@ -28,9 +28,10 @@ namespace FFTPatcher.Editors
 {
     public partial class EventEditor : BaseEditor
     {
-		#region Instance Variables (3) 
+		#region Instance Variables
 
-        private int[] columnWidths = new int[3] { 50, 50, 50 };
+        private int[] columnWidths = new int[7] { 125, 125, 100, 75, 50, 90, 50 };
+        private int[] cumulativeWidths = new int[7] { 125, 250, 350, 425, 475, 565, 615 };
         private Event evt;
         private Context ourContext = Context.Default;
         private bool[] _isPositionOccupied;
@@ -174,7 +175,9 @@ namespace FFTPatcher.Editors
             	for (int innerIndex = index+1; innerIndex < evt.Units.Length; innerIndex++)
             	{
             		EventUnit innerEventUnit = evt.Units[innerIndex];
-            		if ((eventUnit.X == innerEventUnit.X) && (eventUnit.Y == innerEventUnit.Y) && (eventUnit.UpperLevel == innerEventUnit.UpperLevel) && (!eventUnit.RandomlyPresent) && (!innerEventUnit.RandomlyPresent) && (eventUnit.SpriteSet.Value > 0) && (innerEventUnit.SpriteSet.Value > 0))
+            		if ((eventUnit.X == innerEventUnit.X) && (eventUnit.Y == innerEventUnit.Y) && (eventUnit.UpperLevel == innerEventUnit.UpperLevel) 
+                        && ((eventUnit.AlwaysPresent) && (innerEventUnit.AlwaysPresent)) 
+                        && (eventUnit.SpriteSet.Value > 0) && (innerEventUnit.SpriteSet.Value > 0))
             		{
             			_isPositionOccupied[index] = true;
             			_isPositionOccupied[innerIndex] = true;
@@ -185,27 +188,38 @@ namespace FFTPatcher.Editors
         	bool canCheckOccupied = (_isPositionOccupied != null);
         	if (canCheckOccupied)
         		canCheckOccupied = (_isPositionOccupied.Length == unitSelectorListBox.Items.Count);
-        	
+
             if( (e.Index > -1) && (e.Index < unitSelectorListBox.Items.Count) )
             {
-            	bool useOccupiedColor = canCheckOccupied ? _isPositionOccupied[e.Index] : false;
-            	
-                EventUnit unit = unitSelectorListBox.Items[e.Index] as EventUnit;
-                Color foreColor = useOccupiedColor ? Color.Red : e.ForeColor;
+                bool isSelected = ((e.State & DrawItemState.Selected) == DrawItemState.Selected);
+                bool isOccupied = canCheckOccupied ? _isPositionOccupied[e.Index] : false;
 
-                using( Brush textBrush = new SolidBrush( foreColor ) )
-              	using( Brush backBrush = new SolidBrush( e.BackColor ) )
+                EventUnit unit = unitSelectorListBox.Items[e.Index] as EventUnit;
+                bool unitExists = (unit.SpriteSet.Value > 0);
+
+                int colorIndex = (isSelected ? 0 : (unit.AlwaysPresent ? 1 : 2));
+                int teamIndex = (int)unit.TeamColor;
+                FFTPatcher.Settings.CombinedColor teamColor = Settings.GetTeamColor(teamIndex, colorIndex);
+                bool useConflictColor = (isOccupied && (!isSelected));
+                bool useTeamColor = (unitExists && teamColor.UseColor);
+
+                Color foreColor = (useConflictColor ? Color.Red : (useTeamColor ? teamColor.ForegroundColor : e.ForeColor));
+                Color backColor = (useConflictColor ? Color.White : (useTeamColor ? teamColor.BackgroundColor : e.BackColor));
+                string strPresentFlags = unit.AlwaysPresent ? (unit.RandomlyPresent ? "Always/Random" : "Always") : (unit.RandomlyPresent ? "Random" : "");
+
+                using (Brush backBrush = new SolidBrush(backColor))
                 {
                     e.Graphics.FillRectangle( backBrush, e.Bounds );
 
-                    //e.Graphics.DrawString((unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, textBrush, e.Bounds.X + 0, e.Bounds.Y + 0);
                     TextRenderer.DrawText(e.Graphics, (unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, new Point(e.Bounds.X + 0, e.Bounds.Y + 0), foreColor);
-                    if (unit.SpriteSet.Value > 0)
+                    if (unitExists)
                     {
-                        //e.Graphics.DrawString(unit.SpecialName.Name, e.Font, textBrush, e.Bounds.X + columnWidths[0], e.Bounds.Y + 0);
-                        TextRenderer.DrawText(e.Graphics, unit.SpecialName.Name, e.Font, new Point(e.Bounds.X + columnWidths[0], e.Bounds.Y + 0), foreColor);
-                        //e.Graphics.DrawString(unit.Job.Name, e.Font, textBrush, e.Bounds.X + columnWidths[0] + columnWidths[1], e.Bounds.Y + 0);
-                        TextRenderer.DrawText(e.Graphics, unit.Job.Name, e.Font, new Point(e.Bounds.X + columnWidths[0] + columnWidths[1], e.Bounds.Y + 0), foreColor);
+                        TextRenderer.DrawText(e.Graphics, unit.SpecialName.Name, e.Font, new Point(e.Bounds.X + cumulativeWidths[0], e.Bounds.Y + 0), foreColor);
+                        TextRenderer.DrawText(e.Graphics, unit.Job.Name, e.Font, new Point(e.Bounds.X + cumulativeWidths[1], e.Bounds.Y + 0), foreColor);
+                        TextRenderer.DrawText(e.Graphics, String.Format("({0}, {1}, {2})", unit.X, unit.Y, (unit.UpperLevel ? 1 : 0)), e.Font, new Point(e.Bounds.X + cumulativeWidths[2], e.Bounds.Y), foreColor);
+                        TextRenderer.DrawText(e.Graphics, String.Format("0x{0:X2}", unit.UnitID), e.Font, new Point(e.Bounds.X + cumulativeWidths[3], e.Bounds.Y + 0), foreColor);
+                        TextRenderer.DrawText(e.Graphics, strPresentFlags, e.Font, new Point(e.Bounds.X + cumulativeWidths[4], e.Bounds.Y + 0), foreColor);
+                        TextRenderer.DrawText(e.Graphics, unit.TeamColor.ToString(), e.Font, new Point(e.Bounds.X + cumulativeWidths[5], e.Bounds.Y + 0), foreColor);
                     }
                     if( (e.State & DrawItemState.Focus) == DrawItemState.Focus )
                     {
