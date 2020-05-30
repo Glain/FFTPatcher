@@ -34,6 +34,8 @@ namespace FFTorgASM
             this.patchList = patchList;
             this.asmUtility = asmUtility;
 
+            this.Filelistbox.Items.AddRange(FreeSpace.PsxRangeNames);
+
             innerPatchMap = new Dictionary<PatchedByteArray, AsmPatch>();
             patchRangeMap = new Dictionary<PatchRange, List<PatchedByteArray>>();
             outerPatchRangeMap = new Dictionary<PatchRange, HashSet<AsmPatch>>();

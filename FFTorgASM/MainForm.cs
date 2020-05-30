@@ -32,6 +32,7 @@ namespace FFTorgASM
             versionLabel.Text = string.Format( "v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString() );
 
             LoadFiles();
+            FreeSpace.ReadFreeSpaceXML();
 
             btnPatch.Click += new EventHandler( btnPatch_Click );
             reloadButton.Click += new EventHandler( reloadButton_Click );

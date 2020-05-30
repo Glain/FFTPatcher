@@ -49,11 +49,6 @@
             // Filelistbox
             // 
             this.Filelistbox.FormattingEnabled = true;
-            this.Filelistbox.Items.AddRange(new object[] {
-            "BATTLE.BIN",
-            "WORLD.BIN",
-            "SCUS 1",
-            "SCUS 2"});
             this.Filelistbox.Location = new System.Drawing.Point(12, 50);
             this.Filelistbox.Name = "Filelistbox";
             this.Filelistbox.Size = new System.Drawing.Size(86, 108);
