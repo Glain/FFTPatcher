@@ -1202,4 +1202,201 @@ A0000010
 </Location>
 </Patch>
 
+    <Patch name="Keen Senses ASM - 0x1BB ">
+        <Description>
+            (With Correct Reaction, W-EVD/C-EVD/S-EVD applies to back and sides) [Should be fixed]
+        </Description>
+        <Location file="BATTLE_BIN" offset="11E6F4">
+            d9600508
+            00000000
+        </Location>
+        <Location file="BATTLE_BIN" offset="F1364">
+            8D00A290
+            00000000
+            04004230
+            02000210
+            00000000
+            2330C600
+            000066A0
+            C0150608
+            2110C000
+        </Location>
+    </Patch>
+
+    <Patch name="Monster Talk becomes Learn">
+        <Location file="BATTLE_BIN" offset="F2F14">
+            03000292
+            1680053C
+            12000492
+            549FA524
+            0800A2A0
+            91000292
+            0400A4A0
+            10004230
+            04000210
+            0F000234
+            120002A2
+            54000234
+            030002A2
+            DE390608
+            00000000
+        </Location>
+        <Location file="BATTLE_BIN" offset="F2F54">
+            52FF7322
+            0C000234
+            51000334
+            120062A2
+            030063A2
+            623A0608
+            00000000
+        </Location>
+        <Location file="BATTLE_BIN" offset="127774">
+            c5670508
+        </Location>
+        <Location file="BATTLE_BIN" offset="12797c">
+            25104202
+            000062A0
+            D5670508
+        </Location>
+    </Patch>
+
+    <Patch name="R/S/M designates Learn on Hit">
+        <Description>
+            Units with the specified support ability (value XX on byte WW) equipped are treated as having the specified job/skillset (job YY, skillset ZZ) for the duration of learn-on-hit checks. So if you specify byte 91, value 10, job 51, skillset 0c, units with Monster Talk equipped learn Time Magic (e.g. Haste 2 and Slow 2), not their current skillset. It should not interfere with the support ability's ordinary functioning.
+            0x008b: Reactions 1      0x008c: Reactions 2
+            0x80 - PA Save         0x80 - Face (Faith) UP
+            0x40 - MA Save         0x40 - HP Restore
+            0x20 - Speed Save         0x20 - MP Restore
+            0x10 - Sunken State      0x10 - Critical Quick
+            0x08 - Caution         0x08 - Meatbone Slash
+            0x04 - Dragon Spirit         0x04 - Counter Magic
+            0x02 - Regenerator         0x02 - Counter Tackle
+            0x01 - Brave UP         0x01 - Counter Flood
+
+            0x008d: Reactions 3      0x008e: Reactions 4
+            0x80 - Absorb Used MP      0x80 - Damage Split
+            0x40 - Gilgame Heart      0x40 - Weapon Guard
+            0x20 - Reflect         0x20 - Finger Guard
+            0x10 - Auto Potion         0x10 - Abandon
+            0x08 - Counter         0x08 - Catch
+            0x04 -            0x04 - Blade Grasp
+            0x02 - Distribute         0x02 - Arrow Guard
+            0x01 - MP Switch         0x01 - Hamedo
+
+            0x008f: Support 1            0x0090: Support 2
+            0x80 - Equip Armor         0x80 - Half of MP
+            0x40 - Equip Shield         0x40 - Gained JP-UP
+            0x20 - Equip Sword         0x20 - Gained EXP-UP
+            0x10 - Equip Katana      0x10 - Attack UP
+            0x08 - Equip Crossbow      0x08 - Defense UP
+            0x04 - Equip Spear         0x04 - Magic Attack UP
+            0x02 - Equip Axe         0x02 - Magic Defense UP
+            0x01 - Equip Gun         0x01 - Concentrate
+
+            0x0091: Support 3         0x0092: Support 4
+            0x80 - Train         0x80 - Monster Skill
+            0x40 - Secret Hunt         0x40 - Defend
+            0x20 - Martial Arts         0x20 - Equip Change
+            0x10 - Monster Talk         0x10 -
+            0x08 - Throw Item         0x08 - Short Charge
+            0x04 - Maintenance         0x04 - Non-Charge
+            0x02 - Two Hands         0x02 -
+            0x01 - Two Swords         0x01 -
+
+            0x0093: Movement 1      0x0094: Movement 2
+            0x80 - Move +1         0x80 - Move-MP UP
+            0x40 - Move +2         0x40 - Move-Get EXP
+            0x20 - Move +3         0x20 - Move-Get JP
+            0x10 - Jump +1         0x10 - Cannot Enter Water
+            0x08 - Jump +2         0x08 - Teleport
+            0x04 - Jump +3         0x04 - Teleport 2
+            0x02 - Ignore Height      0x02 - Any Weather
+            0x01 - Move-HP UP         0x01 - Any Ground
+
+            0x0095: Movement 3
+            0x80 - Walk on Water
+            0x40 - Move in Water
+            0x20 - Move on Lava
+            0x10 - Move Underwater
+            0x08 - Float
+            0x04 - Fly
+            0x02 - Silent Walk
+            0x01 - Move-Find Item
+        </Description>
+        <Location file="BATTLE_BIN" offset="F2F14">
+            03000292
+            1680053C
+            12000492
+            749FA524
+            0800A2A0
+        </Location>
+        <Variable name="Ability byte (WW)" file="BATTLE_BIN" offset="F2F28"/>
+        <Location file="BATTLE_BIN" offset="F2F29">
+            000292
+            0400A4A0
+        </Location>
+        <Variable name="Ability Bit (XX)" file="BATTLE_BIN" offset="F2F30"/>
+        <Location file="BATTLE_BIN" offset="F2F31">
+            004230
+            04000210
+        </Location>
+        <Variable name="Skillset (ZZ)" file="BATTLE_BIN" offset="F2F38"/>
+        <Location file="BATTLE_BIN" offset="F2F39">
+            000234
+            120002A2
+        </Location>
+        <Variable name="Job (YY)" file="BATTLE_BIN" offset="F2F40"/>
+        <Location file="BATTLE_BIN" offset="F2F41">
+            000234
+            030002A2
+            df390608
+            04000234
+        </Location>
+        <Location file="BATTLE_BIN" offset="F2F54">
+            1680013C
+            409F2124
+            00002190
+            00000000
+            B6FF2124
+            40100100
+            21084100
+            23986102
+            67FF7326
+            05000234
+            4a000334
+            120062A2
+            030063A2
+            0800E003
+            00000000
+        </Location>
+        <Location file="BATTLE_BIN" offset="F2Fb0">
+            CC082124
+            21103400
+            89014190
+            04001034
+            06003014
+            1680013C
+            749F2124
+            04003090
+            08002190
+            120050A0
+            030041A0
+            01003126
+            1C3A0608
+            1500222E
+        </Location>
+        <Location file="BATTLE_BIN" offset="127868">
+            EC670508
+            1980013C
+        </Location>
+        <Location file="BATTLE_BIN" offset="127774">
+            C5670508
+        </Location>
+        <Location file="BATTLE_BIN" offset="12797c">
+            25104202
+            000062A0
+            D567050c
+        </Location>
+    </Patch>
+
 </Patches>
