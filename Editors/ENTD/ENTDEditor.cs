@@ -25,13 +25,23 @@ namespace FFTPatcher.Editors
 {
     public partial class ENTDEditor : UserControl
     {
-		#region Instance Variables (1) 
+		#region Instance Variables 
 
         private Context ourContext = Context.Default;
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                eventEditor1.ToolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public Event ClipBoardEvent { get; private set; }
 

@@ -39,7 +39,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public StatusAttribute StatusAttribute
         {
@@ -116,7 +125,8 @@ namespace FFTPatcher.Editors
             {
                 spinner.SetValueAndDefault(
                     ReflectionHelpers.GetFieldOrProperty<byte>( statusAttribute, spinner.Tag.ToString() ),
-                    ReflectionHelpers.GetFieldOrProperty<byte>( statusAttribute.Default, spinner.Tag.ToString() ) );
+                    ReflectionHelpers.GetFieldOrProperty<byte>( statusAttribute.Default, spinner.Tag.ToString() ),
+                    toolTip);
             }
 
             if( statusAttribute.Default != null )

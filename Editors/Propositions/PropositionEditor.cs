@@ -17,6 +17,16 @@ namespace FFTPatcher.Editors
         private Proposition proposition;
         private Context ourContext = Context.Default;
         private UInt16[] prices;
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
         public void BindTo( Proposition prop, IList<UInt16> prices, IList<UInt16> baseJpRewards, IList<UInt16> baseGilRewards, Context context )
         {
             if (ourContext != context)
@@ -34,28 +44,28 @@ namespace FFTPatcher.Editors
 
             ignoreChanges = true;
 
-            preferredStatsComboBox.SetIndexAndDefault( (int)prop.BraveFaith, (int)prop.Default.BraveFaith );
-            maxDaysSpinner.SetValueAndDefault( prop.MaxDays, prop.Default.MaxDays );
-            minDaysSpinner.SetValueAndDefault( prop.MinDays, prop.Default.MinDays );
-            prereqByteSpinner.SetValueAndDefault( prop.PrereqByte, prop.Default.PrereqByte );
-            completeJobComboBox.SetIndexAndDefault( (int)prop.PrereqProp, (int)prop.Default.PrereqProp );
-            prereqTypeComboBox.SetIndexAndDefault( (int)prop.PrereqType, (int)prop.Default.PrereqType );
-            certainDateComboBox.SetIndexAndDefault( (int)prop.PrereqZodiac, (int)prop.Default.PrereqZodiac );
-            price1ComboBox.SetIndexAndDefault( prop.PriceIndex1 - 1, prop.Default.PriceIndex1 - 1 );
-            price2ComboBox.SetIndexAndDefault( prop.PriceIndex2 - 1, prop.Default.PriceIndex2 - 1 );
-            baseJpRewardComboBox.SetIndexAndDefault( (int)prop.BaseSmallReward, (int)prop.Default.BaseSmallReward );
-            baseGilRewardComboBox.SetIndexAndDefault( (int)prop.BaseLargeReward, (int)prop.Default.BaseLargeReward );
-            rewardComboBox.SetIndexAndDefault( (int)prop.Reward+1, (int)prop.Default.Reward +1);
-            townComboBox.SetIndexAndDefault( (int)prop.Town, (int)prop.Default.Town );
-            jobTypeComboBox.SetIndexAndDefault( (int)prop.Type, (int)prop.Default.Type );
-            randomSuccessClassComboBox.SetIndexAndDefault( (int)prop.RandomSuccessClass, (int)prop.Default.RandomSuccessClass );
+            preferredStatsComboBox.SetIndexAndDefault( (int)prop.BraveFaith, (int)prop.Default.BraveFaith, toolTip );
+            maxDaysSpinner.SetValueAndDefault(prop.MaxDays, prop.Default.MaxDays, toolTip);
+            minDaysSpinner.SetValueAndDefault(prop.MinDays, prop.Default.MinDays, toolTip);
+            prereqByteSpinner.SetValueAndDefault(prop.PrereqByte, prop.Default.PrereqByte, toolTip);
+            completeJobComboBox.SetIndexAndDefault((int)prop.PrereqProp, (int)prop.Default.PrereqProp, toolTip);
+            prereqTypeComboBox.SetIndexAndDefault((int)prop.PrereqType, (int)prop.Default.PrereqType, toolTip);
+            certainDateComboBox.SetIndexAndDefault((int)prop.PrereqZodiac, (int)prop.Default.PrereqZodiac, toolTip);
+            price1ComboBox.SetIndexAndDefault(prop.PriceIndex1 - 1, prop.Default.PriceIndex1 - 1, toolTip);
+            price2ComboBox.SetIndexAndDefault(prop.PriceIndex2 - 1, prop.Default.PriceIndex2 - 1, toolTip);
+            baseJpRewardComboBox.SetIndexAndDefault((int)prop.BaseSmallReward, (int)prop.Default.BaseSmallReward, toolTip);
+            baseGilRewardComboBox.SetIndexAndDefault((int)prop.BaseLargeReward, (int)prop.Default.BaseLargeReward, toolTip);
+            rewardComboBox.SetIndexAndDefault((int)prop.Reward + 1, (int)prop.Default.Reward + 1, toolTip);
+            townComboBox.SetIndexAndDefault((int)prop.Town, (int)prop.Default.Town, toolTip);
+            jobTypeComboBox.SetIndexAndDefault((int)prop.Type, (int)prop.Default.Type, toolTip);
+            randomSuccessClassComboBox.SetIndexAndDefault((int)prop.RandomSuccessClass, (int)prop.Default.RandomSuccessClass, toolTip);
 
-            //unknown0x09Spinner.SetValueAndDefault( prop.Unknown0x09, prop.Default.Unknown0x09 );
-            //unknown0x0BSpinner.SetValueAndDefault( prop.Unknown0x0B, prop.Default.Unknown0x0B );
-            //unknown0x0CSpinner.SetValueAndDefault( prop.Unknown0x0C, prop.Default.Unknown0x0C );
-            unknown0x0FSpinner.SetValueAndDefault( prop.Unknown0x0F, prop.Default.Unknown0x0F );
-            //unknown0x14Spinner.SetValueAndDefault( prop.Unknown0x14, prop.Default.Unknown0x14 );
-            unlockedComboBox.SetValueAndDefault( prop.WhenUnlocked, prop.Default.WhenUnlocked );
+            //unknown0x09Spinner.SetValueAndDefault( prop.Unknown0x09, prop.Default.Unknown0x09, toolTip );
+            //unknown0x0BSpinner.SetValueAndDefault( prop.Unknown0x0B, prop.Default.Unknown0x0B, toolTip );
+            //unknown0x0CSpinner.SetValueAndDefault( prop.Unknown0x0C, prop.Default.Unknown0x0C, toolTip );
+            unknown0x0FSpinner.SetValueAndDefault(prop.Unknown0x0F, prop.Default.Unknown0x0F, toolTip);
+            //unknown0x14Spinner.SetValueAndDefault( prop.Unknown0x14, prop.Default.Unknown0x14, toolTip );
+            unlockedComboBox.SetValueAndDefault(prop.WhenUnlocked, prop.Default.WhenUnlocked, toolTip);
 
             rawByteLabel.Enabled = prop.PrereqType != PrereqType.None;
             completeJobLabel.Enabled = prop.PrereqType == PrereqType.FinishedJob;
@@ -263,8 +273,8 @@ namespace FFTPatcher.Editors
             {
                 ignoreChanges = true;
                 proposition.PrereqByte = (byte)prereqByteSpinner.Value;
-                completeJobComboBox.SetIndexAndDefault( (int)proposition.PrereqProp, (int)proposition.Default.PrereqProp );
-                certainDateComboBox.SetIndexAndDefault( (int)proposition.PrereqZodiac, (int)proposition.Default.PrereqZodiac );
+                completeJobComboBox.SetIndexAndDefault((int)proposition.PrereqProp, (int)proposition.Default.PrereqProp, toolTip);
+                certainDateComboBox.SetIndexAndDefault((int)proposition.PrereqZodiac, (int)proposition.Default.PrereqZodiac, toolTip);
                 ignoreChanges = false;
                 FireDataChanged();
             }
@@ -297,8 +307,8 @@ namespace FFTPatcher.Editors
             {
                 ignoreChanges = true;
                 proposition.PrereqByte = (byte)completeJobComboBox.SelectedIndex;
-                prereqByteSpinner.SetValueAndDefault( proposition.PrereqByte, proposition.Default.PrereqByte );
-                certainDateComboBox.SetIndexAndDefault( (int)proposition.PrereqZodiac, (int)proposition.Default.PrereqZodiac );
+                prereqByteSpinner.SetValueAndDefault(proposition.PrereqByte, proposition.Default.PrereqByte, toolTip);
+                certainDateComboBox.SetIndexAndDefault((int)proposition.PrereqZodiac, (int)proposition.Default.PrereqZodiac, toolTip);
                 ignoreChanges = false;
                 FireDataChanged();
             }
@@ -325,8 +335,8 @@ namespace FFTPatcher.Editors
             {
                 ignoreChanges = true;
                 proposition.PrereqByte = (byte)certainDateComboBox.SelectedIndex;
-                completeJobComboBox.SetIndexAndDefault( (int)proposition.PrereqProp, (int)proposition.Default.PrereqProp );
-                prereqByteSpinner.SetValueAndDefault( proposition.PrereqByte, proposition.Default.PrereqByte );
+                completeJobComboBox.SetIndexAndDefault((int)proposition.PrereqProp, (int)proposition.Default.PrereqProp, toolTip);
+                prereqByteSpinner.SetValueAndDefault(proposition.PrereqByte, proposition.Default.PrereqByte, toolTip);
                 ignoreChanges = false;
                 FireDataChanged();
             }

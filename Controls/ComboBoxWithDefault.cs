@@ -30,6 +30,8 @@ namespace FFTPatcher.Controls
     /// </summary>
     public class ComboBoxWithDefault : ComboBox
     {
+        private ToolTip toolTip;
+
 		#region Public Properties (6) 
 
         [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
@@ -71,18 +73,20 @@ namespace FFTPatcher.Controls
 
 		#region Public Methods (1) 
 
-        public void SetIndexAndDefault( int index, int defaultIndex )
+        public void SetIndexAndDefault( int index, int defaultIndex, ToolTip toolTip )
         {
-            SetValueAndDefault( Items[index], Items[defaultIndex] );
+            SetValueAndDefault( Items[index], Items[defaultIndex], toolTip );
         }
 
         /// <summary>
         /// Sets the SelectedItem and its default value.
         /// </summary>
-        public void SetValueAndDefault(object value, object defaultValue, ToolTip toolTip = null)
+        public void SetValueAndDefault(object value, object defaultValue, ToolTip toolTip)
         {
             if (toolTip == null)
-                toolTip = FFTPatchEditor.ToolTip;
+                toolTip = this.toolTip;
+            else
+                this.toolTip = toolTip;
 
             toolTip.SetToolTip(this, "Default: " + defaultValue.ToString());
 
@@ -128,7 +132,7 @@ namespace FFTPatcher.Controls
         {
             if( e.KeyData == Keys.F12 )
             {
-                SetValueAndDefault( DefaultValue, DefaultValue );
+                SetValueAndDefault( DefaultValue, DefaultValue, toolTip );
             }
             base.OnKeyDown( e );
         }

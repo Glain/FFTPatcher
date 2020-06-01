@@ -40,6 +40,16 @@ namespace FFTPatcher.Editors
 
         #endregion
 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                itemEditor.ToolTip = value;
+            }
+        }
+
         #region Constructors
 
         public AllItemsEditor()

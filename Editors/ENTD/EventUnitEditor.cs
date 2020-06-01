@@ -29,7 +29,7 @@ namespace FFTPatcher.Editors
 {
     public partial class EventUnitEditor : BaseEditor
     {
-		#region Instance Variables (8) 
+		#region Instance Variables 
 
         private ComboBoxWithDefault[] comboBoxes;
         private EventUnit eventUnit = null;
@@ -84,7 +84,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
+		#region Public Properties 
 
         public EventUnit EventUnit
         {
@@ -181,14 +190,16 @@ namespace FFTPatcher.Editors
                 {
                     spinner.SetValueAndDefault(
                         ReflectionHelpers.GetFieldOrProperty<byte>( eventUnit, spinner.Tag.ToString() ),
-                        ReflectionHelpers.GetFieldOrProperty<byte>( eventUnit.Default, spinner.Tag.ToString() ) );
+                        ReflectionHelpers.GetFieldOrProperty<byte>( eventUnit.Default, spinner.Tag.ToString() ),
+                        toolTip);
                 }
 
                 foreach( ComboBoxWithDefault comboBox in comboBoxes )
                 {
                     comboBox.SetValueAndDefault(
                         ReflectionHelpers.GetFieldOrProperty<object>( eventUnit, comboBox.Tag.ToString() ),
-                        ReflectionHelpers.GetFieldOrProperty<object>( eventUnit.Default, comboBox.Tag.ToString() ) );
+                        ReflectionHelpers.GetFieldOrProperty<object>( eventUnit.Default, comboBox.Tag.ToString() ),
+                        toolTip);
                 }
 
                 flags1CheckedListBox.SetValuesAndDefaults(
@@ -211,22 +222,28 @@ namespace FFTPatcher.Editors
 
                 teamColorComboBox.SetValueAndDefault(
                     eventUnit.TeamColor,
-                    eventUnit.Default.TeamColor );
+                    eventUnit.Default.TeamColor,
+                    toolTip);
                 faithComboBox.SetValueAndDefault(
                     eventUnit.Faith == 254 ? zeroTo100[101] : zeroTo100[eventUnit.Faith],
-                    eventUnit.Default.Faith == 254 ? zeroTo100[101] : zeroTo100[eventUnit.Default.Faith] );
+                    eventUnit.Default.Faith == 254 ? zeroTo100[101] : zeroTo100[eventUnit.Default.Faith],
+                    toolTip);
                 braveryComboBox.SetValueAndDefault(
                     eventUnit.Bravery == 254 ? zeroTo100[101] : zeroTo100[eventUnit.Bravery],
-                    eventUnit.Default.Bravery == 254 ? zeroTo100[101] : zeroTo100[eventUnit.Default.Bravery] );
+                    eventUnit.Default.Bravery == 254 ? zeroTo100[101] : zeroTo100[eventUnit.Default.Bravery],
+                    toolTip);
                 dayComboBox.SetValueAndDefault(
                     eventUnit.Day == 254 ? zeroTo31[32] : zeroTo31[eventUnit.Day],
-                    eventUnit.Default.Day == 254 ? zeroTo31[32] : zeroTo31[eventUnit.Default.Day] );
+                    eventUnit.Default.Day == 254 ? zeroTo31[32] : zeroTo31[eventUnit.Default.Day],
+                    toolTip);
                 levelComboBox.SetValueAndDefault(
                     eventUnit.Level == 254 ? levelStrings[200] : levelStrings[eventUnit.Level],
-                    eventUnit.Default.Level == 254 ? levelStrings[200] : levelStrings[eventUnit.Default.Level] );
+                    eventUnit.Default.Level == 254 ? levelStrings[200] : levelStrings[eventUnit.Default.Level],
+                    toolTip);
                 experienceComboBox.SetValueAndDefault(
                     (eventUnit.Experience == 254) ? "Random" : eventUnit.Experience.ToString(),
-                    (eventUnit.Default.Experience == 254) ? "Random" : eventUnit.Default.Experience.ToString()
+                    (eventUnit.Default.Experience == 254) ? "Random" : eventUnit.Default.Experience.ToString(),
+                    toolTip
                 );
 
                 upperLevelCheckBox.Checked = eventUnit.UpperLevel;

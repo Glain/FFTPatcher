@@ -30,7 +30,7 @@ namespace FFTPatcher.Editors
 {
     public partial class ItemEditor : BaseEditor
     {
-		#region Instance Variables (12) 
+		#region Instance Variables 
 
         private List<ComboBoxWithDefault> comboBoxes = new List<ComboBoxWithDefault>();
         private bool ignoreChanges = false;
@@ -56,6 +56,15 @@ namespace FFTPatcher.Editors
             ShopsFlags.Warjilis, ShopsFlags.Bervenia, ShopsFlags.Zarghidas };
 
 		#endregion Instance Variables 
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
 
 		#region Public Properties
 
@@ -359,22 +368,27 @@ namespace FFTPatcher.Editors
 
                 weaponRangeSpinner.SetValueAndDefault(
                     w.Range,
-                    w.WeaponDefault.Range );
+                    w.WeaponDefault.Range,
+                    toolTip);
                 weaponFormulaComboBox.SetValueAndDefault(
                     weaponFormulaComboBox.Items[w.Formula.Value],
-                    weaponFormulaComboBox.Items[w.WeaponDefault.Formula.Value] );
+                    weaponFormulaComboBox.Items[w.WeaponDefault.Formula.Value],
+                    toolTip);
                 weaponPowerSpinner.SetValueAndDefault( 
-                    w.WeaponPower, 
-                    w.WeaponDefault.WeaponPower );
+                    w.WeaponPower,
+                    w.WeaponDefault.WeaponPower,
+                    toolTip);
                 weaponEvadePercentageSpinner.SetValueAndDefault(
                     w.EvadePercentage,
-                    w.WeaponDefault.EvadePercentage );
+                    w.WeaponDefault.EvadePercentage,
+                    toolTip);
 
                 if( w.Formula.Value == 2 )
                 {
                     weaponCastSpellComboBox.SetValueAndDefault(
                         weaponCastSpellComboBox.Items[w.InflictStatus],
-                        weaponCastSpellComboBox.Items[w.WeaponDefault.InflictStatus] );
+                        weaponCastSpellComboBox.Items[w.WeaponDefault.InflictStatus],
+                        toolTip);
                     weaponCastSpellComboBox.Visible = true;
                     weaponCastSpellLabel.Visible = true;
                     weaponSpellStatusSpinner.Visible = false;
@@ -385,7 +399,8 @@ namespace FFTPatcher.Editors
                 {
                     weaponSpellStatusSpinner.SetValueAndDefault(
                         w.InflictStatus,
-                        w.WeaponDefault.InflictStatus );
+                        w.WeaponDefault.InflictStatus,
+                        toolTip);
                     weaponCastSpellComboBox.Visible = false;
                     weaponCastSpellLabel.Visible = false;
                     weaponSpellStatusSpinner.Visible = true;
@@ -394,61 +409,70 @@ namespace FFTPatcher.Editors
                 }
 
                 weaponElementsEditor.SetValueAndDefaults( w.Elements, w.WeaponDefault.Elements );
-                weaponUnknownSpinner.SetValueAndDefault( w.Unknown, w.WeaponDefault.Unknown );
+                weaponUnknownSpinner.SetValueAndDefault( w.Unknown, w.WeaponDefault.Unknown, toolTip );
             }
             else if( item is Shield )
             {
                 shieldPhysicalBlockRateSpinner.SetValueAndDefault(
                     (item as Shield).PhysicalBlockRate,
-                    (item as Shield).ShieldDefault.PhysicalBlockRate );
+                    (item as Shield).ShieldDefault.PhysicalBlockRate,
+                    toolTip);
                 shieldMagicBlockRateSpinner.SetValueAndDefault( 
-                    (item as Shield).MagicBlockRate, 
-                    (item as Shield).ShieldDefault.MagicBlockRate );
+                    (item as Shield).MagicBlockRate,
+                    (item as Shield).ShieldDefault.MagicBlockRate,
+                    toolTip);
             }
             else if( item is Armor )
             {
                 armorHPBonusSpinner.SetValueAndDefault(
                     (item as Armor).HPBonus,
-                    (item as Armor).ArmorDefault.HPBonus );
+                    (item as Armor).ArmorDefault.HPBonus,
+                    toolTip);
                 armorMPBonusSpinner.SetValueAndDefault( 
                     (item as Armor).MPBonus,
-                    (item as Armor).ArmorDefault.MPBonus );
+                    (item as Armor).ArmorDefault.MPBonus,
+                    toolTip);
             }
             else if( item is Accessory )
             {
                 accessoryMagicEvadeRateSpinner.SetValueAndDefault( 
                     (item as Accessory).MagicEvade,
-                    (item as Accessory).AccessoryDefault.MagicEvade );
+                    (item as Accessory).AccessoryDefault.MagicEvade,
+                    toolTip);
                 accessoryPhysicalEvadeRateSpinner.SetValueAndDefault( 
                     (item as Accessory).PhysicalEvade,
-                    (item as Accessory).AccessoryDefault.PhysicalEvade );
+                    (item as Accessory).AccessoryDefault.PhysicalEvade,
+                    toolTip);
             }
             else if( item is ChemistItem )
             {
                 chemistItemFormulaComboBox.SetValueAndDefault(
                     chemistItemFormulaComboBox.Items[(item as ChemistItem).Formula],
-                    chemistItemFormulaComboBox.Items[(item as ChemistItem).ChemistItemDefault.Formula] );
+                    chemistItemFormulaComboBox.Items[(item as ChemistItem).ChemistItemDefault.Formula],
+                    toolTip);
                 chemistItemSpellStatusSpinner.SetValueAndDefault( 
                     (item as ChemistItem).InflictStatus,
-                    (item as ChemistItem).ChemistItemDefault.InflictStatus );
+                    (item as ChemistItem).ChemistItemDefault.InflictStatus,
+                    toolTip);
                 chemistItemXSpinner.SetValueAndDefault( 
                     (item as ChemistItem).X,
-                    (item as ChemistItem).ChemistItemDefault.X );
+                    (item as ChemistItem).ChemistItemDefault.X,
+                    toolTip);
             }
 
-            paletteSpinner.SetValueAndDefault( item.Palette, item.Default.Palette );
-            graphicSpinner.SetValueAndDefault( item.Graphic, item.Default.Graphic );
-            enemyLevelSpinner.SetValueAndDefault( item.EnemyLevel, item.Default.EnemyLevel );
+            paletteSpinner.SetValueAndDefault(item.Palette, item.Default.Palette, toolTip);
+            graphicSpinner.SetValueAndDefault(item.Graphic, item.Default.Graphic, toolTip);
+            enemyLevelSpinner.SetValueAndDefault(item.EnemyLevel, item.Default.EnemyLevel, toolTip);
 
-            itemTypeComboBox.SetValueAndDefault( item.ItemType, item.Default.ItemType );
+            itemTypeComboBox.SetValueAndDefault(item.ItemType, item.Default.ItemType, toolTip);
 
-            itemAttributesSpinner.SetValueAndDefault( item.SIA, item.Default.SIA );
-            secondTableIdSpinner.SetValueAndDefault( item.SecondTableId, item.Default.SecondTableId );
-            priceSpinner.SetValueAndDefault( item.Price, item.Default.Price );
-            shopAvailabilityComboBox.SetValueAndDefault( item.ShopAvailability, item.Default.ShopAvailability );
+            itemAttributesSpinner.SetValueAndDefault(item.SIA, item.Default.SIA, toolTip);
+            secondTableIdSpinner.SetValueAndDefault(item.SecondTableId, item.Default.SecondTableId, toolTip);
+            priceSpinner.SetValueAndDefault(item.Price, item.Default.Price, toolTip);
+            shopAvailabilityComboBox.SetValueAndDefault(item.ShopAvailability, item.Default.ShopAvailability, toolTip);
 
-            unknown1Spinner.SetValueAndDefault( item.Unknown1, item.Default.Unknown1 );
-            unknown2Spinner.SetValueAndDefault( item.Unknown2, item.Default.Unknown2 );
+            unknown1Spinner.SetValueAndDefault(item.Unknown1, item.Default.Unknown1, toolTip);
+            unknown2Spinner.SetValueAndDefault(item.Unknown2, item.Default.Unknown2, toolTip);
             
             if (item.Offset < 256)
             {
@@ -528,7 +552,8 @@ namespace FFTPatcher.Editors
                     ignoreChanges = true;
                     weaponSpellStatusSpinner.SetValueAndDefault(
                         (byte)((item as Weapon).InflictStatus),
-                        (item as Weapon).WeaponDefault.InflictStatus );
+                        (item as Weapon).WeaponDefault.InflictStatus,
+                        toolTip);
                     ignoreChanges = old;
                 }
                 OnDataChanged( sender, System.EventArgs.Empty );

@@ -28,7 +28,7 @@ namespace FFTPatcher.Editors
 {
     public partial class CommonAbilitiesEditor : BaseEditor
     {
-		#region Instance Variables (5) 
+		#region Instance Variables
 
         private Ability ability;
         private static readonly string[] AIPropertyNames = new string[] {
@@ -43,6 +43,15 @@ namespace FFTPatcher.Editors
             "Blank3", "Blank4", "Blank5", "Unknown4" };
 
 		#endregion Instance Variables 
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
 
 		#region Public Properties
 
@@ -153,12 +162,13 @@ namespace FFTPatcher.Editors
                 abilityTypeComboBox.DataSource = ourContext == Context.US_PSP ? PSPResources.Lists.AbilityTypes : PSXResources.Lists.AbilityTypes;
             }
 
-            jpCostSpinner.SetValueAndDefault( ability.JPCost, ability.Default.JPCost );
-            chanceSpinner.SetValueAndDefault( ability.LearnRate, ability.Default.LearnRate );
+            jpCostSpinner.SetValueAndDefault( ability.JPCost, ability.Default.JPCost, toolTip );
+            chanceSpinner.SetValueAndDefault( ability.LearnRate, ability.Default.LearnRate, toolTip );
 
             abilityTypeComboBox.SetValueAndDefault(
                 abilityTypeComboBox.Items[(byte)ability.AbilityType],
-                abilityTypeComboBox.Items[(byte)ability.Default.AbilityType] );
+                abilityTypeComboBox.Items[(byte)ability.Default.AbilityType],
+                toolTip);
 
             if( ability.Default != null )
             {

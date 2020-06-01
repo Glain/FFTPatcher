@@ -18,6 +18,17 @@ namespace FFTPatcher.Editors
         private NumericUpDownWithDefault[] gilBonusSpinners;
         private NumericUpDownWithDefault[] jpBonusSpinners;
 
+        private ToolTip toolTip;
+        public ToolTip ToolTip 
+        {
+            set
+            {
+                toolTip = value;
+                allPropositionDetailsEditor1.ToolTip = value;
+                additionalRewardsEditor1.ToolTip = value;
+            }
+        }
+
         public AllPropositionsEditor()
         {
             InitializeComponent();
@@ -77,13 +88,13 @@ namespace FFTPatcher.Editors
             props = allProps;
             for (int i = 0; i < 8; i++)
             {
-                jpBonusSpinners[i].SetValueAndDefault( allProps.SmallBonuses[i], allProps.Default.SmallBonuses[i] );
-                gilBonusSpinners[i].SetValueAndDefault( allProps.LargeBonuses[i], allProps.Default.LargeBonuses[i] );
+                jpBonusSpinners[i].SetValueAndDefault( allProps.SmallBonuses[i], allProps.Default.SmallBonuses[i], toolTip );
+                gilBonusSpinners[i].SetValueAndDefault( allProps.LargeBonuses[i], allProps.Default.LargeBonuses[i], toolTip );
             }
             for (int i = 0; i < 10; i++)
             {
-                jpMultiplierSpinners[i].SetValueAndDefault( allProps.JPMultipliers[i], allProps.Default.JPMultipliers[i] );
-                gilMultiplierSpinners[i].SetValueAndDefault( allProps.GilMultipliers[i], allProps.Default.GilMultipliers[i] );
+                jpMultiplierSpinners[i].SetValueAndDefault( allProps.JPMultipliers[i], allProps.Default.JPMultipliers[i], toolTip );
+                gilMultiplierSpinners[i].SetValueAndDefault( allProps.GilMultipliers[i], allProps.Default.GilMultipliers[i], toolTip );
             }
             classBonusesEditor1.UpdateView( allProps, context );
             statLevelBonusesEditor1.UpdateView( allProps, context );

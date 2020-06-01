@@ -25,7 +25,7 @@ namespace FFTPatcher.Editors
 {
     public partial class AllStatusAttributesEditor : UserControl
     {
-        #region Instance Variables (3)
+        #region Instance Variables
 
         private StatusAttribute copiedEntry;
         private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
@@ -33,6 +33,16 @@ namespace FFTPatcher.Editors
         const int pasteIndex = 1;
 
         #endregion
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                statusAttributeEditor.ToolTip = value;
+            }
+        }
 
         #region Constructors (1)
 

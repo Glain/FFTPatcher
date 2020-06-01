@@ -26,14 +26,24 @@ namespace FFTPatcher.Editors
 {
     public partial class AllItemAttributesEditor : UserControl
     {
-		#region Instance Variables (2) 
+		#region Instance Variables
 
         private ItemAttributes ClipBoardAttributes;
         private Context ourContext = Context.Default;
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                itemAttributeEditor.ToolTip = value;
+            }
+        }
+
+		#region Public Properties 
 
         public int SelectedIndex { get { return offsetListBox.SelectedIndex; } set { offsetListBox.SelectedIndex = value; } }
 

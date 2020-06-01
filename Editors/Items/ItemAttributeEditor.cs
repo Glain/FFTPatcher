@@ -36,7 +36,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private System.Windows.Forms.ToolTip toolTip;
+        public System.Windows.Forms.ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
+		#region Public Properties 
 
         public ItemAttributes ItemAttributes
         {
@@ -112,7 +121,8 @@ namespace FFTPatcher.Editors
             {
                 spinner.SetValueAndDefault(
                     ReflectionHelpers.GetFieldOrProperty<byte>( attributes, spinner.Tag.ToString() ),
-                    ReflectionHelpers.GetFieldOrProperty<byte>( attributes.Default, spinner.Tag.ToString() ) );
+                    ReflectionHelpers.GetFieldOrProperty<byte>( attributes.Default, spinner.Tag.ToString() ),
+                    toolTip);
             }
 
             statusImmunityEditor.Statuses = null;

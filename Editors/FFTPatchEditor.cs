@@ -25,17 +25,14 @@ namespace FFTPatcher.Editors
 {
     public partial class FFTPatchEditor : UserControl
     {
-		#region Static Properties 
-
-        public static ToolTip ToolTip { get; private set; }
-
-		#endregion
+        private ToolTip toolTip;
 
 		#region Constructors
 
         public FFTPatchEditor()
         {
             InitializeComponent();
+            SetToolTip();
             this.Enabled = false;
 
             allAbilitiesEditor1.InflictStatusClicked += InflictStatusClicked;
@@ -53,11 +50,6 @@ namespace FFTPatcher.Editors
 
             allInflictStatusesEditor1.RepointHandler += OnInflictStatusRepoint;
             allItemAttributesEditor1.RepointHandler += OnItemAttributesRepoint;
-        }
-
-        static FFTPatchEditor()
-        {
-            ToolTip = new ToolTip();
         }
 
 		#endregion Constructors 
@@ -94,6 +86,22 @@ namespace FFTPatcher.Editors
             propositionsTabPage.Text = FFTPatch.Context == Context.US_PSP ? "Errands" : "Propositions";
 
             fftPatch = FFTPatch;
+        }
+
+        private void SetToolTip()
+        {
+            toolTip = new ToolTip();
+
+            allAbilitiesEditor1.ToolTip = toolTip;
+            allItemAttributesEditor1.ToolTip = toolTip;
+            allItemsEditor1.ToolTip = toolTip;
+            allJobsEditor1.ToolTip = toolTip;
+            allMoveFindItemsEditor1.ToolTip = toolTip;
+            allPropositionsEditor1.ToolTip = toolTip;
+            allSkillSetsEditor1.ToolTip = toolTip;
+            allStatusAttributesEditor1.ToolTip = toolTip;
+            entdEditor1.ToolTip = toolTip;
+            jobLevelsEditor1.ToolTip = toolTip;
         }
 
         private void InflictStatusClicked( object sender, LabelClickedEventArgs e )

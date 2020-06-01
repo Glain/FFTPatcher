@@ -20,6 +20,15 @@ namespace FFTPatcher.Editors
 
         private List<ComboBoxWithDefault> allComboBoxes = null;
 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
         public void UpdateView( AllPropositions props )
         {
             this.props = props;
@@ -67,7 +76,7 @@ namespace FFTPatcher.Editors
                 PropositionType type = (PropositionType)Enum.Parse( typeof( PropositionType ), errandType );
                 BonusPercent percent = (BonusPercent)Enum.Parse( typeof( BonusPercent ), percentage );
 
-                box.SetIndexAndDefault( (int)dict[type, percent], (int)def[type, percent] );
+                box.SetIndexAndDefault((int)dict[type, percent], (int)def[type, percent], toolTip);
             }
         }
 
@@ -98,7 +107,7 @@ namespace FFTPatcher.Editors
 
                 PropositionType type = (PropositionType)Enum.Parse( typeof( PropositionType ), tag );
 
-                box.SetIndexAndDefault( (int)dict[type], (int)def[type] );
+                box.SetIndexAndDefault((int)dict[type], (int)def[type], toolTip);
             }
         }
 

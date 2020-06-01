@@ -27,7 +27,7 @@ namespace FFTPatcher.Editors
 {
     public partial class JobEditor : BaseEditor
     {
-		#region Instance Variables (5) 
+		#region Instance Variables 
 
         private ComboBoxWithDefault[] valueComboBoxes;
         private ComboBoxWithDefault[] indexComboBoxes;
@@ -38,7 +38,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private System.Windows.Forms.ToolTip toolTip;
+        public System.Windows.Forms.ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public Job Job
         {
@@ -165,20 +174,21 @@ namespace FFTPatcher.Editors
                 }
             }
 
-            skillsetComboBox.SetValueAndDefault( job.SkillSet, job.Default.SkillSet );
+            skillsetComboBox.SetValueAndDefault( job.SkillSet, job.Default.SkillSet, toolTip );
             foreach( NumericUpDownWithDefault s in spinners )
             {
                 // TODO Update Default
                 s.SetValueAndDefault(
                     ReflectionHelpers.GetFieldOrProperty<byte>( job, s.Tag.ToString() ),
-                    ReflectionHelpers.GetFieldOrProperty<byte>( job.Default, s.Tag.ToString() ) );
+                    ReflectionHelpers.GetFieldOrProperty<byte>( job.Default, s.Tag.ToString() ),
+                    toolTip);
             }
-            innateAComboBox.SetValueAndDefault( job.InnateA, job.Default.InnateA );
-            innateBComboBox.SetValueAndDefault( job.InnateB, job.Default.InnateB );
-            innateCComboBox.SetValueAndDefault( job.InnateC, job.Default.InnateC );
-            innateDComboBox.SetValueAndDefault( job.InnateD, job.Default.InnateD );
-            cmb_MPortrait.SetValueAndDefault(cmb_MPortrait.Items[job.MPortrait], cmb_MPortrait.Items[job.Default.MPortrait]);
-            cmb_MType.SetValueAndDefault(cmb_MType.Items[job.MGraphic], cmb_MPortrait.Items[job.Default.MGraphic]);
+            innateAComboBox.SetValueAndDefault( job.InnateA, job.Default.InnateA, toolTip );
+            innateBComboBox.SetValueAndDefault(job.InnateB, job.Default.InnateB, toolTip);
+            innateCComboBox.SetValueAndDefault(job.InnateC, job.Default.InnateC, toolTip);
+            innateDComboBox.SetValueAndDefault(job.InnateD, job.Default.InnateD, toolTip);
+            cmb_MPortrait.SetValueAndDefault(cmb_MPortrait.Items[job.MPortrait], cmb_MPortrait.Items[job.Default.MPortrait], toolTip);
+            cmb_MType.SetValueAndDefault(cmb_MType.Items[job.MGraphic], cmb_MPortrait.Items[job.Default.MGraphic], toolTip);
 
             absorbElementsEditor.SetValueAndDefaults( job.AbsorbElement, job.Default.AbsorbElement );
             halfElementsEditor.SetValueAndDefaults( job.HalfElement, job.Default.HalfElement);

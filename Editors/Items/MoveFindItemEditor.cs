@@ -9,7 +9,7 @@ namespace FFTPatcher.Editors
 {
     public partial class MoveFindItemEditor : BaseEditor
     {
-		#region Instance Variables (3) 
+		#region Instance Variables
 
         private  bool ignoreChanges = false;
         private MoveFindItem moveFindItem;
@@ -17,7 +17,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (2) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public string Label
         {
@@ -136,10 +145,10 @@ namespace FFTPatcher.Editors
                 }
             }
 
-            rareComboBox.SetValueAndDefault( moveFindItem.RareItem, moveFindItem.Default.RareItem );
-            commonComboBox.SetValueAndDefault( moveFindItem.CommonItem, moveFindItem.Default.CommonItem );
-            xSpinner.SetValueAndDefault( moveFindItem.X, moveFindItem.Default.X );
-            ySpinner.SetValueAndDefault( moveFindItem.Y, moveFindItem.Default.Y );
+            rareComboBox.SetValueAndDefault( moveFindItem.RareItem, moveFindItem.Default.RareItem, toolTip );
+            commonComboBox.SetValueAndDefault( moveFindItem.CommonItem, moveFindItem.Default.CommonItem, toolTip );
+            xSpinner.SetValueAndDefault( moveFindItem.X, moveFindItem.Default.X, toolTip );
+            ySpinner.SetValueAndDefault( moveFindItem.Y, moveFindItem.Default.Y, toolTip );
             trapsCheckedListBox.SetValuesAndDefaults(
                 new bool[] {moveFindItem.Unknown1, moveFindItem.Unknown2, moveFindItem.Unknown3, moveFindItem.Unknown4,
                     moveFindItem.SteelNeedle, moveFindItem.SleepingGas, moveFindItem.Deathtrap, moveFindItem.Degenerator},

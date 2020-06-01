@@ -38,7 +38,17 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (2) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                eventUnitEditor.ToolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public EventUnit ClipBoardUnit { get; private set; }
 

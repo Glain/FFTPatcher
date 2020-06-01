@@ -23,14 +23,27 @@ namespace FFTPatcher.Editors
 {
     public partial class MapMoveFindItemEditor : BaseEditor
     {
-		#region Instance Variables (1) 
+		#region Instance Variables
 
         private MapMoveFindItems mapMoveFindItems;
         private PatcherLib.Datatypes.Context ourContext = PatcherLib.Datatypes.Context.Default;
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private System.Windows.Forms.ToolTip toolTip;
+        public System.Windows.Forms.ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                moveFindItemEditor1.ToolTip = value;
+                moveFindItemEditor2.ToolTip = value;
+                moveFindItemEditor3.ToolTip = value;
+                moveFindItemEditor4.ToolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public MapMoveFindItems MapMoveFindItems
         {

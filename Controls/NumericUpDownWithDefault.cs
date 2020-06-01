@@ -30,7 +30,9 @@ namespace FFTPatcher.Controls
     /// </summary>
     public class NumericUpDownWithDefault : NumericUpDown
     {
-		#region Public Properties (3) 
+        private ToolTip toolTip;
+
+		#region Public Properties
 
         public bool Default { get { return Value == DefaultValue; } }
 
@@ -49,15 +51,17 @@ namespace FFTPatcher.Controls
 
 		#endregion Public Properties 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
         /// <summary>
         /// Sets the value and its default.
         /// </summary>
-        public void SetValueAndDefault( decimal value, decimal defaultValue, ToolTip toolTip = null )
+        public void SetValueAndDefault( decimal value, decimal defaultValue, ToolTip toolTip )
         {
             if (toolTip == null)
-                toolTip = FFTPatchEditor.ToolTip;
+                toolTip = this.toolTip;
+            else
+                this.toolTip = toolTip;
 
             if( Hexadecimal )
                 toolTip.SetToolTip(this, string.Format("Default: 0x{0:X2}", (int)defaultValue));
@@ -112,7 +116,7 @@ namespace FFTPatcher.Controls
         {
             if( e.KeyData == Keys.F12 )
             {
-                SetValueAndDefault( DefaultValue, DefaultValue );
+                SetValueAndDefault( DefaultValue, DefaultValue, toolTip );
             }
             base.OnKeyDown( e );
         }

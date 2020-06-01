@@ -27,7 +27,7 @@ namespace FFTPatcher.Editors
 {
     public partial class AllAbilitiesEditor : UserControl
     {
-		#region Instance Variables (6) 
+		#region Instance Variables
 
         private Ability cbAbility;
         const int cloneCommonIndex = 0;
@@ -39,6 +39,16 @@ namespace FFTPatcher.Editors
         const int pasteSpecificIndex = 2;
 
 		#endregion Instance Variables 
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                abilityEditor.ToolTip = value;
+            }
+        }
 
 		#region Constructors (1) 
 

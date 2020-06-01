@@ -26,12 +26,22 @@ namespace FFTPatcher.Editors
 {
     public partial class AllSkillSetsEditor : UserControl
     {
-		#region Instance Variables (2) 
+		#region Instance Variables 
 
         private SkillSet cbSkillSet = null;
         private Context ourContext = Context.Default;
 
 		#endregion Instance Variables 
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                skillSetEditor.ToolTip = value;
+            }
+        }
 
 		#region Public Properties (1) 
 

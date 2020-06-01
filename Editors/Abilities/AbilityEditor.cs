@@ -28,7 +28,7 @@ namespace FFTPatcher.Editors
 {
     public partial class AbilityEditor : BaseEditor
     {
-		#region Instance Variables (9) 
+		#region Instance Variables
 
         private Ability ability;
         private List<ComboBoxWithDefault> comboBoxes;
@@ -42,7 +42,18 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private System.Windows.Forms.ToolTip toolTip;
+        public System.Windows.Forms.ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                abilityAttributesEditor.ToolTip = value;
+                commonAbilitiesEditor.ToolTip = value;
+            }
+        }
+
+		#region Public Properties 
 
         public Ability Ability
         {
@@ -142,7 +153,8 @@ namespace FFTPatcher.Editors
             {
                 spinner.SetValueAndDefault(
                     ReflectionHelpers.GetFieldOrProperty<byte>( ability, spinner.Tag.ToString() ),
-                    ReflectionHelpers.GetFieldOrProperty<byte>( ability.Default, spinner.Tag.ToString() ) );
+                    ReflectionHelpers.GetFieldOrProperty<byte>( ability.Default, spinner.Tag.ToString() ),
+                    toolTip);
             }
             arithmeticksPanel.Visible = ability.IsArithmetick;
 
@@ -173,17 +185,17 @@ namespace FFTPatcher.Editors
 
             if (showEffect)
             {
-                effectComboBox.SetValueAndDefault( ability.Effect, ability.Default.Effect );
+                effectComboBox.SetValueAndDefault( ability.Effect, ability.Default.Effect, toolTip );
             }
 
             if( ability.IsItem )
             {
-                itemUseComboBox.SetValueAndDefault( ability.Item, ability.Default.Item );
+                itemUseComboBox.SetValueAndDefault( ability.Item, ability.Default.Item, toolTip );
             }
 
             if( ability.IsThrowing )
             {
-                throwingComboBox.SetValueAndDefault( ability.Throwing, ability.Default.Throwing );
+                throwingComboBox.SetValueAndDefault( ability.Throwing, ability.Default.Throwing, toolTip );
             }
 
             ignoreChanges = false;

@@ -37,6 +37,15 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
+        private System.Windows.Forms.ToolTip toolTip;
+        public System.Windows.Forms.ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
 		#region Public Properties (1) 
 
         public SkillSet SkillSet
@@ -110,11 +119,11 @@ namespace FFTPatcher.Editors
             }
             for( int i = 0; i < 16; i++ )
             {
-                actionComboBoxes[i].SetValueAndDefault( skillSet.Actions[i], skillSet.Default.Actions[i] );
+                actionComboBoxes[i].SetValueAndDefault( skillSet.Actions[i], skillSet.Default.Actions[i], toolTip );
             }
             for( int i = 0; i < 6; i++ )
             {
-                theRestComboBoxes[i].SetValueAndDefault( skillSet.TheRest[i], skillSet.Default.TheRest[i] );
+                theRestComboBoxes[i].SetValueAndDefault( skillSet.TheRest[i], skillSet.Default.TheRest[i], toolTip );
             }
 
             theRestGroupBox.ResumeLayout();

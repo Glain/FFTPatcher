@@ -18,6 +18,16 @@ namespace FFTPatcher.Editors
         private AllPropositions props;
         public PatcherLib.Datatypes.Context Context { get; set; }
 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                propositionEditor1.ToolTip = value;
+            }
+        }
+
         public AllPropositionDetailsEditor()
         {
             InitializeComponent();

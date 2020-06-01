@@ -26,12 +26,22 @@ namespace FFTPatcher.Editors
 {
     public partial class AllJobsEditor : UserControl
     {
-		#region Instance Variables (2) 
+		#region Instance Variables
 
         private Job cbJob = null;
         private Context ourContext = Context.Default;
 
 		#endregion Instance Variables 
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+                jobEditor.ToolTip = value;
+            }
+        }
 
 		#region Constructors (1) 
 

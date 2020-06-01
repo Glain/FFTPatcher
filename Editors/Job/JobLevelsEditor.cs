@@ -29,13 +29,22 @@ namespace FFTPatcher.Editors
 {
     public partial class JobLevelsEditor : BaseEditor
     {
-		#region Instance Variables (1) 
+		#region Instance Variables
 
         private JobLevels levels;
         Label[] labels;
         VerticalLabel[] verticalLabels;
 
 		#endregion Instance Variables 
+
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
 
 		#region Constructors (1) 
 
@@ -74,7 +83,8 @@ namespace FFTPatcher.Editors
                     spinner.ValueChanged -= spinner_ValueChanged;
                     spinner.SetValueAndDefault(
                         ReflectionHelpers.GetFieldOrProperty<UInt16>( levels, spinner.Tag.ToString() ),
-                        ReflectionHelpers.GetFieldOrProperty<UInt16>( levels.Default, spinner.Tag.ToString() ) );
+                        ReflectionHelpers.GetFieldOrProperty<UInt16>( levels.Default, spinner.Tag.ToString() ),
+                        toolTip);
                     spinner.ValueChanged += spinner_ValueChanged;
                 }
             }

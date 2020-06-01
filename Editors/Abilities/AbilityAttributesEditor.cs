@@ -30,7 +30,7 @@ namespace FFTPatcher.Editors
 {
     public partial class AbilityAttributesEditor : BaseEditor
     {
-		#region Instance Variables (6) 
+		#region Instance Variables
 
         private AbilityAttributes attributes;
         private static readonly List<string> FieldNames = new List<string>( new string[] {
@@ -46,7 +46,16 @@ namespace FFTPatcher.Editors
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+        private ToolTip toolTip;
+        public ToolTip ToolTip
+        {
+            set
+            {
+                toolTip = value;
+            }
+        }
+
+		#region Public Properties
 
         public AbilityAttributes Attributes
         {
@@ -168,10 +177,11 @@ namespace FFTPatcher.Editors
             {
                 spinner.SetValueAndDefault(
                     ReflectionHelpers.GetFieldOrProperty<byte>( attributes, spinner.Tag.ToString() ),
-                    ReflectionHelpers.GetFieldOrProperty<byte>( attributes.Default, spinner.Tag.ToString() ) );
+                    ReflectionHelpers.GetFieldOrProperty<byte>( attributes.Default, spinner.Tag.ToString() ),
+                    toolTip);
             }
 
-            formulaComboBox.SetValueAndDefault( attributes.Formula, attributes.Default.Formula );
+            formulaComboBox.SetValueAndDefault( attributes.Formula, attributes.Default.Formula, toolTip );
 
             elementsEditor.SetValueAndDefaults( attributes.Elements, attributes.Default.Elements );
             ignoreChanges = false;

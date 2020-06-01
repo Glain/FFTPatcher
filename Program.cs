@@ -42,7 +42,6 @@ namespace FFTPatcher
             object dummy = AllAbilities.PSPNames;
             dummy = PSPResources.Lists.AbilityAttributes;
             dummy = PSXResources.Lists.AbilityAttributes;
-            dummy = FFTPatchEditor.ToolTip;
             dummy = SkillSet.GetDummySkillSets(PatcherLib.Datatypes.Context.US_PSX);
             dummy = AllMonsterSkills.PSXNames;
             dummy = AllJobs.GetNames(PatcherLib.Datatypes.Context.US_PSX);
