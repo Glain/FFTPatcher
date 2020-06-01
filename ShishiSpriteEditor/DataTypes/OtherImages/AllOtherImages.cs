@@ -104,9 +104,14 @@ namespace FFTPatcher.SpriteEditor
                     string name = string.Empty;
                     name = img.GetSaveFileName();
 
+                    if (usedFilenameSet.Contains(name))
+                        name = name.Replace(".", "_2.");
+
+                    int num = 3;
                     while (usedFilenameSet.Contains(name))
                     {
-                        name = name.Replace(".", "_.");
+                        name = name.Replace("_" + (num - 1) + ".", "_" + (num) + ".");
+                        num++;
                     }
 
                     string filePath = Path.Combine(path, name);
@@ -203,9 +208,14 @@ namespace FFTPatcher.SpriteEditor
 
                     if (!string.IsNullOrEmpty( name ))
                     {
+                        if (usedFilenameSet.Contains(name))
+                            name = name.Replace(".", "_2.");
+
+                        int num = 3;
                         while (usedFilenameSet.Contains(name))
                         {
-                            name = name.Replace(".", "_.");
+                            name = name.Replace("_" + (num - 1) + ".", "_" + (num) + ".");
+                            num++;
                         }
 
                         //Bitmap bmp = img.GetImageFromIso( iso );
