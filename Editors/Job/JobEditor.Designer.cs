@@ -104,6 +104,7 @@ namespace FFTPatcher.Editors
             this.pnl_FormationSprites = new System.Windows.Forms.Panel();
             this.cmb_MType = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.cmb_MPortrait = new FFTPatcher.Controls.ComboBoxWithDefault();
+            this.btn_ViewStats = new System.Windows.Forms.Button();
             hpGrowthLabel = new System.Windows.Forms.Label();
             hpMultiplierLabel = new System.Windows.Forms.Label();
             mpGrowthLabel = new System.Windows.Forms.Label();
@@ -762,6 +763,16 @@ namespace FFTPatcher.Editors
             this.cmb_MPortrait.TabIndex = 60;
             this.cmb_MPortrait.Tag = "MPortrait";
             // 
+            // btn_ViewStats
+            // 
+            this.btn_ViewStats.Location = new System.Drawing.Point(527, 427);
+            this.btn_ViewStats.Name = "btn_ViewStats";
+            this.btn_ViewStats.Size = new System.Drawing.Size(93, 22);
+            this.btn_ViewStats.TabIndex = 61;
+            this.btn_ViewStats.Text = "View Stats";
+            this.btn_ViewStats.UseVisualStyleBackColor = true;
+            this.btn_ViewStats.Click += new System.EventHandler(this.btn_ViewStats_Click);
+            // 
             // JobEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -769,6 +780,7 @@ namespace FFTPatcher.Editors
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.btn_ViewStats);
             this.Controls.Add(this.cmb_MPortrait);
             this.Controls.Add(this.cmb_MType);
             this.Controls.Add(this.pnl_FormationSprites);
@@ -882,5 +894,6 @@ namespace FFTPatcher.Editors
         private System.Windows.Forms.Panel pnl_FormationSprites;
         private Controls.ComboBoxWithDefault cmb_MType;
         private Controls.ComboBoxWithDefault cmb_MPortrait;
+        private System.Windows.Forms.Button btn_ViewStats;
     }
 }

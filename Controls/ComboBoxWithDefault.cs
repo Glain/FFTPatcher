@@ -79,9 +79,12 @@ namespace FFTPatcher.Controls
         /// <summary>
         /// Sets the SelectedItem and its default value.
         /// </summary>
-        public void SetValueAndDefault( object value, object defaultValue )
+        public void SetValueAndDefault(object value, object defaultValue, ToolTip toolTip = null)
         {
-            FFTPatchEditor.ToolTip.SetToolTip( this, "Default: " + defaultValue.ToString() );
+            if (toolTip == null)
+                toolTip = FFTPatchEditor.ToolTip;
+
+            toolTip.SetToolTip(this, "Default: " + defaultValue.ToString());
 
             DefaultValue = defaultValue;
             SelectedItem = value;

@@ -268,6 +268,15 @@ namespace FFTPatcher.Editors
 
 		#endregion Private Methods 
 
+        public event EventHandler ViewStatsClicked;
+        private void btn_ViewStats_Click(object sender, EventArgs e)
+        {
+            if (ViewStatsClicked != null)
+            {
+                ViewStatsClicked(this, e);
+            }
+        }
+
         public event EventHandler<LabelClickedEventArgs> SkillSetClicked;
     }
 }

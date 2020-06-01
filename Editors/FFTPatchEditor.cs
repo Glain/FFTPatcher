@@ -47,6 +47,8 @@ namespace FFTPatcher.Editors
             allInflictStatusesEditor1.AbilityClicked += AbilityClicked;
             allInflictStatusesEditor1.ItemClicked += ItemClicked;
 
+            allJobsEditor1.ViewStatsClicked += ViewStatsClicked;
+
             tabControl.Selected += tabControl_Selected;
 
             allInflictStatusesEditor1.RepointHandler += OnInflictStatusRepoint;
@@ -147,6 +149,27 @@ namespace FFTPatcher.Editors
             allItemsEditor1.SelectedIndex = e.Index;
             allItemsEditor1.UpdateListBox();
             tabControl.SelectedTab = itemsTabPage;
+        }
+
+        private void ViewStatsClicked(object sender, ReferenceEventArgs e)
+        {
+            int jobID = e.Index;
+
+            ViewStatForm viewStatForm = new ViewStatForm(fftPatch, jobID);
+            viewStatForm.SaveToJobClicked += SaveToJobClicked;
+            viewStatForm.Show();
+        }
+
+        private void SaveToJobClicked(object sender, ReferenceEventArgs e)
+        {
+            int jobID = e.Index;
+
+            if (jobID < fftPatch.Jobs.Jobs.Length)
+            {
+                allJobsEditor1.SelectedIndex = jobID;
+                allJobsEditor1.UpdateSelectedEntry();
+                allJobsEditor1.UpdateListBox();
+            }
         }
 
         public void ConsolidateInflictStatuses()

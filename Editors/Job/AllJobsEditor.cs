@@ -45,11 +45,15 @@ namespace FFTPatcher.Editors
                 new MenuItem("Paste", PasteClick) } );
             jobsListBox.ContextMenu.Popup += new EventHandler( ContextMenu_Popup );
             jobsListBox.MouseDown += new MouseEventHandler( jobsListBox_MouseDown );
+
+            jobEditor.ViewStatsClicked += OnViewStatsClicked;
         }
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+        public int SelectedIndex { get { return jobsListBox.SelectedIndex; } set { jobsListBox.SelectedIndex = value; } }
+
+		#region Public Methods
 
         public void UpdateView( AllJobs jobs, Context context )
         {
@@ -64,6 +68,16 @@ namespace FFTPatcher.Editors
             jobsListBox.SelectedIndex = 0;
             //jobEditor.Job = jobsListBox.SelectedItem as Job;
             jobEditor.SetJob(jobsListBox.SelectedItem as Job, context);
+            jobsListBox.SetChangedColors();
+        }
+
+        public void UpdateSelectedEntry()
+        {
+            jobEditor.UpdateView(ourContext);
+        }
+
+        public void UpdateListBox()
+        {
             jobsListBox.SetChangedColors();
         }
 
@@ -133,6 +147,15 @@ namespace FFTPatcher.Editors
 		}
         
 		#endregion Private Methods 
+
+        public event EventHandler<ReferenceEventArgs> ViewStatsClicked;
+        private void OnViewStatsClicked(object sender, EventArgs e)
+        {
+            if (ViewStatsClicked != null)
+            {
+                ViewStatsClicked(this, new ReferenceEventArgs(jobsListBox.SelectedIndex));
+            }
+        }
 
         public event EventHandler<LabelClickedEventArgs> SkillSetClicked;
     }

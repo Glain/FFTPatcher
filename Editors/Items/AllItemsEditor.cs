@@ -96,6 +96,16 @@ namespace FFTPatcher.Editors
             itemListBox.SetHighlightedIndexes(highlightedIndexes);
         }
 
+        public void UpdateSelectedEntry()
+        {
+            itemEditor.UpdateView(ourContext);
+        }
+
+        public void UpdateListBox()
+        {
+            itemListBox.SetChangedColors();
+        }
+
         #endregion Public Methods
 
         #region Private Methods
@@ -234,16 +244,6 @@ namespace FFTPatcher.Editors
         {
             Item destItem = itemListBox.SelectedItem as Item;
             return (copiedItem != null) ? (copiedItem.GetType() == destItem.GetType()) : false;
-        }
-
-        public void UpdateSelectedEntry()
-        {
-            itemEditor.UpdateView(ourContext);
-        }
-
-        public void UpdateListBox()
-        {
-            itemListBox.SetChangedColors();
         }
 
         private void UpdateInflictStatus(int itemIndex)
