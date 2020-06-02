@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?> 
-<Patches hideInDefault="true">
+<Patches>
 <!--Patches that require branching outside of original routine scope:-->
   <Patch name="Formula 18: melee spellcaster - Hooking">
     <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
@@ -285,236 +285,6 @@ MSED: lw ra,0x0010(sp)
       nop
       nop
       nop
-      nop
-      nop
-      nop
-      nop
-    </Location>
-  </Patch>
-  <Patch name="Level Cap (xjamxx version)" hideInDefault="true">
-    <Description>It caps all levels to an specific value, with some sort of progession with the event progession byte, up to four time windows in the game, after that caps goes to 99. The idea was based on Glain SCC Patch. No variables, so edit through xml only. Edit these eqvs if needed:
-	stage1_id			The first time window from 0x00 (new game) to 0x0f (end of chapter 1)
-	stage1_lc			Higher byte. Maximum level achievable in the first time window (0x0a=10)
-	stage1_lc			Lower byte. Progession byte substract offset in the first time window (0x00)
-	stage2_id			The second time window from first time window to 0x1f (end of chapter 2)
-	stage2_lc			Higher byte. Maximum level achievable in the second time window (0x14=20)
-	stage2_lc			Lower byte. Progession byte substract offset in the second time window (0x05=1_id-1_ic)
-	stage3_id			The third time window from second time window to 0x29 (end of chapter 3)
-	stage3_lc			Higher byte. Maximum level achievable in the third time window (0x23=35)
-	stage3_lc			Lower byte. Progession byte substract offset in the third time window (0x0b=2_id-2_ic)
-	stage4_id			The fourth time window from third time window to 0x35 (chapter 4 - before orbonne)
-	stage4_lc			Higher byte. Maximum level achievable in the fourth time window (0x32=50)
-	stage4_lc			Lower byte. Progession byte substract offset in the fourth time window (0x06=3_id-3_ic)</Description>
-    <Location file="SCUS_942_21" offset="5DA10" mode="ASM" offsetMode="RAM">
-    .eqv %stage1_id, 0x000f
-    .eqv %stage1_lc, 0x0a00
-    .eqv %stage2_id, 0x001f
-    .eqv %stage2_lc, 0x1405
-    .eqv %stage3_id, 0x0029
-    .eqv %stage3_lc, 0x230b
-    .eqv %stage4_id, 0x0035
-    .eqv %stage4_lc, 0x3206
-@lvl_up_section:
-      addiu sp,sp,0xffc8
-      sw ra,0x0010(sp)
-      sw s3,0x0020(sp)
-      sw s2,0x001c(sp)
-      sw s1,0x0018(sp)
-      sw s0,0x0014(sp)
-      addu s0,a0,zero			#s0 = Unit's Data Pointer
-      addu s1,a1,zero			#s1 = Level Down Flag
-      addiu s2,s0,-0x000f		#s2 = Unit's Raw Stat Pointer -0x81
-      addiu s3,s0,0x0081		#s3 = Unit's Raw Growth Pointer
-LULP: jal 0x0002230c			#RNG, Main loop
-      addiu s2,s2,0x0081
-      lbu t7,0x0022(s0)			#Load Unit's Level
-      lbu t1,0x0000(s3)			#Load Stat Growth.
-      lbu v1,0x0000(s2)			#Load first byte of Raw Stat
-      lbu t3,0x0001(s2)			#Load second byte of Raw Stat
-      lbu v0,0x0002(s2)			#Load third byte of Raw Stat
-      sll t3,t3,0x08			#Raw Stat 2 * 100h
-      addu v1,v1,t3			#Raw Stat 2 * 100h + Raw Stat 1
-      sll v0,v0,0x10			#Raw Stat 3 * 10000h
-      bne t1,zero,LUS1			#Branch if Stat Growth != 0
-      addu t2,v1,v0			#t2 = Full Raw Stat
-      ori t1,zero,0x0001		#v0 = 1 (Min 1 growth)
-LUS1: addu t1,t1,t7			#t1 = Stat Growth + Level
-      divu t2,t1
-      mflo v0				#v0 = Raw Stat / (Stat Growth + Level)
-      beq s1,zero,LUS2			#Branch if not Leveling Down
-      addu t0,t2,v0			#Raw Stat += Raw Stat / (Stat Growth + Level)
-      subu t0,t2,v0			#Raw Stat -= Raw Stat / (Stat Growth + Level)
-LUS2: lui v1,0x00ff
-      ori v0,v1,0xffff			#v0 = ffffff
-      sltu v0,v0,t0
-      beq v0,zero,LUS3			#Branch if ffffff is greater ir equal than Raw Stat
-      addiu s3,s3,0x0002		#Unit's Growth Pointer += 2
-      ori t0,v1,0xffff			#Raw Stat = ffffff
-LUS3: srl v0,t0,0x08			#Raw Stat / 100
-      sb v0,0x0001(s2)			#Store Raw Stat 2
-      srl v0,t0,0x10			#Raw Stat / 10000
-      sb t0,0x0000(s2)			#Store Raw Stat 1
-      sb v0,0x0002(s2)			#Store Raw Stat 3
-      addiu s2,s2,-0x007e		#Unit's Raw Stat Pointer += 3 - 81
-      slt v0,s2,s0
-      bne v0,zero,LULP			#Loop.
-      addu a0,s0,zero			#a0 = Unit's Data Pointer
-      jal 0x0005d5e0			#Status Setting/Checking Prep (Not Initializing, Statuses set?)
-      lhu s1,0x002a(s0)			#Load Unit's Max HP
-      lhu v0,0x0028(s0)			#Load Unit's HP
-      lhu s2,0x002e(s0)			#Load Unit's Max MP
-      lhu v1,0x002c(s0)			#Load Unit's MP
-      sltu v0,s1,v0
-      beq v0,zero,LUS4			#Branch if Max HP greater or equal Current HP
-      sltu v1,s2,v1
-      sh s1,0x0028(s0)			#Store Current HP = Max HP
-LUS4: beq v1,zero,LUED			#Branch if Max MP greater or equal Current MP
-      lw ra,0x0010(sp)
-      sh s2,0x002c(s0)			#Store Current MP = Max MP
-LUED: lw s3,0x0020(sp)
-      lw s2,0x001c(sp)
-      lw s1,0x0018(sp)
-      lw s0,0x0014(sp)
-      jr ra
-      addiu sp,sp,0x0038
-@check_lvl_cap:				#0x0005db08, Check Level Cap, t2= curr lvl, return v0.
-      lui t3,0x8005
-      lbu t3,0x78d4(t3)			#t3 = curr stage id.
-      ori t5,zero,0x63ff		#99 level cap by default.
-CLS1: sltiu v0,t3,%stage4_id
-      beq v0,zero,CLS2
-      sltiu v0,t3,%stage3_id
-      beq v0,zero,CLS2
-      ori t5,zero,%stage4_lc
-      sltiu v0,t3,%stage2_id
-      beq v0,zero,CLS2
-      ori t5,zero,%stage3_lc
-      sltiu v0,t3,%stage1_id
-      beq v0,zero,CLS2
-      ori t5,zero,%stage2_lc
-      ori t5,zero,%stage1_lc
-CLS2: andi t4,t5,0x00ff
-      subu t3,t3,t4
-      sltu t4,t2,t3
-      beq t4,zero,CLED
-      addu v1,zero,t3
-      srl v1,t5,0x08
-CLED: jr ra
-      sltu v0,t2,v1
-      nop
-      nop
-      nop
-    </Location>
-    <Location file="SCUS_942_21" offset="5D880" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe0
-      sw s0,0x0010(sp)
-      addu s0,a0,zero			#s0 = Unit's Data Pointer.
-      sw ra,0x0018(sp)
-      sw s1,0x0014(sp)
-      lbu v0,0x0021(s0)			#Load Unit's Exp.
-      lbu s1,0x0022(s0)			#Load Unit's Level.
-      sltiu v0,v0,0x0064
-      bne v0,zero,CUED			#Branch if Exp less than 100.
-      addu v0,zero,zero			#v0 = 0 (no level up).
-      jal @check_lvl_cap		#Check Level Cap.
-      addu t2,s1,zero			#Needed for Check Level cap. Current Level.
-      ori v1,zero,0x0063		#v0 = 99.
-      sb v1,0x0021(s0)			#Store Exp = 99.
-      beq v0,zero,CUED			#Branch if hit Level Cap. 
-      addu a0,s0,zero			#a0 = Unit's Data Pointer.
-      jal @lvl_up_section		#Level UP section.
-      addu a1,zero,zero			#a1 = 0 (Level Down Flag = False).
-      ori v0,zero,0x0001		#v0 = 1 (Leveled up).
-      addiu v1,s1,0x0001		#Level += 1.
-      sb zero,0x0021(s0)		#Store Exp = 0.
-      sb v1,0x0022(s0)			#Store new Level.
-CUED: lw ra,0x0018(sp)
-      lw s1,0x0014(sp)
-      lw s0,0x0010(sp)
-      jr ra
-      addiu sp,sp,0x0020
-      nop
-      nop
-      nop
-      nop
-    </Location>
-    <Location file="SCUS_942_21" offset="5D8FC" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xfff8
-      sw ra,0x0010(sp)
-      addu t0,a0,zero			#t0 = Party Data Pointer
-      lbu a0,0x0016(t0)			#Load Party Level
-      lbu t1,0x0002(t0)			#Load Party Job ID
-      addu a2,a0,a1			#Level = Party Level + Chosen Level
-      jal @check_lvl_cap		#Check Level Cap.
-      addiu t2,a2,-1			#Needed for Check Level cap. Current Level (Sort of).
-      bne v0,zero,LSS1			#Branch if Level didn't hit cap.
-      sll t2,t1,0x01			#ID * 2
-      addu a2,zero,v1			#Level = Cap.
-LSS1: addu t2,t2,t1			#ID * 3
-      lui t1,0x8006
-      lw t5,0x6194(t1)			#Load Job Data Pointer
-      sll t4,t2,0x04			#ID * 48
-      addu t5,t4,t5
-      subu t3,a2,a0			#Level - Party Level (Chosen Level essentially)
-      blez t3,LSED			#Branch if Level less or equal 0 (will happen at chosen level 99)
-      addu v0,a2,zero			#v0 = Level
-      blez t3,LSS2			#Branch if Level less or equal 0
-      addu t1,zero,zero			#Counter = 0
-      lui t4,0x00ff
-      ori t4,t4,0xffff			#Raw Cap = 0xFFFFFF, main loop
-LSLP: addiu a1,t0,0x0019		#a1 = Pointer to Party Raw HP
-      addiu a3,t5,0x000d		#a3 = Pointer to Job's HP Growth
-      addiu t2,a1,0x000f		#t2 = Pointer to Party's Unlocked Jobs (Limit)
-LSLI: lbu v0,0x0001(a1)			#Load Raw Stat Byte 2, inner loop.
-      lbu a2,0x0016(t0)			#Load Party Level
-      lbu a0,0x0000(a1)			#Load Raw Stat Byte 1
-      lbu v1,0x0002(a1)			#Load Raw Stat Byte 3
-      sll v0,v0,0x08
-      addu a0,a0,v0
-      lbu v0,0x0000(a3)			#Load Stat Growth
-      sll v1,v1,0x10
-      bne v0,zero,LSS3			#Branch if Growth != 0
-      addu a0,a0,v1			#a0 = Full Raw Stat
-      ori v0,zero,0x0001		#v0 = 0 + 1 (min of 1 growth)
-LSS3: addu v0,a2,v0			#v0 = Level + Stat Growth
-      divu a0,v0			#Raw Stat / (Level + Growth)
-      mflo v1				#v1 = Raw Bonus
-      addiu a3,a3,0x0002		#Growth Pointer += 2
-      addu a0,a0,v1			#Raw Stat += Raw Bonus
-      sltu v0,t4,a0
-      beq v0,zero,LSS4			#Branch if Raw Stat less than Raw Cap
-      lui v1,0x00ff
-      ori a0,v1,0xffff			#Raw Stat = FFFFFF
-LSS4: srl v0,a0,0x08
-      sb v0,0x0001(a1)			#Store Raw Stat Byte 2
-      srl v0,a0,0x10
-      sb a0,0x0000(a1)			#Store Raw Stat Byte 1
-      sb v0,0x0002(a1)			#Store Raw Stat Byte 3
-      addiu a1,a1,0x0003		#Raw Pointer += 3
-      slt v0,a1,t2
-      bne v0,zero,LSLI			#Branch if all Raws haven't been Increased
-      nop
-      lbu v0,0x0016(t0)			#Load Party Level
-      addiu t1,t1,0x0001		#Counter ++
-      addiu v0,v0,0x0001		#Level ++
-      sb v0,0x0016(t0)			#Store new Party Level
-      slt v0,t1,t3
-      bne v0,zero,LSLP			#Branch if Current Level less End Level
-      nop
-LSS2: lbu v0,0x0016(t0)			#Load Unit's Party Level
-LSED: lw ra,0x0010(sp)
-      addiu sp,sp,0x0008
-      jr ra
-      nop
-      nop
-      nop
-    </Location>
-    <Location file="BATTLE_BIN" offset="18C888" mode="ASM" offsetMode="RAM">
-      addu a1,zero,zero
-      jal @check_lvl_cap		#Check Level Cap.
-      lbu t2,0x0022(v0)			#Load level, needed for Check Level cap.
-      j 0x0018c8d8
-      addu v1,t2,v0			#Lvl = Lvl + 0 or 1.
       nop
       nop
       nop
@@ -823,134 +593,6 @@ ERED: jr ra
     </Location>
     <Location file="SCUS_942_21" offset="5DCDC" mode="ASM" offsetMode="RAM">
       j @ex_req_jobs			#v0 = Unlocked Jobs, for in and out.
-    </Location>
-  </Patch>
-  <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu) (xjamxx version)" hideInDefault="true">
-    <Description>Disables paging when a confirm menu is up so there is no way to do the JP scroll glitch. It is Glain's hack but inserted in vanilla code without hooking. Only 2 instructions vs 13.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="129B7C" mode="ASM" offsetMode="RAM">
-      lui t0,0x801d			#Sort of vanilla code sorted.
-      lbu t1,-0x7ab0(t0)		#Load ...
-      addiu sp,sp,0xffc0		#Vanilla code.
-      bne t1,zero,0x00129ce0		#Check if ... Finish to avoid paging.
-      sw ra,0x0038(sp)			#Vanilla code sorted, for the 2 spaces needed.
-      sw s1,0x0034(sp)
-      sw s0,0x0030(sp)
-      lh s1,-0x2ab4(t0)
-      addu a2,a0,zero
-      lhu v0,-0x2df4(t0)
-      addu v1,s1,zero			#After this address vanilla is untouched.
-      nop
-      subu s0,v0,v1
-    </Location>
-  </Patch>
-  <Patch name="Switch unit number with L1 and R1 buttons (formation) (xjamxx version)" hideInDefault="true">
-    <Description>Switch unit number with L1/R1 buttons in the formation screen. Directional inputs reworked in the formation screen, Left/Right/Up/Down now behave like old L1/R1. It is similar to Glain's hack but inserted in vanilla code without hooking and some minor fixes.</Description>
-    <Location file="WORLD_WORLD_BIN" offset="116590" mode="ASM" offsetMode="RAM">
-      or a0,zero,v0
-      ori a1,zero,0x0003		#For column effect.
-      jal 0x0012bb88
-      or t0,a3,zero			#Save current pos.
-    </Location>
-    <Location file="WORLD_WORLD_BIN" offset="12BB88" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe0
-      or t1,zero,a2			#Save original a2.
-SULP: andi t7,a0,0x0008			#Check if R1 is pressed.
-      bne t7,zero,SUS2
-      addiu v0,t0,0x0001
-      andi t7,a0,0x2000			#Check if right is pressed.
-      bne t7,zero,SUS4
-      andi t7,a0,0x0004			#Check if L1 is pressed.
-      bne t7,zero,SUS2
-      addiu v0,t0,0xffff
-      andi t7,a0,0x8000			#Check if left is pressed.
-      bne t7,zero,SUS4
-      subu t7,a2,a1
-      blez t7,SUS1			#Branch if a2 is less than or equal 3.
-      addiu v1,zero,0x0001
-      addiu v1,zero,0x0004
-      or a2,a2,a1			#Set last two bits of a2.
-SUS1: andi t7,a0,0x4000			#Check if down is pressed
-      bne t7,zero,SUS4
-      addu v0,t0,v1
-      andi t7,a0,0x1000			#Check if up is pressed.
-      bne t7,zero,SUS4
-      subu v0,t0,v1
-SUAE: j SUED				#End of checking inputs. Abnormal end.
-      or v0,a3,zero
-SUS2: bne s2,zero,SUAE			#Only in party roster menu.
-      lui t6,0x801d			#Glain's code optimized and fixed. From here to SUS4.
-      sll t7,t0,2
-      addu t7,t6,t7
-      lw t7,-0x2a14(t7)
-      subu t5,v0,t0
-      lhu t0,0x2c(t7)			#Current UnitIndex.
-      sll t2,v0,2
-      addu t1,t0,t5			#Destination UnitIndex.
-      addu t7,t0,t1
-      addiu v1,t7,0xffff		#Check if sum of both UnitIndex less than or equal 1
-      blez v1,SUAE
-      addiu v1,t7,0xffd9		#Check if sum of both UnitIndex greater than or equal 39
-      bgez v1,SUAE
-      addu t7,t6,t2
-      lw  t7,-0x2a14(t7)
-      lui t6,0x8005
-      lhu t7,0x2c(t7)			#UnitIndex of the neighbor unit.
-      ori t6,t6,0x7f74			#Load Party Pointer.
-      subu t8,t7,t1			#Store diff of UnitIndex between neighbor and destination.
-      or t2,zero,t0
-      or t3,zero,t1
-      sll t0,t0,8
-      sll t1,t1,8
-      addu t0,t0,t6
-      addu t1,t1,t6
-      lbu v1,0x0001(t1)			#When dismissing units SUS3 branch fails.
-      or t6,t1,zero
-      or t7,t0,zero
-      bne t8,zero,SUS3
-      ori t8,zero,0xff
-      bne v1,t8,SUIL			#Check if unit was not dismissed.
-SUS3: ori v1,zero,0x0100
-      ori t2,zero,0xff			#If it was, keep it like that.
-      or v0,a3,zero			#Dont move the cursor.
-SUIL: addiu v1,v1,0xffff		#Swap data.
-      lbu t5,0(t7)
-      lbu t4,0(t6)
-      bne t2,t8,SUIS
-      sb t4,0(t7)
-      sb t5,0(t7)			#Keep data for better portrait transition.
-SUIS: sb t5,0(t6)
-      addiu t7,t7,0x0001
-      bgtz v1,SUIL
-      addiu t6,t6,0x0001
-      sb t2,0x0001(t0)
-      sb t3,0x0001(t1)
-      sw ra,0x0018(sp)			#This is for the jal's.
-      sw a3,0x0014(sp)
-      sw v0,0x0010(sp)
-      lui t7,0x8019
-      jal 0x001140bc			#Update most graphic data. Kills a lot of visual effects.
-      sb zero,-0x452c(t7)
-      jal 0x00108920			#Update portrait and name.
-      nop
-      lw v0,0x0010(sp)			#Recover from the jal's.
-      lw a3,0x0014(sp)
-      j SUNE				#Normal end.
-      lw ra,0x0018(sp)
-SUS4: bltz v0,SUS5			#Check if destination pos is less than zero.
-      subu t7,v0,a2			#Temporally subtract from destination pos the number of units.
-      bgez t7,SUS6			#If its non negative branch and store subtraction.
-      or v0,t7,zero			#If previous branch is false, then next addition will fix the subtraction.
-SUS5: addu v0,v0,a2			#Add to destination pos the number of units.
-SUS6: subu t7,v0,t1			#Subtract original a2 from destination pos. 
-      bgez t7,SULP			#If its greater than or equal zero it means prohibited pos.
-      or t0,v0,zero			#This will simulate a second press if previous branch is true.
-SUNE: beq v0,a3,SUED			#Normal end.
-      lui t7,0x8019
-      ori t6,zero,0x0003
-      sb t6,-0x4534(t7)			#??? for visual effect.
-SUED: jr ra				#End.
-      addiu sp,sp,0x0020
-      nop
     </Location>
   </Patch>
   <Patch name="Monster eggs in last roster slot only">
@@ -4366,5 +4008,364 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
       00				<!--Exp-->
     </Location>
   </Patch>
-
+    <Patch name="(xjamxx version) Level Cap" hideInDefault="true">
+        <Description>
+            It caps all levels to an specific value, with some sort of progession with the event progession byte, up to four time windows in the game, after that caps goes to 99. The idea was based on Glain SCC Patch. No variables, so edit through xml only. Edit these eqvs if needed:
+            stage1_id			The first time window from 0x00 (new game) to 0x0f (end of chapter 1)
+            stage1_lc			Higher byte. Maximum level achievable in the first time window (0x0a=10)
+            stage1_lc			Lower byte. Progession byte substract offset in the first time window (0x00)
+            stage2_id			The second time window from first time window to 0x1f (end of chapter 2)
+            stage2_lc			Higher byte. Maximum level achievable in the second time window (0x14=20)
+            stage2_lc			Lower byte. Progession byte substract offset in the second time window (0x05=1_id-1_ic)
+            stage3_id			The third time window from second time window to 0x29 (end of chapter 3)
+            stage3_lc			Higher byte. Maximum level achievable in the third time window (0x23=35)
+            stage3_lc			Lower byte. Progession byte substract offset in the third time window (0x0b=2_id-2_ic)
+            stage4_id			The fourth time window from third time window to 0x35 (chapter 4 - before orbonne)
+            stage4_lc			Higher byte. Maximum level achievable in the fourth time window (0x32=50)
+            stage4_lc			Lower byte. Progession byte substract offset in the fourth time window (0x06=3_id-3_ic)
+        </Description>
+        <Location file="SCUS_942_21" offset="5DA10" mode="ASM" offsetMode="RAM">
+            .eqv %stage1_id, 0x000f
+            .eqv %stage1_lc, 0x0a00
+            .eqv %stage2_id, 0x001f
+            .eqv %stage2_lc, 0x1405
+            .eqv %stage3_id, 0x0029
+            .eqv %stage3_lc, 0x230b
+            .eqv %stage4_id, 0x0035
+            .eqv %stage4_lc, 0x3206
+            @lvl_up_section:
+            addiu sp,sp,0xffc8
+            sw ra,0x0010(sp)
+            sw s3,0x0020(sp)
+            sw s2,0x001c(sp)
+            sw s1,0x0018(sp)
+            sw s0,0x0014(sp)
+            addu s0,a0,zero			#s0 = Unit's Data Pointer
+            addu s1,a1,zero			#s1 = Level Down Flag
+            addiu s2,s0,-0x000f		#s2 = Unit's Raw Stat Pointer -0x81
+            addiu s3,s0,0x0081		#s3 = Unit's Raw Growth Pointer
+            LULP: jal 0x0002230c			#RNG, Main loop
+            addiu s2,s2,0x0081
+            lbu t7,0x0022(s0)			#Load Unit's Level
+            lbu t1,0x0000(s3)			#Load Stat Growth.
+            lbu v1,0x0000(s2)			#Load first byte of Raw Stat
+            lbu t3,0x0001(s2)			#Load second byte of Raw Stat
+            lbu v0,0x0002(s2)			#Load third byte of Raw Stat
+            sll t3,t3,0x08			#Raw Stat 2 * 100h
+            addu v1,v1,t3			#Raw Stat 2 * 100h + Raw Stat 1
+            sll v0,v0,0x10			#Raw Stat 3 * 10000h
+            bne t1,zero,LUS1			#Branch if Stat Growth != 0
+            addu t2,v1,v0			#t2 = Full Raw Stat
+            ori t1,zero,0x0001		#v0 = 1 (Min 1 growth)
+            LUS1: addu t1,t1,t7			#t1 = Stat Growth + Level
+            divu t2,t1
+            mflo v0				#v0 = Raw Stat / (Stat Growth + Level)
+            beq s1,zero,LUS2			#Branch if not Leveling Down
+            addu t0,t2,v0			#Raw Stat += Raw Stat / (Stat Growth + Level)
+            subu t0,t2,v0			#Raw Stat -= Raw Stat / (Stat Growth + Level)
+            LUS2: lui v1,0x00ff
+            ori v0,v1,0xffff			#v0 = ffffff
+            sltu v0,v0,t0
+            beq v0,zero,LUS3			#Branch if ffffff is greater ir equal than Raw Stat
+            addiu s3,s3,0x0002		#Unit's Growth Pointer += 2
+            ori t0,v1,0xffff			#Raw Stat = ffffff
+            LUS3: srl v0,t0,0x08			#Raw Stat / 100
+            sb v0,0x0001(s2)			#Store Raw Stat 2
+            srl v0,t0,0x10			#Raw Stat / 10000
+            sb t0,0x0000(s2)			#Store Raw Stat 1
+            sb v0,0x0002(s2)			#Store Raw Stat 3
+            addiu s2,s2,-0x007e		#Unit's Raw Stat Pointer += 3 - 81
+            slt v0,s2,s0
+            bne v0,zero,LULP			#Loop.
+            addu a0,s0,zero			#a0 = Unit's Data Pointer
+            jal 0x0005d5e0			#Status Setting/Checking Prep (Not Initializing, Statuses set?)
+            lhu s1,0x002a(s0)			#Load Unit's Max HP
+            lhu v0,0x0028(s0)			#Load Unit's HP
+            lhu s2,0x002e(s0)			#Load Unit's Max MP
+            lhu v1,0x002c(s0)			#Load Unit's MP
+            sltu v0,s1,v0
+            beq v0,zero,LUS4			#Branch if Max HP greater or equal Current HP
+            sltu v1,s2,v1
+            sh s1,0x0028(s0)			#Store Current HP = Max HP
+            LUS4: beq v1,zero,LUED			#Branch if Max MP greater or equal Current MP
+            lw ra,0x0010(sp)
+            sh s2,0x002c(s0)			#Store Current MP = Max MP
+            LUED: lw s3,0x0020(sp)
+            lw s2,0x001c(sp)
+            lw s1,0x0018(sp)
+            lw s0,0x0014(sp)
+            jr ra
+            addiu sp,sp,0x0038
+            @check_lvl_cap:				#0x0005db08, Check Level Cap, t2= curr lvl, return v0.
+            lui t3,0x8005
+            lbu t3,0x78d4(t3)			#t3 = curr stage id.
+            ori t5,zero,0x63ff		#99 level cap by default.
+            CLS1: sltiu v0,t3,%stage4_id
+            beq v0,zero,CLS2
+            sltiu v0,t3,%stage3_id
+            beq v0,zero,CLS2
+            ori t5,zero,%stage4_lc
+            sltiu v0,t3,%stage2_id
+            beq v0,zero,CLS2
+            ori t5,zero,%stage3_lc
+            sltiu v0,t3,%stage1_id
+            beq v0,zero,CLS2
+            ori t5,zero,%stage2_lc
+            ori t5,zero,%stage1_lc
+            CLS2: andi t4,t5,0x00ff
+            subu t3,t3,t4
+            sltu t4,t2,t3
+            beq t4,zero,CLED
+            addu v1,zero,t3
+            srl v1,t5,0x08
+            CLED: jr ra
+            sltu v0,t2,v1
+            nop
+            nop
+            nop
+        </Location>
+        <Location file="SCUS_942_21" offset="5D880" mode="ASM" offsetMode="RAM">
+            addiu sp,sp,0xffe0
+            sw s0,0x0010(sp)
+            addu s0,a0,zero			#s0 = Unit's Data Pointer.
+            sw ra,0x0018(sp)
+            sw s1,0x0014(sp)
+            lbu v0,0x0021(s0)			#Load Unit's Exp.
+            lbu s1,0x0022(s0)			#Load Unit's Level.
+            sltiu v0,v0,0x0064
+            bne v0,zero,CUED			#Branch if Exp less than 100.
+            addu v0,zero,zero			#v0 = 0 (no level up).
+            jal @check_lvl_cap		#Check Level Cap.
+            addu t2,s1,zero			#Needed for Check Level cap. Current Level.
+            ori v1,zero,0x0063		#v0 = 99.
+            sb v1,0x0021(s0)			#Store Exp = 99.
+            beq v0,zero,CUED			#Branch if hit Level Cap.
+            addu a0,s0,zero			#a0 = Unit's Data Pointer.
+            jal @lvl_up_section		#Level UP section.
+            addu a1,zero,zero			#a1 = 0 (Level Down Flag = False).
+            ori v0,zero,0x0001		#v0 = 1 (Leveled up).
+            addiu v1,s1,0x0001		#Level += 1.
+            sb zero,0x0021(s0)		#Store Exp = 0.
+            sb v1,0x0022(s0)			#Store new Level.
+            CUED: lw ra,0x0018(sp)
+            lw s1,0x0014(sp)
+            lw s0,0x0010(sp)
+            jr ra
+            addiu sp,sp,0x0020
+            nop
+            nop
+            nop
+            nop
+        </Location>
+        <Location file="SCUS_942_21" offset="5D8FC" mode="ASM" offsetMode="RAM">
+            addiu sp,sp,0xfff8
+            sw ra,0x0010(sp)
+            addu t0,a0,zero			#t0 = Party Data Pointer
+            lbu a0,0x0016(t0)			#Load Party Level
+            lbu t1,0x0002(t0)			#Load Party Job ID
+            addu a2,a0,a1			#Level = Party Level + Chosen Level
+            jal @check_lvl_cap		#Check Level Cap.
+            addiu t2,a2,-1			#Needed for Check Level cap. Current Level (Sort of).
+            bne v0,zero,LSS1			#Branch if Level didn't hit cap.
+            sll t2,t1,0x01			#ID * 2
+            addu a2,zero,v1			#Level = Cap.
+            LSS1: addu t2,t2,t1			#ID * 3
+            lui t1,0x8006
+            lw t5,0x6194(t1)			#Load Job Data Pointer
+            sll t4,t2,0x04			#ID * 48
+            addu t5,t4,t5
+            subu t3,a2,a0			#Level - Party Level (Chosen Level essentially)
+            blez t3,LSED			#Branch if Level less or equal 0 (will happen at chosen level 99)
+            addu v0,a2,zero			#v0 = Level
+            blez t3,LSS2			#Branch if Level less or equal 0
+            addu t1,zero,zero			#Counter = 0
+            lui t4,0x00ff
+            ori t4,t4,0xffff			#Raw Cap = 0xFFFFFF, main loop
+            LSLP: addiu a1,t0,0x0019		#a1 = Pointer to Party Raw HP
+            addiu a3,t5,0x000d		#a3 = Pointer to Job's HP Growth
+            addiu t2,a1,0x000f		#t2 = Pointer to Party's Unlocked Jobs (Limit)
+            LSLI: lbu v0,0x0001(a1)			#Load Raw Stat Byte 2, inner loop.
+            lbu a2,0x0016(t0)			#Load Party Level
+            lbu a0,0x0000(a1)			#Load Raw Stat Byte 1
+            lbu v1,0x0002(a1)			#Load Raw Stat Byte 3
+            sll v0,v0,0x08
+            addu a0,a0,v0
+            lbu v0,0x0000(a3)			#Load Stat Growth
+            sll v1,v1,0x10
+            bne v0,zero,LSS3			#Branch if Growth != 0
+            addu a0,a0,v1			#a0 = Full Raw Stat
+            ori v0,zero,0x0001		#v0 = 0 + 1 (min of 1 growth)
+            LSS3: addu v0,a2,v0			#v0 = Level + Stat Growth
+            divu a0,v0			#Raw Stat / (Level + Growth)
+            mflo v1				#v1 = Raw Bonus
+            addiu a3,a3,0x0002		#Growth Pointer += 2
+            addu a0,a0,v1			#Raw Stat += Raw Bonus
+            sltu v0,t4,a0
+            beq v0,zero,LSS4			#Branch if Raw Stat less than Raw Cap
+            lui v1,0x00ff
+            ori a0,v1,0xffff			#Raw Stat = FFFFFF
+            LSS4: srl v0,a0,0x08
+            sb v0,0x0001(a1)			#Store Raw Stat Byte 2
+            srl v0,a0,0x10
+            sb a0,0x0000(a1)			#Store Raw Stat Byte 1
+            sb v0,0x0002(a1)			#Store Raw Stat Byte 3
+            addiu a1,a1,0x0003		#Raw Pointer += 3
+            slt v0,a1,t2
+            bne v0,zero,LSLI			#Branch if all Raws haven't been Increased
+            nop
+            lbu v0,0x0016(t0)			#Load Party Level
+            addiu t1,t1,0x0001		#Counter ++
+            addiu v0,v0,0x0001		#Level ++
+            sb v0,0x0016(t0)			#Store new Party Level
+            slt v0,t1,t3
+            bne v0,zero,LSLP			#Branch if Current Level less End Level
+            nop
+            LSS2: lbu v0,0x0016(t0)			#Load Unit's Party Level
+            LSED: lw ra,0x0010(sp)
+            addiu sp,sp,0x0008
+            jr ra
+            nop
+            nop
+            nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="18C888" mode="ASM" offsetMode="RAM">
+            addu a1,zero,zero
+            jal @check_lvl_cap		#Check Level Cap.
+            lbu t2,0x0022(v0)			#Load level, needed for Check Level cap.
+            j 0x0018c8d8
+            addu v1,t2,v0			#Lvl = Lvl + 0 or 1.
+            nop
+            nop
+            nop
+            nop
+        </Location>
+    </Patch>
+    <Patch name="(xjamxx version) JP scroll glitch actual fix (Disable paging on confirm menu)" hideInDefault="true">
+        <Description>Disables paging when a confirm menu is up so there is no way to do the JP scroll glitch. It is Glain's hack but inserted in vanilla code without hooking. Only 2 instructions vs 13.</Description>
+        <Location file="WORLD_WORLD_BIN" offset="129B7C" mode="ASM" offsetMode="RAM">
+            lui t0,0x801d			#Sort of vanilla code sorted.
+            lbu t1,-0x7ab0(t0)		#Load ...
+            addiu sp,sp,0xffc0		#Vanilla code.
+            bne t1,zero,0x00129ce0		#Check if ... Finish to avoid paging.
+            sw ra,0x0038(sp)			#Vanilla code sorted, for the 2 spaces needed.
+            sw s1,0x0034(sp)
+            sw s0,0x0030(sp)
+            lh s1,-0x2ab4(t0)
+            addu a2,a0,zero
+            lhu v0,-0x2df4(t0)
+            addu v1,s1,zero			#After this address vanilla is untouched.
+            nop
+            subu s0,v0,v1
+        </Location>
+    </Patch>
+    <Patch name="(xjamxx version) Switch unit number with L1 and R1 buttons (formation)" hideInDefault="true">
+        <Description>Switch unit number with L1/R1 buttons in the formation screen. Directional inputs reworked in the formation screen, Left/Right/Up/Down now behave like old L1/R1. It is similar to Glain's hack but inserted in vanilla code without hooking and some minor fixes.</Description>
+        <Location file="WORLD_WORLD_BIN" offset="116590" mode="ASM" offsetMode="RAM">
+            or a0,zero,v0
+            ori a1,zero,0x0003		#For column effect.
+            jal 0x0012bb88
+            or t0,a3,zero			#Save current pos.
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12BB88" mode="ASM" offsetMode="RAM">
+            addiu sp,sp,0xffe0
+            or t1,zero,a2			#Save original a2.
+            SULP: andi t7,a0,0x0008			#Check if R1 is pressed.
+            bne t7,zero,SUS2
+            addiu v0,t0,0x0001
+            andi t7,a0,0x2000			#Check if right is pressed.
+            bne t7,zero,SUS4
+            andi t7,a0,0x0004			#Check if L1 is pressed.
+            bne t7,zero,SUS2
+            addiu v0,t0,0xffff
+            andi t7,a0,0x8000			#Check if left is pressed.
+            bne t7,zero,SUS4
+            subu t7,a2,a1
+            blez t7,SUS1			#Branch if a2 is less than or equal 3.
+            addiu v1,zero,0x0001
+            addiu v1,zero,0x0004
+            or a2,a2,a1			#Set last two bits of a2.
+            SUS1: andi t7,a0,0x4000			#Check if down is pressed
+            bne t7,zero,SUS4
+            addu v0,t0,v1
+            andi t7,a0,0x1000			#Check if up is pressed.
+            bne t7,zero,SUS4
+            subu v0,t0,v1
+            SUAE: j SUED				#End of checking inputs. Abnormal end.
+            or v0,a3,zero
+            SUS2: bne s2,zero,SUAE			#Only in party roster menu.
+            lui t6,0x801d			#Glain's code optimized and fixed. From here to SUS4.
+            sll t7,t0,2
+            addu t7,t6,t7
+            lw t7,-0x2a14(t7)
+            subu t5,v0,t0
+            lhu t0,0x2c(t7)			#Current UnitIndex.
+            sll t2,v0,2
+            addu t1,t0,t5			#Destination UnitIndex.
+            addu t7,t0,t1
+            addiu v1,t7,0xffff		#Check if sum of both UnitIndex less than or equal 1
+            blez v1,SUAE
+            addiu v1,t7,0xffd9		#Check if sum of both UnitIndex greater than or equal 39
+            bgez v1,SUAE
+            addu t7,t6,t2
+            lw  t7,-0x2a14(t7)
+            lui t6,0x8005
+            lhu t7,0x2c(t7)			#UnitIndex of the neighbor unit.
+            ori t6,t6,0x7f74			#Load Party Pointer.
+            subu t8,t7,t1			#Store diff of UnitIndex between neighbor and destination.
+            or t2,zero,t0
+            or t3,zero,t1
+            sll t0,t0,8
+            sll t1,t1,8
+            addu t0,t0,t6
+            addu t1,t1,t6
+            lbu v1,0x0001(t1)			#When dismissing units SUS3 branch fails.
+            or t6,t1,zero
+            or t7,t0,zero
+            bne t8,zero,SUS3
+            ori t8,zero,0xff
+            bne v1,t8,SUIL			#Check if unit was not dismissed.
+            SUS3: ori v1,zero,0x0100
+            ori t2,zero,0xff			#If it was, keep it like that.
+            or v0,a3,zero			#Dont move the cursor.
+            SUIL: addiu v1,v1,0xffff		#Swap data.
+            lbu t5,0(t7)
+            lbu t4,0(t6)
+            bne t2,t8,SUIS
+            sb t4,0(t7)
+            sb t5,0(t7)			#Keep data for better portrait transition.
+            SUIS: sb t5,0(t6)
+            addiu t7,t7,0x0001
+            bgtz v1,SUIL
+            addiu t6,t6,0x0001
+            sb t2,0x0001(t0)
+            sb t3,0x0001(t1)
+            sw ra,0x0018(sp)			#This is for the jal's.
+            sw a3,0x0014(sp)
+            sw v0,0x0010(sp)
+            lui t7,0x8019
+            jal 0x001140bc			#Update most graphic data. Kills a lot of visual effects.
+            sb zero,-0x452c(t7)
+            jal 0x00108920			#Update portrait and name.
+            nop
+            lw v0,0x0010(sp)			#Recover from the jal's.
+            lw a3,0x0014(sp)
+            j SUNE				#Normal end.
+            lw ra,0x0018(sp)
+            SUS4: bltz v0,SUS5			#Check if destination pos is less than zero.
+            subu t7,v0,a2			#Temporally subtract from destination pos the number of units.
+            bgez t7,SUS6			#If its non negative branch and store subtraction.
+            or v0,t7,zero			#If previous branch is false, then next addition will fix the subtraction.
+            SUS5: addu v0,v0,a2			#Add to destination pos the number of units.
+            SUS6: subu t7,v0,t1			#Subtract original a2 from destination pos.
+            bgez t7,SULP			#If its greater than or equal zero it means prohibited pos.
+            or t0,v0,zero			#This will simulate a second press if previous branch is true.
+            SUNE: beq v0,a3,SUED			#Normal end.
+            lui t7,0x8019
+            ori t6,zero,0x0003
+            sb t6,-0x4534(t7)			#??? for visual effect.
+            SUED: jr ra				#End.
+            addiu sp,sp,0x0020
+            nop
+        </Location>
+    </Patch>
 </Patches>
