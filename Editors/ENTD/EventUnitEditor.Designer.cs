@@ -276,7 +276,7 @@ namespace FFTPatcher.Editors
             initialDirectionLabel.Name = "initialDirectionLabel";
             initialDirectionLabel.Size = new System.Drawing.Size(74, 13);
             initialDirectionLabel.TabIndex = 36;
-            initialDirectionLabel.Text = "Initial direction";
+            initialDirectionLabel.Text = "Initial Direction";
             // 
             // jobsUnlockedLabel
             // 
@@ -285,7 +285,7 @@ namespace FFTPatcher.Editors
             jobsUnlockedLabel.Name = "jobsUnlockedLabel";
             jobsUnlockedLabel.Size = new System.Drawing.Size(76, 13);
             jobsUnlockedLabel.TabIndex = 34;
-            jobsUnlockedLabel.Text = "Jobs unlocked";
+            jobsUnlockedLabel.Text = "Jobs Unlocked";
             // 
             // unitIdLabel
             // 
@@ -303,7 +303,7 @@ namespace FFTPatcher.Editors
             jobLabel.Name = "jobLabel";
             jobLabel.Size = new System.Drawing.Size(24, 13);
             jobLabel.TabIndex = 31;
-            jobLabel.Text = "Job";
+            jobLabel.Text = "Current Job";
             // 
             // unitLabel
             // 
@@ -776,7 +776,7 @@ namespace FFTPatcher.Editors
             this.upperLevelCheckBox.Name = "upperLevelCheckBox";
             this.upperLevelCheckBox.Size = new System.Drawing.Size(80, 17);
             this.upperLevelCheckBox.TabIndex = 44;
-            this.upperLevelCheckBox.Text = "Upper level";
+            this.upperLevelCheckBox.Text = "Upper Level";
             this.upperLevelCheckBox.UseVisualStyleBackColor = true;
             // 
             // teamColorComboBox
