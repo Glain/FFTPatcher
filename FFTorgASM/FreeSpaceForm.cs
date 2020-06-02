@@ -26,15 +26,20 @@ namespace FFTorgASM
         public FreeSpaceForm(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
         {
             InitializeComponent();
+            InitFiles();
             Init(patchList, asmUtility);
+        }
+
+        private void InitFiles()
+        {
+            this.Filelistbox.Items.Clear();
+            this.Filelistbox.Items.AddRange(FreeSpace.PsxRangeNames);
         }
 
         private void Init(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
         {
             this.patchList = patchList;
             this.asmUtility = asmUtility;
-
-            this.Filelistbox.Items.AddRange(FreeSpace.PsxRangeNames);
 
             innerPatchMap = new Dictionary<PatchedByteArray, AsmPatch>();
             patchRangeMap = new Dictionary<PatchRange, List<PatchedByteArray>>();
