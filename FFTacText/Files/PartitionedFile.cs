@@ -138,8 +138,16 @@ namespace FFTPatcher.TextEditor
             Set<KeyValuePair<string, byte>> ourCurrentPairs = new Set<KeyValuePair<string, byte>>(currentPairs);
             for (int i = 0; i < Sections.Count; i++)
             {
-                result.AddRange(GetPreferredDTEPairsForSection(GetCopyOfSections(), i, replacements, ourCurrentPairs, dteBytes));
-                ourCurrentPairs.AddRange(result);
+                Set<KeyValuePair<string, byte>> dtePairs = GetPreferredDTEPairsForSection(GetCopyOfSections(), i, replacements, ourCurrentPairs, dteBytes);
+                if (dtePairs == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    result.AddRange(dtePairs);
+                    ourCurrentPairs.AddRange(result);
+                }
             }
             return result;
         }
