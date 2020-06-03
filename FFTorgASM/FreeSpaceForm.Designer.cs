@@ -107,7 +107,7 @@
             this.lbl_NumberOfPatches.Name = "lbl_NumberOfPatches";
             this.lbl_NumberOfPatches.Size = new System.Drawing.Size(16, 13);
             this.lbl_NumberOfPatches.TabIndex = 13;
-            this.lbl_NumberOfPatches.Text = "...";
+            this.lbl_NumberOfPatches.Text = "0";
             // 
             // lbl_NumberOfWrites
             // 
@@ -116,7 +116,7 @@
             this.lbl_NumberOfWrites.Name = "lbl_NumberOfWrites";
             this.lbl_NumberOfWrites.Size = new System.Drawing.Size(16, 13);
             this.lbl_NumberOfWrites.TabIndex = 13;
-            this.lbl_NumberOfWrites.Text = "...";
+            this.lbl_NumberOfWrites.Text = "0";
             // 
             // txtAddress
             // 

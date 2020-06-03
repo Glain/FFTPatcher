@@ -100,6 +100,9 @@ namespace FFTorgASM
 
         private void LoadItems(int freeSpacePositionIndex)
         {
+            lbl_NumberOfPatches.Text = "0";
+            lbl_NumberOfWrites.Text = "0";
+
             if (freeSpacePositionIndex < 0)
                 return;
 
