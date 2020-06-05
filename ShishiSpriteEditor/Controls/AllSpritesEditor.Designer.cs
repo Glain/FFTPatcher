@@ -41,7 +41,7 @@
             this.comboBox1.Location = new System.Drawing.Point(3, 3);
             this.comboBox1.Name = "comboBox1";
             //this.comboBox1.Size = new System.Drawing.Size(739, 21);
-            this.comboBox1.Size = new System.Drawing.Size(663, 21);
+            this.comboBox1.Size = new System.Drawing.Size(658, 21);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
@@ -67,7 +67,7 @@
             this.Name = "AllSpritesEditor";
             //this.Size = new System.Drawing.Size(745, 695);
             //this.Size = new System.Drawing.Size(663, 695);
-            this.Size = new System.Drawing.Size(663, 735);
+            this.Size = new System.Drawing.Size(663, 740);
             this.ResumeLayout(false);
             this.PerformLayout();
 
