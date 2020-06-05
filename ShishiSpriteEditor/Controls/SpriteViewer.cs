@@ -75,6 +75,7 @@ namespace FFTPatcher.SpriteEditor
             AutoScroll = false;
             Name = "SpriteViewer";
             Size = new Size( 256 + 10 + SystemInformation.VerticalScrollBarWidth, 100 );
+            pictureBox1.MouseWheel += pictureBox1_MouseWheel;
 
             office2007ColorPicker1 = new Owf.Controls.Office2007ColorPicker();
             Controls.Add( office2007ColorPicker1 );
@@ -116,7 +117,7 @@ namespace FFTPatcher.SpriteEditor
 
 		#endregion Constructors 
 
-        #region Event Handlers (4)
+        #region Event Handlers
 
         public event DragEventHandler SpriteDragEnter;
         protected virtual void OnSpriteDragEnter(DragEventArgs e)
@@ -152,6 +153,25 @@ namespace FFTPatcher.SpriteEditor
         {
             UpdateZoom();
             UpdateImage();
+        }
+
+        private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (e.Delta > 0)
+                {
+                    if (cmbZoom.SelectedIndex > 0)
+                        cmbZoom.SelectedIndex--;
+                }
+                else
+                {
+                    if (cmbZoom.SelectedIndex < (cmbZoom.Items.Count - 1))
+                        cmbZoom.SelectedIndex++;
+                }
+
+                ((HandledMouseEventArgs)e).Handled = true;
+            }
         }
 
         #endregion

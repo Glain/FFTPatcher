@@ -24,6 +24,8 @@ namespace FFTPatcher.SpriteEditor
             trackBar1.Enabled = false;
             origWidth = control1.Width;
             origHeight = control1.Height;
+
+            control1.MouseWheel += control1_MouseWheel;
         }
 
         public void SetSize(int zoomMultiplier)
@@ -161,6 +163,22 @@ namespace FFTPatcher.SpriteEditor
             trackBar1.Enabled = false;
             if (flipBook != null)
                 flipBook.Unpause();
+        }
+
+        public event EventHandler<MouseEventArgs> AnimationZoomScroll;
+        protected virtual void OnAnimationZoomScroll(MouseEventArgs e)
+        {
+            EventHandler<MouseEventArgs> handler = AnimationZoomScroll;
+            if (handler != null)
+                handler(this, e);
+        }
+        private void control1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                OnAnimationZoomScroll(e);
+                ((HandledMouseEventArgs)e).Handled = true;
+            }
         }
     }
 }

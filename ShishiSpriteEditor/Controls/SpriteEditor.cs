@@ -49,6 +49,9 @@ namespace FFTPatcher.SpriteEditor
             spriteViewer1.SpriteDragEnter += sprite_DragEnter;
             spriteViewer1.SpriteDragDrop += sprite_DragDrop;
 
+            pictureBox1.MouseWheel += pictureBox1_MouseWheel;
+            animationViewer1.AnimationZoomScroll += animationViewer1_ZoomScroll;
+
             InitZoomComboBox();
             UpdateZoom();
         }
@@ -400,5 +403,37 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (e.Delta > 0)
+                {
+                    if (cmbZoom.SelectedIndex > 0)
+                        cmbZoom.SelectedIndex--;
+                }
+                else
+                {
+                    if (cmbZoom.SelectedIndex < (cmbZoom.Items.Count - 1))
+                        cmbZoom.SelectedIndex++;
+                }
+
+                ((HandledMouseEventArgs)e).Handled = true;
+            }
+        }
+
+        private void animationViewer1_ZoomScroll(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                if (cmbZoom.SelectedIndex > 0)
+                    cmbZoom.SelectedIndex--;
+            }
+            else
+            {
+                if (cmbZoom.SelectedIndex < (cmbZoom.Items.Count - 1))
+                    cmbZoom.SelectedIndex++;
+            }
+        }
     }
 }
