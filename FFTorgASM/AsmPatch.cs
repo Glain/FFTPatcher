@@ -189,7 +189,7 @@ namespace FFTorgASM
             int count = 0;
             foreach (VariableType variable in Variables)
             {
-                if (variable.isReference)
+                if (!variable.isReference)
                     count++;
             }
             return count;
