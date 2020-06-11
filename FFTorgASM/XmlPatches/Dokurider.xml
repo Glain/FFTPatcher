@@ -1,0 +1,1151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+  
+<Patch name="Cone AoE">
+<Description>
+Creates Cone AoE. Enable this on any skill by flagging both Linear and Tri Direction AoE flags.
+Uses Kanji Space. Uses lines 0x1557fc - 0x155b04. 194 Lines.
+Does not work with Direct/Stop at Obstacle, as neither does Linear/Tri AoE.
+Make sure you are using the latest version of FFTPatcher.
+Version 1.09
+</Description>
+<Location file="BATTLE_BIN" offset="112204">
+00004126
+</Location>
+<Location file="BATTLE_BIN" offset="114B24">
+06000234
+FF55050C
+00000000
+02004014
+1000A427
+0C56050C
+00000000
+0300A010
+C0003032
+9AEF050C
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="EE7FC">
+06002632
+09004610
+00000234
+02000234
+0600C210
+03000534
+04000234
+0300C210
+01000534
+FF000234
+00000534
+0800E003
+00002F24
+</Location>
+<Location file="BATTLE_BIN" offset="EE830">
+C0FFBD27
+1000A527
+3C00BFAF
+3800B4AF
+3400B3AF
+3000B2AF
+2C00B1AF
+8B78010C
+2800B0AF
+1000A393
+1C00B287
+2000B487
+01000234
+1980013C
+F8F422AC
+C0100300
+23104300
+80110200
+1980033C
+CC086324
+21104300
+47005190
+48005090
+2A103202
+04004010
+01001334
+5856050C
+00000000
+3A560508
+2A105102
+04004010
+FF001334
+5856050C
+00000000
+3A560508
+2A101402
+04004010
+00011334
+5856050C
+00000000
+3A560508
+2A109002
+18004010
+00FF1334
+5856050C
+00000000
+21200000
+1980033C
+D82D6324
+01006290
+00000000
+03004014
+00000000
+44560508
+000060A0
+010060A0
+01008424
+00028228
+F6FF4014
+05006324
+00000000
+2C00B18F
+FF00E431
+2128A002
+42311100
+A9E4050C
+0100C630
+3C00BF8F
+3800B48F
+3400B38F
+3000B28F
+2C00B18F
+2800B08F
+4000BD27
+0800E003
+25280000
+</Location>
+<Location file="BATTLE_BIN" offset="EE960">
+21380000
+19800B3C
+D82D6B25
+01000A34
+3400A68F
+62004006
+0E80033C
+9C4E6390
+00000000
+2A104302
+5D004010
+00000000
+5B008006
+0E80023C
+A04E4290
+00000000
+2A108202
+56004010
+18000302
+12100000
+21205100
+0E80033C
+FF000834
+24106802
+0F004010
+00000000
+05000215
+FFFF2126
+48002004
+00000000
+7D560508
+FFFF0224
+9C4E6390
+01002126
+42006110
+00000000
+01000220
+20882202
+93560508
+20208200
+02121300
+3E004010
+FFFF0126
+06000215
+00000000
+37002004
+FFFF0224
+9C4E6390
+91560508
+22180300
+A04E6390
+01000126
+30007010
+00000000
+0E80033C
+9C4E6390
+01000234
+20800202
+20208300
+22480700
+25288000
+FF000334
+24106302
+0E004010
+0E80033C
+20100902
+20004004
+A04E6390
+00000000
+1F006210
+00000000
+0E80033C
+9C4E6390
+00000000
+18006900
+12180000
+B0560508
+20288300
+02121300
+18004010
+00000000
+20102902
+10004004
+9C4E6390
+00000000
+0F006210
+00000000
+20288900
+80100500
+21104500
+21184B00
+00006AA0
+01006AA0
+0001A824
+80100800
+21104800
+21184B00
+00006AA0
+01006AA0
+D9FF2715
+01002921
+2210C700
+AEFF401C
+0100E724
+0800E003
+00000000
+</Location>
+</Patch>
+
+	<Patch name="AI Ability Settings Fixes (Vanilla)">
+		<Description>Version 1&#13;&#10;		Fixes various incongruencies the AI has when it comes to the game mechanics&#13;&#10;Removes useless code from Jump's CT calculations&#13;&#10;		Accounts for Abilities that are Weapon Elemental&#13;&#10;Item is properly changed to 4 Range instead of Move Range&#13;&#10;Corrects the AI checking the wrong Supports for Short/Non Charge AND correctly calculates the CT (Rounding Up).</Description>
+		<Location file="BATTLE_BIN" offset="12EA90">
+			D1560608
+			00000000
+			03006290	<!-- Load Ability Flags 1 -->
+			00000000
+			04004230
+			04004014	<!-- Branch if Weapon Element -->
+			00000000
+			07006290	<!-- Load Ability Element -->
+			1D570608	<!-- Jump Back and Save Element -->
+			00000000
+			21101502
+			8C194290	<!-- Load Unit's Battle ID -->
+			00000000
+			C0100200	<!-- ID * 8 -->
+			21100202
+			7D174290	<!-- Load Weapon Element -->
+			1D570608	<!-- Jump Back and Save Element -->
+			00000000
+			01000292	<!-- Load Ability CT -->
+			00000000
+			4A570608	<!-- Jump Back and Save CT -->
+			01004224	<!-- CT + 1 -->
+			B45C2390	<!-- Load Action Menu (for another routine) -->
+			00000000
+			F7FF6224	<!-- Action Menu - 9 -->
+			0200422C
+			02004010	<!-- Branch if not Jump or Charge -->
+			FF000234	<!-- r2 = ff -->
+			00004334	<!-- r3 = r2 -->
+			577A0608	<!-- Back to other routine -->
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			38004392	<!-- Load Unit's Speed -->
+			32000234	<!-- r2 = 50 -->
+			1A004300	<!-- 50 / SP -->
+			12180000
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="12EC70">
+			A6560608	<!-- Jump to Weapon Elemental -->
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="12ED0C">
+			92004392	<!-- Load Unit's Support set 4 -->
+			00000000
+			08006230	<!-- Check if Short Charge -->
+			06004010	<!-- Branch if False -->
+			04006230	<!-- Check if Non-Charge -->
+			B6560608	<!-- Jump to Load CT + 1 -->
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="12E9FC">
+			04000234	<!-- Throw Item Range = 4 -->
+		</Location>
+	</Patch>
+
+<Patch name="AI Weapon Elemental Fix">
+		<Description>Version 1&#13;&#10;		The AI will now recognize Weapon Elemental Abilities as their respective elements&#13;&#10;		Replaces the Wall Handling Code in AI Ability Usage Routine (19e804)</Description>
+		<Location file="BATTLE_BIN" offset="137804">
+			107A0608	<!-- Jump to Elemental Nulling -->
+			00000000
+			F3FB2290	<!-- Load Ability Flags 1 -->
+			00000000
+			04004230
+			06004010	<!-- Branch if not Weapon Elemental -->
+			C0100400	<!-- ID * 8 -->
+			2110C203
+			7D174290	<!-- Load Weapon Element -->
+			00000000
+			1000C2A3	<!-- Replace Ability Elements -->
+			00000000
+			F4FB2290	<!-- Load Ability Flags 2 -->
+			B0790608	<!-- Jump back to Target Caster -->
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="1376B8">
+			037A0608	<!-- Jump to Weapon Elemental -->
+			00000000
+		</Location>
+	</Patch>
+
+<Patch name="AI Two Swords Range Fix">
+		<Description>The AI now checks the top weapon last instead of first, preventing the AI from overwriting the top weapon range with the bottom one.&#13;&#10;This is important if you plan to have ranged two swordable weapons and the range of the weapons differ.&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="1333C4">
+			1F004592
+		</Location>
+		<Location file="BATTLE_BIN" offset="1333D4">
+			1D004592
+		</Location>
+	</Patch>
+
+	<Patch name="AI Usage - Faith/Reflect">
+		<Description>AI will no longer add Faith/Reflect when in critical&#13;&#10;AI will now only cast Faith/Reflect as a means to intercept oncoming damage&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137BF4">
+			50008216	<!-- Branch unless Faith/Reflect -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="137C00">
+			7D001032	<!-- Always remove Faith/Reflect -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI Usage - Float">
+		<Description>AI will no longer add Float when critical&#13;&#10;AI will now only cast Float as a means to intercept incoming damage&#13;&#10;By default, the AI will add Float when critical&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137C8C">
+			00000000
+			00000000
+			00000000
+			00000000
+			00000000
+			4E7B0608	<!-- Confirm Status -->
+			00000000
+		</Location>
+	</Patch>
+
+	<Patch name="AI Usage - Protect/Shell/Wall">
+		<Description>AI will now add Protect/Shell/Wall at 50% HP, but not in Critical&#13;&#10;By default, the AI will only add Protect/Shell/Wall when in Critical&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137CD0">
+			01000434
+			81004230	<!-- Check for critical and low HP flags -->
+			03004414	<!-- Branch if low HP, but not critical -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI Usage - Regen">
+		<Description>AI will now add Regen at any HP level&#13;&#10;Not a recommended hack&#13;&#10;By default, the AI will only add regen when at &gt;50%&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137CBC">
+			01000234	<!-- r2 will never equal 0 -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI Usage - Reraise">
+		<Description>AI will now consider adding Reraise no matter what HP the target is&#13;&#10;Not a recommended hack&#13;&#10;By default, the AI will only add Reraise when the target is at &gt;50% HP&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137C5C">
+			01000234	<!-- r2 will never equal 0 -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI Weapon Elemental Fix">
+		<Description>Version 1&#13;&#10;		The AI will now recognize Weapon Elemental Abilities as their respective elements&#13;&#10;		Replaces the Wall Handling Code in AI Ability Usage Routine (19e804)</Description>
+		<Location file="BATTLE_BIN" offset="137804">
+			107A0608	<!-- Jump to Elemental Nulling -->
+			00000000
+			F3FB2290	<!-- Load Ability Flags 1 -->
+			00000000
+			04004230
+			06004010	<!-- Branch if not Weapon Elemental -->
+			C0100400	<!-- ID * 8 -->
+			2110C203
+			7D174290	<!-- Load Weapon Element -->
+			00000000
+			1000C2A3	<!-- Replace Ability Elements -->
+			00000000
+			F4FB2290	<!-- Load Ability Flags 2 -->
+			B0790608	<!-- Jump back to Target Caster -->
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="1376B8">
+			037A0608	<!-- Jump to Weapon Elemental -->
+			00000000
+		</Location>
+	</Patch>
+
+	<Patch name="Alternate Usage - Protect/Shell/Wall">
+		<Description>AI will now add Protect/Shell/Wall at any HP level except when in Critical&#13;&#10;Not a recommended hack; Do not flag with the above hack&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137CD8">
+			03004010	<!-- Branch if not in critical -->
+		</Location>
+	</Patch>
+
+	<Patch name="Sleep Breaking Behavior Fix">
+		<Description>The AI will no longer use Jump to wake up sleeping units&#13;&#10;Uses space made from the AI Ability Settings Fix hack; it must be added to make this code work&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="137954">
+			BA560608	<!-- Branch to code in free space -->
+			00000000
+		</Location>
+	</Patch>
+
+
+	<Patch name="Low Priority Ability Fix">
+		<Description>The AI will now consistantly attempt to use abilities that it otherwise considers to equal to doing nothing&#13;&#10;This applies mostly to the &quot;Save Fading Life/Default AI&#13;&#10;This works by making the &quot;Do Nothing&quot; value 99% accurate.&#13;&#10;As long as the ability in question is 100% accurate and has no MP cost or any other AI detectable negative difference, the AI should use that ability instead of doing nothing&#13;&#10;Will break the intended behaviors of 0 WP weapons&#13;&#10;Pair this with the Stat Usage hack to make the AI use Stats boosts with impunity&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="12F30C">
+			63000234	<!-- Set "Do Nothing" accuracy to 99% -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI is now more likely to stay in place">
+		<Description>The AI's main routine of determining panels to move to is now consistant with the other routines that determine movement&#13;&#10;Accomplishes this by giving this particular routine equality checks so that it throws out any other equal result, which is how the other routines do it&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="12F988">
+			21480000
+			21802003
+			21C0A000
+			2D0E8291
+			00000000
+			C0180200
+			21186200
+			C0180300
+			21186C00
+			740A6324
+			21180302
+			40100900
+			21104300
+			00004394
+			00000000
+			32006010	<!-- Same location but further away -->
+			00000000
+			3A0E8291
+			21400000
+			21786000
+			04100F01
+			00804230
+			26004010	<!-- Same location but further away -->
+			00110900
+			21104800
+			21180203
+			21306C00
+			B403C790
+			00000000
+			2A108700
+			1E004014	<!-- Same location but further away -->
+			40100300
+			21104C00
+			F4054394
+			7401C290
+			001C0300
+			09002012	<!-- Adjusted branch for new location -->
+			21186200
+			05008714	<!-- Adjusted branch for new j location -->
+			2A106301
+			14004014	<!-- Same location but further away -->
+			00000000
+			12006B10	<!-- New Line - Equality Check -->
+			00000000
+			995A0608	<!-- No change needed -->
+			2120E000
+			2A106301
+			0D004014	<!-- Same location but further away -->
+			00000000
+			05006B14	<!-- Same location but further away -->
+			2A10C701
+			09004014	<!-- Same location but further away -->
+			00000000
+			0700EE10	<!-- New Line - Equality Check -->
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="12FA88">
+			D4FF4014	<!-- Adjusted branch for new loop -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="12FA9C">
+			BDFF4014	<!-- Adjusted branch for new loop -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI doesn't  distance itself from targets">
+		<Description>AI will now no longer distance itself from targets it attacked.&#13;&#10;The AI will still run away under certain conditions&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="12F6D0">
+			01000524	<!-- Target Distance over Enemy Distance -->
+		</Location>
+	</Patch>
+
+<Patch name="Critical AI Distancing Fix 1.0">
+		<Description>Uses Kanji Space 0x151fe4 - 0x15200c&#13;&#10;The AI, when in Critical (Cowardly) AI, will now prioritize moving towards the healer.&#13;&#10;In Vanilla, it would prioritize distancing itself away from the enemy as far away as possible.&#13;&#10;No longer stands in place when the unit itself is the Healer or no healer found. Will instead run away like normal.</Description>
+		<Location file="BATTLE_BIN" offset="EAFE4">
+			340E048E	<!-- Load AI Targeting Data -->
+			1C000392	<!-- Load Acting Unit ID -->
+			05008490	<!-- Load Target Unit ID -->
+			00000000
+			03006410	<!-- Branch if IDs are equal -->
+			21280234	<!-- Load normal instructions -->
+			0524023C	<!-- Load new instructions -->
+			01004224	<!-- Move towards target instead of away -->
+			1A80033C
+			0800E003	<!-- Exit -->
+			E09062AC	<!-- Save new instructions -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="1320AC">
+			14004310	<!-- Branch if time's up -->
+			00000234	<!-- Movement Progress = 0 -->
+			F947050C	<!-- Edit Movement Argument Routine -->
+			00000000
+			00000000
+			340E048E	<!-- Same code as before but moved up -->
+			3E65060C
+			00000000
+			FFFF0324
+			0B004310
+			01000234	<!-- Movement Progress = 1 -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="132100">
+			00000000	<!-- Deleted Line -->
+		</Location>
+	</Patch>
+
+  <Patch name="AI can now see procs - Version 1">
+    <Description>
+Version 1.00
+Allows the AI to see it's own procs. It will even understand the effects proc'd spells have on a target. 
+For an example, if you proc a spell from a weapon that can deal CasMaxHP - CasCurHP damage and the AI knows an ability that deals only Weapon Damage and is Weapon Range, but is 100% accurate, the AI will prefer to use that ability until the caster is damaged, then it will switch to using Attack until it is healed back to 100% HP.
+
+This makes the AI assume a 100% proc rate. As a result, it will always weigh using Attack with the proc in mind.
+    </Description>
+	<Location file="BATTLE_BIN" offset="1214DC">
+	   08006014
+	</Location>
+  </Patch>
+  <Patch name="AI can now see procs - Version 2">
+     <Description>
+Version 1.00
+Allows the AI to see it's own procs. It will even understand the effects proc'd spells have on a target. 
+For an example, if you proc a spell from a weapon that can deal CasMaxHP - CasCurHP damage and the AI knows an ability that deals only Weapon Damage and is Weapon Range, but is 100% accurate, the AI will prefer to use that ability until the caster is damaged, then it will switch to using Attack until it is healed back to 100% HP.
+
+This makes the AI assume the exact proc rate and will roll accordingly. As a result, the proc rate should randomly weigh in when the AI is deciding on a target and spell. As a result, the AI's targeting should become more random.
+    </Description>
+	<Location file="BATTLE_BIN" offset="1214CC">
+	   02000434
+	</Location>
+	<Location file="BATTLE_BIN" offset="12069C">
+	   0D004410
+	</Location>
+  </Patch>
+
+	<Patch name="AI no longer charges on ready to act enemies">
+		<Description>AI will no longer consider a spell if the CT cannot complete before the enemy acts&#13;&#10;Not fully tested&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="134290">
+			15004010
+		</Location>
+	</Patch>
+
+	<Patch name="AI no longer ignore confused units">
+		<Description>AI will now consider Confused units &quot;Active&quot;&#13;&#10;There are still hardcoding attached to ignoring Confusion&#13;&#10;The AI will also be hesitant to attack Confused units unless they can surpass a certain amount of damage&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="130D58">
+			00000234	<!-- AI will never detect Confusion -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI Math Skill now looks in all skillsets">
+		<Description>The Math Skill AI Routine now looks in all generic skillsets.&#13;&#10;It also looks into Skillset 04. Useful for having additional utility for Math Skill.&#13;&#10;Version 1</Description>
+		<Location file="BATTLE_BIN" offset="134C48">
+			04000234
+			9CF322AC	<!-- Set Skillset Counter to 4 -->
+			1A80023C
+			9CF3448C	<!-- Load Skillset Counter -->
+			00000000
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="134EF8">
+			17004228	<!-- Go through every skillset (except Mime) -->
+			54FF4014	<!-- Branch back one line lower -->
+		</Location>
+	</Patch>
+
+	<Patch name="AI can now see their own reactions">
+		<Description>The AI can finally see reactions. Will adjust behavior to not trigger reactions unless they have small impact.&#13;&#10;The AI assumes a 100% reaction rate in this version.&#13;&#10;Changed to no longer allow Reactions after Death (except for Reflect).&#13;&#10;Version 2</Description>
+		<Location file="BATTLE_BIN" offset="117220">
+			58002292	<!-- Load Target Current Status -->
+			00000000
+			20004230	<!-- Find Dead -->
+			04004010	<!-- Proceed with routine if not Dead -->
+		</Location>
+	</Patch>
+
+<Patch name="Attack Self with Weapon" >
+    <Description>
+      Allows units to target themselves with Strike/Lunge flagged weapons.
+    </Description>
+    <Location file="BATTLE_BIN" offset="113598">
+      00000000
+    </Location>
+    <Location file="BATTLE_BIN" offset="1135A0">
+      00000000
+    </Location>
+  </Patch>
+
+  <Patch name="Attack All Units while Berserk" >
+    <Description>
+      Berserk Units will now attack all units
+    </Description>
+    <Location file="BATTLE_BIN" offset="132288">
+      F817A48E
+      00000000
+      1A009114
+    </Location>
+  </Patch>
+
+	<Patch name="AI can now see their own reactions - Devil Version">
+		<Description>The AI can finally see reactions...But I didn't realize the game needed this check to also check for dead because muh corpse Reflect. Leads to insane results. Implement this hack for a laugh, but don't get it confused with my actual AI reaction hack.</Description>
+		<Location file="BATTLE_BIN" offset="117238">
+			00000000	<!-- Removed Branch; No longer skips Reaction Setting Routine -->
+		</Location>
+	</Patch>
+
+  <Patch name="Re-enables Code from Ability Flag 1 0x80/0x40">
+    <Description>
+Re-enables Unknown Flag 1 and 2 of Ability Flags 1. Enables you to target all allies or all enemies on the map.
+    </Description>
+	<Location file="BATTLE_BIN" offset="113788">
+	  C0013126
+	</Location>
+  </Patch>
+
+<Patch name="Remove Code from Ability Flag 1 0x80/0x40">
+    <Description>
+Version 2.0
+Removes the code from Unknown Flag 1 and 2 (0x80 and 0x40) of Ability Flags 1.
+    </Description>
+	<Location offset="1134a0" file="BATTLE_BIN">
+	00000234
+	</Location>
+	<Location offset="1134ac" file="BATTLE_BIN">
+	00000234
+	</Location>
+	<Location offset="1134c0" file="BATTLE_BIN">
+	10004232
+	</Location>
+	<Location offset="1134b8" file="BATTLE_BIN">
+	  00000000
+	</Location>
+	<Location file="BATTLE_BIN" offset="1136dc">
+	  00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+	</Location>
+  </Patch>
+
+  <Patch name="Include Caster in AoE using Unknown Ability Flag 1">
+    <Description>
+Removes the code from Unknown Flag 1 and 2 (0x80 and 0x40) of Ability Flags 1. Replaces that code with Caster always in AoE routine. Flag this property with Unknown Flag 1. Unknown Flag 2 doesn't have a function...yet. Version -1.0
+    </Description>
+	<Location offset="1134b8" file="BATTLE_BIN">
+	  00000000
+	</Location>
+	<Location file="BATTLE_BIN" offset="114b0c">
+	  80002431
+	  B7E9050C
+	  1980123C
+	</Location>
+	<Location file="BATTLE_BIN" offset="1136dc">
+	  04008010
+      D82D5226
+      01000234
+      21187200
+      000062A0
+      BFE90508
+      01002232
+      00000234
+      0800E003
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+      00000000
+	</Location>
+  </Patch>
+
+<Patch name="Arcing AoE/Range">
+    <Description>
+Feeds AoE/Range generation through the Arc Range Routine (0x001798b0), creating an AoE/Range that gains size from height/2
+Uses Ability Flags 1 Unknown Flags 0x80 and 0x40.
+Removes and overwrites the coding otherwise attached to the Unknown Ability Flags (0x0017a6dc) known so far. 
+0x80 - Arcing AoE
+0x40 - Arcing Range	
+Version 1.1
+	</Description>
+	<Location file="BATTLE_BIN" offset="114AC8">
+	0680053C
+	01006226
+	000002A1
+	B7E9050C
+	</Location>
+	<Location file="BATTLE_BIN" offset="11343C">
+	B7E9050C
+	0680053C
+	</Location>
+	<Location file="BATTLE_BIN" offset="1134A0">
+	00000000
+	97E4050C
+	00000000
+	00000000
+	00000000
+	00000000
+	00000000
+	21208002
+	10004232
+	05004014
+	</Location>
+	<Location file="BATTLE_BIN" offset="1136DC">
+	F0FBA524
+    1200A287
+    C0180200
+    23186200
+    40180300
+    2128A300
+    1880063C
+    A8A7DFAC
+    A8A7C280
+    FF004230
+    DC000334
+    0300A580
+    14004314
+    8000A230
+    1D004010
+    4CA7C324
+    2000AD93
+    1C00AC93
+    0E80023C
+    D0FFBD27
+    2000B0AF
+    2400B1AF
+    2800A3AF
+    3899C0AC
+    21184002
+    21886002
+    39E6050C
+    A04E4290
+    1880023C
+    4014033C
+    27006324
+    389943AC
+    E5E90508
+    4000A230
+    09004010
+    25288000
+    3899C0AC
+    2CE6050C
+    25208002
+    1880023C
+    4014033C
+    27006324
+    E5E90508
+    389943AC
+    46E5050C
+    21280000
+    1880023C
+    A8A75F8C
+    00000000
+    0800E003
+    00000000
+    00000000
+	</Location>
+  </Patch>
+
+	<Patch name="Math Skill Clears Empty AoE Tiles">
+		<Description>Overwrites Morbol Depth Routine. Takes the 255 AoE check and modifies it to target only tiles with units in them. Good for Random Fire Skills. Saves Ability ID to unused lines for future Ability ID hardcoding. Version 2.0</Description>
+		<Location file="BATTLE_BIN" offset="001148d4">
+		  04007194
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114ae4">
+		  e0002632
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114aec">
+		  2000c630
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114af4">
+		  81E4050C
+		  1880023C
+		</Location>
+		<Location file="BATTLE_BIN" offset="001149fc">
+		  21200000
+		  00402232
+		  1880033C
+		  28BA6324
+		  000060A4
+		  09004010
+		  00000000
+		  C000313A
+		  000062A4
+		  8EEE0508
+		  00000000
+		  00000000
+		  00000000
+		  00000000
+		  00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114b40">
+		  c0403032
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114b60">
+		  1880073C
+		  1EEF050C
+		  28BAE724
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114c90">
+		  0000F794
+		</Location>
+		<Location file="BATTLE_BIN" offset="00114d68">
+		  21800000
+		  01000434
+		  87E4050C
+		  00000000
+		  0900E016
+		  00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="00112204">
+		  2CBA4224
+		  00240400
+		  03240400
+		  000044A4
+		  0800E003
+		  00000000
+		  1980033C
+		  0C00E012
+		  D82D6324
+		  00006290
+		  02007490
+		  0100422C
+		  0100942E
+		  21105400
+		  02004014
+		  01001026
+		  010064A0
+		  0002022A
+		  F6FF4014
+		  05006324
+		  0800E003
+		  00400234
+		</Location>
+	  </Patch>
+
+<Patch name="Move Undrwater gives -4 speed while dead">
+<Description>
+Version 2
+[In between turn control routine] (0x001827f0)
+Kanji Space 0x00150930 to 0x00150980
+An improvement on DW's hack that was a modification of one of Emmy's hacks.
+
+Move Underwater is now Preservation. Reduces Speed by 4 when dead. Does not actually decrease Speed, but reduces CT gained per clocktick. 
+This hack does not remove Move Underwater's original function. However, since there are no water tiles in the original game with a depth of 3 or greater, the functionality might as well not exist.
+</Description>
+<Location file="BATTLE_BIN" offset="11B9DC">
+4C42050C
+00000000
+</Location>
+<Location file="BATTLE_BIN" offset="e9930">
+95002492
+02004010
+1880033C
+F0297F24
+10008330
+04006010
+00000334
+58002492
+00000000
+20008330
+08006010
+38002492
+00000000
+0500832C
+03006014
+01000334
+04000334
+23188300
+00006434
+0800E003
+00000000
+</Location>
+</Patch>
+
+	<Patch name="Jump + 3 =&gt; Range + 1">
+		<Description>Version 1&#13;&#10;Uses 0x00153300 to 0x001533b0 in Kanji Space&#13;&#10;&#13;&#10;Changes Jump + 3 into Range + 1. No longer increases Jump by 3.&#13;&#10;Range + 1 increases the range of all abilities that:&#13;&#10;	-Have an Ability ID of less than 0x0170 (no Jump/Item/Throw)&#13;&#10;	-Are not Weapon Range (Attack, Charge, etc.)&#13;&#10;	-Have a minimum range of 2&#13;&#10;Will not overflow when used on abilities with 255 Range&#13;&#10;The AI is also notified of this change and their target finding should increase with this support enabled&#13;&#10;When added in the unit screen, it should no longer display as adding Jump + 3&#13;&#10;You must rename the ability yourself&#13;&#10;Credit to Emmy and Pride for helping me with the display</Description>
+		<Location file="SCUS_942_21" offset="4D158">
+			00000000	<!-- Deleted Jump + 3 -->
+		</Location>
+		<Location file="BATTLE_BIN" offset="113304">
+			C04C050C	<!-- Range + 1 -->
+			00000000
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="12ECE0">
+			D44C050C	<!-- Range + 1 for the AI -->
+			00000000
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="EC300">
+			01004790	<!-- Load AoE -->
+			00005390	<!-- Load Range -->
+			2800A7A3	<!-- save AoE to stack -->
+			03004790	<!-- load Ability Flags 1 -->
+			1200A387	<!-- Load Ability ID -->
+			93009692	<!-- Load Movement 1 -->
+			7001632C
+			0A006010	<!-- Exit if Ability is 0x170 or greater (Throw, Jump and Item) -->
+			2000E730
+			0800E014	<!-- Exit if Weapon Range -->
+			0400D632
+			0600C012	<!-- Exit if no Range + 1 (Jump + 3) -->
+			0200632E
+			04006014	<!-- Exit if Range is less than 2 -->
+			FF000334
+			02006312	<!-- Exit if Range is 255 -->
+			01000334	<!-- r3 is expected to be 1 -->
+			01007326	<!-- Range + 1 -->
+			0800E003
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="EC350">
+			03006290	<!-- Load Ability Flags -->
+			00000000
+			20004230
+			04004014	<!-- Reload Ability Range if Weapon Range -->
+			00000234	<!-- Makes branch always jump -->
+			93004292	<!-- Load Unit's Movement 1 -->
+			00000000
+			04004230
+			09004010	<!-- Exit if no Range + 2 (Jump + 3) -->
+			00006490	<!-- Load Ability's Range -->
+			00000000
+			0200822C
+			05004014	<!-- Exit if Range is less than 2 -->
+			00000000
+			FF000234
+			02004410	<!-- Exit if Range is 255 -->
+			00000000
+			01008424	<!-- Range + 1 -->
+			0800E003
+			040004A2	<!-- Store Range = Ability's Range -->
+		</Location>
+		<Location file="WORLD_WORLD_BIN" offset="42ED8">
+			0200422C
+		</Location>
+	</Patch>
+
+
+	<Patch name="Jump + 3 =&gt; Range + 2">
+		<Description>Version 1.1&#13;&#10;Uses 0x00153300 to 0x001533b0 in Kanji Space&#13;&#10;&#13;&#10;Changes Jump + 3 into Range + 2. No longer increases Jump by 3.&#13;&#10;Range + 2 increases the range of all abilities that:&#13;&#10;	-Have an Ability ID of less than 0x0170 (no Jump/Item/Throw)&#13;&#10;	-Are not Weapon Range (Attack, Charge, etc.)&#13;&#10;	-Have a minimum range of 2&#13;&#10;Will not overflow when used on abilities with 254 or greater range. An ability with 254 range will increase to 255 and a 255 range ability will not increase at all.&#13;&#10;The AI is also notified of this change and their target finding should increase with this support enabled&#13;&#10;You must rename the ability yourself&#13;&#10;Credit to Emmy and Pride for helping me with the display</Description>
+		<Location file="SCUS_942_21" offset="4D158">
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="113304">
+			C04C050C
+			00000000
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="12ECE0">
+			D74C050C
+			00000000
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="EC300">
+			01004790
+			00005390
+			2800A7A3
+			03004790
+			1200A387
+			93009692
+			7001632C
+			0D006010
+			2000E730
+			0B00E014
+			0400D632
+			0900C012
+			0200632E
+			07006014
+			FF000334
+			05006312
+			FE000334
+			02006312
+			01000334
+			02000334
+			21986302
+			0800E003
+			00000000
+		</Location>
+		<Location file="BATTLE_BIN" offset="EC35C">
+			03006290
+			00000000
+			20004230
+			04004014
+			00000234
+			93004292
+			00000000
+			04004230
+			0B004010
+			00006490
+			00000000
+			0200822C
+			07004014
+			00000000
+			FF000234
+			04004410
+			FE000234
+			02004410
+			01008424
+			01008424
+			0800E003
+			040004A2
+		</Location>
+		<Location file="WORLD_WORLD_BIN" offset="42ED8">
+			0200422C
+		</Location>
+	</Patch>
+
+  <Patch name="Weapon AoE Hack -1.0">
+    <Description>
+Enables the use of Weapon Ranged AoE. It might also enable Direct/Stop at Obstacle AoE as well. Not entirely tested. Version -1.0
+    </Description>
+	<Location file="BATTLE_BIN" offset="113F40">
+	  00000000
+	</Location>
+	<Location file="BATTLE_BIN" offset="114AC0">
+	  00000000
+	</Location>
+  </Patch>
+
+	<Patch name="AI Jump Fix">
+		<Description>Version 1&#13;&#10;Fixes Jump going to Attack Subroutine, which caused edge case issues&#13;&#10;Now directs to the Default Routine</Description>
+		<Location file="BATTLE_BIN" offset="12EB98">
+			00570608	<!-- Jump to the Default Subroutine -->
+		</Location>
+	</Patch>
+
+</Patches> 
