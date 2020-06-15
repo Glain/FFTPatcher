@@ -387,6 +387,7 @@ namespace PatcherLib.Iso
             OFFSET_EVENT_OPTION_OUT = 0x1BF000,
             OFFSET_EVENT_ETC_OUT = 0x1BF000,
             OFFSET_EVENT_BUNIT_OUT = 0x1BF000,
+            OFFSET_EVENT_CARD_OUT = 0x1BF000,
             OFFSET_EVENT_HELPMENU_OUT = 0x1DF000,
             OFFSET_EVENT_JOBSTTS_OUT = 0x1DF000
         }
