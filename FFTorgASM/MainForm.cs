@@ -410,9 +410,9 @@ namespace FFTorgASM
                         PatcherLib.Iso.PsxIso.PatchPsxIso( file, patch );
                     }
                 }
-            }
 
-            PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+            }
         }
 
         private void btnPatchSaveState_Click(object sender, EventArgs e)
@@ -461,9 +461,9 @@ namespace FFTorgASM
                         sbResultMessage.AppendLine();
                     }
                 }
-            }
 
-            PatcherLib.MyMessageBox.Show(this, sbResultMessage.ToString(), "Complete!", MessageBoxButtons.OK);
+                PatcherLib.MyMessageBox.Show(this, sbResultMessage.ToString(), "Complete!", MessageBoxButtons.OK);
+            }
         }
 
         private void clb_Patches_DragEnter( object sender, DragEventArgs e )
