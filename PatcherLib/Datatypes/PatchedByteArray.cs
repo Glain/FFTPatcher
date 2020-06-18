@@ -290,6 +290,7 @@ namespace PatcherLib.Datatypes
         public PatchedByteArray Copy()
         {
             PatchedByteArray result = new PatchedByteArray(Sector, Offset, bytes);
+            result.SectorEnum = SectorEnum;
             result.IsAsm = IsAsm;
             result.MarkedAsData = MarkedAsData;
             result.IsCheckedAsm = IsCheckedAsm;
