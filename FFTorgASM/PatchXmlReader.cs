@@ -409,23 +409,27 @@ namespace FFTorgASM
                 }
 
                 List<VariableType> variables = new List<VariableType>();
+                List<PatchedByteArray> includePatches = new List<PatchedByteArray>();
 
-                List<PatchedByteArray> copyPatches = new List<PatchedByteArray>();
-                XmlAttribute attrCopy = node.Attributes["copy"];
-                if (attrCopy != null)
+                XmlNodeList includeNodes = node.SelectNodes("Include");
+                foreach (XmlNode includeNode in includeNodes)
                 {
-                    string copyName = attrCopy.InnerText.ToLower().Trim();
-                    foreach (AsmPatch currentAsmPatch in result)
+                    XmlAttribute attrPatch = includeNode.Attributes["patch"];
+                    if (attrPatch != null)
                     {
-                        if (currentAsmPatch.Name.ToLower().Trim().Equals(copyName))
+                        string patchName = attrPatch.InnerText.ToLower().Trim();
+                        foreach (AsmPatch currentAsmPatch in result)
                         {
-                            foreach (VariableType variable in currentAsmPatch.Variables)
+                            if (currentAsmPatch.Name.ToLower().Trim().Equals(patchName))
                             {
-                                variables.Add(AsmPatch.CopyVariable(variable));
-                            }
-                            for (int index = 0; index < currentAsmPatch.NonVariableCount; index++)
-                            {
-                                copyPatches.Add(currentAsmPatch[index].Copy());
+                                foreach (VariableType variable in currentAsmPatch.Variables)
+                                {
+                                    variables.Add(AsmPatch.CopyVariable(variable));
+                                }
+                                for (int index = 0; index < currentAsmPatch.NonVariableCount; index++)
+                                {
+                                    includePatches.Add(currentAsmPatch[index].Copy());
+                                }
                             }
                         }
                     }
@@ -612,8 +616,8 @@ namespace FFTorgASM
 
                 GetPatchResult getPatchResult = GetPatch(node, xmlFilename, asmUtility, variables);
 
-                List<PatchedByteArray> patches = new List<PatchedByteArray>(copyPatches.Count + getPatchResult.StaticPatches.Count);
-                patches.AddRange(copyPatches);
+                List<PatchedByteArray> patches = new List<PatchedByteArray>(includePatches.Count + getPatchResult.StaticPatches.Count);
+                patches.AddRange(includePatches);
                 patches.AddRange(getPatchResult.StaticPatches);
 
                 AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, patches, 
