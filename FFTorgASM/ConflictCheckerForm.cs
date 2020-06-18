@@ -133,7 +133,8 @@ namespace FFTorgASM
                             if (conflictPatchedByteArray is InputFilePatch)
                                 continue;
 
-                            if (patchedByteArray.IsPatchEqual(conflictPatchedByteArray))
+                            //if (patchedByteArray.IsPatchEqual(conflictPatchedByteArray))
+                            if (!patchedByteArray.HasConflict(conflictPatchedByteArray))
                                 continue;
 
                             PatchRange conflictRange = new PatchRange(conflictPatchedByteArray);

@@ -249,6 +249,44 @@ namespace PatcherLib.Datatypes
             return true;
         }
 
+        public bool HasConflict(PatchedByteArray patchedByteArray)
+        {
+            if (patchedByteArray == null)
+                return false;
+
+            if (Sector != patchedByteArray.Sector)
+                return false;
+
+            byte[] compareBytes = patchedByteArray.GetBytes();
+
+            if ((bytes == null) || (compareBytes == null))
+                return false;
+
+            if ((bytes.Length == 0) || (compareBytes.Length == 0))
+                return false;
+
+            PatchRange range = new PatchRange(this);
+            PatchRange inputRange = new PatchRange(patchedByteArray);
+
+            if (!range.HasOverlap(inputRange))
+                return false;
+
+            uint greaterStartOffset = Math.Max(range.StartOffset, inputRange.StartOffset);
+            uint lesserEndOffset = Math.Min(range.EndOffset, inputRange.EndOffset);
+            uint length = lesserEndOffset - greaterStartOffset + 1;
+
+            System.Collections.Generic.IList<byte> overlapBytes = GetBytes().SubLength(greaterStartOffset - range.StartOffset, length);
+            System.Collections.Generic.IList<byte> inputOverlapBytes = patchedByteArray.GetBytes().SubLength(greaterStartOffset - inputRange.StartOffset, length);
+
+            for (int index = 0; index < length; index++)
+            {
+                if (overlapBytes[index] != inputOverlapBytes[index])
+                    return true;
+            }
+
+            return false;
+        }
+
         public PatchedByteArray Copy()
         {
             PatchedByteArray result = new PatchedByteArray(Sector, Offset, bytes);
