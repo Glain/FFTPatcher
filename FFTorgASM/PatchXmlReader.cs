@@ -409,6 +409,28 @@ namespace FFTorgASM
                 }
 
                 List<VariableType> variables = new List<VariableType>();
+
+                List<PatchedByteArray> copyPatches = new List<PatchedByteArray>();
+                XmlAttribute attrCopy = node.Attributes["copy"];
+                if (attrCopy != null)
+                {
+                    string copyName = attrCopy.InnerText.ToLower().Trim();
+                    foreach (AsmPatch currentAsmPatch in result)
+                    {
+                        if (currentAsmPatch.Name.ToLower().Trim().Equals(copyName))
+                        {
+                            foreach (VariableType variable in currentAsmPatch.Variables)
+                            {
+                                variables.Add(AsmPatch.CopyVariable(variable));
+                            }
+                            for (int index = 0; index < currentAsmPatch.NonVariableCount; index++)
+                            {
+                                copyPatches.Add(currentAsmPatch[index].Copy());
+                            }
+                        }
+                    }
+                }
+
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
                 	XmlAttribute numBytesAttr = varNode.Attributes["bytes"];
@@ -589,8 +611,14 @@ namespace FFTorgASM
                 }
 
                 GetPatchResult getPatchResult = GetPatch(node, xmlFilename, asmUtility, variables);
-                AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, getPatchResult.StaticPatches, 
+
+                List<PatchedByteArray> patches = new List<PatchedByteArray>(copyPatches.Count + getPatchResult.StaticPatches.Count);
+                patches.AddRange(copyPatches);
+                patches.AddRange(getPatchResult.StaticPatches);
+
+                AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, patches, 
                     (getPatchResult.HideInDefault | rootHideInDefault), variables);
+                
                 asmPatch.ErrorText = getPatchResult.ErrorText;
                 result.Add(asmPatch);
             }
