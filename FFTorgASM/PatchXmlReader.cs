@@ -212,6 +212,13 @@ namespace FFTorgASM
                 }
                 if (replaceLabels)
                 {
+                    foreach (PatchedByteArray currentPatchedByteArray in patches)
+                    {
+                        StringBuilder sbLabels = new StringBuilder();
+                        if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
+                            sbLabels.Append(String.Format(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine));
+                        asmUtility.EncodeASM(sbLabels.ToString(), 0);
+                    }
                     content = asmUtility.ReplaceLabelsInHex(content, true);
                 }
 
