@@ -75,5 +75,58 @@ namespace FFTorgASM
 
             BackgroundColors[0] = allColorList.ToArray();
         }
+
+        public void ReloadFile(int index, ASMEncodingUtility asmUtility)
+        {
+            PatchFile patchFile = FilePatches[index];
+            IList<AsmPatch> tryPatches;
+            List<Color> fileColorList = new List<Color>();
+            Color normalColor = Color.White;
+            Color errorColor = Color.FromArgb(225, 125, 125);
+            patchFile.Patches.Clear();
+
+            if (PatchXmlReader.TryGetPatches(File.ReadAllText(patchFile.Filename, Encoding.UTF8), patchFile.Filename, asmUtility, out tryPatches))
+            {
+                foreach (AsmPatch patch in tryPatches)
+                {
+                    Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+                    patchFile.Patches.Add(patch);
+                    fileColorList.Add(bgColor);
+                }
+
+                LoadedCorrectly[index] = true;
+            }
+            else
+            {
+                LoadedCorrectly[index] = false;
+            }
+
+            BackgroundColors[index + 1] = fileColorList.ToArray();
+        }
+
+        public void RebuildAllList()
+        {
+            AllPatches.Clear();
+            AllShownPatches.Clear();
+            List<Color> allColorList = new List<Color>();
+            Color normalColor = Color.White;
+            Color errorColor = Color.FromArgb(225, 125, 125);
+
+            foreach (PatchFile patchFile in FilePatches)
+            {
+                foreach (AsmPatch patch in patchFile.Patches)
+                {
+                    Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+                    AllPatches.Add(patch);
+                    if (!patch.HideInDefault)
+                    {
+                        AllShownPatches.Add(patch);
+                        allColorList.Add(bgColor);
+                    }
+                }
+            }
+
+            BackgroundColors[0] = allColorList.ToArray();
+        }
     }
 }

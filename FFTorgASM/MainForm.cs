@@ -104,6 +104,20 @@ namespace FFTorgASM
         }
         */
 
+        private void LoadFile(int index)
+        {
+            clb_Patches.Items.Clear();
+            ClearCurrentPatch();
+
+            patchData.SelectedPatches.Clear();
+            patchData.CurrentSelectedPatches.Clear();
+            
+            patchData.ReloadFile(index, asmUtility);
+            patchData.RebuildAllList();
+            
+            LoadFilePatches(index + 1);
+        }
+
         private void LoadFiles(IList<string> fileList = null)
         {
             string[] files = (fileList == null) ? Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
@@ -243,9 +257,49 @@ namespace FFTorgASM
             return resultList;
         }
 
+        private void LoadFilePatches(int selectedIndex)
+        {
+            ClearCurrentPatch();
+
+            if (selectedIndex == 0)
+            {
+                LoadPatches(patchData.AllShownPatches);
+                clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
+            }
+            else if (!patchData.LoadedCorrectly[selectedIndex - 1])
+            {
+                clb_Patches.Items.Clear();
+                PatcherLib.MyMessageBox.Show(this, lsb_FilesList.SelectedItem + " did not load correctly!", "Error", MessageBoxButtons.OK);
+            }
+            else
+            {
+                LoadPatches(patchData.FilePatches[selectedIndex - 1].Patches);
+                clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
+            }
+
+            patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
+
+            skipCheckEventHandler = true;
+            for (int index = 0; index < clb_Patches.Items.Count; index++)
+            {
+                AsmPatch asmPatch = (AsmPatch)(clb_Patches.Items[index]);
+                clb_Patches.SetItemChecked(index, patchData.SelectedPatches.Contains(asmPatch));
+            }
+
+            skipCheckEventHandler = false;
+
+            bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            btnPatch.Enabled = enablePatchButtons;
+            btnPatchSaveState.Enabled = enablePatchButtons;
+        }
+
         private void reloadButton_Click(object sender, EventArgs e)
         {
-            LoadFiles();
+            int selectedIndex = lsb_FilesList.SelectedIndex;
+            if (selectedIndex > 0)
+                LoadFile(selectedIndex - 1);
+            else
+                LoadFiles();
         }
 
         private void variableComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -279,42 +333,8 @@ namespace FFTorgASM
 
         private void lsb_FilesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ClearCurrentPatch();
-            int selectedIndex = lsb_FilesList.SelectedIndex;
-
-            if (lsb_FilesList.SelectedItem == null)
-                return;
-
-            if (selectedIndex == 0)
-            {
-                LoadPatches(patchData.AllShownPatches);
-                clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
-            }
-            else if (!patchData.LoadedCorrectly[selectedIndex - 1])
-            {
-                clb_Patches.Items.Clear();
-                PatcherLib.MyMessageBox.Show(this, lsb_FilesList.SelectedItem + " did not load correctly!", "Error", MessageBoxButtons.OK);
-            }
-            else
-            {
-                LoadPatches(patchData.FilePatches[selectedIndex - 1].Patches);
-                clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
-            }
-            
-            patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
-
-            skipCheckEventHandler = true;
-            for (int index = 0; index < clb_Patches.Items.Count; index++)
-            {
-                AsmPatch asmPatch = (AsmPatch)(clb_Patches.Items[index]);
-                clb_Patches.SetItemChecked(index, patchData.SelectedPatches.Contains(asmPatch));
-            }
-
-            skipCheckEventHandler = false;
-
-            bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
-            btnPatch.Enabled = enablePatchButtons;
-            btnPatchSaveState.Enabled = enablePatchButtons;
+            if (lsb_FilesList.SelectedItem != null)
+                LoadFilePatches(lsb_FilesList.SelectedIndex);
         }
 
         private void clb_Patches_SelectedIndexChanged(object sender, EventArgs e)
