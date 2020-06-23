@@ -109,7 +109,9 @@ namespace FFTorgASM
             clb_Patches.Items.Clear();
             ClearCurrentPatch();
 
-            patchData.SelectedPatches.Clear();
+            foreach (AsmPatch patch in patchData.FilePatches[index].Patches)
+                patchData.SelectedPatches.Remove(patch);
+
             patchData.CurrentSelectedPatches.Clear();
             
             patchData.ReloadFile(index, asmUtility);
