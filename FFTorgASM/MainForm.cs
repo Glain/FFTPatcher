@@ -118,6 +118,8 @@ namespace FFTorgASM
             patchData.RebuildAllList();
             
             LoadFilePatches(index + 1);
+
+            lsb_FilesList.SetBackColor(index + 1, patchData.LoadedCorrectly[index] ? Color.White : Color.FromArgb(225, 125, 125));
         }
 
         private void LoadFiles(IList<string> fileList = null)
