@@ -442,7 +442,8 @@ namespace FFTorgASM
                     }
                 }
 
-                if (isSequential)
+                //if (isSequential)
+                if (bytes != null)
                 {
                     currentPatch.SetBytes(bytes.ToArray());
                     resultList.Add(currentPatch);
