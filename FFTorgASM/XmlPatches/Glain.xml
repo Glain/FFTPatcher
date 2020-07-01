@@ -1554,7 +1554,7 @@ SKP:  j       0x80180848            #   Skip this ability
         4B 10 83
         4C 80 84
     </Location>
-    <Location file="BATTLE_BIN" mode="ASM">
+    <Location file="BATTLE_BIN" offset="15D374" mode="ASM" offsetMode="RAM">
         .label  @address_geomancy_tile_array, 0x8005e9d0
         .label  @address_caster_tile_type, 0x801938cd
         .label  @address_ability_id, 0x801938d6
@@ -2433,6 +2433,309 @@ SKP:  j       0x80180848            #   Skip this ability
       nop
     </Location>
   </Patch>
+  <Patch name="Disable Now Loading Message">
+    <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM">
+        jr      ra
+        nop
+    </Location>
+  </Patch>
+    <Patch name="Now Loading Routine Rewrite">
+        <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
+        <Variable name="Color Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
+        <Variable name="Color Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
+        <Variable name="Color Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
+    </Patch>
+    <Patch name="Expand load and save data">
+        <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
+        <Location file="SCUS_942_21" offset="40F00" mode="ASM" offsetMode="RAM" label="extra_save_data_location">
+            .label  @copy_bytes, 0x8005e254
+        </Location>
+        <Location specific="WORLD_WORLD_BIN:12D9ED,12DD41,12FA99,12FAA9,12FBD1,12FC65,12FCD9,12FCE1,EVENT_CARD_OUT:1BFF71,1BFF99,1C0069" offsetMode="RAM">
+            20
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12FDE4" mode="ASM" offsetMode="RAM">
+            lui     t0, 0x801d
+            lbu     a0, -0x2878(t0)
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12FE3C" mode="ASM" offsetMode="RAM">
+            sw      s5, 0x0114(sp)
+            lw      s5, -0x2e14(t0)
+            move    v0, a0
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12FFB8" mode="ASM" offsetMode="RAM">
+            li      a2, 0x0100
+            jal     @copy_bytes
+            addiu   a1, s5, 0x1604
+            lui     a0, 0x8005
+            ori     a0, a0, 0x9494
+            li      a2, 0x0100
+            jal     @copy_bytes
+            addiu   a1, s5, 0x1704
+            lui     a0, 0x8005
+            ori     a0, a0, 0x9414
+            li      a2, 0x0080
+            jal     @copy_bytes
+            addiu   a1, s5, 0x1804
+
+            la      a0, @extra_save_data_location
+            li      a2, 0x200
+            jal     @copy_bytes
+            addiu   a1, s5, 0x1e00
+            nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="13032C" mode="ASM" offsetMode="RAM">
+            lw      s5, 0x0114(sp)
+            jr      ra
+            addiu   sp, sp, 0x0130
+        </Location>        
+        <Location file="WORLD_WORLD_BIN" offset="130338" mode="ASM" offsetMode="RAM">
+            addiu   sp, sp, -0x30
+            sw      s4, 0x20 (sp)
+            move    s4, a0
+            sw      s5, 0x28 (sp)
+            lui     s5, 0x801d
+            lw      s5, -0x2e14 (s5)
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="130360" mode="ASM" offsetMode="RAM">
+            lbu     v1, 0x100 (s5)
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="13036C" mode="ASM" offsetMode="RAM">
+            sw      ra, 0x24 (sp)       
+            lbu     v1, 0x117 (s5)
+            li      v0, 4
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="130394" mode="ASM" offsetMode="RAM">
+            addiu   a0, s5, 0x118
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1305B0" mode="ASM" offsetMode="RAM">
+            lui     t0, 0x8005      
+            ori     a1, t0, 0x7b34
+            li      a2, 7
+            li      v0, -1
+            sb      v0, 0x7b33(t0)
+            jal     @copy_bytes
+            addiu   a0, s5, 0x1c9f
+            lui     t0, 0x8005
+            ori     a1, t0, 0x7b3c
+            li      a2, 5
+            jal     @copy_bytes
+            addiu   a0, s5, 0x1ca6
+
+            la      a1, @extra_save_data_location
+            li      a2, 0x200
+            jal     @copy_bytes
+            addiu   a0, s5, 0x1e00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="13088C" mode="ASM" offsetMode="RAM">
+            lw      s5, 0x28 (sp)
+            jr      ra
+            addiu   sp, sp, 0x30
+        </Location>
+        <Location file="EVENT_CARD_OUT" offset="1C01BC" mode="ASM" offsetMode="RAM">
+            sw      a0, 0x0138(fp)
+        </Location>
+        <Location file="EVENT_CARD_OUT" offset="1C024C" mode="ASM" offsetMode="RAM">
+            sw      s5, 0x134(fp)
+            addiu   v0, v1, 0xbe
+            lui     s5, 0x801d
+            lw      s5, -0x37f8(s5)
+            nop
+            addiu   v1, s5, 0x0101
+        </Location>
+        <Location file="EVENT_CARD_OUT" offset="1C03B0" mode="ASM" offsetMode="RAM">
+            lw      a0, 0x0138(fp)
+        </Location>
+        <Location file="EVENT_CARD_OUT" offset="1C0460" mode="ASM" offsetMode="RAM">
+            lui     a0, 0x8005
+            ori     a0, a0, 0x96e0
+            li      a2, 0x0100
+            jal     @copy_bytes
+            addiu   a1, s5, 0x1604
+
+            la      a0, @extra_save_data_location
+            li      a2, 0x200
+            jal     @copy_bytes
+            addiu   a1, s5, 0x1e00
+        </Location>
+        <Location file="EVENT_CARD_OUT" offset="1C099C" mode="ASM" offsetMode="RAM">
+            lw      s5, 0x134(fp)
+            move    sp, fp
+            lw      ra, 0x144(sp)
+            lw      fp, 0x140(sp)
+            jr      ra
+            addiu   sp, sp, 0x148
+        </Location>
+        <Location file="EVENT_CARD_OUT" offset="1C09FC" mode="ASM" offsetMode="RAM">
+            ori     v0, v0, 0xf000
+        </Location>
+        <Variable name="Now Loading Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
+        <Variable name="Now Loading Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
+        <Variable name="Now Loading Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
+    </Patch>
+    <Patch name="Unit bench (10 extra unit slots)">
+        <Description>Add the unit bench, which can hold 10 extra units.  Accessible from the formation screen, with Bench Unit and Unbench Unit menu items.  Units sent to the bench lose EXP and JP.  Joining units will join to the bench if party is full.</Description>
+        <Include patch="Expand load and save data" />
+        <Location file="SCUS_942_21" offset="40F00,40F54,40FA8,40FFC,41050,410A4" offsetMode="RAM" mode="DATA">
+            00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141D00" offsetMode="RAM" mode="DATA" label="address_bench_menu_text">
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141DC0" offsetMode="RAM" mode="DATA" label="address_bench_menu_select_text_entries">
+            08 07
+            08 07
+            08 07
+            08 07
+            08 07
+            08 07
+            08 07
+            08 07
+            08 07
+            08 07
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141DD8" offsetMode="RAM" mode="DATA" label="address_bench_menu_entry_empty_text">
+            E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141E00" offsetMode="RAM" mode="DATA" label="address_triangle_menu_text">
+            E3 00 12 37 28 30 F8 
+            E3 00 0A 25 2C 2F 2C 37 3C F8 
+            E3 00 0C 2B 24 31 2A 28 FA 13 32 25 F8 
+            E3 00 1B 28 30 32 39 28 FA 1E 31 2C 37 F8 
+            E3 00 18 35 27 28 35 FA 1E 31 2C 37 F8 
+            E3 00 0B 28 31 26 2B FA 1E 31 2C 37 F8 
+            E3 00 1E 31 25 28 31 26 2B FA 1E 31 2C 37 FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141E60" offsetMode="RAM" mode="DATA" label="address_triangle_menu_select_text_entries">
+            23 10 24 10 25 10 26 10 27 10 82 C8 83 C8
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141EF0" offsetMode="RAM" mode="DATA" label="address_bench_menu_is_empty_entry">
+            01 01 01 01 01 01 01 01 01 01
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141EFB" offsetMode="RAM" mode="DATA" label="address_bench_menu_status">
+            00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141EFC" offsetMode="RAM" mode="DATA" label="address_bench_menu_init">
+            01 00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141EFE" offsetMode="RAM" mode="DATA" label="address_bench_menu_selection">
+            FF FF
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141E70" offsetMode="RAM" mode="DATA" label="address_bench_menu_data" replaceLabels="true">
+            80 01 00 00 68 00 B0 00 18 01 20 00 68 00 B0 00 
+            00 00 00 00 68 00 B0 00 00 00 00 00 
+            80 C8 
+            09 00 
+            01 00 00 00 
+            FF FF FF FF 
+            1C 24 11 80 
+            01 00 00 00 
+            @address_bench_menu_init 
+            @address_bench_menu_selection
+            00 00 
+            4D 00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141EB0" offsetMode="RAM" mode="DATA" label="address_bench_menu_select_text">
+            1E 31 2C 37 FA 31 24 30 28 5F FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F00" offsetMode="RAM" mode="DATA" label="address_unbench_inner_menu_text">
+            1E 31 25 28 31 26 2B F8 0D 2C 36 30 2C 36 36 FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F14" offsetMode="RAM" mode="DATA" label="address_unbench_inner_menu_select_text_entries">
+            83 C8 26 10
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F1A" offsetMode="RAM" mode="DATA" label="address_unbench_inner_menu_status">
+            00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F1C" offsetMode="RAM" mode="DATA" label="address_unbench_inner_menu_init">
+            01 00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F1E" offsetMode="RAM" mode="DATA" label="address_unbench_inner_menu_selection">
+            FF FF
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F20" offsetMode="RAM" mode="DATA" label="address_unbench_inner_menu_data" replaceLabels="true">
+            80 01 00 00 40 00 30 00 E0 00 54 00 40 00 30 00
+            00 00 00 00 40 00 30 00 00 00 00 00
+            81 C8
+            01 00
+            01 00 00 00
+            FF FF FF FF
+            1C 24 11 80
+            01 00 00 00
+            @address_unbench_inner_menu_init
+            @address_unbench_inner_menu_selection
+            00 00
+            4E 00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F60" offsetMode="RAM" mode="DATA" label="address_restore_unit_array">
+            00 00 00 00 00 00 00 00 00 00
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141F6C" offsetMode="RAM" mode="DATA" label="address_bench_unit_select_text">
+            16 32 39 28 FA 38 31 2C 37 FA 29 35 32 30 FA 24 26 37 2C 39 28 FA 33 24 35 37 3C FA 37 32 FA 25 28 31 26 2B 5F F8
+            1E 31 2C 37 FA 2F 32 36 28 36 FA 0E 21 19 FA 24 31 27 FA 13 19 5F FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="141FAC" offsetMode="RAM" mode="DATA" label="address_unbench_unit_select_text">
+            16 32 39 28 FA 38 31 2C 37 FA 29 35 32 30 FA 25 28 31 26 2B FA 37 32 FA 24 26 37 2C 39 28 FA 33 24 35 37 3C 5F FE
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="114594" offsetMode="RAM">
+            5C
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="18A5B4" offsetMode="RAM" mode="DATA" replaceLabels="true">
+            @address_triangle_menu_select_text_entries
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="18A5C8" offsetMode="RAM" mode="DATA" replaceLabels="true">
+            @address_bench_menu_select_text_entries
+            @address_unbench_inner_menu_select_text_entries
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="18C0DE,18C0EE" offsetMode="RAM" mode="DATA">
+            80
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="18C0F6" offsetMode="RAM" mode="DATA">
+            06
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="142000" offsetMode="RAM" mode="ASM" inputFile="XmlPatches\Include\unit_bench_world.asm" />
+        <Location file="WORLD_WORLD_BIN" offset="E4BB8,ECFD0,112520" offsetMode="RAM" mode="ASM">
+            jal     @display_menu_text_entry_outer
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="E50E8" offsetMode="RAM" mode="ASM">
+            jal     @find_text_entry_outer
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="EBD60" offsetMode="RAM" mode="ASM">
+            lui     t1, %hi(@address_bench_menu_status)
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="EBD7C" offsetMode="RAM" mode="ASM">
+            lbu     t1, %lo(@address_bench_menu_status) (t1)
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="EBD84" offsetMode="RAM" mode="ASM">
+            or      s6, s6, t1
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1140D0" offsetMode="RAM" mode="ASM">
+            jal     @formation_screen_frame_processing_start_hook
+            nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="114344" offsetMode="RAM" mode="ASM">
+            jal     @formation_screen_frame_processing_action_check_hook
+            nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="15B0FF" offsetMode="RAM" mode="DATA" label="address_is_bench_join">
+            00
+        </Location>
+        <Location file="BATTLE_BIN" offset="15B100" offsetMode="RAM" mode="ASM" inputFile="XmlPatches\Include\unit_bench_battle.asm" />
+        <Location file="EVENT_REQUIRE_OUT" offset="1C6E40" offsetMode="RAM" mode="ASM">
+            jal     @post_battle_get_join_status
+        </Location>
+        <Location file="EVENT_REQUIRE_OUT" offset="1C7014" offsetMode="RAM" mode="ASM">
+            jal     @post_battle_join
+        </Location>
+    </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
         Changes formula 3B to a mana burn/feedback ability 
