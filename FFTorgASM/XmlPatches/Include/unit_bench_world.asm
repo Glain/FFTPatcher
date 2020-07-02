@@ -21,8 +21,10 @@
 .label  @address_job_level_jp_req_table, 0x80066182
 .label  @address_selected_formation_unit_index, 0x8018ba20
 .label  @address_formation_show_unit_info_panel, 0x8018ba25
+.label  @address_circle_menu_status, 0x8018ba27
 .label  @address_sound_effect_id, 0x8018bacc
 .label  @address_formation_show_unit_info_panel_stored_value, 0x8018bae9
+.label  @address_old_circle_menu_status, 0x801c85fc
 .label  @address_formation_unit_table, 0x801cd5ec
 
 .eqv    %size_party_unit, 256
@@ -1011,15 +1013,18 @@
         j       formation_screen_unit_menu_processing_end
         nop
         
-    formation_screen_unit_menu_processing_default:
+    formation_screen_unit_menu_processing_default:    
         la      a1, @address_bench_menu_data
         jal     @world_run_menu_thread
         li      a0, 15
         
         sb      zero, @address_formation_show_unit_info_panel
+        sb      zero, @address_circle_menu_status
         
         bne     v0, zero, formation_screen_unit_menu_processing_end
         li      t0, 1
+        
+        lbu     t5, @address_old_circle_menu_status
         
         #   Selected entry / cancel processing
         lh      a1, @address_bench_menu_selection
@@ -1033,6 +1038,7 @@
         bgez    a1, formation_screen_unit_menu_processing_past_cancel
         lui     t3, %hi(@address_sound_effect_id)
         
+        sb      t5, @address_circle_menu_status
         j       formation_screen_unit_menu_processing_end
         sb      zero, %lo(@address_bench_menu_status) (t2)
     
@@ -1042,6 +1048,8 @@
         bne     t1, t0, formation_screen_unit_menu_processing_unbench
         sb      t0, %lo(@address_sound_effect_id) (t3)
         
+        #   Bench unit
+        sb      t5, @address_circle_menu_status
         jal     @handle_unit_bench
         sb      zero, %lo(@address_bench_menu_status) (t2)
         j       formation_screen_unit_menu_processing_end
@@ -1274,11 +1282,19 @@
         sb      t0, %lo(@address_sound_effect_id) (at)
         
     formation_screen_frame_processing_action_check_hook_default:
+        lbu     t0, @address_circle_menu_status
         #la      t1, @address_formation_show_unit_info_panel
         #lbu     t2, 0(t1)
         sb      s1, @address_bench_menu_status
         #sb      t2, @address_formation_show_unit_info_panel_stored_value
         #sb      zero, 0(t1)
+        sb      t0, @address_old_circle_menu_status
+        
+        #  This routine sets thread parameters to (0, 0, 1).  Running this with thread IDs 9 and 12 seems to hide circle menus temporarily (along with correct circle menu status).
+        jal     0x8012a598
+        li      a0, 9
+        jal     0x8012a598
+        li      a0, 12
         
         jal     @generate_bench_unit_menu_data
         move    a0, s1
@@ -1326,7 +1342,9 @@
         
         #   Handling of Unbench action
         lbu     a0, @address_selected_formation_unit_index
+        lbu     t7, @address_old_circle_menu_status
         sb      t5, %lo(@address_sound_effect_id) (t4)
+        sb      t7, @address_circle_menu_status
         jal     @handle_unit_unbench
         sb      zero, %lo(@address_bench_menu_status) (t6)
         j       formation_screen_unbench_inner_menu_processing_end
