@@ -2446,6 +2446,10 @@ SKP:  j       0x80180848            #   Skip this ability
         <Variable name="Color Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
     </Patch>
     <Patch name="Expand load and save data">
+        <Description>
+            Expands load and save data to use all 64 blocks, instead of just 60.  If you load a normal 60 block save, then the last 4 blocks loaded in could be garbage data.
+            If you want to prevent loading saves made without this patch, change the Checksum End Block variable to 40 from 3C. (These values are hexadecimal)
+        </Description>
         <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
         <Location file="SCUS_942_21" offset="40F00" mode="ASM" offsetMode="RAM" label="extra_save_data_location">
             .label  @copy_bytes, 0x8005e254
@@ -2568,12 +2572,17 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="EVENT_CARD_OUT" offset="1C09FC" mode="ASM" offsetMode="RAM">
             ori     v0, v0, 0xf000
         </Location>
+        <Variable name="Checksum End Block" specific="WORLD_WORLD_BIN:130308,1303FC,EVENT_CARD_OUT:1C08D8" offsetMode="RAM" bytes="1" default="3C" />
         <Variable name="Now Loading Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
         <Variable name="Now Loading Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
         <Variable name="Now Loading Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
     </Patch>
     <Patch name="Unit bench (10 extra unit slots)">
-        <Description>Add the unit bench, which can hold 10 extra units.  Accessible from the formation screen, with Bench Unit and Unbench Unit menu items.  Units sent to the bench lose EXP and JP.  Joining units will join to the bench if party is full.</Description>
+        <Description>
+            Add the unit bench, which can hold 10 extra units.  Accessible from the formation screen, with Bench Unit and Unbench Unit menu items.  Units sent to the bench lose EXP and JP.  Joining units will join to the bench if party is full.
+            This uses expanded (64 block) save data.  If you load a normal 60 block save, then the last 4 blocks loaded in could be garbage data.
+            If you want to prevent loading saves made without this patch, change the Checksum End Block variable to 40 (from 3C). (These values are hexadecimal)
+        </Description>
         <Include patch="Expand load and save data" />
         <Location file="SCUS_942_21" offset="40F00,40F54,40FA8,40FFC,41050,410A4" offsetMode="RAM" mode="DATA">
             00
