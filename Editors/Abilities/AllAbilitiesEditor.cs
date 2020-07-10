@@ -262,7 +262,7 @@ namespace FFTPatcher.Editors
 
         private void UpdateInflictStatus(int abilityIndex)
         {
-            if (abilityIndex >= 0)
+            if ((abilityIndex >= 0) && (abilityIndex <= 0x16F))
             {
                 Ability ability = ((Ability[])abilitiesListBox.DataSource)[abilityIndex];
                 AbilityAttributes abilityAttr = ability.Attributes;
