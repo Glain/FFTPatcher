@@ -2454,7 +2454,7 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="SCUS_942_21" offset="40F00" mode="ASM" offsetMode="RAM" label="extra_save_data_location">
             .label  @copy_bytes, 0x8005e254
         </Location>
-        <Location specific="WORLD_WORLD_BIN:12D9ED,12DD41,12FA99,12FAA9,12FBD1,12FC65,12FCD9,12FCE1,EVENT_CARD_OUT:1BFF71,1BFF99,1C0069" offsetMode="RAM">
+        <Location specific="WORLD_WORLD_BIN:12FA99,12FAA9,12FBD1,12FC65,12FCD9,12FCE1,EVENT_CARD_OUT:1BFF71,1BFF99,1C0069" offsetMode="RAM">
             20
         </Location>
         <Location file="WORLD_WORLD_BIN" offset="12FDE4" mode="ASM" offsetMode="RAM">
