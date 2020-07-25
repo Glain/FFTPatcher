@@ -2457,6 +2457,67 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location specific="WORLD_WORLD_BIN:12FA99,12FAA9,12FBD1,12FC65,12FCD9,12FCE1,EVENT_CARD_OUT:1BFF71,1BFF99,1C0069" offsetMode="RAM">
             20
         </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12D974" mode="ASM" offsetMode="RAM">
+            lui     at, %hi(0x8018e48c)
+            beq     a0, zero, 0x8012dac8
+            sb      a0, %lo(0x8018e48c) (at)
+            lui     a1, 0x801c
+            jal     0x8012d8b0
+            ori     a1, a1, 0xa768
+            lui     at, 0x801d
+            lw      v0, -0x3a94(at)
+            lw      v1, -0x3a98(at)
+            sw      v0, -0x3a90(at)
+            jal     0x80130898
+            sw      v1, -0x2700(at)
+            jal     0x8012fdd8
+            li      a0, -1
+
+            lw      a0, 0x801cd1ec
+            la      a1, 0x801e8000
+            li      a2, 0x200
+            jal     @copy_bytes
+            addiu   a0, a0, 0x1e00
+
+            j       0x8012d9dc
+            nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12DCDC" mode="ASM" offsetMode="RAM">
+            lw      v0, 0x801cc574
+            sw      s0, 0x0c(sp)
+            beq     v0, zero, 0x8012dd9c
+            lui     s0, %hi(0x801cd1ec)
+            jal     0x8012d5bc
+            nop
+            bne     v0, zero, 0x8012dd94
+            nop
+            lui     at, %hi(0x8018e48c)
+            lw      a0, 0x801cc568
+            jal     0x800449cc
+            sb      zero, %lo(0x8018e48c) (at)
+            lw      a0, 0x801cc56c
+            jal     0x800449cc
+            nop
+            la      a0, 0x801ca768
+            lw      a1, %lo(0x801cd1ec) (s0)
+            jal     0x800222dc
+            li      a2, 0x1e00
+
+            la      a0, 0x801e8000
+            lw      a1, %lo(0x801cd1ec) (s0)
+            li      a2, 0x200
+            jal     @copy_bytes
+            addiu   a1, a1, 0x1e00
+
+            jal     0x80130338
+            li      a0, 1
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12DDB0" mode="ASM" offsetMode="RAM">
+            lw      ra, 0x14(sp)
+            lw      s0, 0x0c(sp)
+            jr      ra
+            addiu   sp, sp, 0x18
+        </Location>
         <Location file="WORLD_WORLD_BIN" offset="12FDE4" mode="ASM" offsetMode="RAM">
             lui     t0, 0x801d
             lbu     a0, -0x2878(t0)
@@ -2572,6 +2633,14 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="EVENT_CARD_OUT" offset="1C09FC" mode="ASM" offsetMode="RAM">
             ori     v0, v0, 0xf000
         </Location>
+        <Location file="MENU_TUTO1_SCR" offset="95,10B">06</Location>
+        <Location file="MENU_TUTO1_SCR" offset="9B">6C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="AD">7C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="BF">8C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="D1">9C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="E3">AC</Location>
+        <Location file="MENU_TUTO4_SCR" offset="5C">8C</Location>
+        <Location file="MENU_TUTO4_SCR" offset="65">06</Location>
         <Variable name="Checksum End Block" specific="WORLD_WORLD_BIN:130308,1303FC,EVENT_CARD_OUT:1C08D8" offsetMode="RAM" bytes="1" default="3C" />
         <Variable name="Now Loading Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
         <Variable name="Now Loading Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
