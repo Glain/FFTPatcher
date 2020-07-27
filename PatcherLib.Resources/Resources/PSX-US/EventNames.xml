@@ -379,9 +379,9 @@
   <Event value="1A3" name="Zarghidas"/>
   <Event value="1A4" name="Outside Lesalia Gate Zalmo 1"/>
   <Event value="1A5" name="Outside Lesalia Gate Talk with Alma"/>
-  <Event value="1A6" name="Underground Book Storage First Floor"/>
-  <Event value="1A7" name="Underground Book Storage Second Floor"/>
-  <Event value="1A8" name="Underground Book Storage Third Floor"/>
+  <Event value="1A6" name="Underground Book Storage Second Floor"/>
+  <Event value="1A7" name="Underground Book Storage Third Floor"/>
+  <Event value="1A8" name="Underground Book Storage First Floor"/>
   <Event value="1A9" name="Meet Velius"/>
   <Event value="1AA" name="Grog Hill "/>
   <Event value="1AB" name="Meet Again with Olan"/>
@@ -420,9 +420,9 @@
   <Event value="1CC" name="St Murond Temple"/>
   <Event value="1CD" name="Hall of St Murond Temple"/>
   <Event value="1CE" name="Chapel of St Murond Temple"/>
-  <Event value="1CF" name="Coillery Underground Third Floor"/>
-  <Event value="1D0" name="Coillery Underground Second Floor"/>
-  <Event value="1D1" name="Coillery Underground First Floor"/>
+  <Event value="1CF" name="Colliery Underground Third Floor"/>
+  <Event value="1D0" name="Colliery Underground Second Floor"/>
+  <Event value="1D1" name="Colliery Underground First Floor"/>
   <Event value="1D2" name="Underground Passage in Goland"/>
   <Event value="1D3" name="Underground Passage in Goland Post Battle"/>
   <Event value="1D4" name="Nelveska Temple"/>
