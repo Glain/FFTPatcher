@@ -2633,14 +2633,6 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="EVENT_CARD_OUT" offset="1C09FC" mode="ASM" offsetMode="RAM">
             ori     v0, v0, 0xf000
         </Location>
-        <Location file="MENU_TUTO1_SCR" offset="95,10B">06</Location>
-        <Location file="MENU_TUTO1_SCR" offset="9B">6C</Location>
-        <Location file="MENU_TUTO1_SCR" offset="AD">7C</Location>
-        <Location file="MENU_TUTO1_SCR" offset="BF">8C</Location>
-        <Location file="MENU_TUTO1_SCR" offset="D1">9C</Location>
-        <Location file="MENU_TUTO1_SCR" offset="E3">AC</Location>
-        <Location file="MENU_TUTO4_SCR" offset="5C">8C</Location>
-        <Location file="MENU_TUTO4_SCR" offset="65">06</Location>
         <Variable name="Checksum End Block" specific="WORLD_WORLD_BIN:130308,1303FC,EVENT_CARD_OUT:1C08D8" offsetMode="RAM" bytes="1" default="3C" />
         <Variable name="Now Loading Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
         <Variable name="Now Loading Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
@@ -2813,6 +2805,14 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="EVENT_REQUIRE_OUT" offset="1C7014" offsetMode="RAM" mode="ASM">
             jal     @post_battle_join
         </Location>
+        <Location file="MENU_TUTO1_SCR" offset="95,10B">06</Location>
+        <Location file="MENU_TUTO1_SCR" offset="9B">6C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="AD">7C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="BF">8C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="D1">9C</Location>
+        <Location file="MENU_TUTO1_SCR" offset="E3">AC</Location>
+        <Location file="MENU_TUTO4_SCR" offset="5C">8C</Location>
+        <Location file="MENU_TUTO4_SCR" offset="65">06</Location>
     </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
