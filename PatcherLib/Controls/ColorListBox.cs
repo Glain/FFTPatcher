@@ -112,7 +112,7 @@ namespace PatcherLib.Controls
 
                 //SolidBrush foregroundBrush = isSelected ? brushForeSelected : new SolidBrush(colorPair.ForeColor);
                 //graphics.DrawString(text, Font, foregroundBrush, GetItemRectangle(index).Location);
-                TextRenderer.DrawText(e.Graphics, text, Font, GetItemRectangle(index).Location, (isSelected ? colorForeSelected : colorPair.ForeColor));
+                TextRenderer.DrawText(e.Graphics, text, Font, GetItemRectangle(index).Location, (isSelected ? colorForeSelected : colorPair.ForeColor), TextFormatFlags.NoPrefix);
             }
 
             e.DrawFocusRectangle();

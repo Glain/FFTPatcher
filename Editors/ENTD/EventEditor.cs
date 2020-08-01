@@ -221,11 +221,11 @@ namespace FFTPatcher.Editors
                 {
                     e.Graphics.FillRectangle( backBrush, e.Bounds );
 
-                    TextRenderer.DrawText(e.Graphics, (unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, new Point(e.Bounds.X + 0, e.Bounds.Y + 0), foreColor);
+                    TextRenderer.DrawText(e.Graphics, (unit.HasChanged ? "*" : "") + unit.SpriteSet.Name, e.Font, new Point(e.Bounds.X + 0, e.Bounds.Y + 0), foreColor, TextFormatFlags.NoPrefix);
                     if (unitExists)
                     {
-                        TextRenderer.DrawText(e.Graphics, unit.SpecialName.Name, e.Font, new Point(e.Bounds.X + cumulativeWidths[0], e.Bounds.Y + 0), foreColor);
-                        TextRenderer.DrawText(e.Graphics, unit.Job.Name, e.Font, new Point(e.Bounds.X + cumulativeWidths[1], e.Bounds.Y + 0), foreColor);
+                        TextRenderer.DrawText(e.Graphics, unit.SpecialName.Name, e.Font, new Point(e.Bounds.X + cumulativeWidths[0], e.Bounds.Y + 0), foreColor, TextFormatFlags.NoPrefix);
+                        TextRenderer.DrawText(e.Graphics, unit.Job.Name, e.Font, new Point(e.Bounds.X + cumulativeWidths[1], e.Bounds.Y + 0), foreColor, TextFormatFlags.NoPrefix);
                         TextRenderer.DrawText(e.Graphics, String.Format("({0}, {1}, {2})", unit.X, unit.Y, (unit.UpperLevel ? 1 : 0)), e.Font, new Point(e.Bounds.X + cumulativeWidths[2], e.Bounds.Y), foreColor);
                         TextRenderer.DrawText(e.Graphics, String.Format("0x{0:X2}", unit.UnitID), e.Font, new Point(e.Bounds.X + cumulativeWidths[3], e.Bounds.Y + 0), foreColor);
                         TextRenderer.DrawText(e.Graphics, strPresentFlags, e.Font, new Point(e.Bounds.X + cumulativeWidths[4], e.Bounds.Y + 0), foreColor);

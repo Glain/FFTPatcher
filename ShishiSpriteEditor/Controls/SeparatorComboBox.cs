@@ -82,7 +82,7 @@ namespace FFTPatcher.SpriteEditor
                     bounds.Height -= separatorHeight;
                 }
 
-                TextRenderer.DrawText( e.Graphics, GetDisplayText( e.Index ), Font, bounds, e.ForeColor, e.BackColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter );
+                TextRenderer.DrawText( e.Graphics, GetDisplayText( e.Index ), Font, bounds, e.ForeColor, e.BackColor, TextFormatFlags.NoPrefix | TextFormatFlags.Left | TextFormatFlags.VerticalCenter );
 
                 if ( drawSeparator )
                 {
