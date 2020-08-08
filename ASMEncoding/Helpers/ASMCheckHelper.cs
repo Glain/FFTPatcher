@@ -687,10 +687,64 @@ namespace ASMEncoding.Helpers
             return ((command == "addi") || (command == "addiu"));
         }
 
+        private bool IsFirstArgWritebackCommand(string command)
+        {
+            if (string.IsNullOrEmpty(command))
+                return false;
+
+            if (IsLoadCommand(command))
+                return true;
+
+            string commandLower = command.ToLower().Trim();
+            switch (commandLower)
+            {
+                case "add":
+                case "addi":
+                case "addiu":
+                case "addu":
+                case "and":
+                case "andi":
+                case "div":
+                case "divu":
+                case "lui":
+                case "mfhi":
+                case "mflo":
+                case "mult":
+                case "multu":
+                case "nor":
+                case "or":
+                case "ori":
+                case "sll":
+                case "sllv":
+                case "slt":
+                case "slti":
+                case "sltiu":
+                case "sltu":
+                case "sra":
+                case "srav":
+                case "srl":
+                case "srlv":
+                case "sub":
+                case "subu":
+                case "xor":
+                case "xori":
+
+                case "cfc0":
+                case "mfc0":
+                case "cfc2":
+                case "mfc2":
+                case "lwc2":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         private void CheckLoadDelay(string command, string[] args, string gprLoad, string strPC)
         {
             bool foundLoadDelay = false;
-            bool isLoad = IsLoadCommand(command);
+            //bool isLoad = IsLoadCommand(command);
+            bool isFirstArgWriteback = IsFirstArgWritebackCommand(command);
             bool isFirstArg = true;
 
             foreach (string arg in args)
@@ -698,7 +752,7 @@ namespace ASMEncoding.Helpers
                 if (isFirstArg)
                 {
                     isFirstArg = false;
-                    if (isLoad)
+                    if (isFirstArgWriteback) //if (isLoad) 
                         continue;
                 }
 
