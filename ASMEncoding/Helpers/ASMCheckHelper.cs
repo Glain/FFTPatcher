@@ -704,13 +704,9 @@ namespace ASMEncoding.Helpers
                 case "addu":
                 case "and":
                 case "andi":
-                case "div":
-                case "divu":
                 case "lui":
                 case "mfhi":
                 case "mflo":
-                case "mult":
-                case "multu":
                 case "nor":
                 case "or":
                 case "ori":
