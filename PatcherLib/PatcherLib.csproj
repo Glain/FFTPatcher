@@ -81,6 +81,9 @@
     <Compile Include="Datatypes\Set.cs" />
     <Compile Include="Datatypes\Shops.cs" />
     <Compile Include="Datatypes\SubArray.cs" />
+    <Compile Include="TextUtilities\CharMap.cs" />
+    <Compile Include="TextUtilities\TextCompression.cs" />
+    <Compile Include="TextUtilities\TextUtilities.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
