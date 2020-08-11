@@ -1,4 +1,5 @@
 ﻿using PatcherLib.Datatypes;
+using PatcherLib.TextUtilities;
 using PatcherLib.Utilities;
 using System;
 using System.Collections.Generic;

@@ -24,6 +24,7 @@ using System.IO;
 using FFTPatcher.TextEditor.Files;
 using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor
 {

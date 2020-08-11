@@ -6,6 +6,7 @@ using PatcherLib;
 using PatcherLib.Utilities;
 using System.IO;
 using PatcherLib.Iso;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor
 {
@@ -15,7 +16,7 @@ namespace FFTPatcher.TextEditor
         {
             public static class PSX
             {
-                static FFTFont defaultFont = TextUtilities.PSXFont;
+                static FFTFont defaultFont = PSXResources.PSXFont;
                 static GenericCharMap defaultMap = TextUtilities.PSXMap;
 
                 public static GenericCharMap GetCharMap(Stream iso)
@@ -57,7 +58,7 @@ namespace FFTPatcher.TextEditor
 
             public static class PSP
             {
-                static FFTFont defaultFont = TextUtilities.PSPFont;
+                static FFTFont defaultFont = PSPResources.PSPFont;
                 static GenericCharMap defaultMap = TextUtilities.PSPMap;
 
                 public static GenericCharMap GetCharMap(Stream iso)

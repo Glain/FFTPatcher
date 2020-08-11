@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using PatcherLib.Utilities;
+using PatcherLib.TextUtilities;
+using PatcherLib;
 
 namespace FFTPatcher.TextEditor
 {
@@ -121,7 +123,7 @@ namespace FFTPatcher.TextEditor
 #if MEASURESTRINGS
         private string GetWidthColumnString( string s )
         {
-            var widths = boundFile.CharMap.MeasureEachLineInFont( s, font );
+            var widths = MeasureEachLineInFont(boundFile.CharMap, s, font);
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             var widthStrings = new List<string>( widths.Count );
 
@@ -190,7 +192,7 @@ namespace FFTPatcher.TextEditor
             DataGridViewRow[] rows = new DataGridViewRow[count];
             dataGridView.SuspendLayout();
 #if MEASURESTRINGS
-            font = file.Context == PatcherLib.Datatypes.Context.US_PSP ? TextUtilities.PSPFont : TextUtilities.PSXFont;
+            font = file.Context == PatcherLib.Datatypes.Context.US_PSP ? PSPResources.PSPFont : PSXResources.PSXFont;
 #endif
             boundFile = file;
 
@@ -238,6 +240,61 @@ namespace FFTPatcher.TextEditor
                 boundFile.SelectedTerminator = (byte)separatorComboBox.SelectedItem;
             }
         }
+
+#if MEASURESTRINGS
+        private int GetWidthForEncodedCharacter(UInt32 c, PatcherLib.Datatypes.FFTFont font)
+        {
+            if (c == 0xFA)
+            {
+                return 4;
+            }
+            else if (c <= 0xCF)
+            {
+                return font.Glyphs[(int)c].Width;
+            }
+            else if ((c & 0xFF00) >= 0xD100 && (c & 0xFF00) <= 0xDA00 && (c & 0x00FF) <= 0xCF &&
+                      ((c & 0xFF00) != 0xDA00 || (c & 0x00FF) <= 0x77))
+            {
+                return font.Glyphs[(int)((((c & 0xFF00) >> 8) - 0xD0) * 0xD0 + (c & 0x00FF))].Width;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public IList<int> MeasureEachLineInFont(GenericCharMap charMap, string s, PatcherLib.Datatypes.FFTFont font)
+        {
+            string[] strings = s.Split(new string[] { "{Newline}", "{Close}" }, StringSplitOptions.RemoveEmptyEntries);
+            int[] result = new int[strings.Length];
+            for (int i = 0; i < strings.Length; i++)
+            {
+                result[i] =
+                    strings[i].Length == 0 ? 0 :
+                                             MeasureSingleLineInFont(charMap, strings[i], font);
+            }
+            return result.AsReadOnly();
+        }
+
+        private int MeasureSingleLineInFont(GenericCharMap charMap, string s, PatcherLib.Datatypes.FFTFont font)
+        {
+            IList<UInt32> everyChar = charMap.GetEachEncodedCharacter(s);
+            int sum = 0;
+            foreach (UInt32 c in everyChar)
+            {
+                sum += GetWidthForEncodedCharacter(c, font);
+            }
+            return sum;
+        }
+
+        public int MeasureStringInFont(GenericCharMap charMap, string s, PatcherLib.Datatypes.FFTFont font)
+        {
+            var widths = MeasureEachLineInFont(charMap, s, font);
+            int width = int.MinValue;
+            widths.ForEach(w => width = Math.Max(width, w));
+            return width;
+        }
+#endif
 
     }
 }

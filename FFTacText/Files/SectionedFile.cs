@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor
 {

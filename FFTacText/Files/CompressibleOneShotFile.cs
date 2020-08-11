@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PatcherLib.TextUtilities;
+using System.Collections.Generic;
 
 namespace FFTPatcher.TextEditor
 {

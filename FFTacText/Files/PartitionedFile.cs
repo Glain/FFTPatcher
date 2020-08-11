@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
 using System.Text;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor
 {

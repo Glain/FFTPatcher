@@ -166,10 +166,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="zipResources.bat" />
-    <Compile Include="Utilities\CharMap.cs" />
     <Compile Include="Utilities\Resources.cs" />
-    <Compile Include="Utilities\TextCompression.cs" />
-    <Compile Include="Utilities\TextUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PatcherLib.Resources\PatcherLib.Resources.csproj">

@@ -59,6 +59,14 @@ namespace PatcherLib
         private static XmlDocument braveStoryDoc;
         private static XmlDocument propositionsDoc;
 
+        public static FFTFont PSXFont
+        {
+            get
+            {
+                return new FFTFont(PatcherLib.PSXResources.Binaries.Font, PatcherLib.PSXResources.Binaries.FontWidths);
+            }
+        }
+
         static PSXResources()
         {
             Dictionary<string, object> dict = new Dictionary<string, object>();

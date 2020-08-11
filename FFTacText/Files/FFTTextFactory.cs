@@ -8,6 +8,7 @@ using FFTPatcher.TextEditor.Files;
 using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 using PatcherLib.Utilities;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor
 {

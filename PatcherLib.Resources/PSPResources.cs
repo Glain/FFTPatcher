@@ -68,6 +68,14 @@ namespace PatcherLib
             }
         }
 
+        public static FFTFont PSPFont
+        {
+            get
+            {
+                return new FFTFont(PatcherLib.PSPResources.Binaries.Font, PatcherLib.PSPResources.Binaries.FontWidths);
+            }
+        }
+
         static PSPResources()
         {
             Binaries.Propositions = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.Binaries.Propositions].AsReadOnly();

@@ -335,61 +335,6 @@ namespace PatcherLib.TextUtilities
 
 
         #endregion Methods
-
-#if MEASURESTRINGS
-        private int GetWidthForEncodedCharacter( UInt32 c, PatcherLib.Datatypes.FFTFont font )
-        {
-            if ( c == 0xFA )
-            {
-                return 4;
-            }
-            else if ( c <= 0xCF )
-            {
-                return font.Glyphs[(int)c].Width;
-            }
-            else if ( ( c & 0xFF00 ) >= 0xD100 && ( c & 0xFF00 ) <= 0xDA00 && ( c & 0x00FF ) <= 0xCF &&
-                      ( ( c & 0xFF00 ) != 0xDA00 || ( c & 0x00FF ) <= 0x77 ) )
-            {
-                return font.Glyphs[(int)( ( ( ( c & 0xFF00 ) >> 8 ) - 0xD0 ) * 0xD0 + ( c & 0x00FF ) )].Width;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        public IList<int> MeasureEachLineInFont( string s, PatcherLib.Datatypes.FFTFont font )
-        {
-            string[] strings = s.Split( new string[] { "{Newline}", "{Close}" }, StringSplitOptions.RemoveEmptyEntries );
-            int[] result = new int[strings.Length];
-            for (int i = 0; i < strings.Length; i++)
-            {
-                result[i] = 
-                    strings[i].Length == 0 ? 0 : 
-                                             MeasureSingleLineInFont( strings[i], font );
-            }
-            return result.AsReadOnly();
-        }
-
-        private int MeasureSingleLineInFont( string s, PatcherLib.Datatypes.FFTFont font )
-        {
-            IList<UInt32> everyChar = GetEachEncodedCharacter( s );
-            int sum = 0;
-            foreach (UInt32 c in everyChar)
-            {
-                sum += GetWidthForEncodedCharacter( c, font );
-            }
-            return sum;
-        }
-
-        public int MeasureStringInFont( string s, PatcherLib.Datatypes.FFTFont font )
-        {
-            var widths = MeasureEachLineInFont( s, font );
-            int width = int.MinValue;
-            widths.ForEach( w => width = Math.Max( width, w ) );
-            return width;
-        }
-#endif
     }
 
     /// <summary>

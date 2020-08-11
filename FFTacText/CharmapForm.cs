@@ -17,6 +17,7 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using PatcherLib.TextUtilities;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;

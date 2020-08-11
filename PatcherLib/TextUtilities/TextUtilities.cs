@@ -243,24 +243,6 @@ namespace PatcherLib.TextUtilities
         /// </summary>
         public static PSXCharMap PSXMap { get; private set; }
 
-        /*
-        public static FFTFont PSXFont
-        {
-            get
-            {
-                return new FFTFont( PatcherLib.PSXResources.Binaries.Font, PatcherLib.PSXResources.Binaries.FontWidths );
-            }
-        }
-
-        public static FFTFont PSPFont
-        {
-            get
-            {
-                return new FFTFont( PatcherLib.PSPResources.Binaries.Font, PatcherLib.PSPResources.Binaries.FontWidths );
-            }
-        }
-        */
-
         #endregion Static Properties
 
         #region Constructors (1)

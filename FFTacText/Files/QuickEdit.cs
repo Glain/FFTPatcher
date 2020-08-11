@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PatcherLib.Utilities;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor.Files
 {

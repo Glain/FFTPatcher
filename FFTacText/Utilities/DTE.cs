@@ -5,6 +5,7 @@ using PatcherLib;
 using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 using PatcherLib.Utilities;
+using PatcherLib.TextUtilities;
 
 namespace FFTPatcher.TextEditor
 {
@@ -137,8 +138,8 @@ namespace FFTPatcher.TextEditor
         {
             IList<byte> fontBytes = PspIso.GetBlock( iso, info, DTE.PspFontSection[0] );
             IList<byte> widthBytes = PspIso.GetBlock( iso, info, DTE.PspFontWidths[0] );
-            IList<byte> defaultFontBytes = TextUtilities.PSPFont.ToByteArray();
-            IList<byte> defaultWidthBytes = TextUtilities.PSPFont.ToWidthsByteArray();
+            IList<byte> defaultFontBytes = PSPResources.PSPFont.ToByteArray();
+            IList<byte> defaultWidthBytes = PSPResources.PSPFont.ToWidthsByteArray();
 
             return 
                 !Utilities.CompareArrays( fontBytes, defaultFontBytes ) ||
