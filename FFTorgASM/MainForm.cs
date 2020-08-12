@@ -201,7 +201,7 @@ namespace FFTorgASM
 
                     if ((!patchedByteArray.IsMoveSimple) && (patch.blockMoveList.Count > 0))
                     {
-                        bytes = asmUtility.UpdateJumps(bytes, (uint)patchedByteArray.RamOffset, true, patch.blockMoveList);
+                        bytes = asmUtility.UpdateBlockReferences(bytes, (uint)patchedByteArray.RamOffset, true, patch.blockMoveList);
                     }
                     
                     patchedByteArray.SetBytes(bytes);

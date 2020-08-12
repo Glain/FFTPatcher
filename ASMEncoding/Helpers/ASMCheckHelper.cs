@@ -407,7 +407,7 @@ namespace ASMEncoding.Helpers
             };
         }
 
-        public byte[] UpdateJumps(byte[] bytes, uint pc, bool littleEndian, IEnumerable<BlockMove> blockMoves)
+        public byte[] UpdateBlockReferences(byte[] bytes, uint pc, bool littleEndian, IEnumerable<BlockMove> blockMoves)
         {
             int byteCount = bytes.Length;
             if (byteCount < 4)
@@ -437,6 +437,13 @@ namespace ASMEncoding.Helpers
             
             int numInstructions = instructions.Length;
             uint[] newInstructions = new uint[numInstructions];
+            uint[] regLuiValues = new uint[32];
+            int[] regLuiIndexes = new int[32];
+
+            for (int regNum = 0; regNum < 32; regNum++)
+            {
+                regLuiIndexes[regNum] = -1;
+            }
 
             for (int index = 0; index < numInstructions; index++)
             {
@@ -459,6 +466,53 @@ namespace ASMEncoding.Helpers
                     }
                 }
 
+                // Is Load Upper Immediate (LUI)
+                EncodingFormat encFormat = Decoder.FormatHelper.FindFormatByBinary(uBinaryLine);
+                if (encFormat.Command == "lui")
+                {
+                    int regNum = (int)(uBinaryLine >> encFormat.RegisterPositions[0] & encFormat.RegisterIncludeMasks[0]);
+                    uint immediate = (uint)(uBinaryLine >> encFormat.ImmediatePositions[0] & encFormat.ImmediateIncludeMasks[0]);
+                    regLuiValues[regNum] = immediate;
+                    regLuiIndexes[regNum] = index;
+                }
+
+                // Is Load or Store command, or ADDI, ADDIU, or ORI
+                if (IsLoadCommand(encFormat.Command) || IsStoreCommand(encFormat.Command) || ((encFormat.Command == "addi") || (encFormat.Command == "addiu") || (encFormat.Command == "ori")))
+                {
+                    int regNum = (int)(uBinaryLine >> encFormat.RegisterPositions[1] & encFormat.RegisterIncludeMasks[1]);
+
+                    if (regLuiIndexes[regNum] >= 0)
+                    {
+                        short offset = ASMValueHelper.UnsignedShortToSignedShort((ushort)(uBinaryLine & 0xffff));
+                        uint targetAddress = (uint)((regLuiValues[regNum] << 16) + offset) | (0x80000000U);
+
+                        foreach (BlockMove blockMove in blockMoves)
+                        {
+                            if ((targetAddress >= blockMove.Location) && (targetAddress < blockMove.EndLocation))
+                            {
+                                uint newTargetAddress = (uint)(targetAddress + blockMove.Offset);
+                                uint newLuiValue = (ushort)(newTargetAddress >> 16);
+                                ushort newOffset = (ushort)(newTargetAddress & 0xffff);
+
+                                if (encFormat.Command != "ori")
+                                    newLuiValue += (uint)((newOffset >= 0x8000) ? 1 : 0);
+
+                                newInstruction = ((uBinaryLine & 0xFFFF0000U) | newOffset);
+
+                                //  Modify the LUI if necessary
+                                if (newLuiValue != regLuiValues[regNum])
+                                {
+                                    uint newLuiInstruction = (newInstructions[regLuiIndexes[regNum]] & 0xFFFF0000U) | newLuiValue;
+                                    newInstructions[regLuiIndexes[regNum]] = newLuiInstruction;
+                                    byte[] newLuiInstructionBytes = ASMValueHelper.ConvertUIntToBytes(newLuiInstruction, littleEndian);
+                                    Array.Copy(newLuiInstructionBytes, 0, resultBytes, (regLuiIndexes[regNum] * 4) + startIndex, 4);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                newInstructions[index] = newInstruction;
                 byte[] newBytes = ASMValueHelper.ConvertUIntToBytes(newInstruction, littleEndian);
                 Array.Copy(newBytes, 0, resultBytes, (index * 4) + startIndex, 4);
             }

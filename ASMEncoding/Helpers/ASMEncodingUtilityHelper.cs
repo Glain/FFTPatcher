@@ -189,9 +189,9 @@ namespace ASMEncoding
             return _asmCheckHelper.CheckASMFromBytes(bytes, pc, littleEndian, useRegAliases, conditions);
         }
 
-        public byte[] UpdateJumps(byte[] bytes, uint pc, bool littleEndian, IEnumerable<BlockMove> blockMoves)
+        public byte[] UpdateBlockReferences(byte[] bytes, uint pc, bool littleEndian, IEnumerable<BlockMove> blockMoves)
         {
-            return _asmCheckHelper.UpdateJumps(bytes, pc, littleEndian, blockMoves);
+            return _asmCheckHelper.UpdateBlockReferences(bytes, pc, littleEndian, blockMoves);
         }
 
         public string ReplaceLabelsInHex(string hex, bool littleEndian)

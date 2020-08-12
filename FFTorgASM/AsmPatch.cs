@@ -318,7 +318,7 @@ namespace FFTorgASM
 
                     if ((!patchedByteArray.IsMoveSimple) && (blockMoveList.Count > 0))
                     {
-                        bytes = asmUtility.UpdateJumps(bytes, (uint)patchedByteArray.RamOffset, true, blockMoveList);
+                        bytes = asmUtility.UpdateBlockReferences(bytes, (uint)patchedByteArray.RamOffset, true, blockMoveList);
                     }
 
                     patchedByteArray.SetBytes(bytes);
@@ -533,7 +533,7 @@ namespace FFTorgASM
 
                 if ((patchedByteArray.IsCheckedAsm) && (!patchedByteArray.IsMoveSimple))
                 {
-                    byte[] newBytes = utility.UpdateJumps(bytes, (uint)patchedByteArray.RamOffset, true, blockMoves);
+                    byte[] newBytes = utility.UpdateBlockReferences(bytes, (uint)patchedByteArray.RamOffset, true, blockMoves);
                     patchedByteArray.SetBytes(newBytes);
                 }
             }
