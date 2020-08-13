@@ -265,13 +265,13 @@ namespace FFTPatcher.SpriteEditor
         // 0, 135
         private static List<AbstractImageList> BuildPsxImages(Stream iso)
         {
-            return BuildImages(iso, Settings.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
+            return BuildImages(iso, Settings.PSXImages, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
             //return BuildImages(Resources.PSXFiles, "/PsxFiles/Section[@ignore='false' or not(@ignore)]");
         }
 
         private static List<AbstractImageList> BuildPspImages(Stream iso)
         {
-            return BuildImages(iso, Settings.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]"); 
+            return BuildImages(iso, Settings.PSPImages, "/PspFiles/Section[@ignore='false' or not(@ignore)]"); 
             //return BuildImages(Resources.PSPFiles, "/PspFiles/Section[@ignore='false' or not(@ignore)]");
         }
 
@@ -285,7 +285,7 @@ namespace FFTPatcher.SpriteEditor
                 if (sectionNode.Attributes["Effects"] == null)
                     result.Add(GetImagesFromNode(doc, sectionNode));
                 else
-                    result.Add(GetEffectImages(iso, (xmlFile == Settings.PSPFiles)));
+                    result.Add(GetEffectImages(iso, (xmlFile == Settings.PSPImages)));
             }
 
             return result;

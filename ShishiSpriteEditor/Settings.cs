@@ -8,52 +8,52 @@ namespace FFTPatcher.SpriteEditor
 {
     public class Settings
     {
-        public static string PSXFilesFilepath = "PSXFiles.xml";
-        public static string PSPFilesFilepath = "PSPFiles.xml";
+        public static string PSXImagesFilepath = "PSXImages.xml";
+        public static string PSPImagesFilepath = "PSPImages.xml";
 
         private static Settings _instance = null;
 
-        private string _psxFiles = null;
-        public string PSXFileString
+        private string _psxImages = null;
+        public string PSXImagesString
         {
             get
             {
-                if (_psxFiles == null)
+                if (_psxImages == null)
                 {
-                    _psxFiles = File.ReadAllText(PSXFilesFilepath);
+                    _psxImages = File.ReadAllText(PSXImagesFilepath);
                 }
 
-                return _psxFiles;
+                return _psxImages;
             }
         }
 
-        public static string PSXFiles
+        public static string PSXImages
         {
             get
             {
-                return GetSettings().PSXFileString;
+                return GetSettings().PSXImagesString;
             }
         }
 
-        private string _pspFiles = null;
-        public string PSPFileString
+        private string _pspImages = null;
+        public string PSPImagesString
         {
             get
             {
-                if (_pspFiles == null)
+                if (_pspImages == null)
                 {
-                    _pspFiles = File.ReadAllText(PSPFilesFilepath);
+                    _pspImages = File.ReadAllText(PSPImagesFilepath);
                 }
 
-                return _pspFiles;
+                return _pspImages;
             }
         }
 
-        public static string PSPFiles
+        public static string PSPImages
         {
             get
             {
-                return GetSettings().PSPFileString;
+                return GetSettings().PSPImagesString;
             }
         }
 

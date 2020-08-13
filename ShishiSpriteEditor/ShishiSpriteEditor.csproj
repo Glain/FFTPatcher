@@ -478,10 +478,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataTypes\Sprites\MemoryLocs.txt" />
-    <Content Include="PSPFiles.xml">
+    <Content Include="PSPImages.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="PSXFiles.xml">
+    <Content Include="PSXImages.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
