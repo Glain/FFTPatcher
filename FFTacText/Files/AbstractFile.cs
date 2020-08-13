@@ -21,8 +21,15 @@ namespace FFTPatcher.TextEditor
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
             for (int i = 0; i < NumberOfSections; i++)
             {
-                string[] thisSection = new string[strings[i].Count];
+                int entries = Math.Max(strings[i].Count, layout.SectionLengths[i]);
+                string[] thisSection = new string[entries];
                 strings[i].CopyTo( thisSection, 0 );
+
+                for (int index = strings[i].Count; index < entries; index++)
+                {
+                    thisSection[index] = "";
+                }
+
                 for (int j = 0; j < thisSection.Length; j++)
                 {
                     if (!CharMap.ValidateString( thisSection[j], layout.AllowedTerminators[0] ))
