@@ -39,8 +39,8 @@ namespace FFTPatcher.TextEditor
 
         #region Static Properties (1)
 
-        public static XmlNode PSX { get { return resourceMapping["psx.xml"]; } }
-        public static XmlNode PSP { get { return resourceMapping["psp.xml"]; } }
+        //public static XmlNode PSX { get { return resourceMapping["psx.xml"]; } }
+        //public static XmlNode PSP { get { return resourceMapping["psp.xml"]; } }
         //public static byte[] FFTTextCompression { get { return otherResources["FFTTextCompression.dll"]; } }
 
         #endregion Static Properties

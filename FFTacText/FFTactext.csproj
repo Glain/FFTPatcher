@@ -106,6 +106,7 @@
     <Compile Include="ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Utilities\DTE.cs" />
     <Compile Include="Utilities\DTEAnalyzer.cs" />
     <Compile Include="Utilities\SectionType.cs" />
@@ -183,8 +184,12 @@
     <Content Include="Files\PSP\FileContents.txt" />
     <Content Include="Files\PSX\FileContents.txt" />
     <Content Include="notes.txt" />
-    <Content Include="Resources\psx.xml" />
-    <Content Include="Resources\psp.xml" />
+    <Content Include="PSXText.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PSPText.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

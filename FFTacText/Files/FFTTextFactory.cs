@@ -287,7 +287,8 @@ namespace FFTPatcher.TextEditor
         public static FFTText GetPspText(Stream iso, GenericCharMap charmap, BackgroundWorker worker)
         {
             pspIsoInfo = PatcherLib.Iso.PspIso.PspIsoInfo.GetPspIsoInfo(iso);
-            var result = GetText(iso, Context.US_PSP, Resources.PSP, BytesFromPspIso, charmap, worker);
+            //var result = GetText(iso, Context.US_PSP, Resources.PSP, BytesFromPspIso, charmap, worker);
+            var result = GetText(iso, Context.US_PSP, Settings.PSPText, BytesFromPspIso, charmap, worker);
             pspIsoInfo = null;
             return result;
         }
@@ -317,7 +318,8 @@ namespace FFTPatcher.TextEditor
 
         public static FFTText GetPsxText(Stream iso, GenericCharMap charmap, BackgroundWorker worker)
         {
-            return GetText(iso, Context.US_PSX, Resources.PSX, BytesFromPsxIso, charmap, worker);
+            //return GetText(iso, Context.US_PSX, Resources.PSX, BytesFromPsxIso, charmap, worker);
+            return GetText(iso, Context.US_PSX, Settings.PSXText, BytesFromPsxIso, charmap, worker);
         }
 
         public static FFTText GetPsxText(Stream iso, BackgroundWorker worker)
@@ -373,7 +375,8 @@ namespace FFTPatcher.TextEditor
         public static Set<Guid> DetectMissingGuids(XmlNode doc)
         {
             Context context = (Context)Enum.Parse(typeof(Context), doc.SelectSingleNode("/FFTText/@context").InnerText);
-            XmlNode layoutDoc = context == Context.US_PSP ? Resources.PSP : Resources.PSX;
+            //XmlNode layoutDoc = context == Context.US_PSP ? Resources.PSP : Resources.PSX;
+            XmlNode layoutDoc = context == Context.US_PSP ? Settings.PSPText : Settings.PSXText;
             XmlNodeList guids = doc.SelectNodes("//File/Guid");
             Set<Guid> myGuids = new Set<Guid>();
             foreach (XmlNode node in guids)
@@ -401,7 +404,8 @@ namespace FFTPatcher.TextEditor
         public static FFTText GetFilesXml(XmlNode doc, BackgroundWorker worker, Set<Guid> guidsToLoadFromIso, Stream iso)
         {
             Context context = (Context)Enum.Parse(typeof(Context), doc.SelectSingleNode("/FFTText/@context").InnerText);
-            XmlNode layoutDoc = context == Context.US_PSP ? Resources.PSP : Resources.PSX;
+            //XmlNode layoutDoc = context == Context.US_PSP ? Resources.PSP : Resources.PSX;
+            XmlNode layoutDoc = context == Context.US_PSP ? Settings.PSPText : Settings.PSXText;
             GenericCharMap charmap = (context == Context.US_PSP) ? (GenericCharMap)TextUtilities.PSPMap : (GenericCharMap)TextUtilities.PSXMap;
 
             Dictionary<Guid, ISerializableFile> result = new Dictionary<Guid, ISerializableFile>();
