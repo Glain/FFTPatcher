@@ -21,11 +21,11 @@ namespace FFTPatcher.TextEditor
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
             for (int i = 0; i < NumberOfSections; i++)
             {
-                int entries = Math.Max(strings[i].Count, layout.SectionLengths[i]);
-                string[] thisSection = new string[entries];
+                int numEntries = Math.Max(strings[i].Count, layout.SectionLengths[i]);
+                string[] thisSection = new string[numEntries];
                 strings[i].CopyTo( thisSection, 0 );
 
-                for (int index = strings[i].Count; index < entries; index++)
+                for (int index = strings[i].Count; index < numEntries; index++)
                 {
                     thisSection[index] = "";
                 }
