@@ -176,7 +176,7 @@
                 <Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
                 <Section>1</Section>
                 <Offset>0</Offset>
-                <Length>168</Length>
+                <Length>170</Length>
             </MainFile>
         </DiaryOfNanai>
         <DismissQuotes>
@@ -793,7 +793,7 @@
                 <Guid>{3316AC7E-D094-4E3B-B1E8-7401EAD7ADEA}</Guid>
                 <Section>2</Section>
                 <Offset>0</Offset>
-                <Length>186</Length>
+                <Length>187</Length>
             </MainFile>
         </Wyuvle>
     </QuickEdit>
@@ -1880,8 +1880,8 @@
             </Sectors>
             <Sections count="6">
                 <Section value="0" entries="204" empty="true" dte="true" name="M-Fiction Novel"/>
-                <Section value="1" entries="168" empty="true" dte="true" name="Diary of Nanai"/>
-                <Section value="2" entries="186" empty="true" dte="true" name="Wyuvle"/>
+                <Section value="1" entries="170" empty="true" dte="true" name="Diary of Nanai"/>
+                <Section value="2" entries="187" empty="true" dte="true" name="Wyuvle"/>
                 <Section value="3" entries="217" empty="true" dte="true" name="Book of Enavia"/>
                 <Section value="4" entries="39" empty="true" name="Germonik Scriptures" dte="false"/>
                 <Section value="5" entries="14" empty="true" dte="false" name="Test book"/>
