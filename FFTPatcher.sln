@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASMEncoding", "ASMEncoding\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassHexASM", "MassHexASM\MassHexASM.csproj", "{63CE41D1-0632-461C-9C53-BF60F2493D58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntryEdit", "EntryEdit\EntryEdit.csproj", "{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,16 @@ Global
 		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Release|Mixed Platforms.Build.0 = Release|x86
 		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Release|x86.ActiveCfg = Release|x86
 		{63CE41D1-0632-461C-9C53-BF60F2493D58}.Release|x86.Build.0 = Release|x86
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{68485EC9-CC36-4C05-A50C-EAED8C8D0C6E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
