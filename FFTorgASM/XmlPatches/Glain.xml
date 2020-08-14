@@ -1448,9 +1448,9 @@ SKP:  j       0x80180848            #   Skip this ability
         #       s2 = New CT value
         @attack_preparation_ability_ct_hook:
                 addiu   sp, sp, -16
-                sw      ra, 4(sp)
-                sw      s0, 8(sp)
-        
+                sw      s0, 4(sp)
+                sw      ra, 8(sp)
+                
                 lbu     s0, 5(v0)
                 
                 lbu     a1, 0x38(s3)        #   Load unit's Speed
@@ -1460,11 +1460,10 @@ SKP:  j       0x80180848            #   Skip this ability
                 move    s2, v0
                 move    v0, s0              #   (Requirement for calling routine)
             
-                lw      s0, 8(sp)
-                lw      ra, 4(sp)
-                addiu   sp, sp, 16
+                lw      ra, 8(sp)
+                lw      s0, 4(sp)
                 jr      ra
-                nop
+                addiu   sp, sp, 16
         
         #   HOOK: Load skillset ability data (Ability CT)
         #   Parameters:
@@ -1475,26 +1474,44 @@ SKP:  j       0x80180848            #   Skip this ability
         #       v1 = Current ability Flags 3 value (= *(a0 + 5), byte)
         @load_skillset_ability_data_ct_hook:
                 lw      t2, 12(sp)          #   Unit (in-battle) data pointer
-        
-                addiu   sp, sp, -16
-                sw      ra, 4(sp)
-                sw      s1, 8(sp)
-        
+                
                 lbu     t0, 12(a0)          
-                lbu     s1, 5(a0)           #   (Required for calling routine)
+                lbu     v1, 5(a0)           #   (Required for calling routine)
                 
                 lbu     a1, 0x38(t2)        #   Load unit's Speed
-                jal     @find_ability_ct
+                j       @find_ability_ct    #   (This routine preserves $v1)
                 andi    a0, t0, 0x7f        #   Ability CT
-                
-                move    v1, s1
-                
-                lw      s1, 8(sp)
-                lw      ra, 4(sp)
-                addiu   sp, sp, 16
-                jr      ra
+       
+        #   HOOK: AI Ability Data Setting (Ability CT for Charge abilities)
+        #   Parameters:
+        #       at = Base address for Charge CT (offset 0x1044)
+        #       s2 = Unit (in-battle) data pointer
+        #   Returns:
+        #       v0 = New CT value
+        @ai_ability_data_setting_charge_ct_hook:
+                        
+                lbu     a0, 0x1044(at)      #   Load Charge CT
+                lbu     a1, 0x38(s2)        #   Load unit's Speed
+                j       @find_ability_ct    #   (This routine preserves $v1)
                 nop
+       
+        #   HOOK: AI Ability Data Setting (Ability CT - Default)
+        #   Parameters:
+        #       v1 = Current ability data block 2 pointer (Pointer into array starting at 0x8005fbf0)
+        #       s2 = Unit (in-battle) data pointer
+        #   Returns:
+        #       v0 = New CT value
+        #       v1 = Current ability data block 2 pointer
+        #       s6 = Current ability Inflict Status value (= *(v1 + 11) (byte))
+        @ai_ability_data_setting_default_ct_hook:
+                        
+                lbu     s6, 11(v1)          #   (Required for calling routine)
         
+                lbu     a0, 12(v1)          #   Load Ability CT
+                lbu     a1, 0x38(s2)        #   Load unit's Speed
+                j       @find_ability_ct    #   (This routine preserves $v1)
+                nop
+                
         #   ROUTINE: Find ability CT
         #   Parameters:
         #       a0 = Ability CT
@@ -1524,6 +1541,7 @@ SKP:  j       0x80180848            #   Skip this ability
             find_ability_ct_end:
                 jr      ra
                 nop
+                                   
     </Location>
     <Location file="BATTLE_BIN" offset="17C84C" mode="ASM" offsetMode="RAM">
         jal     @attack_preparation_ability_ct_hook
@@ -1533,6 +1551,14 @@ SKP:  j       0x80180848            #   Skip this ability
     </Location>
     <Location file="BATTLE_BIN" offset="181A48" mode="ASM" offsetMode="RAM">
         jal     @load_skillset_ability_data_ct_hook
+    </Location>
+    <Location file="BATTLE_BIN" offset="195BAC" mode="ASM" offsetMode="RAM">
+        jal     @ai_ability_data_setting_charge_ct_hook
+        addu    at, at, v0
+    </Location>
+    <Location file="BATTLE_BIN" offset="195C64" mode="ASM" offsetMode="RAM">
+        jal     @ai_ability_data_setting_default_ct_hook
+        nop
     </Location>
     <Variable name="CT Factor" file="BATTLE_BIN" offset="F628F" bytes="1" default="05" />
   </Patch>
