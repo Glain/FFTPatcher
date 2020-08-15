@@ -750,50 +750,50 @@ D8C120AC
 </Patch>
 
 
-<Patch name="Level down fix">
+<Patch name="Level down based on historic growths">
 <Description>
 Level down now decrements stats based on your historical growths rather than your current job, without the "slippage" in vanilla that makes leveling up and leveling down result in mild permanent damage. This hack conflicts with the above hack.
 </Description>
 <Location file="SCUS_942_21" offset="4E28C">
-23105502
-03000334
-E4700508
-1A004300
+    23105502
+    03000334
+    E4700508
+    1A004300
 </Location>
 <Location file="BATTLE_BIN" offset="F5390">
-12100000
-00006392
-06006492
-0400632C
-08006014
-02000334
-80008330
-05006014
-25180000
-40008330
-02006014
-01000334
-03000334
-0580013C
-20082200
-0C000434
-18008300
-12200000
-20202400
-0CF18490
-05000234
-18004300
-12100000
-20102200
-3CF14290
-80230400
-40130200
-20104400
-23100202
-1B005700
-12100000
-AB760108
-23800202
+    12100000
+    00006392
+    06006492
+    0400632C
+    08006014
+    02000334
+    80008330
+    05006014
+    25180000
+    40008330
+    02006014
+    01000334
+    03000334
+    0680013C
+    20082200
+    0C000434
+    18008300
+    12200000
+    20202400
+    0CE98490
+    05000234
+    18004300
+    12100000
+    20102200
+    3CE94290
+    80230400
+    40130200
+    20104400
+    23100202
+    1B005700
+    12100000
+    AB760108
+    23800202
 </Location>
 </Patch>
 <Patch name="First four armors become headgear when flagged in FFTPatcher">
