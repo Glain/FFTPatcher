@@ -16,5 +16,10 @@ namespace EntryEdit
         {
             InitializeComponent();
         }
+
+        private void menuItem_Exit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
