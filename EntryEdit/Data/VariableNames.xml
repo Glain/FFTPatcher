@@ -1,0 +1,587 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry hex="0018" name="Selected Dialog Option" />
+    <Entry hex="001A" name="Camera X" />
+    <Entry hex="001B" name="Camera Z" />
+    <Entry hex="001C" name="Camera Y" />
+    <Entry hex="001D" name="Camera Angle" />
+    <Entry hex="001E" name="Map Rotation" />
+    <Entry hex="001F" name="Camera Rotation" />
+    <Entry hex="0020" name="Camera Zoom" />
+    <Entry hex="0023" name="Weather" />
+    <Entry hex="0024" name="Map State" />
+    <Entry hex="0027" name="Current Event" />
+    <Entry hex="002C" name="War Funds" />
+    <Entry hex="002E" name="Month" />
+    <Entry hex="002F" name="Day" />
+    <Entry hex="0030" name="Map Arrangement" />
+    <Entry hex="0031" name="World Map Location" />
+    <Entry hex="0032" name="Current ENTD" />
+    <Entry hex="0033" name="Current Map" />
+    <Entry hex="0034" name="Number of Squads" />
+    <Entry hex="0035" name="Squad #1 ID" />
+    <Entry hex="0036" name="Squad #2 ID" />
+    <Entry hex="0053" name="Mute Text Audio Cue" />
+    <Entry hex="0057" name="Number of Printed Characters" />
+    <Entry hex="005C" name="Deep Dungeon List Selection" />
+    <Entry hex="0061" name="Injured" />
+    <Entry hex="0062" name="Casualties" />
+    <Entry hex="0064" name="Next Scenario? New Game?" />
+    <Entry hex="0065" name="Deep Dungeon list max index" />
+    <Entry hex="0068" name="Randomized Deep Dungeon Exit ID" />
+    <Entry hex="0069" name="Town Background" />
+    <Entry hex="006D" name="Call World Map Message" />
+    <Entry hex="006E" name="Storyline Progression" />
+    <Entry hex="006F" name="Shop Availability" />
+    <Entry hex="0090" name="Activated Fur Shop" />
+    <Entry hex="0091" name="Activated Propositions" />
+    <Entry hex="0092" name="Activated Facts" />
+    <Entry hex="0094" name="Chapter 4 Started" />
+    <Entry hex="0095" name="Deep Dungeon Found Exit" />
+    <Entry hex="0096" name="Save Algus Choice" />
+    <Entry hex="0097" name="Save Boco Choice" />
+    <Entry hex="0098" name="Save Mustadio Choice" />
+    <Entry hex="0099" name="Found Worker 8 Ball" />
+    <Entry hex="009A" name="Activated Worker 8" />
+    <Entry hex="009B" name="Found Summoning Device" />
+    <Entry hex="009C" name="Summoned Cloud" />
+    <Entry hex="009D" name="Didn't Read the Scriptures" />
+    <Entry hex="009F" name="Orbonne Monastery Unlocked (Ch. 4)" />
+    <Entry hex="00A0" name="Funeral scene (Ending)" />
+    <Entry hex="00A1" name="Bought a flower from Aeris" />
+    <Entry hex="00A2" name="Went flower shopping" />
+    <Entry hex="00A3" name="Bought a flower from Aeris" />
+    <Entry hex="00A4" name="Deep Dungeon Unlocked (Ch. 4)" />
+    <Entry hex="00A5" name="Heard about Deep Dungeon in Bar" />
+    <Entry hex="00A7" name="Accepted Beowulf's Offer" />
+    <Entry hex="00A8" name="Accepted Beowulf's Offer" />
+    <Entry hex="00A9" name="Rescued Holy Dragon Reis" />
+    <Entry hex="00AB" name="Defeated Worker 7" />
+    <Entry hex="00AC" name="Turned Reis back into human" />
+
+    <Entry hex="01A4" name="(Facts)" />
+    <Entry hex="01A5" name="(Facts)" />
+    <Entry hex="01A6" name="(Facts)" />
+    <Entry hex="01A7" name="(Facts)" />
+    <Entry hex="01A8" name="(Facts)" />
+    <Entry hex="01A9" name="(Facts)" />
+    <Entry hex="01AA" name="(Facts)" />
+    <Entry hex="01AB" name="(Facts)" />
+    <Entry hex="01AC" name="(Facts)" />
+    <Entry hex="01AD" name="(Facts)" />
+    <Entry hex="01AE" name="(Facts)" />
+    <Entry hex="01AF" name="(Facts)" />
+    <Entry hex="01B0" name="(Facts)" />
+    <Entry hex="01B1" name="(Facts)" />
+    <Entry hex="01B2" name="(Facts)" />
+    <Entry hex="01B3" name="(Facts)" />
+    <Entry hex="01B4" name="(Facts)" />
+    <Entry hex="01B5" name="(Facts)" />
+    <Entry hex="01B6" name="(Facts)" />
+    <Entry hex="01B7" name="(Facts)" />
+    <Entry hex="01B8" name="(Facts)" />
+    <Entry hex="01B9" name="(Facts)" />
+    <Entry hex="01BA" name="(Facts)" />
+    <Entry hex="01BB" name="(Facts)" />
+
+    <Entry hex="01BC" name="Records: Cadets" />
+    <Entry hex="01BD" name="Records: Death of father Balbanes" />
+    <Entry hex="01BE" name="Records: First meeting with Algus" />
+    <Entry hex="01BF" name="Records: Reunion with Dycedarg" />
+    <Entry hex="01C0" name="Records: At Igros Castle" />
+    <Entry hex="01C1" name="Records: After Gustav!" />
+    <Entry hex="01C2" name="Records: Rescue of Marquis Elmdor" />
+    <Entry hex="01C3" name="Records: Master of Gallione" />
+    <Entry hex="01C4" name="Records: Lady of the Death Corps" />
+    <Entry hex="01C5" name="Records: Attack by the Death Corps!" />
+    <Entry hex="01C6" name="Records: Delita's Anger" />
+    <Entry hex="01C7" name="Records: Reed pipe" />
+    <Entry hex="01C8" name="Records: One rock and a small ripple" />
+    <Entry hex="01C9" name="Records: And I escaped..." />
+    <Entry hex="01CA" name="Records: Prayer of Queen Ovelia" />
+    <Entry hex="01CB" name="Records: Ovelia chase" />
+    <Entry hex="01CC" name="Records: Reunion with Delita" />
+    <Entry hex="01CD" name="Records: Machinist" />
+    <Entry hex="01CE" name="Records: Worries of Ovelia" />
+    <Entry hex="01CF" name="Records: Dycedarg's plans" />
+    <Entry hex="01D0" name="Records: Cardinal Draclau and the holy stone" />
+    <Entry hex="01D1" name="Records: Those who seek the Holy Stone" />
+    <Entry hex="01D2" name="Records: Besrodio rescue" />
+    <Entry hex="01D3" name="Records: Delita's advice" />
+    <Entry hex="01D4" name="Records: Cardinal's anger" />
+    <Entry hex="01D5" name="Records: Those who use, those who get used" />
+    <Entry hex="01D6" name="Records: The Lion War Outbreak" />
+    <Entry hex="01D7" name="Records: T.G. Cid" />
+    <Entry hex="01D8" name="Records: First meeting with Olan" />
+    <Entry hex="01D9" name="Records: Reunion with Zalbag" />
+    <Entry hex="01DA" name="Records: As a &quot;Heretic&quot;" />
+    <Entry hex="01DB" name="Records: Confessions of Simon" />
+    <Entry hex="01DC" name="Records: Velius" />
+    <Entry hex="01DD" name="Records: Ovelia and Delita" />
+    <Entry hex="01DE" name="Records: Son of T.G. Cid" />
+    <Entry hex="01DF" name="Records: Divine Rafa" />
+    <Entry hex="01E0" name="Records: Ambitions of Prince Barinten" />
+    <Entry hex="01E1" name="Records: Escaping Alma" />
+    <Entry hex="01E2" name="Records: Scars of a tragedy" />
+    <Entry hex="01E3" name="Records: The other power" />
+    <Entry hex="01E4" name="Records: The lying heart" />
+    <Entry hex="01E5" name="Records: Those who squirm in darkness" />
+    <Entry hex="01E6" name="Records: A man with the Holy Stone" />
+    <Entry hex="01E7" name="Records: Delita's thoughts" />
+    <Entry hex="01E8" name="Records: Unstoppable cog" />
+    <Entry hex="01E9" name="Records: Seized T.G. Cid" />
+    <Entry hex="01EA" name="Records: Assassination of Prince Larg!" />
+    <Entry hex="01EB" name="Records: Rescue of Cid" />
+    <Entry hex="01EC" name="Records: Prince Goltana's Final Moments" />
+    <Entry hex="01ED" name="Records: Ambitions of Dycedarg" />
+    <Entry hex="01EE" name="Records: Men of odd appearence" />
+    <Entry hex="01EF" name="Records: The mystery of Lucavi" />
+    <Entry hex="01F0" name="Records: Delita's betrayal" />
+    <Entry hex="01F1" name="Records: Mosfungus" />
+    <Entry hex="01F2" name="Records: Funeral's final moments" />
+    <Entry hex="01F3" name="Records: Requiem" />
+    <Entry hex="01F4" name="Records: Steel Ball found!" />
+    <Entry hex="01F5" name="Records: The Steel Giant starts!" />
+    <Entry hex="01F6" name="Records: Celestial Globe found!?" />
+    <Entry hex="01F7" name="Records: Summon Cloud!" />
+    <Entry hex="01F8" name="Records: Reis's curse" />
+    <Entry hex="01F9" name="Records: Entrance to the other world" />
+    <Entry hex="01FA" name="Records: Reunion and beyond..." />
+    <Entry hex="01FB" name="Records: Things obtained" />
+
+    <Entry hex="01FC" name="Brave Story Active"  />
+    <Entry hex="01FD" name="Event Starting" />
+    <Entry hex="01FE" name="World Debug Battle Style" />
+
+    <Entry hex="0200" name="Location: Lesalia Imperial Capital" />
+    <Entry hex="0201" name="Location: Riovanes Castle" />
+    <Entry hex="0202" name="Location: Igros Castle" />
+    <Entry hex="0203" name="Location: Lionel Castle" />
+    <Entry hex="0204" name="Location: Limberry Castle" />
+    <Entry hex="0205" name="Location: Zeltennia Castle" />
+    <Entry hex="0206" name="Location: Gariland Magic City" />
+    <Entry hex="0207" name="Location: Yardow Fort City" />
+    <Entry hex="0208" name="Location: Goland Coal City" />
+    <Entry hex="0209" name="Location: Dorter Trade City" />
+    <Entry hex="020A" name="Location: Zaland Fort City" />
+    <Entry hex="020B" name="Location: Goug Machine City" />
+    <Entry hex="020C" name="Location: Warjilis Trade City" />
+    <Entry hex="020D" name="Location: Bervenia Free City" />
+    <Entry hex="020E" name="Location: Zarghidas Trade City" />
+    <Entry hex="020F" name="Location: Fort Zeakden" />
+    <Entry hex="0210" name="Location: Murond Holy Place" />
+    <Entry hex="0211" name="Location: Thieves Fort" />
+    <Entry hex="0212" name="Location: Orbonne Monastery" />
+    <Entry hex="0213" name="Location: Golgorand Execution Site" />
+    <Entry hex="0214" name="Location: Murond Death City" />
+    <Entry hex="0215" name="Location: Bethla Garrison" />
+    <Entry hex="0216" name="Location: Deep Dungeon" />
+    <Entry hex="0217" name="Location: Nelveska Temple" />
+    <Entry hex="0218" name="Location: Mandalia Plains" />
+    <Entry hex="0219" name="Location: Fovoham Plains" />
+    <Entry hex="021A" name="Location: Sweegy Woods" />
+    <Entry hex="021B" name="Location: Bervenia Volcano" />
+    <Entry hex="021C" name="Location: Zeklaus Desert" />
+    <Entry hex="021D" name="Location: Lenalia Plateau" />
+    <Entry hex="021E" name="Location: Zigolis Swamp" />
+    <Entry hex="021F" name="Location: Yuguo Woods" />
+    <Entry hex="0220" name="Location: Araguay Woods" />
+    <Entry hex="0221" name="Location: Grog Hill" />
+    <Entry hex="0222" name="Location: Bed Desert" />
+    <Entry hex="0223" name="Location: Zirekile Falls" />
+    <Entry hex="0224" name="Location: Dolbodar Swamp" />
+    <Entry hex="0225" name="Location: Bariaus Hill" />
+    <Entry hex="0226" name="Location: Doguola Pass" />
+    <Entry hex="0227" name="Location: Bariaus Valley" />
+    <Entry hex="0228" name="Location: Finath River" />
+    <Entry hex="0229" name="Location: Poeskas Lake" />
+    <Entry hex="022A" name="Location: Germinas Peak" />
+    <Entry hex="022B" name="Location: (Blank)" />
+
+    <Entry hex="022C" name="Path: Igros Castle - Fort Zeakden" />
+    <Entry hex="022D" name="Path: Igros Castle - Mandalia Plains" />
+    <Entry hex="022E" name="Path: Thieves Fort - Mandalia Plains" />
+    <Entry hex="022F" name="Path: Gariland Magic City - Mandalia Plains" />
+    <Entry hex="0230" name="Path: Gariland Magic City - Lenalia Plateau" />
+    <Entry hex="0231" name="Path: Lenalia Plateau - Fovoham Plains" />
+    <Entry hex="0232" name="Path: Fovoham Plains - Fort Zeakden" />
+    <Entry hex="0233" name="Path: Riovanes Castle - Fovoham Plains" />
+    <Entry hex="0234" name="Path: Riovanes Castle - Bervenia Volcano" />
+    <Entry hex="0235" name="Path: Zeklaus Desert - Bervenia Volcano" />
+    <Entry hex="0236" name="Path: Dorter Trade City - Zeklaus Desert" />
+    <Entry hex="0237" name="Path: Dorter Trade City - Sweegy Woods" />
+    <Entry hex="0238" name="Path: Gariland Magic City - Sweegy Woods" />
+    <Entry hex="0239" name="Path: Riovanes Castle - Yuguo Woods" />
+    <Entry hex="023A" name="Path: Yardow Fort City - Yuguo Woods" />
+    <Entry hex="023B" name="Path: Yardow Fort City - Grog Hill" />
+    <Entry hex="023C" name="Path: Lesalia Imperial Capital - Grog Hill" />
+    <Entry hex="023D" name="Path: Lesalia Imperial Capital - Goland Coal City" />
+    <Entry hex="023E" name="Path: Goland Coal City - Zeklaus Desert" />
+    <Entry hex="023F" name="Path: Dorter Trade City - Orbonne Monastery" />
+    <Entry hex="0240" name="Path: Dorter Trade City - Araguay Woods" />
+    <Entry hex="0241" name="Path: Araguay Woods - Zirekile Falls" />
+    <Entry hex="0242" name="Path: Bethla Garrison - Zirekile Falls" />
+    <Entry hex="0243" name="Path: Bethla Garrison - Bed Desert" />
+    <Entry hex="0244" name="Path: Bervenia Free City - Bed Desert" />
+    <Entry hex="0245" name="Path: Bervenia Free City - Doguola Pass" />
+    <Entry hex="0246" name="Path: Doguola Pass - Grog Hill" />
+    <Entry hex="0247" name="Path: Bervenia Free City - Finath River" />
+    <Entry hex="0248" name="Path: Zeltennia Castle - Finath River" />
+    <Entry hex="0249" name="Path: Zeltennia Castle - Nelveska Temple" />
+    <Entry hex="024A" name="Path: Zeltennia Castle - Zarghidas Trade City" />
+    <Entry hex="024B" name="Path: Zarghidas Trade City - Germinas Peak" />
+    <Entry hex="024C" name="Path: Germinas Peak - Poeskas Lake" />
+    <Entry hex="024D" name="Path: Limberry Castle - Poeskas Lake" />
+    <Entry hex="024E" name="Path: Limberry Castle - Dolbodar Swamp" />
+    <Entry hex="024F" name="Path: Bethla Garrison - Dolbodar Swamp" />
+    <Entry hex="0250" name="Path: Zaland Fort City - Zirekile Falls" />
+    <Entry hex="0251" name="Path: Zaland Fort City - Bariaus Hill" />
+    <Entry hex="0252" name="Path: Lionel Castle - Bariaus Hill" />
+    <Entry hex="0253" name="Path: Lionel Castle - Bariaus Valley" />
+    <Entry hex="0254" name="Path: Warjilis Trade City - Bariaus Valley" />
+    <Entry hex="0255" name="Path: Warjilis Trade City - Deep Dungeon" />
+    <Entry hex="0256" name="Path: Golgorand Execution Site - Bariaus Valley" />
+    <Entry hex="0257" name="Path: Lionel Castle - Zigolis Swamp" />
+    <Entry hex="0258" name="Path: Goug Machine City - Zigolis Swamp" />
+    <Entry hex="0259" name="Path: Goug Machine City - Murond Holy Place" />
+    <Entry hex="025A" name="Path: Gariland Magic City - Murond Holy Place" />
+    <Entry hex="025B" name="Path: Warjilis Trade City - Goug Machine City" />
+
+    <Entry hex="0267" name="Color: Lesalia Imperial Capital" />
+    <Entry hex="0268" name="Color: Riovanes Castle" />
+    <Entry hex="0269" name="Color: Igros Castle" />
+    <Entry hex="026A" name="Color: Lionel Castle" />
+    <Entry hex="026B" name="Color: Limberry Castle" />
+    <Entry hex="026C" name="Color: Zeltennia Castle" />
+    <Entry hex="026D" name="Color: Gariland Magic City" />
+    <Entry hex="026E" name="Color: Yardow Fort City" />
+    <Entry hex="026F" name="Color: Goland Coal City" />
+    <Entry hex="0270" name="Color: Dorter Trade City" />
+    <Entry hex="0271" name="Color: Zaland Fort City" />
+    <Entry hex="0272" name="Color: Goug Machine City" />
+    <Entry hex="0273" name="Color: Warjilis Trade City" />
+    <Entry hex="0274" name="Color: Bervenia Free City" />
+    <Entry hex="0275" name="Color: Zarghidas Trade City" />
+    <Entry hex="0276" name="Color: Fort Zeakden" />
+    <Entry hex="0277" name="Color: Murond Holy Place" />
+    <Entry hex="0278" name="Color: Thieves Fort" />
+    <Entry hex="0279" name="Color: Orbonne Monastery" />
+    <Entry hex="027A" name="Color: Golgorand Execution Site" />
+    <Entry hex="027B" name="Color: Murond Death City" />
+    <Entry hex="027C" name="Color: Bethla Garrison" />
+    <Entry hex="027D" name="Color: Deep Dungeon" />
+    <Entry hex="027E" name="Color: Nelveska Temple" />
+    <Entry hex="027F" name="Color: Mandalia Plains" />
+    <Entry hex="0280" name="Color: Fovoham Plains" />
+    <Entry hex="0281" name="Color: Sweegy Woods" />
+    <Entry hex="0282" name="Color: Bervenia Volcano" />
+    <Entry hex="0283" name="Color: Zeklaus Desert" />
+    <Entry hex="0284" name="Color: Lenalia Plateau" />
+    <Entry hex="0285" name="Color: Zigolis Swamp" />
+    <Entry hex="0286" name="Color: Yuguo Woods" />
+    <Entry hex="0287" name="Color: Araguay Woods" />
+    <Entry hex="0288" name="Color: Grog Hill" />
+    <Entry hex="0289" name="Color: Bed Desert" />
+    <Entry hex="028A" name="Color: Zirekile Falls" />
+    <Entry hex="028B" name="Color: Dolbodar Swamp" />
+    <Entry hex="028C" name="Color: Bariaus Hill" />
+    <Entry hex="028D" name="Color: Doguola Pass" />
+    <Entry hex="028E" name="Color: Bariaus Valley" />
+    <Entry hex="028F" name="Color: Finath River" />
+    <Entry hex="0290" name="Color: Poeskas Lake" />
+    <Entry hex="0291" name="Color: Germinas Peak" />
+    <Entry hex="0292" name="Color: (Blank Location)" />
+
+    <Entry hex="02D1" name="Rumors: The Death Corps" />
+    <Entry hex="02D2" name="Rumors: The King Omdoria" />
+    <Entry hex="02D3" name="Rumors: The Fifty Year War" />
+    <Entry hex="02D4" name="Rumors: The condition of Omdoria" />
+    <Entry hex="02D5" name="Rumors: Destruction of the Death Corps?!" />
+    <Entry hex="02D6" name="Rumors: Attempted murder of Lord Dycedarg" />
+    <Entry hex="02D7" name="Rumors: After the king's death" />
+    <Entry hex="02D8" name="Rumors: Feud between Larg and Goltana" />
+    <Entry hex="02D9" name="Rumors: Peasant riot in Zeltennia" />
+    <Entry hex="02DA" name="Rumors: Kidnap of the Princess" />
+    <Entry hex="02DB" name="Rumors: Zodiac Brave Story" />
+    <Entry hex="02DC" name="Rumors: Zodiac Stone" />
+    <Entry hex="02DD" name="Rumors: Bart Company's dark rumor" />
+    <Entry hex="02DE" name="Rumors: Future of the War" />
+    <Entry hex="02DF" name="Rumors: Rescue of Princess Ovelia" />
+    <Entry hex="02E0" name="Rumors: Draclau's death" />
+    <Entry hex="02E1" name="Rumors: Drought and flood damage" />
+    <Entry hex="02E2" name="Rumors: Death of Marquis Elmdor in battle" />
+    <Entry hex="02E3" name="Rumors: Future of the War 2" />
+    <Entry hex="02E4" name="Rumors: Ghost of Colliery" />
+    <Entry hex="02E5" name="Rumors: Cursed Island, Nelveska" />
+    <Entry hex="02E6" name="Rumors: (Blank)" />
+    <Entry hex="02E7" name="Rumors: (Blank)" />
+    <Entry hex="02E8" name="Rumors: (Blank)" />
+    <Entry hex="02E9" name="Rumors: (Blank)" />
+    <Entry hex="02EA" name="Rumors: (Blank)" />
+    <Entry hex="02EB" name="Rumors: (Blank)" />
+    <Entry hex="02EC" name="Rumors: (Blank)" />
+    <Entry hex="02ED" name="Rumors: (Blank)" />
+    <Entry hex="02EE" name="Rumors: (Blank)" />
+    <Entry hex="02EF" name="Rumors: (Blank)" />
+    <Entry hex="02F0" name="Rumors: (Blank)" />
+    <Entry hex="02F1" name="Rumors: (Blank)" />
+    <Entry hex="02F2" name="Rumors: (Blank)" />
+    <Entry hex="02F3" name="Rumors: (Blank)" />
+    <Entry hex="02F4" name="Rumors: (Blank)" />
+    <Entry hex="02F5" name="Rumors: (Blank)" />
+    <Entry hex="02F6" name="Rumors: (Blank)" />
+    <Entry hex="02F7" name="Rumors: (Blank)" />
+    <Entry hex="02F8" name="Rumors: (Blank)" />
+    <Entry hex="02F9" name="Rumors: (Blank)" />
+    <Entry hex="02FA" name="Rumors: (Blank)" />
+    <Entry hex="02FB" name="Rumors: (Blank)" />
+    <Entry hex="02FC" name="Rumors: (Blank)" />
+    <Entry hex="02FD" name="Rumors: (Blank)" />
+    <Entry hex="02FE" name="Rumors: (Blank)" />
+    <Entry hex="02FF" name="Rumors: (Blank)" />
+    <Entry hex="0300" name="Rumors: (Blank)" />
+    <Entry hex="0301" name="Rumors: (Blank)" />
+    <Entry hex="0302" name="Rumors: (Blank)" />
+    <Entry hex="0303" name="Rumors: (Blank)" />
+    <Entry hex="0304" name="Rumors: (Blank)" />
+    <Entry hex="0305" name="Rumors: (Blank)" />
+    <Entry hex="0306" name="Rumors: (Blank)" />
+    <Entry hex="0307" name="Rumors: (Blank)" />
+    <Entry hex="0308" name="Rumors: (Blank)" />
+    <Entry hex="0309" name="Rumors: (Blank)" />
+    <Entry hex="030A" name="Rumors: (Blank)" />
+    <Entry hex="030B" name="Rumors: (Blank)" />
+    <Entry hex="030C" name="Rumors: (Blank)" />
+    <Entry hex="030D" name="Rumors: (Blank)" />
+    <Entry hex="030E" name="Rumors: (Blank)" />
+    <Entry hex="030F" name="Rumors: (Blank)" />
+    <Entry hex="0310" name="Rumors: (Blank)" />
+
+    <Entry hex="0320" name="Treasures: None" />
+    <Entry hex="0321" name="Treasures: Four Gods Set" />
+    <Entry hex="0322" name="Treasures: Statue of Lylis" />
+    <Entry hex="0323" name="Treasures: Beetle Charm" />
+    <Entry hex="0324" name="Treasures: Tobacco Pipe" />
+    <Entry hex="0325" name="Treasures: Zeni-Sword" />
+    <Entry hex="0326" name="Treasures: Black Cat" />
+    <Entry hex="0327" name="Treasures: Malice Mask" />
+    <Entry hex="0328" name="Treasures: Parade Helmet" />
+    <Entry hex="0329" name="Treasures: Kid's Bread" />
+    <Entry hex="032A" name="Treasures: Adult's Bread" />
+    <Entry hex="032B" name="Treasures: Calcobrina" />
+    <Entry hex="032C" name="Treasures: Yurgeivogue" />
+    <Entry hex="032D" name="Treasures: Red Materia" />
+    <Entry hex="032E" name="Treasures: Blue Materia" />
+    <Entry hex="032F" name="Treasures: Black Materia" />
+    <Entry hex="0330" name="Treasures: White Materia" />
+    <Entry hex="0331" name="Treasures: Rat Tail" />
+    <Entry hex="0332" name="Treasures: M-Fiction Novel" />
+    <Entry hex="0333" name="Treasures: Diary of Nanai" />
+    <Entry hex="0334" name="Treasures: Wyuvle" />
+    <Entry hex="0335" name="Treasures: Book of Enavia" />
+    <Entry hex="0336" name="Treasures: Magical Gun" />
+    <Entry hex="0337" name="Treasures: M Machine Gun" />
+    <Entry hex="0338" name="Treasures: Magi-Sword" />
+    <Entry hex="0339" name="Treasures: Minu Orb" />
+    <Entry hex="033A" name="Treasures: Tarot of Ben" />
+    <Entry hex="033B" name="Treasures: Excalipar" />
+    <Entry hex="033C" name="Treasures: Parasite Tree" />
+    <Entry hex="033D" name="Treasures: Longibunne Spear" />
+    <Entry hex="033E" name="Treasures: Chocobo Cannon" />
+    <Entry hex="033F" name="Treasures: St. Elmo's Fire" />
+    <Entry hex="0340" name="Treasures: Germonik Scriptures" />
+    <Entry hex="0341" name="Treasures: (Unused)" />
+    <Entry hex="0342" name="Treasures: (Unused)" />
+    <Entry hex="0343" name="Treasures: Aries" />
+    <Entry hex="0344" name="Treasures: Taurus" />
+    <Entry hex="0345" name="Treasures: Gemini" />
+    <Entry hex="0346" name="Treasures: Cancer" />
+    <Entry hex="0347" name="Treasures: Leo" />
+    <Entry hex="0348" name="Treasures: Virgo" />
+    <Entry hex="0349" name="Treasures: Libra" />
+    <Entry hex="034A" name="Treasures: Scorpio" />
+    <Entry hex="034B" name="Treasures: Sagittarius" />
+    <Entry hex="034C" name="Treasures: Capricorn" />
+    <Entry hex="034D" name="Treasures: Aquarius" />
+    <Entry hex="034E" name="Treasures: Pisces" />
+    <Entry hex="034F" name="Treasures: Serpentarius" />
+
+    <Entry hex="0350" name="Unexplored Lands: Shrine of Chaos" />
+    <Entry hex="0351" name="Unexplored Lands: Forbidden Land Eureka" />
+    <Entry hex="0352" name="Unexplored Lands: Pandemonium" />
+    <Entry hex="0353" name="Unexplored Lands: Mirage Tower" />
+    <Entry hex="0354" name="Unexplored Lands: Floating Castle" />
+    <Entry hex="0355" name="Unexplored Lands: Matoya Cave" />
+    <Entry hex="0356" name="Unexplored Lands: Crystal Tower" />
+    <Entry hex="0357" name="Unexplored Lands: Magic Continent" />
+    <Entry hex="0358" name="Unexplored Lands: Castle of Trials" />
+    <Entry hex="0359" name="Unexplored Lands: Tower of Babel" />
+    <Entry hex="035A" name="Unexplored Lands: Ronkan Ruins" />
+    <Entry hex="035B" name="Unexplored Lands: Falgabird" />
+    <Entry hex="035C" name="Unexplored Lands: Magic Train" />
+    <Entry hex="035D" name="Unexplored Lands: Touzas Village" />
+    <Entry hex="035E" name="Unexplored Lands: Chocobo Forest" />
+    <Entry hex="035F" name="Unexplored Lands: Semite Falls" />
+
+    <Entry hex="0360" name="Propositions: Destiny of the Company" />
+    <Entry hex="0361" name="Propositions: Sunken Salvage Tour" />
+    <Entry hex="0362" name="Propositions: Sailor Tour" />
+    <Entry hex="0363" name="Propositions: Lamer Channel Waves" />
+    <Entry hex="0364" name="Propositions: Attractive Workplace" />
+    <Entry hex="0365" name="Propositions: Salvage the Trade Ship!" />
+    <Entry hex="0366" name="Propositions: Envoy ship, Falcon" />
+    <Entry hex="0367" name="Propositions: Heir of Mesa" />
+    <Entry hex="0368" name="Propositions: Salvage the Trade Ship!" />
+    <Entry hex="0369" name="Propositions: Emissary of Lionel" />
+    <Entry hex="036A" name="Propositions: Zaland Embassy" />
+    <Entry hex="036B" name="Propositions: Stolen Ancient Writings" />
+    <Entry hex="036C" name="Propositions: Good Workplace and Job!" />
+    <Entry hex="036D" name="Propositions: Sea of Gredia Island" />
+    <Entry hex="036E" name="Propositions: Stranded Trade Ship" />
+    <Entry hex="036F" name="Propositions: Trade Ship Douing" />
+    <Entry hex="0370" name="Propositions: Mine Excavation Tour" />
+    <Entry hex="0371" name="Propositions: Miner's Tour" />
+    <Entry hex="0372" name="Propositions: Will of Elder Topa" />
+    <Entry hex="0373" name="Propositions: Miner's Tour 2" />
+    <Entry hex="0374" name="Propositions: Dream of Miner" />
+    <Entry hex="0375" name="Propositions: Vacancy!" />
+    <Entry hex="0376" name="Propositions: Miners Wanted!" />
+    <Entry hex="0377" name="Propositions: Girl at Gulg Volcano" />
+    <Entry hex="0378" name="Propositions: Hidden Trap at the Maze" />
+    <Entry hex="0379" name="Propositions: Himka Cliffs" />
+    <Entry hex="037A" name="Propositions: The Lord's Ore" />
+    <Entry hex="037B" name="Propositions: One Activity" />
+    <Entry hex="037C" name="Propositions: Miners Wanted! 2" />
+    <Entry hex="037D" name="Propositions: Rolade Ore Company" />
+    <Entry hex="037E" name="Propositions: Testimony of Ex-miner" />
+    <Entry hex="037F" name="Propositions: Death Canyon" />
+    <Entry hex="0380" name="Propositions: Discovery Race" />
+    <Entry hex="0381" name="Propositions: Poeskas Lake Bottom" />
+    <Entry hex="0382" name="Propositions: Discovery Race 2" />
+    <Entry hex="0383" name="Propositions: Legendary Traces" />
+    <Entry hex="0384" name="Propositions: Discovery Race 3" />
+    <Entry hex="0385" name="Propositions: Deep in Sweegy Woods" />
+    <Entry hex="0386" name="Propositions: Ruins at Bed Desert" />
+    <Entry hex="0387" name="Propositions: Adverturer Ramzan" />
+    <Entry hex="0388" name="Propositions: I saw it." />
+    <Entry hex="0389" name="Propositions: Discovery Tour" />
+    <Entry hex="038A" name="Propositions: Storm of Zigolis!" />
+    <Entry hex="038B" name="Propositions: Ominous Dungeon" />
+    <Entry hex="038C" name="Propositions: Adventure Wanted!" />
+    <Entry hex="038D" name="Propositions: I saw it! I swear!" />
+    <Entry hex="038E" name="Propositions: Concerns of a Merchant" />
+    <Entry hex="038F" name="Propositions: Mountain of Rain" />
+    <Entry hex="0390" name="Propositions: Defeat Golden Gotsko!" />
+    <Entry hex="0391" name="Propositions: Defeat Behemoth!" />
+    <Entry hex="0392" name="Propositions: Trap of the Bandits" />
+    <Entry hex="0393" name="Propositions: Son, Pappal!" />
+    <Entry hex="0394" name="Propositions: Within the Darkness" />
+    <Entry hex="0395" name="Propositions: Defeat Whirlwind Karz!" />
+    <Entry hex="0396" name="Propositions: Minimum's Melancholy" />
+    <Entry hex="0397" name="Propositions: Terror of Assault Cave" />
+    <Entry hex="0398" name="Propositions: Challenge of Zero" />
+    <Entry hex="0399" name="Propositions: Phantom Thief Zero!" />
+    <Entry hex="039A" name="Propositions: Thief Zero Returns!" />
+    <Entry hex="039B" name="Propositions: Thief Zero Reborn!" />
+    <Entry hex="039C" name="Propositions: Thief Zero's Last Stand" />
+    <Entry hex="039D" name="Propositions: Legendary Monster" />
+    <Entry hex="039E" name="Propositions: Sullen Experiment" />
+    <Entry hex="039F" name="Propositions: Fiar's Request" />
+    <Entry hex="03A0" name="Propositions: Dream child" />
+    <Entry hex="03A1" name="Propositions: Protect the Little Life" />
+    <Entry hex="03A2" name="Propositions: If wishes come true" />
+    <Entry hex="03A3" name="Propositions: My Little Carrot" />
+    <Entry hex="03A4" name="Propositions: Secret Door" />
+    <Entry hex="03A5" name="Propositions: Orders of Coast Guard" />
+    <Entry hex="03A6" name="Propositions: Devil in the Dark" />
+    <Entry hex="03A7" name="Propositions: Mother" />
+    <Entry hex="03A8" name="Propositions: My treasure" />
+    <Entry hex="03A9" name="Propositions: The Greatest Plan" />
+    <Entry hex="03AA" name="Propositions: Secret Society" />
+    <Entry hex="03AB" name="Propositions: How much is Life worth?" />
+    <Entry hex="03AC" name="Propositions: Letter to my Love" />
+    <Entry hex="03AD" name="Propositions: Minimum's Melancholy" />
+    <Entry hex="03AE" name="Propositions: Road of Beasts" />
+    <Entry hex="03AF" name="Propositions: True Romance" />
+    <Entry hex="03B0" name="Propositions: Shy Katedona" />
+    <Entry hex="03B1" name="Propositions: Master Math!" />
+    <Entry hex="03B2" name="Propositions: Sad Traveling Artist" />
+    <Entry hex="03B3" name="Propositions: Minimum's Melancholy" />
+    <Entry hex="03B4" name="Propositions: Machinist Contest" />
+    <Entry hex="03B5" name="Propositions: Traveling Artist Mameko" />
+    <Entry hex="03B6" name="Propositions: Chocobo Restaurant" />
+    <Entry hex="03B7" name="Propositions: Wandering Gambler" />
+    <Entry hex="03B8" name="Propositions: Wandering Gambler" />
+    <Entry hex="03B9" name="Propositions: Ringing of the Bell" />
+    <Entry hex="03BA" name="Propositions: Memories" />
+    <Entry hex="03BB" name="Propositions: Hard Lecture" />
+    <Entry hex="03BC" name="Propositions: Win the Yardow Fight!" />
+    <Entry hex="03BD" name="Propositions: Win the Zaland Fight!" />
+    <Entry hex="03BE" name="Propositions: Win the Magic Contest!" />
+    <Entry hex="03BF" name="Propositions: Meister Contest" />
+
+    <Entry hex="03C0" name="Biographies: Ramza" />
+    <Entry hex="03C1" name="Biographies: Delita" />
+    <Entry hex="03C2" name="Biographies: Ovelia" />
+    <Entry hex="03C3" name="Biographies: Alma" />
+    <Entry hex="03C4" name="Biographies: Zalbag" />
+    <Entry hex="03C5" name="Biographies: Dycedarg" />
+    <Entry hex="03C6" name="Biographies: Larg" />
+    <Entry hex="03C7" name="Biographies: Goltana" />
+    <Entry hex="03C8" name="Biographies: Orinas" />
+    <Entry hex="03C9" name="Biographies: Ruvelia" />
+    <Entry hex="03CA" name="Biographies: Omdolia" />
+    <Entry hex="03CB" name="Biographies: Funeral" />
+    <Entry hex="03CC" name="Biographies: Algus" />
+    <Entry hex="03CD" name="Biographies: Gafgarion" />
+    <Entry hex="03CE" name="Biographies: Agrias" />
+    <Entry hex="03CF" name="Biographies: Orlandu" />
+    <Entry hex="03D0" name="Biographies: Olan" />
+    <Entry hex="03D1" name="Biographies: Zalmo" />
+    <Entry hex="03D2" name="Biographies: (Blank)" />
+    <Entry hex="03D3" name="Biographies: (Blank)" />
+    <Entry hex="03D4" name="Biographies: Simon" />
+    <Entry hex="03D5" name="Biographies: (Blank)" />
+    <Entry hex="03D6" name="Biographies: Beowulf" />
+    <Entry hex="03D7" name="Biographies: Wiegraf" />
+    <Entry hex="03D8" name="Biographies: Reis" />
+    <Entry hex="03D9" name="Biographies: Balmafula" />
+    <Entry hex="03DA" name="Biographies: Draclau" />
+    <Entry hex="03DB" name="Biographies: (Blank)" />
+    <Entry hex="03DC" name="Biographies: Rafa" />
+    <Entry hex="03DD" name="Biographies: Malak" />
+    <Entry hex="03DE" name="Biographies: Elmdor" />
+    <Entry hex="03DF" name="Biographies: (Blank)" />
+    <Entry hex="03E0" name="Biographies: Barinten" />
+    <Entry hex="03E1" name="Biographies: (Blank)" />
+    <Entry hex="03E2" name="Biographies: Mustadio" />
+    <Entry hex="03E3" name="Biographies: Besrodio" />
+    <Entry hex="03E4" name="Biographies: Rudvich" />
+    <Entry hex="03E5" name="Biographies: Celia" />
+    <Entry hex="03E6" name="Biographies: Lede" />
+    <Entry hex="03E7" name="Biographies: Ajora" />
+    <Entry hex="03E8" name="Biographies: Vormav" />
+    <Entry hex="03E9" name="Biographies: Rofel" />
+    <Entry hex="03EA" name="Biographies: Izlude" />
+    <Entry hex="03EB" name="Biographies: Kletian" />
+    <Entry hex="03EC" name="Biographies: Balk" />
+    <Entry hex="03ED" name="Biographies: Meliadoul" />
+    <Entry hex="03EE" name="Biographies: Cloud" />
+    <Entry hex="03EF" name="Biographies: Teta" />
+    <Entry hex="03F0" name="Biographies: Balbanes" />
+    <Entry hex="03F1" name="Biographies: Gustav" />
+    <Entry hex="03F2" name="Biographies: Miluda" />
+    <Entry hex="03F3" name="Biographies: Golagros" />
+    <Entry hex="03F4" name="Biographies: (Blank)" />
+    <Entry hex="03F5" name="Biographies: (Blank)" />
+    <Entry hex="03F6" name="Biographies: (Blank)" />
+    <Entry hex="03F7" name="Biographies: (Blank)" />
+    <Entry hex="03F8" name="Biographies: (Blank)" />
+    <Entry hex="03F9" name="Biographies: (Blank)" />
+    <Entry hex="03FA" name="Biographies: (Blank)" />
+    <Entry hex="03FB" name="Biographies: (Blank)" />
+    <Entry hex="03FC" name="Biographies: (Blank)" />
+    <Entry hex="03FD" name="Biographies: Daravon" />
+    <Entry hex="03FE" name="Biographies: Elidibs" />
+    <Entry hex="03FF" name="Biographies: Alazlam" />
+</Entries>
