@@ -1213,8 +1213,8 @@
       </Sectors>
       <Sections count="6">
         <Section value="0" entries="204" empty="true" dte="true" name="Mesa's Musings"/>
-        <Section value="1" entries="168" empty="true" dte="true" name="Nanai's Histories"/>
-        <Section value="2" entries="186" empty="true" dte="true" name="Veil of Wiyu"/>
+        <Section value="1" entries="170" empty="true" dte="true" name="Nanai's Histories"/>
+        <Section value="2" entries="187" empty="true" dte="true" name="Veil of Wiyu"/>
         <Section value="3" entries="217" empty="true" dte="true" name="Enavia Chronicles"/>
         <Section value="4" entries="40" empty="true" dte="true" name="Germonik Scriptures"/>
         <Section value="5" entries="14" empty="true" dte="true" name="Test book"/>
