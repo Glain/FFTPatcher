@@ -1,0 +1,552 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry value="0" name="&lt;Nothing&gt;" />
+    <Entry value="1" name="Cure" />
+    <Entry value="2" name="Cure 2" />
+    <Entry value="3" name="Cure 3" />
+    <Entry value="4" name="Cure 4" />
+    <Entry value="5" name="Raise" />
+    <Entry value="6" name="Raise 2" />
+    <Entry value="7" name="Reraise" />
+    <Entry value="8" name="Regen" />
+    <Entry value="9" name="Protect" />
+    <Entry value="10" name="Protect 2" />
+    <Entry value="11" name="Shell" />
+    <Entry value="12" name="Shell 2" />
+    <Entry value="13" name="Wall" />
+    <Entry value="14" name="Esuna" />
+    <Entry value="15" name="Holy" />
+    <Entry value="16" name="Fire" />
+    <Entry value="17" name="Fire 2" />
+    <Entry value="18" name="Fire 3" />
+    <Entry value="19" name="Fire 4" />
+    <Entry value="20" name="Bolt" />
+    <Entry value="21" name="Bolt 2" />
+    <Entry value="22" name="Bolt 3" />
+    <Entry value="23" name="Bolt 4" />
+    <Entry value="24" name="Ice" />
+    <Entry value="25" name="Ice 2" />
+    <Entry value="26" name="Ice 3" />
+    <Entry value="27" name="Ice 4" />
+    <Entry value="28" name="Poison" />
+    <Entry value="29" name="Frog" />
+    <Entry value="30" name="Death" />
+    <Entry value="31" name="Flare" />
+    <Entry value="32" name="Haste" />
+    <Entry value="33" name="Haste 2" />
+    <Entry value="34" name="Slow" />
+    <Entry value="35" name="Slow 2" />
+    <Entry value="36" name="Stop" />
+    <Entry value="37" name="Don't Move" />
+    <Entry value="38" name="Float " /> <!-- leave trailing space -->
+    <Entry value="39" name="Reflect " /> <!-- leave trailing space -->
+    <Entry value="40" name="(Summon Demon)" />
+    <Entry value="41" name="Quick" />
+    <Entry value="42" name="Demi" />
+    <Entry value="43" name="Demi 2" />
+    <Entry value="44" name="Meteor" />
+    <Entry value="45" name="  " /> <!-- leave trailing space -->
+    <Entry value="46" name="Blind " /> <!-- leave trailing space -->
+    <Entry value="47" name="Spell Absorb" />
+    <Entry value="48" name="Life Drain" />
+    <Entry value="49" name="Pray Faith" />
+    <Entry value="50" name="Doubt Faith" />
+    <Entry value="51" name="Zombie " /> <!-- leave trailing space -->
+    <Entry value="52" name="Silence Song" />
+    <Entry value="53" name="Blind Rage" />
+    <Entry value="54" name="Foxbird" />
+    <Entry value="55" name="Confusion Song" />
+    <Entry value="56" name="Dispel Magic" />
+    <Entry value="57" name="Paralyze" />
+    <Entry value="58" name="Sleep " /> <!-- leave trailing space -->
+    <Entry value="59" name="Petrify" />
+    <Entry value="60" name="Moogle" />
+    <Entry value="61" name="Shiva" />
+    <Entry value="62" name="Ramuh" />
+    <Entry value="63" name="Ifrit" />
+    <Entry value="64" name="Titan" />
+    <Entry value="65" name="Golem" />
+    <Entry value="66" name="Carbunkle" />
+    <Entry value="67" name="Bahamut" />
+    <Entry value="68" name="Odin" />
+    <Entry value="69" name="Leviathan" />
+    <Entry value="70" name="Salamander" />
+    <Entry value="71" name="Silf" />
+    <Entry value="72" name="Fairy" />
+    <Entry value="73" name="Lich" />
+    <Entry value="74" name="Cyclops" />
+    <Entry value="75" name="Zodiac" />
+    <Entry value="76" name="Asura " /> <!-- leave trailing space -->
+    <Entry value="77" name="Koutetsu" />
+    <Entry value="78" name="Bizen Boat" />
+    <Entry value="79" name="Murasame" />
+    <Entry value="80" name="Heaven's Cloud" />
+    <Entry value="81" name="Kiyomori" />
+    <Entry value="82" name="Muramasa" />
+    <Entry value="83" name="Kikuichimoji" />
+    <Entry value="84" name="Masamune" />
+    <Entry value="85" name="Chirijiraden" />
+    <Entry value="86" name="Angel Song" />
+    <Entry value="87" name="Life Song" />
+    <Entry value="88" name="Cheer Song" />
+    <Entry value="89" name="Battle Song" />
+    <Entry value="90" name="Magic Song" />
+    <Entry value="91" name="Nameless Song" />
+    <Entry value="92" name="Last Song" />
+    <Entry value="93" name="Witch Hunt" />
+    <Entry value="94" name="Wiznaibus" />
+    <Entry value="95" name="Slow Dance" />
+    <Entry value="96" name="Polka Polka" />
+    <Entry value="97" name="Disillusion" />
+    <Entry value="98" name="Nameless Dance" />
+    <Entry value="99" name="Last Dance" />
+    <Entry value="100" name="Spin Fist" />
+    <Entry value="101" name="Repeating Fist" />
+    <Entry value="102" name="Wave Fist" />
+    <Entry value="103" name="Earth Slash" />
+    <Entry value="104" name="Secret Fist" />
+    <Entry value="105" name="Stigma Magic" />
+    <Entry value="106" name="Chakra" />
+    <Entry value="107" name="Revive" />
+    <Entry value="108" name="Gil Taking" />
+    <Entry value="109" name="Steal Heart" />
+    <Entry value="110" name="Steal Helmet" />
+    <Entry value="111" name="Steal Armor" />
+    <Entry value="112" name="Steal Shield" />
+    <Entry value="113" name="Steal Weapon" />
+    <Entry value="114" name="Steal Accessory" />
+    <Entry value="115" name="Steal Exp" />
+    <Entry value="116" name="Invitation" />
+    <Entry value="117" name="Persuade" />
+    <Entry value="118" name="Praise" />
+    <Entry value="119" name="Threaten" />
+    <Entry value="120" name="Preach" />
+    <Entry value="121" name="Solution" />
+    <Entry value="122" name="Death Sentence " /> <!-- leave trailing space -->
+    <Entry value="123" name="Negotiate" />
+    <Entry value="124" name="Insult" />
+    <Entry value="125" name="Mimic Daravon" />
+    <Entry value="126" name="Pitfall" />
+    <Entry value="127" name="Water Ball" />
+    <Entry value="128" name="Hell Ivy" />
+    <Entry value="129" name="Carve Model" />
+    <Entry value="130" name="Local Quake" />
+    <Entry value="131" name="Kamaitachi" />
+    <Entry value="132" name="Demon Fire" />
+    <Entry value="133" name="Quicksand" />
+    <Entry value="134" name="Sand Storm" />
+    <Entry value="135" name="Blizzard" />
+    <Entry value="136" name="Gusty Wind" />
+    <Entry value="137" name="Lava Ball" />
+    <Entry value="138" name="Head Break" />
+    <Entry value="139" name="Armor Break" />
+    <Entry value="140" name="Shield Break" />
+    <Entry value="141" name="Weapon Break" />
+    <Entry value="142" name="Magic Break" />
+    <Entry value="143" name="Speed Break" />
+    <Entry value="144" name="Power Break" />
+    <Entry value="145" name="Mind Break" />
+    <Entry value="146" name="Accumulate" />
+    <Entry value="147" name="Dash " /> <!-- leave trailing space -->
+    <Entry value="148" name="Throw Stone" />
+    <Entry value="149" name="Heal" />
+    <Entry value="150" name="Yell" />
+    <Entry value="151" name="Cheer Up" />
+    <Entry value="152" name="Wish" />
+    <Entry value="153" name="Scream" />
+    <Entry value="154" name="Ultima " /> <!-- leave trailing space -->
+    <Entry value="155" name="Stasis Sword" />
+    <Entry value="156" name="Split Punch" />
+    <Entry value="157" name="Crush Punch" />
+    <Entry value="158" name="Lightning Stab" />
+    <Entry value="159" name="Holy Explosion" />
+    <Entry value="160" name="Shellbust Stab" />
+    <Entry value="161" name="Blastar Punch" />
+    <Entry value="162" name="Hellcry Punch" />
+    <Entry value="163" name="Icewolf Bite" />
+    <Entry value="164" name="Dark Sword" />
+    <Entry value="165" name="Night Sword" />
+    <Entry value="166" name="Dark Holy" />
+    <Entry value="167" name="Deathspell 2" />
+    <Entry value="168" name="Galaxy Stop" />
+    <Entry value="169" name="Heaven Thunder" />
+    <Entry value="170" name="Asura  " /> <!-- leave trailing space -->
+    <Entry value="171" name="Diamond Sword" />
+    <Entry value="172" name="Hydragon Pit" />
+    <Entry value="173" name="Space Storage" />
+    <Entry value="174" name="Sky Demon" />
+    <Entry value="175" name="Heaven Bolt Back" />
+    <Entry value="176" name="Asura Back" />
+    <Entry value="177" name="Diamond Sword Back" />
+    <Entry value="178" name="Hydragon Pit Back" />
+    <Entry value="179" name="Space Storage Back" />
+    <Entry value="180" name="Sky Demon Back" />
+    <Entry value="181" name="Seal " /> <!-- leave trailing space -->
+    <Entry value="182" name="Shadow Stitch" />
+    <Entry value="183" name="Stop Bracelet" />
+    <Entry value="184" name="(Summon Angel)" /> 
+    <Entry value="185" name="Shock " /> <!-- leave trailing space -->
+    <Entry value="186" name="Difference" />
+    <Entry value="187" name="Seal  " /> <!-- leave trailing space -->
+    <Entry value="188" name="Chicken Race" />
+    <Entry value="189" name="Hold Tight" />
+    <Entry value="190" name="Darkness" />
+    <Entry value="191" name="Lose Voice" />
+    <Entry value="192" name="Loss" />
+    <Entry value="193" name="Spell" />
+    <Entry value="194" name="Nightmare" />
+    <Entry value="195" name="Death Cold" />
+    <Entry value="196" name="Magic Ruin" />
+    <Entry value="197" name="Speed Ruin" />
+    <Entry value="198" name="Power Ruin" />
+    <Entry value="199" name="Mind Ruin" />
+    <Entry value="200" name="Blood Suck " /> <!-- leave trailing space -->
+    <Entry value="201" name="Allure" />
+    <Entry value="202" name="Bio " /> <!-- leave trailing space -->
+    <Entry value="203" name="Bio  " /> <!-- leave trailing space -->
+    <Entry value="204" name="Bio   " /> <!-- leave trailing space -->
+    <Entry value="205" name="Bio 2 " /> <!-- leave trailing space -->
+    <Entry value="206" name="Bio 2  " /> <!-- leave trailing space -->
+    <Entry value="207" name="Bio 2   " /> <!-- leave trailing space -->
+    <Entry value="208" name="Bio 2    " /> <!-- leave trailing space -->
+    <Entry value="209" name="Bio 3 " /> <!-- leave trailing space -->
+    <Entry value="210" name="Bio 3  " /> <!-- leave trailing space -->
+    <Entry value="211" name="Bio 3   " /> <!-- leave trailing space -->
+    <Entry value="212" name="Magic Barrier" />
+    <Entry value="213" name="Leg Aim" />
+    <Entry value="214" name="Arm Aim" />
+    <Entry value="215" name="Seal Evil" />
+    <Entry value="216" name="Melt" />
+    <Entry value="217" name="Tornado" />
+    <Entry value="218" name="Quake" />
+    <Entry value="219" name="(Teleport 3: Send)" /> 
+    <Entry value="220" name="(Teleport 3: Arrive)" /> 
+    <Entry value="221" name="Toad 2" />
+    <Entry value="222" name="Gravi 2" />
+    <Entry value="223" name="Flare 2" />
+    <Entry value="224" name="Blind 2" />
+    <Entry value="225" name="Small Bomb " /> <!-- leave trailing space -->
+    <Entry value="226" name="Small Bomb  " /> <!-- leave trailing space -->
+    <Entry value="227" name="Confuse 2" />
+    <Entry value="228" name="Sleep 2" />
+    <Entry value="229" name="Ultima  " /> <!-- leave trailing space -->
+    <Entry value="230" name="All-ultima" />
+    <Entry value="231" name="Mute" />
+    <Entry value="232" name="Despair 2" />
+    <Entry value="233" name="Return 2" />
+    <Entry value="234" name="Blind  " /> <!-- leave trailing space -->
+    <Entry value="235" name="Aspel" />
+    <Entry value="236" name="Drain" />
+    <Entry value="237" name="Faith" />
+    <Entry value="238" name="Innocent" />
+    <Entry value="239" name="Zombie  " /> <!-- leave trailing space -->
+    <Entry value="240" name="Silence" />
+    <Entry value="241" name="Berserk" />
+    <Entry value="242" name="Chicken" />
+    <Entry value="243" name="Confuse" />
+    <Entry value="244" name="Despair" />
+    <Entry value="245" name="Don't Act" />
+    <Entry value="246" name="Sleep  " /> <!-- leave trailing space -->
+    <Entry value="247" name="Break" />
+    <Entry value="248" name="Ice Bracelet " /> <!-- leave trailing space -->
+    <Entry value="249" name="Fire Bracelet " /> <!-- leave trailing space -->
+    <Entry value="250" name="Thunder Bracelet " /> <!-- leave trailing space -->
+    <Entry value="251" name="Dragon Tame" />
+    <Entry value="252" name="Dragon Care" />
+    <Entry value="253" name="Dragon Power Up" />
+    <Entry value="254" name="Dragon Level Up" />
+    <Entry value="255" name="Holy Bracelet" />
+    <Entry value="256" name="Shock!" />
+    <Entry value="257" name="Braver" />
+    <Entry value="258" name="Cross-slash" />
+    <Entry value="259" name="Blade Beam" />
+    <Entry value="260" name="Climhazzard" />
+    <Entry value="261" name="Meteorain" />
+    <Entry value="262" name="Finish Touch" />
+    <Entry value="263" name="Omnislash" />
+    <Entry value="264" name="Cherry Blossom" />
+    <Entry value="265" name="Choco Attack" />
+    <Entry value="266" name="Choco Ball" />
+    <Entry value="267" name="Choco Meteor" />
+    <Entry value="268" name="Choco Esuna" />
+    <Entry value="269" name="Choco Cure" />
+    <Entry value="270" name="Tackle" />
+    <Entry value="271" name="Goblin Punch" />
+    <Entry value="272" name="Turn Punch" />
+    <Entry value="273" name="Eye Gouge" />
+    <Entry value="274" name="Mutilate" />
+    <Entry value="275" name="Bite" />
+    <Entry value="276" name="Small Bomb  " /> <!-- leave trailing space -->
+    <Entry value="277" name="Self Destruct" />
+    <Entry value="278" name="Flame Attack" />
+    <Entry value="279" name="Spark" />
+    <Entry value="280" name="Scratch" />
+    <Entry value="281" name="Cat Kick" />
+    <Entry value="282" name="Blaster" />
+    <Entry value="283" name="Poison Nail" />
+    <Entry value="284" name="Blood Suck  " /> <!-- leave trailing space -->
+    <Entry value="285" name="Tentacle " /> <!-- leave trailing space -->
+    <Entry value="286" name="Black Ink" />
+    <Entry value="287" name="Odd Soundwave" />
+    <Entry value="288" name="Mind Blast" />
+    <Entry value="289" name="Level Blast" />
+    <Entry value="290" name="Knife Hand" />
+    <Entry value="291" name="Thunder Soul" />
+    <Entry value="292" name="Aqua Soul" />
+    <Entry value="293" name="Ice Soul" />
+    <Entry value="294" name="Wind Soul" />
+    <Entry value="295" name="Throw Spirit" />
+    <Entry value="296" name="Zombie Touch" />
+    <Entry value="297" name="Sleep Touch" />
+    <Entry value="298" name="Drain Touch" />
+    <Entry value="299" name="Grease Touch" />
+    <Entry value="300" name="Wing Attack" />
+    <Entry value="301" name="Look of Devil" />
+    <Entry value="302" name="Look of Fright" />
+    <Entry value="303" name="Circle" />
+    <Entry value="304" name="Death Sentence  " /> <!-- leave trailing space -->
+    <Entry value="305" name="Scratch Up" />
+    <Entry value="306" name="Beak" />
+    <Entry value="307" name="Shine Lover" />
+    <Entry value="308" name="Feather Bomb" />
+    <Entry value="309" name="Beaking" />
+    <Entry value="310" name="Straight Dash" />
+    <Entry value="311" name="Nose Bracelet" />
+    <Entry value="312" name="Oink" />
+    <Entry value="313" name="Pooh-" />
+    <Entry value="314" name="Please Eat" />
+    <Entry value="315" name="Leaf Dance" />
+    <Entry value="316" name="Protect Spirit" />
+    <Entry value="317" name="Clam Spirit" />
+    <Entry value="318" name="Spirit of Life" />
+    <Entry value="319" name="Magic Spirit" />
+    <Entry value="320" name="Shake Off" />
+    <Entry value="321" name="Wave Around" />
+    <Entry value="322" name="Mimic Titan" />
+    <Entry value="323" name="Gather Power" />
+    <Entry value="324" name="Blow Fire" />
+    <Entry value="325" name="Tentacle  " /> <!-- leave trailing space -->
+    <Entry value="326" name="Lick" />
+    <Entry value="327" name="Goo" />
+    <Entry value="328" name="Bad Bracelet" />
+    <Entry value="329" name="Moldball Virus" />
+    <Entry value="330" name="Stab Up" />
+    <Entry value="331" name="Sudden Cry" />
+    <Entry value="332" name="Hurricane" />
+    <Entry value="333" name="Ulmaguest" />
+    <Entry value="334" name="Giga Flare" />
+    <Entry value="335" name="Dash  " /> <!-- leave trailing space -->
+    <Entry value="336" name="Tail Swing" />
+    <Entry value="337" name="Ice Bracelet  " /> <!-- leave trailing space -->
+    <Entry value="338" name="Fire Bracelet  " /> <!-- leave trailing space -->
+    <Entry value="339" name="Thunder Bracelet  " /> <!-- leave trailing space -->
+    <Entry value="340" name="Triple Attack" />
+    <Entry value="341" name="Triple Bracelet" />
+    <Entry value="342" name="Triple Thunder" />
+    <Entry value="343" name="Triple Flame" />
+    <Entry value="344" name="Dark Whisper" />
+    <Entry value="345" name="Snake Carrier" />
+    <Entry value="346" name="Poison Frog" />
+    <Entry value="347" name="Midgar Swarm" />
+    <Entry value="348" name="Lifebreak" />
+    <Entry value="349" name="Nanoflare" />
+    <Entry value="350" name="Grand Cross" />
+    <Entry value="351" name="Destroy" />
+    <Entry value="352" name="Compress" />
+    <Entry value="353" name="Dispose" />
+    <Entry value="354" name="Crush" />
+    <Entry value="355" name="Energy" />
+    <Entry value="356" name="Parasite" />
+    <Entry value="357" name="      " /> <!-- leave trailing space -->
+    <Entry value="358" name="       " /> <!-- leave trailing space -->
+    <Entry value="359" name="        " /> <!-- leave trailing space -->
+    <Entry value="360" name="         " /> <!-- leave trailing space -->
+    <Entry value="361" name="          " /> <!-- leave trailing space -->
+    <Entry value="362" name="           " /> <!-- leave trailing space -->
+    <Entry value="363" name="            " /> <!-- leave trailing space -->
+    <Entry value="364" name="             " /> <!-- leave trailing space -->
+    <Entry value="365" name="              " /> <!-- leave trailing space -->
+    <Entry value="366" name="               " /> <!-- leave trailing space -->
+    <Entry value="367" name="Frog Attack" /> 
+    <Entry value="368" name="Potion" />
+    <Entry value="369" name="Hi-Potion" />
+    <Entry value="370" name="X-Potion" />
+    <Entry value="371" name="Ether" />
+    <Entry value="372" name="Hi-Ether" />
+    <Entry value="373" name="Elixir" />
+    <Entry value="374" name="Antidote" />
+    <Entry value="375" name="Eye Drop" />
+    <Entry value="376" name="Echo Grass" />
+    <Entry value="377" name="Maiden's Kiss" />
+    <Entry value="378" name="Soft" />
+    <Entry value="379" name="Holy Water" />
+    <Entry value="380" name="Remedy" />
+    <Entry value="381" name="Phoenix Down" />
+    <Entry value="382" name="Shuriken" />
+    <Entry value="383" name="Knife" />
+    <Entry value="384" name="Sword" />
+    <Entry value="385" name="Hammer" />
+    <Entry value="386" name="Katana" />
+    <Entry value="387" name="Ninja Sword" />
+    <Entry value="388" name="Axe" />
+    <Entry value="389" name="Spear" />
+    <Entry value="390" name="Stick" />
+    <Entry value="391" name="Knight Sword" />
+    <Entry value="392" name="Dictionary" />
+    <Entry value="393" name="Ball" />
+    <Entry value="394" name="Level Jump2" />
+    <Entry value="395" name="Level Jump3" />
+    <Entry value="396" name="Level Jump4" />
+    <Entry value="397" name="Level Jump5" />
+    <Entry value="398" name="Level Jump8" />
+    <Entry value="399" name="Vertical Jump2" />
+    <Entry value="400" name="Vertical Jump3" />
+    <Entry value="401" name="Vertical Jump4" />
+    <Entry value="402" name="Vertical Jump5" />
+    <Entry value="403" name="Vertical Jump6" />
+    <Entry value="404" name="Vertical Jump7" />
+    <Entry value="405" name="Vertical Jump8" />
+    <Entry value="406" name="Charge+1" />
+    <Entry value="407" name="Charge+2" />
+    <Entry value="408" name="Charge+3" />
+    <Entry value="409" name="Charge+4" />
+    <Entry value="410" name="Charge+5" />
+    <Entry value="411" name="Charge+7" />
+    <Entry value="412" name="Charge+10" />
+    <Entry value="413" name="Charge+20" />
+    <Entry value="414" name="CT" />
+    <Entry value="415" name="Level" />
+    <Entry value="416" name="Exp" />
+    <Entry value="417" name="Height" />
+    <Entry value="418" name="Prime Number" />
+    <Entry value="419" name="5" />
+    <Entry value="420" name="4" />
+    <Entry value="421" name="3" />
+    <Entry value="422" name="A Save" />
+    <Entry value="423" name="MA Save" />
+    <Entry value="424" name="Speed Save" />
+    <Entry value="425" name="Sunken State" />
+    <Entry value="426" name="Caution" />
+    <Entry value="427" name="Dragon Spirit" />
+    <Entry value="428" name="Regenerator" />
+    <Entry value="429" name="Brave Up" />
+    <Entry value="430" name="Face Up" />
+    <Entry value="431" name="HP Restore" />
+    <Entry value="432" name="MP Restore" />
+    <Entry value="433" name="Critical Quick" />
+    <Entry value="434" name="Meatbone Slash" />
+    <Entry value="435" name="Counter Magic" />
+    <Entry value="436" name="Counter Tackle" />
+    <Entry value="437" name="Counter Flood" />
+    <Entry value="438" name="Absorb Used MP" />
+    <Entry value="439" name="Gilgame Heart" />
+    <Entry value="440" name="Reflect  " /> <!-- leave trailing space -->
+    <Entry value="441" name="Auto Potion" />
+    <Entry value="442" name="Counter" />
+    <Entry value="443" name="                 " /> <!-- leave trailing space -->
+    <Entry value="444" name="Distribute" />
+    <Entry value="445" name="MP Switch" />
+    <Entry value="446" name="Damage Split" />
+    <Entry value="447" name="Weapon Guard" />
+    <Entry value="448" name="Finger Guard" />
+    <Entry value="449" name="Abandon" />
+    <Entry value="450" name="Catch" />
+    <Entry value="451" name="Blade Grasp" />
+    <Entry value="452" name="Arrow Guard" />
+    <Entry value="453" name="Hamedo" />
+    <Entry value="454" name="Equip Armor" />
+    <Entry value="455" name="Equip Shield" />
+    <Entry value="456" name="Equip Sword" />
+    <Entry value="457" name="Equip Knife" />
+    <Entry value="458" name="Equip Crossbow" />
+    <Entry value="459" name="Equip Spear" />
+    <Entry value="460" name="Equip Axe" />
+    <Entry value="461" name="Equip Gun" />
+    <Entry value="462" name="Half of MP" />
+    <Entry value="463" name="Gained Jp UP" />
+    <Entry value="464" name="Gained Exp UP" />
+    <Entry value="465" name="Attack UP" />
+    <Entry value="466" name="Defense UP" />
+    <Entry value="467" name="Magic AttackUP" />
+    <Entry value="468" name="Magic DefendUP" />
+    <Entry value="469" name="Concentrate" />
+    <Entry value="470" name="Train" />
+    <Entry value="471" name="Secret Hunt" />
+    <Entry value="472" name="Martial Arts" />
+    <Entry value="473" name="Monster Talk" />
+    <Entry value="474" name="Throw Item" />
+    <Entry value="475" name="Maintenance" />
+    <Entry value="476" name="Two Hands" />
+    <Entry value="477" name="Two Swords" />
+    <Entry value="478" name="Monster Skill" />
+    <Entry value="479" name="Defend" />
+    <Entry value="480" name="Equip Change" />
+    <Entry value="481" name="                  " /> <!-- leave trailing space -->
+    <Entry value="482" name="Short Charge" />
+    <Entry value="483" name="Non-charge" />
+    <Entry value="484" name="                   " /> <!-- leave trailing space -->
+    <Entry value="485" name="                    " /> <!-- leave trailing space -->
+    <Entry value="486" name="Move+1" />
+    <Entry value="487" name="Move+2" />
+    <Entry value="488" name="Move+3" />
+    <Entry value="489" name="Jump+1" />
+    <Entry value="490" name="Jump+2" />
+    <Entry value="491" name="Jump+3" />
+    <Entry value="492" name="Ignore Height" />
+    <Entry value="493" name="Move-HP Up" />
+    <Entry value="494" name="Move-MP Up" />
+    <Entry value="495" name="Move-Get Exp" />
+    <Entry value="496" name="Move-Get Jp" />
+    <Entry value="497" name="(Cannot enter water)" />
+    <Entry value="498" name="Teleport" />
+    <Entry value="499" name="Teleport 2" />
+    <Entry value="500" name="Any Weather" />
+    <Entry value="501" name="Any Ground" />
+    <Entry value="502" name="Move in Water (Walk*)" />
+    <Entry value="503" name="Walk on Water (Move*)" />
+    <Entry value="504" name="Move on Lava" />
+    <Entry value="505" name="Move Underwater" />
+    <Entry value="506" name="Float  " /> <!-- leave trailing space -->
+    <Entry value="507" name="Fly" />
+    <Entry value="508" name="Silent Walk" />
+    <Entry value="509" name="Move-Find Item" />
+    <Entry value="510" name="                     " /> <!-- leave trailing space -->
+    <Entry value="511" name="                      " /> <!-- leave trailing space -->
+    <Entry value="512" name="Fire Explosion (Fort Zeakden)" />
+    <Entry value="513" name="Strong Fire Explosion (Fort Zeakden)" />
+    <Entry value="514" name="Mini Explosion (Fort Zeakden)" />
+    <Entry value="515" name="Flood (Bethla Sluice)" />
+    <Entry value="516" name="Velius' Transformation" />
+    <Entry value="517" name="Zalera's Transformation" />
+    <Entry value="518" name="Hashmalum's Transformation" />
+    <Entry value="519" name="Queklain's Transformation" />
+    <Entry value="520" name="Adramelk's Transformation" />
+    <Entry value="521" name="Altima's Ultimate Transformation" />
+    <Entry value="522" name="Velius' Death" />
+    <Entry value="523" name="Zalera's Death" />
+    <Entry value="524" name="Hashmalum's Death" />
+    <Entry value="525" name="Queklain's Death/Zalbag's Death" />
+    <Entry value="526" name="Adramelk's Death" />
+    <Entry value="527" name="Fire (unknown)" />
+    <Entry value="528" name="Aries' Glow" />
+    <Entry value="529" name="Gemini's Glow" />
+    <Entry value="530" name="Leo's Glow" />
+    <Entry value="531" name="Virgo's Glow" />
+    <Entry value="532" name="Scorpio's Glow" />
+    <Entry value="533" name="Capricorn's Glow" />
+    <Entry value="534" name="Cancer's Restoration spell" />
+    <Entry value="535" name="Stone Glow" />
+    <Entry value="536" name="Dejeon: Send (Orbonne, battle vs Rofel)" />
+    <Entry value="537" name="Banish (Murond's entrance)" />
+    <Entry value="538" name="Altima's Transformation" />
+    <Entry value="539" name="Saggitarius' electricity recharge" />
+    <Entry value="540" name="Exploding Smash (Mustadio's House; Worker 8)" />
+    <Entry value="541" name="Scorpio's Revive spell (Rafa revives Malak)" />
+    <Entry value="542" name="Small Electricity (Mustadio's House)" />
+    <Entry value="543" name="Large Electricity (Mustadio's House)" />
+    <Entry value="544" name="Dejeon: Arrive (Murond's entrance)" />
+    <Entry value="545" name="End of the World (Altima's Death)" />
+    <Entry value="546" name="Summon Ultimate" />
+    <Entry value="547" name="Stone Glow (higher altitude)" />
+    <Entry value="548" name="Virgo's Holy Angel Revive" />
+</Entries>

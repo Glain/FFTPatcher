@@ -1,0 +1,676 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Commands bytes="1">
+    <Command hex="10" name="Display Message">
+        <Parameter name="Unknown" bytes="1" />
+        <Parameter name="Dialog Type" bytes="1" />
+        <Parameter name="Message ID" bytes="2" />
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Portrait Row" bytes="1" />
+        <Parameter name="X" bytes="2" />
+        <Parameter name="Y" bytes="2" />
+        <Parameter name="Arrow Position" bytes="2" />
+        <Parameter name="Dialog Box Opening Type" bytes="1" />
+    </Command>
+    <Command hex="11" name="Unit Anim">
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi-Targeting" bytes="1" mode="hex" />
+        <Parameter name="Animation ID" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="1" />
+    </Command>
+    <Command hex="12" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="13" name="Change Map Beta">
+        <Parameter name="Map" bytes="2" type="Map" />
+    </Command>
+    <Command hex="14" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="16" name="Pause" />
+    <Command hex="17" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="18" name="Effect">
+        <Parameter name="Ability/Effect ID" bytes="2" type="AbilityEffect" />
+        <Parameter name="Unit ID" bytes="1" type="Unit" />
+        <Parameter name="X" bytes="1" />
+        <Parameter name="Y" bytes="1" />
+        <Parameter name="Unknown" bytes="1" />
+    </Command>
+    <Command hex="19" name="Camera">
+        <Parameter name="X" bytes="2" />
+        <Parameter name="Z" bytes="2" />
+        <Parameter name="Y" bytes="2" />
+        <Parameter name="Angle" bytes="2" />
+        <Parameter name="Map Rotation" bytes="2" />
+        <Parameter name="Camera Rotation" bytes="2" />
+        <Parameter name="Zoom" bytes="2" />
+        <Parameter name="Time" bytes="2" />
+    </Command>
+    <Command hex="1A" name="Map Darkness">
+        <Parameter name="Blending Mode" bytes="1" mode="hex" />
+        <Parameter name="Red" bytes="1" />
+        <Parameter name="Green" bytes="1" />
+        <Parameter name="Blue" bytes="1" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="1B" name="Map Light">
+        <Parameter name="Unknown" bytes="2" />
+        <Parameter name="Unknown" bytes="2" />
+        <Parameter name="Unknown" bytes="2" />
+        <Parameter name="Red" bytes="2" />
+        <Parameter name="Green" bytes="2" />
+        <Parameter name="Blue" bytes="2" />
+        <Parameter name="Time" bytes="2" />
+    </Command>
+    <Command hex="1C" name="Event Speed">
+        <Parameter name="Speed" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="1D" name="Camera Fusion Start" />
+    <Command hex="1E" name="Camera Fusion End" />
+    <Command hex="1F" name="Focus">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="20" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="21" name="Sound">
+        <Parameter name="Sound ID" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="22" name="Music">
+        <Parameter name="1" bytes="1" />
+        <Parameter name="Volume" bytes="1" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="23" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="25" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="26" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="27" name="Reload Map State" />
+    <Command hex="28" name="Walk To">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="X" bytes="1" />
+        <Parameter name="Y" bytes="1" />
+        <Parameter name="Z" bytes="1" />
+        <Parameter name="Unknown" bytes="1" />
+        <Parameter name="Speed" bytes="1" />
+        <Parameter name="Unknown" bytes="1" />
+    </Command>
+    <Command hex="29" name="Wait Walk">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="2A" name="Block Start" />
+    <Command hex="2B" name="Block End" />
+    <Command hex="2C" name="Face Unit 2">
+        <Parameter name="Faced Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="Rotation Direction" bytes="1" mode="hex" />
+        <Parameter name="Rotation Speed" bytes="1" mode="hex" />
+        <Parameter name="Delay" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="2D" name="Rotate Unit">
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="Facing Direction" bytes="1" mode="hex" />
+        <Parameter name="Rotation Direction" bytes="1" mode="hex" />
+        <Parameter name="Rotation Speed" bytes="1" mode="hex" />
+        <Parameter name="Delay" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="2E" name="Background">
+        <Parameter name="Red (Top)" bytes="1" mode="unsigned" />
+        <Parameter name="Green (Top)" bytes="1" mode="unsigned" />
+        <Parameter name="Blue (Top)" bytes="1" mode="unsigned" />
+        <Parameter name="Red (Bottom)" bytes="1" mode="unsigned" />
+        <Parameter name="Green (Bottom)" bytes="1" mode="unsigned" />
+        <Parameter name="Blue (Bottom)" bytes="1" mode="unsigned" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="31" name="Color BG Beta">
+        <Parameter name="Preset Color" bytes="1" mode="hex" />
+        <Parameter name="Red" bytes="1" />
+        <Parameter name="Green" bytes="1" />
+        <Parameter name="Blue" bytes="1" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="32" name="Color Unit">
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="Preset Color" bytes="1" mode="hex" />
+        <Parameter name="Red" bytes="1" />
+        <Parameter name="Green" bytes="1" />
+        <Parameter name="Blue" bytes="1" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="33" name="Color Field">
+        <Parameter name="Preset Color" bytes="1" mode="hex" />
+        <Parameter name="Red" bytes="1" />
+        <Parameter name="Green" bytes="1" />
+        <Parameter name="Blue" bytes="1" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="34" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="35" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="36" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="37" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="38" name="Focus Speed">
+        <Parameter name="Travel Speed" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="3B" name="Sprite Move">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="X Movement" bytes="2" />
+        <Parameter name="Z Movement" bytes="2" />
+        <Parameter name="Y Movement" bytes="2" />
+        <Parameter name="Movement Type" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Time" bytes="2" />
+    </Command>
+    <Command hex="3C" name="Weather">
+        <Parameter name="Strength" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="3D" name="Remove Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="3E" name="Color Screen">
+        <Parameter name="Blending Mode" bytes="1" mode="hex" />
+        <Parameter name="Initial Red" bytes="1" mode="unsigned" />
+        <Parameter name="Initial Green" bytes="1" mode="unsigned" />
+        <Parameter name="Initial Blue" bytes="1" mode="unsigned" />
+        <Parameter name="Target Red" bytes="1" mode="unsigned" />
+        <Parameter name="Target Green" bytes="1" mode="unsigned" />
+        <Parameter name="Target Blue" bytes="1" mode="unsigned" />
+        <Parameter name="Time" bytes="2" />
+    </Command>
+    <Command hex="3F" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="40" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="41" name="Earthquake Start">
+        <Parameter name="Magnitude" bytes="1" mode="hex" />
+        <Parameter name="Intensity" bytes="1" mode="unsigned" />
+        <Parameter name="Shock Magnitude" bytes="1" mode="unsigned" />
+        <Parameter name="Shock Delay" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="42" name="Earthquake End" />
+    <Command hex="43" name="Call Function">
+        <Parameter name="Function" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="44" name="Draw Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="45" name="Add Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Initial Draw" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="46" name="Erase Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="47" name="Add Ghost Unit">
+        <Parameter name="Spritesheet ID" bytes="2" type="Spritesheet" />
+        <Parameter name="Ghost Unit Index" bytes="1" mode="hex" />
+        <Parameter name="X" bytes="1" mode="unsigned" />
+        <Parameter name="Y" bytes="1" mode="unsigned" />
+        <Parameter name="Z" bytes="1" mode="unsigned" />
+        <Parameter name="Facing Direction" bytes="1" mode="hex" />
+        <Parameter name="Initial Draw" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="48" name="Wait Add Unit" />
+    <Command hex="49" name="Add Unit Start" />
+    <Command hex="4A" name="Add Unit End" />
+    <Command hex="4B" name="Wait Add Unit End" />
+    <Command hex="4C" name="Change Map">
+        <Parameter name="Map ID" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="4D" name="Reveal">
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="4E" name="Unit Shadow">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Disable" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="4F" name="Set Daytime">
+        <Parameter name="Night" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="50" name="Portrait Column">
+        <Parameter name="Column" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="51" name="Change Dialog">
+        <Parameter name="Target" bytes="1" mode="hex" />
+        <Parameter name="Message ID" bytes="2" />
+        <Parameter name="Portrait Row" bytes="1" mode="hex" />
+        <Parameter name="Portrait Palette" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="52" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="53" name="Face Unit">
+        <Parameter name="Faced Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="Rotation Direction" bytes="1" mode="hex" />
+        <Parameter name="Rotation Speed" bytes="1" mode="hex" />
+        <Parameter name="Delay" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="54" name="Use 3D Object">
+        <Parameter name="Object ID" bytes="1" mode="hex" />
+        <Parameter name="State" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="55" name="Use Field Object">
+        <Parameter name="Object ID" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="56" name="Wait 3D Object" />
+    <Command hex="57" name="Wait Field Object" />
+    <Command hex="58" name="Load EVTCHR">
+        <Parameter name="Memory Block" bytes="1" mode="hex" />
+        <Parameter name="EVTCHR Slot" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="59" name="Save EVTCHR">
+        <Parameter name="Memory Block" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="5A" name="Save EVTCHR Clear">
+        <Parameter name="Memory Block" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="5B" name="Load EVTCHR Clear">
+        <Parameter name="Memory Block" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="5C" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="5D" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="5E" name="End Song">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="5F" name="Warp Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="X" bytes="1" mode="unsigned" />
+        <Parameter name="Y" bytes="1" mode="unsigned" />
+        <Parameter name="Z" bytes="1" mode="unsigned" />
+        <Parameter name="Facing Direction" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="60" name="Fade Sound">
+        <Parameter name="Shift Amount" bytes="1" mode="unsigned" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="61" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="62" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="63" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="64" name="Wait Rotate Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="65" name="Wait Rotate All" />
+    <Command hex="67" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="68" name="Mirror Sprite">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Mirror" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="69" name="Face Tile">
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="X" bytes="1" mode="unsigned" />
+        <Parameter name="Y" bytes="1" mode="unsigned" />
+        <Parameter name="Unused" bytes="1" mode="hex" />
+        <Parameter name="Rotation Direction" bytes="1" mode="hex" />
+        <Parameter name="Rotation Speed" bytes="1" mode="hex" />
+        <Parameter name="Delay" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="6A" name="Edit BG Sound">
+        <Parameter name="Sound ID" bytes="1" mode="hex" />
+        <Parameter name="Echo" bytes="1" mode="unsigned" />
+        <Parameter name="Volume" bytes="1" mode="unsigned" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="6B" name="BG Sound">
+        <Parameter name="Sound ID" bytes="1" mode="hex" />
+        <Parameter name="Echo" bytes="1" mode="unsigned" />
+        <Parameter name="Volume?" bytes="1" mode="unsigned" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Time?" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="6C" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="6D" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="6E" name="Sprite Move Beta">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="X Movement" bytes="2" />
+        <Parameter name="Z Movement" bytes="2" />
+        <Parameter name="Y Movement" bytes="2" />
+        <Parameter name="Movement Type" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Speed" bytes="2" />
+    </Command>
+    <Command hex="6F" name="Wait Sprite Move">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="70" name="Jump">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Distance" bytes="1" mode="unsigned" />
+        <Parameter name="Direction" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="71" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="73" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="74" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="75" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="76" name="Dark Screen">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Shape" bytes="1" mode="hex" />
+        <Parameter name="Screen Expansion Speed" bytes="1" mode="unsigned" />
+        <Parameter name="Rotation Speed" bytes="2" mode="unsigned" />
+        <Parameter name="Square Expansion Speed" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="77" name="Remove Dark Screen" />
+    <Command hex="78" name="Display Conditions">
+        <Parameter name="Message" bytes="1" mode="hex" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="79" name="Walk To Anim">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Animation ID" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="7A" name="Dismiss Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="7B" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="7C" name="Stop Sound Effect?" />
+    <Command hex="7D" name="Show Graphic">
+        <Parameter name="Graphic ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="7E" name="Wait Value">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="7F" name="EVTCHR Palette">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="EVTCHR Block" bytes="1" mode="hex" />
+        <Parameter name="Palette ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="80" name="March">
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="Time" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="81" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="83" name="Change Stats">
+        <Parameter name="Affected Units" bytes="1" mode="hex" />
+        <Parameter name="Multi Targeting" bytes="1" mode="hex" />
+        <Parameter name="Stat" bytes="1" mode="hex" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="84" name="Play Song">
+        <Parameter name="Song ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="85" name="Set Unlock Date">
+        <Parameter name="Treasure/Land ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="86" name="Temp Weapon">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Item ID" bytes="1" type="Item" />
+    </Command>
+    <Command hex="87" name="Arrow">
+        <Parameter name="Target Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Acting Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="88" name="Map Unfreeze" />
+    <Command hex="89" name="Map Freeze" />
+    <Command hex="8A" name="Load Effect" />
+    <Command hex="8B" name="Play Effect" />
+    <Command hex="8C" name="Unit Anim Rotate">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Direction" bytes="1" mode="hex" />
+        <Parameter name="Animation ID" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="8E" name="Wait Graphic Print" />
+    <Command hex="8F" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="90" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="91" name="Show Map Title">
+        <Parameter name="X" bytes="1" />
+        <Parameter name="Y" bytes="1" />
+        <Parameter name="Speed" bytes="1" />
+    </Command>
+    <Command hex="92" name="Inflict Status">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Status" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="93" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="94" name="Teleport Out">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="96" name="Append Map State" />
+    <Command hex="97" name="Reset Palette">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="98" name="Teleport In">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="99" name="Blue Remove Unit">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="A0" name="Variable &lt;=" />
+    <Command hex="A1" name="Variable &gt;=" />
+    <Command hex="A2" name="Variable ==" />
+    <Command hex="A3" name="Variable !=" />
+    <Command hex="A4" name="Variable &lt;" />
+    <Command hex="A5" name="Variable &gt;" />
+    <Command hex="B0" name="Add">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="B1" name="Add Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="B2" name="Subtract">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="B3" name="Subtract Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="B4" name="Multiply">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="B5" name="Multiply Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="B6" name="Divide">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="B7" name="Divide Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="B8" name="Modulo">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="B9" name="Modulo Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="BA" name="AND">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="BB" name="AND Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="BC" name="OR">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="BD" name="OR Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="BE" name="ZERO">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="C0" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="D0" name="Jump Forward If Zero">
+        <Parameter name="Jump Target ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D1" name="Jump Forward">
+        <Parameter name="Jump Target ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D2" name="Forward Target">
+        <Parameter name="Jump Target ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D3" name="Jump Back">
+        <Parameter name="Jump Target ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D4" name="Forward If Zero Target">
+        <Parameter name="Jump Target ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D5" name="Back Target">
+        <Parameter name="Jump Target ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D8" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="D9" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="DB" name="Event End" />
+    <Command hex="E0" name="Unknown">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="E1" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="E2" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="E3" name="Event End 2" />
+    <Command hex="E4" name="Unknown">
+        <Parameter name="Unknown" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="E5" name="Wait For Instruction">
+        <Parameter name="Instruction Type" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="F1" name="Wait">
+        <Parameter name="Time" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="F2" name="No-op" />
+</Commands>

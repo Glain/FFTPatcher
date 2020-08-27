@@ -1,76 +1,76 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Entries>
-    <Entry name="00" />
-    <Entry name="01 Ramza" />
-    <Entry name="02 Ramza" />
-    <Entry name="03 Ramza" />
-    <Entry name="04 Delita" />
-    <Entry name="05 Delita" />
-    <Entry name="06 Delita" />
-    <Entry name="07 Algus" />
-    <Entry name="08 Zalbag" />
-    <Entry name="09 Dycedarg" />
-    <Entry name="0A Larg" />
-    <Entry name="0B Goltana" />
-    <Entry name="0C Ovelia" />
-    <Entry name="0D Orlandu" />
-    <Entry name="0E Funeral" />
-    <Entry name="0F Reis" />
-    <Entry name="10 Zalmo" />
-    <Entry name="11 Gafgarion" />
-    <Entry name="12 Malak" />
-    <Entry name="13 Simon" />
-    <Entry name="14 Alma" />
-    <Entry name="15 Olan" />
-    <Entry name="16 Mustadio" />
-    <Entry name="17 Gafgarion" />
-    <Entry name="18 Draclau" />
-    <Entry name="19 Rafa" />
-    <Entry name="1A Malak" />
-    <Entry name="1B Elmdor" />
-    <Entry name="1C Teta" />
-    <Entry name="1D Barinten" />
-    <Entry name="1E Agrias" />
-    <Entry name="1F Beowulf" />
-    <Entry name="20 Wiegraf" />
-    <Entry name="21 Balmafula" />
-    <Entry name="22 Mustadio" />
-    <Entry name="23 Rudvich" />
-    <Entry name="24 Vormav" />
-    <Entry name="25 Rofel" />
-    <Entry name="26 Izlude" />
-    <Entry name="27 Kletian" />
-    <Entry name="28 Wiegraf" />
-    <Entry name="29 Rafa" />
-    <Entry name="2A Meliadoul" />
-    <Entry name="2B Balk" />
-    <Entry name="2C Alma" />
-    <Entry name="2D Celia" />
-    <Entry name="2E Lede" />
-    <Entry name="2F Meliadoul" />
-    <Entry name="30 Alma" />
-    <Entry name="31 Ajora" />
-    <Entry name="32 Cloud" />
-    <Entry name="33 Zalbag" />
-    <Entry name="34 Agrias" />
-    <Entry name="35"/>
-    <Entry name="36"/>
-    <Entry name="37"/>
-    <Entry name="38"/>
-    <Entry name="39"/>
-    <Entry name="3A"/>
-    <Entry name="3B"/>
-    <Entry name="3C Velius" />
-    <Entry name="3D"/>
-    <Entry name="3E Zalera" />
-    <Entry name="3F"/>
-    <Entry name="40 Hashmalum" />
-    <Entry name="41 Altima" />
-    <Entry name="42"/>
-    <Entry name="43 Queklain" />
-    <Entry name="44 Rofokare" />
-    <Entry name="45 Adramelk" />
-    <Entry name="46"/>
-    <Entry name="47"/>
-    <Entry name="48 Reis" />
+    <Entry hex="00" />
+    <Entry hex="01" name="Ramza" />
+    <Entry hex="02" name="Ramza" />
+    <Entry hex="03" name="Ramza" />
+    <Entry hex="04" name="Delita" />
+    <Entry hex="05" name="Delita" />
+    <Entry hex="06" name="Delita" />
+    <Entry hex="07" name="Algus" />
+    <Entry hex="08" name="Zalbag" />
+    <Entry hex="09" name="Dycedarg" />
+    <Entry hex="0A" name="Larg" />
+    <Entry hex="0B" name="Goltana" />
+    <Entry hex="0C" name="Ovelia" />
+    <Entry hex="0D" name="Orlandu" />
+    <Entry hex="0E" name="Funeral" />
+    <Entry hex="0F" name="Reis" />
+    <Entry hex="10" name="Zalmo" />
+    <Entry hex="11" name="Gafgarion" />
+    <Entry hex="12" name="Malak" />
+    <Entry hex="13" name="Simon" />
+    <Entry hex="14" name="Alma" />
+    <Entry hex="15" name="Olan" />
+    <Entry hex="16" name="Mustadio" />
+    <Entry hex="17" name="Gafgarion" />
+    <Entry hex="18" name="Draclau" />
+    <Entry hex="19" name="Rafa" />
+    <Entry hex="1A" name="Malak" />
+    <Entry hex="1B" name="Elmdor" />
+    <Entry hex="1C" name="Teta" />
+    <Entry hex="1D" name="Barinten" />
+    <Entry hex="1E" name="Agrias" />
+    <Entry hex="1F" name="Beowulf" />
+    <Entry hex="20" name="Wiegraf" />
+    <Entry hex="21" name="Balmafula" />
+    <Entry hex="22" name="Mustadio" />
+    <Entry hex="23" name="Rudvich" />
+    <Entry hex="24" name="Vormav" />
+    <Entry hex="25" name="Rofel" />
+    <Entry hex="26" name="Izlude" />
+    <Entry hex="27" name="Kletian" />
+    <Entry hex="28" name="Wiegraf" />
+    <Entry hex="29" name="Rafa" />
+    <Entry hex="2A" name="Meliadoul" />
+    <Entry hex="2B" name="Balk" />
+    <Entry hex="2C" name="Alma" />
+    <Entry hex="2D" name="Celia" />
+    <Entry hex="2E" name="Lede" />
+    <Entry hex="2F" name="Meliadoul" />
+    <Entry hex="30" name="Alma" />
+    <Entry hex="31" name="Ajora" />
+    <Entry hex="32" name="Cloud" />
+    <Entry hex="33" name="Zalbag" />
+    <Entry hex="34" name="Agrias" />
+    <Entry hex="35" />
+    <Entry hex="36" />
+    <Entry hex="37" />
+    <Entry hex="38" />
+    <Entry hex="39" />
+    <Entry hex="3A" />
+    <Entry hex="3B" />
+    <Entry hex="3C" name="Velius" />
+    <Entry hex="3D" />
+    <Entry hex="3E" name="Zalera" />
+    <Entry hex="3F" />
+    <Entry hex="40" name="Hashmalum" />
+    <Entry hex="41" name="Altima" />
+    <Entry hex="42" />
+    <Entry hex="43" name="Queklain" />
+    <Entry hex="44" name="Rofokare" />
+    <Entry hex="45" name="Adramelk" />
+    <Entry hex="46" />
+    <Entry hex="47" />
+    <Entry hex="48" name="Reis" />
 </Entries>

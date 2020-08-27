@@ -1,149 +1,149 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Entries>
-    <Entry name="0000 Orbonne Prayer" />
-    <Entry name="0001 Orbonne Battle" />
-    <Entry name="0002 Military Academy" />
-    <Entry name="0003 Gariland Fight" />
-    <Entry name="0004 Balbanes's Death" />
-    <Entry name="0005 Mandalia Plains" />
-    <Entry name="0006 Introducing Algus" />
-    <Entry name="0007 Returning to Igros" />
-    <Entry name="0008 Family Meeting" />
-    <Entry name="0009 Sweegy Woods" />
-    <Entry name="000A Slums in Dorter" />
-    <Entry name="000B Interrogation" />
-    <Entry name="000C Sand Rat Cellar" />
-    <Entry name="000D Gustav vs. Wiegraf" />
-    <Entry name="000E Larg's Praise" />
-    <Entry name="000F Thieves' Fort" />
-    <Entry name="0010 Releasing Miluda" />
-    <Entry name="0011 Attack on the Beoulves" />
-    <Entry name="0012 Bedridden Dycedarg" />
-    <Entry name="0013 Expelling Algus" />
-    <Entry name="0014 Reed Whistle" />
-    <Entry name="0015 Lenalia Plateau" />
-    <Entry name="0016 Wiegraf Berating Golagros" />
-    <Entry name="0017 Windmill Shed" />
-    <Entry name="0018 Finding Teta Missing" />
-    <Entry name="0019 Fort Zeakden" />
-    <Entry name="001A Partings" />
-    <Entry name="001B NOGIAS" />
-    <Entry name="001C TERMINATE" />
-    <Entry name="001D DELTA" />
-    <Entry name="001E VALKYRIES" />
-    <Entry name="001F MLAPAN" />
-    <Entry name="0020 TIGER" />
-    <Entry name="0021 BRIDGE" />
-    <Entry name="0022 VOYAGE" />
-    <Entry name="0023 HORROR" />
-    <Entry name="0024 DD END vs. Elidibs" />
-    <Entry name="0025 END" />
-    <Entry name="0026 Ch2 Start Orbonne Monastery" />
-    <Entry name="0027 Dorter Trade City" />
-    <Entry name="0028 Araguay Woods" />
-    <Entry name="0029 Zirekile Falls" />
-    <Entry name="002A Ovelia Joins" />
-    <Entry name="002B Zaland Fort City" />
-    <Entry name="002C Mustadio Joins (Post-Zaland)" />
-    <Entry name="002D Ruins of Zaland" />
-    <Entry name="002E Bariaus Hill" />
-    <Entry name="002F Dycedarg and Gafgarion" />
-    <Entry name="0030 Gate of Lionel Castle" />
-    <Entry name="0031 Meet Draclau" />
-    <Entry name="0032 Besrodio Kidnapped" />
-    <Entry name="0033 Zigolis Swamp" />
-    <Entry name="0034 Goug Machine City Town" />
-    <Entry name="0035 Slums in Goug" />
-    <Entry name="0036 Besrodio Saved" />
-    <Entry name="0037 Warjilis Port" />
-    <Entry name="0038 Draclau Hires Gafgarion" />
-    <Entry name="0039 Bariaus Valley" />
-    <Entry name="003A Golgorand Execution Site" />
-    <Entry name="003B Substitute Princess" />
-    <Entry name="003C Lionel Castle Gate" />
-    <Entry name="003D Inside of Lionel Castle" />
-    <Entry name="003E The Lion War Outbreak" />
-    <Entry name="003F Chapter 3 Start" />
-    <Entry name="0040 Goland Coal City" />
-    <Entry name="0041 Goland Coal City Post-Battle" />
-    <Entry name="0042 Steel Ball Found" />
-    <Entry name="0043 Worker 8 Activated" />
-    <Entry name="0044 Ancient Machine Found" />
-    <Entry name="0045 Cloud Summoned" />
-    <Entry name="0046 Zarghidas Battle (Cloud, Aeris)" />
-    <Entry name="0047 Lesalia Office - Zalbag Talk" />
-    <Entry name="0048 Lesalia Gate Battle (Zalmo)" />
-    <Entry name="0049 Lesalia Gate - Alma Talk" />
-    <Entry name="004A Orbonne Monastery Arrival (Ch. 3)" />
-    <Entry name="004B Underground Book Storage Second Floor" />
-    <Entry name="004C Underground Book Storage Third Floor" />
-    <Entry name="004D Underground Book Storage First Floor" />
-    <Entry name="004E Meet Velius" />
-    <Entry name="004F Malak and the Scriptures" />
-    <Entry name="0050 Ruins of Zeltennia Castle's Church" />
-    <Entry name="0051 Grog Hill" />
-    <Entry name="0052 Meet Again with Olan" />
-    <Entry name="0053 Yardow Fort City" />
-    <Entry name="0054 Exploding Frog" />
-    <Entry name="0055 Yuguo Woods" />
-    <Entry name="0056 Barinten threatens Vormav" />
-    <Entry name="0057 Gate of Riovanes Castle" />
-    <Entry name="0058 Escaping Alma" />
-    <Entry name="0059 Inside of Riovanes Castle" />
-    <Entry name="005A Ajora's Vessel" />
-    <Entry name="005B Rooftop of Riovanes Castle" />
-    <Entry name="005C Reviving Malak" />
-    <Entry name="005D Searching for Alma" />
-    <Entry name="005E Things Obtained (Ending)" />
-    <Entry name="005F Underground Book Storage Fourth Floor" />
-    <Entry name="0060 Underground Book Storage Fifth Floor" />
-    <Entry name="0061 Entrance to the Other World" />
-    <Entry name="0062 Murond Death City" />
-    <Entry name="0063 Lost Sacred Precincts" />
-    <Entry name="0064 Graveyard of Airships (Vormav)" />
-    <Entry name="0065 Graveyard of Airships (Altima)" />
-    <Entry name="0066 Reunion and Beyond" />
-    <Entry name="0067 Those Who Squirm in Darkness" />
-    <Entry name="0068 A Man with the Holy Stone" />
-    <Entry name="0069 Doguola Pass" />
-    <Entry name="006A Bervenia Free City" />
-    <Entry name="006B Finath River" />
-    <Entry name="006C Delita's Thoughts (Church)" />
-    <Entry name="006D Church Outside the Town" />
-    <Entry name="006E Unstoppable Cog" />
-    <Entry name="006F Bed Desert" />
-    <Entry name="0070 Seized TG Cid" />
-    <Entry name="0071 South Wall of Bethla Garrison" />
-    <Entry name="0072 North Wall of Bethla Garrison" />
-    <Entry name="0073 Assassination of Prince Larg" />
-    <Entry name="0074 Bethla Sluice" />
-    <Entry name="0075 Rescue of TG Cid" />
-    <Entry name="0076 Prince Goltana's Final Moments" />
-    <Entry name="0077 Germinas Peak" />
-    <Entry name="0078 Poeskas Lake" />
-    <Entry name="0079 Ambition of Dycedarg" />
-    <Entry name="007A Outside of Limberry Castle" />
-    <Entry name="007B Men of Odd Appearence" />
-    <Entry name="007C Inside of Limberry Castle" />
-    <Entry name="007D Underground Cemetery of Limberry Castle" />
-    <Entry name="007E The Mystery of Lucavi" />
-    <Entry name="007F Delita's Betrayal" />
-    <Entry name="0080 Mosfungus (Zalbag Gil Toss)" />
-    <Entry name="0081 Gate of Igros Castle" />
-    <Entry name="0082 Inside of Igros Castle" />
-    <Entry name="0083 Funeral's Final Moments" />
-    <Entry name="0084 St. Murond Temple" />
-    <Entry name="0085 Hall of St. Murond Temple" />
-    <Entry name="0086 Chapel of St. Murond Temple" />
-    <Entry name="0087 Requiem (Finding Funeral)" />
-    <Entry name="0088 Zarghidas (Aeris)" />
-    <Entry name="0089 Bar - Deep Dungeon" />
-    <Entry name="008A Bar - Goland Coal City" />
-    <Entry name="008B Colliery Underground Third Floor" />
-    <Entry name="008C Colliery Underground Second Floor" />
-    <Entry name="008D Colliery Underground First Floor" />
-    <Entry name="008E Underground Passage in Goland" />
-    <Entry name="008F Underground Passage in Goland (Post-battle)" />
-    <Entry name="0090 Nelveska Temple" />
-    <Entry name="0091 Reis Curse (Nelveska)" />
+    <Entry hex="0000" name="Orbonne Prayer" />
+    <Entry hex="0001" name="Orbonne Battle" />
+    <Entry hex="0002" name="Military Academy" />
+    <Entry hex="0003" name="Gariland Fight" />
+    <Entry hex="0004" name="Balbanes's Death" />
+    <Entry hex="0005" name="Mandalia Plains" />
+    <Entry hex="0006" name="Introducing Algus" />
+    <Entry hex="0007" name="Returning to Igros" />
+    <Entry hex="0008" name="Family Meeting" />
+    <Entry hex="0009" name="Sweegy Woods" />
+    <Entry hex="000A" name="Slums in Dorter" />
+    <Entry hex="000B" name="Interrogation" />
+    <Entry hex="000C" name="Sand Rat Cellar" />
+    <Entry hex="000D" name="Gustav vs. Wiegraf" />
+    <Entry hex="000E" name="Larg's Praise" />
+    <Entry hex="000F" name="Thieves Fort" />
+    <Entry hex="0010" name="Releasing Miluda" />
+    <Entry hex="0011" name="Attack on the Beoulves" />
+    <Entry hex="0012" name="Bedridden Dycedarg" />
+    <Entry hex="0013" name="Expelling Algus" />
+    <Entry hex="0014" name="Reed Whistle" />
+    <Entry hex="0015" name="Lenalia Plateau" />
+    <Entry hex="0016" name="Wiegraf Berating Golagros" />
+    <Entry hex="0017" name="Windmill Shed" />
+    <Entry hex="0018" name="Finding Teta Missing" />
+    <Entry hex="0019" name="Fort Zeakden" />
+    <Entry hex="001A" name="Partings" />
+    <Entry hex="001B" name="NOGIAS" />
+    <Entry hex="001C" name="TERMINATE" />
+    <Entry hex="001D" name="DELTA" />
+    <Entry hex="001E" name="VALKYRIES" />
+    <Entry hex="001F" name="MLAPAN" />
+    <Entry hex="0020" name="TIGER" />
+    <Entry hex="0021" name="BRIDGE" />
+    <Entry hex="0022" name="VOYAGE" />
+    <Entry hex="0023" name="HORROR" />
+    <Entry hex="0024" name="DD END vs. Elidibs" />
+    <Entry hex="0025" name="END" />
+    <Entry hex="0026" name="Ch2 Start Orbonne Monastery" />
+    <Entry hex="0027" name="Dorter Trade City" />
+    <Entry hex="0028" name="Araguay Woods" />
+    <Entry hex="0029" name="Zirekile Falls" />
+    <Entry hex="002A" name="Ovelia Joins" />
+    <Entry hex="002B" name="Zaland Fort City" />
+    <Entry hex="002C" name="Mustadio Joins (Post-Zaland)" />
+    <Entry hex="002D" name="Ruins of Zaland" />
+    <Entry hex="002E" name="Bariaus Hill" />
+    <Entry hex="002F" name="Dycedarg and Gafgarion" />
+    <Entry hex="0030" name="Gate of Lionel Castle" />
+    <Entry hex="0031" name="Meet Draclau" />
+    <Entry hex="0032" name="Besrodio Kidnapped" />
+    <Entry hex="0033" name="Zigolis Swamp" />
+    <Entry hex="0034" name="Goug Machine City Town" />
+    <Entry hex="0035" name="Slums in Goug" />
+    <Entry hex="0036" name="Besrodio Saved" />
+    <Entry hex="0037" name="Warjilis Port" />
+    <Entry hex="0038" name="Draclau Hires Gafgarion" />
+    <Entry hex="0039" name="Bariaus Valley" />
+    <Entry hex="003A" name="Golgorand Execution Site" />
+    <Entry hex="003B" name="Substitute Princess" />
+    <Entry hex="003C" name="Lionel Castle Gate" />
+    <Entry hex="003D" name="Inside of Lionel Castle" />
+    <Entry hex="003E" name="The Lion War Outbreak" />
+    <Entry hex="003F" name="Chapter 3 Start" />
+    <Entry hex="0040" name="Goland Coal City" />
+    <Entry hex="0041" name="Goland Coal City Post-Battle" />
+    <Entry hex="0042" name="Steel Ball Found" />
+    <Entry hex="0043" name="Worker 8 Activated" />
+    <Entry hex="0044" name="Ancient Machine Found" />
+    <Entry hex="0045" name="Cloud Summoned" />
+    <Entry hex="0046" name="Zarghidas Battle (Cloud, Aeris)" />
+    <Entry hex="0047" name="Lesalia Office - Zalbag Talk" />
+    <Entry hex="0048" name="Lesalia Gate Battle (Zalmo)" />
+    <Entry hex="0049" name="Lesalia Gate - Alma Talk" />
+    <Entry hex="004A" name="Orbonne Monastery Arrival (Ch. 3)" />
+    <Entry hex="004B" name="Underground Book Storage Second Floor" />
+    <Entry hex="004C" name="Underground Book Storage Third Floor" />
+    <Entry hex="004D" name="Underground Book Storage First Floor" />
+    <Entry hex="004E" name="Meet Velius" />
+    <Entry hex="004F" name="Malak and the Scriptures" />
+    <Entry hex="0050" name="Ruins of Zeltennia Castle's Church" />
+    <Entry hex="0051" name="Grog Hill" />
+    <Entry hex="0052" name="Meet Again with Olan" />
+    <Entry hex="0053" name="Yardow Fort City" />
+    <Entry hex="0054" name="Exploding Frog" />
+    <Entry hex="0055" name="Yuguo Woods" />
+    <Entry hex="0056" name="Barinten threatens Vormav" />
+    <Entry hex="0057" name="Gate of Riovanes Castle" />
+    <Entry hex="0058" name="Escaping Alma" />
+    <Entry hex="0059" name="Inside of Riovanes Castle" />
+    <Entry hex="005A" name="Ajora's Vessel" />
+    <Entry hex="005B" name="Rooftop of Riovanes Castle" />
+    <Entry hex="005C" name="Reviving Malak" />
+    <Entry hex="005D" name="Searching for Alma" />
+    <Entry hex="005E" name="Things Obtained (Ending)" />
+    <Entry hex="005F" name="Underground Book Storage Fourth Floor" />
+    <Entry hex="0060" name="Underground Book Storage Fifth Floor" />
+    <Entry hex="0061" name="Entrance to the Other World" />
+    <Entry hex="0062" name="Murond Death City" />
+    <Entry hex="0063" name="Lost Sacred Precincts" />
+    <Entry hex="0064" name="Graveyard of Airships (Vormav)" />
+    <Entry hex="0065" name="Graveyard of Airships (Altima)" />
+    <Entry hex="0066" name="Reunion and Beyond" />
+    <Entry hex="0067" name="Those Who Squirm in Darkness" />
+    <Entry hex="0068" name="A Man with the Holy Stone" />
+    <Entry hex="0069" name="Doguola Pass" />
+    <Entry hex="006A" name="Bervenia Free City" />
+    <Entry hex="006B" name="Finath River" />
+    <Entry hex="006C" name="Delita's Thoughts (Church)" />
+    <Entry hex="006D" name="Church Outside the Town" />
+    <Entry hex="006E" name="Unstoppable Cog" />
+    <Entry hex="006F" name="Bed Desert" />
+    <Entry hex="0070" name="Seized TG Cid" />
+    <Entry hex="0071" name="South Wall of Bethla Garrison" />
+    <Entry hex="0072" name="North Wall of Bethla Garrison" />
+    <Entry hex="0073" name="Assassination of Prince Larg" />
+    <Entry hex="0074" name="Bethla Sluice" />
+    <Entry hex="0075" name="Rescue of TG Cid" />
+    <Entry hex="0076" name="Prince Goltana's Final Moments" />
+    <Entry hex="0077" name="Germinas Peak" />
+    <Entry hex="0078" name="Poeskas Lake" />
+    <Entry hex="0079" name="Ambition of Dycedarg" />
+    <Entry hex="007A" name="Outside of Limberry Castle" />
+    <Entry hex="007B" name="Men of Odd Appearence" />
+    <Entry hex="007C" name="Inside of Limberry Castle" />
+    <Entry hex="007D" name="Underground Cemetery of Limberry Castle" />
+    <Entry hex="007E" name="The Mystery of Lucavi" />
+    <Entry hex="007F" name="Delita's Betrayal" />
+    <Entry hex="0080" name="Mosfungus (Zalbag Gil Toss)" />
+    <Entry hex="0081" name="Gate of Igros Castle" />
+    <Entry hex="0082" name="Inside of Igros Castle" />
+    <Entry hex="0083" name="Funeral's Final Moments" />
+    <Entry hex="0084" name="St. Murond Temple" />
+    <Entry hex="0085" name="Hall of St. Murond Temple" />
+    <Entry hex="0086" name="Chapel of St. Murond Temple" />
+    <Entry hex="0087" name="Requiem (Finding Funeral)" />
+    <Entry hex="0088" name="Zarghidas (Aeris)" />
+    <Entry hex="0089" name="Bar - Deep Dungeon" />
+    <Entry hex="008A" name="Bar - Goland Coal City" />
+    <Entry hex="008B" name="Colliery Underground Third Floor" />
+    <Entry hex="008C" name="Colliery Underground Second Floor" />
+    <Entry hex="008D" name="Colliery Underground First Floor" />
+    <Entry hex="008E" name="Underground Passage in Goland" />
+    <Entry hex="008F" name="Underground Passage in Goland (Post-battle)" />
+    <Entry hex="0090" name="Nelveska Temple" />
+    <Entry hex="0091" name="Reis Curse (Nelveska)" />
 </Entries>

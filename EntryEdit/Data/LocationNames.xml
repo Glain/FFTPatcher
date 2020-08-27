@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry hex="00" name="Lesalia Imperial Capital" />
+    <Entry hex="01" name="Riovanes Castle" />
+    <Entry hex="02" name="Igros Castle" />
+    <Entry hex="03" name="Lionel Castle" />
+    <Entry hex="04" name="Limberry Castle" />
+    <Entry hex="05" name="Zeltennia Castle" />
+    <Entry hex="06" name="Gariland Magic City" />
+    <Entry hex="07" name="Yardow Fort City" />
+    <Entry hex="08" name="Goland Coal City" />
+    <Entry hex="09" name="Dorter Trade City" />
+    <Entry hex="0A" name="Zaland Fort City" />
+    <Entry hex="0B" name="Goug Machine City" />
+    <Entry hex="0C" name="Warjilis Trade City" />
+    <Entry hex="0D" name="Bervenia Free City" />
+    <Entry hex="0E" name="Zarghidas Trade City" />
+    <Entry hex="0F" name="Fort Zeakden" />
+    <Entry hex="10" name="Murond Holy Place" />
+    <Entry hex="11" name="Thieves Fort" />
+    <Entry hex="12" name="Orbonne Monastery" />
+    <Entry hex="13" name="Golgorand Execution Site" />
+    <Entry hex="14" name="Murond Death City" />
+    <Entry hex="15" name="Bethla Garrison" />
+    <Entry hex="16" name="Deep Dungeon" />
+    <Entry hex="17" name="Nelveska Temple" />
+    <Entry hex="18" name="Mandalia Plains" />
+    <Entry hex="19" name="Fovoham Plains" />
+    <Entry hex="1A" name="Sweegy Woods" />
+    <Entry hex="1B" name="Bervenia Volcano" />
+    <Entry hex="1C" name="Zeklaus Desert" />
+    <Entry hex="1D" name="Lenalia Plateau" />
+    <Entry hex="1E" name="Zigolis Swamp" />
+    <Entry hex="1F" name="Yuguo Woods" />
+    <Entry hex="20" name="Araguay Woods" />
+    <Entry hex="21" name="Grog Hill" />
+    <Entry hex="22" name="Bed Desert" />
+    <Entry hex="23" name="Zirekile Falls" />
+    <Entry hex="24" name="Dolbodar Swamp" />
+    <Entry hex="25" name="Bariaus Hill" />
+    <Entry hex="26" name="Doguola Pass" />
+    <Entry hex="27" name="Bariaus Valley" />
+    <Entry hex="28" name="Finath River" />
+    <Entry hex="29" name="Poeskas Lake" />
+    <Entry hex="2A" name="Germinas Peak" />
+    <Entry hex="2B" name="(Blank)" />
+</Entries>

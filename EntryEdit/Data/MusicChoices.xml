@@ -1,102 +1,102 @@
-<?xml version="1.0" encoding="utf-8" ?> 
+<?xml version="1.0" encoding="utf-8" ?>
 <Entries>
-    <Entry name="01 Unavoidable Battle"/>
-    <Entry name="02 Run Past Through the Plain"/>
-    <Entry name="03 Back Fire"/>
-    <Entry name="04 Random Waltz"/>
-    <Entry name="05 A Chapel"/>
-    <Entry name="06 Bloody Excrement"/>
-    <Entry name="07 Decisive Battle"/>
-    <Entry name="08 Night Attack"/>
-    <Entry name="09 Under The Stars"/>
-    <Entry name="0A Remnants"/>
-    <Entry name="0B Antipyrectic"/>
-    <Entry name="0C Trisection"/>
-    <Entry name="0D Antidote"/>
-    <Entry name="0E Apoplexy (original part 1)"/>
-    <Entry name="0F Desert Land"/>
-    <Entry name="10 Espionage"/>
-    <Entry name="11 The Impure"/>
-    <Entry name="12 Ultema, the Nice Body"/>
-    <Entry name="13 Ultema, the Perfect Body"/>
-    <Entry name="14 Award 1 - Completed"/>
-    <Entry name="15 Award 2 - Unlucky"/>
-    <Entry name="16 Job Level Up S"/>
-    <Entry name="17 General Unhappiness L"/>
-    <Entry name="18 Job Level Up L"/>
-    <Entry name="19 To the Ball"/>
-    <Entry name="1A Tutorial"/>
-    <Entry name="1B World Map"/>
-    <Entry name="1C Shop"/>
-    <Entry name="1D Warrior's Hideout"/>
-    <Entry name="1E Fur, Meat, and Bones stores"/>
-    <Entry name="1F Team Making"/>
-    <Entry name="20 Brave Story"/>
-    <Entry name="21 Pub"/>
-    <Entry name="22 Character Making"/>
-    <Entry name="23 In Pursuit"/>
-    <Entry name="24 Final Report"/>
-    <Entry name="25 Ovelia's Worries"/>
-    <Entry name="26 Treasure"/>
-    <Entry name="27 Apoplexy (original Part 2)"/>
-    <Entry name="28 Algus"/>
-    <Entry name="29 Data Screen"/>
-    <Entry name="2A Attack Tea"/>
-    <Entry name="2B Mission Complete"/>
-    <Entry name="2C Fanfare"/>
-    <Entry name="2D Level Up S"/>
-    <Entry name="2E Treasure Discovery S"/>
-    <Entry name="2F General Happiness S"/>
-    <Entry name="30 General Unhappiness S"/>
-    <Entry name="31 Job Change"/>
-    <Entry name="32 Game Over"/>
-    <Entry name="33 Pray"/>
-    <Entry name="34 Enemy Attack"/>
-    <Entry name="35 Commander in Training"/>
-    <Entry name="36 Anxiety"/>
-    <Entry name="37 Cryptic Mood"/>
-    <Entry name="38 Cry of Pain"/>
-    <Entry name="39 Invasion"/>
-    <Entry name="3A Requiem"/>
-    <Entry name="3B Count's Anger"/>
-    <Entry name="3C Kourin"/>
-    <Entry name="3D Memories"/>
-    <Entry name="3E Ovelia's Theme - variation"/>
-    <Entry name="3F Cry of Pain!"/>
-    <Entry name="40 Terror 1"/>
-    <Entry name="41 Terror 2"/>
-    <Entry name="42 Ovelia's Theme"/>
-    <Entry name="43 Alma's Theme"/>
-    <Entry name="44 Delita's Theme"/>
-    <Entry name="45 Ovelia's Theme (music-box)"/>
-    <Entry name="46 Dycedarg's Theme"/>
-    <Entry name="47 Zalbag, the Holy Knight"/>
-    <Entry name="48 Thunder God Cid"/>
-    <Entry name="49 Hero's Theme"/>
-    <Entry name="4A Holy Angel's Theme"/>
-    <Entry name="4B Holy Angel's Theme Deluxe"/>
-    <Entry name="4C Tension 1"/>
-    <Entry name="4D Battle on the Bridge"/>
-    <Entry name="4E Shock!! ~ Failure"/>
-    <Entry name="4F And I Ran Away"/>
-    <Entry name="50 Altima's Theme"/>
-    <Entry name="51 Fighting"/>
-    <Entry name="52 Fighting - version 2"/>
-    <Entry name="53 Walking Theme"/>
-    <Entry name="54 Inside the Forest"/>
-    <Entry name="55 Evil Hormone"/>
-    <Entry name="56 Vengeance"/>
-    <Entry name="57 Yamanaka Lake of Fear"/>
-    <Entry name="58 Love Love Happiness"/>
-    <Entry name="59 Silence at Night"/>
-    <Entry name="5A Repose"/>
-    <Entry name="5B Sky Travel"/>
-    <Entry name="5C Brain Side Gyro Mono"/>
-    <Entry name="5D In a Limited Time"/>
-    <Entry name="5E Heard with Something"/>
-    <Entry name="5F Little Wing"/>
-    <Entry name="60 Fear After"/>
-    <Entry name="61 Espionage (alternate)"/>
-    <Entry name="62 Thunder God Cid (slow)"/>
-    <Entry name="63 Apoplexy (entended)"/>
+    <Entry hex="01" name="Unavoidable Battle" />
+    <Entry hex="02" name="Run Past Through the Plain" />
+    <Entry hex="03" name="Back Fire" />
+    <Entry hex="04" name="Random Waltz" />
+    <Entry hex="05" name="A Chapel" />
+    <Entry hex="06" name="Bloody Excrement" />
+    <Entry hex="07" name="Decisive Battle" />
+    <Entry hex="08" name="Night Attack" />
+    <Entry hex="09" name="Under The Stars" />
+    <Entry hex="0A" name="Remnants" />
+    <Entry hex="0B" name="Antipyrectic" />
+    <Entry hex="0C" name="Trisection" />
+    <Entry hex="0D" name="Antidote" />
+    <Entry hex="0E" name="Apoplexy (original part 1)" />
+    <Entry hex="0F" name="Desert Land" />
+    <Entry hex="10" name="Espionage" />
+    <Entry hex="11" name="The Impure" />
+    <Entry hex="12" name="Ultema, the Nice Body" />
+    <Entry hex="13" name="Ultema, the Perfect Body" />
+    <Entry hex="14" name="Award 1 - Completed" />
+    <Entry hex="15" name="Award 2 - Unlucky" />
+    <Entry hex="16" name="Job Level Up S" />
+    <Entry hex="17" name="General Unhappiness L" />
+    <Entry hex="18" name="Job Level Up L" />
+    <Entry hex="19" name="To the Ball" />
+    <Entry hex="1A" name="Tutorial" />
+    <Entry hex="1B" name="World Map" />
+    <Entry hex="1C" name="Shop" />
+    <Entry hex="1D" name="Warrior's Hideout" />
+    <Entry hex="1E" name="Fur, Meat, and Bones stores" />
+    <Entry hex="1F" name="Team Making" />
+    <Entry hex="20" name="Brave Story" />
+    <Entry hex="21" name="Pub" />
+    <Entry hex="22" name="Character Making" />
+    <Entry hex="23" name="In Pursuit" />
+    <Entry hex="24" name="Final Report" />
+    <Entry hex="25" name="Ovelia's Worries" />
+    <Entry hex="26" name="Treasure" />
+    <Entry hex="27" name="Apoplexy (original Part 2)" />
+    <Entry hex="28" name="Algus" />
+    <Entry hex="29" name="Data Screen" />
+    <Entry hex="2A" name="Attack Tea" />
+    <Entry hex="2B" name="Mission Complete" />
+    <Entry hex="2C" name="Fanfare" />
+    <Entry hex="2D" name="Level Up S" />
+    <Entry hex="2E" name="Treasure Discovery S" />
+    <Entry hex="2F" name="General Happiness S" />
+    <Entry hex="30" name="General Unhappiness S" />
+    <Entry hex="31" name="Job Change" />
+    <Entry hex="32" name="Game Over" />
+    <Entry hex="33" name="Pray" />
+    <Entry hex="34" name="Enemy Attack" />
+    <Entry hex="35" name="Commander in Training" />
+    <Entry hex="36" name="Anxiety" />
+    <Entry hex="37" name="Cryptic Mood" />
+    <Entry hex="38" name="Cry of Pain" />
+    <Entry hex="39" name="Invasion" />
+    <Entry hex="3A" name="Requiem" />
+    <Entry hex="3B" name="Count's Anger" />
+    <Entry hex="3C" name="Kourin" />
+    <Entry hex="3D" name="Memories" />
+    <Entry hex="3E" name="Ovelia's Theme - variation" />
+    <Entry hex="3F" name="Cry of Pain!" />
+    <Entry hex="40" name="Terror 1" />
+    <Entry hex="41" name="Terror 2" />
+    <Entry hex="42" name="Ovelia's Theme" />
+    <Entry hex="43" name="Alma's Theme" />
+    <Entry hex="44" name="Delita's Theme" />
+    <Entry hex="45" name="Ovelia's Theme (music-box)" />
+    <Entry hex="46" name="Dycedarg's Theme" />
+    <Entry hex="47" name="Zalbag, the Holy Knight" />
+    <Entry hex="48" name="Thunder God Cid" />
+    <Entry hex="49" name="Hero's Theme" />
+    <Entry hex="4A" name="Holy Angel's Theme" />
+    <Entry hex="4B" name="Holy Angel's Theme Deluxe" />
+    <Entry hex="4C" name="Tension 1" />
+    <Entry hex="4D" name="Battle on the Bridge" />
+    <Entry hex="4E" name="Shock!! ~ Failure" />
+    <Entry hex="4F" name="And I Ran Away" />
+    <Entry hex="50" name="Altima's Theme" />
+    <Entry hex="51" name="Fighting" />
+    <Entry hex="52" name="Fighting - version 2" />
+    <Entry hex="53" name="Walking Theme" />
+    <Entry hex="54" name="Inside the Forest" />
+    <Entry hex="55" name="Evil Hormone" />
+    <Entry hex="56" name="Vengeance" />
+    <Entry hex="57" name="Yamanaka Lake of Fear" />
+    <Entry hex="58" name="Love Love Happiness" />
+    <Entry hex="59" name="Silence at Night" />
+    <Entry hex="5A" name="Repose" />
+    <Entry hex="5B" name="Sky Travel" />
+    <Entry hex="5C" name="Brain Side Gyro Mono" />
+    <Entry hex="5D" name="In a Limited Time" />
+    <Entry hex="5E" name="Heard with Something" />
+    <Entry hex="5F" name="Little Wing" />
+    <Entry hex="60" name="Fear After" />
+    <Entry hex="61" name="Espionage (alternate)" />
+    <Entry hex="62" name="Thunder God Cid (slow)" />
+    <Entry hex="63" name="Apoplexy (entended)" />
 </Entries>

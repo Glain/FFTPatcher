@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry hex="0000" name="Unusable" />
+    <Entry hex="0001" name="Orbonne Prayer (Setup)" />
+    <Entry hex="0002" name="Orbonne Prayer" />
+    <Entry hex="0003" name="Orbonne Battle (Setup)" />
+    <Entry hex="0004" name="Orbonne Battle" />
+    <Entry hex="0005" name="Orbonne Battle (Gafgarion and Agrias chat)" />
+    <Entry hex="0006" name="Orbonne Battle (Abducting the Princess)" />
+    <Entry hex="0007" name="Military Academy (Setup)" />
+    <Entry hex="0008" name="Military Academy" />
+    <Entry hex="0009" name="Gariland Fight (Setup)" />
+    <Entry hex="000A" name="Gariland Fight" />
+    <Entry hex="000B" name="Gariland Fight (Ramza, Delita, Thief Chat)" />
+    <Entry hex="000C" name="Gariland Fight (Ramza talking about honest lives)" />
+    <Entry hex="000D" name="Balbanes's Death (Setup)" />
+    <Entry hex="000E" name="Balbanes's Death" />
+    <Entry hex="000F" name="Mandalia Plains (Setup)" />
+    <Entry hex="0010" name="Mandalia Plains (Options Given)" />
+    <Entry hex="0011" name="Mandalia Plains (Destroy Corps" />
+    <Entry hex="0012" name="Mandalia Plains (Save Algus Chosen)" />
+    <Entry hex="0013" name="Mandalia Plains (Algus First Turn)" />
+    <Entry hex="0014" name="Mandalia Plains (Algus KO'd, Destroy Chosen)" />
+    <Entry hex="0015" name="Mandalia Plains (Algus KO'd, Save Chosen)" />
+    <Entry hex="0016" name="Mandalia Plains (Victory, Algus KO'd)" />
+    <Entry hex="0017" name="Mandalia Plains (Victory, Algus Alive)" />
+    <Entry hex="0018" name="Introducing Algus (Setup)" />
+    <Entry hex="0019" name="Introducing Algus" />
+    <Entry hex="001A" name="Returning to Igros (Setup)" />
+    <Entry hex="001B" name="Returning to Igros" />
+    <Entry hex="001C" name="Family Meeting (Setup)" />
+    <Entry hex="001D" name="Family Meeting" />
+    <Entry hex="001E" name="Sweegy Woods (Setup)" />
+    <Entry hex="001F" name="Sweegy Woods" />
+    <Entry hex="0020" name="Sweegy Woods (Victory)" />
+    <Entry hex="0021" name="Dorter Trade City1 (Setup)" />
+    <Entry hex="0022" name="Dorter Trade City1" />
+    <Entry hex="0023" name="Dorter Trade City1 (Algus and Delita talk)" />
+    <Entry hex="0024" name="Dorter Trade City1 (Victory)" />
+    <Entry hex="0025" name="Interrogation (Setup)" />
+    <Entry hex="0026" name="Interrogation" />
+    <Entry hex="0027" name="Sand Rat Cellar (Setup)" />
+    <Entry hex="0028" name="Sand Rat Cellar" />
+    <Entry hex="0029" name="Sand Rat Cellar (Victory)" />
+    <Entry hex="002A" name="Gustav vs" />
+    <Entry hex="002B" name="Gustav vs" />
+    <Entry hex="002C" name="Larg's Praise (Setup)" />
+    <Entry hex="002D" name="Larg's Praise" />
+    <Entry hex="002E" name="Miluda1 (Setup)" />
+    <Entry hex="002F" name="Miluda1" />
+    <Entry hex="0030" name="Miluda1 (Miluda and Algus arguing)" />
+    <Entry hex="0031" name="Miluda1 (Delita talking)" />
+    <Entry hex="0032" name="Miluda1 (Victory)" />
+    <Entry hex="0033" name="Releasing Miluda (Setup)" />
+    <Entry hex="0034" name="Releasing Miluda" />
+    <Entry hex="0035" name="Attack on the Beoulves (Setup)" />
+    <Entry hex="0036" name="Attack on the Beoulves" />
+    <Entry hex="0037" name="Meeting with bedridden Dycedarg (Setup)" />
+    <Entry hex="0038" name="Meeting with bedridden Dycedarg" />
+    <Entry hex="0039" name="Expelling Algus (Setup)" />
+    <Entry hex="003A" name="Expelling Algus" />
+    <Entry hex="003B" name="Reed Whistle (Setup)" />
+    <Entry hex="003C" name="Reed Whistle" />
+    <Entry hex="003D" name="Miluda2 (Setup)" />
+    <Entry hex="003E" name="Miluda2" />
+    <Entry hex="003F" name="Miluda2 (Delita bartering with Miluda)" />
+    <Entry hex="0040" name="Miluda2 (Miluda half HP)" />
+    <Entry hex="0041" name="Miluda2 (Ramza debating with Miluda)" />
+    <Entry hex="0042" name="Miluda2 (Ramza pleading with Miluda)" />
+    <Entry hex="0043" name="Miluda2 (Miluda's Death)" />
+    <Entry hex="0044" name="Wiegraf berating Golagros (Setup)" />
+    <Entry hex="0045" name="Wiegraf berating Golagros" />
+    <Entry hex="0046" name="Wiegraf1 (Setup)" />
+    <Entry hex="0047" name="Wiegraf1" />
+    <Entry hex="0048" name="Wiegraf1 (Delita, Ramza, Wiegraf talk)" />
+    <Entry hex="0049" name="Wiegraf1 (Ramza and Wiegraf debate)" />
+    <Entry hex="004A" name="Wiegraf1 (Ramza and Wiegraf talk)" />
+    <Entry hex="004B" name="Wiegraf1 (Victory)" />
+    <Entry hex="004C" name="Finding Teta Missing (Setup)" />
+    <Entry hex="004D" name="Finding Teta Missing" />
+    <Entry hex="004E" name="Fort Zeakden (Setup)" />
+    <Entry hex="004F" name="Fort Zeakden" />
+    <Entry hex="0050" name="Fort Zeakden (Algus, Ramza round 1)" />
+    <Entry hex="0051" name="Fort Zeakden (Algus, Ramza round 2)" />
+    <Entry hex="0052" name="Fort Zeakden (Algus, Ramza round 3)" />
+    <Entry hex="0053" name="Fort Zeakden (Destroy Chosen at Mandalia)" />
+    <Entry hex="0054" name="Fort Zeakden (Save Chosen at Mandalia)" />
+    <Entry hex="0055" name="Fort Zeakden (Delita's First Turn)" />
+    <Entry hex="0056" name="Fort Zeakden (Algus, Delita round 1)" />
+    <Entry hex="0057" name="Fort Zeakden (Ramza, Delita talking)" />
+    <Entry hex="0058" name="Fort Zeakden (Victory)" />
+    <Entry hex="0059" name="Partings (Setup)" />
+    <Entry hex="005A" name="Partings" />
+    <Entry hex="005B" name="Deep Dungeon NOGIAS (Setup)" />
+    <Entry hex="005C" name="Deep Dungeon NOGIAS (Battle)" />
+    <Entry hex="005D" name="Deep Dungeon Panel Found" />
+    <Entry hex="005E" name="Deep Dungeon (Victory - Used for all Floors)" />
+    <Entry hex="005F" name="Deep Dungeon TERMINATE(Setup)" />
+    <Entry hex="0060" name="Deep Dungeon TERMINATE (Battle)" />
+    <Entry hex="0061" name="Deep Dungeon DELTA (Setup)" />
+    <Entry hex="0062" name="Deep Dungeon DELTA (Battle)" />
+    <Entry hex="0063" name="Deep Dungeon VALKYRIES (Setup)" />
+    <Entry hex="0064" name="Deep Dungeon VALKYRIES (Battle)" />
+    <Entry hex="0065" name="Deep Dungeon MLAPAN (Setup)" />
+    <Entry hex="0066" name="Deep Dungeon MLAPAN (Battle)" />
+    <Entry hex="0067" name="Deep Dungeon TIGER (Setup)" />
+    <Entry hex="0068" name="Deep Dungeon TIGER (Battle)" />
+    <Entry hex="0069" name="Deep Dungeon BRIDGE (Setup)" />
+    <Entry hex="006A" name="Deep Dungeon BRIDGE (Battle)" />
+    <Entry hex="006B" name="Deep Dungeon VOYAGE (Setup)" />
+    <Entry hex="006C" name="Deep Dungeon VOYAGE (Battle)" />
+    <Entry hex="006D" name="Deep Dungeon HORROR (Setup)" />
+    <Entry hex="006E" name="Deep Dungeon HORROR (Battle)" />
+    <Entry hex="006F" name="Elidibs (Setup)" />
+    <Entry hex="0070" name="Elidibs" />
+    <Entry hex="0071" name="Elidibs (Victory)" />
+    <Entry hex="0072" name="Deep Dungeon END (Setup)" />
+    <Entry hex="0073" name="Deep Dungeon END (Battle)" />
+    <Entry hex="0074" name="Chapter 2 Start (Setup)" />
+    <Entry hex="0075" name="Chapter 2 Start" />
+    <Entry hex="0076" name="Dorter2 (Setup)" />
+    <Entry hex="0077" name="Dorter2" />
+    <Entry hex="0078" name="Dorter2 (Victory)" />
+    <Entry hex="0079" name="Araguay Woods (Setup)" />
+    <Entry hex="007A" name="Araguay Woods (Options Given)" />
+    <Entry hex="007B" name="Araguay Woods (Kill Enemies Chosen)" />
+    <Entry hex="007C" name="Araguay Woods (Save Boco Chosen)" />
+    <Entry hex="007D" name="Araguay Woods (Boco KO'd, Kill Enemies Chosen)" />
+    <Entry hex="007E" name="Araguay Woods (Boco KO'd, Save Boco Chosen)" />
+    <Entry hex="007F" name="Araguay Woods (Victory)" />
+    <Entry hex="0080" name="Zirekile Falls (Setup)" />
+    <Entry hex="0081" name="Zirekile Falls" />
+    <Entry hex="0082" name="Zirekile Falls (Gafgarion and Agrias talk)" />
+    <Entry hex="0083" name="Zirekile Falls (Gafgarion, Ramza, Delita, talk)" />
+    <Entry hex="0084" name="Zirekile Falls (Delita, Ovelia talk)" />
+    <Entry hex="0085" name="Zirekile Falls (Ovelia's Death)" />
+    <Entry hex="0086" name="Zirekile Falls (Gafgarion and Ramza arguing)" />
+    <Entry hex="0087" name="Zirekile Falls (Gafgarion retreat)" />
+    <Entry hex="0088" name="Zirekile Falls (Victory)" />
+    <Entry hex="0089" name="Ovelia Joins (Setup)" />
+    <Entry hex="008A" name="Ovelia Joins" />
+    <Entry hex="008B" name="Zalamd Fort City (Setup)" />
+    <Entry hex="008C" name="Zaland Fort City (Options Given)" />
+    <Entry hex="008D" name="Zaland Fort City (Kill Enemies Chosen)" />
+    <Entry hex="008E" name="Zaland Fort City (Save Mustadio Chosen)" />
+    <Entry hex="008F" name="Zaland Fort City (Mustadio KO'd, Kill Chosen)" />
+    <Entry hex="0090" name="Zaland Fort City (Mustadio KO'd, Save Chosen)" />
+    <Entry hex="0091" name="Zaland Fort City (Victory)" />
+    <Entry hex="0092" name="Ramza, Mustadio, Agrias and Ovelia meeting (Setup)" />
+    <Entry hex="0093" name="Ramza, Mustadio, Agrias and Ovelia meeting" />
+    <Entry hex="0094" name="Ruins of Zaland (Setup)" />
+    <Entry hex="0095" name="Ruins of Zaland" />
+    <Entry hex="0096" name="Bariaus Hill (Setup)" />
+    <Entry hex="0097" name="Bariaus Hill" />
+    <Entry hex="0098" name="Bariaus Hill (Victory)" />
+    <Entry hex="0099" name="Dycedarg and Gafgarion Reunion (Setup)" />
+    <Entry hex="009A" name="Dycedarg and Gafgarion Reunion" />
+    <Entry hex="009B" name="Gate of Lionel Castle (Setup)" />
+    <Entry hex="009C" name="Gate of Lionel Castle" />
+    <Entry hex="009D" name="Meeting with Draclay (Setup)" />
+    <Entry hex="009E" name="Meeting with Draclau" />
+    <Entry hex="009F" name="Besrodio Kidnapped (Setup)" />
+    <Entry hex="00A0" name="Besrodio Kidnapped" />
+    <Entry hex="00A1" name="Zigolis Swamp (Setup)" />
+    <Entry hex="00A2" name="Zigolis Swamp" />
+    <Entry hex="00A3" name="Zigolis Swamp (Victory)" />
+    <Entry hex="00A4" name="Goug Machine City Town (Setup)" />
+    <Entry hex="00A5" name="Goug Machine City Town" />
+    <Entry hex="00A6" name="Goug Machine City (Setup)" />
+    <Entry hex="00A7" name="Goug Machine City" />
+    <Entry hex="00A8" name="Goug Machine City (Victory)" />
+    <Entry hex="00A9" name="Besrodio Saved (Setup)" />
+    <Entry hex="00AA" name="Besrodio Saved" />
+    <Entry hex="00AB" name="Warjilis Port (Setup)" />
+    <Entry hex="00AC" name="Warjilis Port" />
+    <Entry hex="00AD" name="Draclau hires Gafgarion (Setup)" />
+    <Entry hex="00AE" name="Draclau hires Gafgarion" />
+    <Entry hex="00AF" name="Bariaus Valley (Setup)" />
+    <Entry hex="00B0" name="Bariaus Valley" />
+    <Entry hex="00B1" name="Bariaus Valley (Agrias and Ramza talk)" />
+    <Entry hex="00B2" name="Bariaus Valley (Agrias Death)" />
+    <Entry hex="00B3" name="Bariaus Valley (Victory)" />
+    <Entry hex="00B4" name="Golgorand Execution Site (Setup)" />
+    <Entry hex="00B5" name="Golgorand Execution Site" />
+    <Entry hex="00B6" name="Golgorand Execution Site (Gafgarion and Agrias talk)" />
+    <Entry hex="00B7" name="Golgorand Execution Site (Gafgarion and Ramza talk first part)" />
+    <Entry hex="00B8" name="Golgorand Execution Site (Gafgarion and Ramza talk second part)" />
+    <Entry hex="00B9" name="Golgorand Execution Site (Gafgarion and Ramza talk third part)" />
+    <Entry hex="00BA" name="Golgorand Execution Site (Gafgarion, Agrias and Ramza talk)" />
+    <Entry hex="00BB" name="Golgorand Execution Site (Gafgarion retreats)" />
+    <Entry hex="00BC" name="Golgorand Execution Site (Victory)" />
+    <Entry hex="00BD" name="Substitute (Setup)" />
+    <Entry hex="00BE" name="Substitute" />
+    <Entry hex="00BF" name="Lionel Castle Gate (Setup)" />
+    <Entry hex="00C0" name="Lionel Castle Gate" />
+    <Entry hex="00C1" name="Lionel Castle Gate (Ramza opens the gate)" />
+    <Entry hex="00C2" name="Lionel Castle Gate (Gafgarion Death)" />
+    <Entry hex="00C3" name="Lionel Castle Gate (Victory)" />
+    <Entry hex="00C4" name="Inside of Lionel Castle (Setup)" />
+    <Entry hex="00C5" name="Inside of Lionel Castle" />
+    <Entry hex="00C6" name="Inside of Lionel Castle (Queklain and Ramza talk)" />
+    <Entry hex="00C7" name="Inside of Lionel Castle (Victory)" />
+    <Entry hex="00C8" name="Gelwan's Death (Setup)" />
+    <Entry hex="00C9" name="Gelwan's Death" />
+    <Entry hex="00CA" name="Chapter 3 Start (Setup)" />
+    <Entry hex="00CB" name="Chapter 3 Start" />
+    <Entry hex="00CC" name="Goland Coal City (Setup)" />
+    <Entry hex="00CD" name="Goland Coal City" />
+    <Entry hex="00CE" name="Goland Coal City (Olan Death)" />
+    <Entry hex="00CF" name="Goland Coal City (Victory)" />
+    <Entry hex="00D0" name="Goland Coal City post battle (setup)" />
+    <Entry hex="00D1" name="Goland Coal City post battle" />
+    <Entry hex="00D2" name="Steel Ball Found! (Setup)" />
+    <Entry hex="00D3" name="Steel Ball Found!" />
+    <Entry hex="00D4" name="Worker 8 Activated (setup)" />
+    <Entry hex="00D5" name="Worker 8 Activated" />
+    <Entry hex="00D6" name="Time Machine Found! (Setup)" />
+    <Entry hex="00D7" name="Time Machine Found!" />
+    <Entry hex="00D8" name="Cloud Summoned (Setup)" />
+    <Entry hex="00D9" name="Cloud Summoned" />
+    <Entry hex="00DA" name="Zarghidas (Setup)" />
+    <Entry hex="00DB" name="Zarghidas" />
+    <Entry hex="00DC" name="Zarghidas (Cloud freaking out)" />
+    <Entry hex="00DD" name="Zarghidas (Cloud Death)" />
+    <Entry hex="00DE" name="Zarghidas (Victory)" />
+    <Entry hex="00DF" name="Talk with Zalbag in Lesalia (Setup)" />
+    <Entry hex="00E0" name="Talk with Zalbag in Lesalia" />
+    <Entry hex="00E1" name="Outside Castle Gate in Leaslia Zalmo 1 (Setup)" />
+    <Entry hex="00E2" name="Outside Castle Gate in Lesalia Zalmo 1" />
+    <Entry hex="00E3" name="Outside Castle Gate in Lesalia Zalmo 1 (Zalmo and Ramza talk)" />
+    <Entry hex="00E4" name="Outside Castle Gate in Lesalia Zalmo 1 (Alma and Ramza talk)" />
+    <Entry hex="00E5" name="Outside Castle Gate in Lesalia Zalmo 1 (Victory)" />
+    <Entry hex="00E6" name="Outside Castle Gate in Lesalia Talk with Alma Setup)" />
+    <Entry hex="00E7" name="Outside Castle Gate in Lesalia Talk with Alma" />
+    <Entry hex="00E8" name="Orbonne Monastery (Setup)" />
+    <Entry hex="00E9" name="Orbonne Monastery" />
+    <Entry hex="00EA" name="Underground Book Storage First Floor (Setup)" />
+    <Entry hex="00EB" name="Underground Book Storage First Floor" />
+    <Entry hex="00EC" name="Underground Book Storage First Floor (Victory)" />
+    <Entry hex="00ED" name="Underground Book Storage Second Floor (Setup)" />
+    <Entry hex="00EE" name="Underground Book Storage Second Floor" />
+    <Entry hex="00EF" name="Underground Book Storage Second Floor (Izlude, Ramza talk first)" />
+    <Entry hex="00F0" name="Underground Book Storage Second Floor (Izlude,Ramza talk second)" />
+    <Entry hex="00F1" name="Underground Book Storage Second Floor (Victory)" />
+    <Entry hex="00F2" name="Underground Book Storage Third Floor (Setup)" />
+    <Entry hex="00F3" name="Underground Book Storage Third Floor" />
+    <Entry hex="00F4" name="Underground Book Storage Third Floor (Wiegraf talk)" />
+    <Entry hex="00F5" name="Underground Book Storage Third Floor (Wiegraf, Ramza talk first)" />
+    <Entry hex="00F6" name="Underground Book Storage Third Floor (Wiegraf, Ramza talk second)" />
+    <Entry hex="00F7" name="Underground Book Storage Third Floor (Victory)" />
+    <Entry hex="00F8" name="Meet Velius (Setup)" />
+    <Entry hex="00F9" name="Meet Velius" />
+    <Entry hex="00FA" name="Malak and the Scriptures (Setup)" />
+    <Entry hex="00FB" name="Malak and the Scriptures (Options Given)" />
+    <Entry hex="00FC" name="Malak and the Scriptures (Yes Chosen)" />
+    <Entry hex="00FD" name="Malak and the Scriptures (No Chosen)" />
+    <Entry hex="00FE" name="Delita swears allegiance to Ovelia (Setup)" />
+    <Entry hex="00FF" name="Delita swears allegiance to Ovelia" />
+    <Entry hex="0100" name="Grog Hill (Setup)" />
+    <Entry hex="0101" name="Grog Hill" />
+    <Entry hex="0102" name="Grog Hill (Victory)" />
+    <Entry hex="0103" name="Meet Again with Olan (Setup)" />
+    <Entry hex="0104" name="Meet again with Olan" />
+    <Entry hex="0105" name="Rescue Rafa (Setup)" />
+    <Entry hex="0106" name="Rescue Rafa" />
+    <Entry hex="0107" name="Rescue Rafa (Malak and Ramza talk)" />
+    <Entry hex="0108" name="Rescue Rafa (Malak, Ninja and Ramza talk)" />
+    <Entry hex="0109" name="Rescue Rafa (Malak Retreat)" />
+    <Entry hex="010A" name="Rescue Rafa (Rafa Death, Malak Present)" />
+    <Entry hex="010B" name="Rescue Rafa (Rafa Death, Malak Retreated)" />
+    <Entry hex="010C" name="Rescue Rafa (Victory)" />
+    <Entry hex="010D" name="Exploding Frog (Setup)" />
+    <Entry hex="010E" name="Exploding Frog" />
+    <Entry hex="010F" name="Yuguo Woods (Setup)" />
+    <Entry hex="0110" name="Yuguo Woods" />
+    <Entry hex="0111" name="Yuguo Woods (Victory)" />
+    <Entry hex="0112" name="Barinten threatens Vormav (Setup)" />
+    <Entry hex="0113" name="Barinten threatens Vormav" />
+    <Entry hex="0114" name="Riovanes Castle Entrance (Setup)" />
+    <Entry hex="0115" name="Riovanes Castle Entrance" />
+    <Entry hex="0116" name="Riovanes Castle Entrance (Rafa, Malak and Ramza talk)" />
+    <Entry hex="0117" name="Riovanes Castle Entrance (Malak Defeated)" />
+    <Entry hex="0118" name="Riovanes Castle Entrance (Rafa Defeated)" />
+    <Entry hex="0119" name="Riovanes Castle Entrance (Victory)" />
+    <Entry hex="011A" name="Escaping Alma (Setup)" />
+    <Entry hex="011B" name="Escaping Alma" />
+    <Entry hex="011C" name="Inside of Riovanes Castle (Setup)" />
+    <Entry hex="011D" name="Inside of Riovanes Castle" />
+    <Entry hex="011E" name="Inside of Riovanes Castle (Wiegraf and Ramza talk)" />
+    <Entry hex="011F" name="Inside of Riovanes Castle (Here comes Velius)" />
+    <Entry hex="0120" name="Inside of Riovanes Castle (Victory)" />
+    <Entry hex="0121" name="Ajora's vessel (Setup)" />
+    <Entry hex="0122" name="Ajora's vessel" />
+    <Entry hex="0123" name="Rooftop of Riovanes Castle (Setup)" />
+    <Entry hex="0124" name="Rooftop of Riovanes Castle" />
+    <Entry hex="0125" name="Rooftop of Riovanes Castle (Rafa Death)" />
+    <Entry hex="0126" name="Rooftop of Riovanes Castle (Victory)" />
+    <Entry hex="0127" name="Reviving Malak (Setup)" />
+    <Entry hex="0128" name="Reviving Malak" />
+    <Entry hex="0129" name="Searching for Alma (Setup)" />
+    <Entry hex="012A" name="Searching for Alma" />
+    <Entry hex="012B" name="Things Obtained (Setup)" />
+    <Entry hex="012C" name="Things Obtained" />
+    <Entry hex="012D" name="Underground Book Storage Fourth Floor (Setup)" />
+    <Entry hex="012E" name="Underground Book Storage Fourth Floor" />
+    <Entry hex="012F" name="Underground Book Storage Fourth Floor (Victory)" />
+    <Entry hex="0130" name="Underground Book Storage Fifth Floor (Setup)" />
+    <Entry hex="0131" name="Underground Book Storage Fifth Floor" />
+    <Entry hex="0132" name="Underground Book Storage Fifth Floor (Rofel and Ramza talk)" />
+    <Entry hex="0133" name="Underground Book Storage Fifth Floor (Victory)" />
+    <Entry hex="0134" name="Entrance to the other world (Setup)" />
+    <Entry hex="0135" name="Entrance to the other world" />
+    <Entry hex="0136" name="Murond Death City (Setup)" />
+    <Entry hex="0137" name="Murond Death City" />
+    <Entry hex="0138" name="Murond Death City (Kletian and Ramza talk)" />
+    <Entry hex="0139" name="Murond Death City (Victory)" />
+    <Entry hex="013A" name="Lost Sacred Precincts (Setup)" />
+    <Entry hex="013B" name="Lost Sacred Precincts" />
+    <Entry hex="013C" name="Lost Sacred Precincts (Balk and Ramza talk)" />
+    <Entry hex="013D" name="Lost Sacred Precincts (Victory)" />
+    <Entry hex="013E" name="Graveyard of Airships (Setup)" />
+    <Entry hex="013F" name="Graveyard of Airships" />
+    <Entry hex="0140" name="Graveyard of Airships (Hashmalum and Ramza talk)" />
+    <Entry hex="0141" name="Graveyard of Airships (Victory)" />
+    <Entry hex="0142" name="Graveyard of Airships (Setup)" />
+    <Entry hex="0143" name="Graveyard of Airships" />
+    <Entry hex="0144" name="Graveyard of Airships (Here comes Altima 2)" />
+    <Entry hex="0145" name="Graveyard of Airships (Victory)" />
+    <Entry hex="0146" name="Reunion and Beyond" />
+    <Entry hex="0147" name="Reunion and beyond" />
+    <Entry hex="0148" name="Those Who Squirm In Darkness (Setup)" />
+    <Entry hex="0149" name="Those Who Squirm in Darkness" />
+    <Entry hex="014A" name="A Man with the Holy Stone (Setup)" />
+    <Entry hex="014B" name="A Man with the Holy Stone" />
+    <Entry hex="014C" name="Doguola Pass (Setup)" />
+    <Entry hex="014D" name="Doguola Pass" />
+    <Entry hex="014E" name="Doguola Pass (Victory)" />
+    <Entry hex="014F" name="Bervenia Free City (Setup)" />
+    <Entry hex="0150" name="Bervenia Free City" />
+    <Entry hex="0151" name="Bervenia Free City (Meliadoul and Ramza talk first part)" />
+    <Entry hex="0152" name="Bervenia Free City (Meliadoul and Ramza talk second part)" />
+    <Entry hex="0153" name="Bervenia Free City (Meliadoul and Ramza talk third part)" />
+    <Entry hex="0154" name="Bervenia Free City (Victory)" />
+    <Entry hex="0155" name="Finath River (Setup)" />
+    <Entry hex="0156" name="Finath River" />
+    <Entry hex="0157" name="Finath River (Victory)" />
+    <Entry hex="0158" name="Delita's Thoughts (Setup)" />
+    <Entry hex="0159" name="Delita's Thoughts" />
+    <Entry hex="015A" name="Zalmo II (Setup)" />
+    <Entry hex="015B" name="Zalmo II" />
+    <Entry hex="015C" name="Zalmo II (Zalmo and Delita talk)" />
+    <Entry hex="015D" name="Zalmo II (Zalmo and Ramza talk)" />
+    <Entry hex="015E" name="Zalmo II (Victory)" />
+    <Entry hex="015F" name="Unstoppable Cog (Setup)" />
+    <Entry hex="0160" name="Unstoppable Cog" />
+    <Entry hex="0161" name="Balk I (Setup)" />
+    <Entry hex="0162" name="Balk I" />
+    <Entry hex="0163" name="Balk I (Balk and Ramza talk)" />
+    <Entry hex="0164" name="Balk I (Victory)" />
+    <Entry hex="0165" name="Seized T" />
+    <Entry hex="0166" name="Seized T" />
+    <Entry hex="0167" name="South Wall of Bethla Garrison (Setup)" />
+    <Entry hex="0168" name="South Wall of Bethla Garrison" />
+    <Entry hex="0169" name="South Wall of Bethla Garrison (Victory)" />
+    <Entry hex="016A" name="North Wall of Bethla Garrison (Setup)" />
+    <Entry hex="016B" name="North Wall of Bethla Garrison" />
+    <Entry hex="016C" name="North Wall of Bethla Garrison (Victory)" />
+    <Entry hex="016D" name="Assassination of Prince Larg (Setup)" />
+    <Entry hex="016E" name="Assassination of Prince Larg" />
+    <Entry hex="016F" name="Bethla Sluice (Setup)" />
+    <Entry hex="0170" name="Bethla Sluice" />
+    <Entry hex="0171" name="Bethla Sluice (First lever left)" />
+    <Entry hex="0172" name="Bethla Sluice (Second lever left)" />
+    <Entry hex="0173" name="Bethla Sluice (First lever right)" />
+    <Entry hex="0174" name="Bethla Sluice (Second lever right)" />
+    <Entry hex="0175" name="Rescue of Cid (Setup)" />
+    <Entry hex="0176" name="Rescue of Cid" />
+    <Entry hex="0177" name="Prince Goltana's Final Moments (Setup)" />
+    <Entry hex="0178" name="Prince Goltana's Final Moments" />
+    <Entry hex="0179" name="Germinas Peak (Setup)" />
+    <Entry hex="017A" name="Germinas Peak" />
+    <Entry hex="017B" name="Germinas Peak (Victory)" />
+    <Entry hex="017C" name="Poeskas Lake (Setup)" />
+    <Entry hex="017D" name="Poeskas Lake" />
+    <Entry hex="017E" name="Poeskas Lake (Victory)" />
+    <Entry hex="017F" name="Ambition of Dycedarg (Setup)" />
+    <Entry hex="0180" name="Ambition of Dycedarg" />
+    <Entry hex="0181" name="Outside of Limberry Castle (Setup)" />
+    <Entry hex="0182" name="Outside of Limberry Castle" />
+    <Entry hex="0183" name="Outside of Limberry Castle (Victory)" />
+    <Entry hex="0184" name="Men of Odd Appearance (Setup)" />
+    <Entry hex="0185" name="Men of Odd Appearance" />
+    <Entry hex="0186" name="Elmdor II (Setup)" />
+    <Entry hex="0187" name="Elmdor II" />
+    <Entry hex="0188" name="Elmdor II (Ultima Demon Celia)" />
+    <Entry hex="0189" name="Elmdor II (Ultima Demon Lede)" />
+    <Entry hex="018A" name="Elmdor II (Victory)" />
+    <Entry hex="018B" name="Zalera (Setup)" />
+    <Entry hex="018C" name="Zalera" />
+    <Entry hex="018D" name="Zalera (Zalera, Meliadoul and Ramza talk)" />
+    <Entry hex="018E" name="Zalera (Meliadoul and Ramza talk)" />
+    <Entry hex="018F" name="Zalera (Victory)" />
+    <Entry hex="0190" name="Random Battle Template (Setup)" />
+    <Entry hex="0191" name="Random Battle Template (Initiate)" />
+    <Entry hex="0192" name="Random Battle Template (Victory)" />
+    <Entry hex="0193" name="Empty" />
+    <Entry hex="0194" name="Game Over Event (Plays automatically upon Game Over)" />
+    <Entry hex="0195" name="Empty" />
+    <Entry hex="0196" name="Empty" />
+    <Entry hex="0197" name="Empty" />
+    <Entry hex="0198" name="Empty" />
+    <Entry hex="0199" name="Empty" />
+    <Entry hex="019A" name="Tutorial - (Battlefield Control) (Setup)" />
+    <Entry hex="019B" name="Tutorial - (Battlefield Control)" />
+    <Entry hex="019C" name="Tutorial - (Battle) (Setup)" />
+    <Entry hex="019D" name="Tutorial - (Battle)" />
+    <Entry hex="019E" name="Tutorial - (Move and Act) (Setup)" />
+    <Entry hex="019F" name="Tutorial - (Move and Act)" />
+    <Entry hex="01A0" name="Tutorial - (Charge Time Battle) (Setup)" />
+    <Entry hex="01A1" name="Tutorial - (Charge Time Battle)" />
+    <Entry hex="01A2" name="Tutorial - (How to Cast Spells) (Setup)" />
+    <Entry hex="01A3" name="Tutorial - (How to Cast Spells)" />
+    <Entry hex="01A4" name="Tutorial - (Abnormal Status) (Setup)" />
+    <Entry hex="01A5" name="Tutorial - (Abnormal Status)" />
+    <Entry hex="01A6" name="Tutorial - (On-Line Help) (Setup)" />
+    <Entry hex="01A7" name="Tutorial - (On-Line Help)" />
+    <Entry hex="01A8" name="Tutorial - (Options) (Setup)" />
+    <Entry hex="01A9" name="Tutorial - (Options)" />
+    <Entry hex="01AA" name="The Mystery of Lucavi (Setup)" />
+    <Entry hex="01AB" name="The Mystery of Lucavi" />
+    <Entry hex="01AC" name="Delita's Betrayal (Setup)" />
+    <Entry hex="01AD" name="Delita's Betrayal" />
+    <Entry hex="01AE" name="Delita's Betrayal" />
+    <Entry hex="01AF" name="Mosfungus (Setup)" />
+    <Entry hex="01B0" name="Mosfungus" />
+    <Entry hex="01B1" name="At the Gate of the Beoulve Castle (Setup)" />
+    <Entry hex="01B2" name="At the Gate of the Beoulve Castle" />
+    <Entry hex="01B3" name="Adramelk (Setup)" />
+    <Entry hex="01B4" name="Adramelk" />
+    <Entry hex="01B5" name="Adramelk (Zalbag and Ramza talk)" />
+    <Entry hex="01B6" name="Adramelk (Dycedarg and Zalbag talk)" />
+    <Entry hex="01B7" name="Adramelk (Here comes Adramelk)" />
+    <Entry hex="01B8" name="Adramelk (Victory)" />
+    <Entry hex="01B9" name="Funeral's Final Moments (Setup)" />
+    <Entry hex="01BA" name="Funeral's Final Moments" />
+    <Entry hex="01BB" name="St. Murond Temple (Setup)" />
+    <Entry hex="01BC" name="St. Murond Temple" />
+    <Entry hex="01BD" name="St. Murond Temple (Victory)" />
+    <Entry hex="01BE" name="Hall of St. Murond Temple (Setup)" />
+    <Entry hex="01BF" name="Hall of St. Murond Temple" />
+    <Entry hex="01C0" name="Hall of St. Murond Temple (Vormav and Meliadoul talk)" />
+    <Entry hex="01C1" name="Hall of St. Murond Temple (Vormav and Ramza talk)" />
+    <Entry hex="01C2" name="Hall of St. Murond Temple (Victory)" />
+    <Entry hex="01C3" name="Chapel of St. Murond Temple (Setup)" />
+    <Entry hex="01C4" name="Chapel of St. Murond Temple" />
+    <Entry hex="01C5" name="Chapel of St. Murond Temple (Zalbag, Ramza first turn)" />
+    <Entry hex="01C6" name="Chapel of St. Murond Temple (Ramza, Zalbag 50% HP talk)" />
+    <Entry hex="01C7" name="Chapel of St. Murond Temple (Victory)" />
+    <Entry hex="01C8" name="Reguiem (Setup)" />
+    <Entry hex="01C9" name="Requiem" />
+    <Entry hex="01CA" name="Zarghidas (Setup)" />
+    <Entry hex="01CB" name="Zarghidas (Options Given)" />
+    <Entry hex="01CC" name="Zarghidas (Don't Buy Flower Chosen)" />
+    <Entry hex="01CD" name="Zarghidas (Buy Flower Chosen)" />
+    <Entry hex="01CE" name="Bar - Deep Dungeon (Setup)" />
+    <Entry hex="01CF" name="Bar - Deep Dungeon" />
+    <Entry hex="01D0" name="Bar - Goland Coal City (Setup)" />
+    <Entry hex="01D1" name="Bar - Goland Coal City (Options Given)" />
+    <Entry hex="01D2" name="Bar - Goland Coal City (Refuse Beowulf's Invitation Chosen)" />
+    <Entry hex="01D3" name="Bar - Goland Coal City (Accept Beowulf's invitation Chosen)" />
+    <Entry hex="01D4" name="Coillery Underground - Third Floor (Setup)" />
+    <Entry hex="01D5" name="Coillery Underground - Third Floor (Battle)" />
+    <Entry hex="01D6" name="Coillery Underground - Third Floor (Victory)" />
+    <Entry hex="01D7" name="Coillery Underground - Second Floor (Setup)" />
+    <Entry hex="01D8" name="Coillery Underground - Second Floor (Battle)" />
+    <Entry hex="01D9" name="Coillery Underground - Second Floor (Victory)" />
+    <Entry hex="01DA" name="Coillery Underground - First Floor (Setup)" />
+    <Entry hex="01DB" name="Coillery Underground - First Floor (Battle)" />
+    <Entry hex="01DC" name="Coillery Underground - First Floor (Victory)" />
+    <Entry hex="01DD" name="Underground Passage in Goland (Setup)" />
+    <Entry hex="01DE" name="Underground Passage in Goland (Battle)" />
+    <Entry hex="01DF" name="Underground Passage in Goland (Reis's Death, Beowulf Alive)" />
+    <Entry hex="01E0" name="Underground Passage in Goland (Reis's Death, Beowulf KO'd)" />
+    <Entry hex="01E1" name="Underground Passage in Goland (Victory)" />
+    <Entry hex="01E2" name="Underground Passage in Goland (Setup)" />
+    <Entry hex="01E3" name="Underground Passage in Goland (Post-Battle)" />
+    <Entry hex="01E4" name="Nelveska Temple (Setup)" />
+    <Entry hex="01E5" name="Nelveska Temple" />
+    <Entry hex="01E6" name="Nelveska Temple (Worker 7 recharging)" />
+    <Entry hex="01E7" name="Nelveska Temple (Victory)" />
+    <Entry hex="01E8" name="Reis' Curse (Setup)" />
+    <Entry hex="01E9" name="Reis' Curse" />
+    <Entry hex="01EA" name="Bethla Sluice (Late add-in Ramza hint)" />
+    <Entry hex="01EB" name="Empty" />
+    <Entry hex="01EC" name="Empty" />
+    <Entry hex="01ED" name="Empty" />
+    <Entry hex="01EE" name="Empty" />
+    <Entry hex="01EF" name="Empty" />
+    <Entry hex="01F0" name="Empty" />
+    <Entry hex="01F1" name="Empty" />
+    <Entry hex="01F2" name="Empty" />
+    <Entry hex="01F3" name="Empty" />
+</Entries>

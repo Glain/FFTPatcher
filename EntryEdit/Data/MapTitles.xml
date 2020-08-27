@@ -1,129 +1,129 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Entries>    
-    <Entry name="00 Unknown"/>
-    <Entry name="01 At the Main Gate of Igros Castle"/>
-    <Entry name="02 Back Gate of Lesalia Castle"/>
-    <Entry name="03 Hall of St. Murond Temple"/>
-    <Entry name="04 Office of Lesalia Castle"/>
-    <Entry name="05 Rooftop of Riovanes Castle"/>
-    <Entry name="06 At the Gate of Riovanes Castle"/>
-    <Entry name="07 Inside of Riovanes Castle"/>
-    <Entry name="08 Riovanes Castle"/>
-    <Entry name="09 Citadel of Igros Castle"/>
-    <Entry name="0A Inside of Igros Castle"/>
-    <Entry name="0B Office of Igros Castle"/>
-    <Entry name="0C At the Gate of Lionel Castle"/>
-    <Entry name="0D Inside of Lionel Castle"/>
-    <Entry name="0E Office of Lionel Castle"/>
-    <Entry name="0F At the Gate of Limberry Castle (1)"/>
-    <Entry name="10 Inside of Limberry Castle"/>
-    <Entry name="11 Underground Cemetary of Limberry Castle"/>
-    <Entry name="12 Office of Limberry Castle"/>
-    <Entry name="13 At the Gate of Limberry Castle (2)"/>
-    <Entry name="14 Inside of Zeltennia Castle"/>
-    <Entry name="15 Zeltennia Castle"/>
-    <Entry name="16 Magic City Gariland"/>
-    <Entry name="17 Beoulve Residence"/>
-    <Entry name="18 Military Academy's Auditorium"/>
-    <Entry name="19 Yardow Fort City"/>
-    <Entry name="1A Weapon Storage of Yardow"/>
-    <Entry name="1B Goland Coal City"/>
-    <Entry name="1C Colliery Underground First Floor"/>
-    <Entry name="1D Colliery Underground Second Floor"/>
-    <Entry name="1E Colliery Underground Third Floor"/>
-    <Entry name="1F Dorter Trade City"/>
-    <Entry name="20 Slums in Dorter"/>
-    <Entry name="21 Hospital in Slums"/>
-    <Entry name="22 Cellar of Sand Mouse"/>
-    <Entry name="23 Zaland Fort City"/>
-    <Entry name="24 Church Outside of Town"/>
-    <Entry name="25 Ruins Outside Zaland"/>
-    <Entry name="26 Goug Machine City"/>
-    <Entry name="27 Underground Passage in Goland"/>
-    <Entry name="28 Slums in Goug"/>
-    <Entry name="29 Besrodio's House"/>
-    <Entry name="2A Warjilis Trade City"/>
-    <Entry name="2B Port of Warjilis"/>
-    <Entry name="2C Bervenia Free City"/>
-    <Entry name="2D Ruins of Zeltennia Castle's Church"/>
-    <Entry name="2E Cemetery of Heavenly Knight, Balbanes"/>
-    <Entry name="2F Zarghidas Trade City"/>
-    <Entry name="30 Slums of Zarghidas"/>
-    <Entry name="31 Fort Zeakden"/>
-    <Entry name="32 Outside St. Murond Temple"/>
-    <Entry name="33 St. Murond Temple"/>
-    <Entry name="34 Chapel of St. Murond Temple"/>
-    <Entry name="35 Entrance to Death City"/>
-    <Entry name="36 Lost Sacred Precincts"/>
-    <Entry name="37 Graveyard of Airships"/>
-    <Entry name="38 Orbonne Monastery"/>
-    <Entry name="39 Underground Book Storage First Floor"/>
-    <Entry name="3A Underground Book Storage Second Floor"/>
-    <Entry name="3B Underground Book Storage Third Floor"/>
-    <Entry name="3C Underground Book Storage Fourth Floor"/>
-    <Entry name="3D Underground Book Storage Fifth Floor"/>
-    <Entry name="3E Chapel of Orbonne Monastery"/>
-    <Entry name="3F Golgorland Execution Site"/>
-    <Entry name="40 In Front of Bethla Garrison's Sluice"/>
-    <Entry name="41 Granary of Bethla Garrison"/>
-    <Entry name="42 South Wall of Bethla Garrison"/>
-    <Entry name="43 North Wall of Bethla Garrison"/>
-    <Entry name="44 Bethla Garrison"/>
-    <Entry name="45 Murond Death City"/>
-    <Entry name="46 Nelveska Temple"/>
-    <Entry name="47 Dolbodar Swamp"/>
-    <Entry name="48 Fovoham Plains"/>
-    <Entry name="49 Inside of Windmill Shed"/>
-    <Entry name="4A Sweegy Woods"/>
-    <Entry name="4B Bervenia Volcano"/>
-    <Entry name="4C Zeklaus Desert"/>
-    <Entry name="4D Lenalia Plateau"/>
-    <Entry name="4E Zigolis Swamp"/>
-    <Entry name="4F Yuguo Woods"/>
-    <Entry name="50 Araguay Woods"/>
-    <Entry name="51 Grog Hill"/>
-    <Entry name="52 Bed Desert"/>
-    <Entry name="53 Zirekile Falls"/>
-    <Entry name="54 Bariaus Hill"/>
-    <Entry name="55 Mandalia Plains"/>
-    <Entry name="56 Doguola Pass"/>
-    <Entry name="57 Bariaus Valley"/>
-    <Entry name="58 Finath River"/>
-    <Entry name="59 Poeskas Lake"/>
-    <Entry name="5A Germinas Peak"/>
-    <Entry name="5B Thieves Fort"/>
-    <Entry name="5C Igros-Beoulve Residence"/>
-    <Entry name="5D Broke Down Shed-Wooden Building"/>
-    <Entry name="5E Broke Down Shed-Stone Building"/>
-    <Entry name="5F Church"/>
-    <Entry name="60 Pub"/>
-    <Entry name="61 Inside Castle Gate in Lesalia"/>
-    <Entry name="62 Outside Castle Gate in Lesalia"/>
-    <Entry name="63 Main Street of Lesalia"/>
-    <Entry name="64 Public Cemetary"/>
-    <Entry name="65 Tutorial (1)"/>
-    <Entry name="66 Tutorial (2)"/>
-    <Entry name="67 Windmill Shed"/>
-    <Entry name="68 Beoulve Residence"/>
-    <Entry name="69 TERMINATE"/>
-    <Entry name="6A DELTA"/>
-    <Entry name="6B NOGIAS"/>
-    <Entry name="6C VOYAGE"/>
-    <Entry name="6D BRIDGE"/>
-    <Entry name="6E VALKYRIES"/>
-    <Entry name="6F MLAPAN"/>
-    <Entry name="70 TIGER"/>
-    <Entry name="71 HORROR"/>
-    <Entry name="72 END"/>
-    <Entry name="73 Banished Fort"/>
-    <Entry name="74 Arena"/>
-    <Entry name="75 Unknown"/>
-    <Entry name="76 Unknown"/>
-    <Entry name="77 Unknown"/>
-    <Entry name="78 Empty"/>
-    <Entry name="79 Empty"/>
-    <Entry name="7A Empty"/>
-    <Entry name="7B Empty"/>
-    <Entry name="7C Empty"/>
-    <Entry name="7D Unknown"/>
+<Entries>
+    <Entry hex="00" name="Unknown" />
+    <Entry hex="01" name="At the Main Gate of Igros Castle" />
+    <Entry hex="02" name="Back Gate of Lesalia Castle" />
+    <Entry hex="03" name="Hall of St. Murond Temple" />
+    <Entry hex="04" name="Office of Lesalia Castle" />
+    <Entry hex="05" name="Rooftop of Riovanes Castle" />
+    <Entry hex="06" name="At the Gate of Riovanes Castle" />
+    <Entry hex="07" name="Inside of Riovanes Castle" />
+    <Entry hex="08" name="Riovanes Castle" />
+    <Entry hex="09" name="Citadel of Igros Castle" />
+    <Entry hex="0A" name="Inside of Igros Castle" />
+    <Entry hex="0B" name="Office of Igros Castle" />
+    <Entry hex="0C" name="At the Gate of Lionel Castle" />
+    <Entry hex="0D" name="Inside of Lionel Castle" />
+    <Entry hex="0E" name="Office of Lionel Castle" />
+    <Entry hex="0F" name="At the Gate of Limberry Castle (1)" />
+    <Entry hex="10" name="Inside of Limberry Castle" />
+    <Entry hex="11" name="Underground Cemetary of Limberry Castle" />
+    <Entry hex="12" name="Office of Limberry Castle" />
+    <Entry hex="13" name="At the Gate of Limberry Castle (2)" />
+    <Entry hex="14" name="Inside of Zeltennia Castle" />
+    <Entry hex="15" name="Zeltennia Castle" />
+    <Entry hex="16" name="Magic City Gariland" />
+    <Entry hex="17" name="Beoulve Residence" />
+    <Entry hex="18" name="Military Academy's Auditorium" />
+    <Entry hex="19" name="Yardow Fort City" />
+    <Entry hex="1A" name="Weapon Storage of Yardow" />
+    <Entry hex="1B" name="Goland Coal City" />
+    <Entry hex="1C" name="Colliery Underground First Floor" />
+    <Entry hex="1D" name="Colliery Underground Second Floor" />
+    <Entry hex="1E" name="Colliery Underground Third Floor" />
+    <Entry hex="1F" name="Dorter Trade City" />
+    <Entry hex="20" name="Slums in Dorter" />
+    <Entry hex="21" name="Hospital in Slums" />
+    <Entry hex="22" name="Cellar of Sand Mouse" />
+    <Entry hex="23" name="Zaland Fort City" />
+    <Entry hex="24" name="Church Outside of Town" />
+    <Entry hex="25" name="Ruins Outside Zaland" />
+    <Entry hex="26" name="Goug Machine City" />
+    <Entry hex="27" name="Underground Passage in Goland" />
+    <Entry hex="28" name="Slums in Goug" />
+    <Entry hex="29" name="Besrodio's House" />
+    <Entry hex="2A" name="Warjilis Trade City" />
+    <Entry hex="2B" name="Port of Warjilis" />
+    <Entry hex="2C" name="Bervenia Free City" />
+    <Entry hex="2D" name="Ruins of Zeltennia Castle's Church" />
+    <Entry hex="2E" name="Cemetery of Heavenly Knight, Balbanes" />
+    <Entry hex="2F" name="Zarghidas Trade City" />
+    <Entry hex="30" name="Slums of Zarghidas" />
+    <Entry hex="31" name="Fort Zeakden" />
+    <Entry hex="32" name="Outside St. Murond Temple" />
+    <Entry hex="33" name="St. Murond Temple" />
+    <Entry hex="34" name="Chapel of St. Murond Temple" />
+    <Entry hex="35" name="Entrance to Death City" />
+    <Entry hex="36" name="Lost Sacred Precincts" />
+    <Entry hex="37" name="Graveyard of Airships" />
+    <Entry hex="38" name="Orbonne Monastery" />
+    <Entry hex="39" name="Underground Book Storage First Floor" />
+    <Entry hex="3A" name="Underground Book Storage Second Floor" />
+    <Entry hex="3B" name="Underground Book Storage Third Floor" />
+    <Entry hex="3C" name="Underground Book Storage Fourth Floor" />
+    <Entry hex="3D" name="Underground Book Storage Fifth Floor" />
+    <Entry hex="3E" name="Chapel of Orbonne Monastery" />
+    <Entry hex="3F" name="Golgorland Execution Site" />
+    <Entry hex="40" name="In Front of Bethla Garrison's Sluice" />
+    <Entry hex="41" name="Granary of Bethla Garrison" />
+    <Entry hex="42" name="South Wall of Bethla Garrison" />
+    <Entry hex="43" name="North Wall of Bethla Garrison" />
+    <Entry hex="44" name="Bethla Garrison" />
+    <Entry hex="45" name="Murond Death City" />
+    <Entry hex="46" name="Nelveska Temple" />
+    <Entry hex="47" name="Dolbodar Swamp" />
+    <Entry hex="48" name="Fovoham Plains" />
+    <Entry hex="49" name="Inside of Windmill Shed" />
+    <Entry hex="4A" name="Sweegy Woods" />
+    <Entry hex="4B" name="Bervenia Volcano" />
+    <Entry hex="4C" name="Zeklaus Desert" />
+    <Entry hex="4D" name="Lenalia Plateau" />
+    <Entry hex="4E" name="Zigolis Swamp" />
+    <Entry hex="4F" name="Yuguo Woods" />
+    <Entry hex="50" name="Araguay Woods" />
+    <Entry hex="51" name="Grog Hill" />
+    <Entry hex="52" name="Bed Desert" />
+    <Entry hex="53" name="Zirekile Falls" />
+    <Entry hex="54" name="Bariaus Hill" />
+    <Entry hex="55" name="Mandalia Plains" />
+    <Entry hex="56" name="Doguola Pass" />
+    <Entry hex="57" name="Bariaus Valley" />
+    <Entry hex="58" name="Finath River" />
+    <Entry hex="59" name="Poeskas Lake" />
+    <Entry hex="5A" name="Germinas Peak" />
+    <Entry hex="5B" name="Thieves Fort" />
+    <Entry hex="5C" name="Igros-Beoulve Residence" />
+    <Entry hex="5D" name="Broke Down Shed-Wooden Building" />
+    <Entry hex="5E" name="Broke Down Shed-Stone Building" />
+    <Entry hex="5F" name="Church" />
+    <Entry hex="60" name="Pub" />
+    <Entry hex="61" name="Inside Castle Gate in Lesalia" />
+    <Entry hex="62" name="Outside Castle Gate in Lesalia" />
+    <Entry hex="63" name="Main Street of Lesalia" />
+    <Entry hex="64" name="Public Cemetery" />
+    <Entry hex="65" name="Tutorial (1)" />
+    <Entry hex="66" name="Tutorial (2)" />
+    <Entry hex="67" name="Windmill Shed" />
+    <Entry hex="68" name="Beoulve Residence" />
+    <Entry hex="69" name="TERMINATE" />
+    <Entry hex="6A" name="DELTA" />
+    <Entry hex="6B" name="NOGIAS" />
+    <Entry hex="6C" name="VOYAGE" />
+    <Entry hex="6D" name="BRIDGE" />
+    <Entry hex="6E" name="VALKYRIES" />
+    <Entry hex="6F" name="MLAPAN" />
+    <Entry hex="70" name="TIGER" />
+    <Entry hex="71" name="HORROR" />
+    <Entry hex="72" name="END" />
+    <Entry hex="73" name="Banished Fort" />
+    <Entry hex="74" name="Arena" />
+    <Entry hex="75" name="Unknown" />
+    <Entry hex="76" name="Unknown" />
+    <Entry hex="77" name="Unknown" />
+    <Entry hex="78" name="Empty" />
+    <Entry hex="79" name="Empty" />
+    <Entry hex="7A" name="Empty" />
+    <Entry hex="7B" name="Empty" />
+    <Entry hex="7C" name="Empty" />
+    <Entry hex="7D" name="Unknown" />
 </Entries>

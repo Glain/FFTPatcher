@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry hex="01" name="Ramza Chapter 1" />
+    <Entry hex="02" name="Ramza Chapter 2-3" />
+    <Entry hex="03" name="Ramza Chapter 4" />
+    <Entry hex="04" name="Delita Chapter 1" />
+    <Entry hex="05" name="Delita Chapter 2-3" />
+    <Entry hex="06" name="Delita Chapter 4" />
+    <Entry hex="07" name="Algus" />
+    <Entry hex="08" name="Zalbag" />
+    <Entry hex="09" name="Dycedarg" />
+    <Entry hex="0A" name="Larg" />
+    <Entry hex="0B" name="Goltana" />
+    <Entry hex="0C" name="Ovelia" />
+    <Entry hex="0D" name="Orlandu" />
+    <Entry hex="0E" name="Funeral" />
+    <Entry hex="0F" name="Reis (Human Form)" />
+    <Entry hex="10" name="Zalmo" />
+    <Entry hex="11" name="Gafgarion (Enemy)" />
+    <Entry hex="12" name="Malak (Dead, Used once)" />
+    <Entry hex="13" name="Simon" />
+    <Entry hex="14" name="Alma (Final Battle)" />
+    <Entry hex="15" name="Olan" />
+    <Entry hex="16" name="Mustadio (Join)" />
+    <Entry hex="17" name="Gafgarion (Guest)" />
+    <Entry hex="18" name="Draclau" />
+    <Entry hex="19" name="Rafa (Guest)" />
+    <Entry hex="1A" name="Malak" />
+    <Entry hex="1B" name="Elmdor" />
+    <Entry hex="1C" name="Teta" />
+    <Entry hex="1D" name="Barinten" />
+    <Entry hex="1E" name="Agrias (Join)" />
+    <Entry hex="1F" name="Beowulf" />
+    <Entry hex="20" name="Wiegraf Chapter 1" />
+    <Entry hex="21" name="Balmafula" />
+    <Entry hex="22" name="Mustadio (Guest)" />
+    <Entry hex="23" name="Rudvich" />
+    <Entry hex="24" name="Vormav" />
+    <Entry hex="25" name="Rofel" />
+    <Entry hex="26" name="Izlude" />
+    <Entry hex="27" name="Kletian" />
+    <Entry hex="28" name="Wiegraf Chapter 2-3" />
+    <Entry hex="29" name="Rafa (Join)" />
+    <Entry hex="2A" name="Meliadoul (Join)" />
+    <Entry hex="2B" name="Balk" />
+    <Entry hex="2C" name="Alma (KO)" />
+    <Entry hex="2D" name="Celia" />
+    <Entry hex="2E" name="Lede" />
+    <Entry hex="2F" name="Meliadoul (Enemy)" />
+    <Entry hex="30" name="Alma" />
+    <Entry hex="31" name="Ajora" />
+    <Entry hex="32" name="Cloud" />
+    <Entry hex="33" name="Zalbag (Zombie)" />
+    <Entry hex="34" name="Agrias (Guest)" />
+    <Entry hex="35" name="Female Chemist" />
+    <Entry hex="36" name="Female Priest" />
+    <Entry hex="37" name="Male Wizard" />
+    <Entry hex="38" name="Male Oracle" />
+    <Entry hex="39" name="Male Squire" />
+    <Entry hex="3A" name="Celia (Never used)" />
+    <Entry hex="3B" name="Lede (Never used)" />
+    <Entry hex="3C" name="Velius" />
+    <Entry hex="3D" name="Male Knight" />
+    <Entry hex="3E" name="Zarela" />
+    <Entry hex="3F" name="Male Archer" />
+    <Entry hex="40" name="Hashmalum" />
+    <Entry hex="41" name="Altima (First Form)" />
+    <Entry hex="42" name="Male Wizard" />
+    <Entry hex="43" name="Queklain" />
+    <Entry hex="44" name="Female Time Mage" />
+    <Entry hex="45" name="Adramelk" />
+    <Entry hex="46" name="Male Oracle" />
+    <Entry hex="47" name="Female Summoner" />
+    <Entry hex="48" name="Reis (Dragon Form)" />
+    <Entry hex="49" name="Altima (Second Form)" />
+    <Entry hex="4A" name="10 year old boy" />
+    <Entry hex="4B" name="10 year old girl" />
+    <Entry hex="4C" name="20 year old man" />
+    <Entry hex="4D" name="20 year old woman" />
+    <Entry hex="4E" name="40 year old man" />
+    <Entry hex="4F" name="40 year old woman" />
+    <Entry hex="50" name="60 year old man" />
+    <Entry hex="51" name="60 year old woman" />
+    <Entry hex="52" name="Old Funeral Man" />
+    <Entry hex="53" name="Old Funeral Woman" />
+    <Entry hex="54" name="Funeral Man" />
+    <Entry hex="55" name="Funeral Woman" />
+    <Entry hex="56" name="Funeral Priest" />
+    <Entry hex="57" name="Male Squire" />
+    <Entry hex="58" name="Male Squire" />
+    <Entry hex="59" name="Male Squire" />
+    <Entry hex="5A" name="Male Squire" />
+    <Entry hex="5B" name="Male Squire" />
+    <Entry hex="5C" name="Male Squire" />
+    <Entry hex="5D" name="???" />
+    <Entry hex="5E" name="???" />
+    <Entry hex="5F" name="???" />
+    <Entry hex="60" name="Male Squire" />
+    <Entry hex="61" name="Female Squire" />
+    <Entry hex="62" name="Male Chemist" />
+    <Entry hex="63" name="Female Chemist" />
+    <Entry hex="64" name="Male Knight" />
+    <Entry hex="65" name="Female Knight" />
+    <Entry hex="66" name="Male Archer" />
+    <Entry hex="67" name="Female Archer" />
+    <Entry hex="68" name="Male Monk" />
+    <Entry hex="69" name="Female Monk" />
+    <Entry hex="6A" name="Male Priest" />
+    <Entry hex="6B" name="Female Priest" />
+    <Entry hex="6C" name="Male Wizard" />
+    <Entry hex="6D" name="Female Wizard" />
+    <Entry hex="6E" name="Male Time Mage" />
+    <Entry hex="6F" name="Female Time Mage" />
+    <Entry hex="70" name="Male Summoner" />
+    <Entry hex="71" name="Female Summoner" />
+    <Entry hex="72" name="Male Thief" />
+    <Entry hex="73" name="Female Thief" />
+    <Entry hex="74" name="Male Mediator" />
+    <Entry hex="75" name="Female Mediator" />
+    <Entry hex="76" name="Male Oracle" />
+    <Entry hex="77" name="Female Oracle" />
+    <Entry hex="78" name="Male Geomancer" />
+    <Entry hex="79" name="Female Geomancer" />
+    <Entry hex="7A" name="Male Lancer" />
+    <Entry hex="7B" name="Female Lancer" />
+    <Entry hex="7C" name="Male Samurai" />
+    <Entry hex="7D" name="Female Samurai" />
+    <Entry hex="7E" name="Male Ninja" />
+    <Entry hex="7F" name="Female Ninja" />
+    <Entry hex="80" name="Male Calculator" />
+    <Entry hex="81" name="Female Calculator" />
+    <Entry hex="82" name="Male Bard" />
+    <Entry hex="83" name="Female Dancer" />
+    <Entry hex="84" name="Male Mime" />
+    <Entry hex="85" name="Female Mime" />
+    <Entry hex="86" name="Chocobo" />
+    <Entry hex="87" name="Goblin" />
+    <Entry hex="88" name="Bomb" />
+    <Entry hex="89" name="Coeurl" />
+    <Entry hex="8A" name="Squid" />
+    <Entry hex="8B" name="Skeleton" />
+    <Entry hex="8C" name="Ghost" />
+    <Entry hex="8D" name="Ahriman" />
+    <Entry hex="8E" name="Cockatrice" />
+    <Entry hex="8F" name="Uribo" />
+    <Entry hex="90" name="Treant" />
+    <Entry hex="91" name="Minotaur" />
+    <Entry hex="92" name="Malboro" />
+    <Entry hex="93" name="Behemoth" />
+    <Entry hex="94" name="Dragon" />
+    <Entry hex="95" name="Tiamat" />
+    <Entry hex="96" name="Apanda/Byblos" />
+    <Entry hex="97" name="Elidibs" />
+    <Entry hex="98" name="Dragon" />
+    <Entry hex="99" name="Demon" />
+    <Entry hex="9A" name="Steel Giant" />
+</Entries>

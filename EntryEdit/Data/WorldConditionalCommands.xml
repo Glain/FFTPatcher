@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Commands bytes="2">
+    <Command hex="0001" name="Variable =">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0002" name="Variable &gt;=">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0003" name="Variable &lt;=">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0004" name="Unit Present">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="0005" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0006" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0007" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0008" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0009" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="000A" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="000B" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="000C" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="000D" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="000E" name="Gil &gt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000F" name="Gil &lt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0010" name="Date &gt;=">
+        <Parameter name="Month" bytes="2" />
+        <Parameter name="Day" bytes="2" />
+    </Command>
+    <Command hex="0011" name="Date &lt;=">
+        <Parameter name="Month" bytes="2" />
+        <Parameter name="Day" bytes="2" />
+    </Command>
+    <Command hex="0012" name="Casualties &gt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0013" name="Casualties &lt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0014" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0015" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0016" name="Blank" />
+    <Command hex="0017" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0018" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0019" name="Run Scenario">
+        <Parameter name="Scenario ID" bytes="2" type="Scenario" />
+        <Parameter name="Screen Transition Style" bytes="2" />
+    </Command>
+    <Command hex="001A" name="Scenario List">
+        <Parameter name="Map Name (1)" bytes="2" type="Map" />
+        <Parameter name="Scenario (1)" bytes="2" type="Scenario" />
+        <Parameter name="Map Name (2)" bytes="2" type="Map" />
+        <Parameter name="Scenario (2)" bytes="2" type="Scenario" />
+        <Parameter name="Map Name (3)" bytes="2" type="Map" />
+        <Parameter name="Scenario (3)" bytes="2" type="Scenario" />
+        <Parameter name="Map Name (4)" bytes="2" type="Map" />
+        <Parameter name="Scenario (4)" bytes="2" type="Scenario" />
+    </Command>
+    <Command hex="001B" name="Blank">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="001C" name="Set Variable">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="001D" name="Display Text">
+        <Parameter name="Message ID" bytes="2" />
+    </Command>
+    <Command hex="001E" name="Deep Dungeon Choice">
+        <Parameter name="Random Battle Slot" bytes="2" />
+        <Parameter name="Scenario ID" bytes="2" type="Scenario" />
+        <Parameter name="Random Mod" bytes="2" />
+    </Command>
+    <Command hex="001F" name="Unknown">
+        <Parameter name="Unknown" bytes="2" />
+        <Parameter name="Unknown" bytes="2" />
+    </Command>
+    <Command hex="0020" name="Draw Path">
+        <Parameter name="From Location ID" bytes="2" type="Location" />
+        <Parameter name="To Location ID" bytes="2" type="Location" />
+    </Command>
+    <Command hex="0021" name="Erase Path">
+        <Parameter name="From Location ID" bytes="2" type="Location" />
+        <Parameter name="To Location ID" bytes="2" type="Location" />
+    </Command>
+    <Command hex="0022" name="Draw Location">
+        <Parameter name="Location ID" bytes="2" type="Location" />
+    </Command>
+    <Command hex="0023" name="Erase Location">
+        <Parameter name="Location ID" bytes="2" type="Location" />
+    </Command>
+    <Command hex="0024" name="Focus Location">
+        <Parameter name="Location ID" bytes="2" type="Location" />
+    </Command>
+    <Command hex="0025" name="Main Character Brave &gt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0026" name="Main Character Brave &lt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0027" name="Main Character Faith &gt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0028" name="Main Character Faith &lt;=">
+        <Parameter name="Value" bytes="2" />
+    </Command>    
+</Commands>

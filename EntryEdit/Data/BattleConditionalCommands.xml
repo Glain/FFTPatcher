@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Commands bytes="2">
+    <Command hex="0001" name="Variable =">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0002" name="Variable &gt;=">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0003" name="Variable &lt;=">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0004" name="Unit Present">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="0005" name="HP &gt;=">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0006" name="HP &lt;=">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0007" name="HP % &gt;=">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0008" name="HP % &lt;=">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0009" name="MP &gt;=">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000A" name="MP &lt;=">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000B" name="Active Turn">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="000D" name="Main Character Equip">
+        <Parameter name="Item ID" bytes="2" type="Item" />
+    </Command>
+    <Command hex="000E" name="Gil &gt;=">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000F" name="Gil &lt;=">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0010" name="Date &gt;=">
+        <Parameter name="Month" bytes="2" />
+        <Parameter name="Day" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0011" name="Date &lt;=">
+        <Parameter name="Month" bytes="2" />
+        <Parameter name="Day" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0012" name="Casualties &gt;=">
+        <Parameter name="Value" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0013" name="Casualties &lt;=">
+        <Parameter name="Value" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0016" name="Victory" />
+    <Command hex="0018" name="Unit Location">
+        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="X" bytes="2" />
+        <Parameter name="Y" bytes="2" />
+        <Parameter name="Upper Level" bytes="2" />
+    </Command>
+    <Command hex="0019" name="Run Scenario">
+        <Parameter name="Scenario ID" bytes="2" type="Scenario" />
+    </Command>
+    <Command hex="0025" name="Team Unit Location">
+        <Parameter name="Team ID" bytes="2" />
+        <Parameter name="X" bytes="2" />
+        <Parameter name="Y" bytes="2" />
+        <Parameter name="Upper Level" bytes="2" />
+    </Command>
+</Commands>

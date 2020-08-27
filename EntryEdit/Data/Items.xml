@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry hex="00" name="&lt;Nothing&gt; " /> <!-- leave trailing space -->
+    <Entry hex="01" name="Dagger" />
+    <Entry hex="02" name="Mythril Knife" />
+    <Entry hex="03" name="Blind Knife" />
+    <Entry hex="04" name="Mage Masher" />
+    <Entry hex="05" name="Platina Dagger" />
+    <Entry hex="06" name="Main Gauche" />
+    <Entry hex="07" name="Orichalcum" />
+    <Entry hex="08" name="Assassin Dagger" />
+    <Entry hex="09" name="Air Knife" />
+    <Entry hex="0A" name="Zorlin Shape" />
+    <Entry hex="0B" name="Hidden Knife" />
+    <Entry hex="0C" name="Ninja Knife" />
+    <Entry hex="0D" name="Short Edge" />
+    <Entry hex="0E" name="Ninja Edge" />
+    <Entry hex="0F" name="Spell Edge" />
+    <Entry hex="10" name="Sasuke Knife" />
+    <Entry hex="11" name="Iga Knife" />
+    <Entry hex="12" name="Koga Knife" />
+    <Entry hex="13" name="Broad Sword" />
+    <Entry hex="14" name="Long Sword" />
+    <Entry hex="15" name="Iron Sword" />
+    <Entry hex="16" name="Mythril Sword" />
+    <Entry hex="17" name="Blood Sword" />
+    <Entry hex="18" name="Coral Sword" />
+    <Entry hex="19" name="Ancient Sword" />
+    <Entry hex="1A" name="Sleep Sword" />
+    <Entry hex="1B" name="Platinum Sword" />
+    <Entry hex="1C" name="Diamond Sword" />
+    <Entry hex="1D" name="Ice Brand" />
+    <Entry hex="1E" name="Rune Blade" />
+    <Entry hex="1F" name="Nagrarock" />
+    <Entry hex="20" name="Materia Blade" />
+    <Entry hex="21" name="Defender" />
+    <Entry hex="22" name="Save the Queen" />
+    <Entry hex="23" name="Excalibur" />
+    <Entry hex="24" name="Ragnarok" />
+    <Entry hex="25" name="Chaos Blade" />
+    <Entry hex="26" name="Asura Knife" />
+    <Entry hex="27" name="Koutetsu Knife" />
+    <Entry hex="28" name="Bizen Boat" />
+    <Entry hex="29" name="Murasame" />
+    <Entry hex="2A" name="Heaven's Cloud" />
+    <Entry hex="2B" name="Kiyomori" />
+    <Entry hex="2C" name="Muramasa" />
+    <Entry hex="2D" name="Kikuichimoji" />
+    <Entry hex="2E" name="Masamune" />
+    <Entry hex="2F" name="Chirijiraden" />
+    <Entry hex="30" name="Battle Axe" />
+    <Entry hex="31" name="Giant Axe" />
+    <Entry hex="32" name="Slasher" />
+    <Entry hex="33" name="Rod" />
+    <Entry hex="34" name="Thunder Rod" />
+    <Entry hex="35" name="Flame Rod" />
+    <Entry hex="36" name="Ice Rod" />
+    <Entry hex="37" name="Poison Rod" />
+    <Entry hex="38" name="Wizard Rod" />
+    <Entry hex="39" name="Dragon Rod" />
+    <Entry hex="3A" name="Faith Rod" />
+    <Entry hex="3B" name="Oak Staff" />
+    <Entry hex="3C" name="White Staff" />
+    <Entry hex="3D" name="Healing Staff" />
+    <Entry hex="3E" name="Rainbow Staff" />
+    <Entry hex="3F" name="Wizard Staff" />
+    <Entry hex="40" name="Gold Staff" />
+    <Entry hex="41" name="Mace of Zeus" />
+    <Entry hex="42" name="Sage Staff" />
+    <Entry hex="43" name="Flail" />
+    <Entry hex="44" name="Flame Whip" />
+    <Entry hex="45" name="Morning Star" />
+    <Entry hex="46" name="Scorpion Tail" />
+    <Entry hex="47" name="Romanda Gun" />
+    <Entry hex="48" name="Mythril Gun" />
+    <Entry hex="49" name="Stone Gun" />
+    <Entry hex="4A" name="Blaze Gun" />
+    <Entry hex="4B" name="Glacier Gun" />
+    <Entry hex="4C" name="Blast Gun" />
+    <Entry hex="4D" name="Bow Gun" />
+    <Entry hex="4E" name="Night Killer" />
+    <Entry hex="4F" name="Cross Bow" />
+    <Entry hex="50" name="Poison Bow" />
+    <Entry hex="51" name="Hunting Bow" />
+    <Entry hex="52" name="Gastrafitis" />
+    <Entry hex="53" name="Long Bow" />
+    <Entry hex="54" name="Silver Bow" />
+    <Entry hex="55" name="Ice Bow" />
+    <Entry hex="56" name="Lightning Bow" />
+    <Entry hex="57" name="Windslash Bow" />
+    <Entry hex="58" name="Mythril Bow" />
+    <Entry hex="59" name="Ultimus Bow" />
+    <Entry hex="5A" name="Yoichi Bow" />
+    <Entry hex="5B" name="Perseus Bow" />
+    <Entry hex="5C" name="Ramia Harp" />
+    <Entry hex="5D" name="Bloody Strings" />
+    <Entry hex="5E" name="Fairy Harp" />
+    <Entry hex="5F" name="Battle Dict" />
+    <Entry hex="60" name="Monster Dict" />
+    <Entry hex="61" name="Papyrus Plate" />
+    <Entry hex="62" name="Madlemgen" />
+    <Entry hex="63" name="Javelin " /> <!-- leave trailing space -->
+    <Entry hex="64" name="Spear" />
+    <Entry hex="65" name="Mythril Spear" />
+    <Entry hex="66" name="Partisan" />
+    <Entry hex="67" name="Oberisk" />
+    <Entry hex="68" name="Holy Lance" />
+    <Entry hex="69" name="Dragon Whisker" />
+    <Entry hex="6A" name="Javelin  " /> <!-- leave trailing space -->
+    <Entry hex="6B" name="Cypress Rod" />
+    <Entry hex="6C" name="Battle Bamboo" />
+    <Entry hex="6D" name="Musk Rod" />
+    <Entry hex="6E" name="Iron Fan" />
+    <Entry hex="6F" name="Gokuu Rod" />
+    <Entry hex="70" name="Ivory Rod" />
+    <Entry hex="71" name="Octagon Rod" />
+    <Entry hex="72" name="Whale Whisker" />
+    <Entry hex="73" name="C Bag" />
+    <Entry hex="74" name="FS Bag" />
+    <Entry hex="75" name="P Bag" />
+    <Entry hex="76" name="H Bag" />
+    <Entry hex="77" name="Persia" />
+    <Entry hex="78" name="Cashmere" />
+    <Entry hex="79" name="Ryozan Silk" />
+    <Entry hex="7A" name="Shuriken" />
+    <Entry hex="7B" name="Magic Shuriken" />
+    <Entry hex="7C" name="Yagyu Darkness" />
+    <Entry hex="7D" name="Fire Ball" />
+    <Entry hex="7E" name="Water Ball" />
+    <Entry hex="7F" name="Lightning Ball" />
+    <Entry hex="80" name="Escutcheon " /> <!-- leave trailing space -->
+    <Entry hex="81" name="Buckler" />
+    <Entry hex="82" name="Bronze Shield" />
+    <Entry hex="83" name="Round Shield" />
+    <Entry hex="84" name="Mythril Shield" />
+    <Entry hex="85" name="Gold Shield" />
+    <Entry hex="86" name="Ice Shield" />
+    <Entry hex="87" name="Flame Shield" />
+    <Entry hex="88" name="Aegis Shield" />
+    <Entry hex="89" name="Diamond Shield" />
+    <Entry hex="8A" name="Platina Shield" />
+    <Entry hex="8B" name="Crystal Shield" />
+    <Entry hex="8C" name="Genji Shield" />
+    <Entry hex="8D" name="Kaiser Plate" />
+    <Entry hex="8E" name="Venetian Shield" />
+    <Entry hex="8F" name="Escutcheon  " /> <!-- leave trailing space -->
+    <Entry hex="90" name="Leather Helmet" />
+    <Entry hex="91" name="Bronze Helmet" />
+    <Entry hex="92" name="Iron Helmet" />
+    <Entry hex="93" name="Barbuta" />
+    <Entry hex="94" name="Mythril Helmet" />
+    <Entry hex="95" name="Gold Helmet" />
+    <Entry hex="96" name="Cross Helmet" />
+    <Entry hex="97" name="Diamond Helmet" />
+    <Entry hex="98" name="Platina Helmet" />
+    <Entry hex="99" name="Circlet" />
+    <Entry hex="9A" name="Crystal Helmet" />
+    <Entry hex="9B" name="Genji Helmet" />
+    <Entry hex="9C" name="Grand Helmet" />
+    <Entry hex="9D" name="Leather Hat" />
+    <Entry hex="9E" name="Feather Hat" />
+    <Entry hex="9F" name="Red Hood" />
+    <Entry hex="A0" name="Headgear" />
+    <Entry hex="A1" name="Triangle Hat" />
+    <Entry hex="A2" name="Green Beret" />
+    <Entry hex="A3" name="Twist Headband" />
+    <Entry hex="A4" name="Holy Miter" />
+    <Entry hex="A5" name="Black Hood" />
+    <Entry hex="A6" name="Golden Hairpin" />
+    <Entry hex="A7" name="Flash Hat" />
+    <Entry hex="A8" name="Thief Hat" />
+    <Entry hex="A9" name="Cachusha" />
+    <Entry hex="AA" name="Barette" />
+    <Entry hex="AB" name="Ribbon" />
+    <Entry hex="AC" name="Leather Armor" />
+    <Entry hex="AD" name="Linen Cuirass" />
+    <Entry hex="AE" name="Bronze Armor" />
+    <Entry hex="AF" name="Chain Mail" />
+    <Entry hex="B0" name="Mythril Armor" />
+    <Entry hex="B1" name="Plate Mail" />
+    <Entry hex="B2" name="Gold Armor" />
+    <Entry hex="B3" name="Diamond Armor" />
+    <Entry hex="B4" name="Platina Armor" />
+    <Entry hex="B5" name="Carabini Mail" />
+    <Entry hex="B6" name="Crystal Mail" />
+    <Entry hex="B7" name="Genji Armor" />
+    <Entry hex="B8" name="Reflect Mail" />
+    <Entry hex="B9" name="Maximillian" />
+    <Entry hex="BA" name="Clothes" />
+    <Entry hex="BB" name="Leather Outfit" />
+    <Entry hex="BC" name="Leather Vest" />
+    <Entry hex="BD" name="Chain Vest" />
+    <Entry hex="BE" name="Mythril Vest" />
+    <Entry hex="BF" name="Adaman Vest" />
+    <Entry hex="C0" name="Wizard Outfit" />
+    <Entry hex="C1" name="Brigandine" />
+    <Entry hex="C2" name="Judo Outfit" />
+    <Entry hex="C3" name="Power Sleeve" />
+    <Entry hex="C4" name="Earth Clothes" />
+    <Entry hex="C5" name="Secret Clothes" />
+    <Entry hex="C6" name="Black Costume" />
+    <Entry hex="C7" name="Rubber Costume" />
+    <Entry hex="C8" name="Linen Robe" />
+    <Entry hex="C9" name="Silk Robe" />
+    <Entry hex="CA" name="Wizard Robe" />
+    <Entry hex="CB" name="Chameleon Robe" />
+    <Entry hex="CC" name="White Robe" />
+    <Entry hex="CD" name="Black Robe" />
+    <Entry hex="CE" name="Light Robe" />
+    <Entry hex="CF" name="Robe of Lords" />
+    <Entry hex="D0" name="Battle Boots" />
+    <Entry hex="D1" name="Spike Shoes" />
+    <Entry hex="D2" name="Germinas Boots" />
+    <Entry hex="D3" name="Rubber Shoes" />
+    <Entry hex="D4" name="Feather Boots" />
+    <Entry hex="D5" name="Sprint Shoes" />
+    <Entry hex="D6" name="Red Shoes" />
+    <Entry hex="D7" name="Power Wrist" />
+    <Entry hex="D8" name="Genji Gauntlet" />
+    <Entry hex="D9" name="Magic Gauntlet" />
+    <Entry hex="DA" name="Bracer" />
+    <Entry hex="DB" name="Reflect Ring" />
+    <Entry hex="DC" name="Defense Ring" />
+    <Entry hex="DD" name="Magic Ring" />
+    <Entry hex="DE" name="Cursed Ring" />
+    <Entry hex="DF" name="Angel Ring" />
+    <Entry hex="E0" name="Diamond Armlet" />
+    <Entry hex="E1" name="Jade Armlet" />
+    <Entry hex="E2" name="108 Gems" />
+    <Entry hex="E3" name="N-Kai Armlet" />
+    <Entry hex="E4" name="Defense Armlet" />
+    <Entry hex="E5" name="Small Mantle" />
+    <Entry hex="E6" name="Leather Mantle" />
+    <Entry hex="E7" name="Wizard Mantle" />
+    <Entry hex="E8" name="Elf Mantle" />
+    <Entry hex="E9" name="Dracula Mantle" />
+    <Entry hex="EA" name="Feather Mantle" />
+    <Entry hex="EB" name="Vanish Mantle" />
+    <Entry hex="EC" name="Chantage" />
+    <Entry hex="ED" name="Cherche" />
+    <Entry hex="EE" name="Setiemson" />
+    <Entry hex="EF" name="Salty Rage" />
+    <Entry hex="F0" name="Potion" />
+    <Entry hex="F1" name="Hi-Potion" />
+    <Entry hex="F2" name="X-Potion" />
+    <Entry hex="F3" name="Ether" />
+    <Entry hex="F4" name="Hi-Ether" />
+    <Entry hex="F5" name="Elixir" />
+    <Entry hex="F6" name="Antidote" />
+    <Entry hex="F7" name="Eye Drop" />
+    <Entry hex="F8" name="Echo Grass" />
+    <Entry hex="F9" name="Maiden's Kiss" />
+    <Entry hex="FA" name="Soft" />
+    <Entry hex="FB" name="Holy Water" />
+    <Entry hex="FC" name="Remedy" />
+    <Entry hex="FD" name="Phoenix Down" />
+    <Entry hex="FE" name="&lt;Nothing&gt;  " /> <!-- leave trailing space -->
+    <Entry hex="FF" name="&lt;Nothing&gt;   " /> <!-- leave trailing space -->
+</Entries>
