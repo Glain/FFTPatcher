@@ -24,6 +24,12 @@ namespace EntryEdit
         private void Start()
         {
             dataHelper = new DataHelper();
+            List<List<List<Command>>> battleConditionalSets = dataHelper.LoadBattleConditionalDefaults();
+            List<List<List<Command>>> worldConditionalSets = dataHelper.LoadWorldConditionalDefaults();
+            byte[] battleConditionalBytes = dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, battleConditionalSets);
+            byte[] worldConditionalBytes = dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, worldConditionalSets);
+            //System.IO.File.WriteAllBytes("Data/TestBattle.bin", battleConditionalBytes);
+            //System.IO.File.WriteAllBytes("Data/TestWorld.bin", worldConditionalBytes);
         }
 
         private void SaveXMLFromEventFilenames(string inputFilepath, string outputFilepath)

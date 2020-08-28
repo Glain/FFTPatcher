@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using PatcherLib.Utilities;
+using PatcherLib.Datatypes;
+using System.IO;
 
 namespace EntryEdit
 {
@@ -14,6 +17,16 @@ namespace EntryEdit
         {
             parameterValueMaps = GetParameterValueMaps();
             commandTemplateMaps = GetCommandTemplateMaps();
+        }
+
+        public List<List<List<Command>>> LoadBattleConditionalDefaults()
+        {
+            return LoadConditionalSetDefaults(CommandType.BattleConditional);
+        }
+
+        public List<List<List<Command>>> LoadWorldConditionalDefaults()
+        {
+            return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
 
         private readonly Dictionary<CommandParameterType, Dictionary<int, string>> parameterValueMaps;
@@ -54,6 +67,17 @@ namespace EntryEdit
             }
         }
 
+        private string GetDefaultDataFilepath(CommandType type)
+        {
+            switch (type)
+            {
+                case CommandType.BattleConditional: return "Data/BattleConditionals.bin";
+                case CommandType.WorldConditional: return "Data/WorldConditionals.bin";
+                case CommandType.EventCommand: return "Data/Events.bin";
+                default: return null;
+            }
+        }
+        
         private string GetCommandFilepath(CommandType type)
         {
             switch (type)
@@ -180,7 +204,7 @@ namespace EntryEdit
                     commandTemplate.ByteLength = byteLength;
 
                     commandTemplate.Parameters = new List<CommandParameterTemplate>();
-                    foreach (XmlNode parameterNode in node.SelectNodes("//Parameter"))
+                    foreach (XmlNode parameterNode in node.SelectNodes("Parameter"))
                     {
                         XmlAttribute attrParamName = parameterNode.Attributes["name"];
                         XmlAttribute attrParamBytes = parameterNode.Attributes["bytes"];
@@ -252,6 +276,190 @@ namespace EntryEdit
             }
 
             return nodeValue;
+        }
+
+        public byte[] ConditionalSetsToByteArray(CommandType type, List<List<List<Command>>> conditionalSets)
+        {
+            int numSets = conditionalSets.Count;
+            int numBlocks = 0;
+            foreach (List<List<Command>> blocks in conditionalSets)
+                numBlocks += blocks.Count;
+            
+            List<UInt16> setReferences = new List<UInt16>(numSets);
+            List<UInt16> blockReferences = new List<UInt16>();
+            List<byte> commandBytes = new List<byte>();
+
+            UInt16 setReference = (UInt16)(numSets * 2);
+            UInt16 blockReference = (UInt16)((setReference + numBlocks) * 2);
+            foreach (List<List<Command>> blocks in conditionalSets)
+            {
+                setReferences.Add(setReference);
+                foreach (List<Command> commands in blocks)
+                {
+                    blockReferences.Add(blockReference);
+                    byte[] currentCommandBytes = CommandsToByteArray(commands);
+                    commandBytes.AddRange(currentCommandBytes);
+                    blockReference += (UInt16)(currentCommandBytes.Length);
+                    setReference += 2;
+                }
+                blockReferences.Add(0);
+                setReference += 2;
+            }
+
+            byte[] setBytes = setReferences.ToBytesLE();
+            byte[] blockBytes = blockReferences.ToBytesLE();
+
+            List<byte> bytes = new List<byte>(setBytes.Length + blockBytes.Length + commandBytes.Count);
+            bytes.AddRange(setBytes);
+            bytes.AddRange(blockBytes);
+            bytes.AddRange(commandBytes);
+            return bytes.ToArray();
+        }
+
+        private List<List<List<Command>>> LoadConditionalSetDefaults(CommandType type)
+        {
+            return LoadConditionalSetsFromFile(type, GetDefaultDataFilepath(type));
+        }
+
+        private List<List<List<Command>>> LoadConditionalSetsFromFile(CommandType type, string filepath)
+        {
+            return LoadConditionalSetsFromByteArray(type, File.ReadAllBytes(filepath));
+        }
+
+        private List<List<List<Command>>> LoadConditionalSetsFromByteArray(CommandType type, IList<byte> bytes)
+        {
+            int setByteOffset = bytes.ToUInt16LE();
+            int numSets = setByteOffset / 2;
+            List<List<List<Command>>> result = new List<List<List<Command>>>(numSets);
+
+            UInt16[] setOffsets = bytes.SubLength(0, setByteOffset).ToUInt16ArrayLE();
+            int blockByteOffset = bytes.SubLength(setOffsets[0], 2).ToUInt16LE();
+
+            for (int setIndex = 0; setIndex < numSets; setIndex++)
+            {
+                List<List<Command>> setCommandList = new List<List<Command>>();
+
+                int setStartIndex = setOffsets[setIndex];
+                int setEndIndex = ((setIndex < (numSets - 1)) ? setOffsets[setIndex + 1] : blockByteOffset);
+
+                UInt16 prevBlockIndex = 0;
+                for (int setByteIndex = setStartIndex; setByteIndex < setEndIndex; setByteIndex += 2)
+                {
+                    UInt16 blockIndex = bytes.SubLength(setByteIndex, 2).ToUInt16LE();
+                    if (prevBlockIndex != 0)
+                    {
+                        int startIndex = prevBlockIndex;
+                        
+                        int endIndex = blockIndex;
+                        int setIndexAddend = 1;
+                        while (endIndex == 0)
+                        {
+                            int checkSetIndex = setIndex + setIndexAddend;
+                            endIndex = (checkSetIndex < numSets) ? bytes.SubLength(setOffsets[checkSetIndex], 2).ToUInt16LE() : bytes.Count;
+                            setIndexAddend++;
+                        }
+                        
+                        setCommandList.Add(CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex)));
+                    }
+                    
+                    prevBlockIndex = blockIndex;
+                }
+
+                result.Add(setCommandList);
+            }
+
+            return result;
+        }
+
+        private byte[] CommandsToByteArray(IEnumerable<Command> commands)
+        {
+            List<byte> result = new List<byte>();
+
+            foreach (Command command in commands)
+            {
+                result.AddRange(CommandToByteArray(command));
+            }
+
+            return result.ToArray();
+        }
+
+        private byte[] CommandToByteArray(Command command)
+        {
+            int commandByteLength = command.Template.ByteLength;
+            int byteLength = commandByteLength;
+            foreach (CommandParameter parameter in command.Parameters)
+            {
+                byteLength += parameter.Template.ByteLength;
+            }
+
+            List<byte> result = new List<byte>(byteLength);
+            result.AddRange(command.Template.ID.ToBytesLE(commandByteLength));
+
+            foreach (CommandParameter parameter in command.Parameters)
+            {
+                result.AddRange(parameter.Value.ToBytesLE(parameter.Template.ByteLength));
+            }
+
+            return result.ToArray();
+        }
+
+        private List<Command> CommandsFromByteArray(CommandType type, IList<byte> bytes)
+        {
+            List<Command> result = new List<Command>();
+            int startIndex = 0;
+
+            while (startIndex < bytes.Count)
+            {
+                Command command = CommandFromByteArray(type, bytes.SubLength(startIndex, bytes.Count - startIndex));
+                if (command == null)
+                    break;
+
+                startIndex += command.GetTotalByteLength();
+                result.Add(command);
+            }
+
+            return result;
+        }
+
+        private Command CommandFromByteArray(CommandType type, IList<byte> bytes)
+        {
+            Dictionary<int, CommandTemplate> templateMap = commandTemplateMaps[type];
+            int value = 0;
+            int shiftAmount = 0;
+
+            Command result = new Command();
+            CommandTemplate template = null;
+
+            int index = 0;
+            for (; index < 4; index++)
+            {
+                value |= (bytes[index] << shiftAmount);
+                shiftAmount += 8;
+
+                if (templateMap.TryGetValue(value, out template))
+                {
+                    result.Template = template;
+                    break;
+                }
+            }
+
+            if (result.Template == null)
+                return null;
+
+            index = result.Template.ByteLength;
+            result.Parameters = new List<CommandParameter>();
+            foreach (CommandParameterTemplate parameterTemplate in template.Parameters)
+            {
+                CommandParameter parameter = new CommandParameter();
+                int byteLength = parameterTemplate.ByteLength;
+
+                parameter.Template = parameterTemplate;
+                parameter.Value = bytes.SubLength(index, byteLength).ToIntLE();
+                index += byteLength;
+                result.Parameters.Add(parameter);
+            }
+
+            return result;
         }
     }
 }

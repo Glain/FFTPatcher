@@ -10,12 +10,31 @@ namespace EntryEdit
     {
         public CommandTemplate Template { get; set; }
         public List<CommandParameter> Parameters { get; set; }
+
+        public int GetTotalByteLength()
+        {
+            int result = (Template != null) ? Template.ByteLength : 0;
+            if (Parameters != null)
+            {
+                foreach (CommandParameter parameter in Parameters)
+                {
+                    result += parameter.GetByteLength();
+                }
+            }
+
+            return result;
+        }
     }
 
     public class CommandParameter
     {
         public CommandParameterTemplate Template { get; set; }
         public int Value { get; set; }
+
+        public int GetByteLength()
+        {
+            return (Template != null) ? Template.ByteLength : 0;
+        }
     }
 
     public class CommandTemplate

@@ -544,6 +544,53 @@ namespace PatcherLib.Utilities
             return result;
         }
 
+        // Returns a UInt16 interpreting the bytes as a little-endian value.
+        public static UInt16 ToUInt16LE(this IList<byte> bytes)
+        {
+            return (UInt16)(bytes[0] | (bytes[1] << 8));
+        }
+
+        // Returns a UInt16 array from a list of bytes, interpreted as little-endian byte order.
+        public static UInt16[] ToUInt16ArrayLE(this IList<byte> bytes)
+        {
+            int numValues = bytes.Count / 2;
+            UInt16[] result = new UInt16[numValues];
+            for (int index = 0; index < numValues; index++)
+            {
+                result[index] = (UInt16)(bytes[index * 2] | (bytes[(index * 2) + 1] << 8));
+            }
+            return result;
+        }
+
+        // Returns bytes in little-endian order representing the specified Int32.
+        public static byte[] ToBytesLE(this Int32 value, int byteLength = 4)
+        {
+            byte[] result = new byte[byteLength];
+            int shiftAmount = 0;
+            int endIndex = Math.Min(byteLength, 4);
+
+            for (int index = 0; index < endIndex; index++)
+            {
+                result[index] = (byte)((value >> shiftAmount) & 0xFF);
+                shiftAmount += 8;
+            }
+
+            return result;
+        }
+
+        // Returns bytes in little-endian order representing the specified UInt16 list.
+        public static byte[] ToBytesLE(this IList<UInt16> valueList)
+        {
+            int numValues = valueList.Count;
+            byte[] bytes = new byte[numValues * 2];
+            for (int index = 0; index < numValues; index++)
+            {
+                bytes[index * 2] = (byte)(valueList[index] & 0xFF);
+                bytes[(index * 2) + 1] = (byte)((valueList[index] >> 8) & 0xFF);
+            }
+            return bytes;
+        }
+
         public static int IndexOf(this IList<byte> bytes, IList<byte> searchBytes)
         {
             return FindIndexOf(bytes, searchBytes, false);
