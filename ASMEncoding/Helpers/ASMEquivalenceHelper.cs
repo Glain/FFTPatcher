@@ -32,9 +32,9 @@ namespace ASMEncoding.Helpers
 
             StringBuilder errorTextBuilder = new StringBuilder();
 
-            Dictionary<string, string> eqvDict = new Dictionary<string, string>();
+            Dictionary<string, string> eqvMap = new Dictionary<string, string>();
 
-            ASMFindEquivalencesResult findEquivalencesResult = FindEquivalences(eqvDict, lines);
+            ASMFindEquivalencesResult findEquivalencesResult = FindEquivalences(eqvMap, lines);
             if (findEquivalencesResult != null)
             {
                 if (findEquivalencesResult.ErrorCode > 0)
@@ -43,6 +43,10 @@ namespace ASMEncoding.Helpers
                     errorTextBuilder.Append(findEquivalencesResult.ErrorMessage);
                 }
             }
+
+            List<string> eqvKeys = new List<string>(eqvMap.Keys);
+            eqvKeys.Sort((a, b) => a.Length.CompareTo(b.Length));
+            eqvKeys.Reverse();
 
             List<string> newLines = new List<string>();
             foreach (string line in lines)
@@ -57,10 +61,18 @@ namespace ASMEncoding.Helpers
 
                 if (!isEquivalence)
                 {
+                    /*
                     foreach (KeyValuePair<string, string> eqv in eqvDict)
                     {
                         //newLine = newLine.Replace(eqv.Key, eqv.Value);
                         newLine = System.Text.RegularExpressions.Regex.Replace(newLine, System.Text.RegularExpressions.Regex.Escape(eqv.Key), eqv.Value.Replace("$", "$$"), 
+                            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    }
+                    */
+
+                    foreach (string eqvKey in eqvKeys)
+                    {
+                        newLine = System.Text.RegularExpressions.Regex.Replace(newLine, System.Text.RegularExpressions.Regex.Escape(eqvKey), eqvMap[eqvKey].Replace("$", "$$"),
                             System.Text.RegularExpressions.RegexOptions.IgnoreCase);
                     }
                 }

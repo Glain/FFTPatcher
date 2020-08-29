@@ -315,7 +315,11 @@ namespace ASMEncoding.Helpers
         {
             string result = hex.ToUpper();
 
-            foreach (string label in LabelDict.Keys)
+            List<string> labels = new List<string>(LabelDict.Keys);
+            labels.Sort((a, b) => a.Length.CompareTo(b.Length));
+            labels.Reverse();
+
+            foreach (string label in labels)
             {
                 uint labelValue = LabelToUnsigned(label);
                 labelValue = littleEndian ? ASMValueHelper.ReverseBytes(labelValue) : labelValue;
