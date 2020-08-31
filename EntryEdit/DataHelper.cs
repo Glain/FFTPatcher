@@ -278,6 +278,33 @@ namespace EntryEdit
             return nodeValue;
         }
 
+        public Event GetEventFromBytes(IList<byte> bytes)
+        {
+            Event result = new Event();
+            result.CommandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), new HashSet<int>() { 0xDB, 0xE3 });
+
+            int numCommandBytes = 0;
+            foreach (Command command in result.CommandList)
+                if (command != null)
+                    numCommandBytes += command.GetTotalByteLength();
+
+            int naturalTextOffset = numCommandBytes + 4;
+
+            uint textOffset = bytes.SubLength(0, 4).ToUInt32();
+            if (textOffset == 0xF2F2F2F2U)
+            {
+                result.BetweenSection = new CustomSection();
+                result.EndSection = new CustomSection(bytes.Sub(naturalTextOffset));
+            }
+            else
+            {
+                result.BetweenSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset + 1))) : new CustomSection();
+                result.EndSection = new CustomSection(bytes.Sub(textOffset));
+            }
+
+            return result;
+        }
+
         public byte[] ConditionalSetsToByteArray(CommandType type, List<List<List<Command>>> conditionalSets)
         {
             int numSets = conditionalSets.Count;
@@ -403,16 +430,20 @@ namespace EntryEdit
             return result.ToArray();
         }
 
-        private List<Command> CommandsFromByteArray(CommandType type, IList<byte> bytes)
+        private List<Command> CommandsFromByteArray(CommandType type, IList<byte> bytes, ICollection<int> sentinelCommands = null)
         {
             List<Command> result = new List<Command>();
             int startIndex = 0;
+            int lastCommandID = -1;
 
-            while (startIndex < bytes.Count)
+            while ((startIndex < bytes.Count) && ((sentinelCommands == null) || (!sentinelCommands.Contains(lastCommandID))))
             {
                 Command command = CommandFromByteArray(type, bytes.SubLength(startIndex, bytes.Count - startIndex));
                 if (command == null)
                     break;
+
+                if (command.Template != null)
+                    lastCommandID = command.Template.ID;
 
                 startIndex += command.GetTotalByteLength();
                 result.Add(command);

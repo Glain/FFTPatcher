@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Command.cs" />
     <Compile Include="DataHelper.cs" />
+    <Compile Include="Event.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
