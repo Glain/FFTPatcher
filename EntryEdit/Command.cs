@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
-using PatcherLib.TextUtilities;
 
 namespace EntryEdit
 {
@@ -82,12 +80,22 @@ namespace EntryEdit
             CustomEntryList = new List<CustomEntry>();
 
             IList<IList<byte>> byteLists = bytes.Split((byte)0xFE);
-            IList<string> textSection = PatcherLib.TextUtilities.TextUtilities.ProcessList(bytes, 0xFE, PatcherLib.TextUtilities.TextUtilities.PSXMap);
+            IList<string> textSection = TextUtility.DecodeList(bytes);
 
             for (int index = 0; index < byteLists.Count; index++)
             {
                 CustomEntryList.Add(new CustomEntry(new List<byte>(byteLists[index]), textSection[index]));
             }
+        }
+
+        public byte[] ToByteArray()
+        {
+            List<byte> byteList = new List<byte>(ByteLength);
+            
+            foreach (CustomEntry entry in CustomEntryList)
+                byteList.AddRange(entry.Bytes);
+
+            return byteList.ToArray();
         }
     }
 

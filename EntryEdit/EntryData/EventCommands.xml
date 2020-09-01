@@ -85,10 +85,10 @@
         <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
-    <Command hex="21" name="Sound">
+    <Command hex="21" name="Sound Effect">
         <Parameter name="Sound ID" bytes="2" mode="hex" />
     </Command>
-    <Command hex="22" name="Music">
+    <Command hex="22" name="Switch Track">
         <Parameter name="1" bytes="1" />
         <Parameter name="Volume" bytes="1" />
         <Parameter name="Time" bytes="1" mode="unsigned" />
@@ -98,6 +98,7 @@
         <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
+    <Command hex="24" name="Unknown" />
     <Command hex="25" name="Unknown">
         <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
@@ -189,6 +190,8 @@
     <Command hex="38" name="Focus Speed">
         <Parameter name="Travel Speed" bytes="2" mode="unsigned" />
     </Command>
+    <Command hex="39" name="Unknown" />
+    <Command hex="3A" name="Unknown" />
     <Command hex="3B" name="Sprite Move">
         <Parameter name="Unit ID" bytes="2" type="Unit" />
         <Parameter name="X Movement" bytes="2" />
@@ -359,6 +362,7 @@
         <Parameter name="Unit ID" bytes="2" type="Unit" />
     </Command>
     <Command hex="65" name="Wait Rotate All" />
+    <Command hex="66" name="Unknown" />
     <Command hex="67" name="Unknown">
         <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
@@ -417,6 +421,7 @@
     <Command hex="71" name="Unknown">
         <Parameter name="Unknown" bytes="2" mode="hex" />
     </Command>
+    <Command hex="72" name="Unknown" />
     <Command hex="73" name="Unknown">
         <Parameter name="Unknown" bytes="2" mode="hex" />
         <Parameter name="Unknown" bytes="2" mode="hex" />
@@ -487,6 +492,7 @@
         <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
+    <Command hex="82" name="Unknown" />
     <Command hex="83" name="Change Stats">
         <Parameter name="Affected Units" bytes="1" mode="hex" />
         <Parameter name="Multi Targeting" bytes="1" mode="hex" />
@@ -543,6 +549,7 @@
     <Command hex="94" name="Teleport Out">
         <Parameter name="Unit ID" bytes="2" type="Unit" />
     </Command>
+    <Command hex="95" name="Unknown" />
     <Command hex="96" name="Append Map State" />
     <Command hex="97" name="Reset Palette">
         <Parameter name="Unit ID" bytes="2" type="Unit" />
@@ -652,7 +659,9 @@
     <Command hex="D9" name="Unknown">
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
+    <Command hex="DA" name="Unknown" />
     <Command hex="DB" name="Event End" />
+    <Command hex="DC" name="Unknown" />
     <Command hex="E0" name="Unknown">
         <Parameter name="Unknown" bytes="2" mode="hex" />
     </Command>
@@ -669,6 +678,7 @@
     <Command hex="E5" name="Wait For Instruction">
         <Parameter name="Instruction Type" bytes="2" mode="hex" />
     </Command>
+    <Command hex="F0" name="Wait One Cycle" />
     <Command hex="F1" name="Wait">
         <Parameter name="Time" bytes="2" mode="unsigned" />
     </Command>

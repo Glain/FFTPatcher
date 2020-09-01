@@ -10,6 +10,7 @@ namespace EntryEdit
 {
     public class Event
     {
+        public uint TextOffset { get; set; }
         public List<Command> CommandList { get; set; }
         public CustomSection BetweenSection { get; set; }
         public CustomSection EndSection { get; set; }

@@ -13,7 +13,17 @@ namespace EntryEdit
 {
     public partial class MainForm : Form
     {
-        private DataHelper dataHelper;
+        private DataHelper _dataHelper = null;
+        public DataHelper DataHelper
+        {
+            get
+            {
+                if (_dataHelper == null)
+                    _dataHelper = new DataHelper();
+
+                return _dataHelper;
+            }
+        }
 
         public MainForm()
         {
@@ -23,13 +33,21 @@ namespace EntryEdit
 
         private void Start()
         {
-            dataHelper = new DataHelper();
-            List<List<List<Command>>> battleConditionalSets = dataHelper.LoadBattleConditionalDefaults();
-            List<List<List<Command>>> worldConditionalSets = dataHelper.LoadWorldConditionalDefaults();
-            byte[] battleConditionalBytes = dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, battleConditionalSets);
-            byte[] worldConditionalBytes = dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, worldConditionalSets);
-            //System.IO.File.WriteAllBytes("Data/TestBattle.bin", battleConditionalBytes);
-            //System.IO.File.WriteAllBytes("Data/TestWorld.bin", worldConditionalBytes);
+            EntryData entryData = DataHelper.LoadDefaultEntryData();
+        }
+
+        private void Test()
+        {
+            List<List<List<Command>>> battleConditionalSets = DataHelper.LoadBattleConditionalDefaults();
+            List<List<List<Command>>> worldConditionalSets = DataHelper.LoadWorldConditionalDefaults();
+            List<Event> events = DataHelper.LoadDefaultEvents();
+            byte[] battleConditionalBytes = DataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, battleConditionalSets);
+            byte[] worldConditionalBytes = DataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, worldConditionalSets);
+            byte[] eventBytes = DataHelper.EventsToByteArray(events);
+            
+            System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", battleConditionalBytes);
+            System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", worldConditionalBytes);
+            System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", eventBytes);
         }
 
         private void SaveXMLFromEventFilenames(string inputFilepath, string outputFilepath)

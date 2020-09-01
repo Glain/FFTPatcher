@@ -71,9 +71,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return "Data/BattleConditionals.bin";
-                case CommandType.WorldConditional: return "Data/WorldConditionals.bin";
-                case CommandType.EventCommand: return "Data/Events.bin";
+                case CommandType.BattleConditional: return "EntryData/BattleConditionals.bin";
+                case CommandType.WorldConditional: return "EntryData/WorldConditionals.bin";
+                case CommandType.EventCommand: return "EntryData/Events.bin";
                 default: return null;
             }
         }
@@ -82,9 +82,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return "Data/BattleConditionalCommands.xml";
-                case CommandType.WorldConditional: return "Data/WorldConditionalCommands.xml";
-                case CommandType.EventCommand: return "Data/EventCommands.xml";
+                case CommandType.BattleConditional: return "EntryData/BattleConditionalCommands.xml";
+                case CommandType.WorldConditional: return "EntryData/WorldConditionalCommands.xml";
+                case CommandType.EventCommand: return "EntryData/EventCommands.xml";
                 default: return null;
             }
         }
@@ -93,14 +93,14 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandParameterType.Variable: return "Data/VariableNames.xml";
-                case CommandParameterType.Unit: return "Data/CharacterNames.xml";
-                case CommandParameterType.Item: return "Data/Items.xml";
-                case CommandParameterType.Scenario: return "Data/ScenarioNames.xml";
-                case CommandParameterType.Map: return "Data/MapTitles.xml";
-                case CommandParameterType.Location: return "Data/LocationNames.xml";
-                case CommandParameterType.AbilityEffect: return "Data/AbilityEffects.xml";
-                case CommandParameterType.Spritesheet: return "Data/Spritesheets.xml";
+                case CommandParameterType.Variable: return "EntryData/VariableNames.xml";
+                case CommandParameterType.Unit: return "EntryData/CharacterNames.xml";
+                case CommandParameterType.Item: return "EntryData/Items.xml";
+                case CommandParameterType.Scenario: return "EntryData/ScenarioNames.xml";
+                case CommandParameterType.Map: return "EntryData/MapTitles.xml";
+                case CommandParameterType.Location: return "EntryData/LocationNames.xml";
+                case CommandParameterType.AbilityEffect: return "EntryData/AbilityEffects.xml";
+                case CommandParameterType.Spritesheet: return "EntryData/Spritesheets.xml";
                 default: return null;
             }
         }
@@ -278,6 +278,68 @@ namespace EntryEdit
             return nodeValue;
         }
 
+        public EntryData LoadDefaultEntryData()
+        {
+            return new EntryData(LoadBattleConditionalDefaults(), LoadWorldConditionalDefaults(), LoadDefaultEvents());
+        }
+
+        public EntryBytes GetEntryBytesFromData(EntryData entryData)
+        {
+            return new EntryBytes(ConditionalSetsToByteArray(CommandType.BattleConditional, entryData.BattleConditionals), ConditionalSetsToByteArray(CommandType.WorldConditional, entryData.WorldConditionals),
+                EventsToByteArray(entryData.Events));
+        }
+
+        public byte[] EventsToByteArray(IList<Event> events)
+        {
+            byte[] resultBytes = new byte[events.Count * 0x2000];
+
+            int copyIndex = 0;
+            foreach (Event inputEvent in events)
+            {
+                byte[] eventBytes = EventToByteArray(inputEvent);
+                Array.Copy(eventBytes, 0, resultBytes, copyIndex, eventBytes.Length);
+                copyIndex += eventBytes.Length;
+            }
+
+            return resultBytes;
+        }
+
+        public byte[] EventToByteArray(Event inputEvent)
+        {
+            byte[] textOffsetBytes = inputEvent.TextOffset.ToBytes();
+            byte[] commandBytes = CommandsToByteArray(inputEvent.CommandList);
+            byte[] betweenBytes = inputEvent.BetweenSection.ToByteArray();
+            byte[] endBytes = inputEvent.EndSection.ToByteArray();
+
+            byte[] resultBytes = new byte[4 + commandBytes.Length + betweenBytes.Length + endBytes.Length];
+            Array.Copy(textOffsetBytes, resultBytes, 4);
+            Array.Copy(commandBytes, 0, resultBytes, 4, commandBytes.Length);
+            Array.Copy(betweenBytes, 0, resultBytes, commandBytes.Length + 4, betweenBytes.Length);
+            Array.Copy(endBytes, 0, resultBytes, commandBytes.Length + betweenBytes.Length + 4, endBytes.Length);
+
+            return resultBytes;
+        }
+
+        public List<Event> LoadDefaultEvents()
+        {
+            return LoadEventsFromFile(GetDefaultDataFilepath(CommandType.EventCommand));
+        }
+
+        public List<Event> LoadEventsFromFile(string filepath)
+        {
+            return GetEventsFromBytes(File.ReadAllBytes(filepath));
+        }
+
+        public List<Event> GetEventsFromBytes(IList<byte> bytes)
+        {
+            List<Event> result = new List<Event>();
+
+            for (int startIndex = 0; startIndex < bytes.Count; startIndex += 0x2000)
+                result.Add(GetEventFromBytes(bytes.SubLength(startIndex, 0x2000)));
+
+            return result;
+        }
+
         public Event GetEventFromBytes(IList<byte> bytes)
         {
             Event result = new Event();
@@ -291,6 +353,8 @@ namespace EntryEdit
             int naturalTextOffset = numCommandBytes + 4;
 
             uint textOffset = bytes.SubLength(0, 4).ToUInt32();
+            result.TextOffset = textOffset;
+
             if (textOffset == 0xF2F2F2F2U)
             {
                 result.BetweenSection = new CustomSection();
@@ -298,7 +362,7 @@ namespace EntryEdit
             }
             else
             {
-                result.BetweenSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset + 1))) : new CustomSection();
+                result.BetweenSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset))) : new CustomSection();
                 result.EndSection = new CustomSection(bytes.Sub(textOffset));
             }
 
