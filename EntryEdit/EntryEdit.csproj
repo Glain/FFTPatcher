@@ -46,6 +46,30 @@
   <ItemGroup>
     <Compile Include="Command.cs" />
     <Compile Include="DataHelper.cs" />
+    <Compile Include="Editors\ConditionalSetEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ConditionalSetEditor.Designer.cs">
+      <DependentUpon>ConditionalSetEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ConditionalSetsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ConditionalSetsEditor.Designer.cs">
+      <DependentUpon>ConditionalSetsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\EventEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\EventEditor.Designer.cs">
+      <DependentUpon>EventEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\EventsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\EventsEditor.Designer.cs">
+      <DependentUpon>EventsEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="EntryData.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="MainForm.cs">
@@ -57,6 +81,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextUtility.cs" />
+    <EmbeddedResource Include="Editors\ConditionalSetsEditor.resx">
+      <DependentUpon>ConditionalSetsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\EventsEditor.resx">
+      <DependentUpon>EventsEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
