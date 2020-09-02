@@ -1118,10 +1118,16 @@ SKP:  j       0x80180848            #   Skip this ability
     <Variable name="XX" file="BATTLE_BIN" offset="1201F8" default="46"/>
   </Patch>
   <Patch name="[Half of MP] becomes [No MP Cost]">
-    <Description>[Half of MP] becomes [No MP Cost]</Description>
-    <Location file="BATTLE_BIN" offset="116B6C" mode="ASM">
-      addu a0,zero,zero
-    </Location>
+      <Description>[Half of MP] becomes [No MP Cost]</Description>
+      <Location file="BATTLE_BIN" offset="17DB6C" mode="ASM" offsetMode="RAM">
+            li      a0, 0
+      </Location>
+      <Location file="BATTLE_BIN" offset="181A44" mode="ASM" offsetMode="RAM">
+            li      s1, 0
+      </Location>
+      <Location file="BATTLE_BIN" offset="195CA4" mode="ASM" offsetMode="RAM">
+            li      v0, 0
+      </Location>
   </Patch>
   <Patch name="Require Materia Blade -> Require Item Type X (Default Lance)">
     <Description>
