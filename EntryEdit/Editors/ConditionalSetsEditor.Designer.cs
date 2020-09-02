@@ -29,32 +29,37 @@
         private void InitializeComponent()
         {
             this.cmb_Event = new System.Windows.Forms.ComboBox();
-            this.conditionalSetEditor1 = new EntryEdit.Editors.ConditionalSetEditor();
+            this.conditionalSetEditor = new EntryEdit.Editors.ConditionalSetEditor();
             this.SuspendLayout();
             // 
             // cmb_Event
             // 
+            this.cmb_Event.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_Event.FormattingEnabled = true;
             this.cmb_Event.Location = new System.Drawing.Point(11, 11);
             this.cmb_Event.Name = "cmb_Event";
-            this.cmb_Event.Size = new System.Drawing.Size(249, 21);
+            this.cmb_Event.Size = new System.Drawing.Size(550, 21);
             this.cmb_Event.TabIndex = 1;
+            this.cmb_Event.SelectedIndexChanged += new System.EventHandler(this.cmb_Event_SelectedIndexChanged);
             // 
-            // conditionalSetEditor1
+            // conditionalSetEditor
             // 
-            this.conditionalSetEditor1.Location = new System.Drawing.Point(15, 48);
-            this.conditionalSetEditor1.Name = "conditionalSetEditor1";
-            this.conditionalSetEditor1.Size = new System.Drawing.Size(380, 220);
-            this.conditionalSetEditor1.TabIndex = 2;
+            this.conditionalSetEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.conditionalSetEditor.Location = new System.Drawing.Point(15, 48);
+            this.conditionalSetEditor.Name = "conditionalSetEditor";
+            this.conditionalSetEditor.Size = new System.Drawing.Size(620, 350);
+            this.conditionalSetEditor.TabIndex = 2;
             // 
             // ConditionalSetsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.conditionalSetEditor1);
+            this.Controls.Add(this.conditionalSetEditor);
             this.Controls.Add(this.cmb_Event);
             this.Name = "ConditionalSetsEditor";
-            this.Size = new System.Drawing.Size(410, 280);
+            this.Size = new System.Drawing.Size(650, 410);
             this.ResumeLayout(false);
 
         }
@@ -62,6 +67,6 @@
         #endregion
 
         private System.Windows.Forms.ComboBox cmb_Event;
-        private ConditionalSetEditor conditionalSetEditor1;
+        private ConditionalSetEditor conditionalSetEditor;
     }
 }

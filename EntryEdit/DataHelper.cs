@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
@@ -13,24 +12,26 @@ namespace EntryEdit
 {
     public class DataHelper
     {
+        private readonly Dictionary<CommandParameterType, Dictionary<int, string>> parameterValueMaps;
+        private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
+        private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
+
         public DataHelper()
         {
             parameterValueMaps = GetParameterValueMaps();
             commandTemplateMaps = GetCommandTemplateMaps();
+            entryNameMaps = GetEntryNameMaps();
         }
 
-        public List<List<List<Command>>> LoadBattleConditionalDefaults()
+        public List<ConditionalSet> LoadBattleConditionalDefaults()
         {
             return LoadConditionalSetDefaults(CommandType.BattleConditional);
         }
 
-        public List<List<List<Command>>> LoadWorldConditionalDefaults()
+        public List<ConditionalSet> LoadWorldConditionalDefaults()
         {
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
-
-        private readonly Dictionary<CommandParameterType, Dictionary<int, string>> parameterValueMaps;
-        private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
 
         public List<string> GetParameterValueList(int numBytes, CommandParameterType type)
         {
@@ -89,6 +90,17 @@ namespace EntryEdit
             }
         }
 
+        private string GetEntryNameFilepath(CommandType type)
+        {
+            switch (type)
+            {
+                case CommandType.BattleConditional: return "EntryData/ConditionalSets.xml";
+                case CommandType.WorldConditional: return "EntryData/LocationNames.xml";
+                case CommandType.EventCommand: return "EntryData/ScenarioNames.xml";
+                default: return null;
+            }
+        }
+
         private string GetParameterValueListFilepath(CommandParameterType type)
         {
             switch (type)
@@ -105,17 +117,32 @@ namespace EntryEdit
             }
         }
 
+        private List<string> GetParameterEntryNames(CommandParameterTemplate template)
+        {
+            List<string> result = new List<string>();
+
+            Dictionary<int, string> valueMap = parameterValueMaps[template.Type];
+            int numEntries = 1 << (template.ByteLength * 8);
+            string hexFormatString = "X" + (template.ByteLength * 2);
+            for (int index = 0; index < numEntries; index++)
+            {
+                result.Add(index.ToString(hexFormatString) + (valueMap.ContainsKey(index) ? (" " + valueMap[index]) : ""));
+            }
+
+            return result;
+        }
+
         private Dictionary<CommandParameterType, Dictionary<int, string>> GetParameterValueMaps()
         {
             Dictionary<CommandParameterType, Dictionary<int, string>> result = new Dictionary<CommandParameterType, Dictionary<int, string>>();
-            result.Add(CommandParameterType.Variable, GetParameterValueMap(CommandParameterType.Variable));
-            result.Add(CommandParameterType.Unit, GetParameterValueMap(CommandParameterType.Unit));
-            result.Add(CommandParameterType.Item, GetParameterValueMap(CommandParameterType.Item));
-            result.Add(CommandParameterType.Scenario, GetParameterValueMap(CommandParameterType.Scenario));
-            result.Add(CommandParameterType.Map, GetParameterValueMap(CommandParameterType.Map));
-            result.Add(CommandParameterType.Location, GetParameterValueMap(CommandParameterType.Location));
-            result.Add(CommandParameterType.AbilityEffect, GetParameterValueMap(CommandParameterType.AbilityEffect));
-            result.Add(CommandParameterType.Spritesheet, GetParameterValueMap(CommandParameterType.Spritesheet));
+            result.Add(CommandParameterType.Variable, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Variable)));
+            result.Add(CommandParameterType.Unit, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Unit)));
+            result.Add(CommandParameterType.Item, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Item)));
+            result.Add(CommandParameterType.Scenario, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Scenario)));
+            result.Add(CommandParameterType.Map, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Map)));
+            result.Add(CommandParameterType.Location, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Location)));
+            result.Add(CommandParameterType.AbilityEffect, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.AbilityEffect)));
+            result.Add(CommandParameterType.Spritesheet, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Spritesheet)));
             return result;
         }
 
@@ -144,16 +171,32 @@ namespace EntryEdit
             return result;
         }
 
-        private List<string> GetParameterEntryNames(CommandParameterTemplate template)
+        private Dictionary<CommandType, Dictionary<int, string>> GetEntryNameMaps()
         {
-            List<string> result = new List<string>();
+            Dictionary<CommandType, Dictionary<int, string>> result = new Dictionary<CommandType, Dictionary<int, string>>();
+            result.Add(CommandType.BattleConditional, GetXMLNameMap(GetEntryNameFilepath(CommandType.BattleConditional)));
+            result.Add(CommandType.WorldConditional, GetXMLNameMap(GetEntryNameFilepath(CommandType.WorldConditional)));
+            result.Add(CommandType.EventCommand, GetXMLNameMap(GetEntryNameFilepath(CommandType.EventCommand)));
+            return result;
+        }
 
-            Dictionary<int, string> valueMap = parameterValueMaps[template.Type];
-            int numEntries = 1 << (template.ByteLength * 8);
-            string hexFormatString = "X" + (template.ByteLength * 2);
-            for (int index = 0; index < numEntries; index++)
+        private Dictionary<int, string> GetXMLNameMap(string filepath)
+        {
+            Dictionary<int, string> result = new Dictionary<int, string>();
+
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(filepath);
+            XmlNodeList nodeList = xmlDocument.SelectNodes("//Entry");
+
+            foreach (XmlNode node in nodeList)
             {
-                result.Add(index.ToString(hexFormatString) + (valueMap.ContainsKey(index) ? (" " + valueMap[index]) : ""));
+                int nodeValue = GetNodeValue(node);
+                XmlAttribute attrName = node.Attributes["name"];
+
+                if ((nodeValue >= 0) && (attrName != null))
+                {
+                    result.Add(nodeValue, attrName.InnerText.Trim());
+                }
             }
 
             return result;
@@ -333,9 +376,16 @@ namespace EntryEdit
         public List<Event> GetEventsFromBytes(IList<byte> bytes)
         {
             List<Event> result = new List<Event>();
+            Dictionary<int, string> nameMap = entryNameMaps[CommandType.EventCommand];
 
+            int index = 0;
             for (int startIndex = 0; startIndex < bytes.Count; startIndex += 0x2000)
-                result.Add(GetEventFromBytes(bytes.SubLength(startIndex, 0x2000)));
+            {
+                Event ev = GetEventFromBytes(bytes.SubLength(startIndex, 0x2000));
+                ev.Name = index.ToString("X4") + " " + nameMap[index];
+                result.Add(ev);
+                index++;
+            }
 
             return result;
         }
@@ -369,12 +419,12 @@ namespace EntryEdit
             return result;
         }
 
-        public byte[] ConditionalSetsToByteArray(CommandType type, List<List<List<Command>>> conditionalSets)
+        public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)
         {
             int numSets = conditionalSets.Count;
             int numBlocks = 0;
-            foreach (List<List<Command>> blocks in conditionalSets)
-                numBlocks += blocks.Count;
+            foreach (ConditionalSet set in conditionalSets)
+                numBlocks += set.ConditionalBlocks.Count;
             
             List<UInt16> setReferences = new List<UInt16>(numSets);
             List<UInt16> blockReferences = new List<UInt16>();
@@ -382,10 +432,10 @@ namespace EntryEdit
 
             UInt16 setReference = (UInt16)(numSets * 2);
             UInt16 blockReference = (UInt16)((setReference + numBlocks) * 2);
-            foreach (List<List<Command>> blocks in conditionalSets)
+            foreach (ConditionalSet set in conditionalSets)
             {
                 setReferences.Add(setReference);
-                foreach (List<Command> commands in blocks)
+                foreach (List<Command> commands in set.ConditionalBlocks)
                 {
                     blockReferences.Add(blockReference);
                     byte[] currentCommandBytes = CommandsToByteArray(commands);
@@ -407,28 +457,32 @@ namespace EntryEdit
             return bytes.ToArray();
         }
 
-        private List<List<List<Command>>> LoadConditionalSetDefaults(CommandType type)
+        private List<ConditionalSet> LoadConditionalSetDefaults(CommandType type)
         {
             return LoadConditionalSetsFromFile(type, GetDefaultDataFilepath(type));
         }
 
-        private List<List<List<Command>>> LoadConditionalSetsFromFile(CommandType type, string filepath)
+        private List<ConditionalSet> LoadConditionalSetsFromFile(CommandType type, string filepath)
         {
             return LoadConditionalSetsFromByteArray(type, File.ReadAllBytes(filepath));
         }
 
-        private List<List<List<Command>>> LoadConditionalSetsFromByteArray(CommandType type, IList<byte> bytes)
+        private List<ConditionalSet> LoadConditionalSetsFromByteArray(CommandType type, IList<byte> bytes)
         {
             int setByteOffset = bytes.ToUInt16LE();
             int numSets = setByteOffset / 2;
-            List<List<List<Command>>> result = new List<List<List<Command>>>(numSets);
+            List<ConditionalSet> result = new List<ConditionalSet>(numSets);
+
+            Dictionary<int, string> setNameMap = entryNameMaps[type];
 
             UInt16[] setOffsets = bytes.SubLength(0, setByteOffset).ToUInt16ArrayLE();
             int blockByteOffset = bytes.SubLength(setOffsets[0], 2).ToUInt16LE();
 
             for (int setIndex = 0; setIndex < numSets; setIndex++)
             {
-                List<List<Command>> setCommandList = new List<List<Command>>();
+                ConditionalSet set = new ConditionalSet();
+                set.ConditionalBlocks = new List<List<Command>>();
+                set.Name = setIndex.ToString("X2") + " " + setNameMap[setIndex];
 
                 int setStartIndex = setOffsets[setIndex];
                 int setEndIndex = ((setIndex < (numSets - 1)) ? setOffsets[setIndex + 1] : blockByteOffset);
@@ -449,14 +503,14 @@ namespace EntryEdit
                             endIndex = (checkSetIndex < numSets) ? bytes.SubLength(setOffsets[checkSetIndex], 2).ToUInt16LE() : bytes.Count;
                             setIndexAddend++;
                         }
-                        
-                        setCommandList.Add(CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex)));
+
+                        set.ConditionalBlocks.Add(CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex)));
                     }
                     
                     prevBlockIndex = blockIndex;
                 }
 
-                result.Add(setCommandList);
+                result.Add(set);
             }
 
             return result;

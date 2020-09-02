@@ -5,7 +5,7 @@
         <Parameter name="Dialog Type" bytes="1" />
         <Parameter name="Message ID" bytes="2" />
         <Parameter name="Unit ID" bytes="2" type="Unit" />
-        <Parameter name="Portrait Row" bytes="1" />
+        <Parameter name="Portrait Column" bytes="1" />
         <Parameter name="X" bytes="2" />
         <Parameter name="Y" bytes="2" />
         <Parameter name="Arrow Position" bytes="2" />
@@ -73,8 +73,8 @@
     <Command hex="1D" name="Camera Fusion Start" />
     <Command hex="1E" name="Camera Fusion End" />
     <Command hex="1F" name="Focus">
-        <Parameter name="Unit ID" bytes="2" type="Unit" />
-        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="First Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Second Unit ID" bytes="2" type="Unit" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
     <Command hex="20" name="Unknown">
@@ -277,13 +277,13 @@
     <Command hex="4F" name="Set Daytime">
         <Parameter name="Night" bytes="1" mode="hex" />
     </Command>
-    <Command hex="50" name="Portrait Column">
-        <Parameter name="Column" bytes="1" mode="hex" />
+    <Command hex="50" name="Portrait Row">
+        <Parameter name="Row" bytes="1" mode="hex" />
     </Command>
     <Command hex="51" name="Change Dialog">
         <Parameter name="Target" bytes="1" mode="hex" />
         <Parameter name="Message ID" bytes="2" />
-        <Parameter name="Portrait Row" bytes="1" mode="hex" />
+        <Parameter name="Portrait Column" bytes="1" mode="hex" />
         <Parameter name="Portrait Palette" bytes="1" mode="hex" />
     </Command>
     <Command hex="52" name="Unknown">

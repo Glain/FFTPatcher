@@ -30,14 +30,14 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage_BattleConditionals = new System.Windows.Forms.TabPage();
+            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_WorldConditionals = new System.Windows.Forms.TabPage();
+            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_Events = new System.Windows.Forms.TabPage();
+            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.menuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.conditionalSetsEditor1 = new EntryEdit.Editors.ConditionalSetsEditor();
-            this.conditionalSetsEditor2 = new EntryEdit.Editors.ConditionalSetsEditor();
-            this.eventEditor1 = new EntryEdit.Editors.EventsEditor();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -61,7 +61,7 @@
             // 
             // tabPage_BattleConditionals
             // 
-            this.tabPage_BattleConditionals.Controls.Add(this.conditionalSetsEditor1);
+            this.tabPage_BattleConditionals.Controls.Add(this.battleConditionalSetsEditor);
             this.tabPage_BattleConditionals.Location = new System.Drawing.Point(4, 22);
             this.tabPage_BattleConditionals.Name = "tabPage_BattleConditionals";
             this.tabPage_BattleConditionals.Padding = new System.Windows.Forms.Padding(3);
@@ -70,9 +70,16 @@
             this.tabPage_BattleConditionals.Text = "Battle Conditionals";
             this.tabPage_BattleConditionals.UseVisualStyleBackColor = true;
             // 
+            // battleConditionalSetsEditor
+            // 
+            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(10, 10);
+            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
+            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(650, 410);
+            this.battleConditionalSetsEditor.TabIndex = 0;
+            // 
             // tabPage_WorldConditionals
             // 
-            this.tabPage_WorldConditionals.Controls.Add(this.conditionalSetsEditor2);
+            this.tabPage_WorldConditionals.Controls.Add(this.worldConditionalSetsEditor);
             this.tabPage_WorldConditionals.Location = new System.Drawing.Point(4, 22);
             this.tabPage_WorldConditionals.Name = "tabPage_WorldConditionals";
             this.tabPage_WorldConditionals.Padding = new System.Windows.Forms.Padding(3);
@@ -81,9 +88,16 @@
             this.tabPage_WorldConditionals.Text = "World Conditionals";
             this.tabPage_WorldConditionals.UseVisualStyleBackColor = true;
             // 
+            // worldConditionalSetsEditor
+            // 
+            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(10, 10);
+            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
+            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(650, 410);
+            this.worldConditionalSetsEditor.TabIndex = 1;
+            // 
             // tabPage_Events
             // 
-            this.tabPage_Events.Controls.Add(this.eventEditor1);
+            this.tabPage_Events.Controls.Add(this.eventsEditor);
             this.tabPage_Events.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Events.Name = "tabPage_Events";
             this.tabPage_Events.Padding = new System.Windows.Forms.Padding(3);
@@ -91,6 +105,13 @@
             this.tabPage_Events.TabIndex = 2;
             this.tabPage_Events.Text = "Events";
             this.tabPage_Events.UseVisualStyleBackColor = true;
+            // 
+            // eventsEditor
+            // 
+            this.eventsEditor.Location = new System.Drawing.Point(10, 10);
+            this.eventsEditor.Name = "eventsEditor";
+            this.eventsEditor.Size = new System.Drawing.Size(650, 410);
+            this.eventsEditor.TabIndex = 0;
             // 
             // menuBar
             // 
@@ -116,27 +137,6 @@
             this.menuItem_Exit.Size = new System.Drawing.Size(92, 22);
             this.menuItem_Exit.Text = "Exit";
             this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
-            // 
-            // conditionalSetsEditor1
-            // 
-            this.conditionalSetsEditor1.Location = new System.Drawing.Point(10, 10);
-            this.conditionalSetsEditor1.Name = "conditionalSetsEditor1";
-            this.conditionalSetsEditor1.Size = new System.Drawing.Size(650, 410);
-            this.conditionalSetsEditor1.TabIndex = 0;
-            // 
-            // conditionalSetsEditor2
-            // 
-            this.conditionalSetsEditor2.Location = new System.Drawing.Point(10, 10);
-            this.conditionalSetsEditor2.Name = "conditionalSetsEditor2";
-            this.conditionalSetsEditor2.Size = new System.Drawing.Size(650, 410);
-            this.conditionalSetsEditor2.TabIndex = 1;
-            // 
-            // eventEditor1
-            // 
-            this.eventEditor1.Location = new System.Drawing.Point(10, 10);
-            this.eventEditor1.Name = "eventEditor1";
-            this.eventEditor1.Size = new System.Drawing.Size(650, 410);
-            this.eventEditor1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -168,9 +168,9 @@
         private System.Windows.Forms.MenuStrip menuBar;
         private System.Windows.Forms.ToolStripMenuItem menuItem_File;
         private System.Windows.Forms.ToolStripMenuItem menuItem_Exit;
-        private Editors.ConditionalSetsEditor conditionalSetsEditor1;
-        private Editors.ConditionalSetsEditor conditionalSetsEditor2;
-        private Editors.EventsEditor eventEditor1;
+        private Editors.ConditionalSetsEditor battleConditionalSetsEditor;
+        private Editors.ConditionalSetsEditor worldConditionalSetsEditor;
+        private Editors.EventsEditor eventsEditor;
     }
 }
 

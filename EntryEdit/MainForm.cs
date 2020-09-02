@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -25,6 +23,8 @@ namespace EntryEdit
             }
         }
 
+        private EntryData _entryData;
+
         public MainForm()
         {
             InitializeComponent();
@@ -33,13 +33,17 @@ namespace EntryEdit
 
         private void Start()
         {
-            EntryData entryData = DataHelper.LoadDefaultEntryData();
+            _entryData = DataHelper.LoadDefaultEntryData();
+
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals);
+            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals);
+            eventsEditor.Populate(_entryData.Events);
         }
 
         private void Test()
         {
-            List<List<List<Command>>> battleConditionalSets = DataHelper.LoadBattleConditionalDefaults();
-            List<List<List<Command>>> worldConditionalSets = DataHelper.LoadWorldConditionalDefaults();
+            List<ConditionalSet> battleConditionalSets = DataHelper.LoadBattleConditionalDefaults();
+            List<ConditionalSet> worldConditionalSets = DataHelper.LoadWorldConditionalDefaults();
             List<Event> events = DataHelper.LoadDefaultEvents();
             byte[] battleConditionalBytes = DataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, battleConditionalSets);
             byte[] worldConditionalBytes = DataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, worldConditionalSets);

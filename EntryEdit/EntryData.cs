@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EntryEdit
 {
     public class EntryData
     {
-        public List<List<List<Command>>> BattleConditionals { get; set; }
-        public List<List<List<Command>>> WorldConditionals { get; set; }
+        public List<ConditionalSet> BattleConditionals { get; set; }
+        public List<ConditionalSet> WorldConditionals { get; set; }
         public List<Event> Events { get; set; }
 
-        public EntryData(List<List<List<Command>>> battleConditionals, List<List<List<Command>>> worldConditionals, List<Event> events)
+        public EntryData(List<ConditionalSet> battleConditionals, List<ConditionalSet> worldConditionals, List<Event> events)
         {
             this.BattleConditionals = battleConditionals;
             this.WorldConditionals = worldConditionals;
@@ -31,6 +29,31 @@ namespace EntryEdit
             this.BattleConditionals = battleConditionals;
             this.WorldConditionals = worldConditionals;
             this.Events = events;
+        }
+    }
+
+    public class Event
+    {
+        public string Name { get; set; }
+        public uint TextOffset { get; set; }
+        public List<Command> CommandList { get; set; }
+        public CustomSection BetweenSection { get; set; }
+        public CustomSection EndSection { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
+    public class ConditionalSet
+    {
+        public string Name { get; set; }
+        public List<List<Command>> ConditionalBlocks { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }
