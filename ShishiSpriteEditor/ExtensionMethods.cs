@@ -24,16 +24,6 @@ using System.Collections.ObjectModel;
 using PatcherLib.Datatypes;
 using System;
 
-
-namespace System.Runtime.CompilerServices
-{
-    public class ExtensionAttribute : Attribute
-    {
-
-    }
-
-}
-
 namespace FFTPatcher.SpriteEditor
 {
     /// <summary>
