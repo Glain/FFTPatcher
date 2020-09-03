@@ -42,8 +42,8 @@
     <Entry hex="0027" name="Sand Rat Cellar (Setup)" />
     <Entry hex="0028" name="Sand Rat Cellar" />
     <Entry hex="0029" name="Sand Rat Cellar (Victory)" />
-    <Entry hex="002A" name="Gustav vs" />
-    <Entry hex="002B" name="Gustav vs" />
+    <Entry hex="002A" name="Gustav vs. Wiegraf (Setup)" />
+    <Entry hex="002B" name="Gustav vs. Wiegraf" />
     <Entry hex="002C" name="Larg's Praise (Setup)" />
     <Entry hex="002D" name="Larg's Praise" />
     <Entry hex="002E" name="Miluda1 (Setup)" />
@@ -63,7 +63,7 @@
     <Entry hex="003C" name="Reed Whistle" />
     <Entry hex="003D" name="Miluda2 (Setup)" />
     <Entry hex="003E" name="Miluda2" />
-    <Entry hex="003F" name="Miluda2 (Delita bartering with Miluda)" />
+    <Entry hex="003F" name="Miluda2 (Delita talking with Miluda)" />
     <Entry hex="0040" name="Miluda2 (Miluda half HP)" />
     <Entry hex="0041" name="Miluda2 (Ramza debating with Miluda)" />
     <Entry hex="0042" name="Miluda2 (Ramza pleading with Miluda)" />

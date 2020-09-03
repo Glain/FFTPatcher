@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmb_Event = new System.Windows.Forms.ComboBox();
+            this.cmb_ConditionalSet = new System.Windows.Forms.ComboBox();
             this.conditionalSetEditor = new EntryEdit.Editors.ConditionalSetEditor();
             this.SuspendLayout();
             // 
-            // cmb_Event
+            // cmb_ConditionalSet
             // 
-            this.cmb_Event.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_Event.FormattingEnabled = true;
-            this.cmb_Event.Location = new System.Drawing.Point(11, 11);
-            this.cmb_Event.Name = "cmb_Event";
-            this.cmb_Event.Size = new System.Drawing.Size(550, 21);
-            this.cmb_Event.TabIndex = 1;
-            this.cmb_Event.SelectedIndexChanged += new System.EventHandler(this.cmb_Event_SelectedIndexChanged);
+            this.cmb_ConditionalSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_ConditionalSet.FormattingEnabled = true;
+            this.cmb_ConditionalSet.Location = new System.Drawing.Point(11, 11);
+            this.cmb_ConditionalSet.Name = "cmb_ConditionalSet";
+            this.cmb_ConditionalSet.Size = new System.Drawing.Size(550, 21);
+            this.cmb_ConditionalSet.TabIndex = 1;
+            this.cmb_ConditionalSet.SelectedIndexChanged += new System.EventHandler(this.cmb_Event_SelectedIndexChanged);
             // 
             // conditionalSetEditor
             // 
@@ -57,7 +57,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.conditionalSetEditor);
-            this.Controls.Add(this.cmb_Event);
+            this.Controls.Add(this.cmb_ConditionalSet);
             this.Name = "ConditionalSetsEditor";
             this.Size = new System.Drawing.Size(650, 410);
             this.ResumeLayout(false);
@@ -66,7 +66,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cmb_Event;
+        private System.Windows.Forms.ComboBox cmb_ConditionalSet;
         private ConditionalSetEditor conditionalSetEditor;
     }
 }

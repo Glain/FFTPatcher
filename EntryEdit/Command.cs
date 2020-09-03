@@ -5,10 +5,16 @@ using PatcherLib.Datatypes;
 
 namespace EntryEdit
 {
-    public class Command
+    public class Command : ICopyableEntry<Command>
     {
-        public CommandTemplate Template { get; set; }
-        public List<CommandParameter> Parameters { get; set; }
+        public CommandTemplate Template { get; private set; }
+        public List<CommandParameter> Parameters { get; private set; }
+
+        public Command(CommandTemplate template, List<CommandParameter> parameters)
+        {
+            this.Template = template;
+            this.Parameters = parameters;
+        }
 
         public int GetTotalByteLength()
         {
@@ -23,16 +29,32 @@ namespace EntryEdit
 
             return result;
         }
+
+        public Command Copy()
+        {
+            return new Command(Template, CopyableEntry.CopyList<CommandParameter>(Parameters));
+        }
     }
 
-    public class CommandParameter
+    public class CommandParameter : ICopyableEntry<CommandParameter>
     {
-        public CommandParameterTemplate Template { get; set; }
-        public int Value { get; set; }
+        public CommandParameterTemplate Template { get; private set; }
+        public int Value { get; private set; }
+
+        public CommandParameter(CommandParameterTemplate template, int value)
+        {
+            this.Template = template;
+            this.Value = value;
+        }
 
         public int GetByteLength()
         {
             return (Template != null) ? Template.ByteLength : 0;
+        }
+
+        public CommandParameter Copy()
+        {
+            return new CommandParameter(Template, Value);
         }
     }
 
@@ -40,28 +62,46 @@ namespace EntryEdit
     {
         public const string DefaultName = "Unknown";
 
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public int ByteLength { get; set; }
-        public CommandType Type { get; set; }
-        public List<CommandParameterTemplate> Parameters { get; set; }
+        public int ID { get; private set; }
+        public string Name { get; private set; }
+        public int ByteLength { get; private set; }
+        public CommandType Type { get; private set; }
+        public List<CommandParameterTemplate> Parameters { get; private set; }
+
+        public CommandTemplate(int id, string name, int byteLength, CommandType type, List<CommandParameterTemplate> parameters)
+        {
+            this.ID = id;
+            this.Name = name;
+            this.ByteLength = byteLength;
+            this.Type = type;
+            this.Parameters = parameters;
+        }
     }
 
     public class CommandParameterTemplate
     {
         public const string DefaultName = "Unknown";
 
-        public string Name { get; set; }
-        public int ByteLength { get; set; }
-        public bool IsHex { get; set; }
-        public bool IsSigned { get; set; }
-        public CommandParameterType Type { get; set; }
+        public string Name { get; private set; }
+        public int ByteLength { get; private set; }
+        public bool IsHex { get; private set; }
+        public bool IsSigned { get; private set; }
+        public CommandParameterType Type { get; private set; }
+
+        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, CommandParameterType type)
+        {
+            this.Name = name;
+            this.ByteLength = byteLength;
+            this.IsHex = isHex;
+            this.IsSigned = isSigned;
+            this.Type = type;
+        }
     }
 
-    public class CustomSection
+    public class CustomSection : ICopyableEntry<CustomSection>
     {
-        public int ByteLength { get; set; }
-        public List<CustomEntry> CustomEntryList { get; set; }
+        public int ByteLength { get; private set; }
+        public List<CustomEntry> CustomEntryList { get; private set; }
 
         public CustomSection(int byteLength, List<CustomEntry> customEntryList)
         {
@@ -95,13 +135,18 @@ namespace EntryEdit
 
             return byteList.ToArray();
         }
+
+        public CustomSection Copy()
+        {
+            return new CustomSection(ByteLength, CopyableEntry.CopyList<CustomEntry>(CustomEntryList));
+        }
     }
 
-    public class CustomEntry
+    public class CustomEntry : ICopyableEntry<CustomEntry>
     {
-        public List<byte> Bytes { get; set; }
-        public string Text { get; set; }
-        public string ASM { get; set; }
+        public List<byte> Bytes { get; private set; }
+        public string Text { get; private set; }
+        public string ASM { get; private set; }
 
         public CustomEntry(List<byte> bytes, string text, string asm)
         {
@@ -112,6 +157,11 @@ namespace EntryEdit
 
         public CustomEntry(List<byte> bytes, string text) : this(bytes, text, "") { }
         public CustomEntry() : this(new List<byte>(), "", "") { }
+
+        public CustomEntry Copy()
+        {
+            return new CustomEntry(Bytes, Text, ASM);
+        }
     }
 
     public enum CommandType

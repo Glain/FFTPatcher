@@ -1,6 +1,6 @@
 ﻿namespace EntryEdit.Editors
 {
-    partial class EventEditor
+    partial class CommandListEditor
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,16 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // EventEditor
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "EventEditor";
-            this.Size = new System.Drawing.Size(620, 350);
-            this.ResumeLayout(false);
-
         }
 
         #endregion

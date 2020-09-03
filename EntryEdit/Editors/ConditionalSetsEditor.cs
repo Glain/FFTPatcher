@@ -22,9 +22,9 @@ namespace EntryEdit.Editors
         {
             this._conditionalSets = conditionalSets;
 
-            cmb_Event.Items.Clear();
-            cmb_Event.Items.AddRange(_conditionalSets.ToArray());
-            cmb_Event.SelectedIndex = 0;
+            cmb_ConditionalSet.Items.Clear();
+            cmb_ConditionalSet.Items.AddRange(_conditionalSets.ToArray());
+            cmb_ConditionalSet.SelectedIndex = 0;
 
             _conditionalSetIndex = 0;
             conditionalSetEditor.Populate(_conditionalSets[_conditionalSetIndex]);
@@ -32,7 +32,7 @@ namespace EntryEdit.Editors
 
         private void cmb_Event_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _conditionalSetIndex = cmb_Event.SelectedIndex;
+            _conditionalSetIndex = cmb_ConditionalSet.SelectedIndex;
             conditionalSetEditor.Populate(_conditionalSets[_conditionalSetIndex]);
         }
     }

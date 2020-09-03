@@ -241,12 +241,11 @@ namespace EntryEdit
                         int.TryParse(attrBytes.InnerText, out byteLength);
                     }
 
-                    CommandTemplate commandTemplate = new CommandTemplate();
-                    commandTemplate.ID = nodeValue;
-                    commandTemplate.Name = (attrName != null) ? attrName.InnerText : CommandTemplate.DefaultName;
-                    commandTemplate.ByteLength = byteLength;
+                    int commandTemplateID = nodeValue;
+                    string commandTemplateName = (attrName != null) ? attrName.InnerText : CommandTemplate.DefaultName;
+                    int commandTemplateByteLength = byteLength;
 
-                    commandTemplate.Parameters = new List<CommandParameterTemplate>();
+                    List<CommandParameterTemplate> commandTemplateParameters = new List<CommandParameterTemplate>();
                     foreach (XmlNode parameterNode in node.SelectNodes("Parameter"))
                     {
                         XmlAttribute attrParamName = parameterNode.Attributes["name"];
@@ -260,41 +259,38 @@ namespace EntryEdit
                             int.TryParse(attrParamBytes.InnerText, out paramByteLength);
                         }
 
-                        CommandParameterTemplate parameterTemplate = new CommandParameterTemplate();
-                        parameterTemplate.Name = (attrParamName != null) ? attrParamName.InnerText : CommandParameterTemplate.DefaultName;
-                        parameterTemplate.ByteLength = paramByteLength;
-                        parameterTemplate.Type = (attrParamType != null) ? GetParameterType(attrParamType.InnerText) : CommandParameterType.Number;
+                        string parameterTemplateName = (attrParamName != null) ? attrParamName.InnerText : CommandParameterTemplate.DefaultName;
+                        int parameterTemplateByteLength = paramByteLength;
+                        CommandParameterType parameterTemplateType = (attrParamType != null) ? GetParameterType(attrParamType.InnerText) : CommandParameterType.Number;
+
+                        bool isHex = false;
+                        bool isSigned = true;
 
                         if (attrParamMode != null)
                         {
                             string strMode = attrParamMode.InnerText.ToLower().Trim();
                             if (strMode == "hex")
                             {
-                                parameterTemplate.IsHex = true;
-                                parameterTemplate.IsSigned = false;
+                                isHex = true;
+                                isSigned = false;
                             }
                             else if (strMode == "unsigned")
                             {
-                                parameterTemplate.IsHex = false;
-                                parameterTemplate.IsSigned = false;
-                            }
-                            else
-                            {
-                                parameterTemplate.IsHex = false;
-                                parameterTemplate.IsSigned = true;
+                                isHex = false;
+                                isSigned = false;
                             }
                         }
                         else
                         {
-                            bool isNumber = (parameterTemplate.Type == CommandParameterType.Number);
-                            parameterTemplate.IsHex = !isNumber;
-                            parameterTemplate.IsSigned = isNumber;
+                            bool isNumber = (parameterTemplateType == CommandParameterType.Number);
+                            isHex = !isNumber;
+                            isSigned = isNumber;
                         }
 
-                        commandTemplate.Parameters.Add(parameterTemplate);
+                        commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, parameterTemplateType));
                     }
 
-                    result.Add(commandTemplate.ID, commandTemplate);
+                    result.Add(commandTemplateID, new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, type, commandTemplateParameters));
                 }
             }
 
@@ -376,47 +372,44 @@ namespace EntryEdit
         public List<Event> GetEventsFromBytes(IList<byte> bytes)
         {
             List<Event> result = new List<Event>();
-            Dictionary<int, string> nameMap = entryNameMaps[CommandType.EventCommand];
 
             int index = 0;
             for (int startIndex = 0; startIndex < bytes.Count; startIndex += 0x2000)
             {
-                Event ev = GetEventFromBytes(bytes.SubLength(startIndex, 0x2000));
-                ev.Name = index.ToString("X4") + " " + nameMap[index];
-                result.Add(ev);
+                result.Add(GetEventFromBytes(index, bytes.SubLength(startIndex, 0x2000)));
                 index++;
             }
 
             return result;
         }
 
-        public Event GetEventFromBytes(IList<byte> bytes)
+        public Event GetEventFromBytes(int index, IList<byte> bytes)
         {
-            Event result = new Event();
-            result.CommandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), new HashSet<int>() { 0xDB, 0xE3 });
+            List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), new HashSet<int>() { 0xDB, 0xE3 });
 
             int numCommandBytes = 0;
-            foreach (Command command in result.CommandList)
+            foreach (Command command in commandList)
                 if (command != null)
                     numCommandBytes += command.GetTotalByteLength();
 
             int naturalTextOffset = numCommandBytes + 4;
-
             uint textOffset = bytes.SubLength(0, 4).ToUInt32();
-            result.TextOffset = textOffset;
+
+            CustomSection betweenSection;
+            CustomSection endSection;
 
             if (textOffset == 0xF2F2F2F2U)
             {
-                result.BetweenSection = new CustomSection();
-                result.EndSection = new CustomSection(bytes.Sub(naturalTextOffset));
+                betweenSection = new CustomSection();
+                endSection = new CustomSection(bytes.Sub(naturalTextOffset));
             }
             else
             {
-                result.BetweenSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset))) : new CustomSection();
-                result.EndSection = new CustomSection(bytes.Sub(textOffset));
+                betweenSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset))) : new CustomSection();
+                endSection = new CustomSection(bytes.Sub(textOffset));
             }
 
-            return result;
+            return new Event(index, entryNameMaps[CommandType.EventCommand][index], textOffset, commandList, betweenSection, endSection);
         }
 
         public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)
@@ -435,10 +428,10 @@ namespace EntryEdit
             foreach (ConditionalSet set in conditionalSets)
             {
                 setReferences.Add(setReference);
-                foreach (List<Command> commands in set.ConditionalBlocks)
+                foreach (ConditionalBlock block in set.ConditionalBlocks)
                 {
                     blockReferences.Add(blockReference);
-                    byte[] currentCommandBytes = CommandsToByteArray(commands);
+                    byte[] currentCommandBytes = CommandsToByteArray(block.Commands);
                     commandBytes.AddRange(currentCommandBytes);
                     blockReference += (UInt16)(currentCommandBytes.Length);
                     setReference += 2;
@@ -480,13 +473,13 @@ namespace EntryEdit
 
             for (int setIndex = 0; setIndex < numSets; setIndex++)
             {
-                ConditionalSet set = new ConditionalSet();
-                set.ConditionalBlocks = new List<List<Command>>();
-                set.Name = setIndex.ToString("X2") + " " + setNameMap[setIndex];
+                List<ConditionalBlock> conditionalBlocks = new List<ConditionalBlock>();
+                string setName = setNameMap[setIndex];
 
                 int setStartIndex = setOffsets[setIndex];
                 int setEndIndex = ((setIndex < (numSets - 1)) ? setOffsets[setIndex + 1] : blockByteOffset);
 
+                int numBlocks = 0;
                 UInt16 prevBlockIndex = 0;
                 for (int setByteIndex = setStartIndex; setByteIndex < setEndIndex; setByteIndex += 2)
                 {
@@ -504,13 +497,14 @@ namespace EntryEdit
                             setIndexAddend++;
                         }
 
-                        set.ConditionalBlocks.Add(CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex)));
+                        conditionalBlocks.Add(new ConditionalBlock(numBlocks, CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex))));
+                        numBlocks++;
                     }
                     
                     prevBlockIndex = blockIndex;
                 }
 
-                result.Add(set);
+                result.Add(new ConditionalSet(setIndex, setName, conditionalBlocks));
             }
 
             return result;
@@ -576,7 +570,7 @@ namespace EntryEdit
             int value = 0;
             int shiftAmount = 0;
 
-            Command result = new Command();
+            CommandTemplate resultTemplate = null;
             CommandTemplate template = null;
 
             int index = 0;
@@ -587,28 +581,24 @@ namespace EntryEdit
 
                 if (templateMap.TryGetValue(value, out template))
                 {
-                    result.Template = template;
+                    resultTemplate = template;
                     break;
                 }
             }
 
-            if (result.Template == null)
+            if (resultTemplate == null)
                 return null;
 
-            index = result.Template.ByteLength;
-            result.Parameters = new List<CommandParameter>();
+            index = resultTemplate.ByteLength;
+            List<CommandParameter> parameters = new List<CommandParameter>();
             foreach (CommandParameterTemplate parameterTemplate in template.Parameters)
             {
-                CommandParameter parameter = new CommandParameter();
                 int byteLength = parameterTemplate.ByteLength;
-
-                parameter.Template = parameterTemplate;
-                parameter.Value = bytes.SubLength(index, byteLength).ToIntLE();
+                parameters.Add(new CommandParameter(parameterTemplate, bytes.SubLength(index, byteLength).ToIntLE()));
                 index += byteLength;
-                result.Parameters.Add(parameter);
             }
 
-            return result;
+            return new Command(resultTemplate, parameters);
         }
     }
 }

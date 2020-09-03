@@ -24,34 +24,30 @@ namespace EntryEdit
         }
 
         private EntryData _entryData;
+        private EntryData _entryDataDefault;
 
         public MainForm()
         {
             InitializeComponent();
             Start();
+            WriteByteDataToTestFiles();
         }
 
         private void Start()
         {
             _entryData = DataHelper.LoadDefaultEntryData();
+            _entryDataDefault = _entryData.Copy();
 
             battleConditionalSetsEditor.Populate(_entryData.BattleConditionals);
             worldConditionalSetsEditor.Populate(_entryData.WorldConditionals);
             eventsEditor.Populate(_entryData.Events);
         }
 
-        private void Test()
+        private void WriteByteDataToTestFiles()
         {
-            List<ConditionalSet> battleConditionalSets = DataHelper.LoadBattleConditionalDefaults();
-            List<ConditionalSet> worldConditionalSets = DataHelper.LoadWorldConditionalDefaults();
-            List<Event> events = DataHelper.LoadDefaultEvents();
-            byte[] battleConditionalBytes = DataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, battleConditionalSets);
-            byte[] worldConditionalBytes = DataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, worldConditionalSets);
-            byte[] eventBytes = DataHelper.EventsToByteArray(events);
-            
-            System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", battleConditionalBytes);
-            System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", worldConditionalBytes);
-            System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", eventBytes);
+            System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", DataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals));
+            System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", DataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals));
+            System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", DataHelper.EventsToByteArray(_entryData.Events));
         }
 
         private void SaveXMLFromEventFilenames(string inputFilepath, string outputFilepath)
