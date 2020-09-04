@@ -281,7 +281,7 @@
   <Event value="10D" name="Wiegraf berating Golagros"/>
   <Event value="10E" name="Finding Teta Missing"/>
   <Event value="10F" name="Partings"/>
-  <Event value="110" name="Ch2 Start Orbonne Monastary"/>
+  <Event value="110" name="Ch2 Start Orbonne Monastery"/>
   <Event value="111" name="Ovelia Joins BS"/>
   <Event value="112" name=" Ramza Mustadio Agrias Ovelia Meeting BS"/>
   <Event value="113" name="Ruins of Zaland and BS"/>
@@ -295,7 +295,7 @@
   <Event value="11B" name="Draclau hires Gafgarion and BS"/>
   <Event value="11C" name="Substitute and BS"/>
   <Event value="11D" name="Gelwan's Death and BS"/>
-  <Event value="11E" name="Ch2 Start Orbonne Monastary BS"/>
+  <Event value="11E" name="Ch2 Start Orbonne Monastery BS"/>
   <Event value="11F" name="Chapter 3 Start"/>
   <Event value="120" name="Chapter 3 Start BS"/>
   <Event value="121" name="Goland Coal City Post Battle"/>
