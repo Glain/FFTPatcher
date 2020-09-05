@@ -42,9 +42,6 @@ namespace FFTorgASM
     
     static class PatchXmlReader
     {
-        public static readonly System.Text.RegularExpressions.Regex stripRegex = 
-            new System.Text.RegularExpressions.Regex( @"\s" );
-
         public static bool TryGetPatches( string xmlString, string xmlFilename, ASMEncodingUtility asmUtility, out IList<AsmPatch> patches )
         {
             try
@@ -715,18 +712,9 @@ namespace FFTorgASM
             return specifics;
         }
 
-        private static byte[] GetBytes( string byteText )
+        private static byte[] GetBytes(string byteText)
         {
-            string strippedText = stripRegex.Replace( byteText, string.Empty );
-    
-            int bytes = strippedText.Length / 2;
-            byte[] result = new byte[bytes];
-
-            for ( int i = 0; i < bytes; i++ )
-            {
-                result[i] = Byte.Parse( strippedText.Substring( i * 2, 2 ), System.Globalization.NumberStyles.HexNumber );
-            }
-            return result;
+            return PatcherLib.Utilities.Utilities.GetBytesFromHexString(byteText);
         }
     }
 }

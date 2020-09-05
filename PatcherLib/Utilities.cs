@@ -55,8 +55,10 @@ namespace PatcherLib.Utilities
     /// </summary>
     public static class Utilities
     {
+        public static readonly System.Text.RegularExpressions.Regex stripRegex = new System.Text.RegularExpressions.Regex(@"\s");
+        public const string hexAlphabet = "0123456789ABCDEF";
 
-		#region Methods (13) 
+		#region Methods
 
 
         public static IDictionary<TKey, TValue> DictionaryFromKVPs<TKey, TValue>( IEnumerable<KeyValuePair<TKey, TValue>> kvps )
@@ -435,6 +437,33 @@ namespace PatcherLib.Utilities
             {
                 return false;
             }
+        }
+
+        public static byte[] GetBytesFromHexString(string byteText)
+        {
+            string strippedText = stripRegex.Replace(byteText, string.Empty);
+
+            int bytes = strippedText.Length / 2;
+            byte[] result = new byte[bytes];
+
+            for (int i = 0; i < bytes; i++)
+            {
+                result[i] = Byte.Parse(strippedText.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber);
+            }
+            return result;
+        }
+
+        public static string ByteArrayToHexString(ICollection<byte> bytes)
+        {
+            StringBuilder result = new StringBuilder(bytes.Count * 2);
+
+            foreach (byte b in bytes)
+            {
+                result.Append(hexAlphabet[(int)(b >> 4)]);
+                result.Append(hexAlphabet[(int)(b & 0x0F)]);
+            }
+
+            return result.ToString();
         }
 
         #endregion Methods 
