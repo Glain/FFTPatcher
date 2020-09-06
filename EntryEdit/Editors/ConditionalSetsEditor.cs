@@ -25,12 +25,9 @@ namespace EntryEdit.Editors
             cmb_ConditionalSet.Items.Clear();
             cmb_ConditionalSet.Items.AddRange(_conditionalSets.ToArray());
             cmb_ConditionalSet.SelectedIndex = 0;
-
-            _conditionalSetIndex = 0;
-            conditionalSetEditor.Populate(_conditionalSets[_conditionalSetIndex]);
         }
 
-        private void cmb_Event_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmb_ConditionalSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             _conditionalSetIndex = cmb_ConditionalSet.SelectedIndex;
             conditionalSetEditor.Populate(_conditionalSets[_conditionalSetIndex]);

@@ -20,6 +20,8 @@ namespace EntryEdit.Editors
         public void Populate(Event inputEvent)
         {
             _event = inputEvent;
+            commandListEditor.Populate(inputEvent.CommandList);
+            textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection });
         }
     }
 }

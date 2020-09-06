@@ -17,7 +17,7 @@
     <Entry hex="000E" name="Balbanes's Death" />
     <Entry hex="000F" name="Mandalia Plains (Setup)" />
     <Entry hex="0010" name="Mandalia Plains (Options Given)" />
-    <Entry hex="0011" name="Mandalia Plains (Destroy Corps" />
+    <Entry hex="0011" name="Mandalia Plains (Destroy Corps Chosen)" />
     <Entry hex="0012" name="Mandalia Plains (Save Algus Chosen)" />
     <Entry hex="0013" name="Mandalia Plains (Algus First Turn)" />
     <Entry hex="0014" name="Mandalia Plains (Algus KO'd, Destroy Chosen)" />
@@ -200,8 +200,8 @@
     <Entry hex="00C5" name="Inside of Lionel Castle" />
     <Entry hex="00C6" name="Inside of Lionel Castle (Queklain and Ramza talk)" />
     <Entry hex="00C7" name="Inside of Lionel Castle (Victory)" />
-    <Entry hex="00C8" name="Gelwan's Death (Setup)" />
-    <Entry hex="00C9" name="Gelwan's Death" />
+    <Entry hex="00C8" name="The Lion War Outbreak (Setup)" />
+    <Entry hex="00C9" name="The Lion War Outbreak" />
     <Entry hex="00CA" name="Chapter 3 Start (Setup)" />
     <Entry hex="00CB" name="Chapter 3 Start" />
     <Entry hex="00CC" name="Goland Coal City (Setup)" />
@@ -234,20 +234,20 @@
     <Entry hex="00E7" name="Outside Castle Gate in Lesalia Talk with Alma" />
     <Entry hex="00E8" name="Orbonne Monastery (Setup)" />
     <Entry hex="00E9" name="Orbonne Monastery" />
-    <Entry hex="00EA" name="Underground Book Storage First Floor (Setup)" />
-    <Entry hex="00EB" name="Underground Book Storage First Floor" />
-    <Entry hex="00EC" name="Underground Book Storage First Floor (Victory)" />
-    <Entry hex="00ED" name="Underground Book Storage Second Floor (Setup)" />
-    <Entry hex="00EE" name="Underground Book Storage Second Floor" />
-    <Entry hex="00EF" name="Underground Book Storage Second Floor (Izlude, Ramza talk first)" />
-    <Entry hex="00F0" name="Underground Book Storage Second Floor (Izlude,Ramza talk second)" />
-    <Entry hex="00F1" name="Underground Book Storage Second Floor (Victory)" />
-    <Entry hex="00F2" name="Underground Book Storage Third Floor (Setup)" />
-    <Entry hex="00F3" name="Underground Book Storage Third Floor" />
-    <Entry hex="00F4" name="Underground Book Storage Third Floor (Wiegraf talk)" />
-    <Entry hex="00F5" name="Underground Book Storage Third Floor (Wiegraf, Ramza talk first)" />
-    <Entry hex="00F6" name="Underground Book Storage Third Floor (Wiegraf, Ramza talk second)" />
-    <Entry hex="00F7" name="Underground Book Storage Third Floor (Victory)" />
+    <Entry hex="00EA" name="Underground Book Storage Second Floor (Setup)" />
+    <Entry hex="00EB" name="Underground Book Storage Second Floor" />
+    <Entry hex="00EC" name="Underground Book Storage Second Floor (Victory)" />
+    <Entry hex="00ED" name="Underground Book Storage Third Floor (Setup)" />
+    <Entry hex="00EE" name="Underground Book Storage Third Floor" />
+    <Entry hex="00EF" name="Underground Book Storage Third Floor (Izlude, Ramza talk first)" />
+    <Entry hex="00F0" name="Underground Book Storage Third Floor (Izlude, Ramza talk second)" />
+    <Entry hex="00F1" name="Underground Book Storage Third Floor (Victory)" />
+    <Entry hex="00F2" name="Underground Book Storage First Floor (Setup)" />
+    <Entry hex="00F3" name="Underground Book Storage First Floor" />
+    <Entry hex="00F4" name="Underground Book Storage First Floor (Wiegraf talk)" />
+    <Entry hex="00F5" name="Underground Book Storage First Floor (Wiegraf, Ramza talk first)" />
+    <Entry hex="00F6" name="Underground Book Storage First Floor (Wiegraf, Ramza talk second)" />
+    <Entry hex="00F7" name="Underground Book Storage First Floor (Victory)" />
     <Entry hex="00F8" name="Meet Velius (Setup)" />
     <Entry hex="00F9" name="Meet Velius" />
     <Entry hex="00FA" name="Malak and the Scriptures (Setup)" />
@@ -456,7 +456,7 @@
     <Entry hex="01C5" name="Chapel of St. Murond Temple (Zalbag, Ramza first turn)" />
     <Entry hex="01C6" name="Chapel of St. Murond Temple (Ramza, Zalbag 50% HP talk)" />
     <Entry hex="01C7" name="Chapel of St. Murond Temple (Victory)" />
-    <Entry hex="01C8" name="Reguiem (Setup)" />
+    <Entry hex="01C8" name="Requiem (Setup)" />
     <Entry hex="01C9" name="Requiem" />
     <Entry hex="01CA" name="Zarghidas (Setup)" />
     <Entry hex="01CB" name="Zarghidas (Options Given)" />
@@ -468,15 +468,15 @@
     <Entry hex="01D1" name="Bar - Goland Coal City (Options Given)" />
     <Entry hex="01D2" name="Bar - Goland Coal City (Refuse Beowulf's Invitation Chosen)" />
     <Entry hex="01D3" name="Bar - Goland Coal City (Accept Beowulf's invitation Chosen)" />
-    <Entry hex="01D4" name="Coillery Underground - Third Floor (Setup)" />
-    <Entry hex="01D5" name="Coillery Underground - Third Floor (Battle)" />
-    <Entry hex="01D6" name="Coillery Underground - Third Floor (Victory)" />
-    <Entry hex="01D7" name="Coillery Underground - Second Floor (Setup)" />
-    <Entry hex="01D8" name="Coillery Underground - Second Floor (Battle)" />
-    <Entry hex="01D9" name="Coillery Underground - Second Floor (Victory)" />
-    <Entry hex="01DA" name="Coillery Underground - First Floor (Setup)" />
-    <Entry hex="01DB" name="Coillery Underground - First Floor (Battle)" />
-    <Entry hex="01DC" name="Coillery Underground - First Floor (Victory)" />
+    <Entry hex="01D4" name="Colliery Underground - Third Floor (Setup)" />
+    <Entry hex="01D5" name="Colliery Underground - Third Floor (Battle)" />
+    <Entry hex="01D6" name="Colliery Underground - Third Floor (Victory)" />
+    <Entry hex="01D7" name="Colliery Underground - Second Floor (Setup)" />
+    <Entry hex="01D8" name="Colliery Underground - Second Floor (Battle)" />
+    <Entry hex="01D9" name="Colliery Underground - Second Floor (Victory)" />
+    <Entry hex="01DA" name="Colliery Underground - First Floor (Setup)" />
+    <Entry hex="01DB" name="Colliery Underground - First Floor (Battle)" />
+    <Entry hex="01DC" name="Colliery Underground - First Floor (Victory)" />
     <Entry hex="01DD" name="Underground Passage in Goland (Setup)" />
     <Entry hex="01DE" name="Underground Passage in Goland (Battle)" />
     <Entry hex="01DF" name="Underground Passage in Goland (Reis's Death, Beowulf Alive)" />
@@ -488,8 +488,8 @@
     <Entry hex="01E5" name="Nelveska Temple" />
     <Entry hex="01E6" name="Nelveska Temple (Worker 7 recharging)" />
     <Entry hex="01E7" name="Nelveska Temple (Victory)" />
-    <Entry hex="01E8" name="Reis' Curse (Setup)" />
-    <Entry hex="01E9" name="Reis' Curse" />
+    <Entry hex="01E8" name="Reis Curse (Setup)" />
+    <Entry hex="01E9" name="Reis Curse" />
     <Entry hex="01EA" name="Bethla Sluice (Late add-in Ramza hint)" />
     <Entry hex="01EB" name="Empty" />
     <Entry hex="01EC" name="Empty" />

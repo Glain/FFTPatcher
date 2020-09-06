@@ -30,7 +30,7 @@ namespace EntryEdit
         {
             InitializeComponent();
             Start();
-            WriteByteDataToTestFiles();
+            //WriteByteDataToTestFiles();
         }
 
         private void Start()

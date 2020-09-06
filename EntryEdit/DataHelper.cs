@@ -12,6 +12,8 @@ namespace EntryEdit
 {
     public class DataHelper
     {
+        private const int EventSize = 0x2000;
+
         private readonly Dictionary<CommandParameterType, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
@@ -330,13 +332,13 @@ namespace EntryEdit
 
         public byte[] EventsToByteArray(IList<Event> events)
         {
-            byte[] resultBytes = new byte[events.Count * 0x2000];
+            byte[] resultBytes = new byte[events.Count * EventSize];
 
             int copyIndex = 0;
             foreach (Event inputEvent in events)
             {
                 byte[] eventBytes = EventToByteArray(inputEvent);
-                Array.Copy(eventBytes, 0, resultBytes, copyIndex, eventBytes.Length);
+                Array.Copy(eventBytes, 0, resultBytes, copyIndex, EventSize);
                 copyIndex += eventBytes.Length;
             }
 
@@ -347,14 +349,25 @@ namespace EntryEdit
         {
             byte[] textOffsetBytes = inputEvent.TextOffset.ToBytes();
             byte[] commandBytes = CommandsToByteArray(inputEvent.CommandList);
-            byte[] betweenBytes = inputEvent.BetweenSection.ToByteArray();
-            byte[] endBytes = inputEvent.EndSection.ToByteArray();
+            byte[] dataBytes = inputEvent.DataSection.ToByteArray();
+            byte[] textBytes = inputEvent.TextSection.ToByteArray();
 
-            byte[] resultBytes = new byte[4 + commandBytes.Length + betweenBytes.Length + endBytes.Length];
+            /*
+            byte[] resultBytes = new byte[4 + commandBytes.Length + dataBytes.Length + textBytes.Length];
             Array.Copy(textOffsetBytes, resultBytes, 4);
             Array.Copy(commandBytes, 0, resultBytes, 4, commandBytes.Length);
-            Array.Copy(betweenBytes, 0, resultBytes, commandBytes.Length + 4, betweenBytes.Length);
-            Array.Copy(endBytes, 0, resultBytes, commandBytes.Length + betweenBytes.Length + 4, endBytes.Length);
+            Array.Copy(dataBytes, 0, resultBytes, commandBytes.Length + 4, dataBytes.Length);
+            Array.Copy(endBytes, 0, resultBytes, commandBytes.Length + dataBytes.Length + 4, textBytes.Length);
+            */
+
+            List<byte> resultByteList = new List<byte>(EventSize);
+            resultByteList.AddRange(textOffsetBytes);
+            resultByteList.AddRange(commandBytes);
+            resultByteList.AddRange(dataBytes);
+            resultByteList.AddRange(textBytes);
+
+            byte[] resultBytes = new byte[EventSize];
+            Array.Copy(resultByteList.ToArray(), resultBytes, Math.Min(EventSize, resultByteList.Count));
 
             return resultBytes;
         }
@@ -395,21 +408,21 @@ namespace EntryEdit
             int naturalTextOffset = numCommandBytes + 4;
             uint textOffset = bytes.SubLength(0, 4).ToUInt32();
 
-            CustomSection betweenSection;
-            CustomSection endSection;
+            CustomSection dataSection;
+            CustomSection textSection;
 
             if (textOffset == 0xF2F2F2F2U)
             {
-                betweenSection = new CustomSection();
-                endSection = new CustomSection(bytes.Sub(naturalTextOffset));
+                dataSection = new CustomSection();
+                textSection = new CustomSection(bytes.Sub(naturalTextOffset), true);
             }
             else
             {
-                betweenSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset))) : new CustomSection();
-                endSection = new CustomSection(bytes.Sub(textOffset));
+                dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset)), false) : new CustomSection();
+                textSection = new CustomSection(bytes.Sub(textOffset), true);
             }
 
-            return new Event(index, entryNameMaps[CommandType.EventCommand][index], textOffset, commandList, betweenSection, endSection);
+            return new Event(index, entryNameMaps[CommandType.EventCommand][index], textOffset, commandList, dataSection, textSection);
         }
 
         public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)

@@ -46,6 +46,12 @@
   <ItemGroup>
     <Compile Include="Command.cs" />
     <Compile Include="DataHelper.cs" />
+    <Compile Include="Editors\CommandEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\CommandEditor.Designer.cs">
+      <DependentUpon>CommandEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\CommandListEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -63,6 +69,18 @@
     </Compile>
     <Compile Include="Editors\ConditionalSetsEditor.Designer.cs">
       <DependentUpon>ConditionalSetsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\CustomEntryEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\CustomEntryEditor.Designer.cs">
+      <DependentUpon>CustomEntryEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\CustomSectionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\CustomSectionEditor.Designer.cs">
+      <DependentUpon>CustomSectionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\EventEditor.cs">
       <SubType>UserControl</SubType>
@@ -86,11 +104,20 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextUtility.cs" />
+    <EmbeddedResource Include="Editors\CommandListEditor.resx">
+      <DependentUpon>CommandListEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\ConditionalSetEditor.resx">
       <DependentUpon>ConditionalSetEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ConditionalSetsEditor.resx">
       <DependentUpon>ConditionalSetsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\CustomEntryEditor.resx">
+      <DependentUpon>CustomEntryEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\CustomSectionEditor.resx">
+      <DependentUpon>CustomSectionEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\EventEditor.resx">
       <DependentUpon>EventEditor.cs</DependentUpon>

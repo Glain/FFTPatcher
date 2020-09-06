@@ -28,8 +28,6 @@ namespace EntryEdit.Editors
             if (conditionalSet.ConditionalBlocks.Count > 0)
             {
                 cmb_Block.SelectedIndex = 0;
-                _blockIndex = 0;
-                commandListEditor.Populate(conditionalSet.ConditionalBlocks[_blockIndex].Commands);
             }
             else
             {

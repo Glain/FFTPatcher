@@ -58,7 +58,13 @@ namespace EntryEdit
 
         public EntryBytes Copy()
         {
-            return new EntryBytes(BattleConditionals, WorldConditionals, Events);
+            byte[] battleConditionalsCopy = new byte[BattleConditionals.Length];
+            byte[] worldConditionalsCopy = new byte[WorldConditionals.Length];
+            byte[] eventsCopy = new byte[Events.Length];
+            Array.Copy(BattleConditionals, battleConditionalsCopy, BattleConditionals.Length);
+            Array.Copy(WorldConditionals, worldConditionalsCopy, WorldConditionals.Length);
+            Array.Copy(Events, eventsCopy, Events.Length);
+            return new EntryBytes(battleConditionalsCopy, worldConditionalsCopy, eventsCopy);
         }
     }
 
@@ -68,22 +74,22 @@ namespace EntryEdit
         public string Name { get; private set; }
         public uint TextOffset { get; private set; }
         public List<Command> CommandList { get; private set; }
-        public CustomSection BetweenSection { get; private set; }
-        public CustomSection EndSection { get; private set; }
+        public CustomSection DataSection { get; private set; }
+        public CustomSection TextSection { get; private set; }
 
-        public Event(int index, string name, uint textOffset, List<Command> commandList, CustomSection betweenSection, CustomSection endSection)
+        public Event(int index, string name, uint textOffset, List<Command> commandList, CustomSection dataSection, CustomSection textSection)
         {
             this.Index = index;
             this.Name = name;
             this.TextOffset = textOffset;
             this.CommandList = commandList;
-            this.BetweenSection = betweenSection;
-            this.EndSection = endSection;
+            this.DataSection = dataSection;
+            this.TextSection = textSection;
         }
 
         public Event Copy()
         {
-            return new Event(Index, Name, TextOffset, CopyableEntry.CopyList<Command>(CommandList), BetweenSection.Copy(), EndSection.Copy());
+            return new Event(Index, Name, TextOffset, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy());
         }
 
         public override string ToString()

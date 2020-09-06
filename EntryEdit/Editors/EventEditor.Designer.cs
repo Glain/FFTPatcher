@@ -28,18 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.textSectionEditor = new EntryEdit.Editors.CustomSectionEditor();
+            this.commandListEditor = new EntryEdit.Editors.CommandListEditor();
             this.SuspendLayout();
+            // 
+            // textSectionEditor
+            // 
+            this.textSectionEditor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textSectionEditor.Location = new System.Drawing.Point(7, 414);
+            this.textSectionEditor.Name = "textSectionEditor";
+            this.textSectionEditor.Size = new System.Drawing.Size(605, 135);
+            this.textSectionEditor.TabIndex = 2;
+            // 
+            // commandListEditor
+            // 
+            this.commandListEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.commandListEditor.Location = new System.Drawing.Point(7, 7);
+            this.commandListEditor.Name = "commandListEditor";
+            this.commandListEditor.Size = new System.Drawing.Size(605, 400);
+            this.commandListEditor.TabIndex = 0;
             // 
             // EventEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textSectionEditor);
+            this.Controls.Add(this.commandListEditor);
             this.Name = "EventEditor";
-            this.Size = new System.Drawing.Size(620, 350);
+            this.Size = new System.Drawing.Size(620, 550);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private CommandListEditor commandListEditor;
+        private CustomSectionEditor textSectionEditor;
     }
 }
