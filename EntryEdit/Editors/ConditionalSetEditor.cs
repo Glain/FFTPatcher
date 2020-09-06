@@ -11,15 +11,25 @@ namespace EntryEdit.Editors
     public partial class ConditionalSetEditor : UserControl
     {
         private ConditionalSet _conditionalSet;
+        private List<string> _commandNames;
         private int _blockIndex = -1;
+        private bool _isPopulate = false;
 
         public ConditionalSetEditor()
         {
             InitializeComponent();
         }
 
+        public void Init(List<string> commandNames)
+        {
+            this._commandNames = commandNames;
+            commandListEditor.Init(commandNames);
+        }
+
         public void Populate(ConditionalSet conditionalSet)
         {
+            _isPopulate = true;
+
             this._conditionalSet = conditionalSet;
 
             cmb_Block.Items.Clear();
@@ -28,6 +38,7 @@ namespace EntryEdit.Editors
             if (conditionalSet.ConditionalBlocks.Count > 0)
             {
                 cmb_Block.SelectedIndex = 0;
+                SetBlockIndex(0);
             }
             else
             {
@@ -35,12 +46,20 @@ namespace EntryEdit.Editors
                 _blockIndex = -1;
                 commandListEditor.Clear();
             }
+
+            _isPopulate = false;
+        }
+
+        private void SetBlockIndex(int index)
+        {
+            _blockIndex = index;
+            commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
         }
 
         private void cmb_Block_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _blockIndex = cmb_Block.SelectedIndex;
-            commandListEditor.Populate(_conditionalSet.ConditionalBlocks[_blockIndex].Commands);
+            if (!_isPopulate)
+                SetBlockIndex(cmb_Block.SelectedIndex);
         }
     }
 }

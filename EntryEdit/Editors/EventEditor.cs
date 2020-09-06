@@ -11,10 +11,17 @@ namespace EntryEdit.Editors
     public partial class EventEditor : UserControl
     {
         private Event _event;
+        private List<string> _commandNames;
 
         public EventEditor()
         {
             InitializeComponent();
+        }
+
+        public void Init(List<string> commandNames)
+        {
+            _commandNames = commandNames;
+            commandListEditor.Init(commandNames);
         }
 
         public void Populate(Event inputEvent)

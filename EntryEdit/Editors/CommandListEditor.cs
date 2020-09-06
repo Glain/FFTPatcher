@@ -14,7 +14,10 @@ namespace EntryEdit.Editors
         const int DefaultPageSize = 10;
         const float RowHeight = 30.0F;
 
+        private bool _isPopulate = false;
+
         private List<Command> _commandList;
+        private List<string> _commandNames;
         private int _commandPageSize = DefaultPageSize;
         private int _commandPageIndex = 0;
         private int _commandNumPages = 1;
@@ -22,31 +25,41 @@ namespace EntryEdit.Editors
         public CommandListEditor()
         {
             InitializeComponent();
+        }
+
+        public void Init(List<string> commandNames)
+        {
+            _commandNames = commandNames;
             InitRows();
         }
 
         public void Populate(List<Command> commandList, int commandPageSize = DefaultPageSize)
         {
+            _isPopulate = true;
+
             _commandList = commandList;
             _commandPageSize = commandPageSize;
             _commandNumPages = (_commandList.Count + _commandPageSize - 1) / _commandPageSize;
 
-            int oldPageValue = (int)spinner_Page.Value;
             spinner_Page.Value = 1;
             spinner_Page.Maximum = _commandNumPages;
 
-            if (oldPageValue == 1)
-                PopulateRows();
+            SetCommandPageIndex(0);
+            _isPopulate = false;
         }
 
         public void Clear()
         {
+            _isPopulate = true;
+
             _commandList = null;
             _commandPageSize = DefaultPageSize;
             _commandNumPages = 1;
             spinner_Page.Value = 1;
             spinner_Page.Maximum = _commandNumPages;
             tlp_Commands.Controls.Clear();
+
+            _isPopulate = false;
         }
 
         private void InitRows()
@@ -111,6 +124,7 @@ namespace EntryEdit.Editors
 
             CommandEditor commandEditor = new CommandEditor();
             commandEditor.Visible = false;
+            commandEditor.InitCommandList(_commandNames);
 
             tlp_Commands.RowCount++;
             tlp_Commands.RowStyles.Add(new RowStyle(SizeType.Absolute, 0.0F));
@@ -118,10 +132,16 @@ namespace EntryEdit.Editors
             tlp_Commands.Controls.Add(commandEditor);
         }
 
+        private void SetCommandPageIndex(int index)
+        {
+            _commandPageIndex = index;
+            PopulateRows();
+        }
+
         private void spinner_Page_ValueChanged(object sender, EventArgs e)
         {
-            _commandPageIndex = ((int)spinner_Page.Value) - 1;
-            PopulateRows();
+            if (!_isPopulate)
+                SetCommandPageIndex(((int)spinner_Page.Value) - 1);
         }
 
         private void btn_Page_Prev_Click(object sender, EventArgs e)

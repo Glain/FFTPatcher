@@ -34,6 +34,11 @@ namespace EntryEdit
         {
             return new Command(Template, CopyableEntry.CopyList<CommandParameter>(Parameters));
         }
+
+        public override string ToString()
+        {
+            return Template.ToString();
+        }
     }
 
     public class CommandParameter : ICopyableEntry<CommandParameter>
@@ -75,6 +80,11 @@ namespace EntryEdit
             this.ByteLength = byteLength;
             this.Type = type;
             this.Parameters = parameters;
+        }
+
+        public override string ToString()
+        {
+            return ID.ToString("X" + (ByteLength * 2)) + " " + Name;
         }
     }
 

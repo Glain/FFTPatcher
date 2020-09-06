@@ -319,6 +319,36 @@ namespace EntryEdit
             return nodeValue;
         }
 
+        public Dictionary<CommandType, List<string>> GetCommandNames()
+        {
+            Dictionary<CommandType, List<string>> result = new Dictionary<CommandType, List<string>>();
+            result.Add(CommandType.BattleConditional, GetCommandNamesByType(CommandType.BattleConditional, 256, 2));
+            result.Add(CommandType.WorldConditional, GetCommandNamesByType(CommandType.WorldConditional, 256, 2));
+            result.Add(CommandType.EventCommand, GetCommandNamesByType(CommandType.EventCommand, 256, 1));
+            return result;
+        }
+
+        public List<string> GetCommandNamesByType(CommandType type, int numValues, int actualByteLength)
+        {
+            List<string> result = new List<string>();
+            string hexFormatString = "X" + (actualByteLength * 2);
+
+            for (int index = 0; index < numValues; index++)
+            {
+                CommandTemplate template = null;
+                if (commandTemplateMaps[type].TryGetValue(index, out template))
+                {
+                    result.Add(index.ToString("X" + (template.ByteLength * 2)) + " " + template.Name);
+                }
+                else
+                {
+                    result.Add(index.ToString(hexFormatString));
+                }
+            }
+
+            return result;
+        }
+
         public EntryData LoadDefaultEntryData()
         {
             return new EntryData(LoadBattleConditionalDefaults(), LoadWorldConditionalDefaults(), LoadDefaultEvents());

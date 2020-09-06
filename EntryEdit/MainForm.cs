@@ -38,9 +38,11 @@ namespace EntryEdit
             _entryData = DataHelper.LoadDefaultEntryData();
             _entryDataDefault = _entryData.Copy();
 
-            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals);
-            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals);
-            eventsEditor.Populate(_entryData.Events);
+            Dictionary<CommandType, List<string>> commandNames = DataHelper.GetCommandNames();
+
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, commandNames[CommandType.BattleConditional]);
+            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, commandNames[CommandType.WorldConditional]);
+            eventsEditor.Populate(_entryData.Events, commandNames[CommandType.EventCommand]);
         }
 
         private void WriteByteDataToTestFiles()

@@ -104,6 +104,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextUtility.cs" />
+    <EmbeddedResource Include="Editors\CommandEditor.resx">
+      <DependentUpon>CommandEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\CommandListEditor.resx">
       <DependentUpon>CommandListEditor.cs</DependentUpon>
     </EmbeddedResource>

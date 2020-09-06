@@ -16,6 +16,9 @@ namespace EntryEdit.Editors
         private int _customSectionIndex = 0;
         private int _customEntryIndex = -1;
 
+        private bool _isPopulate = false;
+        private bool _isPopulateSection = false;
+
         public CustomSectionEditor()
         {
             InitializeComponent();
@@ -23,6 +26,8 @@ namespace EntryEdit.Editors
 
         public void Populate(IList<CustomSection> customSections)
         {
+            _isPopulate = true;
+
             _customSections = customSections;
             _customSectionIndex = 0;
             _editorMode = CustomEntryEditor.EditorMode.Data;
@@ -31,15 +36,21 @@ namespace EntryEdit.Editors
             cmb_Section.Items.Add("Text");
             cmb_Section.Items.Add("Data");
             cmb_Section.SelectedIndex = _customSectionIndex;
+            SetSectionIndex(_customSectionIndex);
+
+            _isPopulate = false;
         }
 
         private void PopulateSection()
         {
+            _isPopulateSection = true;
+
             if (_customSections[_customSectionIndex].CustomEntryList.Count > 0)
             {
                 cmb_Entry.Items.Clear();
                 cmb_Entry.Items.AddRange(_customSections[_customSectionIndex].CustomEntryList.ToArray());
                 cmb_Entry.SelectedIndex = 0;
+                SetEntryIndex(0);
             }
             else
             {
@@ -47,19 +58,33 @@ namespace EntryEdit.Editors
             }
 
             cmb_Entry.Visible = (_customSections[_customSectionIndex].CustomEntryList.Count > 1);
+
+            _isPopulateSection = false;
+        }
+
+        private void SetSectionIndex(int index)
+        {
+            _customSectionIndex = index;
+            _editorMode = (CustomEntryEditor.EditorMode)(index);
+            PopulateSection();
+        }
+
+        private void SetEntryIndex(int index)
+        {
+            _customEntryIndex = index;
+            entryEditor.Populate(_customSections[_customSectionIndex].CustomEntryList[index], _editorMode);
         }
 
         private void cmb_Section_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _customSectionIndex = cmb_Section.SelectedIndex;
-            _editorMode = (CustomEntryEditor.EditorMode)(_customSectionIndex);
-            PopulateSection();
+            if (!_isPopulate)
+                SetSectionIndex(cmb_Section.SelectedIndex);
         }
 
         private void cmb_Entry_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _customEntryIndex = cmb_Entry.SelectedIndex;
-            entryEditor.Populate(_customSections[_customSectionIndex].CustomEntryList[_customEntryIndex], _editorMode);
+            if (!_isPopulateSection)
+                SetEntryIndex(cmb_Entry.SelectedIndex);
         }
     }
 }
