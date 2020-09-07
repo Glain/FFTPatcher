@@ -3,7 +3,7 @@
     <Command hex="10" name="Display Message">
         <Parameter name="Unknown" bytes="1" />
         <Parameter name="Dialog Type" bytes="1" />
-        <Parameter name="Message ID" bytes="2" />
+        <Parameter name="Message ID" bytes="2" mode="hex" />
         <Parameter name="Unit ID" bytes="2" type="Unit" />
         <Parameter name="Portrait Column" bytes="1" />
         <Parameter name="X" bytes="2" />

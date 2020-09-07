@@ -20,10 +20,10 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(List<string> commandNames)
+        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps)
         {
             this._commandNames = commandNames;
-            commandListEditor.Init(commandNames);
+            commandListEditor.Init(commandNames, parameterValueMaps);
         }
 
         public void Populate(ConditionalSet conditionalSet)

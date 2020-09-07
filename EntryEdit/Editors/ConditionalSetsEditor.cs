@@ -20,14 +20,14 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<ConditionalSet> conditionalSets, List<string> commandNames)
+        public void Populate(List<ConditionalSet> conditionalSets, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps)
         {
             _isPopulate = true;
 
             this._conditionalSets = conditionalSets;
             this._commandNames = commandNames;
 
-            conditionalSetEditor.Init(commandNames);
+            conditionalSetEditor.Init(commandNames, parameterValueMaps);
 
             cmb_ConditionalSet.Items.Clear();
             cmb_ConditionalSet.Items.AddRange(_conditionalSets.ToArray());

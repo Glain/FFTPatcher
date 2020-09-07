@@ -12,12 +12,13 @@ namespace EntryEdit.Editors
     public partial class CommandListEditor : UserControl
     {
         const int DefaultPageSize = 10;
-        const float RowHeight = 30.0F;
+        const float RowHeight = 42.0F;
 
         private bool _isPopulate = false;
 
         private List<Command> _commandList;
         private List<string> _commandNames;
+        private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
         private int _commandPageSize = DefaultPageSize;
         private int _commandPageIndex = 0;
         private int _commandNumPages = 1;
@@ -27,27 +28,36 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(List<string> commandNames)
+        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int commandPageSize = DefaultPageSize)
         {
             _commandNames = commandNames;
+            _parameterValueMaps = parameterValueMaps;
+            _commandPageSize = commandPageSize;
             InitRows();
         }
 
-        public void Populate(List<Command> commandList, int commandPageSize = DefaultPageSize)
+        public void Populate(List<Command> commandList)
         {
             _isPopulate = true;
 
             _commandList = commandList;
-            _commandPageSize = commandPageSize;
             _commandNumPages = (_commandList.Count + _commandPageSize - 1) / _commandPageSize;
 
-            spinner_Page.Value = 1;
+            int minPageValue = Math.Min(_commandNumPages, 1);
+            spinner_Page.Minimum = minPageValue;
             spinner_Page.Maximum = _commandNumPages;
+            spinner_Page.Value = minPageValue;
 
             SetCommandPageIndex(0);
             _isPopulate = false;
         }
 
+        public void Clear()
+        {
+            Populate(new List<Command>());
+        }
+
+        /*
         public void Clear()
         {
             _isPopulate = true;
@@ -61,6 +71,7 @@ namespace EntryEdit.Editors
 
             _isPopulate = false;
         }
+        */
 
         private void InitRows()
         {
@@ -71,6 +82,10 @@ namespace EntryEdit.Editors
 
         private void PopulateRows()
         {
+            btn_Page_Prev.Enabled = false;
+            btn_Page_Next.Enabled = false;
+            spinner_Page.Enabled = false;
+
             int commandIndex = (_commandPageIndex * _commandPageSize);
             for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
             {
@@ -84,6 +99,7 @@ namespace EntryEdit.Editors
 
             btn_Page_Prev.Enabled = (_commandPageIndex > 0);
             btn_Page_Next.Enabled = (_commandPageIndex < (_commandNumPages - 1));
+            spinner_Page.Enabled = true;
         }
 
         private void ClearPanel()
@@ -124,7 +140,7 @@ namespace EntryEdit.Editors
 
             CommandEditor commandEditor = new CommandEditor();
             commandEditor.Visible = false;
-            commandEditor.InitCommandList(_commandNames);
+            commandEditor.InitCommandList(_commandNames, _parameterValueMaps);
 
             tlp_Commands.RowCount++;
             tlp_Commands.RowStyles.Add(new RowStyle(SizeType.Absolute, 0.0F));

@@ -96,9 +96,9 @@ namespace EntryEdit
         public int ByteLength { get; private set; }
         public bool IsHex { get; private set; }
         public bool IsSigned { get; private set; }
-        public CommandParameterType Type { get; private set; }
+        public string Type { get; private set; }
 
-        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, CommandParameterType type)
+        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, string type)
         {
             this.Name = name;
             this.ByteLength = byteLength;
@@ -196,6 +196,7 @@ namespace EntryEdit
         EventCommand = 3
     }
 
+    /*
     public enum CommandParameterType
     {
         Number = 0,
@@ -208,4 +209,5 @@ namespace EntryEdit
         AbilityEffect = 7,
         Spritesheet = 8
     }
+    */
 }

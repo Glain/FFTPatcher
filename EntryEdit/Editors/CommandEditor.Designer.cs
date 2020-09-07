@@ -48,7 +48,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flp_Parameters.Location = new System.Drawing.Point(180, 1);
             this.flp_Parameters.Name = "flp_Parameters";
-            this.flp_Parameters.Size = new System.Drawing.Size(268, 27);
+            this.flp_Parameters.Size = new System.Drawing.Size(268, 37);
             this.flp_Parameters.TabIndex = 1;
             // 
             // CommandEditor
@@ -58,7 +58,7 @@
             this.Controls.Add(this.flp_Parameters);
             this.Controls.Add(this.cmb_Command);
             this.Name = "CommandEditor";
-            this.Size = new System.Drawing.Size(450, 30);
+            this.Size = new System.Drawing.Size(450, 40);
             this.ResumeLayout(false);
 
         }

@@ -14,15 +14,49 @@ namespace EntryEdit
     {
         private const int EventSize = 0x2000;
 
-        private readonly Dictionary<CommandParameterType, Dictionary<int, string>> parameterValueMaps;
+        private readonly List<string> parameterTypes;
+        private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
 
         public DataHelper()
         {
-            parameterValueMaps = GetParameterValueMaps();
+            parameterTypes = new List<string>();
             commandTemplateMaps = GetCommandTemplateMaps();
+            parameterValueMaps = GetParameterValueMaps();
             entryNameMaps = GetEntryNameMaps();
+        }
+
+        public static List<string> GetParameterEntryNames(CommandParameterTemplate template, Dictionary<int, string> valueMap)
+        {
+            List<string> result = new List<string>();
+
+            int numValues = 1 << (template.ByteLength * 8);
+            string hexFormatString = "X" + (template.ByteLength * 2);
+            string entry = "";
+            int numEntriesFound = 0;
+            int totalEntries = valueMap.Count;
+            bool allEntriesFound = false;
+
+            for (int index = 0; index < numValues; index++)
+            {
+                if (allEntriesFound && (index >= 256))
+                    break;
+
+                string strIndex = index.ToString(hexFormatString);
+                if (valueMap.TryGetValue(index, out entry))
+                {
+                    result.Add(strIndex + " " + entry);
+                    numEntriesFound++;
+                    allEntriesFound = (numEntriesFound >= totalEntries);
+                }
+                else
+                {
+                    result.Add(strIndex);
+                }
+            }
+
+            return result;
         }
 
         public List<ConditionalSet> LoadBattleConditionalDefaults()
@@ -35,7 +69,7 @@ namespace EntryEdit
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
 
-        public List<string> GetParameterValueList(int numBytes, CommandParameterType type)
+        public List<string> GetParameterValueList(int numBytes, string type)
         {
             List<string> result = new List<string>();
             int numChoices = (int)Math.Pow(256, numBytes);
@@ -54,6 +88,25 @@ namespace EntryEdit
             return result;
         }
 
+        public Dictionary<string, Dictionary<int, string>> GetParameterMaps()
+        {
+            Dictionary<string, Dictionary<int, string>> result = new Dictionary<string, Dictionary<int, string>>();
+
+            foreach (KeyValuePair<string, Dictionary<int, string>> kvp in parameterValueMaps)
+            {
+                Dictionary<int, string> innerResult = new Dictionary<int, string>();
+                foreach (KeyValuePair<int, string> innerKvp in kvp.Value)
+                {
+                    innerResult.Add(innerKvp.Key, innerKvp.Value);
+                }
+
+                result.Add(kvp.Key, innerResult);
+            }
+
+            return result;
+        }
+
+        /*
         private CommandParameterType GetParameterType(string typeName)
         {
             switch (typeName.ToLower().Trim())
@@ -69,6 +122,7 @@ namespace EntryEdit
                 default: return CommandParameterType.Number;
             }
         }
+        */
 
         private string GetDefaultDataFilepath(CommandType type)
         {
@@ -103,6 +157,12 @@ namespace EntryEdit
             }
         }
 
+        private string GetParameterValueListFilepath(string type)
+        {
+            return "EntryData/" + type + "Names.xml";
+        }
+
+        /*
         private string GetParameterValueListFilepath(CommandParameterType type)
         {
             switch (type)
@@ -118,22 +178,26 @@ namespace EntryEdit
                 default: return null;
             }
         }
+        */
 
         private List<string> GetParameterEntryNames(CommandParameterTemplate template)
         {
-            List<string> result = new List<string>();
+            return GetParameterEntryNames(template, parameterValueMaps[template.Type]);
+        }
 
-            Dictionary<int, string> valueMap = parameterValueMaps[template.Type];
-            int numEntries = 1 << (template.ByteLength * 8);
-            string hexFormatString = "X" + (template.ByteLength * 2);
-            for (int index = 0; index < numEntries; index++)
+        private Dictionary<string, Dictionary<int, string>> GetParameterValueMaps()
+        {
+            Dictionary<string, Dictionary<int, string>> result = new Dictionary<string, Dictionary<int, string>>();
+
+            foreach (string type in parameterTypes)
             {
-                result.Add(index.ToString(hexFormatString) + (valueMap.ContainsKey(index) ? (" " + valueMap[index]) : ""));
+                result.Add(type, GetXMLNameMap(GetParameterValueListFilepath(type)));
             }
 
             return result;
         }
 
+        /*
         private Dictionary<CommandParameterType, Dictionary<int, string>> GetParameterValueMaps()
         {
             Dictionary<CommandParameterType, Dictionary<int, string>> result = new Dictionary<CommandParameterType, Dictionary<int, string>>();
@@ -147,12 +211,14 @@ namespace EntryEdit
             result.Add(CommandParameterType.Spritesheet, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Spritesheet)));
             return result;
         }
+        */
 
-        private Dictionary<int, string> GetParameterValueMap(CommandParameterType type)
+        private Dictionary<int, string> GetParameterValueMap(string type)
         {
             Dictionary<int, string> result = new Dictionary<int, string>();
 
-            if (type != CommandParameterType.Number)
+            //if (type != CommandParameterType.Number)
+            if (!string.IsNullOrEmpty(type))
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(GetParameterValueListFilepath(type));
@@ -186,18 +252,21 @@ namespace EntryEdit
         {
             Dictionary<int, string> result = new Dictionary<int, string>();
 
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load(filepath);
-            XmlNodeList nodeList = xmlDocument.SelectNodes("//Entry");
-
-            foreach (XmlNode node in nodeList)
+            if (File.Exists(filepath))
             {
-                int nodeValue = GetNodeValue(node);
-                XmlAttribute attrName = node.Attributes["name"];
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(filepath);
+                XmlNodeList nodeList = xmlDocument.SelectNodes("//Entry");
 
-                if ((nodeValue >= 0) && (attrName != null))
+                foreach (XmlNode node in nodeList)
                 {
-                    result.Add(nodeValue, attrName.InnerText.Trim());
+                    int nodeValue = GetNodeValue(node);
+                    XmlAttribute attrName = node.Attributes["name"];
+
+                    if ((nodeValue >= 0) && (attrName != null))
+                    {
+                        result.Add(nodeValue, attrName.InnerText.Trim());
+                    }
                 }
             }
 
@@ -263,7 +332,11 @@ namespace EntryEdit
 
                         string parameterTemplateName = (attrParamName != null) ? attrParamName.InnerText : CommandParameterTemplate.DefaultName;
                         int parameterTemplateByteLength = paramByteLength;
-                        CommandParameterType parameterTemplateType = (attrParamType != null) ? GetParameterType(attrParamType.InnerText) : CommandParameterType.Number;
+                        //CommandParameterType parameterTemplateType = (attrParamType != null) ? GetParameterType(attrParamType.InnerText) : CommandParameterType.Number;
+                        string parameterTemplateType = (attrParamType != null) ? attrParamType.InnerText.ToLower().Trim() : "";
+
+                        if ((!string.IsNullOrEmpty(parameterTemplateType)) && (!parameterTypes.Contains(parameterTemplateType)))
+                            parameterTypes.Add(parameterTemplateType);
 
                         bool isHex = false;
                         bool isSigned = true;
@@ -284,7 +357,8 @@ namespace EntryEdit
                         }
                         else
                         {
-                            bool isNumber = (parameterTemplateType == CommandParameterType.Number);
+                            //bool isNumber = (parameterTemplateType == CommandParameterType.Number);
+                            bool isNumber = string.IsNullOrEmpty(parameterTemplateType);
                             isHex = !isNumber;
                             isSigned = isNumber;
                         }

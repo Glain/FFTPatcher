@@ -13,15 +13,17 @@ namespace EntryEdit.Editors
     {
         private Command _command;
         private List<string> _commandNames;
+        private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
 
         public CommandEditor()
         {
             InitializeComponent();
         }
 
-        public void InitCommandList(List<string> commandNames)
+        public void InitCommandList(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps)
         {
             _commandNames = commandNames;
+            _parameterValueMaps = parameterValueMaps;
             InitCommandComboBox(commandNames);
         }
 
@@ -47,7 +49,9 @@ namespace EntryEdit.Editors
                     int range = (1 << (parameter.Template.ByteLength << 3));
 
                     GroupBox groupBox = new GroupBox();
-                    if (parameter.Template.Type == CommandParameterType.Number)
+                    //if (parameter.Template.Type == CommandParameterType.Number)
+                    Dictionary<int, string> parameterValueMap = null;
+                    if (!_parameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
                     {
                         NumericUpDown spinner = new NumericUpDown();
                         spinner.Width = (parameter.GetByteLength() * 20) + 20;
@@ -60,14 +64,14 @@ namespace EntryEdit.Editors
                     else
                     {
                         ComboBox comboBox = new ComboBox();
-                        //comboBox.Items
-                        //comboBox.SelectedIndex = parameter.Value;
-                        //parameter.Template.Type
+                        List<string> entryNames = DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap);
+                        comboBox.Items.AddRange(entryNames.ToArray());
+                        comboBox.SelectedIndex = parameter.Value;
                         groupBox.Controls.Add(comboBox);
                     }
 
+                    groupBox.Text = parameter.Template.Name + (isHex ? " (h)" : "");
                     groupBox.AutoSize = true;
-                    groupBox.Text = parameter.Template.Name + (isHex ? " (h)" : "");                    
                     controls.Add(groupBox);
                 }
 

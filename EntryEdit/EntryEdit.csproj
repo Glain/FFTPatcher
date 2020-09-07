@@ -179,13 +179,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EntryData\AbilityEffects.xml">
+    <Content Include="EntryData\AbilityEffectNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EntryData\BattleConditionalCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\CharacterNames.xml">
+    <Content Include="EntryData\UnitNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EntryData\ConditionalSets.xml">
@@ -201,16 +201,16 @@
     <Content Include="EntryData\ScenarioNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\Items.xml">
+    <Content Include="EntryData\ItemNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\MapTitles.xml">
+    <Content Include="EntryData\MapNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EntryData\MusicChoices.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\Spritesheets.xml">
+    <Content Include="EntryData\SpritesheetNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EntryData\VariableNames.xml">
