@@ -19,6 +19,8 @@ namespace EntryEdit.Editors
         private List<Command> _commandList;
         private List<string> _commandNames;
         private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
+        private int _maxParameters = 1;
+
         private int _commandPageSize = DefaultPageSize;
         private int _commandPageIndex = 0;
         private int _commandNumPages = 1;
@@ -28,11 +30,13 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int commandPageSize = DefaultPageSize)
+        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters, int commandPageSize = DefaultPageSize)
         {
             _commandNames = commandNames;
             _parameterValueMaps = parameterValueMaps;
             _commandPageSize = commandPageSize;
+            _maxParameters = maxParameters;
+
             InitRows();
         }
 
@@ -84,6 +88,8 @@ namespace EntryEdit.Editors
         {
             btn_Page_Prev.Enabled = false;
             btn_Page_Next.Enabled = false;
+            btn_Page_First.Enabled = false;
+            btn_Page_Last.Enabled = false;
             spinner_Page.Enabled = false;
 
             int commandIndex = (_commandPageIndex * _commandPageSize);
@@ -97,8 +103,13 @@ namespace EntryEdit.Editors
                 commandIndex++;
             }
 
-            btn_Page_Prev.Enabled = (_commandPageIndex > 0);
-            btn_Page_Next.Enabled = (_commandPageIndex < (_commandNumPages - 1));
+            bool isNotFirstPage = (_commandPageIndex > 0);
+            bool isNotLastPage = (_commandPageIndex < (_commandNumPages - 1));
+
+            btn_Page_Prev.Enabled = isNotFirstPage;
+            btn_Page_Next.Enabled = isNotLastPage;
+            btn_Page_First.Enabled = isNotFirstPage;
+            btn_Page_Last.Enabled = isNotLastPage;
             spinner_Page.Enabled = true;
         }
 
@@ -135,12 +146,13 @@ namespace EntryEdit.Editors
         private void AddHiddenCommandRow()
         {
             CheckBox cb = new CheckBox();
-            cb.AutoSize = true;
+            //cb.AutoSize = true;
+            cb.CheckAlign = ContentAlignment.MiddleCenter;
             cb.Visible = false;
 
             CommandEditor commandEditor = new CommandEditor();
             commandEditor.Visible = false;
-            commandEditor.InitCommandList(_commandNames, _parameterValueMaps);
+            commandEditor.Init(_commandNames, _parameterValueMaps, _maxParameters);
 
             tlp_Commands.RowCount++;
             tlp_Commands.RowStyles.Add(new RowStyle(SizeType.Absolute, 0.0F));
@@ -163,17 +175,25 @@ namespace EntryEdit.Editors
         private void btn_Page_Prev_Click(object sender, EventArgs e)
         {
             if (_commandPageIndex > 0)
-            {
                 spinner_Page.Value = spinner_Page.Value - 1;
-            }
         }
 
         private void btn_Page_Next_Click(object sender, EventArgs e)
         {
             if (_commandPageIndex < (_commandNumPages - 1))
-            {
                 spinner_Page.Value = spinner_Page.Value + 1;
-            }
+        }
+
+        private void btn_Page_First_Click(object sender, EventArgs e)
+        {
+            if (_commandPageIndex > 0)
+                spinner_Page.Value = 1;
+        }
+
+        private void btn_Page_Last_Click(object sender, EventArgs e)
+        {
+            if (_commandPageIndex < (_commandNumPages - 1))
+                spinner_Page.Value = _commandNumPages;
         }
     }
 }

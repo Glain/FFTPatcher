@@ -41,9 +41,9 @@ namespace EntryEdit
             Dictionary<CommandType, List<string>> commandNames = DataHelper.GetCommandNames();
             Dictionary<string, Dictionary<int, string>> parameterValueMaps = DataHelper.GetParameterMaps();
 
-            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, commandNames[CommandType.BattleConditional], parameterValueMaps);
-            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, commandNames[CommandType.WorldConditional], parameterValueMaps);
-            eventsEditor.Populate(_entryData.Events, commandNames[CommandType.EventCommand], parameterValueMaps);
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, commandNames[CommandType.BattleConditional], parameterValueMaps, DataHelper.GetParameterMax(CommandType.BattleConditional));
+            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, commandNames[CommandType.WorldConditional], parameterValueMaps, DataHelper.GetParameterMax(CommandType.WorldConditional));
+            eventsEditor.Populate(_entryData.Events, commandNames[CommandType.EventCommand], parameterValueMaps, DataHelper.GetParameterMax(CommandType.EventCommand));
         }
 
         private void WriteByteDataToTestFiles()

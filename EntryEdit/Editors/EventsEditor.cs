@@ -20,14 +20,14 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<Event> events, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps)
+        public void Populate(List<Event> events, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
             _isPopulate = true;
 
             this._events = events;
             this._commandNames = commandNames;
 
-            eventEditor.Init(commandNames, parameterValueMaps);
+            eventEditor.Init(commandNames, parameterValueMaps, maxParameters);
 
             cmb_Event.Items.Clear();
             cmb_Event.Items.AddRange(_events.ToArray());

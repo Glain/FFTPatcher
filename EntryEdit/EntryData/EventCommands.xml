@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Commands bytes="1">
     <Command hex="10" name="Display Message">
-        <Parameter name="Unknown" bytes="1" />
+        <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Dialog Type" bytes="1" />
         <Parameter name="Message ID" bytes="2" mode="hex" />
         <Parameter name="Unit ID" bytes="2" type="Unit" />

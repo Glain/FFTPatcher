@@ -11,20 +11,41 @@ namespace EntryEdit.Editors
 {
     public partial class CommandEditor : UserControl
     {
+        private class ParameterData
+        {
+            public bool IsSpinner { get; set; }
+            public GroupBox GroupBox { get; set; }
+            public NumericUpDown Spinner { get; set; }
+            public ComboBox ComboBox { get; set; }
+
+            public ParameterData(bool isSpinner, GroupBox groupBox, NumericUpDown spinner, ComboBox comboBox)
+            {
+                this.IsSpinner = isSpinner;
+                this.GroupBox = groupBox;
+                this.Spinner = spinner;
+                this.ComboBox = comboBox;
+            }
+        }
+
         private Command _command;
         private List<string> _commandNames;
         private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
 
+        private int _maxParameters = 1;
+        private List<ParameterData> parameterDataList;
+        
         public CommandEditor()
         {
             InitializeComponent();
         }
 
-        public void InitCommandList(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps)
+        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
             _commandNames = commandNames;
             _parameterValueMaps = parameterValueMaps;
+            _maxParameters = maxParameters;
             InitCommandComboBox(commandNames);
+            InitParameters();
         }
 
         public void Populate(Command command)
@@ -36,46 +57,61 @@ namespace EntryEdit.Editors
 
         private void SetParameters(List<CommandParameter> parameters)
         {
-            flp_Parameters.Controls.Clear();
+            //flp_Parameters.Controls.Clear();
+            ClearParameters();
 
             if ((parameters != null) && (parameters.Count > 0))
             {
-                List<Control> controls = new List<Control>();
-
+                //List<Control> controls = new List<Control>();
+                int index = 0;
                 foreach (CommandParameter parameter in parameters)
                 {
                     bool isHex = parameter.Template.IsHex;
                     bool isSigned = parameter.Template.IsSigned;
                     int range = (1 << (parameter.Template.ByteLength << 3));
 
-                    GroupBox groupBox = new GroupBox();
+                    ParameterData parameterData = parameterDataList[index];
+
+                    //GroupBox groupBox = new GroupBox();
+                    GroupBox groupBox = parameterData.GroupBox;
+                    NumericUpDown spinner = parameterData.Spinner;
+                    ComboBox comboBox = parameterData.ComboBox;
                     //if (parameter.Template.Type == CommandParameterType.Number)
                     Dictionary<int, string> parameterValueMap = null;
                     if (!_parameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
                     {
-                        NumericUpDown spinner = new NumericUpDown();
+                        parameterData.IsSpinner = true;
+                        //NumericUpDown spinner = new NumericUpDown();
                         spinner.Width = (parameter.GetByteLength() * 20) + 20;
                         spinner.Minimum = isSigned ? (-(range / 2)) : 0;
                         spinner.Maximum = isSigned ? ((range / 2) - 1) : (range - 1);
                         spinner.Hexadecimal = isHex;
                         spinner.Value = (parameter.Value > spinner.Maximum) ? -(range - parameter.Value) : parameter.Value;
-                        groupBox.Controls.Add(spinner);
+                        //groupBox.Controls.Add(spinner);
+                        spinner.Visible = true;
+                        comboBox.Visible = false;
                     }
                     else
                     {
-                        ComboBox comboBox = new ComboBox();
+                        parameterData.IsSpinner = false;
+                        //ComboBox comboBox = new ComboBox();
                         List<string> entryNames = DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap);
                         comboBox.Items.AddRange(entryNames.ToArray());
                         comboBox.SelectedIndex = parameter.Value;
-                        groupBox.Controls.Add(comboBox);
+                        //groupBox.Controls.Add(comboBox);
+                        comboBox.Visible = true;
+                        spinner.Visible = false;
                     }
 
                     groupBox.Text = parameter.Template.Name + (isHex ? " (h)" : "");
-                    groupBox.AutoSize = true;
-                    controls.Add(groupBox);
+                    //groupBox.AutoSize = true;
+                    //controls.Add(groupBox);
+                    groupBox.Visible = true;
+
+                    index++;
                 }
 
-                flp_Parameters.Controls.AddRange(controls.ToArray());
+                //flp_Parameters.Controls.AddRange(controls.ToArray());
             }
         }
 
@@ -96,6 +132,42 @@ namespace EntryEdit.Editors
                 {
                     cmb_Command.Items.Add(index.ToString("X2"));
                 }
+            }
+        }
+
+        private void InitParameters()
+        {
+            parameterDataList = new List<ParameterData>();
+            GroupBox[] groupBoxes = new GroupBox[_maxParameters];
+
+            for (int index = 0; index < _maxParameters; index++)
+            {
+                GroupBox groupBox = new GroupBox();
+                groupBox.AutoSize = true;
+                groupBox.Visible = false;
+
+                NumericUpDown spinner = new NumericUpDown();
+                spinner.Visible = false;
+
+                ComboBox comboBox = new ComboBox();
+                comboBox.Visible = false;
+
+                groupBox.Controls.Add(spinner);
+                groupBox.Controls.Add(comboBox);
+                comboBox.Location = spinner.Location;
+
+                groupBoxes[index] = groupBox;
+                parameterDataList.Add(new ParameterData(true, groupBox, spinner, comboBox));
+            }
+
+            flp_Parameters.Controls.AddRange(groupBoxes);
+        }
+
+        private void ClearParameters()
+        {
+            for (int index = 0; index < _maxParameters; index++)
+            {
+                parameterDataList[index].GroupBox.Visible = false;
             }
         }
     }

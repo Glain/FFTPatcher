@@ -106,6 +106,18 @@ namespace EntryEdit
             return result;
         }
 
+        public int GetParameterMax(CommandType type)
+        {
+            int max = 0;
+            foreach (CommandTemplate template in commandTemplateMaps[type].Values)
+            {
+                if (template.Parameters.Count > max)
+                    max = template.Parameters.Count;
+            }
+
+            return max;
+        }
+
         /*
         private CommandParameterType GetParameterType(string typeName)
         {

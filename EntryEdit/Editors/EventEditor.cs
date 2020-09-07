@@ -18,10 +18,10 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps)
+        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
             _commandNames = commandNames;
-            commandListEditor.Init(commandNames, parameterValueMaps);
+            commandListEditor.Init(commandNames, parameterValueMaps, maxParameters);
         }
 
         public void Populate(Event inputEvent)
