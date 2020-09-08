@@ -241,7 +241,19 @@
         addiu   a1, s1, 7
         jal     @copy_bytes
         li      a2, 15
-
+        
+        #   For monsters, store equipped abilities data into first learned ability bytes, and return!
+        lbu     t1, 4(s0)
+        addiu   a0, s0, 7
+        andi    t0, t1, 0x20    
+        beq     t0, zero, battle_bench_unit_past_monster_check
+        addiu   a1, s1, 22
+        jal     @copy_bytes
+        li      a2, 8
+        j       battle_bench_unit_end
+        nop
+        
+    battle_bench_unit_past_monster_check:   
         #   Learned abilities, R/S/M, job levels
         li      t0, 0       #   Job index (0 to 19)
         li      a0, 0       #   Current value for R/S/M
@@ -348,6 +360,7 @@
         srl     t0, t0, 8
         sb      t0, 81(s1)
         
+    battle_bench_unit_end:
         #   Return!
         lw      ra, 12(sp)
         lw      s1, 8(sp)

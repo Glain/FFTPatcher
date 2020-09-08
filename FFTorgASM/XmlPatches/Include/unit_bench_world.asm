@@ -257,6 +257,18 @@
         jal     @copy_bytes
         li      a2, 15
 
+        #   For monsters, store equipped abilities data into first learned ability bytes, and return!
+        lbu     t1, 4(s0)
+        addiu   a0, s0, 7
+        andi    t0, t1, 0x20    
+        beq     t0, zero, bench_unit_past_monster_check
+        addiu   a1, s1, 22
+        jal     @copy_bytes
+        li      a2, 8
+        j       bench_unit_end
+        nop
+        
+    bench_unit_past_monster_check:
         #   Learned abilities, R/S/M, job levels
         li      t0, 0       #   Job index (0 to 19)
         li      a0, 0       #   Current value for R/S/M
@@ -362,7 +374,8 @@
         sb      t0, 82(s1)
         srl     t0, t0, 8
         sb      t0, 81(s1)
-        
+    
+    bench_unit_end:
         #   Return!
         lw      ra, 12(sp)
         lw      s1, 8(sp)
@@ -387,6 +400,14 @@
         
         move    s0, a0
         move    s1, a1
+        
+        #   Initially, zero out the party data
+        addiu   t0, s0, 0
+        addiu   t1, s0, 0xfc 
+    unbench_unit_zero_out_words_loop: 
+        sw      $0, 0(t0)
+        bne     t0, t1, unbench_unit_zero_out_words_loop
+        addiu   t0, t0, 4
         
         #   Base Class, Party index, Job, Team, Flags
         lbu     t0, 0(s1)
@@ -465,6 +486,18 @@
         jal     @copy_bytes
         li      a2, 15
         
+        #   For monsters, load equipped abilities data from first learned ability bytes, and return!
+        lbu     t1, 2(s1)
+        addiu   a1, s0, 7
+        andi    t0, t1, 0x20    
+        beq     t0, zero, unbench_unit_past_monster_check
+        addiu   a0, s1, 22
+        jal     @copy_bytes
+        li      a2, 8
+        j       unbench_unit_end
+        nop
+        
+    unbench_unit_past_monster_check:
         #   Learned abilities, R/S/M, job levels
         li      t0, 0       #   Job index (0 to 19)
         #li      a0, 0       #   Current value for R/S/M
@@ -680,15 +713,8 @@
         addiu   a0, s0, 40
         jal     @store_three_bytes
         move    a1, v0
-       
-        #   Zeroed out data : 0xd0 - 0xff
-        addiu   t0, s0, 0xd0
-        addiu   t1, s0, 0xfc 
-    unbench_unit_zero_out_words_loop: 
-        sw      $0, 0(t0)
-        bne     t0, t1, unbench_unit_zero_out_words_loop
-        addiu   t0, t0, 4
         
+    unbench_unit_end:
         #   Return!
         lw      ra, 16(sp)
         lw      s2, 12(sp)
