@@ -55,7 +55,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tlp_Commands.AutoScroll = true;
             this.tlp_Commands.ColumnCount = 1;
-            this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 602F));
+            this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 874F));
             this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlp_Commands.Location = new System.Drawing.Point(0, 27);
             this.tlp_Commands.Name = "tlp_Commands";

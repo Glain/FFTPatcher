@@ -74,7 +74,7 @@ namespace EntryEdit.Editors
                     ParameterData parameterData = parameterDataList[index];
 
                     //GroupBox groupBox = new GroupBox();
-                    GroupBox groupBox = parameterData.GroupBox;
+                    ShortGroupBox groupBox = parameterData.GroupBox;
                     NumericUpDown spinner = parameterData.Spinner;
                     ComboBox comboBox = parameterData.ComboBox;
                     //if (parameter.Template.Type == CommandParameterType.Number)
@@ -84,7 +84,7 @@ namespace EntryEdit.Editors
                     {
                         parameterData.IsSpinner = true;
                         //NumericUpDown spinner = new NumericUpDown();
-                        spinner.Width = (parameter.GetByteLength() * 20) + 20;
+                        spinner.Width = (parameter.GetByteLength() * 10) + 35;
                         spinner.Minimum = isSigned ? (-(range / 2)) : 0;
                         spinner.Maximum = isSigned ? ((range / 2) - 1) : (range - 1);
                         spinner.Hexadecimal = isHex;
