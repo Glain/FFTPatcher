@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using PatcherLib.Controls;
 
 namespace EntryEdit.Editors
 {
@@ -14,11 +15,11 @@ namespace EntryEdit.Editors
         private class ParameterData
         {
             public bool IsSpinner { get; set; }
-            public GroupBox GroupBox { get; set; }
+            public ShortGroupBox GroupBox { get; set; }
             public NumericUpDown Spinner { get; set; }
             public ComboBox ComboBox { get; set; }
 
-            public ParameterData(bool isSpinner, GroupBox groupBox, NumericUpDown spinner, ComboBox comboBox)
+            public ParameterData(bool isSpinner, ShortGroupBox groupBox, NumericUpDown spinner, ComboBox comboBox)
             {
                 this.IsSpinner = isSpinner;
                 this.GroupBox = groupBox;
@@ -78,6 +79,7 @@ namespace EntryEdit.Editors
                     ComboBox comboBox = parameterData.ComboBox;
                     //if (parameter.Template.Type == CommandParameterType.Number)
                     Dictionary<int, string> parameterValueMap = null;
+                    groupBox.AutoSize = true;
                     if (!_parameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
                     {
                         parameterData.IsSpinner = true;
@@ -96,6 +98,7 @@ namespace EntryEdit.Editors
                         parameterData.IsSpinner = false;
                         //ComboBox comboBox = new ComboBox();
                         List<string> entryNames = DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap);
+                        comboBox.Items.Clear();
                         comboBox.Items.AddRange(entryNames.ToArray());
                         comboBox.SelectedIndex = parameter.Value;
                         //groupBox.Controls.Add(comboBox);
@@ -106,6 +109,9 @@ namespace EntryEdit.Editors
                     groupBox.Text = parameter.Template.Name + (isHex ? " (h)" : "");
                     //groupBox.AutoSize = true;
                     //controls.Add(groupBox);
+                    //groupBox.Padding = new Padding(groupBox.Padding.Left, groupBox.Padding.Top, groupBox.Padding.Right, 0);
+                    //groupBox.Margin = new Padding(groupBox.Margin.Left, groupBox.Margin.Top, groupBox.Margin.Right, 0);
+                    //groupBox.AutoSize = false;
                     groupBox.Visible = true;
 
                     index++;
@@ -138,13 +144,14 @@ namespace EntryEdit.Editors
         private void InitParameters()
         {
             parameterDataList = new List<ParameterData>();
-            GroupBox[] groupBoxes = new GroupBox[_maxParameters];
+            ShortGroupBox[] groupBoxes = new ShortGroupBox[_maxParameters];
 
             for (int index = 0; index < _maxParameters; index++)
             {
-                GroupBox groupBox = new GroupBox();
+                ShortGroupBox groupBox = new ShortGroupBox();
                 groupBox.AutoSize = true;
                 groupBox.Visible = false;
+                //flp_Parameters.Controls.Add(groupBox);
 
                 NumericUpDown spinner = new NumericUpDown();
                 spinner.Visible = false;
@@ -153,11 +160,17 @@ namespace EntryEdit.Editors
                 comboBox.Visible = false;
 
                 groupBox.Controls.Add(spinner);
+                spinner.Location = new Point(5, 15);
+
                 groupBox.Controls.Add(comboBox);
                 comboBox.Location = spinner.Location;
 
                 groupBoxes[index] = groupBox;
                 parameterDataList.Add(new ParameterData(true, groupBox, spinner, comboBox));
+
+                //groupBox.Location = new Point(groupBox.Location.X, 0);
+                //groupBox.Padding = new Padding(groupBox.Padding.Left, groupBox.Padding.Top, groupBox.Padding.Right, 0);
+                //groupBox.Margin = new Padding(groupBox.Margin.Left, groupBox.Margin.Top, groupBox.Margin.Right, 0);
             }
 
             flp_Parameters.Controls.AddRange(groupBoxes);

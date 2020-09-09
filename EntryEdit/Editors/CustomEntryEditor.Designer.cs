@@ -33,11 +33,14 @@
             // 
             // txt_Entry
             // 
-            this.txt_Entry.Location = new System.Drawing.Point(5, 5);
+            this.txt_Entry.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_Entry.Location = new System.Drawing.Point(0, 0);
             this.txt_Entry.Multiline = true;
             this.txt_Entry.Name = "txt_Entry";
             this.txt_Entry.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txt_Entry.Size = new System.Drawing.Size(554, 90);
+            this.txt_Entry.Size = new System.Drawing.Size(874, 100);
             this.txt_Entry.TabIndex = 0;
             // 
             // CustomEntryEditor
@@ -46,7 +49,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.txt_Entry);
             this.Name = "CustomEntryEditor";
-            this.Size = new System.Drawing.Size(564, 100);
+            this.Size = new System.Drawing.Size(874, 100);
             this.ResumeLayout(false);
             this.PerformLayout();
 

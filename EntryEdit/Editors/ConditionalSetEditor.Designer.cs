@@ -36,7 +36,7 @@
             // 
             this.cmb_Block.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_Block.FormattingEnabled = true;
-            this.cmb_Block.Location = new System.Drawing.Point(7, 7);
+            this.cmb_Block.Location = new System.Drawing.Point(1, 7);
             this.cmb_Block.Name = "cmb_Block";
             this.cmb_Block.Size = new System.Drawing.Size(73, 21);
             this.cmb_Block.TabIndex = 2;
@@ -47,9 +47,9 @@
             this.commandListEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.commandListEditor.Location = new System.Drawing.Point(7, 32);
+            this.commandListEditor.Location = new System.Drawing.Point(0, 32);
             this.commandListEditor.Name = "commandListEditor";
-            this.commandListEditor.Size = new System.Drawing.Size(605, 310);
+            this.commandListEditor.Size = new System.Drawing.Size(876, 553);
             this.commandListEditor.TabIndex = 3;
             // 
             // ConditionalSetEditor
@@ -59,7 +59,7 @@
             this.Controls.Add(this.commandListEditor);
             this.Controls.Add(this.cmb_Block);
             this.Name = "ConditionalSetEditor";
-            this.Size = new System.Drawing.Size(620, 350);
+            this.Size = new System.Drawing.Size(877, 682);
             this.ResumeLayout(false);
 
         }

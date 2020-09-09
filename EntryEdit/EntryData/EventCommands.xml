@@ -622,7 +622,7 @@
         <Parameter name="Variable" bytes="2" type="Variable" />
         <Parameter name="Variable" bytes="2" type="Variable" />
     </Command>
-    <Command hex="BE" name="ZERO">
+    <Command hex="BE" name="Zero">
         <Parameter name="Variable" bytes="2" type="Variable" />
     </Command>
     <Command hex="C0" name="Unknown">

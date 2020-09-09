@@ -12,7 +12,7 @@ namespace EntryEdit.Editors
     public partial class CommandListEditor : UserControl
     {
         const int DefaultPageSize = 10;
-        const float RowHeight = 42.0F;
+        const float RowHeight = 51.0F;
 
         private bool _isPopulate = false;
 
@@ -60,22 +60,6 @@ namespace EntryEdit.Editors
         {
             Populate(new List<Command>());
         }
-
-        /*
-        public void Clear()
-        {
-            _isPopulate = true;
-
-            _commandList = null;
-            _commandPageSize = DefaultPageSize;
-            _commandNumPages = 1;
-            spinner_Page.Value = 1;
-            spinner_Page.Maximum = _commandNumPages;
-            tlp_Commands.Controls.Clear();
-
-            _isPopulate = false;
-        }
-        */
 
         private void InitRows()
         {
@@ -125,11 +109,7 @@ namespace EntryEdit.Editors
         private void SetCommandRow(int rowIndex, int index, Command command)
         {
             tlp_Commands.RowStyles[rowIndex].Height = RowHeight;
-            CheckBox cb = ((CheckBox)(tlp_Commands.Controls[rowIndex * 2]));
-            CommandEditor commandEditor = ((CommandEditor)(tlp_Commands.Controls[rowIndex * 2 + 1]));
-
-            cb.Tag = index;
-            cb.Visible = true;
+            CommandEditor commandEditor = ((CommandEditor)(tlp_Commands.Controls[rowIndex]));
             commandEditor.Populate(command);
             commandEditor.Visible = true;
         }
@@ -137,26 +117,18 @@ namespace EntryEdit.Editors
         private void SetHiddenCommandRow(int rowIndex)
         {
             tlp_Commands.RowStyles[rowIndex].Height = 0.0F;
-            CheckBox cb = ((CheckBox)(tlp_Commands.Controls[rowIndex * 2]));
-            CommandEditor commandEditor = ((CommandEditor)(tlp_Commands.Controls[rowIndex * 2 + 1]));
-            cb.Visible = false;
+            CommandEditor commandEditor = ((CommandEditor)(tlp_Commands.Controls[rowIndex]));
             commandEditor.Visible = false;
         }
 
         private void AddHiddenCommandRow()
         {
-            CheckBox cb = new CheckBox();
-            //cb.AutoSize = true;
-            cb.CheckAlign = ContentAlignment.MiddleCenter;
-            cb.Visible = false;
-
             CommandEditor commandEditor = new CommandEditor();
             commandEditor.Visible = false;
             commandEditor.Init(_commandNames, _parameterValueMaps, _maxParameters);
 
             tlp_Commands.RowCount++;
             tlp_Commands.RowStyles.Add(new RowStyle(SizeType.Absolute, 0.0F));
-            tlp_Commands.Controls.Add(cb);
             tlp_Commands.Controls.Add(commandEditor);
         }
 

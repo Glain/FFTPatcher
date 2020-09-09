@@ -92,13 +92,13 @@
         <Parameter name="Screen Transition Style" bytes="2" />
     </Command>
     <Command hex="001A" name="Scenario List">
-        <Parameter name="Map Name (1)" bytes="2" type="Map" />
+        <Parameter name="Map (1)" bytes="2" type="Map" />
         <Parameter name="Scenario (1)" bytes="2" type="Scenario" />
-        <Parameter name="Map Name (2)" bytes="2" type="Map" />
+        <Parameter name="Map (2)" bytes="2" type="Map" />
         <Parameter name="Scenario (2)" bytes="2" type="Scenario" />
-        <Parameter name="Map Name (3)" bytes="2" type="Map" />
+        <Parameter name="Map (3)" bytes="2" type="Map" />
         <Parameter name="Scenario (3)" bytes="2" type="Scenario" />
-        <Parameter name="Map Name (4)" bytes="2" type="Map" />
+        <Parameter name="Map (4)" bytes="2" type="Map" />
         <Parameter name="Scenario (4)" bytes="2" type="Scenario" />
     </Command>
     <Command hex="001B" name="Blank">

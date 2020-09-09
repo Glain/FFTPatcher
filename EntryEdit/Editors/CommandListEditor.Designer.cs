@@ -41,7 +41,7 @@
             // 
             // btn_Add
             // 
-            this.btn_Add.Location = new System.Drawing.Point(200, 10);
+            this.btn_Add.Location = new System.Drawing.Point(194, 1);
             this.btn_Add.Name = "btn_Add";
             this.btn_Add.Size = new System.Drawing.Size(30, 24);
             this.btn_Add.TabIndex = 0;
@@ -54,17 +54,17 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tlp_Commands.AutoScroll = true;
-            this.tlp_Commands.ColumnCount = 2;
-            this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlp_Commands.ColumnCount = 1;
+            this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 602F));
             this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlp_Commands.Location = new System.Drawing.Point(7, 40);
+            this.tlp_Commands.Location = new System.Drawing.Point(0, 27);
             this.tlp_Commands.Name = "tlp_Commands";
-            this.tlp_Commands.Size = new System.Drawing.Size(585, 200);
+            this.tlp_Commands.Size = new System.Drawing.Size(874, 523);
             this.tlp_Commands.TabIndex = 1;
             // 
             // btn_Delete
             // 
-            this.btn_Delete.Location = new System.Drawing.Point(233, 10);
+            this.btn_Delete.Location = new System.Drawing.Point(227, 1);
             this.btn_Delete.Name = "btn_Delete";
             this.btn_Delete.Size = new System.Drawing.Size(30, 24);
             this.btn_Delete.TabIndex = 2;
@@ -73,7 +73,7 @@
             // 
             // btn_Page_Prev
             // 
-            this.btn_Page_Prev.Location = new System.Drawing.Point(40, 10);
+            this.btn_Page_Prev.Location = new System.Drawing.Point(33, 1);
             this.btn_Page_Prev.Name = "btn_Page_Prev";
             this.btn_Page_Prev.Size = new System.Drawing.Size(30, 24);
             this.btn_Page_Prev.TabIndex = 3;
@@ -83,7 +83,7 @@
             // 
             // btn_Page_Next
             // 
-            this.btn_Page_Next.Location = new System.Drawing.Point(117, 10);
+            this.btn_Page_Next.Location = new System.Drawing.Point(110, 1);
             this.btn_Page_Next.Name = "btn_Page_Next";
             this.btn_Page_Next.Size = new System.Drawing.Size(30, 24);
             this.btn_Page_Next.TabIndex = 4;
@@ -93,7 +93,7 @@
             // 
             // spinner_Page
             // 
-            this.spinner_Page.Location = new System.Drawing.Point(75, 12);
+            this.spinner_Page.Location = new System.Drawing.Point(68, 3);
             this.spinner_Page.Minimum = new decimal(new int[] {
             1,
             0,
@@ -111,7 +111,7 @@
             // 
             // btn_Page_First
             // 
-            this.btn_Page_First.Location = new System.Drawing.Point(7, 10);
+            this.btn_Page_First.Location = new System.Drawing.Point(0, 1);
             this.btn_Page_First.Name = "btn_Page_First";
             this.btn_Page_First.Size = new System.Drawing.Size(30, 24);
             this.btn_Page_First.TabIndex = 6;
@@ -121,7 +121,7 @@
             // 
             // btn_Page_Last
             // 
-            this.btn_Page_Last.Location = new System.Drawing.Point(150, 10);
+            this.btn_Page_Last.Location = new System.Drawing.Point(143, 1);
             this.btn_Page_Last.Name = "btn_Page_Last";
             this.btn_Page_Last.Size = new System.Drawing.Size(30, 24);
             this.btn_Page_Last.TabIndex = 7;
@@ -142,7 +142,7 @@
             this.Controls.Add(this.tlp_Commands);
             this.Controls.Add(this.btn_Add);
             this.Name = "CommandListEditor";
-            this.Size = new System.Drawing.Size(605, 250);
+            this.Size = new System.Drawing.Size(876, 553);
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Page)).EndInit();
             this.ResumeLayout(false);
 
