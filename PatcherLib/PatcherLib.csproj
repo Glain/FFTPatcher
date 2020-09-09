@@ -103,6 +103,9 @@
     <Compile Include="Controls\ModifiedListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ShortGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Datatypes\Context.cs" />
     <Compile Include="Datatypes\PatchRange.cs" />
     <Compile Include="ExtensionMethods.cs" />
