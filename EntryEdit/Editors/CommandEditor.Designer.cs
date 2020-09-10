@@ -70,7 +70,7 @@
             this.Controls.Add(this.flp_Parameters);
             this.Controls.Add(this.cmb_Command);
             this.Name = "CommandEditor";
-            this.Size = new System.Drawing.Size(870, 48);
+            this.Size = new System.Drawing.Size(870, 45);
             this.ResumeLayout(false);
             this.PerformLayout();
 
