@@ -46,7 +46,7 @@
             // 
             this.flp_Parameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flp_Parameters.AutoScroll = true;
+            this.flp_Parameters.AutoSize = true;
             this.flp_Parameters.Location = new System.Drawing.Point(195, 0);
             this.flp_Parameters.Name = "flp_Parameters";
             this.flp_Parameters.Size = new System.Drawing.Size(673, 51);
@@ -64,13 +64,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
+            this.AutoScroll = true;
             this.Controls.Add(this.chk_Include);
             this.Controls.Add(this.flp_Parameters);
             this.Controls.Add(this.cmb_Command);
             this.Name = "CommandEditor";
-            this.Size = new System.Drawing.Size(870, 54);
+            this.Size = new System.Drawing.Size(870, 51);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
