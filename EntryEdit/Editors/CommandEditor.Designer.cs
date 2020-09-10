@@ -46,12 +46,11 @@
             // 
             this.flp_Parameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flp_Parameters.AutoSize = true;
+            this.flp_Parameters.AutoScroll = true;
             this.flp_Parameters.Location = new System.Drawing.Point(195, 0);
             this.flp_Parameters.Name = "flp_Parameters";
-            this.flp_Parameters.Size = new System.Drawing.Size(673, 45);
+            this.flp_Parameters.Size = new System.Drawing.Size(673, 51);
             this.flp_Parameters.TabIndex = 1;
-            this.flp_Parameters.WrapContents = false;
             // 
             // chk_Include
             // 
@@ -70,9 +69,8 @@
             this.Controls.Add(this.flp_Parameters);
             this.Controls.Add(this.cmb_Command);
             this.Name = "CommandEditor";
-            this.Size = new System.Drawing.Size(870, 45);
+            this.Size = new System.Drawing.Size(870, 54);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
