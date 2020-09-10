@@ -79,7 +79,7 @@ namespace EntryEdit.Editors
                     ComboBox comboBox = parameterData.ComboBox;
                     //if (parameter.Template.Type == CommandParameterType.Number)
                     Dictionary<int, string> parameterValueMap = null;
-                    groupBox.AutoSize = true;
+                    //groupBox.AutoSize = true;
                     if (!_parameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
                     {
                         parameterData.IsSpinner = true;

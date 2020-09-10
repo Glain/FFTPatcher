@@ -44,17 +44,17 @@
             // 
             // flp_Parameters
             // 
-            this.flp_Parameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.flp_Parameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.flp_Parameters.AutoSize = true;
             this.flp_Parameters.Location = new System.Drawing.Point(185, 0);
             this.flp_Parameters.Name = "flp_Parameters";
             this.flp_Parameters.Size = new System.Drawing.Size(683, 45);
             this.flp_Parameters.TabIndex = 1;
+            this.flp_Parameters.WrapContents = false;
             // 
             // chk_Include
             // 
-            this.chk_Include.AutoSize = true;
             this.chk_Include.Location = new System.Drawing.Point(2, 21);
             this.chk_Include.Name = "chk_Include";
             this.chk_Include.Size = new System.Drawing.Size(15, 14);
@@ -65,6 +65,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.Controls.Add(this.chk_Include);
             this.Controls.Add(this.flp_Parameters);
             this.Controls.Add(this.cmb_Command);

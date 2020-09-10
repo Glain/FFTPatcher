@@ -126,7 +126,7 @@ namespace EntryEdit.Editors
             CommandEditor commandEditor = new CommandEditor();
             commandEditor.Visible = false;
             commandEditor.Init(_commandNames, _parameterValueMaps, _maxParameters);
-            commandEditor.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            commandEditor.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 
             tlp_Commands.RowCount++;
             tlp_Commands.RowStyles.Add(new RowStyle(SizeType.Absolute, 0.0F));
