@@ -31,6 +31,7 @@ namespace EntryEdit.Editors
         private Command _command;
         private List<string> _commandNames;
         private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
+        private Dictionary<string, int> _parameterWidthMaps;
 
         private int _maxParameters = 1;
         private List<ParameterData> parameterDataList;
@@ -38,6 +39,7 @@ namespace EntryEdit.Editors
         public CommandEditor()
         {
             InitializeComponent();
+            InitData();
         }
 
         public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
@@ -54,6 +56,11 @@ namespace EntryEdit.Editors
             _command = command;
             cmb_Command.SelectedIndex = command.Template.ID;
             SetParameters(command.Parameters);
+        }
+
+        private void InitData()
+        {
+            _parameterWidthMaps = new Dictionary<string, int>();
         }
 
         private void SetParameters(List<CommandParameter> parameters)
@@ -98,8 +105,11 @@ namespace EntryEdit.Editors
                         parameterData.IsSpinner = false;
                         //ComboBox comboBox = new ComboBox();
                         List<string> entryNames = DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap);
+                        comboBox.Width = GetComboBoxWidth(comboBox, parameter.Template.Type, entryNames);
+
                         comboBox.Items.Clear();
                         comboBox.Items.AddRange(entryNames.ToArray());
+                        //comboBox.Width = Math.Max(comboBox.Width, GetComboBoxWidth(comboBox, parameter.Template.Type, entryNames));
                         comboBox.SelectedIndex = parameter.Value;
                         //groupBox.Controls.Add(comboBox);
                         comboBox.Visible = true;
@@ -182,6 +192,27 @@ namespace EntryEdit.Editors
             {
                 parameterDataList[index].GroupBox.Visible = false;
             }
+        }
+
+        private int GetComboBoxWidth(ComboBox cb, string type, IEnumerable<string> entryNames)
+        {
+            int width = 0;
+            if (_parameterWidthMaps.TryGetValue(type, out width))
+                return width;
+
+            int result = GetMaxWidth(entryNames, cb.Font);
+            _parameterWidthMaps.Add(type, result);
+            return result;
+        }
+
+        private int GetMaxWidth(IEnumerable<string> strings, Font font)
+        {
+            int result = 0;
+            foreach (string str in strings)
+            {
+                result = Math.Max(result, TextRenderer.MeasureText(str, font).Width);
+            }
+            return result + 10;
         }
     }
 }
