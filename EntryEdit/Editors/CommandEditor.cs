@@ -96,6 +96,7 @@ namespace EntryEdit.Editors
                         spinner.Maximum = isSigned ? ((range / 2) - 1) : (range - 1);
                         spinner.Hexadecimal = isHex;
                         spinner.Value = (parameter.Value > spinner.Maximum) ? -(range - parameter.Value) : parameter.Value;
+                        //spinner.Location = new Point((groupBox.Width - spinner.Width) / 2, 15);
                         //groupBox.Controls.Add(spinner);
                         spinner.Visible = true;
                         comboBox.Visible = false;
@@ -111,12 +112,14 @@ namespace EntryEdit.Editors
                         comboBox.Items.AddRange(entryNames.ToArray());
                         //comboBox.Width = Math.Max(comboBox.Width, GetComboBoxWidth(comboBox, parameter.Template.Type, entryNames));
                         comboBox.SelectedIndex = parameter.Value;
+                        //comboBox.Location = new Point((groupBox.Width - comboBox.Width) / 2, 15);
                         //groupBox.Controls.Add(comboBox);
                         comboBox.Visible = true;
                         spinner.Visible = false;
                     }
 
-                    groupBox.Text = parameter.Template.Name + (isHex ? " (h)" : "");
+                    string name = (parameter.Template.Name == "Unknown") ? "?" : parameter.Template.Name;
+                    groupBox.Text = name + (isHex ? " (h)" : "");
                     //groupBox.AutoSize = true;
                     //controls.Add(groupBox);
                     //groupBox.Padding = new Padding(groupBox.Padding.Left, groupBox.Padding.Top, groupBox.Padding.Right, 0);
@@ -171,9 +174,11 @@ namespace EntryEdit.Editors
 
                 groupBox.Controls.Add(spinner);
                 spinner.Location = new Point(5, 15);
+                //spinner.Location = new Point((groupBox.Width - spinner.Width) / 2, 15);
 
                 groupBox.Controls.Add(comboBox);
                 comboBox.Location = spinner.Location;
+                //comboBox.Location = new Point((groupBox.Width - comboBox.Width) / 2, 15);
 
                 groupBoxes[index] = groupBox;
                 parameterDataList.Add(new ParameterData(true, groupBox, spinner, comboBox));

@@ -14,6 +14,11 @@ namespace PatcherLib.Controls
         public override Size GetPreferredSize(Size proposedSize)
         {
             Size size = base.GetPreferredSize(proposedSize);
+
+            int reqNameWidth = TextRenderer.MeasureText(Text, Font).Width + 20;
+            if (size.Width < reqNameWidth)
+                size.Width = reqNameWidth;
+
             return new Size(size.Width, size.Height - HeightReductionAmount);
         }
     }
