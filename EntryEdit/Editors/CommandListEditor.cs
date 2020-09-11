@@ -11,7 +11,7 @@ namespace EntryEdit.Editors
 {
     public partial class CommandListEditor : UserControl
     {
-        const int DefaultPageSize = 9;
+        const int DefaultPageSize = 10;
         const float RowHeight = 57.0F;
 
         private bool _isPopulate = false;
