@@ -282,7 +282,7 @@
     </Command>
     <Command hex="51" name="Change Dialog">
         <Parameter name="Target" bytes="1" mode="hex" />
-        <Parameter name="Message ID" bytes="2" />
+        <Parameter name="Message" bytes="2" mode="hex" />
         <Parameter name="Portrait Column" bytes="1" mode="hex" />
         <Parameter name="Portrait Palette" bytes="1" mode="hex" />
     </Command>
