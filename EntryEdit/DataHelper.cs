@@ -297,6 +297,7 @@ namespace EntryEdit
         private Dictionary<int, CommandTemplate> GetCommandTemplateMap(CommandType type)
         {
             Dictionary<int, CommandTemplate> result = new Dictionary<int, CommandTemplate>();
+            string strTrue = bool.TrueString.ToLower().Trim();
 
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.Load(GetCommandFilepath(type));
@@ -335,6 +336,7 @@ namespace EntryEdit
                         XmlAttribute attrParamBytes = parameterNode.Attributes["bytes"];
                         XmlAttribute attrParamType = parameterNode.Attributes["type"];
                         XmlAttribute attrParamMode = parameterNode.Attributes["mode"];
+                        XmlAttribute attrParamText = parameterNode.Attributes["text"];
 
                         int paramByteLength = 1;
                         if (attrParamBytes != null)
@@ -375,7 +377,8 @@ namespace EntryEdit
                             isSigned = isNumber;
                         }
 
-                        commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, parameterTemplateType));
+                        bool isTextReference = (attrParamText != null) && (attrParamText.InnerText.ToLower().Trim() == strTrue);
+                        commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, isTextReference, parameterTemplateType));
                     }
 
                     result.Add(commandTemplateID, new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, type, commandTemplateParameters));
@@ -482,8 +485,9 @@ namespace EntryEdit
             resultByteList.AddRange(dataBytes);
             resultByteList.AddRange(textBytes);
 
-            byte[] resultBytes = new byte[EventSize];
-            Array.Copy(resultByteList.ToArray(), resultBytes, Math.Min(EventSize, resultByteList.Count));
+            //byte[] resultBytes = new byte[EventSize];
+            byte[] resultBytes = new List<byte>(inputEvent.OriginalBytes).ToArray();
+            Array.Copy(resultByteList.ToArray(), resultBytes, Math.Min(inputEvent.OriginalBytes.Count, resultByteList.Count));
 
             return resultBytes;
         }
@@ -524,21 +528,20 @@ namespace EntryEdit
             int naturalTextOffset = numCommandBytes + 4;
             uint textOffset = bytes.SubLength(0, 4).ToUInt32();
 
-            CustomSection dataSection;
-            CustomSection textSection;
+            CustomSection dataSection, textSection;
 
             if (textOffset == 0xF2F2F2F2U)
             {
                 dataSection = new CustomSection();
-                textSection = new CustomSection(bytes.Sub(naturalTextOffset), true);
+                textSection = new CustomSection();
             }
             else
             {
                 dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset)), false) : new CustomSection();
-                textSection = new CustomSection(bytes.Sub(textOffset), true);
+                textSection = new CustomSection(bytes.Sub(textOffset), true, Event.FindNumTextEntries(commandList));
             }
 
-            return new Event(index, entryNameMaps[CommandType.EventCommand][index], textOffset, commandList, dataSection, textSection);
+            return new Event(index, entryNameMaps[CommandType.EventCommand][index], textOffset, commandList, dataSection, textSection, new List<byte>(bytes));
         }
 
         public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)

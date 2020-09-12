@@ -96,14 +96,16 @@ namespace EntryEdit
         public int ByteLength { get; private set; }
         public bool IsHex { get; private set; }
         public bool IsSigned { get; private set; }
+        public bool IsTextReference { get; private set; }
         public string Type { get; private set; }
 
-        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, string type)
+        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, bool isTextReference, string type)
         {
             this.Name = name;
             this.ByteLength = byteLength;
             this.IsHex = isHex;
             this.IsSigned = isSigned;
+            this.IsTextReference = isTextReference;
             this.Type = type;
         }
     }
@@ -122,24 +124,27 @@ namespace EntryEdit
         public CustomSection(int byteLength, CustomEntry customEntry): this(byteLength, new List<CustomEntry>() { customEntry }) { }
         public CustomSection() : this(0, new List<CustomEntry>()) { }
 
-        public CustomSection(IList<byte> bytes, bool isText)
+        public CustomSection(IList<byte> bytes, bool isText = false, int numTextEntries = 0)
         {
-            ByteLength = bytes.Count;
             CustomEntryList = new List<CustomEntry>();
 
             if (isText)
             {
                 IList<IList<byte>> byteLists = bytes.Split((byte)0xFE);
                 IList<string> textSection = TextUtility.DecodeList(bytes);
+                int numEntries = Math.Min(numTextEntries, byteLists.Count);
 
-                for (int index = 0; index < byteLists.Count; index++)
+                ByteLength = 0;
+                for (int index = 0; index < numEntries; index++)
                 {
                     CustomEntryList.Add(new CustomEntry(index, new List<byte>(byteLists[index]), textSection[index]));
+                    ByteLength += byteLists[index].Count;
                 }
             }
             else
             {
                 CustomEntryList.Add(new CustomEntry(0, new List<byte>(bytes)));
+                ByteLength = bytes.Count;
             }
         }
 

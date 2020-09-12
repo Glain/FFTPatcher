@@ -29,6 +29,11 @@ namespace EntryEdit
         public List<ConditionalSet> WorldConditionals { get; private set; }
         public List<Event> Events { get; private set; }
 
+        public static T GetEntry<T>(IList<T> list, int index) where T: class
+        {
+            return ((index < list.Count) ? list[index] : null);
+        }
+
         public EntryData(List<ConditionalSet> battleConditionals, List<ConditionalSet> worldConditionals, List<Event> events)
         {
             this.BattleConditionals = battleConditionals;
@@ -76,8 +81,9 @@ namespace EntryEdit
         public List<Command> CommandList { get; private set; }
         public CustomSection DataSection { get; private set; }
         public CustomSection TextSection { get; private set; }
+        public IList<byte> OriginalBytes { get; private set; }
 
-        public Event(int index, string name, uint textOffset, List<Command> commandList, CustomSection dataSection, CustomSection textSection)
+        public Event(int index, string name, uint textOffset, List<Command> commandList, CustomSection dataSection, CustomSection textSection, IList<byte> originalBytes)
         {
             this.Index = index;
             this.Name = name;
@@ -85,16 +91,33 @@ namespace EntryEdit
             this.CommandList = commandList;
             this.DataSection = dataSection;
             this.TextSection = textSection;
+            this.OriginalBytes = originalBytes;
         }
 
         public Event Copy()
         {
-            return new Event(Index, Name, TextOffset, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy());
+            return new Event(Index, Name, TextOffset, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), new List<byte>(OriginalBytes));
         }
 
         public override string ToString()
         {
             return Index.ToString("X4") + " " + Name;
+        }
+
+        public static int FindNumTextEntries(IEnumerable<Command> commands)
+        {
+            int maxTextID = 0;
+            foreach (Command command in commands)
+            {
+                foreach (CommandParameter parameter in command.Parameters)
+                {
+                    short paramValue = unchecked((short)parameter.Value);
+                    if ((parameter.Template.IsTextReference) && (paramValue > maxTextID))
+                        maxTextID = paramValue;
+                }
+            }
+
+            return maxTextID;
         }
     }
 

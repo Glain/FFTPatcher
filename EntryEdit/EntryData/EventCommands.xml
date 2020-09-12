@@ -3,13 +3,13 @@
     <Command hex="10" name="Display Message">
         <Parameter name="Unknown" bytes="1" mode="hex" />
         <Parameter name="Dialog" bytes="1" mode="hex" />
-        <Parameter name="Message" bytes="2" mode="hex" />
+        <Parameter name="Message" bytes="2" mode="hex" text="true" />
         <Parameter name="Unit" bytes="2" type="Unit" />
         <Parameter name="Portrait" bytes="1" />
         <Parameter name="X" bytes="2" />
         <Parameter name="Y" bytes="2" />
-        <Parameter name="Arrow Pos" bytes="2" />
-        <Parameter name="Open Type" bytes="1" />
+        <Parameter name="Arrow X" bytes="2" />
+        <Parameter name="Open Type" bytes="1" mode="hex" />
     </Command>
     <Command hex="11" name="Unit Anim">
         <Parameter name="Units" bytes="1" mode="hex" />
@@ -119,7 +119,7 @@
         <Parameter name="Unknown" bytes="1" />
     </Command>
     <Command hex="29" name="Wait Walk">
-        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Unit" bytes="2" type="Unit" />
     </Command>
     <Command hex="2A" name="Block Start" />
     <Command hex="2B" name="Block End" />
@@ -282,7 +282,7 @@
     </Command>
     <Command hex="51" name="Change Dialog">
         <Parameter name="Target" bytes="1" mode="hex" />
-        <Parameter name="Message" bytes="2" mode="hex" />
+        <Parameter name="Message" bytes="2" mode="hex" text="true" />
         <Parameter name="Portrait Column" bytes="1" mode="hex" />
         <Parameter name="Portrait Palette" bytes="1" mode="hex" />
     </Command>
@@ -456,7 +456,7 @@
     </Command>
     <Command hex="77" name="Remove Dark Screen" />
     <Command hex="78" name="Display Conditions">
-        <Parameter name="Message" bytes="1" mode="hex" />
+        <Parameter name="Conditions" bytes="1" mode="hex" />
         <Parameter name="Time" bytes="1" mode="unsigned" />
     </Command>
     <Command hex="79" name="Walk To Anim">
@@ -608,7 +608,7 @@
     </Command>
     <Command hex="BA" name="AND">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="hex" />
     </Command>
     <Command hex="BB" name="AND Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />
@@ -616,7 +616,7 @@
     </Command>
     <Command hex="BC" name="OR">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="hex" />
     </Command>
     <Command hex="BD" name="OR Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />

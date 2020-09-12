@@ -11,6 +11,8 @@ namespace EntryEdit.Editors
     public partial class ConditionalSetEditor : UserControl
     {
         private ConditionalSet _conditionalSet;
+        private ConditionalSet _defaultConditionalSet;
+
         private List<string> _commandNames;
         private int _blockIndex = -1;
         private bool _isPopulate = false;
@@ -26,11 +28,12 @@ namespace EntryEdit.Editors
             commandListEditor.Init(commandNames, parameterValueMaps, maxParameters);
         }
 
-        public void Populate(ConditionalSet conditionalSet)
+        public void Populate(ConditionalSet conditionalSet, ConditionalSet defaultConditionalSet)
         {
             _isPopulate = true;
 
             this._conditionalSet = conditionalSet;
+            this._defaultConditionalSet = defaultConditionalSet;
 
             cmb_Block.Items.Clear();
             cmb_Block.Items.AddRange(conditionalSet.ConditionalBlocks.ToArray());

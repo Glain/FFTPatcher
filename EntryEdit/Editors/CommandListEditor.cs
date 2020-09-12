@@ -17,6 +17,11 @@ namespace EntryEdit.Editors
         private bool _isPopulate = false;
 
         private List<Command> _commandList;
+        public List<Command> CommandList
+        {
+            get { return _commandList; }
+        }
+
         private List<string> _commandNames;
         private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
         private int _maxParameters = 1;

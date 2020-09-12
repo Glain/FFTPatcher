@@ -11,6 +11,8 @@ namespace EntryEdit.Editors
     public partial class EventEditor : UserControl
     {
         private Event _event;
+        private Event _defaultEvent;
+
         private List<string> _commandNames;
 
         public EventEditor()
@@ -24,9 +26,11 @@ namespace EntryEdit.Editors
             commandListEditor.Init(commandNames, parameterValueMaps, maxParameters);
         }
 
-        public void Populate(Event inputEvent)
+        public void Populate(Event inputEvent, Event defaultEvent)
         {
-            _event = inputEvent;
+            this._event = inputEvent;
+            this._defaultEvent = defaultEvent;
+
             commandListEditor.Populate(inputEvent.CommandList);
             textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection });
         }

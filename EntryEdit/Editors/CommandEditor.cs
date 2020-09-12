@@ -217,7 +217,7 @@ namespace EntryEdit.Editors
             {
                 result = Math.Max(result, TextRenderer.MeasureText(str, font).Width);
             }
-            return result + 10;
+            return result + 15;
         }
     }
 }

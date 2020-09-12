@@ -150,7 +150,7 @@
     <Entry hex="01FB" name="Records: Things obtained" />
 
     <Entry hex="01FC" name="Brave Story Active"  />
-    <Entry hex="01FD" name="Event Starting" />
+    <Entry hex="01FD" name="Initialization" />
     <Entry hex="01FE" name="World Debug Battle Style" />
 
     <Entry hex="0200" name="Location: Lesalia Imperial Capital" />

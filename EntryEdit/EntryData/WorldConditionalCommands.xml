@@ -2,18 +2,18 @@
 <Commands bytes="2">
     <Command hex="0001" name="Variable =">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="hex" />
     </Command>
     <Command hex="0002" name="Variable &gt;=">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="hex" />
     </Command>
     <Command hex="0003" name="Variable &lt;=">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="hex" />
     </Command>
     <Command hex="0004" name="Unit Present">
-        <Parameter name="Unit ID" bytes="2" type="Unit" />
+        <Parameter name="Unit" bytes="2" type="Unit" />
     </Command>
     <Command hex="0005" name="Blank">
         <Parameter name="Unused" bytes="2" />
@@ -89,7 +89,7 @@
     </Command>
     <Command hex="0019" name="Run Scenario">
         <Parameter name="Scenario ID" bytes="2" type="Scenario" />
-        <Parameter name="Screen Transition Style" bytes="2" />
+        <Parameter name="Transition" bytes="2" />
     </Command>
     <Command hex="001A" name="Scenario List">
         <Parameter name="Map (1)" bytes="2" type="Map" />
@@ -110,11 +110,11 @@
         <Parameter name="Value" bytes="2" />
     </Command>
     <Command hex="001D" name="Display Text">
-        <Parameter name="Message ID" bytes="2" />
+        <Parameter name="Message" bytes="2" />
     </Command>
     <Command hex="001E" name="Deep Dungeon Choice">
-        <Parameter name="Random Battle Slot" bytes="2" />
-        <Parameter name="Scenario ID" bytes="2" type="Scenario" />
+        <Parameter name="Battle Slot" bytes="2" />
+        <Parameter name="Scenario" bytes="2" type="Scenario" />
         <Parameter name="Random Mod" bytes="2" />
     </Command>
     <Command hex="001F" name="Unknown">
@@ -122,12 +122,12 @@
         <Parameter name="Unknown" bytes="2" />
     </Command>
     <Command hex="0020" name="Draw Path">
-        <Parameter name="From Location ID" bytes="2" type="Location" />
-        <Parameter name="To Location ID" bytes="2" type="Location" />
+        <Parameter name="From Location" bytes="2" type="Location" />
+        <Parameter name="To Location" bytes="2" type="Location" />
     </Command>
     <Command hex="0021" name="Erase Path">
-        <Parameter name="From Location ID" bytes="2" type="Location" />
-        <Parameter name="To Location ID" bytes="2" type="Location" />
+        <Parameter name="From Location" bytes="2" type="Location" />
+        <Parameter name="To Location" bytes="2" type="Location" />
     </Command>
     <Command hex="0022" name="Draw Location">
         <Parameter name="Location ID" bytes="2" type="Location" />

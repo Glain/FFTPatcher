@@ -11,6 +11,8 @@ namespace EntryEdit.Editors
     public partial class ConditionalSetsEditor : UserControl
     {
         private List<ConditionalSet> _conditionalSets;
+        private List<ConditionalSet> _defaultConditionalSets;
+
         private List<string> _commandNames;
         private int _conditionalSetIndex = 0;
         private bool _isPopulate = false;
@@ -20,11 +22,12 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<ConditionalSet> conditionalSets, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        public void Populate(List<ConditionalSet> conditionalSets, List<ConditionalSet> defaultConditionalSets,  List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
             _isPopulate = true;
 
             this._conditionalSets = conditionalSets;
+            this._defaultConditionalSets = defaultConditionalSets;
             this._commandNames = commandNames;
 
             conditionalSetEditor.Init(commandNames, parameterValueMaps, maxParameters);
@@ -40,7 +43,7 @@ namespace EntryEdit.Editors
         private void SetConditionalSetIndex(int index)
         {
             _conditionalSetIndex = index;
-            conditionalSetEditor.Populate(_conditionalSets[index]);
+            conditionalSetEditor.Populate(_conditionalSets[index], EntryData.GetEntry<ConditionalSet>(_defaultConditionalSets, index));
         }
 
         private void cmb_ConditionalSet_SelectedIndexChanged(object sender, EventArgs e)
