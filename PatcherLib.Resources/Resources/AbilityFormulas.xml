@@ -62,7 +62,7 @@
   <Ability value="29">OppositeSex: Hit_(MA+X)% NE ELSE miss</Ability>
   <Ability value="2A">Hit_(MA+X)% //AffectBraveOrFaith(Y) NS NE</Ability>
   <Ability value="2B">Hit_(PA+Y)% //-PA/MA/SP_(X) NS PE</Ability>
-  <Ability value="2C">DmgMP_(X)% Hit_(PA+Y)% NS PE</Ability>
+  <Ability value="2C">DmgMP_(Y)% Hit_(PA+Y)% NS PE</Ability>
   <Ability value="2D">Dmg_(PA*(WP+Y)) PE</Ability>
   <Ability value="2E">Equipped:Break Dmg_(PA*WP) NS PE ELSE miss</Ability>
   <Ability value="2F">AbsorbMP_(PA*WP) NS PE</Ability>

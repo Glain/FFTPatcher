@@ -214,8 +214,8 @@
     <Entry hex="00D3" name="Steel Ball Found!" />
     <Entry hex="00D4" name="Worker 8 Activated (setup)" />
     <Entry hex="00D5" name="Worker 8 Activated" />
-    <Entry hex="00D6" name="Time Machine Found! (Setup)" />
-    <Entry hex="00D7" name="Time Machine Found!" />
+    <Entry hex="00D6" name="Summoning Machine Found! (Setup)" />
+    <Entry hex="00D7" name="Summoning Machine Found!" />
     <Entry hex="00D8" name="Cloud Summoned (Setup)" />
     <Entry hex="00D9" name="Cloud Summoned" />
     <Entry hex="00DA" name="Zarghidas (Setup)" />
