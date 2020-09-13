@@ -11,17 +11,7 @@ namespace EntryEdit
 {
     public partial class MainForm : Form
     {
-        private DataHelper _dataHelper = null;
-        public DataHelper DataHelper
-        {
-            get
-            {
-                if (_dataHelper == null)
-                    _dataHelper = new DataHelper();
-
-                return _dataHelper;
-            }
-        }
+        private DataHelper _dataHelper;
 
         private EntryData _entryData;
         private EntryData _entryDataDefault;
@@ -30,27 +20,29 @@ namespace EntryEdit
         {
             InitializeComponent();
             Start();
-            WriteByteDataToTestFiles();
+            //WriteByteDataToTestFiles();
         }
 
         private void Start()
         {
-            _entryData = DataHelper.LoadDefaultEntryData();
+            _dataHelper = new DataHelper();
+
+            _entryData = _dataHelper.LoadDefaultEntryData();
             _entryDataDefault = _entryData.Copy();
 
-            Dictionary<CommandType, List<string>> commandNames = DataHelper.GetCommandNames();
-            Dictionary<string, Dictionary<int, string>> parameterValueMaps = DataHelper.GetParameterMaps();
+            Dictionary<CommandType, List<string>> commandNames = _dataHelper.GetCommandNames();
+            Dictionary<string, Dictionary<int, string>> parameterValueMaps = _dataHelper.GetParameterMaps();
 
-            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, commandNames[CommandType.BattleConditional], parameterValueMaps, DataHelper.GetParameterMax(CommandType.BattleConditional));
-            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, commandNames[CommandType.WorldConditional], parameterValueMaps, DataHelper.GetParameterMax(CommandType.WorldConditional));
-            eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, commandNames[CommandType.EventCommand], parameterValueMaps, DataHelper.GetParameterMax(CommandType.EventCommand));
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, commandNames[CommandType.BattleConditional], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.BattleConditional));
+            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, commandNames[CommandType.WorldConditional], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.WorldConditional));
+            eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, commandNames[CommandType.EventCommand], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.EventCommand));
         }
 
         private void WriteByteDataToTestFiles()
         {
-            System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", DataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals));
-            System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", DataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals));
-            System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", DataHelper.EventsToByteArray(_entryData.Events));
+            System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", _dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals));
+            System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals));
+            System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", _dataHelper.EventsToByteArray(_entryData.Events));
         }
 
         private void SaveXMLFromEventFilenames(string inputFilepath, string outputFilepath)

@@ -13,6 +13,7 @@ namespace EntryEdit
     public class DataHelper
     {
         private const int EventSize = 0x2000;
+        private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
 
         private readonly List<string> parameterTypes;
         private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
@@ -464,12 +465,13 @@ namespace EntryEdit
             return resultBytes;
         }
 
-        public byte[] EventToByteArray(Event inputEvent)
+        public byte[] EventToByteArray(Event inputEvent, bool forceOriginalSize = true)
         {
-            byte[] textOffsetBytes = inputEvent.TextOffset.ToBytes();
+            //byte[] textOffsetBytes = inputEvent.TextOffset.ToBytes();
             byte[] commandBytes = CommandsToByteArray(inputEvent.CommandList);
             byte[] dataBytes = inputEvent.DataSection.ToByteArray();
             byte[] textBytes = inputEvent.TextSection.ToByteArray();
+            byte[] textOffsetBytes = ((textBytes.Length > 0) || (!inputEvent.CanUseBlankTextOffset)) ? (commandBytes.Length + dataBytes.Length + 4).ToBytesLE() : BlankTextOffsetBytes;
 
             /*
             byte[] resultBytes = new byte[4 + commandBytes.Length + dataBytes.Length + textBytes.Length];
@@ -485,11 +487,17 @@ namespace EntryEdit
             resultByteList.AddRange(dataBytes);
             resultByteList.AddRange(textBytes);
 
-            //byte[] resultBytes = new byte[EventSize];
-            byte[] resultBytes = new List<byte>(inputEvent.OriginalBytes).ToArray();
-            Array.Copy(resultByteList.ToArray(), resultBytes, Math.Min(inputEvent.OriginalBytes.Count, resultByteList.Count));
-
-            return resultBytes;
+            if (forceOriginalSize)
+            {
+                //byte[] resultBytes = new byte[EventSize];
+                byte[] resultBytes = new List<byte>(inputEvent.OriginalBytes).ToArray();
+                Array.Copy(resultByteList.ToArray(), resultBytes, Math.Min(inputEvent.OriginalBytes.Count, resultByteList.Count));
+                return resultBytes;
+            }
+            else
+            {
+                return resultByteList.ToArray();
+            }
         }
 
         public List<Event> LoadDefaultEvents()
@@ -529,6 +537,7 @@ namespace EntryEdit
             uint textOffset = bytes.SubLength(0, 4).ToUInt32();
 
             CustomSection dataSection, textSection;
+            bool canUseBlankTextOffset = true;
 
             if (textOffset == 0xF2F2F2F2U)
             {
@@ -539,9 +548,11 @@ namespace EntryEdit
             {
                 dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset)), false) : new CustomSection();
                 textSection = new CustomSection(bytes.Sub(textOffset), true, Event.FindNumTextEntries(commandList));
+
+                canUseBlankTextOffset = (textSection.CustomEntryList.Count > 0);
             }
 
-            return new Event(index, entryNameMaps[CommandType.EventCommand][index], textOffset, commandList, dataSection, textSection, new List<byte>(bytes));
+            return new Event(index, entryNameMaps[CommandType.EventCommand][index], canUseBlankTextOffset, commandList, dataSection, textSection, new List<byte>(bytes));
         }
 
         public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)
