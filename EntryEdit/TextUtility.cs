@@ -8,10 +8,10 @@ namespace EntryEdit
 {
     public static class TextUtility
     {
-        public static IList<byte> Encode(string input)
+        public static List<byte> Encode(string input)
         {
             TextUtilities.CompressionResult result = TextUtilities.Compress(new List<IList<string>>() { new List<string>() { input } }, 0xFE, TextUtilities.PSXMap, new List<bool>() { false });
-            return result.Bytes;
+            return new List<byte>(result.Bytes);
         }
 
         public static string Decode(IList<byte> bytes, byte terminator = (byte)0xFE, GenericCharMap charmap = null)

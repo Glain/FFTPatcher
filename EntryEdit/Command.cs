@@ -112,17 +112,15 @@ namespace EntryEdit
 
     public class CustomSection : ICopyableEntry<CustomSection>
     {
-        public int ByteLength { get; private set; }
         public List<CustomEntry> CustomEntryList { get; private set; }
 
-        public CustomSection(int byteLength, List<CustomEntry> customEntryList)
+        public CustomSection(List<CustomEntry> customEntryList)
         {
-            this.ByteLength = byteLength;
             this.CustomEntryList = customEntryList;
         }
 
-        public CustomSection(int byteLength, CustomEntry customEntry): this(byteLength, new List<CustomEntry>() { customEntry }) { }
-        public CustomSection() : this(0, new List<CustomEntry>()) { }
+        public CustomSection(CustomEntry customEntry): this(new List<CustomEntry>() { customEntry }) { }
+        public CustomSection() : this(new List<CustomEntry>()) { }
 
         public CustomSection(IList<byte> bytes, bool isText = false, int numTextEntries = 0)
         {
@@ -134,23 +132,20 @@ namespace EntryEdit
                 IList<string> textSection = TextUtility.DecodeList(bytes);
                 int numEntries = Math.Min(numTextEntries, byteLists.Count);
 
-                ByteLength = 0;
                 for (int index = 0; index < numEntries; index++)
                 {
                     CustomEntryList.Add(new CustomEntry(index, new List<byte>(byteLists[index]), textSection[index]));
-                    ByteLength += byteLists[index].Count;
                 }
             }
             else
             {
                 CustomEntryList.Add(new CustomEntry(0, new List<byte>(bytes)));
-                ByteLength = bytes.Count;
             }
         }
 
         public byte[] ToByteArray()
         {
-            List<byte> byteList = new List<byte>(ByteLength);
+            List<byte> byteList = new List<byte>();
             
             foreach (CustomEntry entry in CustomEntryList)
                 byteList.AddRange(entry.Bytes);
@@ -160,7 +155,7 @@ namespace EntryEdit
 
         public CustomSection Copy()
         {
-            return new CustomSection(ByteLength, CopyableEntry.CopyList<CustomEntry>(CustomEntryList));
+            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList));
         }
     }
 
@@ -191,6 +186,36 @@ namespace EntryEdit
         public override string ToString()
         {
             return (Index + 1).ToString("X2");
+        }
+
+        public void SetText(string text)
+        {
+            Text = text;
+            Bytes = TextUtility.Encode(text);
+        }
+
+        public void SetHex(string hex, bool isText = false)
+        {
+            SetBytes(PatcherLib.Utilities.Utilities.GetBytesFromHexString(hex, true), isText);
+        }
+
+        public void SetBytes(IList<byte> bytes, bool isText = false)
+        {
+            Bytes = new List<byte>(bytes);
+            if (isText)
+            {
+                Text = TextUtility.Decode(bytes);
+            }
+        }
+
+        public void IncrementIndex()
+        {
+            Index++;
+        }
+
+        public void DecrementIndex()
+        {
+            Index--;
         }
     }
 

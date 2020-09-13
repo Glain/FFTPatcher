@@ -30,6 +30,8 @@
         {
             this.cmb_Section = new System.Windows.Forms.ComboBox();
             this.cmb_Entry = new System.Windows.Forms.ComboBox();
+            this.btn_Add = new System.Windows.Forms.Button();
+            this.btn_Delete = new System.Windows.Forms.Button();
             this.entryEditor = new EntryEdit.Editors.CustomEntryEditor();
             this.SuspendLayout();
             // 
@@ -53,6 +55,26 @@
             this.cmb_Entry.TabIndex = 5;
             this.cmb_Entry.SelectedIndexChanged += new System.EventHandler(this.cmb_Entry_SelectedIndexChanged);
             // 
+            // btn_Add
+            // 
+            this.btn_Add.Location = new System.Drawing.Point(193, 0);
+            this.btn_Add.Name = "btn_Add";
+            this.btn_Add.Size = new System.Drawing.Size(30, 24);
+            this.btn_Add.TabIndex = 6;
+            this.btn_Add.Text = "+";
+            this.btn_Add.UseVisualStyleBackColor = true;
+            this.btn_Add.Click += new System.EventHandler(this.btn_Add_Click);
+            // 
+            // btn_Delete
+            // 
+            this.btn_Delete.Location = new System.Drawing.Point(226, 0);
+            this.btn_Delete.Name = "btn_Delete";
+            this.btn_Delete.Size = new System.Drawing.Size(30, 24);
+            this.btn_Delete.TabIndex = 7;
+            this.btn_Delete.Text = "-";
+            this.btn_Delete.UseVisualStyleBackColor = true;
+            this.btn_Delete.Click += new System.EventHandler(this.btn_Delete_Click);
+            // 
             // entryEditor
             // 
             this.entryEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -67,6 +89,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_Delete);
+            this.Controls.Add(this.btn_Add);
             this.Controls.Add(this.cmb_Entry);
             this.Controls.Add(this.entryEditor);
             this.Controls.Add(this.cmb_Section);
@@ -81,5 +105,7 @@
         private System.Windows.Forms.ComboBox cmb_Section;
         private CustomEntryEditor entryEditor;
         private System.Windows.Forms.ComboBox cmb_Entry;
+        private System.Windows.Forms.Button btn_Add;
+        private System.Windows.Forms.Button btn_Delete;
     }
 }

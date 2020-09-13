@@ -18,6 +18,14 @@ namespace EntryEdit.Editors
         }
 
         private CustomEntry _customEntry;
+        public CustomEntry CustomEntry 
+        {
+            get
+            {
+                return _customEntry;
+            }
+        }
+
         private EditorMode _editorMode;
 
         public CustomEntryEditor()
@@ -38,12 +46,30 @@ namespace EntryEdit.Editors
             {
                 txt_Entry.Text = customEntry.Text;
             }
+
+            txt_Entry.Enabled = true;
         }
 
         public void Clear()
         {
             _customEntry = null;
             txt_Entry.Text = "";
+            txt_Entry.Enabled = false;
+        }
+
+        public void SaveEntry()
+        {
+            if (_customEntry != null)
+            {
+                if (_editorMode == CustomEntryEditor.EditorMode.Text)
+                {
+                    _customEntry.SetText(txt_Entry.Text);
+                }
+                else if (_editorMode == CustomEntryEditor.EditorMode.Data)
+                {
+                    _customEntry.SetHex(txt_Entry.Text);
+                }
+            }
         }
     }
 }

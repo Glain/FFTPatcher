@@ -471,7 +471,7 @@ namespace EntryEdit
             byte[] commandBytes = CommandsToByteArray(inputEvent.CommandList);
             byte[] dataBytes = inputEvent.DataSection.ToByteArray();
             byte[] textBytes = inputEvent.TextSection.ToByteArray();
-            byte[] textOffsetBytes = ((textBytes.Length > 0) || (!inputEvent.CanUseBlankTextOffset)) ? (commandBytes.Length + dataBytes.Length + 4).ToBytesLE() : BlankTextOffsetBytes;
+            byte[] textOffsetBytes = (textBytes.Length > 0) ? (commandBytes.Length + dataBytes.Length + 4).ToBytesLE() : BlankTextOffsetBytes;
 
             /*
             byte[] resultBytes = new byte[4 + commandBytes.Length + dataBytes.Length + textBytes.Length];
@@ -537,7 +537,6 @@ namespace EntryEdit
             uint textOffset = bytes.SubLength(0, 4).ToUInt32();
 
             CustomSection dataSection, textSection;
-            bool canUseBlankTextOffset = true;
 
             if (textOffset == 0xF2F2F2F2U)
             {
@@ -547,12 +546,12 @@ namespace EntryEdit
             else
             {
                 dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset)), false) : new CustomSection();
-                textSection = new CustomSection(bytes.Sub(textOffset), true, Event.FindNumTextEntries(commandList));
-
-                canUseBlankTextOffset = (textSection.CustomEntryList.Count > 0);
+                int numTextEntries = Event.FindNumTextEntries(commandList);
+                numTextEntries = (numTextEntries > 0) ? numTextEntries : 1;
+                textSection = new CustomSection(bytes.Sub(textOffset), true, numTextEntries);
             }
 
-            return new Event(index, entryNameMaps[CommandType.EventCommand][index], canUseBlankTextOffset, commandList, dataSection, textSection, new List<byte>(bytes));
+            return new Event(index, entryNameMaps[CommandType.EventCommand][index], commandList, dataSection, textSection, new List<byte>(bytes));
         }
 
         public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)

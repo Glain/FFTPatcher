@@ -77,17 +77,15 @@ namespace EntryEdit
     {
         public int Index { get; private set; }
         public string Name { get; private set; }
-        public bool CanUseBlankTextOffset { get; private set; }
         public List<Command> CommandList { get; private set; }
         public CustomSection DataSection { get; private set; }
         public CustomSection TextSection { get; private set; }
         public IList<byte> OriginalBytes { get; private set; }
 
-        public Event(int index, string name, bool canUseBlankTextOffset, List<Command> commandList, CustomSection dataSection, CustomSection textSection, IList<byte> originalBytes)
+        public Event(int index, string name, List<Command> commandList, CustomSection dataSection, CustomSection textSection, IList<byte> originalBytes)
         {
             this.Index = index;
             this.Name = name;
-            this.CanUseBlankTextOffset = canUseBlankTextOffset;
             this.CommandList = commandList;
             this.DataSection = dataSection;
             this.TextSection = textSection;
@@ -96,7 +94,7 @@ namespace EntryEdit
 
         public Event Copy()
         {
-            return new Event(Index, Name, CanUseBlankTextOffset, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), new List<byte>(OriginalBytes));
+            return new Event(Index, Name, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), new List<byte>(OriginalBytes));
         }
 
         public override string ToString()

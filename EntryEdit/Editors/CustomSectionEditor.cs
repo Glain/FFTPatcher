@@ -47,14 +47,13 @@ namespace EntryEdit.Editors
 
             if (_customSections[_customSectionIndex].CustomEntryList.Count > 0)
             {
-                cmb_Entry.Items.Clear();
-                cmb_Entry.Items.AddRange(_customSections[_customSectionIndex].CustomEntryList.ToArray());
+                SetEntryComboBoxEntries();
                 cmb_Entry.SelectedIndex = 0;
                 SetEntryIndex(0);
             }
             else
             {
-                entryEditor.Clear();
+                ClearEntry();
             }
 
             cmb_Entry.Visible = (_customSections[_customSectionIndex].CustomEntryList.Count > 1);
@@ -73,18 +72,91 @@ namespace EntryEdit.Editors
         {
             _customEntryIndex = index;
             entryEditor.Populate(_customSections[_customSectionIndex].CustomEntryList[index], _editorMode);
+            btn_Delete.Enabled = true;
+        }
+
+        private void ClearEntry()
+        {
+            _customEntryIndex = -1;
+            cmb_Entry.Visible = false;
+            btn_Delete.Enabled = false;
+            cmb_Entry.Items.Clear();
+            entryEditor.Clear();
+        }
+
+        private void SetEntryComboBoxEntries()
+        {
+            cmb_Entry.Items.Clear();
+            cmb_Entry.Items.AddRange(_customSections[_customSectionIndex].CustomEntryList.ToArray());
+        }
+
+        private void SetEntryComboBoxIndex(int index, bool triggerEventHandler = false)
+        {
+            bool oldIsPopulateSection = _isPopulateSection;
+            _isPopulateSection = !triggerEventHandler;
+            cmb_Entry.SelectedIndex = index;
+            _isPopulateSection = oldIsPopulateSection;
         }
 
         private void cmb_Section_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!_isPopulate)
+            {
+                entryEditor.SaveEntry();
                 SetSectionIndex(cmb_Section.SelectedIndex);
+            }
         }
 
         private void cmb_Entry_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!_isPopulateSection)
+            {
+                entryEditor.SaveEntry();
                 SetEntryIndex(cmb_Entry.SelectedIndex);
+            }
+        }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            List<CustomEntry> entryList = _customSections[_customSectionIndex].CustomEntryList;
+            entryList.Remove(entryEditor.CustomEntry);
+
+            if (entryList.Count > 0)
+            {
+                bool isFirstIndex = (_customEntryIndex > 0);
+                int newIndex = isFirstIndex ? (_customEntryIndex - 1) : 0;
+                int startIndex = isFirstIndex ? (newIndex + 1) : 0;
+
+                for (int index = startIndex; index < entryList.Count; index++)
+                    entryList[index].DecrementIndex();
+                
+                SetEntryComboBoxEntries();
+
+                SetEntryComboBoxIndex(newIndex, false);
+                SetEntryIndex(newIndex);
+                cmb_Entry.Visible = (entryList.Count > 1);
+            }
+            else
+            {
+                ClearEntry();
+            }
+        }
+
+        private void btn_Add_Click(object sender, EventArgs e)
+        {
+            entryEditor.SaveEntry();
+
+            List<CustomEntry> entryList = _customSections[_customSectionIndex].CustomEntryList;
+            int newIndex = _customEntryIndex + 1;
+            entryList.Insert(newIndex, new CustomEntry(newIndex));
+
+            for (int index = newIndex + 1; index < entryList.Count; index++)
+                entryList[index].IncrementIndex();
+
+            SetEntryComboBoxEntries();
+            SetEntryComboBoxIndex(newIndex, false);
+            SetEntryIndex(newIndex);
+            cmb_Entry.Visible = (entryList.Count > 1);
         }
     }
 }

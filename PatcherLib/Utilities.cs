@@ -56,6 +56,7 @@ namespace PatcherLib.Utilities
     public static class Utilities
     {
         public static readonly System.Text.RegularExpressions.Regex stripRegex = new System.Text.RegularExpressions.Regex(@"\s");
+        public static readonly System.Text.RegularExpressions.Regex hexRegex = new System.Text.RegularExpressions.Regex(@"[^0-9a-fA-F]");
         public const string hexAlphabet = "0123456789ABCDEF";
 
 		#region Methods
@@ -439,9 +440,12 @@ namespace PatcherLib.Utilities
             }
         }
 
-        public static byte[] GetBytesFromHexString(string byteText)
+        public static byte[] GetBytesFromHexString(string byteText, bool forceHex = false)
         {
             string strippedText = stripRegex.Replace(byteText, string.Empty);
+
+            if (forceHex)
+                strippedText = hexRegex.Replace(strippedText, string.Empty);
 
             int bytes = strippedText.Length / 2;
             byte[] result = new byte[bytes];
