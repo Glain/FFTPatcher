@@ -29,15 +29,17 @@ namespace EntryEdit.Editors
         }
 
         private Command _command;
-        private CommandType _commandType;
-        private int _defaultCommandByteLength;
-        private Dictionary<int, CommandTemplate> _commandMap;
-        private List<string> _commandNames;
-        private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
-        private Dictionary<string, int> _parameterWidthMaps;
+        public Command Command
+        {
+            get
+            {
+                return _command;
+            }
+        }
 
-        private int _maxParameters = 1;
-        private List<ParameterData> parameterDataList;
+        private CommandData _commandData;
+        private Dictionary<string, int> _parameterWidthMaps;
+        private List<ParameterData> _parameterDataList;
         
         public CommandEditor()
         {
@@ -45,16 +47,10 @@ namespace EntryEdit.Editors
             InitData();
         }
 
-        public void Init(CommandType commandType, int defaultCommandByteLength, Dictionary<int, CommandTemplate> commandMap, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        public void Init(CommandData commandData)
         {
-            this._commandType = commandType;
-            this._defaultCommandByteLength = defaultCommandByteLength;
-            this._commandMap = commandMap;
-            this._commandNames = commandNames;
-            this._parameterValueMaps = parameterValueMaps;
-            this._maxParameters = maxParameters;
-
-            InitCommandComboBox(commandNames);
+            this._commandData = commandData;
+            InitCommandComboBox(commandData.CommandNames);
             InitParameters();
         }
 
@@ -65,15 +61,22 @@ namespace EntryEdit.Editors
             SetParameters(command.Parameters);
         }
 
+        public void SaveFormCommand()
+        {
+            Command formCommand = GetFormCommand();
+            if (!_command.Equals(formCommand))
+                _command = formCommand;
+        }
+
         private void SetNewCommand(int commandID)
         {
             CommandTemplate template = null;
-            _commandMap.TryGetValue(commandID, out template);
+            _commandData.CommandMap.TryGetValue(commandID, out template);
             
             if (template != null)
                 Populate(new Command(template));
             else
-                Populate(new Command(commandID, _defaultCommandByteLength, _commandType));
+                Populate(new Command(commandID, _commandData.DefaultCommandByteLength, _commandData.CommandType));
         }
 
         private void InitData()
@@ -96,7 +99,7 @@ namespace EntryEdit.Editors
                     bool isSigned = parameter.Template.IsSigned;
                     int range = (1 << (parameter.Template.ByteLength << 3));
 
-                    ParameterData parameterData = parameterDataList[index];
+                    ParameterData parameterData = _parameterDataList[index];
 
                     //GroupBox groupBox = new GroupBox();
                     ShortGroupBox groupBox = parameterData.GroupBox;
@@ -105,7 +108,7 @@ namespace EntryEdit.Editors
                     //if (parameter.Template.Type == CommandParameterType.Number)
                     Dictionary<int, string> parameterValueMap = null;
                     //groupBox.AutoSize = true;
-                    if (!_parameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
+                    if (!_commandData.ParameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
                     {
                         parameterData.IsSpinner = true;
                         //NumericUpDown spinner = new NumericUpDown();
@@ -174,10 +177,10 @@ namespace EntryEdit.Editors
 
         private void InitParameters()
         {
-            parameterDataList = new List<ParameterData>();
-            ShortGroupBox[] groupBoxes = new ShortGroupBox[_maxParameters];
+            _parameterDataList = new List<ParameterData>();
+            ShortGroupBox[] groupBoxes = new ShortGroupBox[_commandData.MaxParameters];
 
-            for (int index = 0; index < _maxParameters; index++)
+            for (int index = 0; index < _commandData.MaxParameters; index++)
             {
                 ShortGroupBox groupBox = new ShortGroupBox();
                 groupBox.AutoSize = true;
@@ -199,7 +202,7 @@ namespace EntryEdit.Editors
                 //comboBox.Location = new Point((groupBox.Width - comboBox.Width) / 2, 15);
 
                 groupBoxes[index] = groupBox;
-                parameterDataList.Add(new ParameterData(true, groupBox, spinner, comboBox));
+                _parameterDataList.Add(new ParameterData(true, groupBox, spinner, comboBox));
 
                 //groupBox.Location = new Point(groupBox.Location.X, 0);
                 //groupBox.Padding = new Padding(groupBox.Padding.Left, groupBox.Padding.Top, groupBox.Padding.Right, 0);
@@ -211,10 +214,31 @@ namespace EntryEdit.Editors
 
         private void ClearParameters()
         {
-            for (int index = 0; index < _maxParameters; index++)
+            for (int index = 0; index < _commandData.MaxParameters; index++)
             {
-                parameterDataList[index].GroupBox.Visible = false;
+                _parameterDataList[index].GroupBox.Visible = false;
             }
+        }
+
+        private List<int> GetFormParameterValues()
+        {
+            List<int> result = new List<int>();
+            for (int index = 0; index < _command.Parameters.Count; index++)
+            {
+                result.Add(GetFormParameterValue(index));
+            }
+
+            return result;
+        }
+
+        private int GetFormParameterValue(int index)
+        {
+            return _parameterDataList[index].IsSpinner ? (int)_parameterDataList[index].Spinner.Value : _parameterDataList[index].ComboBox.SelectedIndex;
+        }
+
+        private Command GetFormCommand()
+        {
+            return _command.CopyWithValues(GetFormParameterValues());
         }
 
         private int GetComboBoxWidth(ComboBox cb, string type, IEnumerable<string> entryNames)

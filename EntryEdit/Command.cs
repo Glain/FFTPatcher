@@ -47,6 +47,20 @@ namespace EntryEdit
             return new Command(Template, CopyableEntry.CopyList<CommandParameter>(Parameters));
         }
 
+        public Command CopyWithValues(IList<int> values)
+        {
+            if (values.Count != Parameters.Count)
+                return Copy();
+
+            List<CommandParameter> parameters = new List<CommandParameter>();
+            for (int index = 0; index < Parameters.Count; index++)
+            {
+                parameters.Add(Parameters[index].CopyWithValue(values[index]));
+            }
+
+            return new Command(Template, parameters);
+        }
+
         public override string ToString()
         {
             return Template.ToString();
@@ -59,6 +73,30 @@ namespace EntryEdit
             {
                 this.Parameters.Add(new CommandParameter(parameterTemplate));
             }
+        }
+
+        public bool Equals(Command command)
+        {
+            if ((Template == null) || (command.Template == null))
+                return false;
+            else if (Template.Type != command.Template.Type)
+                return false;
+            else if (Template.ID != command.Template.ID)
+                return false;
+            else if ((Template.Parameters == null) || (command.Template.Parameters == null))
+                return false;
+            else if (Template.Parameters.Count != command.Template.Parameters.Count)
+                return false;
+
+            for (int index = 0; index < Parameters.Count; index++)
+            {
+                if ((Parameters[index].Template == null) || (command.Parameters[index].Template == null))
+                    return false;
+                else if (Parameters[index].Value != command.Parameters[index].Value)
+                    return false;
+            }
+
+            return true;
         }
     }
 
@@ -87,6 +125,11 @@ namespace EntryEdit
         public CommandParameter Copy()
         {
             return new CommandParameter(Template, Value);
+        }
+
+        public CommandParameter CopyWithValue(int value)
+        {
+            return new CommandParameter(Template, value);
         }
     }
 

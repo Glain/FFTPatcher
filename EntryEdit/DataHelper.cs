@@ -10,6 +10,27 @@ using System.IO;
 
 namespace EntryEdit
 {
+    public class CommandData
+    {
+        public CommandType CommandType { get; private set; }
+        public List<string> CommandNames { get; private set; }
+        public Dictionary<int, CommandTemplate> CommandMap { get; private set; }
+        public int DefaultCommandByteLength { get; private set; }
+        public Dictionary<string, Dictionary<int, string>> ParameterValueMaps { get; private set; }
+        public int MaxParameters { get; private set; }
+
+        public CommandData(CommandType commandType, List<string> commandNames, Dictionary<int, CommandTemplate> commandMap, int defaultCommandByteLength,
+            Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        {
+            this.CommandType = commandType;
+            this.CommandNames = commandNames;
+            this.CommandMap = commandMap;
+            this.DefaultCommandByteLength = defaultCommandByteLength;
+            this.ParameterValueMaps = parameterValueMaps;
+            this.MaxParameters = maxParameters;
+        }
+    }
+
     public class DataHelper
     {
         private const int EventSize = 0x2000;
@@ -138,7 +159,7 @@ namespace EntryEdit
             return result;
         }
 
-        public int GetParameterMax(CommandType type)
+        public int GetMaxParameters(CommandType type)
         {
             int max = 0;
             foreach (CommandTemplate template in commandTemplateMaps[type].Values)
@@ -148,6 +169,25 @@ namespace EntryEdit
             }
 
             return max;
+        }
+
+        public Dictionary<CommandType, CommandData> GetCommandDataMap()
+        {
+            Dictionary<CommandType, List<string>> commandNames = GetCommandNames();
+            Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandMaps = GetCommandMaps();
+            Dictionary<CommandType, int> defaultCommandByteLengthMaps = GetDefaultCommandByteLengthMaps();
+            Dictionary<string, Dictionary<int, string>> parameterValueMaps = GetParameterMaps();
+
+            Dictionary<CommandType, CommandData> result = new Dictionary<CommandType, CommandData>();
+
+            result.Add(CommandType.BattleConditional, new CommandData(CommandType.BattleConditional, commandNames[CommandType.BattleConditional], commandMaps[CommandType.BattleConditional], 
+                defaultCommandByteLengthMaps[CommandType.BattleConditional], parameterValueMaps, GetMaxParameters(CommandType.BattleConditional)));
+            result.Add(CommandType.WorldConditional, new CommandData(CommandType.WorldConditional, commandNames[CommandType.WorldConditional], commandMaps[CommandType.WorldConditional],
+                defaultCommandByteLengthMaps[CommandType.WorldConditional], parameterValueMaps, GetMaxParameters(CommandType.WorldConditional)));
+            result.Add(CommandType.EventCommand, new CommandData(CommandType.EventCommand, commandNames[CommandType.EventCommand], commandMaps[CommandType.EventCommand],
+                defaultCommandByteLengthMaps[CommandType.EventCommand], parameterValueMaps, GetMaxParameters(CommandType.EventCommand)));
+
+            return result;
         }
 
         /*

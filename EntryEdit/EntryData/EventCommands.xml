@@ -639,7 +639,7 @@
         <Parameter name="Target" bytes="1" mode="hex" />
     </Command>
     <Command hex="D1" name="Jump Forward">
-        <Parameter name="Target ID" bytes="1" mode="hex" />
+        <Parameter name="Target" bytes="1" mode="hex" />
     </Command>
     <Command hex="D2" name="Forward Target">
         <Parameter name="Target" bytes="1" mode="hex" />
