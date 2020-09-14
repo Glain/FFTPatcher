@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Commands bytes="1">
-    <Command hex="10" name="Display Message">
+    <Command hex="10" name="Display Message" default="true">
         <Parameter name="Unknown" bytes="1" mode="hex" default="16" />
         <Parameter name="Dialog" bytes="1" mode="hex" />
         <Parameter name="Message" bytes="2" mode="hex" text="true" />

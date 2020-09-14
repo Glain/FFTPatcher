@@ -18,9 +18,10 @@ namespace EntryEdit
         public int DefaultCommandByteLength { get; private set; }
         public Dictionary<string, Dictionary<int, string>> ParameterValueMaps { get; private set; }
         public int MaxParameters { get; private set; }
+        public CommandTemplate DefaultCommandTemplate { get; set; }
 
         public CommandData(CommandType commandType, List<string> commandNames, Dictionary<int, CommandTemplate> commandMap, int defaultCommandByteLength,
-            Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+            Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters, CommandTemplate defaultCommandTemplate)
         {
             this.CommandType = commandType;
             this.CommandNames = commandNames;
@@ -28,6 +29,7 @@ namespace EntryEdit
             this.DefaultCommandByteLength = defaultCommandByteLength;
             this.ParameterValueMaps = parameterValueMaps;
             this.MaxParameters = maxParameters;
+            this.DefaultCommandTemplate = defaultCommandTemplate;
         }
     }
 
@@ -38,6 +40,8 @@ namespace EntryEdit
 
         private readonly List<string> parameterTypes;
         private readonly Dictionary<CommandType, int> defaultCommandByteLengthMaps;
+        private readonly Dictionary<CommandType, CommandTemplate> defaultCommandTemplateMap;
+
         private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
@@ -46,6 +50,8 @@ namespace EntryEdit
         {
             parameterTypes = new List<string>();
             defaultCommandByteLengthMaps = new Dictionary<CommandType, int>();
+            defaultCommandTemplateMap = new Dictionary<CommandType, CommandTemplate>();
+
             commandTemplateMaps = GetCommandTemplateMaps();
             parameterValueMaps = GetParameterValueMaps();
             entryNameMaps = GetEntryNameMaps();
@@ -159,6 +165,17 @@ namespace EntryEdit
             return result;
         }
 
+        public Dictionary<CommandType, CommandTemplate> GetDefaultCommandTemplateMap()
+        {
+            Dictionary<CommandType, CommandTemplate> result = new Dictionary<CommandType, CommandTemplate>();
+            foreach (KeyValuePair<CommandType, CommandTemplate> kvp in defaultCommandTemplateMap)
+            {
+                result.Add(kvp.Key, kvp.Value);
+            }
+
+            return result;
+        }
+
         public int GetMaxParameters(CommandType type)
         {
             int max = 0;
@@ -177,15 +194,16 @@ namespace EntryEdit
             Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandMaps = GetCommandMaps();
             Dictionary<CommandType, int> defaultCommandByteLengthMaps = GetDefaultCommandByteLengthMaps();
             Dictionary<string, Dictionary<int, string>> parameterValueMaps = GetParameterMaps();
+            Dictionary<CommandType, CommandTemplate> commandTemplateMap = GetDefaultCommandTemplateMap();
 
             Dictionary<CommandType, CommandData> result = new Dictionary<CommandType, CommandData>();
 
             result.Add(CommandType.BattleConditional, new CommandData(CommandType.BattleConditional, commandNames[CommandType.BattleConditional], commandMaps[CommandType.BattleConditional], 
-                defaultCommandByteLengthMaps[CommandType.BattleConditional], parameterValueMaps, GetMaxParameters(CommandType.BattleConditional)));
+                defaultCommandByteLengthMaps[CommandType.BattleConditional], parameterValueMaps, GetMaxParameters(CommandType.BattleConditional), commandTemplateMap[CommandType.BattleConditional]));
             result.Add(CommandType.WorldConditional, new CommandData(CommandType.WorldConditional, commandNames[CommandType.WorldConditional], commandMaps[CommandType.WorldConditional],
-                defaultCommandByteLengthMaps[CommandType.WorldConditional], parameterValueMaps, GetMaxParameters(CommandType.WorldConditional)));
+                defaultCommandByteLengthMaps[CommandType.WorldConditional], parameterValueMaps, GetMaxParameters(CommandType.WorldConditional), commandTemplateMap[CommandType.WorldConditional]));
             result.Add(CommandType.EventCommand, new CommandData(CommandType.EventCommand, commandNames[CommandType.EventCommand], commandMaps[CommandType.EventCommand],
-                defaultCommandByteLengthMaps[CommandType.EventCommand], parameterValueMaps, GetMaxParameters(CommandType.EventCommand)));
+                defaultCommandByteLengthMaps[CommandType.EventCommand], parameterValueMaps, GetMaxParameters(CommandType.EventCommand), commandTemplateMap[CommandType.EventCommand]));
 
             return result;
         }
@@ -390,6 +408,7 @@ namespace EntryEdit
                 int nodeValue = GetNodeValue(node);
                 XmlAttribute attrName = node.Attributes["name"];
                 XmlAttribute attrBytes = node.Attributes["bytes"];
+                XmlAttribute attrDefault = node.Attributes["default"];
 
                 if (nodeValue >= 0)
                 {
@@ -402,6 +421,7 @@ namespace EntryEdit
                     int commandTemplateID = nodeValue;
                     string commandTemplateName = (attrName != null) ? attrName.InnerText : CommandTemplate.DefaultName;
                     int commandTemplateByteLength = byteLength;
+                    bool isDefault = (attrDefault != null) && (attrDefault.InnerText.ToLower().Trim() == strTrue);
 
                     List<CommandParameterTemplate> commandTemplateParameters = new List<CommandParameterTemplate>();
                     foreach (XmlNode parameterNode in node.SelectNodes("Parameter"))
@@ -460,7 +480,12 @@ namespace EntryEdit
                         commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, isTextReference, parameterTemplateType, defaultValue));
                     }
 
-                    result.Add(commandTemplateID, new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, type, commandTemplateParameters));
+                    CommandTemplate commandTemplate = new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, type, commandTemplateParameters);
+                    result.Add(commandTemplateID, commandTemplate);
+                    if (isDefault)
+                    {
+                        defaultCommandTemplateMap.Add(type, commandTemplate);
+                    }
                 }
             }
 

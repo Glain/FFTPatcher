@@ -36,6 +36,9 @@
             this.spinner_Page = new System.Windows.Forms.NumericUpDown();
             this.btn_Page_First = new System.Windows.Forms.Button();
             this.btn_Page_Last = new System.Windows.Forms.Button();
+            this.btn_CheckAll = new System.Windows.Forms.Button();
+            this.btn_UncheckAll = new System.Windows.Forms.Button();
+            this.btn_ToggleAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Page)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,6 +50,7 @@
             this.btn_Add.TabIndex = 0;
             this.btn_Add.Text = "+";
             this.btn_Add.UseVisualStyleBackColor = true;
+            this.btn_Add.Click += new System.EventHandler(this.btn_Add_Click);
             // 
             // tlp_Commands
             // 
@@ -56,7 +60,6 @@
             this.tlp_Commands.AutoScroll = true;
             this.tlp_Commands.ColumnCount = 1;
             this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 874F));
-            //this.tlp_Commands.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlp_Commands.Location = new System.Drawing.Point(0, 27);
             this.tlp_Commands.Name = "tlp_Commands";
             this.tlp_Commands.Size = new System.Drawing.Size(874, 523);
@@ -70,6 +73,7 @@
             this.btn_Delete.TabIndex = 2;
             this.btn_Delete.Text = "-";
             this.btn_Delete.UseVisualStyleBackColor = true;
+            this.btn_Delete.Click += new System.EventHandler(this.btn_Delete_Click);
             // 
             // btn_Page_Prev
             // 
@@ -129,10 +133,43 @@
             this.btn_Page_Last.UseVisualStyleBackColor = true;
             this.btn_Page_Last.Click += new System.EventHandler(this.btn_Page_Last_Click);
             // 
+            // btn_CheckAll
+            // 
+            this.btn_CheckAll.Location = new System.Drawing.Point(300, 1);
+            this.btn_CheckAll.Name = "btn_CheckAll";
+            this.btn_CheckAll.Size = new System.Drawing.Size(77, 24);
+            this.btn_CheckAll.TabIndex = 8;
+            this.btn_CheckAll.Text = "Check All";
+            this.btn_CheckAll.UseVisualStyleBackColor = true;
+            this.btn_CheckAll.Click += new System.EventHandler(this.btn_CheckAll_Click);
+            // 
+            // btn_UncheckAll
+            // 
+            this.btn_UncheckAll.Location = new System.Drawing.Point(380, 1);
+            this.btn_UncheckAll.Name = "btn_UncheckAll";
+            this.btn_UncheckAll.Size = new System.Drawing.Size(77, 24);
+            this.btn_UncheckAll.TabIndex = 9;
+            this.btn_UncheckAll.Text = "Uncheck All";
+            this.btn_UncheckAll.UseVisualStyleBackColor = true;
+            this.btn_UncheckAll.Click += new System.EventHandler(this.btn_UncheckAll_Click);
+            // 
+            // btn_ToggleAll
+            // 
+            this.btn_ToggleAll.Location = new System.Drawing.Point(460, 1);
+            this.btn_ToggleAll.Name = "btn_ToggleAll";
+            this.btn_ToggleAll.Size = new System.Drawing.Size(77, 24);
+            this.btn_ToggleAll.TabIndex = 10;
+            this.btn_ToggleAll.Text = "Toggle All";
+            this.btn_ToggleAll.UseVisualStyleBackColor = true;
+            this.btn_ToggleAll.Click += new System.EventHandler(this.btn_ToggleAll_Click);
+            // 
             // CommandListEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_ToggleAll);
+            this.Controls.Add(this.btn_UncheckAll);
+            this.Controls.Add(this.btn_CheckAll);
             this.Controls.Add(this.btn_Page_Last);
             this.Controls.Add(this.btn_Page_First);
             this.Controls.Add(this.spinner_Page);
@@ -158,5 +195,8 @@
         private System.Windows.Forms.NumericUpDown spinner_Page;
         private System.Windows.Forms.Button btn_Page_First;
         private System.Windows.Forms.Button btn_Page_Last;
+        private System.Windows.Forms.Button btn_CheckAll;
+        private System.Windows.Forms.Button btn_UncheckAll;
+        private System.Windows.Forms.Button btn_ToggleAll;
     }
 }

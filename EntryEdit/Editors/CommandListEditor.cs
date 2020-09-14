@@ -22,6 +22,8 @@ namespace EntryEdit.Editors
             get { return _commandList; }
         }
 
+        private CommandData _commandData;
+
         private int _commandPageSize = DefaultPageSize;
         private int _commandPageIndex = 0;
         private int _commandNumPages = 1;
@@ -33,23 +35,19 @@ namespace EntryEdit.Editors
 
         public void Init(CommandData commandData, int commandPageSize = DefaultPageSize)
         {
+            this._commandData = commandData;
             this._commandPageSize = commandPageSize;
             InitRows(commandData);
         }
 
-        public void Populate(List<Command> commandList)
+        public void Populate(List<Command> commandList, int pageIndex = 0)
         {
             _isPopulate = true;
 
             _commandList = commandList;
-            _commandNumPages = (_commandList.Count + _commandPageSize - 1) / _commandPageSize;
+            SetCommandListFormProperties(pageIndex);
 
-            int minPageValue = Math.Min(_commandNumPages, 1);
-            spinner_Page.Minimum = minPageValue;
-            spinner_Page.Maximum = _commandNumPages;
-            spinner_Page.Value = minPageValue;
-
-            SetCommandPageIndex(0);
+            SetCommandPageIndex(pageIndex);
             _isPopulate = false;
         }
 
@@ -67,31 +65,20 @@ namespace EntryEdit.Editors
 
         private void PopulateRows()
         {
-            btn_Page_Prev.Enabled = false;
-            btn_Page_Next.Enabled = false;
-            btn_Page_First.Enabled = false;
-            btn_Page_Last.Enabled = false;
-            spinner_Page.Enabled = false;
+            SetInputControlEnabledState(false);
 
             int commandIndex = (_commandPageIndex * _commandPageSize);
             for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
             {
                 if (commandIndex < _commandList.Count)
-                    SetCommandRow(rowIndex, commandIndex, _commandList[commandIndex]);
+                    SetCommandRow(rowIndex, _commandList[commandIndex]);
                 else
                     SetHiddenCommandRow(rowIndex);
 
                 commandIndex++;
             }
 
-            bool isNotFirstPage = (_commandPageIndex > 0);
-            bool isNotLastPage = (_commandPageIndex < (_commandNumPages - 1));
-
-            btn_Page_Prev.Enabled = isNotFirstPage;
-            btn_Page_Next.Enabled = isNotLastPage;
-            btn_Page_First.Enabled = isNotFirstPage;
-            btn_Page_Last.Enabled = isNotLastPage;
-            spinner_Page.Enabled = true;
+            SetInputControlEnabledState(true);
         }
 
         private void ClearPanel()
@@ -103,7 +90,46 @@ namespace EntryEdit.Editors
             tlp_Commands.RowCount = 0;
         }
 
-        private void SetCommandRow(int rowIndex, int index, Command command)
+        private void SetCommandListFormProperties(int pageIndex)
+        {
+            _commandNumPages = (_commandList.Count + _commandPageSize - 1) / _commandPageSize;
+
+            int minPageValue = Math.Min(_commandNumPages, (pageIndex + 1));
+            spinner_Page.Minimum = minPageValue;
+            spinner_Page.Maximum = _commandNumPages;
+            spinner_Page.Value = minPageValue;
+
+            btn_Delete.Enabled = (_commandList.Count > 0);
+        }
+
+        private void SetInputControlEnabledState(bool isNormal)
+        {
+            if (isNormal)
+            {
+                bool isNotFirstPage = (_commandPageIndex > 0);
+                bool isNotLastPage = (_commandPageIndex < (_commandNumPages - 1));
+
+                btn_Page_Prev.Enabled = isNotFirstPage;
+                btn_Page_Next.Enabled = isNotLastPage;
+                btn_Page_First.Enabled = isNotFirstPage;
+                btn_Page_Last.Enabled = isNotLastPage;
+                btn_Add.Enabled = true;
+                btn_Delete.Enabled = (_commandList.Count > 0);
+                spinner_Page.Enabled = true;
+            }
+            else
+            {
+                btn_Page_Prev.Enabled = false;
+                btn_Page_Next.Enabled = false;
+                btn_Page_First.Enabled = false;
+                btn_Page_Last.Enabled = false;
+                btn_Add.Enabled = false;
+                btn_Delete.Enabled = false;
+                spinner_Page.Enabled = false;
+            }
+        }
+
+        private void SetCommandRow(int rowIndex, Command command)
         {
             tlp_Commands.RowStyles[rowIndex].Height = RowHeight;
             CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
@@ -116,6 +142,7 @@ namespace EntryEdit.Editors
             tlp_Commands.RowStyles[rowIndex].Height = 0.0F;
             CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
             commandEditor.Visible = false;
+            commandEditor.SetCheckedState(false);
         }
 
         private void AddHiddenCommandRow(CommandData commandData)
@@ -157,6 +184,35 @@ namespace EntryEdit.Editors
             }
         }
 
+        private List<int> FindCheckedRowIndexes()
+        {
+            List<int> result = new List<int>();
+
+            int commandIndex = (_commandPageIndex * _commandPageSize);
+            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
+            {
+                if (commandIndex < _commandList.Count)
+                {
+                    if (GetRowCommandEditor(rowIndex).IsChecked())
+                        result.Add(rowIndex);
+                }
+
+                commandIndex++;
+            }
+
+            return result;
+        }
+
+        private int GetNumEntriesOnPage(int pageIndex)
+        {
+            if ((pageIndex >= _commandNumPages) || (pageIndex < 0))
+                return 0;
+            else if (pageIndex < (_commandNumPages - 1))
+                return _commandPageSize;
+            else
+                return _commandList.Count - (_commandPageSize * (_commandNumPages - 1));
+        }
+
         private void spinner_Page_ValueChanged(object sender, EventArgs e)
         {
             if (!_isPopulate)
@@ -188,6 +244,86 @@ namespace EntryEdit.Editors
         {
             if (_commandPageIndex < (_commandNumPages - 1))
                 spinner_Page.Value = _commandNumPages;
+        }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            if (_commandList.Count > 0)
+            {
+                List<int> checkedRowIndexes = FindCheckedRowIndexes();
+                if (checkedRowIndexes.Count > 0)
+                {
+                    SavePage();
+                    int numPageEntries = GetNumEntriesOnPage(_commandPageIndex);
+
+                    foreach (int rowIndex in checkedRowIndexes)
+                    {
+                        _commandList.Remove(GetRowCommandEditor(rowIndex).Command);
+                    }
+
+                    int newPageIndex = Math.Max(0, ((checkedRowIndexes.Count == numPageEntries) ? (_commandPageIndex - 1) : _commandPageIndex));
+                    Populate(_commandList, newPageIndex);
+                }
+            }
+        }
+
+        private void btn_Add_Click(object sender, EventArgs e)
+        {
+            Command newCommand = new Command(_commandData.DefaultCommandTemplate);
+            List<int> checkedRowIndexes = FindCheckedRowIndexes();
+            int pageStartIndex = (_commandPageIndex * _commandPageSize);
+
+            SavePage();
+            if (checkedRowIndexes.Count > 0)
+            {
+                int newIndex = pageStartIndex + checkedRowIndexes[0] + 1;
+                _commandList.Insert(newIndex, newCommand);
+                bool isNewPage = (checkedRowIndexes[0] == (_commandPageSize - 1));
+                int newPageIndex = isNewPage ? (_commandPageIndex + 1) : _commandPageIndex;
+                Populate(_commandList, newPageIndex);
+            }
+            else
+            {
+                int numPageEntries = GetNumEntriesOnPage(_commandPageIndex);
+                int rowIndex = (numPageEntries == _commandPageSize) ? (numPageEntries - 1) : numPageEntries;
+                int newIndex = pageStartIndex + rowIndex;
+                _commandList.Insert(newIndex, newCommand);
+
+                //Populate(_commandList, _commandPageIndex);
+                SetCommandRow(rowIndex, newCommand);
+                SetCommandListFormProperties(_commandPageIndex);
+                SetInputControlEnabledState(true);
+            }
+        }
+
+        private void btn_CheckAll_Click(object sender, EventArgs e)
+        {
+            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
+            {
+                CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
+                if (commandEditor.Visible)
+                    commandEditor.SetCheckedState(true);
+            }
+        }
+
+        private void btn_UncheckAll_Click(object sender, EventArgs e)
+        {
+            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
+            {
+                CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
+                if (commandEditor.Visible)
+                    commandEditor.SetCheckedState(false);
+            }
+        }
+
+        private void btn_ToggleAll_Click(object sender, EventArgs e)
+        {
+            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
+            {
+                CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
+                if (commandEditor.Visible)
+                    commandEditor.ToggleCheckedState();
+            }
         }
     }
 }

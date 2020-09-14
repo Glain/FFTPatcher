@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Commands bytes="2">
-    <Command hex="0001" name="Variable =">
+    <Command hex="0001" name="Variable =" default="true">
         <Parameter name="Variable" bytes="2" type="Variable" />
         <Parameter name="Value" bytes="2" mode="hex" />
     </Command>

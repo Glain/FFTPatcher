@@ -40,7 +40,22 @@ namespace EntryEdit.Editors
         private CommandData _commandData;
         private Dictionary<string, int> _parameterWidthMaps;
         private List<ParameterData> _parameterDataList;
-        
+
+        public bool IsChecked()
+        {
+            return chk_Include.Checked;
+        }
+
+        public void SetCheckedState(bool checkedState)
+        {
+            chk_Include.Checked = checkedState;
+        }
+
+        public void ToggleCheckedState()
+        {
+            chk_Include.Checked = !chk_Include.Checked;
+        }
+
         public CommandEditor()
         {
             InitializeComponent();
@@ -57,6 +72,7 @@ namespace EntryEdit.Editors
         public void Populate(Command command)
         {
             _command = command;
+            chk_Include.Checked = false;
             cmb_Command.SelectedIndex = command.Template.ID;
             SetParameters(command.Parameters);
         }
