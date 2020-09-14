@@ -12,6 +12,7 @@ namespace EntryEdit.Editors
     {
         private List<Event> _events;
         private List<Event> _defaultEvents;
+        private Dictionary<int, CommandTemplate> _commandMap;
 
         private List<string> _commandNames;
         private int _eventIndex = 0;
@@ -22,15 +23,16 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<Event> events, List<Event> defaultEvents, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        public void Populate(List<Event> events, List<Event> defaultEvents, CommandType commandType, int defaultCommandByteLength, Dictionary<int, CommandTemplate> commandMap, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
             _isPopulate = true;
 
             this._events = events;
             this._defaultEvents = defaultEvents;
+            this._commandMap = commandMap;
             this._commandNames = commandNames;
 
-            eventEditor.Init(commandNames, parameterValueMaps, maxParameters);
+            eventEditor.Init(commandType, defaultCommandByteLength, commandMap, commandNames, parameterValueMaps, maxParameters);
 
             cmb_Event.Items.Clear();
             cmb_Event.Items.AddRange(_events.ToArray());

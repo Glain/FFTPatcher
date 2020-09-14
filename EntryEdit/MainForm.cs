@@ -32,10 +32,12 @@ namespace EntryEdit
 
             Dictionary<CommandType, List<string>> commandNames = _dataHelper.GetCommandNames();
             Dictionary<string, Dictionary<int, string>> parameterValueMaps = _dataHelper.GetParameterMaps();
+            Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandMaps = _dataHelper.GetCommandMaps();
+            Dictionary<CommandType, int> defaultCommandByteLengthMaps = _dataHelper.GetDefaultCommandByteLengthMaps();
 
-            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, commandNames[CommandType.BattleConditional], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.BattleConditional));
-            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, commandNames[CommandType.WorldConditional], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.WorldConditional));
-            eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, commandNames[CommandType.EventCommand], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.EventCommand));
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, CommandType.BattleConditional, defaultCommandByteLengthMaps[CommandType.BattleConditional], commandMaps[CommandType.BattleConditional], commandNames[CommandType.BattleConditional], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.BattleConditional));
+            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, CommandType.WorldConditional, defaultCommandByteLengthMaps[CommandType.WorldConditional], commandMaps[CommandType.WorldConditional], commandNames[CommandType.WorldConditional], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.WorldConditional));
+            eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, CommandType.EventCommand, defaultCommandByteLengthMaps[CommandType.EventCommand], commandMaps[CommandType.EventCommand], commandNames[CommandType.EventCommand], parameterValueMaps, _dataHelper.GetParameterMax(CommandType.EventCommand));
         }
 
         private void WriteByteDataToTestFiles()

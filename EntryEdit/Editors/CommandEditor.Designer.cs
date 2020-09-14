@@ -41,6 +41,7 @@
             this.cmb_Command.Name = "cmb_Command";
             this.cmb_Command.Size = new System.Drawing.Size(170, 21);
             this.cmb_Command.TabIndex = 0;
+            this.cmb_Command.SelectedIndexChanged += new System.EventHandler(this.cmb_Command_SelectedIndexChanged);
             // 
             // flp_Parameters
             // 

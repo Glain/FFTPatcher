@@ -13,6 +13,7 @@ namespace EntryEdit.Editors
         private Event _event;
         private Event _defaultEvent;
 
+        private Dictionary<int, CommandTemplate> _commandMap;
         private List<string> _commandNames;
 
         public EventEditor()
@@ -20,10 +21,11 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        public void Init(CommandType commandType, int defaultCommandByteLength, Dictionary<int, CommandTemplate> commandMap, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
+            _commandMap = commandMap;
             _commandNames = commandNames;
-            commandListEditor.Init(commandNames, parameterValueMaps, maxParameters);
+            commandListEditor.Init(commandType, defaultCommandByteLength, commandMap, commandNames, parameterValueMaps, maxParameters);
         }
 
         public void Populate(Event inputEvent, Event defaultEvent)

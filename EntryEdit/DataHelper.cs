@@ -16,6 +16,7 @@ namespace EntryEdit
         private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
 
         private readonly List<string> parameterTypes;
+        private readonly Dictionary<CommandType, int> defaultCommandByteLengthMaps;
         private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
@@ -23,6 +24,7 @@ namespace EntryEdit
         public DataHelper()
         {
             parameterTypes = new List<string>();
+            defaultCommandByteLengthMaps = new Dictionary<CommandType, int>();
             commandTemplateMaps = GetCommandTemplateMaps();
             parameterValueMaps = GetParameterValueMaps();
             entryNameMaps = GetEntryNameMaps();
@@ -102,6 +104,35 @@ namespace EntryEdit
                 }
 
                 result.Add(kvp.Key, innerResult);
+            }
+
+            return result;
+        }
+
+        public Dictionary<CommandType, Dictionary<int, CommandTemplate>> GetCommandMaps()
+        {
+            Dictionary<CommandType, Dictionary<int, CommandTemplate>> result = new Dictionary<CommandType, Dictionary<int, CommandTemplate>>();
+
+            foreach (KeyValuePair<CommandType, Dictionary<int, CommandTemplate>> kvp in commandTemplateMaps)
+            {
+                Dictionary<int, CommandTemplate> innerResult = new Dictionary<int, CommandTemplate>();
+                foreach (KeyValuePair<int, CommandTemplate> innerKvp in kvp.Value)
+                {
+                    innerResult.Add(innerKvp.Key, innerKvp.Value);
+                }
+
+                result.Add(kvp.Key, innerResult);
+            }
+
+            return result;
+        }
+
+        public Dictionary<CommandType, int> GetDefaultCommandByteLengthMaps()
+        {
+            Dictionary<CommandType, int> result = new Dictionary<CommandType, int>();
+            foreach (KeyValuePair<CommandType, int> kvp in defaultCommandByteLengthMaps)
+            {
+                result.Add(kvp.Key, kvp.Value);
             }
 
             return result;
@@ -311,6 +342,8 @@ namespace EntryEdit
                 int.TryParse(attrDefaultBytes.InnerText, out defaultCommandByteLength);
             }
 
+            defaultCommandByteLengthMaps.Add(type, defaultCommandByteLength);
+
             XmlNodeList nodeList = xmlDocument.SelectNodes("//Command");
             foreach (XmlNode node in nodeList)
             {
@@ -338,6 +371,7 @@ namespace EntryEdit
                         XmlAttribute attrParamType = parameterNode.Attributes["type"];
                         XmlAttribute attrParamMode = parameterNode.Attributes["mode"];
                         XmlAttribute attrParamText = parameterNode.Attributes["text"];
+                        XmlAttribute attrParamDefault = parameterNode.Attributes["default"];
 
                         int paramByteLength = 1;
                         if (attrParamBytes != null)
@@ -379,7 +413,11 @@ namespace EntryEdit
                         }
 
                         bool isTextReference = (attrParamText != null) && (attrParamText.InnerText.ToLower().Trim() == strTrue);
-                        commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, isTextReference, parameterTemplateType));
+                        int defaultValue = 0;
+                        if (attrParamDefault != null)
+                            int.TryParse(attrParamDefault.InnerText, out defaultValue);
+
+                        commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, isTextReference, parameterTemplateType, defaultValue));
                     }
 
                     result.Add(commandTemplateID, new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, type, commandTemplateParameters));
@@ -732,7 +770,7 @@ namespace EntryEdit
                 return null;
 
             index = resultTemplate.ByteLength;
-            List<CommandParameter> parameters = new List<CommandParameter>();
+            List<CommandParameter> parameters = new List<CommandParameter>(template.Parameters.Capacity);
             foreach (CommandParameterTemplate parameterTemplate in template.Parameters)
             {
                 int byteLength = parameterTemplate.ByteLength;

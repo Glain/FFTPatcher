@@ -10,6 +10,18 @@ namespace EntryEdit
         public CommandTemplate Template { get; private set; }
         public List<CommandParameter> Parameters { get; private set; }
 
+        public Command(int commandID, int byteLength, CommandType type)
+        {
+            Template = new CommandTemplate(commandID, byteLength, type);
+            LoadTemplateParameters(Template);
+        }
+
+        public Command(CommandTemplate template)
+        {
+            this.Template = template;
+            LoadTemplateParameters(template);
+        }
+
         public Command(CommandTemplate template, List<CommandParameter> parameters)
         {
             this.Template = template;
@@ -39,12 +51,27 @@ namespace EntryEdit
         {
             return Template.ToString();
         }
+
+        private void LoadTemplateParameters(CommandTemplate template)
+        {
+            this.Parameters = new List<CommandParameter>(template.Parameters.Capacity);
+            foreach (CommandParameterTemplate parameterTemplate in template.Parameters)
+            {
+                this.Parameters.Add(new CommandParameter(parameterTemplate));
+            }
+        }
     }
 
     public class CommandParameter : ICopyableEntry<CommandParameter>
     {
         public CommandParameterTemplate Template { get; private set; }
         public int Value { get; private set; }
+
+        public CommandParameter(CommandParameterTemplate template)
+        {
+            this.Template = template;
+            this.Value = template.DefaultValue;
+        }
 
         public CommandParameter(CommandParameterTemplate template, int value)
         {
@@ -73,6 +100,8 @@ namespace EntryEdit
         public CommandType Type { get; private set; }
         public List<CommandParameterTemplate> Parameters { get; private set; }
 
+        public CommandTemplate(int commandID, int byteLength, CommandType type) : this(commandID, "Unknown", byteLength, type, new List<CommandParameterTemplate>()) { }
+
         public CommandTemplate(int id, string name, int byteLength, CommandType type, List<CommandParameterTemplate> parameters)
         {
             this.ID = id;
@@ -98,8 +127,9 @@ namespace EntryEdit
         public bool IsSigned { get; private set; }
         public bool IsTextReference { get; private set; }
         public string Type { get; private set; }
+        public int DefaultValue { get; private set; }
 
-        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, bool isTextReference, string type)
+        public CommandParameterTemplate(string name, int byteLength, bool isHex, bool isSigned, bool isTextReference, string type, int defaultValue)
         {
             this.Name = name;
             this.ByteLength = byteLength;
@@ -107,6 +137,7 @@ namespace EntryEdit
             this.IsSigned = isSigned;
             this.IsTextReference = isTextReference;
             this.Type = type;
+            this.DefaultValue = defaultValue;
         }
     }
 

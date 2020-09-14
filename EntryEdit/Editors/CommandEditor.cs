@@ -29,6 +29,9 @@ namespace EntryEdit.Editors
         }
 
         private Command _command;
+        private CommandType _commandType;
+        private int _defaultCommandByteLength;
+        private Dictionary<int, CommandTemplate> _commandMap;
         private List<string> _commandNames;
         private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
         private Dictionary<string, int> _parameterWidthMaps;
@@ -42,11 +45,15 @@ namespace EntryEdit.Editors
             InitData();
         }
 
-        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        public void Init(CommandType commandType, int defaultCommandByteLength, Dictionary<int, CommandTemplate> commandMap, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
-            _commandNames = commandNames;
-            _parameterValueMaps = parameterValueMaps;
-            _maxParameters = maxParameters;
+            this._commandType = commandType;
+            this._defaultCommandByteLength = defaultCommandByteLength;
+            this._commandMap = commandMap;
+            this._commandNames = commandNames;
+            this._parameterValueMaps = parameterValueMaps;
+            this._maxParameters = maxParameters;
+
             InitCommandComboBox(commandNames);
             InitParameters();
         }
@@ -56,6 +63,17 @@ namespace EntryEdit.Editors
             _command = command;
             cmb_Command.SelectedIndex = command.Template.ID;
             SetParameters(command.Parameters);
+        }
+
+        private void SetNewCommand(int commandID)
+        {
+            CommandTemplate template = null;
+            _commandMap.TryGetValue(commandID, out template);
+            
+            if (template != null)
+                Populate(new Command(template));
+            else
+                Populate(new Command(commandID, _defaultCommandByteLength, _commandType));
         }
 
         private void InitData()
@@ -218,6 +236,15 @@ namespace EntryEdit.Editors
                 result = Math.Max(result, TextRenderer.MeasureText(str, font).Width);
             }
             return result + 15;
+        }
+
+        private void cmb_Command_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = cmb_Command.SelectedIndex;
+            if (selectedIndex != _command.Template.ID)
+            {
+                SetNewCommand(selectedIndex);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace EntryEdit.Editors
     {
         private List<ConditionalSet> _conditionalSets;
         private List<ConditionalSet> _defaultConditionalSets;
+        private Dictionary<int, CommandTemplate> _commandMap;
 
         private List<string> _commandNames;
         private int _conditionalSetIndex = 0;
@@ -22,15 +23,16 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<ConditionalSet> conditionalSets, List<ConditionalSet> defaultConditionalSets,  List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
+        public void Populate(List<ConditionalSet> conditionalSets, List<ConditionalSet> defaultConditionalSets, CommandType commandType, int defaultCommandByteLength, Dictionary<int, CommandTemplate> commandMap, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters)
         {
             _isPopulate = true;
 
             this._conditionalSets = conditionalSets;
             this._defaultConditionalSets = defaultConditionalSets;
+            this._commandMap = commandMap;
             this._commandNames = commandNames;
 
-            conditionalSetEditor.Init(commandNames, parameterValueMaps, maxParameters);
+            conditionalSetEditor.Init(commandType, defaultCommandByteLength, commandMap, commandNames, parameterValueMaps, maxParameters);
 
             cmb_ConditionalSet.Items.Clear();
             cmb_ConditionalSet.Items.AddRange(_conditionalSets.ToArray());

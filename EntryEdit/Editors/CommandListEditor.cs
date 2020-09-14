@@ -22,6 +22,9 @@ namespace EntryEdit.Editors
             get { return _commandList; }
         }
 
+        private CommandType _commandType;
+        private int _defaultCommandByteLength;
+        private Dictionary<int, CommandTemplate> _commandMap;
         private List<string> _commandNames;
         private Dictionary<string, Dictionary<int, string>> _parameterValueMaps;
         private int _maxParameters = 1;
@@ -35,12 +38,15 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters, int commandPageSize = DefaultPageSize)
+        public void Init(CommandType commandType, int defaultCommandByteLength, Dictionary<int, CommandTemplate> commandMap, List<string> commandNames, Dictionary<string, Dictionary<int, string>> parameterValueMaps, int maxParameters, int commandPageSize = DefaultPageSize)
         {
-            _commandNames = commandNames;
-            _parameterValueMaps = parameterValueMaps;
-            _commandPageSize = commandPageSize;
-            _maxParameters = maxParameters;
+            this._commandType = commandType;
+            this._defaultCommandByteLength = defaultCommandByteLength;
+            this._commandMap = commandMap;
+            this._commandNames = commandNames;
+            this._parameterValueMaps = parameterValueMaps;
+            this._commandPageSize = commandPageSize;
+            this._maxParameters = maxParameters;
 
             InitRows();
         }
@@ -130,7 +136,7 @@ namespace EntryEdit.Editors
         {
             CommandEditor commandEditor = new CommandEditor();
             commandEditor.Visible = false;
-            commandEditor.Init(_commandNames, _parameterValueMaps, _maxParameters);
+            commandEditor.Init(_commandType, _defaultCommandByteLength, _commandMap, _commandNames, _parameterValueMaps, _maxParameters);
             commandEditor.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 
             tlp_Commands.RowCount++;
