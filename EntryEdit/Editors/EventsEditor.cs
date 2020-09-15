@@ -46,8 +46,14 @@ namespace EntryEdit.Editors
 
         private void cmb_Event_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!_isPopulate)
-                SetEventIndex(cmb_Event.SelectedIndex);
+            if (cmb_Event.SelectedIndex != _eventIndex)
+            {
+                if (!_isPopulate)
+                {
+                    eventEditor.SavePage();
+                    SetEventIndex(cmb_Event.SelectedIndex);
+                }
+            }
         }
     }
 }

@@ -31,5 +31,11 @@ namespace EntryEdit.Editors
             commandListEditor.Populate(inputEvent.CommandList);
             textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection });
         }
+
+        public void SavePage()
+        {
+            commandListEditor.SavePage();
+            textSectionEditor.SaveEntry();
+        }
     }
 }

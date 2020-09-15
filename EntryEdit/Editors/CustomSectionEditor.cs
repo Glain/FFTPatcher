@@ -41,6 +41,11 @@ namespace EntryEdit.Editors
             _isPopulate = false;
         }
 
+        public void SaveEntry()
+        {
+            entryEditor.SaveEntry();
+        }
+
         private void PopulateSection(int index = 0)
         {
             _isPopulateSection = true;
