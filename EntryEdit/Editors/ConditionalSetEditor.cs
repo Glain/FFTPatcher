@@ -59,13 +59,7 @@ namespace EntryEdit.Editors
             commandListEditor.SavePage();
         }
 
-        private void SetBlockIndex(int index)
-        {
-            _blockIndex = index;
-            commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
-        }
-
-        private void ClearBlock()
+        public void ClearBlock()
         {
             cmb_Block.Items.Clear();
             cmb_Block.SelectedIndex = -1;
@@ -73,6 +67,26 @@ namespace EntryEdit.Editors
             commandListEditor.Clear();
             commandListEditor.SetEnabledState(false);
             btn_Delete.Enabled = false;
+        }
+
+        public void SetEnabledState(bool isEnabled)
+        {
+            if (isEnabled)
+            {
+                btn_Add.Enabled = true;
+                btn_Delete.Enabled = (_conditionalSet.ConditionalBlocks.Count > 0);
+            }
+            else
+            {
+                btn_Add.Enabled = false;
+                btn_Delete.Enabled = false;
+            }
+        }
+
+        private void SetBlockIndex(int index)
+        {
+            _blockIndex = index;
+            commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
         }
 
         private void cmb_Block_SelectedIndexChanged(object sender, EventArgs e)

@@ -72,9 +72,9 @@ namespace EntryEdit.Editors
             }
         }
 
-        public void SetEnabledState(bool state)
+        public void SetEnabledState(bool isEnabled)
         {
-            SetInputControlEnabledState(state);
+            SetInputControlEnabledState(isEnabled);
         }
 
         private void InitRows(CommandData commandData)
@@ -129,6 +129,7 @@ namespace EntryEdit.Editors
             {
                 bool isNotFirstPage = (_commandPageIndex > 0);
                 bool isNotLastPage = (_commandPageIndex < (_commandNumPages - 1));
+                bool hasEntries = (_commandList.Count > 0);
 
                 btn_Page_Prev.Enabled = isNotFirstPage;
                 btn_Page_Next.Enabled = isNotLastPage;
@@ -136,6 +137,9 @@ namespace EntryEdit.Editors
                 btn_Page_Last.Enabled = isNotLastPage;
                 btn_Add.Enabled = true;
                 btn_Delete.Enabled = (_commandList.Count > 0);
+                btn_CheckAll.Enabled = hasEntries;
+                btn_UncheckAll.Enabled = hasEntries;
+                btn_ToggleAll.Enabled = hasEntries;
                 spinner_Page.Enabled = true;
             }
             else
@@ -146,6 +150,9 @@ namespace EntryEdit.Editors
                 btn_Page_Last.Enabled = false;
                 btn_Add.Enabled = false;
                 btn_Delete.Enabled = false;
+                btn_CheckAll.Enabled = false;
+                btn_UncheckAll.Enabled = false;
+                btn_ToggleAll.Enabled = false;
                 spinner_Page.Enabled = false;
             }
         }
