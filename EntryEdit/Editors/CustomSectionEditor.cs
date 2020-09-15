@@ -12,6 +12,8 @@ namespace EntryEdit.Editors
     public partial class CustomSectionEditor : UserControl
     {
         private IList<CustomSection> _customSections;
+        private CustomSection _originalTextSection;
+
         private CustomEntryEditor.EditorMode _editorMode;
         private int _customSectionIndex = 0;
         private int _customEntryIndex = -1;
@@ -24,11 +26,13 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(IList<CustomSection> customSections)
+        public void Populate(IList<CustomSection> customSections, CustomSection originalTextSection)
         {
             _isPopulate = true;
 
-            _customSections = customSections;
+            this._customSections = customSections;
+            this._originalTextSection = originalTextSection;
+
             _customSectionIndex = 0;
             _editorMode = CustomEntryEditor.EditorMode.Data;
 
@@ -103,25 +107,36 @@ namespace EntryEdit.Editors
             _isPopulateSection = oldIsPopulateSection;
         }
 
-        private void cmb_Section_SelectedIndexChanged(object sender, EventArgs e)
+        private void AddSection(bool useDefaultEntry)
         {
-            if (!_isPopulate)
+            entryEditor.SaveEntry();
+
+            List<CustomEntry> entryList = _customSections[_customSectionIndex].CustomEntryList;
+            int newIndex = _customEntryIndex + 1;
+
+            if ((useDefaultEntry) && (newIndex == entryList.Count) && (_editorMode == CustomEntryEditor.EditorMode.Text) && (newIndex < _originalTextSection.CustomEntryList.Count))
             {
-                entryEditor.SaveEntry();
-                SetSectionIndex(cmb_Section.SelectedIndex);
+                CustomEntry originalTextEntry = _originalTextSection.CustomEntryList[newIndex];
+                entryList.Insert(newIndex, new CustomEntry(newIndex, originalTextEntry.Bytes, originalTextEntry.Text));
             }
+            else
+            {
+                entryList.Insert(newIndex, new CustomEntry(newIndex));
+            }
+
+            for (int index = newIndex + 1; index < entryList.Count; index++)
+                entryList[index].IncrementIndex();
+
+            PopulateSection(newIndex);
+            /*
+            SetEntryComboBoxEntries();
+            SetEntryComboBoxIndex(newIndex, false);
+            SetEntryIndex(newIndex);
+            cmb_Entry.Visible = (entryList.Count > 1);
+            */
         }
 
-        private void cmb_Entry_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!_isPopulateSection)
-            {
-                entryEditor.SaveEntry();
-                SetEntryIndex(cmb_Entry.SelectedIndex);
-            }
-        }
-
-        private void btn_Delete_Click(object sender, EventArgs e)
+        private void DeleteSection()
         {
             List<CustomEntry> entryList = _customSections[_customSectionIndex].CustomEntryList;
             entryList.Remove(entryEditor.CustomEntry);
@@ -149,24 +164,37 @@ namespace EntryEdit.Editors
             }
         }
 
+        private void cmb_Section_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_isPopulate)
+            {
+                entryEditor.SaveEntry();
+                SetSectionIndex(cmb_Section.SelectedIndex);
+            }
+        }
+
+        private void cmb_Entry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_isPopulateSection)
+            {
+                entryEditor.SaveEntry();
+                SetEntryIndex(cmb_Entry.SelectedIndex);
+            }
+        }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            DeleteSection();
+        }
+
         private void btn_Add_Click(object sender, EventArgs e)
         {
-            entryEditor.SaveEntry();
+            AddSection(false);
+        }
 
-            List<CustomEntry> entryList = _customSections[_customSectionIndex].CustomEntryList;
-            int newIndex = _customEntryIndex + 1;
-            entryList.Insert(newIndex, new CustomEntry(newIndex));
-
-            for (int index = newIndex + 1; index < entryList.Count; index++)
-                entryList[index].IncrementIndex();
-
-            PopulateSection(newIndex);
-            /*
-            SetEntryComboBoxEntries();
-            SetEntryComboBoxIndex(newIndex, false);
-            SetEntryIndex(newIndex);
-            cmb_Entry.Visible = (entryList.Count > 1);
-            */
+        private void btn_Add_UseDefault_Click(object sender, EventArgs e)
+        {
+            AddSection(true);
         }
     }
 }

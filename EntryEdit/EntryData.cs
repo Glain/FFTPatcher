@@ -80,21 +80,23 @@ namespace EntryEdit
         public List<Command> CommandList { get; private set; }
         public CustomSection DataSection { get; private set; }
         public CustomSection TextSection { get; private set; }
+        public CustomSection OriginalTextSection { get; private set; }
         public IList<byte> OriginalBytes { get; private set; }
 
-        public Event(int index, string name, List<Command> commandList, CustomSection dataSection, CustomSection textSection, IList<byte> originalBytes)
+        public Event(int index, string name, List<Command> commandList, CustomSection dataSection, CustomSection textSection, CustomSection originalTextSection, IList<byte> originalBytes)
         {
             this.Index = index;
             this.Name = name;
             this.CommandList = commandList;
             this.DataSection = dataSection;
             this.TextSection = textSection;
+            this.OriginalTextSection = originalTextSection;
             this.OriginalBytes = originalBytes;
         }
 
         public Event Copy()
         {
-            return new Event(Index, Name, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), new List<byte>(OriginalBytes));
+            return new Event(Index, Name, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), OriginalTextSection.Copy(), new List<byte>(OriginalBytes));
         }
 
         public void IncrementIndex()

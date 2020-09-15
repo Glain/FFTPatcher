@@ -641,20 +641,26 @@ namespace EntryEdit
 
             CustomSection dataSection, textSection;
 
+            CustomSection originalTextSection = null;
             if (textOffset == 0xF2F2F2F2U)
             {
                 dataSection = new CustomSection();
                 textSection = new CustomSection();
+                originalTextSection = new CustomSection();
             }
             else
             {
-                dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset)), false) : new CustomSection();
+                dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset))) : new CustomSection();
                 int numTextEntries = Event.FindNumTextEntries(commandList);
                 numTextEntries = (numTextEntries > 0) ? numTextEntries : 1;
-                textSection = new CustomSection(bytes.Sub(textOffset), true, numTextEntries);
+                IList<byte> textBytes = bytes.Sub(textOffset);
+                IList<IList<byte>> textByteLists = textBytes.Split((byte)0xFE);
+                IList<string> textList = TextUtility.DecodeList(textBytes);
+                textSection = new CustomSection(textByteLists, textList, numTextEntries);
+                originalTextSection = new CustomSection(textByteLists, textList, textByteLists.Count);
             }
 
-            return new Event(index, entryNameMaps[CommandType.EventCommand][index], commandList, dataSection, textSection, new List<byte>(bytes));
+            return new Event(index, entryNameMaps[CommandType.EventCommand][index], commandList, dataSection, textSection, originalTextSection, new List<byte>(bytes));
         }
 
         public byte[] ConditionalSetsToByteArray(CommandType type, List<ConditionalSet> conditionalSets)

@@ -196,24 +196,23 @@ namespace EntryEdit
         public CustomSection(CustomEntry customEntry): this(new List<CustomEntry>() { customEntry }) { }
         public CustomSection() : this(new List<CustomEntry>()) { }
 
-        public CustomSection(IList<byte> bytes, bool isText = false, int numTextEntries = 0)
+        public CustomSection(IList<byte> bytes)
+        {
+            CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, new List<byte>(bytes)) };
+        }
+
+        public CustomSection(IList<IList<byte>> byteLists, IList<string> textList, int numTextEntries)
         {
             CustomEntryList = new List<CustomEntry>();
 
-            if (isText)
+            if (textList != null)
             {
-                IList<IList<byte>> byteLists = bytes.Split((byte)0xFE);
-                IList<string> textSection = TextUtility.DecodeList(bytes);
                 int numEntries = Math.Min(numTextEntries, byteLists.Count);
 
                 for (int index = 0; index < numEntries; index++)
                 {
-                    CustomEntryList.Add(new CustomEntry(index, new List<byte>(byteLists[index]), textSection[index]));
+                    CustomEntryList.Add(new CustomEntry(index, new List<byte>(byteLists[index]), textList[index]));
                 }
-            }
-            else
-            {
-                CustomEntryList.Add(new CustomEntry(0, new List<byte>(bytes)));
             }
         }
 

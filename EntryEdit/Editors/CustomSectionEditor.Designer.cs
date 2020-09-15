@@ -33,6 +33,7 @@
             this.btn_Add = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.entryEditor = new EntryEdit.Editors.CustomEntryEditor();
+            this.btn_Add_UseDefault = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cmb_Section
@@ -67,7 +68,7 @@
             // 
             // btn_Delete
             // 
-            this.btn_Delete.Location = new System.Drawing.Point(226, 0);
+            this.btn_Delete.Location = new System.Drawing.Point(259, 0);
             this.btn_Delete.Name = "btn_Delete";
             this.btn_Delete.Size = new System.Drawing.Size(30, 24);
             this.btn_Delete.TabIndex = 7;
@@ -85,10 +86,22 @@
             this.entryEditor.Size = new System.Drawing.Size(874, 100);
             this.entryEditor.TabIndex = 4;
             // 
+            // btn_Add_UseDefault
+            // 
+            this.btn_Add_UseDefault.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.btn_Add_UseDefault.Location = new System.Drawing.Point(226, 0);
+            this.btn_Add_UseDefault.Name = "btn_Add_UseDefault";
+            this.btn_Add_UseDefault.Size = new System.Drawing.Size(30, 24);
+            this.btn_Add_UseDefault.TabIndex = 8;
+            this.btn_Add_UseDefault.Text = "+";
+            this.btn_Add_UseDefault.UseVisualStyleBackColor = false;
+            this.btn_Add_UseDefault.Click += new System.EventHandler(this.btn_Add_UseDefault_Click);
+            // 
             // CustomSectionEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_Add_UseDefault);
             this.Controls.Add(this.btn_Delete);
             this.Controls.Add(this.btn_Add);
             this.Controls.Add(this.cmb_Entry);
@@ -107,5 +120,6 @@
         private System.Windows.Forms.ComboBox cmb_Entry;
         private System.Windows.Forms.Button btn_Add;
         private System.Windows.Forms.Button btn_Delete;
+        private System.Windows.Forms.Button btn_Add_UseDefault;
     }
 }

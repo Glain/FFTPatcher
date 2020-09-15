@@ -29,7 +29,7 @@ namespace EntryEdit.Editors
             this._defaultEvent = defaultEvent;
 
             commandListEditor.Populate(inputEvent.CommandList);
-            textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection });
+            textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection }, inputEvent.OriginalTextSection);
         }
 
         public void SavePage()
