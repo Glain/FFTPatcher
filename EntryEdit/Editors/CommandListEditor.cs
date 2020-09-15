@@ -56,6 +56,27 @@ namespace EntryEdit.Editors
             Populate(new List<Command>());
         }
 
+        public void SavePage()
+        {
+            int commandIndex = (_commandPageIndex * _commandPageSize);
+            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
+            {
+                if (commandIndex < _commandList.Count)
+                {
+                    CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
+                    commandEditor.SaveFormCommand();
+                    _commandList[commandIndex] = commandEditor.Command;
+                }
+
+                commandIndex++;
+            }
+        }
+
+        public void SetEnabledState(bool state)
+        {
+            SetInputControlEnabledState(state);
+        }
+
         private void InitRows(CommandData commandData)
         {
             ClearPanel();
@@ -166,22 +187,6 @@ namespace EntryEdit.Editors
         {
             _commandPageIndex = index;
             PopulateRows();
-        }
-
-        private void SavePage()
-        {
-            int commandIndex = (_commandPageIndex * _commandPageSize);
-            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
-            {
-                if (commandIndex < _commandList.Count)
-                {
-                    CommandEditor commandEditor = GetRowCommandEditor(rowIndex);
-                    commandEditor.SaveFormCommand();
-                    _commandList[commandIndex] = commandEditor.Command;
-                }
-                
-                commandIndex++;
-            }
         }
 
         private List<int> FindCheckedRowIndexes()

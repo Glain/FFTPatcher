@@ -28,27 +28,35 @@ namespace EntryEdit.Editors
 
         public void Populate(ConditionalSet conditionalSet, ConditionalSet defaultConditionalSet)
         {
-            _isPopulate = true;
-
             this._conditionalSet = conditionalSet;
             this._defaultConditionalSet = defaultConditionalSet;
 
-            cmb_Block.Items.Clear();
-            cmb_Block.Items.AddRange(conditionalSet.ConditionalBlocks.ToArray());
+            PopulateBlocks();
+        }
 
-            if (conditionalSet.ConditionalBlocks.Count > 0)
+        public void PopulateBlocks(int blockIndex = 0)
+        {
+            _isPopulate = true;
+
+            if (_conditionalSet.ConditionalBlocks.Count > 0)
             {
-                cmb_Block.SelectedIndex = 0;
-                SetBlockIndex(0);
+                cmb_Block.Items.Clear();
+                cmb_Block.Items.AddRange(_conditionalSet.ConditionalBlocks.ToArray());
+                cmb_Block.SelectedIndex = blockIndex;
+                SetBlockIndex(blockIndex);
+                btn_Delete.Enabled = true;
             }
             else
             {
-                cmb_Block.SelectedIndex = -1;
-                _blockIndex = -1;
-                commandListEditor.Clear();
+                ClearBlock();
             }
 
             _isPopulate = false;
+        }
+
+        public void SaveBlock()
+        {
+            commandListEditor.SavePage();
         }
 
         private void SetBlockIndex(int index)
@@ -57,10 +65,63 @@ namespace EntryEdit.Editors
             commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
         }
 
+        private void ClearBlock()
+        {
+            cmb_Block.Items.Clear();
+            cmb_Block.SelectedIndex = -1;
+            _blockIndex = -1;
+            commandListEditor.Clear();
+            commandListEditor.SetEnabledState(false);
+            btn_Delete.Enabled = false;
+        }
+
         private void cmb_Block_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!_isPopulate)
-                SetBlockIndex(cmb_Block.SelectedIndex);
+            if (cmb_Block.SelectedIndex != _blockIndex)
+            {
+                if (!_isPopulate)
+                {
+                    SaveBlock();
+                    SetBlockIndex(cmb_Block.SelectedIndex);
+                }
+            }
+        }
+
+        private void btn_Delete_Click(object sender, EventArgs e)
+        {
+            if (_conditionalSet.ConditionalBlocks.Count > 0)
+            {
+                _conditionalSet.ConditionalBlocks.RemoveAt(_blockIndex);
+
+                if (_conditionalSet.ConditionalBlocks.Count > 0)
+                {
+                    bool isFirstIndex = (_blockIndex > 0);
+                    int newIndex = isFirstIndex ? (_blockIndex - 1) : 0;
+                    int startIndex = isFirstIndex ? (newIndex + 1) : 0;
+
+                    for (int index = startIndex; index < _conditionalSet.ConditionalBlocks.Count; index++)
+                        _conditionalSet.ConditionalBlocks[index].DecrementIndex();
+
+                    PopulateBlocks(newIndex);
+                }
+                else
+                {
+                    ClearBlock();
+                }
+            }
+        }
+
+        private void btn_Add_Click(object sender, EventArgs e)
+        {
+            SaveBlock();
+
+            int newIndex = _blockIndex + 1;
+            _conditionalSet.ConditionalBlocks.Insert(newIndex, new ConditionalBlock(newIndex, new List<Command>()));
+
+            for (int index = newIndex + 1; index < _conditionalSet.ConditionalBlocks.Count; index++)
+                _conditionalSet.ConditionalBlocks[index].IncrementIndex();
+
+            PopulateBlocks(newIndex);
         }
     }
 }

@@ -41,15 +41,15 @@ namespace EntryEdit.Editors
             _isPopulate = false;
         }
 
-        private void PopulateSection()
+        private void PopulateSection(int index = 0)
         {
             _isPopulateSection = true;
 
             if (_customSections[_customSectionIndex].CustomEntryList.Count > 0)
             {
                 SetEntryComboBoxEntries();
-                cmb_Entry.SelectedIndex = 0;
-                SetEntryIndex(0);
+                cmb_Entry.SelectedIndex = index;
+                SetEntryIndex(index);
             }
             else
             {
@@ -129,12 +129,14 @@ namespace EntryEdit.Editors
 
                 for (int index = startIndex; index < entryList.Count; index++)
                     entryList[index].DecrementIndex();
-                
-                SetEntryComboBoxEntries();
 
+                PopulateSection(newIndex);
+                /*
+                SetEntryComboBoxEntries();
                 SetEntryComboBoxIndex(newIndex, false);
                 SetEntryIndex(newIndex);
                 cmb_Entry.Visible = (entryList.Count > 1);
+                */
             }
             else
             {
@@ -153,10 +155,13 @@ namespace EntryEdit.Editors
             for (int index = newIndex + 1; index < entryList.Count; index++)
                 entryList[index].IncrementIndex();
 
+            PopulateSection(newIndex);
+            /*
             SetEntryComboBoxEntries();
             SetEntryComboBoxIndex(newIndex, false);
             SetEntryIndex(newIndex);
             cmb_Entry.Visible = (entryList.Count > 1);
+            */
         }
     }
 }

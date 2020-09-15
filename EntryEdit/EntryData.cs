@@ -97,6 +97,16 @@ namespace EntryEdit
             return new Event(Index, Name, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), new List<byte>(OriginalBytes));
         }
 
+        public void IncrementIndex()
+        {
+            Index++;
+        }
+
+        public void DecrementIndex()
+        {
+            Index--;
+        }
+
         public override string ToString()
         {
             return Index.ToString("X4") + " " + Name;
@@ -137,6 +147,16 @@ namespace EntryEdit
             return new ConditionalSet(Index, Name, CopyableEntry.CopyList<ConditionalBlock>(ConditionalBlocks));
         }
 
+        public void IncrementIndex()
+        {
+            Index++;
+        }
+
+        public void DecrementIndex()
+        {
+            Index--;
+        }
+
         public override string ToString()
         {
             return Index.ToString("X2") + " " + Name;
@@ -157,6 +177,16 @@ namespace EntryEdit
         public ConditionalBlock Copy()
         {
             return new ConditionalBlock(Index, CopyableEntry.CopyList<Command>(Commands));
+        }
+
+        public void IncrementIndex()
+        {
+            Index++;
+        }
+
+        public void DecrementIndex()
+        {
+            Index--;
         }
 
         public override string ToString()
