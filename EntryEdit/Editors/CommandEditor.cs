@@ -72,7 +72,7 @@ namespace EntryEdit.Editors
         public void Populate(Command command)
         {
             _command = command;
-            chk_Include.Checked = false;
+            //chk_Include.Checked = false;
             cmb_Command.SelectedIndex = command.Template.ID;
             SetParameters(command.Parameters);
         }

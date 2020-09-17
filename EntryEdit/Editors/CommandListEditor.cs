@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using PatcherLib.Utilities;
 
 namespace EntryEdit.Editors
 {
@@ -40,12 +41,15 @@ namespace EntryEdit.Editors
             InitRows(commandData);
         }
 
-        public void Populate(List<Command> commandList, int pageIndex = 0)
+        public void Populate(List<Command> commandList, int pageIndex = 0, bool clearChecks = true)
         {
             _isPopulate = true;
 
             _commandList = commandList;
             SetCommandListFormProperties(pageIndex);
+
+            if (clearChecks)
+                ClearChecksOnPage();
 
             SetCommandPageIndex(pageIndex);
             _isPopulate = false;
@@ -102,6 +106,11 @@ namespace EntryEdit.Editors
             SetInputControlEnabledState(true);
         }
 
+        private void RefreshRows()
+        {
+            Populate(_commandList, _commandPageIndex);
+        }
+
         private void ClearPanel()
         {
             for (int i = tlp_Commands.Controls.Count - 1; i >= 0; i--)
@@ -115,10 +124,9 @@ namespace EntryEdit.Editors
         {
             _commandNumPages = (_commandList.Count + _commandPageSize - 1) / _commandPageSize;
 
-            int minPageValue = Math.Min(_commandNumPages, (pageIndex + 1));
-            spinner_Page.Minimum = minPageValue;
+            spinner_Page.Minimum = Math.Min(_commandNumPages, 1);
             spinner_Page.Maximum = _commandNumPages;
-            spinner_Page.Value = minPageValue;
+            spinner_Page.Value = Math.Min(_commandNumPages, (pageIndex + 1));
 
             btn_Delete.Enabled = (_commandList.Count > 0);
         }
@@ -196,20 +204,24 @@ namespace EntryEdit.Editors
             PopulateRows();
         }
 
+        private void ClearChecksOnPage()
+        {
+            int numPageEntries = GetNumEntriesOnPage(_commandPageIndex);
+            for (int rowIndex = 0; rowIndex < numPageEntries; rowIndex++)
+            {
+                GetRowCommandEditor(rowIndex).SetCheckedState(false);
+            }
+        }
+
         private List<int> FindCheckedRowIndexes()
         {
             List<int> result = new List<int>();
 
-            int commandIndex = (_commandPageIndex * _commandPageSize);
-            for (int rowIndex = 0; rowIndex < _commandPageSize; rowIndex++)
+            int numPageEntries = GetNumEntriesOnPage(_commandPageIndex);
+            for (int rowIndex = 0; rowIndex < numPageEntries; rowIndex++)
             {
-                if (commandIndex < _commandList.Count)
-                {
-                    if (GetRowCommandEditor(rowIndex).IsChecked())
-                        result.Add(rowIndex);
-                }
-
-                commandIndex++;
+                if (GetRowCommandEditor(rowIndex).IsChecked())
+                    result.Add(rowIndex);
             }
 
             return result;
@@ -225,11 +237,64 @@ namespace EntryEdit.Editors
                 return _commandList.Count - (_commandPageSize * (_commandNumPages - 1));
         }
 
+        private void SwapCheckedCommandsByOffset(int offset)
+        {
+            List<int> checkedRowIndexes = FindCheckedRowIndexes();
+            if (offset > 0)
+                checkedRowIndexes.Reverse();
+
+            if ((checkedRowIndexes.Count > 0) && (checkedRowIndexes.Count < _commandList.Count))
+            {
+                HashSet<int> invalidSwapTargetRowIndexes = new HashSet<int>();
+                int numPageEntries = GetNumEntriesOnPage(_commandPageIndex);
+                int newPageIndex = _commandPageIndex;
+                int pageIndexOffset = (_commandPageIndex * _commandPageSize);
+                int numSuccessfulSwaps = 0;
+                int rowToCheckOnPageChange = 0;
+
+                foreach (int rowIndex in checkedRowIndexes)
+                {
+                    if ((!invalidSwapTargetRowIndexes.Contains(rowIndex + offset)) 
+                        && (PatcherLib.Utilities.Utilities.SafeSwap<Command>(_commandList, pageIndexOffset + rowIndex, pageIndexOffset + rowIndex + offset)))
+                    {
+                        int newRowIndex = rowIndex + offset; 
+                        GetRowCommandEditor(rowIndex).SetCheckedState(false);
+                        numSuccessfulSwaps++;
+
+                        if ((newRowIndex >= 0) && (newRowIndex < numPageEntries))
+                        {
+                            GetRowCommandEditor(newRowIndex).SetCheckedState(true);
+                        }
+                        else
+                        {
+                            newPageIndex = _commandPageIndex + ((newRowIndex < 0) ? -1 : 1);
+                            rowToCheckOnPageChange = (newRowIndex < 0) ? (_commandPageSize - 1) : 0;
+                        }
+                    }
+                    else
+                    {
+                        invalidSwapTargetRowIndexes.Add(rowIndex);
+                    }
+                }
+
+                if (numSuccessfulSwaps > 0)
+                {
+                    if (_commandPageIndex != newPageIndex)
+                    {
+                        ClearChecksOnPage();
+                        GetRowCommandEditor(rowToCheckOnPageChange).SetCheckedState(true);
+                    }
+                    Populate(_commandList, newPageIndex, false);
+                }
+            }
+        }
+
         private void spinner_Page_ValueChanged(object sender, EventArgs e)
         {
             if (!_isPopulate)
             {
                 SavePage();
+                ClearChecksOnPage();
                 SetCommandPageIndex(((int)spinner_Page.Value) - 1);
             }
         }
@@ -336,6 +401,16 @@ namespace EntryEdit.Editors
                 if (commandEditor.Visible)
                     commandEditor.ToggleCheckedState();
             }
+        }
+
+        private void btn_Up_Click(object sender, EventArgs e)
+        {
+            SwapCheckedCommandsByOffset(-1);
+        }
+
+        private void btn_Down_Click(object sender, EventArgs e)
+        {
+            SwapCheckedCommandsByOffset(1);
         }
     }
 }

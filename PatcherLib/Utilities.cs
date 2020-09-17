@@ -87,6 +87,23 @@ namespace PatcherLib.Utilities
             QuickSort( list, 0, list.Count - 1, comparer );
         }
 
+        public static void Swap<T>(IList<T> list, int index1, int index2)
+        {
+            T temp = list[index1];
+            list[index1] = list[index2];
+            list[index2] = temp;
+        }
+
+        public static bool SafeSwap<T>(IList<T> list, int index1, int index2)
+        {
+            bool isSwapValid = (list != null) && (index1 >= 0) && (index1 < list.Count) && (index2 >= 0) && (index2 < list.Count);
+
+            if (isSwapValid)
+                Swap(list, index1, index2);
+            
+            return isSwapValid;
+        }
+
         private static int QuickSortPivot<T>(IList<T> list, int beginning, int end, Comparison<T> comparer)
         {
             T pivot = list[beginning];
