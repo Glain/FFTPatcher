@@ -24,7 +24,8 @@ namespace FFTPatcher.TextEditor
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
             for ( int i = 0; i < NumberOfSections; i++ )
             {
-                sections.Add(TextUtilities.ProcessList(bytes.Sub(i * PartitionSize, (i + 1) * PartitionSize - 1), layout.AllowedTerminators, map));
+                GenericCharMap processCharMap = DteAllowed[i] ? map : GetContextCharmap(layout.Context);
+                sections.Add(TextUtilities.ProcessList(bytes.Sub(i * PartitionSize, (i + 1) * PartitionSize - 1), layout.AllowedTerminators, processCharMap));
 
                 if ( sections[i].Count < SectionLengths[i] )
                 {
@@ -60,7 +61,7 @@ namespace FFTPatcher.TextEditor
             IList<IList<string>> secs = new List<IList<string>>();
             allSections.ForEach( ls => secs.Add( new List<string>( ls ) ) );
 
-            var bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed );
+            var bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed );
             IList<byte> ourBytes = bytes[index];
 
             Set<KeyValuePair<string, byte>> result = new Set<KeyValuePair<string, byte>>();
@@ -74,7 +75,7 @@ namespace FFTPatcher.TextEditor
             result.AddRange( currentPairs );
 
             TextUtilities.DoDTEEncoding( secs[index], Utilities.DictionaryFromKVPs( currentPairs ) );
-            bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed );
+            bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed );
             ourBytes = bytes[index];
             bytesNeeded = ourBytes.Count - this.PartitionSize;
             if (bytesNeeded <= 0)
@@ -107,7 +108,7 @@ namespace FFTPatcher.TextEditor
                 result.Add( new KeyValuePair<string, byte>( l[0].Key, dteBytes.Pop() ) );
                 TextUtilities.DoDTEEncoding(secs, DteAllowed, PatcherLib.Utilities.Utilities.DictionaryFromKVPs(result));
 
-                bytes = GetSectionByteArrays(secs, SelectedTerminator, CharMap, CompressionAllowed);
+                bytes = GetSectionByteArrays(secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed);
 
                 ourBytes = bytes[index];
                 bytesNeeded = ourBytes.Count - PartitionSize;

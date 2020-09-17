@@ -123,12 +123,12 @@ namespace FFTPatcher.TextEditor
             switch (type)
             {
                 case FileType.CompressedFile:
-                    return new SectionedFile( charmap, layout, bytes, string.Empty, new string[layout.SectionNames.Count], true );
+                    return new SectionedFile(charmap, layout, bytes, string.Empty, new string[layout.SectionNames.Count], true);
                 case FileType.SectionedFile:
-                    return new SectionedFile( charmap, layout, bytes, string.Empty, new string[layout.SectionNames.Count], false );
+                    return new SectionedFile(charmap, layout, bytes, string.Empty, new string[layout.SectionNames.Count], false);
                 case FileType.OneShotFile:
                 case FileType.PartitionedFile:
-                    return new PartitionedFile( charmap, layout, bytes, string.Empty, new string[layout.SectionNames.Count] );
+                    return new PartitionedFile(charmap, layout, bytes, string.Empty, new string[layout.SectionNames.Count]);
             }
             return null;
         }
@@ -232,12 +232,21 @@ namespace FFTPatcher.TextEditor
             return result;
         }
 
+        public GenericCharMap GetSectionCharmap(int sectionIndex, GenericCharMap charMap = null, Nullable<Context> context = null)
+        {
+            return DteAllowed[sectionIndex] ? (charMap ?? CharMap) : GetContextCharmap(context);
+        }
+
+        public GenericCharMap GetContextCharmap(Nullable<Context> context = null)
+        {
+            return ((context ?? Layout.Context) == Context.US_PSP) ? (GenericCharMap)TextUtilities.PSPMap : TextUtilities.PSXMap;
+        }
 
         public virtual Set<KeyValuePair<string, byte>> GetPreferredDTEPairs( Set<string> replacements, Set<KeyValuePair<string, byte>> currentPairs, Stack<byte> dteBytes, System.ComponentModel.BackgroundWorker worker )
         {
             // Clone the sections
             var secs = GetCopyOfSections();
-            IList<byte> bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed ).Join();
+            IList<byte> bytes = GetSectionByteArrays(secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed).Join();
 
             Set<KeyValuePair<string, byte>> result = new Set<KeyValuePair<string, byte>>();
 
@@ -252,7 +261,7 @@ namespace FFTPatcher.TextEditor
             // Take the pairs that were already used for other files and encode this file with them
             result.AddRange( currentPairs );
             TextUtilities.DoDTEEncoding( secs, DteAllowed, PatcherLib.Utilities.Utilities.DictionaryFromKVPs( result ) );
-            bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed ).Join();
+            bytes = GetSectionByteArrays(secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed).Join();
 
             // If enough bytes were saved with the existing pairs, no need to look further
             bytesNeeded = bytes.Count - (Layout.Size - DataStart);
@@ -325,7 +334,7 @@ namespace FFTPatcher.TextEditor
                 */
                 result.Add( new KeyValuePair<string, byte>( l[0].Key, dteBytes.Pop() ) );
                 TextUtilities.DoDTEEncoding( secs, DteAllowed, PatcherLib.Utilities.Utilities.DictionaryFromKVPs( result ) );
-                bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed ).Join();
+                bytes = GetSectionByteArrays(secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed).Join();
                 bytesNeeded = bytes.Count - (Layout.Size - DataStart);
 
                 if (bytesNeeded > 0)
@@ -372,9 +381,10 @@ namespace FFTPatcher.TextEditor
             return result;
         }
 
-        protected static IList<byte> Compress( IList<IList<string>> strings, byte terminator, out IList<UInt32> offsets, GenericCharMap charmap, IList<bool> allowedSections )
+        protected static IList<byte> Compress( IList<IList<string>> strings, byte terminator, out IList<UInt32> offsets, GenericCharMap charmap, GenericCharMap nonDteCharmap, 
+            IList<bool> allowedSections, IList<bool> dteAllowedSections )
         {
-            TextUtilities.CompressionResult r = TextUtilities.Compress( strings, terminator, charmap, allowedSections );
+            TextUtilities.CompressionResult r = TextUtilities.Compress(strings, terminator, charmap, nonDteCharmap, allowedSections, dteAllowedSections);
             offsets = new List<UInt32>( 32 );
             offsets.Add( 0 );
             int pos = 0;
@@ -389,7 +399,7 @@ namespace FFTPatcher.TextEditor
 
         protected IList<byte> Compress( IList<IList<string>> strings, out IList<UInt32> offsets )
         {
-            return Compress( strings, SelectedTerminator, out offsets, CharMap, CompressionAllowed );
+            return Compress( strings, SelectedTerminator, out offsets, CharMap, GetContextCharmap(), CompressionAllowed, DteAllowed );
         }
 
         protected IList<byte> Compress( out IList<UInt32> offsets )
@@ -402,24 +412,27 @@ namespace FFTPatcher.TextEditor
             return GetUncompressedSectionBytes( Sections, SelectedTerminator, CharMap );
         }
 
-        protected static IList<IList<byte>> GetUncompressedSectionBytes( IList<IList<string>> strings, byte terminator, GenericCharMap charmap )
+        protected IList<IList<byte>> GetUncompressedSectionBytes( IList<IList<string>> strings, byte terminator, GenericCharMap charmap )
         {
             IList<IList<byte>> result = new List<IList<byte>>( strings.Count );
+            int sectionIndex = 0;
             foreach (IList<string> section in strings)
             {
                 List<byte> bytes = new List<byte>();
-                section.ForEach( s => bytes.AddRange( charmap.StringToByteArray( s, terminator ) ) );
+                GenericCharMap processCharmap = GetSectionCharmap(sectionIndex, charmap);
+                section.ForEach(s => bytes.AddRange(processCharmap.StringToByteArray(s, terminator)));
                 result.Add( bytes.AsReadOnly() );
+                sectionIndex++;
             }
             return result.AsReadOnly();
 
         }
 
-        private static IList<IList<byte>> GetCompressedSectionByteArrays( IList<IList<string>> sections, byte terminator, GenericCharMap charmap, IList<bool> compressibleSections )
+        private IList<IList<byte>> GetCompressedSectionByteArrays( IList<IList<string>> sections, byte terminator, GenericCharMap charmap, IList<bool> compressibleSections, IList<bool> dteAllowedSections )
         {
             IList<IList<byte>> result = new IList<byte>[sections.Count];
             IList<UInt32> offsets;
-            IList<byte> compression = Compress( sections, terminator, out offsets, charmap, compressibleSections );
+            IList<byte> compression = Compress( sections, terminator, out offsets, charmap, GetContextCharmap(), compressibleSections, dteAllowedSections );
             offsets = new List<UInt32>( offsets );
             offsets.Add( (uint)compression.Count );
             for (int i = 0; i < sections.Count; i++)
@@ -429,11 +442,11 @@ namespace FFTPatcher.TextEditor
             return result;
         }
 
-        protected static IList<IList<byte>> GetSectionByteArrays( IList<IList<string>> strings, byte terminator, GenericCharMap charmap, IList<bool> compressibleSections )
+        protected IList<IList<byte>> GetSectionByteArrays(IList<IList<string>> strings, byte terminator, GenericCharMap charmap, IList<bool> compressibleSections, IList<bool> dteAllowedSections)
         {
             if (compressibleSections.Contains( true ))
             {
-                return GetCompressedSectionByteArrays( strings, terminator, charmap, compressibleSections );
+                return GetCompressedSectionByteArrays( strings, terminator, charmap, compressibleSections, dteAllowedSections );
             }
             else
             {

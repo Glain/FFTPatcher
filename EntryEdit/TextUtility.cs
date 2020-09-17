@@ -10,7 +10,8 @@ namespace EntryEdit
     {
         public static List<byte> Encode(string input)
         {
-            TextUtilities.CompressionResult result = TextUtilities.Compress(new List<IList<string>>() { new List<string>() { input } }, 0xFE, TextUtilities.PSXMap, new List<bool>() { false });
+            TextUtilities.CompressionResult result = TextUtilities.Compress(new List<IList<string>>() { new List<string>() { input } }, 0xFE, TextUtilities.PSXMap, TextUtilities.PSXMap, 
+                new List<bool>() { false }, new List<bool> () { false } );
             return new List<byte>(result.Bytes);
         }
 

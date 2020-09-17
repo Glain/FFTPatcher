@@ -17,17 +17,17 @@ namespace FFTPatcher.TextEditor
         {
         }
 
-        public SectionedFile( GenericCharMap map, FFTTextFactory.FileInfo layout, IList<IList<string>> strings, string fileComments, IList<string> sectionComments, bool compressed ) :
+        public SectionedFile(GenericCharMap map, FFTTextFactory.FileInfo layout, IList<IList<string>> strings, string fileComments, IList<string> sectionComments, bool compressed) :
             base( map, layout, strings, fileComments, sectionComments, compressed )
         {
         }
 
-        public SectionedFile( GenericCharMap map, FFTPatcher.TextEditor.FFTTextFactory.FileInfo layout, IList<byte> bytes, string fileComments, IList<string> sectionComments )
+        public SectionedFile(GenericCharMap map, FFTPatcher.TextEditor.FFTTextFactory.FileInfo layout, IList<byte> bytes, string fileComments, IList<string> sectionComments)
             : this( map, layout, bytes, fileComments, sectionComments, false )
         {
         }
 
-        public SectionedFile( GenericCharMap map, FFTPatcher.TextEditor.FFTTextFactory.FileInfo layout, IList<byte> bytes, string fileComments, IList<string> sectionComments, bool compressible )
+        public SectionedFile(GenericCharMap map, FFTPatcher.TextEditor.FFTTextFactory.FileInfo layout, IList<byte> bytes, string fileComments, IList<string> sectionComments, bool compressible)
             : base( map, layout, fileComments, sectionComments, compressible )
         {
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
@@ -45,7 +45,19 @@ namespace FFTPatcher.TextEditor
                 {
                     thisSection = TextUtilities.Decompress( bytes, thisSection, (int)( start + DataStart ) );
                 }
-                sections.Add( TextUtilities.ProcessList( thisSection, layout.AllowedTerminators[0], CharMap ) );
+                GenericCharMap processCharMap = DteAllowed[i] ? CharMap : GetContextCharmap(layout.Context);
+                sections.Add(TextUtilities.ProcessList(thisSection, layout.AllowedTerminators[0], processCharMap));
+                if (sections[i].Count < SectionLengths[i])
+                {
+                    string[] newSection = new string[SectionLengths[i]];
+                    sections[i].CopyTo(newSection, 0);
+                    new string[SectionLengths[i] - sections[i].Count].CopyTo(newSection, sections[i].Count);
+                    sections[i] = newSection;
+                }
+                else if (sections[i].Count > SectionLengths[i])
+                {
+                    sections[i] = sections[i].Sub(0, SectionLengths[i] - 1);
+                }
             }
             Sections = sections.AsReadOnly();
             PopulateDisallowedSections();

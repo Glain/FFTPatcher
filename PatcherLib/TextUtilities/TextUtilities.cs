@@ -754,7 +754,7 @@ namespace PatcherLib.TextUtilities
         /// <param name="ignoreSections">A dictionary indicating which entries to not compress, with each key being the section that contains the ignored
         /// entries and each item in the value being an entry to ignore</param>
         /// <param name="callback">The progress callback.</param>
-        public static CompressionResult Compress( IList<IList<string>> sections, byte terminator, GenericCharMap charmap, IList<bool> allowedSections )
+        public static CompressionResult Compress( IList<IList<string>> sections, byte terminator, GenericCharMap charmap, GenericCharMap nonDteCharmap, IList<bool> allowedSections, IList<bool> dteAllowedSections )
         {
             int length = 0;
             //sections.ForEach( s => length += charmap.StringsToByteArray( s, terminator ).Length );
@@ -763,7 +763,8 @@ namespace PatcherLib.TextUtilities
             byte[][] sectionBytes = new byte[sectionCount][];
             for (int section = 0; section < sectionCount; section++)
             {
-                byte[] bytes = charmap.StringsToByteArray(sections[section], terminator);
+                GenericCharMap processCharmap = dteAllowedSections[section] ? charmap : nonDteCharmap;
+                byte[] bytes = processCharmap.StringsToByteArray(sections[section], terminator);
                 length += bytes.Length;
                 sectionBytes[section] = bytes;
             }

@@ -1,5 +1,6 @@
 ﻿using PatcherLib.TextUtilities;
 using System.Collections.Generic;
+using PatcherLib.Datatypes;
 
 namespace FFTPatcher.TextEditor
 {
@@ -17,13 +18,18 @@ namespace FFTPatcher.TextEditor
             System.Diagnostics.Debug.Assert( NumberOfSections == 1 );
             for ( int i = 0; i < NumberOfSections; i++ )
             {
-                sections.Add( TextUtilities.ProcessList( TextUtilities.Decompress( bytes, bytes, 0 ), layout.AllowedTerminators, map ) );
+                GenericCharMap processCharMap = DteAllowed[i] ? map : GetContextCharmap(layout.Context);
+                sections.Add(TextUtilities.ProcessList(TextUtilities.Decompress(bytes, bytes, 0), layout.AllowedTerminators, processCharMap));
                 if ( sections[i].Count < SectionLengths[i] )
                 {
                     string[] newSection = new string[SectionLengths[i]];
                     sections[i].CopyTo( newSection, 0 );
                     new string[SectionLengths[i] - sections[i].Count].CopyTo( newSection, sections[i].Count );
                     sections[i] = newSection;
+                }
+                else if (sections[i].Count > SectionLengths[i])
+                {
+                    sections[i] = sections[i].Sub(0, SectionLengths[i] - 1);
                 }
             }
             Sections = sections.AsReadOnly();
