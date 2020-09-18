@@ -23,25 +23,40 @@ namespace EntryEdit.Editors
 
         public void Populate(List<Event> events, List<Event> defaultEvents, CommandData commandData)
         {
-            _isPopulate = true;
-
             this._events = events;
             this._defaultEvents = defaultEvents;
 
             eventEditor.Init(commandData);
+            PopulateEvents();
+        }
+
+        private void PopulateEvents(int eventIndex = 0, bool reloadEvent = true)
+        {
+            _isPopulate = true;
 
             cmb_Event.Items.Clear();
             cmb_Event.Items.AddRange(_events.ToArray());
-            cmb_Event.SelectedIndex = 0;
+            cmb_Event.SelectedIndex = eventIndex;
+            SetEventIndex(eventIndex, reloadEvent);
 
-            SetEventIndex(0);
             _isPopulate = false;
         }
 
-        private void SetEventIndex(int index)
+        private void SetEventIndex(int index, bool reloadEvent = true)
         {
             _eventIndex = index;
-            eventEditor.Populate(_events[index], EntryData.GetEntry<Event>(_defaultEvents, index));
+
+            if (reloadEvent)
+                eventEditor.Populate(_events[index], EntryData.GetEntry<Event>(_defaultEvents, index));
+        }
+
+        private void SwapEventByOffset(int offset)
+        {
+            if (PatcherLib.Utilities.Utilities.SafeSwap<Event>(_events, _eventIndex, _eventIndex + offset))
+            {
+                _events[_eventIndex].AddOffsetToIndex(-offset);
+                _events[_eventIndex + offset].AddOffsetToIndex(offset);
+            }
         }
 
         private void cmb_Event_SelectedIndexChanged(object sender, EventArgs e)
@@ -53,6 +68,24 @@ namespace EntryEdit.Editors
                     eventEditor.SavePage();
                     SetEventIndex(cmb_Event.SelectedIndex);
                 }
+            }
+        }
+
+        private void btn_Up_Click(object sender, EventArgs e)
+        {
+            if (_eventIndex > 0)
+            {
+                SwapEventByOffset(-1);
+                PopulateEvents(_eventIndex - 1, false);
+            }
+        }
+
+        private void btn_Down_Click(object sender, EventArgs e)
+        {
+            if (_eventIndex < (_events.Count - 1))
+            {
+                SwapEventByOffset(1);
+                PopulateEvents(_eventIndex + 1, false);
             }
         }
     }

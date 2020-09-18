@@ -99,14 +99,19 @@ namespace EntryEdit
             return new Event(Index, Name, CopyableEntry.CopyList<Command>(CommandList), DataSection.Copy(), TextSection.Copy(), OriginalTextSection.Copy(), new List<byte>(OriginalBytes));
         }
 
+        public void AddOffsetToIndex(int offset)
+        {
+            Index = Index + offset;
+        }
+
         public void IncrementIndex()
         {
-            Index++;
+            AddOffsetToIndex(1);
         }
 
         public void DecrementIndex()
         {
-            Index--;
+            AddOffsetToIndex(-1);
         }
 
         public override string ToString()
@@ -149,14 +154,19 @@ namespace EntryEdit
             return new ConditionalSet(Index, Name, CopyableEntry.CopyList<ConditionalBlock>(ConditionalBlocks));
         }
 
+        public void AddOffsetToIndex(int offset)
+        {
+            Index = Index + offset;
+        }
+
         public void IncrementIndex()
         {
-            Index++;
+            AddOffsetToIndex(1);
         }
 
         public void DecrementIndex()
         {
-            Index--;
+            AddOffsetToIndex(-1);
         }
 
         public override string ToString()
@@ -168,12 +178,14 @@ namespace EntryEdit
     public class ConditionalBlock : ICopyableEntry<ConditionalBlock>
     {
         public int Index { get; set; }
+        public string Name { get; set; }
         public List<Command> Commands { get; set; }
 
         public ConditionalBlock(int index, List<Command> commands)
         {
             this.Index = index;
             this.Commands = commands;
+            this.Name = FindName();
         }
 
         public ConditionalBlock Copy()
@@ -181,19 +193,29 @@ namespace EntryEdit
             return new ConditionalBlock(Index, CopyableEntry.CopyList<Command>(Commands));
         }
 
+        public void AddOffsetToIndex(int offset)
+        {
+            Index = Index + offset;
+        }
+
         public void IncrementIndex()
         {
-            Index++;
+            AddOffsetToIndex(1);
         }
 
         public void DecrementIndex()
         {
-            Index--;
+            AddOffsetToIndex(-1);
         }
 
         public override string ToString()
         {
-            return (Index + 1).ToString();
+            return (Index + 1).ToString("X2") + " " + Name;
+        }
+
+        private string FindName()
+        {
+            return string.Empty;
         }
     }
 }

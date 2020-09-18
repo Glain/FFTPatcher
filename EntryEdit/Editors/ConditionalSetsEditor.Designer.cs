@@ -32,6 +32,8 @@
             this.conditionalSetEditor = new EntryEdit.Editors.ConditionalSetEditor();
             this.btn_Add = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
+            this.btn_Up = new System.Windows.Forms.Button();
+            this.btn_Down = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cmb_ConditionalSet
@@ -56,7 +58,7 @@
             // 
             // btn_Add
             // 
-            this.btn_Add.Location = new System.Drawing.Point(580, 0);
+            this.btn_Add.Location = new System.Drawing.Point(674, 0);
             this.btn_Add.Name = "btn_Add";
             this.btn_Add.Size = new System.Drawing.Size(30, 24);
             this.btn_Add.TabIndex = 5;
@@ -66,7 +68,7 @@
             // 
             // btn_Delete
             // 
-            this.btn_Delete.Location = new System.Drawing.Point(613, 0);
+            this.btn_Delete.Location = new System.Drawing.Point(707, 0);
             this.btn_Delete.Name = "btn_Delete";
             this.btn_Delete.Size = new System.Drawing.Size(30, 24);
             this.btn_Delete.TabIndex = 6;
@@ -74,10 +76,32 @@
             this.btn_Delete.UseVisualStyleBackColor = true;
             this.btn_Delete.Click += new System.EventHandler(this.btn_Delete_Click);
             // 
+            // btn_Up
+            // 
+            this.btn_Up.Location = new System.Drawing.Point(581, 0);
+            this.btn_Up.Name = "btn_Up";
+            this.btn_Up.Size = new System.Drawing.Size(30, 24);
+            this.btn_Up.TabIndex = 13;
+            this.btn_Up.Text = "↑";
+            this.btn_Up.UseVisualStyleBackColor = true;
+            this.btn_Up.Click += new System.EventHandler(this.btn_Up_Click);
+            // 
+            // btn_Down
+            // 
+            this.btn_Down.Location = new System.Drawing.Point(614, 0);
+            this.btn_Down.Name = "btn_Down";
+            this.btn_Down.Size = new System.Drawing.Size(30, 24);
+            this.btn_Down.TabIndex = 14;
+            this.btn_Down.Text = "↓";
+            this.btn_Down.UseVisualStyleBackColor = true;
+            this.btn_Down.Click += new System.EventHandler(this.btn_Down_Click);
+            // 
             // ConditionalSetsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_Down);
+            this.Controls.Add(this.btn_Up);
             this.Controls.Add(this.btn_Delete);
             this.Controls.Add(this.btn_Add);
             this.Controls.Add(this.conditionalSetEditor);
@@ -94,5 +118,7 @@
         private ConditionalSetEditor conditionalSetEditor;
         private System.Windows.Forms.Button btn_Add;
         private System.Windows.Forms.Button btn_Delete;
+        private System.Windows.Forms.Button btn_Up;
+        private System.Windows.Forms.Button btn_Down;
     }
 }

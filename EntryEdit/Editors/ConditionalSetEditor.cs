@@ -34,7 +34,7 @@ namespace EntryEdit.Editors
             PopulateBlocks();
         }
 
-        public void PopulateBlocks(int blockIndex = 0)
+        public void PopulateBlocks(int blockIndex = 0, bool reloadCommandList = true)
         {
             _isPopulate = true;
 
@@ -43,7 +43,7 @@ namespace EntryEdit.Editors
                 cmb_Block.Items.Clear();
                 cmb_Block.Items.AddRange(_conditionalSet.ConditionalBlocks.ToArray());
                 cmb_Block.SelectedIndex = blockIndex;
-                SetBlockIndex(blockIndex);
+                SetBlockIndex(blockIndex, reloadCommandList);
                 btn_Delete.Enabled = true;
             }
             else
@@ -83,10 +83,21 @@ namespace EntryEdit.Editors
             }
         }
 
-        private void SetBlockIndex(int index)
+        private void SetBlockIndex(int index, bool reloadCommandList = true)
         {
             _blockIndex = index;
-            commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
+
+            if (reloadCommandList)
+                commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
+        }
+
+        private void SwapBlockByOffset(int offset)
+        {
+            if (PatcherLib.Utilities.Utilities.SafeSwap<ConditionalBlock>(_conditionalSet.ConditionalBlocks, _blockIndex, _blockIndex + offset))
+            {
+                _conditionalSet.ConditionalBlocks[_blockIndex].AddOffsetToIndex(-offset);
+                _conditionalSet.ConditionalBlocks[_blockIndex + offset].AddOffsetToIndex(offset);
+            }
         }
 
         private void cmb_Block_SelectedIndexChanged(object sender, EventArgs e)
@@ -136,6 +147,24 @@ namespace EntryEdit.Editors
                 _conditionalSet.ConditionalBlocks[index].IncrementIndex();
 
             PopulateBlocks(newIndex);
+        }
+
+        private void btn_Up_Click(object sender, EventArgs e)
+        {
+            if (_blockIndex > 0)
+            {
+                SwapBlockByOffset(-1);
+                PopulateBlocks(_blockIndex - 1, false);
+            }
+        }
+
+        private void btn_Down_Click(object sender, EventArgs e)
+        {
+            if (_blockIndex < (_conditionalSet.ConditionalBlocks.Count - 1))
+            {
+                SwapBlockByOffset(1);
+                PopulateBlocks(_blockIndex + 1, false);
+            }
         }
     }
 }

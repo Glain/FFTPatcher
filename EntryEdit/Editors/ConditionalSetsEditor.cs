@@ -31,7 +31,7 @@ namespace EntryEdit.Editors
             PopulateSets();
         }
 
-        public void PopulateSets(int index = 0)
+        public void PopulateSets(int index = 0, bool reloadSet = true)
         {
             _isPopulate = true;
 
@@ -40,7 +40,7 @@ namespace EntryEdit.Editors
                 cmb_ConditionalSet.Items.Clear();
                 cmb_ConditionalSet.Items.AddRange(_conditionalSets.ToArray());
                 cmb_ConditionalSet.SelectedIndex = index;
-                SetConditionalSetIndex(index);
+                SetConditionalSetIndex(index, reloadSet);
                 btn_Delete.Enabled = true;
             }
             else
@@ -51,10 +51,12 @@ namespace EntryEdit.Editors
             _isPopulate = false;
         }
 
-        private void SetConditionalSetIndex(int index)
+        private void SetConditionalSetIndex(int index, bool reloadSet = true)
         {
             _conditionalSetIndex = index;
-            conditionalSetEditor.Populate(_conditionalSets[index], EntryData.GetEntry<ConditionalSet>(_defaultConditionalSets, index));
+
+            if (reloadSet)
+                conditionalSetEditor.Populate(_conditionalSets[index], EntryData.GetEntry<ConditionalSet>(_defaultConditionalSets, index));
         }
 
         private void ClearSet()
@@ -65,6 +67,15 @@ namespace EntryEdit.Editors
             conditionalSetEditor.ClearBlock();
             conditionalSetEditor.SetEnabledState(false);
             btn_Delete.Enabled = false;
+        }
+
+        private void SwapSetByOffset(int offset)
+        {
+            if (PatcherLib.Utilities.Utilities.SafeSwap<ConditionalSet>(_conditionalSets, _conditionalSetIndex, _conditionalSetIndex + offset))
+            {
+                _conditionalSets[_conditionalSetIndex].AddOffsetToIndex(-offset);
+                _conditionalSets[_conditionalSetIndex + offset].AddOffsetToIndex(offset);
+            }
         }
 
         private void cmb_ConditionalSet_SelectedIndexChanged(object sender, EventArgs e)
@@ -113,6 +124,24 @@ namespace EntryEdit.Editors
                 _conditionalSets[index].IncrementIndex();
 
             PopulateSets(newIndex);
+        }
+
+        private void btn_Up_Click(object sender, EventArgs e)
+        {
+            if (_conditionalSetIndex > 0)
+            {
+                SwapSetByOffset(-1);
+                PopulateSets(_conditionalSetIndex - 1, false);
+            }
+        }
+
+        private void btn_Down_Click(object sender, EventArgs e)
+        {
+            if (_conditionalSetIndex < (_conditionalSets.Count - 1))
+            {
+                SwapSetByOffset(1);
+                PopulateSets(_conditionalSetIndex + 1, false);
+            }
         }
     }
 }
