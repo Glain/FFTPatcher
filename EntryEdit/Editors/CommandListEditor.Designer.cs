@@ -41,6 +41,8 @@
             this.btn_ToggleAll = new System.Windows.Forms.Button();
             this.btn_Up = new System.Windows.Forms.Button();
             this.btn_Down = new System.Windows.Forms.Button();
+            this.btn_Clear = new System.Windows.Forms.Button();
+            this.btn_Reload = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Page)).BeginInit();
             this.SuspendLayout();
             // 
@@ -137,7 +139,7 @@
             // 
             // btn_CheckAll
             // 
-            this.btn_CheckAll.Location = new System.Drawing.Point(400, 1);
+            this.btn_CheckAll.Location = new System.Drawing.Point(389, 1);
             this.btn_CheckAll.Name = "btn_CheckAll";
             this.btn_CheckAll.Size = new System.Drawing.Size(77, 24);
             this.btn_CheckAll.TabIndex = 8;
@@ -147,7 +149,7 @@
             // 
             // btn_UncheckAll
             // 
-            this.btn_UncheckAll.Location = new System.Drawing.Point(480, 1);
+            this.btn_UncheckAll.Location = new System.Drawing.Point(469, 1);
             this.btn_UncheckAll.Name = "btn_UncheckAll";
             this.btn_UncheckAll.Size = new System.Drawing.Size(77, 24);
             this.btn_UncheckAll.TabIndex = 9;
@@ -157,7 +159,7 @@
             // 
             // btn_ToggleAll
             // 
-            this.btn_ToggleAll.Location = new System.Drawing.Point(560, 1);
+            this.btn_ToggleAll.Location = new System.Drawing.Point(549, 1);
             this.btn_ToggleAll.Name = "btn_ToggleAll";
             this.btn_ToggleAll.Size = new System.Drawing.Size(77, 24);
             this.btn_ToggleAll.TabIndex = 10;
@@ -185,10 +187,32 @@
             this.btn_Down.UseVisualStyleBackColor = true;
             this.btn_Down.Click += new System.EventHandler(this.btn_Down_Click);
             // 
+            // btn_Clear
+            // 
+            this.btn_Clear.Location = new System.Drawing.Point(656, 1);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(50, 24);
+            this.btn_Clear.TabIndex = 13;
+            this.btn_Clear.Text = "Clear";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
+            // 
+            // btn_Reload
+            // 
+            this.btn_Reload.Location = new System.Drawing.Point(709, 1);
+            this.btn_Reload.Name = "btn_Reload";
+            this.btn_Reload.Size = new System.Drawing.Size(50, 24);
+            this.btn_Reload.TabIndex = 14;
+            this.btn_Reload.Text = "Reload";
+            this.btn_Reload.UseVisualStyleBackColor = true;
+            this.btn_Reload.Click += new System.EventHandler(this.btn_Reload_Click);
+            // 
             // CommandListEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_Reload);
+            this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.btn_Down);
             this.Controls.Add(this.btn_Up);
             this.Controls.Add(this.btn_ToggleAll);
@@ -224,5 +248,7 @@
         private System.Windows.Forms.Button btn_ToggleAll;
         private System.Windows.Forms.Button btn_Up;
         private System.Windows.Forms.Button btn_Down;
+        private System.Windows.Forms.Button btn_Clear;
+        private System.Windows.Forms.Button btn_Reload;
     }
 }

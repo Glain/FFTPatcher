@@ -29,11 +29,13 @@
         private void InitializeComponent()
         {
             this.cmb_ConditionalSet = new System.Windows.Forms.ComboBox();
-            this.conditionalSetEditor = new EntryEdit.Editors.ConditionalSetEditor();
             this.btn_Add = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.btn_Up = new System.Windows.Forms.Button();
             this.btn_Down = new System.Windows.Forms.Button();
+            this.btn_Reload = new System.Windows.Forms.Button();
+            this.btn_Clear = new System.Windows.Forms.Button();
+            this.conditionalSetEditor = new EntryEdit.Editors.ConditionalSetEditor();
             this.SuspendLayout();
             // 
             // cmb_ConditionalSet
@@ -45,16 +47,6 @@
             this.cmb_ConditionalSet.Size = new System.Drawing.Size(550, 21);
             this.cmb_ConditionalSet.TabIndex = 1;
             this.cmb_ConditionalSet.SelectedIndexChanged += new System.EventHandler(this.cmb_ConditionalSet_SelectedIndexChanged);
-            // 
-            // conditionalSetEditor
-            // 
-            this.conditionalSetEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.conditionalSetEditor.Location = new System.Drawing.Point(0, 25);
-            this.conditionalSetEditor.Name = "conditionalSetEditor";
-            this.conditionalSetEditor.Size = new System.Drawing.Size(877, 682);
-            this.conditionalSetEditor.TabIndex = 2;
             // 
             // btn_Add
             // 
@@ -96,10 +88,42 @@
             this.btn_Down.UseVisualStyleBackColor = true;
             this.btn_Down.Click += new System.EventHandler(this.btn_Down_Click);
             // 
+            // btn_Reload
+            // 
+            this.btn_Reload.Location = new System.Drawing.Point(820, 0);
+            this.btn_Reload.Name = "btn_Reload";
+            this.btn_Reload.Size = new System.Drawing.Size(50, 24);
+            this.btn_Reload.TabIndex = 15;
+            this.btn_Reload.Text = "Reload";
+            this.btn_Reload.UseVisualStyleBackColor = true;
+            this.btn_Reload.Click += new System.EventHandler(this.btn_Reload_Click);
+            // 
+            // btn_Clear
+            // 
+            this.btn_Clear.Location = new System.Drawing.Point(767, 0);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(50, 24);
+            this.btn_Clear.TabIndex = 16;
+            this.btn_Clear.Text = "Clear";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
+            // 
+            // conditionalSetEditor
+            // 
+            this.conditionalSetEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.conditionalSetEditor.Location = new System.Drawing.Point(0, 25);
+            this.conditionalSetEditor.Name = "conditionalSetEditor";
+            this.conditionalSetEditor.Size = new System.Drawing.Size(877, 682);
+            this.conditionalSetEditor.TabIndex = 2;
+            // 
             // ConditionalSetsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_Clear);
+            this.Controls.Add(this.btn_Reload);
             this.Controls.Add(this.btn_Down);
             this.Controls.Add(this.btn_Up);
             this.Controls.Add(this.btn_Delete);
@@ -120,5 +144,7 @@
         private System.Windows.Forms.Button btn_Delete;
         private System.Windows.Forms.Button btn_Up;
         private System.Windows.Forms.Button btn_Down;
+        private System.Windows.Forms.Button btn_Reload;
+        private System.Windows.Forms.Button btn_Clear;
     }
 }

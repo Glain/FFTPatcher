@@ -11,8 +11,8 @@ namespace EntryEdit.Editors
 {
     public partial class CustomSectionEditor : UserControl
     {
-        private IList<CustomSection> _customSections;
-        private CustomSection _originalTextSection;
+        private IList<CustomSection> _customSections, _defaultCustomSections;
+        private CustomSection _originalTextSection, _defaultOriginalTextSection;
 
         private CustomEntryEditor.EditorMode _editorMode;
         private int _customSectionIndex = 0;
@@ -26,12 +26,14 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(IList<CustomSection> customSections, CustomSection originalTextSection)
+        public void Populate(IList<CustomSection> customSections, CustomSection originalTextSection, IList<CustomSection> defaultCustomSections, CustomSection defaultOriginalTextSection)
         {
             _isPopulate = true;
 
             this._customSections = customSections;
             this._originalTextSection = originalTextSection;
+            this._defaultCustomSections = defaultCustomSections;
+            this._defaultOriginalTextSection = defaultOriginalTextSection;
 
             _customSectionIndex = 0;
             _editorMode = CustomEntryEditor.EditorMode.Data;
@@ -128,12 +130,6 @@ namespace EntryEdit.Editors
                 entryList[index].IncrementIndex();
 
             PopulateSection(newIndex);
-            /*
-            SetEntryComboBoxEntries();
-            SetEntryComboBoxIndex(newIndex, false);
-            SetEntryIndex(newIndex);
-            cmb_Entry.Visible = (entryList.Count > 1);
-            */
         }
 
         private void DeleteSection()
@@ -151,16 +147,29 @@ namespace EntryEdit.Editors
                     entryList[index].DecrementIndex();
 
                 PopulateSection(newIndex);
-                /*
-                SetEntryComboBoxEntries();
-                SetEntryComboBoxIndex(newIndex, false);
-                SetEntryIndex(newIndex);
-                cmb_Entry.Visible = (entryList.Count > 1);
-                */
             }
             else
             {
                 ClearEntry();
+            }
+        }
+
+        private void Clear()
+        {
+            if (_customSections[_customSectionIndex].CustomEntryList.Count > 0)
+            {
+                _customSections[_customSectionIndex].CustomEntryList.Clear();
+                PopulateSection(0);
+            }
+        }
+
+        private void Reload()
+        {
+            if ((_defaultCustomSections != null) && (_customSectionIndex < _defaultCustomSections.Count))
+            {
+                _customSections[_customSectionIndex].CustomEntryList.Clear();
+                _customSections[_customSectionIndex].CustomEntryList.AddRange(CopyableEntry.CopyList<CustomEntry>(_defaultCustomSections[_customSectionIndex].CustomEntryList));
+                PopulateSection(0);
             }
         }
 
@@ -195,6 +204,16 @@ namespace EntryEdit.Editors
         private void btn_Add_UseDefault_Click(object sender, EventArgs e)
         {
             AddSection(true);
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        private void btn_Reload_Click(object sender, EventArgs e)
+        {
+            Reload();
         }
     }
 }

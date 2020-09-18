@@ -59,6 +59,31 @@ namespace EntryEdit.Editors
             }
         }
 
+        private void Clear()
+        {
+            if ((_events[_eventIndex].CommandList.Count > 0) || (_events[_eventIndex].TextSection.CustomEntryList.Count > 0) || (_events[_eventIndex].DataSection.CustomEntryList.Count > 0))
+            {
+                _events[_eventIndex].CommandList.Clear();
+                _events[_eventIndex].TextSection.CustomEntryList.Clear();
+                _events[_eventIndex].DataSection.CustomEntryList.Clear();
+                PopulateEvents(_eventIndex);
+            }
+        }
+
+        private void Reload()
+        {
+            if ((_defaultEvents != null) && (_eventIndex < _defaultEvents.Count))
+            {
+                _events[_eventIndex].CommandList.Clear();
+                _events[_eventIndex].CommandList.AddRange(CopyableEntry.CopyList<Command>(_defaultEvents[_eventIndex].CommandList));
+                _events[_eventIndex].TextSection.CustomEntryList.Clear();
+                _events[_eventIndex].TextSection.CustomEntryList.AddRange(CopyableEntry.CopyList<CustomEntry>(_defaultEvents[_eventIndex].TextSection.CustomEntryList));
+                _events[_eventIndex].DataSection.CustomEntryList.Clear();
+                _events[_eventIndex].DataSection.CustomEntryList.AddRange(CopyableEntry.CopyList<CustomEntry>(_defaultEvents[_eventIndex].DataSection.CustomEntryList));
+                PopulateEvents(_eventIndex);
+            }
+        }
+
         private void cmb_Event_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_Event.SelectedIndex != _eventIndex)
@@ -87,6 +112,16 @@ namespace EntryEdit.Editors
                 SwapEventByOffset(1);
                 PopulateEvents(_eventIndex + 1, false);
             }
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        private void btn_Reload_Click(object sender, EventArgs e)
+        {
+            Reload();
         }
     }
 }

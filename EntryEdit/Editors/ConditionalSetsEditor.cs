@@ -78,6 +78,25 @@ namespace EntryEdit.Editors
             }
         }
 
+        private void Clear()
+        {
+            if (_conditionalSets[_conditionalSetIndex].ConditionalBlocks.Count > 0)
+            {
+                _conditionalSets[_conditionalSetIndex].ConditionalBlocks.Clear();
+                PopulateSets(_conditionalSetIndex);
+            }
+        }
+
+        private void Reload()
+        {
+            if ((_defaultConditionalSets != null) && (_conditionalSetIndex < _defaultConditionalSets.Count))
+            {
+                _conditionalSets[_conditionalSetIndex].ConditionalBlocks.Clear();
+                _conditionalSets[_conditionalSetIndex].ConditionalBlocks.AddRange(CopyableEntry.CopyList<ConditionalBlock>(_defaultConditionalSets[_conditionalSetIndex].ConditionalBlocks));
+                PopulateSets(_conditionalSetIndex);
+            }
+        }
+
         private void cmb_ConditionalSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_ConditionalSet.SelectedIndex != _conditionalSetIndex)
@@ -142,6 +161,16 @@ namespace EntryEdit.Editors
                 SwapSetByOffset(1);
                 PopulateSets(_conditionalSetIndex + 1, false);
             }
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        private void btn_Reload_Click(object sender, EventArgs e)
+        {
+            Reload();
         }
     }
 }

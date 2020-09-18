@@ -34,6 +34,8 @@
             this.btn_Delete = new System.Windows.Forms.Button();
             this.entryEditor = new EntryEdit.Editors.CustomEntryEditor();
             this.btn_Add_UseDefault = new System.Windows.Forms.Button();
+            this.btn_Clear = new System.Windows.Forms.Button();
+            this.btn_Reload = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cmb_Section
@@ -97,10 +99,32 @@
             this.btn_Add_UseDefault.UseVisualStyleBackColor = false;
             this.btn_Add_UseDefault.Click += new System.EventHandler(this.btn_Add_UseDefault_Click);
             // 
+            // btn_Clear
+            // 
+            this.btn_Clear.Location = new System.Drawing.Point(319, 0);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(50, 24);
+            this.btn_Clear.TabIndex = 14;
+            this.btn_Clear.Text = "Clear";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
+            // 
+            // btn_Reload
+            // 
+            this.btn_Reload.Location = new System.Drawing.Point(372, 0);
+            this.btn_Reload.Name = "btn_Reload";
+            this.btn_Reload.Size = new System.Drawing.Size(50, 24);
+            this.btn_Reload.TabIndex = 15;
+            this.btn_Reload.Text = "Reload";
+            this.btn_Reload.UseVisualStyleBackColor = true;
+            this.btn_Reload.Click += new System.EventHandler(this.btn_Reload_Click);
+            // 
             // CustomSectionEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btn_Reload);
+            this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.btn_Add_UseDefault);
             this.Controls.Add(this.btn_Delete);
             this.Controls.Add(this.btn_Add);
@@ -121,5 +145,7 @@
         private System.Windows.Forms.Button btn_Add;
         private System.Windows.Forms.Button btn_Delete;
         private System.Windows.Forms.Button btn_Add_UseDefault;
+        private System.Windows.Forms.Button btn_Clear;
+        private System.Windows.Forms.Button btn_Reload;
     }
 }

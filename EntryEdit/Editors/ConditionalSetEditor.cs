@@ -86,9 +86,16 @@ namespace EntryEdit.Editors
         private void SetBlockIndex(int index, bool reloadCommandList = true)
         {
             _blockIndex = index;
+            List<Command> defaultCommandList = (index < _defaultConditionalSet.ConditionalBlocks.Count) ? _defaultConditionalSet.ConditionalBlocks[index].Commands : new List<Command>();
 
             if (reloadCommandList)
-                commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands);
+            {
+                commandListEditor.Populate(_conditionalSet.ConditionalBlocks[index].Commands, defaultCommandList);
+            }
+            else
+            {
+                commandListEditor.SetDefaultCommandList(defaultCommandList);
+            }
         }
 
         private void SwapBlockByOffset(int offset)

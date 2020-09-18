@@ -28,8 +28,9 @@ namespace EntryEdit.Editors
             this._event = inputEvent;
             this._defaultEvent = defaultEvent;
 
-            commandListEditor.Populate(inputEvent.CommandList);
-            textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection }, inputEvent.OriginalTextSection);
+            commandListEditor.Populate(inputEvent.CommandList, defaultEvent.CommandList);
+            textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection }, inputEvent.OriginalTextSection,
+                new CustomSection[2] { defaultEvent.TextSection, defaultEvent.DataSection }, defaultEvent.OriginalTextSection);
         }
 
         public void SavePage()
