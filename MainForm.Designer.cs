@@ -238,7 +238,7 @@ namespace FFTPatcher
             // 
             this.menuItem_PatchPSXSavestate.Enabled = false;
             this.menuItem_PatchPSXSavestate.Index = 3;
-            this.menuItem_PatchPSXSavestate.Text = "Patch PSX Savestate";
+            this.menuItem_PatchPSXSavestate.Text = "Patch pSX Savestate";
             this.menuItem_PatchPSXSavestate.Click += new System.EventHandler(this.menuItem_PatchPSXSaveState_Click);
             // 
             // pspMenu
