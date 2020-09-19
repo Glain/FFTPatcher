@@ -51,6 +51,26 @@ namespace EntryEdit.Editors
             _isPopulate = false;
         }
 
+        public void SaveBlock()
+        {
+            conditionalSetEditor.SaveBlock();
+        }
+
+        public ConditionalSet CopyConditionalSet()
+        {
+            return (_conditionalSetIndex >= 0) ? _conditionalSets[_conditionalSetIndex].Copy() : null;
+        }
+
+        public void PasteConditionalSet(ConditionalSet conditionalSet)
+        {
+            if ((_conditionalSetIndex >= 0) && (conditionalSet != null))
+            {
+                _conditionalSets[_conditionalSetIndex] = conditionalSet.Copy();
+                _conditionalSets[_conditionalSetIndex].Index = _conditionalSetIndex;
+                PopulateSets(_conditionalSetIndex);
+            }
+        }
+
         private void SetConditionalSetIndex(int index, bool reloadSet = true)
         {
             _conditionalSetIndex = index;

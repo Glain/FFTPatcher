@@ -124,13 +124,7 @@ namespace EntryEdit
 
             foreach (KeyValuePair<string, Dictionary<int, string>> kvp in parameterValueMaps)
             {
-                Dictionary<int, string> innerResult = new Dictionary<int, string>();
-                foreach (KeyValuePair<int, string> innerKvp in kvp.Value)
-                {
-                    innerResult.Add(innerKvp.Key, innerKvp.Value);
-                }
-
-                result.Add(kvp.Key, innerResult);
+                result.Add(kvp.Key, new Dictionary<int, string>(kvp.Value));
             }
 
             return result;
@@ -142,13 +136,7 @@ namespace EntryEdit
 
             foreach (KeyValuePair<CommandType, Dictionary<int, CommandTemplate>> kvp in commandTemplateMaps)
             {
-                Dictionary<int, CommandTemplate> innerResult = new Dictionary<int, CommandTemplate>();
-                foreach (KeyValuePair<int, CommandTemplate> innerKvp in kvp.Value)
-                {
-                    innerResult.Add(innerKvp.Key, innerKvp.Value);
-                }
-
-                result.Add(kvp.Key, innerResult);
+                result.Add(kvp.Key, new Dictionary<int, CommandTemplate>(kvp.Value));
             }
 
             return result;
@@ -156,24 +144,12 @@ namespace EntryEdit
 
         public Dictionary<CommandType, int> GetDefaultCommandByteLengthMaps()
         {
-            Dictionary<CommandType, int> result = new Dictionary<CommandType, int>();
-            foreach (KeyValuePair<CommandType, int> kvp in defaultCommandByteLengthMaps)
-            {
-                result.Add(kvp.Key, kvp.Value);
-            }
-
-            return result;
+            return new Dictionary<CommandType, int>(defaultCommandByteLengthMaps);
         }
 
         public Dictionary<CommandType, CommandTemplate> GetDefaultCommandTemplateMap()
         {
-            Dictionary<CommandType, CommandTemplate> result = new Dictionary<CommandType, CommandTemplate>();
-            foreach (KeyValuePair<CommandType, CommandTemplate> kvp in defaultCommandTemplateMap)
-            {
-                result.Add(kvp.Key, kvp.Value);
-            }
-
-            return result;
+            return new Dictionary<CommandType, CommandTemplate>(defaultCommandTemplateMap);
         }
 
         public int GetMaxParameters(CommandType type)

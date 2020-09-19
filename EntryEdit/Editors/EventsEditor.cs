@@ -30,6 +30,26 @@ namespace EntryEdit.Editors
             PopulateEvents();
         }
 
+        public void SavePage()
+        {
+            eventEditor.SavePage();
+        }
+
+        public Event CopyEvent()
+        {
+            return (_eventIndex >= 0) ? _events[_eventIndex].Copy() : null;
+        }
+
+        public void PasteEvent(Event inputEvent)
+        {
+            if ((_eventIndex >= 0) && (inputEvent != null))
+            {
+                _events[_eventIndex] = inputEvent.Copy();
+                _events[_eventIndex].Index = _eventIndex;
+                PopulateEvents(_eventIndex);
+            }
+        }
+
         private void PopulateEvents(int eventIndex = 0, bool reloadEvent = true)
         {
             _isPopulate = true;
