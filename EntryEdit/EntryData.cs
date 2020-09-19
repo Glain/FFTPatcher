@@ -76,7 +76,7 @@ namespace EntryEdit
     public class Event : ICopyableEntry<Event>
     {
         public int Index { get; private set; }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public List<Command> CommandList { get; private set; }
         public CustomSection DataSection { get; private set; }
         public CustomSection TextSection { get; private set; }
@@ -139,7 +139,7 @@ namespace EntryEdit
     public class ConditionalSet : ICopyableEntry<ConditionalSet>
     {
         public int Index { get; private set; }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public List<ConditionalBlock> ConditionalBlocks { get; private set; }
 
         public ConditionalSet(int index, string name, List<ConditionalBlock> conditionalBlocks)

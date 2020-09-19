@@ -86,7 +86,8 @@ namespace EntryEdit.Editors
         private void SetBlockIndex(int index, bool reloadCommandList = true)
         {
             _blockIndex = index;
-            List<Command> defaultCommandList = (index < _defaultConditionalSet.ConditionalBlocks.Count) ? _defaultConditionalSet.ConditionalBlocks[index].Commands : new List<Command>();
+            List<Command> defaultCommandList = ((_defaultConditionalSet != null) && (index < _defaultConditionalSet.ConditionalBlocks.Count)) 
+                ? _defaultConditionalSet.ConditionalBlocks[index].Commands : new List<Command>();
 
             if (reloadCommandList)
             {

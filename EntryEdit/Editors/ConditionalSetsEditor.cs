@@ -93,6 +93,7 @@ namespace EntryEdit.Editors
             {
                 _conditionalSets[_conditionalSetIndex].ConditionalBlocks.Clear();
                 _conditionalSets[_conditionalSetIndex].ConditionalBlocks.AddRange(CopyableEntry.CopyList<ConditionalBlock>(_defaultConditionalSets[_conditionalSetIndex].ConditionalBlocks));
+                _conditionalSets[_conditionalSetIndex].Name = _defaultConditionalSets[_conditionalSetIndex].Name;
                 PopulateSets(_conditionalSetIndex);
             }
         }

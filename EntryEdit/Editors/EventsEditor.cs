@@ -80,6 +80,7 @@ namespace EntryEdit.Editors
                 _events[_eventIndex].TextSection.CustomEntryList.AddRange(CopyableEntry.CopyList<CustomEntry>(_defaultEvents[_eventIndex].TextSection.CustomEntryList));
                 _events[_eventIndex].DataSection.CustomEntryList.Clear();
                 _events[_eventIndex].DataSection.CustomEntryList.AddRange(CopyableEntry.CopyList<CustomEntry>(_defaultEvents[_eventIndex].DataSection.CustomEntryList));
+                _events[_eventIndex].Name = _defaultEvents[_eventIndex].Name;
                 PopulateEvents(_eventIndex);
             }
         }
