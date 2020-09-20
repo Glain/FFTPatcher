@@ -24,6 +24,9 @@ namespace EntryEdit.Editors
         }
 
         private List<Command> _defaultCommandList;
+
+        private Action _saveCallback = null;
+
         private bool _isEnabled = false;
 
         private CommandData _commandData;
@@ -58,6 +61,11 @@ namespace EntryEdit.Editors
             btn_Reload.Enabled = _isEnabled && (_defaultCommandList != null) && (_defaultCommandList.Count > 0);
         }
 
+        public void SetSaveCallback(Action saveCallback)
+        {
+            this._saveCallback = saveCallback;
+        }
+
         public void Clear()
         {
             Populate(new List<Command>(), new List<Command>());
@@ -76,6 +84,11 @@ namespace EntryEdit.Editors
                 }
 
                 commandIndex++;
+            }
+
+            if (_saveCallback != null)
+            {
+                _saveCallback();
             }
         }
 

@@ -724,7 +724,9 @@ namespace EntryEdit
                             setIndexAddend++;
                         }
 
-                        conditionalBlocks.Add(new ConditionalBlock(numBlocks, CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex))));
+                        ConditionalBlock newBlock = new ConditionalBlock(numBlocks, CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex)));
+                        newBlock.FindName(parameterValueMaps);
+                        conditionalBlocks.Add(newBlock);
                         numBlocks++;
                     }
                     

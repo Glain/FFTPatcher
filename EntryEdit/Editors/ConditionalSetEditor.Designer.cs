@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.cmb_Block = new System.Windows.Forms.ComboBox();
-            this.commandListEditor = new EntryEdit.Editors.CommandListEditor();
             this.btn_Add = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.btn_Up = new System.Windows.Forms.Button();
             this.btn_Down = new System.Windows.Forms.Button();
+            this.commandListEditor = new EntryEdit.Editors.CommandListEditor();
             this.SuspendLayout();
             // 
             // cmb_Block
@@ -42,9 +42,49 @@
             this.cmb_Block.FormattingEnabled = true;
             this.cmb_Block.Location = new System.Drawing.Point(1, 7);
             this.cmb_Block.Name = "cmb_Block";
-            this.cmb_Block.Size = new System.Drawing.Size(73, 21);
+            this.cmb_Block.Size = new System.Drawing.Size(550, 21);
             this.cmb_Block.TabIndex = 2;
             this.cmb_Block.SelectedIndexChanged += new System.EventHandler(this.cmb_Block_SelectedIndexChanged);
+            // 
+            // btn_Add
+            // 
+            this.btn_Add.Location = new System.Drawing.Point(674, 6);
+            this.btn_Add.Name = "btn_Add";
+            this.btn_Add.Size = new System.Drawing.Size(30, 24);
+            this.btn_Add.TabIndex = 4;
+            this.btn_Add.Text = "+";
+            this.btn_Add.UseVisualStyleBackColor = true;
+            this.btn_Add.Click += new System.EventHandler(this.btn_Add_Click);
+            // 
+            // btn_Delete
+            // 
+            this.btn_Delete.Location = new System.Drawing.Point(707, 6);
+            this.btn_Delete.Name = "btn_Delete";
+            this.btn_Delete.Size = new System.Drawing.Size(30, 24);
+            this.btn_Delete.TabIndex = 5;
+            this.btn_Delete.Text = "-";
+            this.btn_Delete.UseVisualStyleBackColor = true;
+            this.btn_Delete.Click += new System.EventHandler(this.btn_Delete_Click);
+            // 
+            // btn_Up
+            // 
+            this.btn_Up.Location = new System.Drawing.Point(581, 6);
+            this.btn_Up.Name = "btn_Up";
+            this.btn_Up.Size = new System.Drawing.Size(30, 24);
+            this.btn_Up.TabIndex = 12;
+            this.btn_Up.Text = "↑";
+            this.btn_Up.UseVisualStyleBackColor = true;
+            this.btn_Up.Click += new System.EventHandler(this.btn_Up_Click);
+            // 
+            // btn_Down
+            // 
+            this.btn_Down.Location = new System.Drawing.Point(614, 6);
+            this.btn_Down.Name = "btn_Down";
+            this.btn_Down.Size = new System.Drawing.Size(30, 24);
+            this.btn_Down.TabIndex = 13;
+            this.btn_Down.Text = "↓";
+            this.btn_Down.UseVisualStyleBackColor = true;
+            this.btn_Down.Click += new System.EventHandler(this.btn_Down_Click);
             // 
             // commandListEditor
             // 
@@ -55,46 +95,6 @@
             this.commandListEditor.Name = "commandListEditor";
             this.commandListEditor.Size = new System.Drawing.Size(876, 553);
             this.commandListEditor.TabIndex = 3;
-            // 
-            // btn_Add
-            // 
-            this.btn_Add.Location = new System.Drawing.Point(197, 6);
-            this.btn_Add.Name = "btn_Add";
-            this.btn_Add.Size = new System.Drawing.Size(30, 24);
-            this.btn_Add.TabIndex = 4;
-            this.btn_Add.Text = "+";
-            this.btn_Add.UseVisualStyleBackColor = true;
-            this.btn_Add.Click += new System.EventHandler(this.btn_Add_Click);
-            // 
-            // btn_Delete
-            // 
-            this.btn_Delete.Location = new System.Drawing.Point(230, 6);
-            this.btn_Delete.Name = "btn_Delete";
-            this.btn_Delete.Size = new System.Drawing.Size(30, 24);
-            this.btn_Delete.TabIndex = 5;
-            this.btn_Delete.Text = "-";
-            this.btn_Delete.UseVisualStyleBackColor = true;
-            this.btn_Delete.Click += new System.EventHandler(this.btn_Delete_Click);
-            // 
-            // btn_Up
-            // 
-            this.btn_Up.Location = new System.Drawing.Point(104, 6);
-            this.btn_Up.Name = "btn_Up";
-            this.btn_Up.Size = new System.Drawing.Size(30, 24);
-            this.btn_Up.TabIndex = 12;
-            this.btn_Up.Text = "↑";
-            this.btn_Up.UseVisualStyleBackColor = true;
-            this.btn_Up.Click += new System.EventHandler(this.btn_Up_Click);
-            // 
-            // btn_Down
-            // 
-            this.btn_Down.Location = new System.Drawing.Point(137, 6);
-            this.btn_Down.Name = "btn_Down";
-            this.btn_Down.Size = new System.Drawing.Size(30, 24);
-            this.btn_Down.TabIndex = 13;
-            this.btn_Down.Text = "↓";
-            this.btn_Down.UseVisualStyleBackColor = true;
-            this.btn_Down.Click += new System.EventHandler(this.btn_Down_Click);
             // 
             // ConditionalSetEditor
             // 

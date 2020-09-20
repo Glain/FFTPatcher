@@ -13,6 +13,8 @@ namespace EntryEdit.Editors
         private ConditionalSet _conditionalSet;
         private ConditionalSet _defaultConditionalSet;
 
+        private CommandData _commandData;
+
         private int _blockIndex = -1;
         private bool _isPopulate = false;
 
@@ -23,7 +25,9 @@ namespace EntryEdit.Editors
 
         public void Init(CommandData commandData)
         {
+            _commandData = commandData;
             commandListEditor.Init(commandData);
+            //commandListEditor.SetSaveCallback(FindBlockName);
         }
 
         public void Populate(ConditionalSet conditionalSet, ConditionalSet defaultConditionalSet)
@@ -57,6 +61,7 @@ namespace EntryEdit.Editors
         public void SaveBlock()
         {
             commandListEditor.SavePage();
+            FindBlockName();
         }
 
         public void ClearBlock()
@@ -96,6 +101,16 @@ namespace EntryEdit.Editors
             else
             {
                 commandListEditor.SetDefaultCommandList(defaultCommandList);
+            }
+        }
+
+        private void FindBlockName()
+        {
+            if ((_conditionalSet != null) && (_blockIndex >= 0))
+            {
+                _conditionalSet.ConditionalBlocks[_blockIndex].FindName(_commandData.ParameterValueMaps);
+                cmb_Block.Items.Remove(_conditionalSet.ConditionalBlocks[_blockIndex]);
+                cmb_Block.Items.Insert(_blockIndex, _conditionalSet.ConditionalBlocks[_blockIndex]);
             }
         }
 
@@ -149,7 +164,7 @@ namespace EntryEdit.Editors
             SaveBlock();
 
             int newIndex = _blockIndex + 1;
-            _conditionalSet.ConditionalBlocks.Insert(newIndex, new ConditionalBlock(newIndex, new List<Command>()));
+            _conditionalSet.ConditionalBlocks.Insert(newIndex, new ConditionalBlock(newIndex, new List<Command>(), string.Empty));
 
             for (int index = newIndex + 1; index < _conditionalSet.ConditionalBlocks.Count; index++)
                 _conditionalSet.ConditionalBlocks[index].IncrementIndex();

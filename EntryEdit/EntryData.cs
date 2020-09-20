@@ -185,12 +185,12 @@ namespace EntryEdit
         {
             this.Index = index;
             this.Commands = commands;
-            this.Name = name ?? FindName();
+            this.Name = name ?? string.Empty;
         }
 
         public ConditionalBlock Copy()
         {
-            return new ConditionalBlock(Index, CopyableEntry.CopyList<Command>(Commands));
+            return new ConditionalBlock(Index, CopyableEntry.CopyList<Command>(Commands), Name);
         }
 
         public void AddOffsetToIndex(int offset)
@@ -208,14 +208,48 @@ namespace EntryEdit
             AddOffsetToIndex(-1);
         }
 
+        public string FindName(Dictionary<string, Dictionary<int, string>> parameterValueMaps)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if ((Commands != null) && (Commands.Count > 0))
+            {
+                Command lastCommand = Commands[Commands.Count - 1];
+                if ((lastCommand != null) && (lastCommand.Template != null) && !string.IsNullOrEmpty(lastCommand.Template.Name))
+                {
+                    sb.Append(lastCommand.Template.Name);
+                    if ((lastCommand.Parameters != null) && (lastCommand.Parameters.Count <= 2))
+                    {
+                        foreach (CommandParameter parameter in lastCommand.Parameters)
+                        {
+                            if ((parameter != null) && (parameter.Template != null))
+                            {
+                                string parameterName = parameter.Value.ToString();
+
+                                if (!string.IsNullOrEmpty(parameter.Template.Type))
+                                {
+                                    Dictionary<int, string> valueMap = null;
+                                    parameterValueMaps.TryGetValue(parameter.Template.Type, out valueMap);
+                                    if (valueMap != null)
+                                    {
+                                        valueMap.TryGetValue(parameter.Value, out parameterName);
+                                    }
+
+                                    sb.AppendFormat(" ({0})", parameterName);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Name = sb.ToString();
+            return Name;
+        }
+
         public override string ToString()
         {
             return (Index + 1).ToString("X2") + " " + Name;
-        }
-
-        private string FindName()
-        {
-            return string.Empty;
         }
     }
 }
