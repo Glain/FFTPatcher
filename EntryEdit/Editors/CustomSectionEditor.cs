@@ -68,6 +68,10 @@ namespace EntryEdit.Editors
             }
 
             cmb_Entry.Visible = (_customSections[_customSectionIndex].CustomEntryList.Count > 1);
+            bool isAddAvailable = (_editorMode != CustomEntryEditor.EditorMode.Data) || (_customSections[_customSectionIndex].CustomEntryList.Count == 0);
+            btn_Add.Enabled = isAddAvailable;
+            btn_Add_UseDefault.Enabled = isAddAvailable;
+            btn_Add_UseDefault.Visible = (_editorMode == CustomEntryEditor.EditorMode.Text);
 
             _isPopulateSection = false;
         }
@@ -91,6 +95,8 @@ namespace EntryEdit.Editors
             _customEntryIndex = -1;
             cmb_Entry.Visible = false;
             btn_Delete.Enabled = false;
+            btn_Add.Enabled = true;
+            btn_Add_UseDefault.Enabled = true;
             cmb_Entry.Items.Clear();
             entryEditor.Clear();
         }
