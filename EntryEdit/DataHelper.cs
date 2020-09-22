@@ -140,49 +140,56 @@ namespace EntryEdit
             const string constSectionText = "{SECTION:";
             const string constTextSectionName = "TEXT";
 
-            int sectionTextIndex = script.IndexOf(constSectionText);
+            try
+            {
+                int sectionTextIndex = script.IndexOf(constSectionText);
 
-            string strCommandSection = (sectionTextIndex == -1) ? script : script.Substring(0, sectionTextIndex);
-            string strTextSection = string.Empty;
-            string strDataSection = string.Empty;
+                string strCommandSection = (sectionTextIndex == -1) ? script : script.Substring(0, sectionTextIndex);
+                string strTextSection = string.Empty;
+                string strDataSection = string.Empty;
 
-            List<Command> commandList = GetCommandListFromScript(CommandType.EventCommand, strCommandSection);
-            if (commandList == null)
+                List<Command> commandList = GetCommandListFromScript(CommandType.EventCommand, strCommandSection);
+                if (commandList == null)
+                    return null;
+
+                while (sectionTextIndex >= 0)
+                {
+                    int sectionNameIndex = sectionTextIndex + constSectionText.Length;
+                    int endBraceIndex = script.IndexOf("}", sectionNameIndex);
+                    string sectionTitle = script.Substring(sectionNameIndex, endBraceIndex - sectionNameIndex);
+                    bool isTextSection = (sectionTitle.ToUpper().Trim().Equals(constTextSectionName));
+                    int nextSectionTextIndex = script.IndexOf(constSectionText, endBraceIndex);
+                    string sectionBody = (nextSectionTextIndex == -1) ? script.Substring(endBraceIndex + 1) : script.Substring(endBraceIndex + 1, nextSectionTextIndex - endBraceIndex);
+
+                    if (isTextSection)
+                        strTextSection = sectionBody;
+                    else
+                        strDataSection = sectionBody;
+
+                    sectionTextIndex = nextSectionTextIndex;
+                }
+
+                /*
+                if (textMarkerIndex >= 0)
+                {
+                    strTextSection = (dataMarkerIndex == -1) ? script.Substring(textMarkerIndex) : script.Substring(textMarkerIndex, textMarkerIndex - dataMarkerIndex + 1);
+                }
+                if (dataMarkerIndex >= 0)
+                {
+                    strDataSection = script.Substring(dataMarkerIndex);
+                }
+                */
+
+                CustomSection textSection = GetCustomSectionFromScript(strTextSection, true);
+                CustomSection dataSection = GetCustomSectionFromScript(strDataSection, false);
+
+                Event newEvent = new Event(originalEvent.Index, originalEvent.Name, commandList, dataSection, textSection, textSection, originalEvent.OriginalBytes);
+                return GetEventFromBytes(originalEvent.Index, EventToByteArray(newEvent, true));
+            }
+            catch (Exception)
+            {
                 return null;
-
-            while (sectionTextIndex >= 0)
-            {
-                int sectionNameIndex = sectionTextIndex + constSectionText.Length;
-                int endBraceIndex = script.IndexOf("}", sectionNameIndex);
-                string sectionTitle = script.Substring(sectionNameIndex, endBraceIndex - sectionNameIndex);
-                bool isTextSection = (sectionTitle.ToUpper().Trim().Equals(constTextSectionName));
-                int nextSectionTextIndex = script.IndexOf(constSectionText, endBraceIndex);
-                string sectionBody = (nextSectionTextIndex == -1) ? script.Substring(endBraceIndex + 1) : script.Substring(endBraceIndex + 1, nextSectionTextIndex - endBraceIndex);
-
-                if (isTextSection)
-                    strTextSection = sectionBody;
-                else
-                    strDataSection = sectionBody;
-
-                sectionTextIndex = nextSectionTextIndex;
             }
-
-            /*
-            if (textMarkerIndex >= 0)
-            {
-                strTextSection = (dataMarkerIndex == -1) ? script.Substring(textMarkerIndex) : script.Substring(textMarkerIndex, textMarkerIndex - dataMarkerIndex + 1);
-            }
-            if (dataMarkerIndex >= 0)
-            {
-                strDataSection = script.Substring(dataMarkerIndex);
-            }
-            */
-
-            CustomSection textSection = GetCustomSectionFromScript(strTextSection, true);
-            CustomSection dataSection = GetCustomSectionFromScript(strDataSection, false);
-
-            Event newEvent = new Event(originalEvent.Index, originalEvent.Name, commandList, dataSection, textSection, textSection, originalEvent.OriginalBytes);
-            return GetEventFromBytes(originalEvent.Index, EventToByteArray(newEvent, true));
         }
 
         public List<string> GetParameterValueList(int numBytes, string type)
