@@ -16,6 +16,11 @@ namespace EntryEdit.Editors
         private CommandData _commandData;
 
         private int _blockIndex = -1;
+        public int BlockIndex
+        {
+            get { return _blockIndex; } 
+        }
+
         private bool _isPopulate = false;
 
         public ConditionalSetEditor()
@@ -72,6 +77,20 @@ namespace EntryEdit.Editors
             commandListEditor.Clear();
             commandListEditor.SetEnabledState(false);
             btn_Delete.Enabled = false;
+        }
+
+        public string GetCommandListScript()
+        {
+            return ((_conditionalSet != null) && (_blockIndex >= 0)) ? _conditionalSet.ConditionalBlocks[_blockIndex].GetScript() : string.Empty;   
+        }
+
+        public void LoadBlock(ConditionalBlock block)
+        {
+            if ((_conditionalSet != null) && (_blockIndex >= 0))
+            {
+                _conditionalSet.ConditionalBlocks[_blockIndex] = block;
+                PopulateBlocks(_blockIndex);
+            }
         }
 
         public void SetEnabledState(bool isEnabled)
@@ -143,9 +162,9 @@ namespace EntryEdit.Editors
 
                 if (_conditionalSet.ConditionalBlocks.Count > 0)
                 {
-                    bool isFirstIndex = (_blockIndex > 0);
-                    int newIndex = isFirstIndex ? (_blockIndex - 1) : 0;
-                    int startIndex = isFirstIndex ? (newIndex + 1) : 0;
+                    bool isNotFirstIndex = (_blockIndex > 0);
+                    int newIndex = isNotFirstIndex ? (_blockIndex - 1) : 0;
+                    int startIndex = isNotFirstIndex ? (newIndex + 1) : 0;
 
                     for (int index = startIndex; index < _conditionalSet.ConditionalBlocks.Count; index++)
                         _conditionalSet.ConditionalBlocks[index].DecrementIndex();

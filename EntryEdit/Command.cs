@@ -98,6 +98,41 @@ namespace EntryEdit
 
             return true;
         }
+
+        public string GetScriptString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (Template != null)
+            {
+                if (Template.IsUnknown)
+                    sb.AppendFormat("{{{0}}}", Template.ID.ToString("X" + (Template.ByteLength << 1)));
+                else if (!string.IsNullOrEmpty(Template.Name))
+                    sb.Append(PatcherLib.Utilities.Utilities.RemoveWhitespace(Template.Name));
+
+                if (Parameters != null)
+                {
+                    sb.Append("(");
+
+                    bool isFirstParameter = true;
+                    foreach (CommandParameter parameter in Parameters)
+                    {
+                        if (parameter != null)
+                        {
+                            if (!isFirstParameter)
+                                sb.Append(",");
+
+                            sb.Append(parameter.GetValueDisplayString());
+                            isFirstParameter = false;
+                        }
+                    }
+
+                    sb.Append(")");
+                }
+            }
+
+            return sb.ToString();
+        }
     }
 
     public class CommandParameter : ICopyableEntry<CommandParameter>
@@ -131,6 +166,27 @@ namespace EntryEdit
         {
             return new CommandParameter(Template, value);
         }
+
+        public string GetValueDisplayString()
+        {
+            if (Template == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                if (Template.IsHex)
+                {
+                    return "0x" + Value.ToString("X" + (Template.ByteLength << 1));
+                }
+                else
+                {
+                    int range = (1 << (Template.ByteLength << 3));
+                    int displayValue = (Template.IsSigned && (Value > ((range / 2) - 1))) ? -(range - Value) : Value;
+                    return displayValue.ToString();
+                }
+            }
+        }
     }
 
     public class CommandTemplate
@@ -140,16 +196,20 @@ namespace EntryEdit
         public int ID { get; private set; }
         public string Name { get; private set; }
         public int ByteLength { get; private set; }
+        public bool IsUnknown { get; private set; }
+        public bool IsSentinel { get; private set; }
         public CommandType Type { get; private set; }
         public List<CommandParameterTemplate> Parameters { get; private set; }
 
-        public CommandTemplate(int commandID, int byteLength, CommandType type) : this(commandID, "Unknown", byteLength, type, new List<CommandParameterTemplate>()) { }
+        public CommandTemplate(int commandID, int byteLength, CommandType type) : this(commandID, "Unknown", byteLength, true, false, type, new List<CommandParameterTemplate>()) { }
 
-        public CommandTemplate(int id, string name, int byteLength, CommandType type, List<CommandParameterTemplate> parameters)
+        public CommandTemplate(int id, string name, int byteLength, bool isUnknown, bool isSentinel, CommandType type, List<CommandParameterTemplate> parameters)
         {
             this.ID = id;
             this.Name = name;
             this.ByteLength = byteLength;
+            this.IsUnknown = isUnknown;
+            this.IsSentinel = isSentinel;
             this.Type = type;
             this.Parameters = parameters;
         }
@@ -230,6 +290,34 @@ namespace EntryEdit
         {
             return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList));
         }
+
+        public string GetCombinedByteString()
+        {
+            StringBuilder sb = new StringBuilder();
+            int index = 1;
+            foreach (CustomEntry entry in CustomEntryList)
+            {
+                sb.AppendFormat("Entry 0x{0}{1}", index.ToString("X2"), Environment.NewLine);
+                sb.Append(entry.GetByteString());
+                sb.AppendLine();
+                index++;
+            }
+            return sb.ToString();
+        }
+
+        public string GetCombinedTextString()
+        {
+            StringBuilder sb = new StringBuilder();
+            int index = 1;
+            foreach (CustomEntry entry in CustomEntryList)
+            {
+                sb.AppendFormat("Entry 0x{0}{1}", index.ToString("X2"), Environment.NewLine);
+                sb.AppendLine(entry.Text);
+                sb.AppendLine();
+                index++;
+            }
+            return sb.ToString();
+        }
     }
 
     public class CustomEntry : ICopyableEntry<CustomEntry>
@@ -250,6 +338,12 @@ namespace EntryEdit
         public CustomEntry(int index, List<byte> bytes, string text) : this(index, bytes, text, "") { }
         public CustomEntry(int index, List<byte> bytes) : this(index, bytes, "", "") { }
         public CustomEntry(int index) : this(index, new List<byte>(), "", "") { }
+
+        public CustomEntry(int index, string text)
+        {
+            this.Index = index;
+            SetText(text);
+        }
 
         public CustomEntry Copy()
         {
@@ -289,6 +383,11 @@ namespace EntryEdit
         public void DecrementIndex()
         {
             Index--;
+        }
+
+        public string GetByteString()
+        {
+            return PatcherLib.Utilities.Utilities.GetByteString(Bytes);
         }
     }
 

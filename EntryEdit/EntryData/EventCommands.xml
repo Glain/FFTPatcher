@@ -660,7 +660,7 @@
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
     <Command hex="DA" name="Unknown" />
-    <Command hex="DB" name="Event End" />
+    <Command hex="DB" name="Event End" sentinel="true" />
     <Command hex="DC" name="Unknown" />
     <Command hex="E0" name="Unknown">
         <Parameter name="Unknown" bytes="2" mode="hex" />
@@ -671,7 +671,7 @@
     <Command hex="E2" name="Unknown">
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
-    <Command hex="E3" name="Event End 2" />
+    <Command hex="E3" name="Event End 2" sentinel="true" />
     <Command hex="E4" name="Unknown">
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>

@@ -457,6 +457,16 @@ namespace PatcherLib.Utilities
             }
         }
 
+        public static string RemoveWhitespace(string text)
+        {
+            return stripRegex.Replace(text, string.Empty);
+        }
+
+        public static string[] SplitIntoLines(string text)
+        {
+            return System.Text.RegularExpressions.Regex.Split(text, "\r\n|\r|\n");
+        }
+
         public static byte[] GetBytesFromHexString(string byteText, bool forceHex = false)
         {
             string strippedText = stripRegex.Replace(byteText, string.Empty);
@@ -485,6 +495,57 @@ namespace PatcherLib.Utilities
             }
 
             return result.ToString();
+        }
+
+        public static uint[] GetUintArrayFromBytes(IEnumerable<byte> bytes, bool littleEndian = false)
+        {
+            List<uint> uintList = new List<uint>();
+
+            uint uintValue = 0;
+            int offset = 0;
+            foreach (byte b in bytes)
+            {
+                int shiftAmount = littleEndian ? (offset * 8) : (24 - (offset * 8));
+                uintValue |= (((uint)b) << shiftAmount);
+
+                offset = (offset + 1) % 4;
+                if (offset == 0)
+                {
+                    uintList.Add(uintValue);
+                    uintValue = 0;
+                }
+            }
+
+            return uintList.ToArray();
+        }
+
+        public static string GetByteString(IList<byte> bytes)
+        {
+            if (bytes == null)
+                return string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            
+            List<uint> fourByteSets = new List<uint>(GetUintArrayFromBytes(bytes, false));
+            foreach (uint fourByteSet in fourByteSets)
+            {
+                sb.AppendFormat("{0}{1}", fourByteSet.ToString("X8"), Environment.NewLine);
+            }
+
+            int byteCount = bytes.Count;
+            int remainingBytes = byteCount % 4;
+            if (remainingBytes > 0)
+            {
+                int remainingBytesIndex = byteCount - remainingBytes;
+                System.Text.StringBuilder sbRemainingBytes = new System.Text.StringBuilder(remainingBytes * 2);
+                for (int index = remainingBytesIndex; index < byteCount; index++)
+                {
+                    sbRemainingBytes.Append(bytes[index].ToString("X2"));
+                }
+                sb.AppendFormat("{0}{1}", sbRemainingBytes.ToString(), Environment.NewLine);
+            }
+
+            return sb.ToString();
         }
 
         #endregion Methods 

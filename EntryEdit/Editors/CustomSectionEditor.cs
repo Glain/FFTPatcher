@@ -139,9 +139,9 @@ namespace EntryEdit.Editors
 
             if (entryList.Count > 0)
             {
-                bool isFirstIndex = (_customEntryIndex > 0);
-                int newIndex = isFirstIndex ? (_customEntryIndex - 1) : 0;
-                int startIndex = isFirstIndex ? (newIndex + 1) : 0;
+                bool isNotFirstIndex = (_customEntryIndex > 0);
+                int newIndex = isNotFirstIndex ? (_customEntryIndex - 1) : 0;
+                int startIndex = isNotFirstIndex ? (newIndex + 1) : 0;
 
                 for (int index = startIndex; index < entryList.Count; index++)
                     entryList[index].DecrementIndex();

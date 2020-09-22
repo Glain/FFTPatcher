@@ -114,6 +114,30 @@ namespace EntryEdit
             AddOffsetToIndex(-1);
         }
 
+        public string GetScript()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(DataHelper.GetCommandListScript(CommandList));
+
+            string strTextSection = TextSection.GetCombinedTextString();
+            if (!string.IsNullOrEmpty(strTextSection))
+            {
+                sb.AppendLine("{SECTION:TEXT}");
+                sb.AppendLine();
+                sb.Append(strTextSection);
+            }
+
+            string strDataSection = DataSection.GetCombinedByteString();
+            if (!string.IsNullOrEmpty(strDataSection))
+            {
+                sb.AppendLine("{SECTION:DATA}");
+                sb.AppendLine();
+                sb.Append(strDataSection);
+            }
+
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
             return Index.ToString("X4") + " " + Name;
@@ -177,9 +201,9 @@ namespace EntryEdit
 
     public class ConditionalBlock : ICopyableEntry<ConditionalBlock>
     {
-        public int Index { get; set; }
-        public string Name { get; set; }
-        public List<Command> Commands { get; set; }
+        public int Index { get; private set; }
+        public string Name { get; private set; }
+        public List<Command> Commands { get; private set; }
 
         public ConditionalBlock(int index, List<Command> commands, string name = null)
         {
@@ -245,6 +269,11 @@ namespace EntryEdit
 
             Name = sb.ToString();
             return Name;
+        }
+
+        public string GetScript()
+        {
+            return DataHelper.GetCommandListScript(Commands);
         }
 
         public override string ToString()

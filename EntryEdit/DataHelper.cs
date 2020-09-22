@@ -36,6 +36,8 @@ namespace EntryEdit
     public class DataHelper
     {
         private const int EventSize = 0x2000;
+        private const string StrUnknown = "unknown";
+        private const string StrBlank = "blank";
         private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
 
         private readonly List<string> parameterTypes;
@@ -55,6 +57,21 @@ namespace EntryEdit
             commandTemplateMaps = GetCommandTemplateMaps();
             parameterValueMaps = GetParameterValueMaps();
             entryNameMaps = GetEntryNameMaps();
+        }
+
+        public static string GetCommandListScript(IEnumerable<Command> commands)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (commands != null)
+            {
+                foreach (Command command in commands)
+                {
+                    sb.AppendLine(command.GetScriptString());
+                }
+            }
+
+            return sb.ToString();
         }
 
         public static List<string> GetParameterEntryNames(CommandParameterTemplate template, Dictionary<int, string> valueMap)
@@ -97,6 +114,75 @@ namespace EntryEdit
         public List<ConditionalSet> LoadWorldConditionalDefaults()
         {
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
+        }
+
+        public ConditionalBlock GetConditionalBlockFromScript(CommandType type, int blockIndex, string script)
+        {
+            List<Command> commandList = GetCommandListFromScript(type, script);
+            if (commandList != null)
+            {
+                ConditionalBlock block = new ConditionalBlock(blockIndex, commandList);
+                block.FindName(parameterValueMaps);
+                return block;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Event GetEventFromScript(string script, Event originalEvent)
+        {
+            //int textMarkerIndex = script.LastIndexOf("{TEXT}");
+            //int dataMarkerIndex = script.LastIndexOf("{DATA}");
+            //int firstMarkerIndex = unchecked((int)Math.Min(unchecked((uint)textMarkerIndex), unchecked((uint)dataMarkerIndex)));
+
+            const string constSectionText = "{SECTION:";
+            const string constTextSectionName = "TEXT";
+
+            int sectionTextIndex = script.IndexOf(constSectionText);
+
+            string strCommandSection = (sectionTextIndex == -1) ? script : script.Substring(0, sectionTextIndex);
+            string strTextSection = string.Empty;
+            string strDataSection = string.Empty;
+
+            List<Command> commandList = GetCommandListFromScript(CommandType.EventCommand, strCommandSection);
+            if (commandList == null)
+                return null;
+
+            while (sectionTextIndex >= 0)
+            {
+                int sectionNameIndex = sectionTextIndex + constSectionText.Length;
+                int endBraceIndex = script.IndexOf("}", sectionNameIndex);
+                string sectionTitle = script.Substring(sectionNameIndex, endBraceIndex - sectionNameIndex);
+                bool isTextSection = (sectionTitle.ToUpper().Trim().Equals(constTextSectionName));
+                int nextSectionTextIndex = script.IndexOf(constSectionText, endBraceIndex);
+                string sectionBody = (nextSectionTextIndex == -1) ? script.Substring(endBraceIndex + 1) : script.Substring(endBraceIndex + 1, nextSectionTextIndex - endBraceIndex);
+
+                if (isTextSection)
+                    strTextSection = sectionBody;
+                else
+                    strDataSection = sectionBody;
+
+                sectionTextIndex = nextSectionTextIndex;
+            }
+
+            /*
+            if (textMarkerIndex >= 0)
+            {
+                strTextSection = (dataMarkerIndex == -1) ? script.Substring(textMarkerIndex) : script.Substring(textMarkerIndex, textMarkerIndex - dataMarkerIndex + 1);
+            }
+            if (dataMarkerIndex >= 0)
+            {
+                strDataSection = script.Substring(dataMarkerIndex);
+            }
+            */
+
+            CustomSection textSection = GetCustomSectionFromScript(strTextSection, true);
+            CustomSection dataSection = GetCustomSectionFromScript(strDataSection, false);
+
+            Event newEvent = new Event(originalEvent.Index, originalEvent.Name, commandList, dataSection, textSection, textSection, originalEvent.OriginalBytes);
+            return GetEventFromBytes(originalEvent.Index, EventToByteArray(newEvent, true));
         }
 
         public List<string> GetParameterValueList(int numBytes, string type)
@@ -180,6 +266,132 @@ namespace EntryEdit
                 defaultCommandByteLengthMaps[CommandType.WorldConditional], parameterValueMaps, GetMaxParameters(CommandType.WorldConditional), commandTemplateMap[CommandType.WorldConditional]));
             result.Add(CommandType.EventCommand, new CommandData(CommandType.EventCommand, commandNames[CommandType.EventCommand], commandMaps[CommandType.EventCommand],
                 defaultCommandByteLengthMaps[CommandType.EventCommand], parameterValueMaps, GetMaxParameters(CommandType.EventCommand), commandTemplateMap[CommandType.EventCommand]));
+
+            return result;
+        }
+
+        private List<Command> GetCommandListFromScript(CommandType type, string script)
+        {
+            try
+            {
+                List<Command> commandList = new List<Command>();
+                string[] lines = PatcherLib.Utilities.Utilities.SplitIntoLines(script);
+                Dictionary<string, CommandTemplate> commandTemplateNameMap = GetCommandTemplateNameMap(type, true);
+
+                foreach (string origLine in lines)
+                {
+                    if (string.IsNullOrEmpty(origLine))
+                        continue;
+
+                    string line = PatcherLib.Utilities.Utilities.RemoveWhitespace(origLine.Trim());
+                    if (line.StartsWith("//"))
+                        continue;
+
+                    int openingParenIndex = line.IndexOf('(');
+                    int closingParenIndex = line.LastIndexOf(')');
+                    string commandName = line.Substring(0, openingParenIndex);
+                    CommandTemplate commandTemplate = null;
+                    if (commandTemplateNameMap.TryGetValue(commandName, out commandTemplate))
+                    {
+                        string[] strParams = line.Substring(openingParenIndex + 1, closingParenIndex - openingParenIndex - 1).Split(',');
+                        List<CommandParameter> commandParameterList = new List<CommandParameter>(commandTemplate.Parameters.Capacity);
+                        for (int index = 0; index < commandTemplate.Parameters.Count; index++)
+                        {
+                            int value = 0;
+                            bool isHex = strParams[index].StartsWith("0x");
+                            string strParam = strParams[index].Replace("0x", "");
+
+                            if (int.TryParse(strParam, isHex ? NumberStyles.HexNumber : NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+                            {
+                                commandParameterList.Add(new CommandParameter(commandTemplate.Parameters[index], value));
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+
+                        commandList.Add(new Command(commandTemplate, commandParameterList));
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                return commandList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private CustomSection GetCustomSectionFromScript(string script, bool isTextSection)
+        {
+            KeyValuePair<int, int> entryTextIndexes = FindCustomSectionEntryTextIndex(script, 0);
+            KeyValuePair<int, int> nextEntryTextIndexes = FindCustomSectionEntryTextIndex(script, entryTextIndexes.Value + 1);
+
+            List<CustomEntry> customEntryList = new List<CustomEntry>();
+            int entryIndex = 0;
+            while (entryTextIndexes.Value != -1)
+            {
+                int length = nextEntryTextIndexes.Key - entryTextIndexes.Value + 1;
+                string strEntry = script.Substring(entryTextIndexes.Value, length);
+
+                if (isTextSection)
+                {
+                    customEntryList.Add(new CustomEntry(entryIndex, strEntry));
+                }
+                else
+                {
+                    customEntryList.Add(new CustomEntry(entryIndex, new List<byte>(PatcherLib.Utilities.Utilities.GetBytesFromHexString(strEntry))));
+                }
+
+                entryTextIndexes = nextEntryTextIndexes;
+                nextEntryTextIndexes = FindCustomSectionEntryTextIndex(script, entryTextIndexes.Value + 1);
+                entryIndex++;
+            }
+
+            return new CustomSection(customEntryList);
+        }
+
+        private KeyValuePair<int, int> FindCustomSectionEntryTextIndex(string script, int textIndex)
+        {
+            int entryTextIndex = script.IndexOf("\r\n\r\nEntry", textIndex);
+            if (entryTextIndex == -1)
+                entryTextIndex = script.IndexOf("\n\nEntry", textIndex);
+
+            if (entryTextIndex == -1)
+            {
+                entryTextIndex = script.IndexOf("\r\n\r\n", textIndex);
+                if (entryTextIndex == -1)
+                    entryTextIndex = script.IndexOf("\n\n", textIndex);
+
+                return new KeyValuePair<int, int>(entryTextIndex, -1);
+            }
+            else
+            {
+                return new KeyValuePair<int, int>(entryTextIndex, script.IndexOf('\n', entryTextIndex + 4) + 1);
+            }
+        }
+
+        private Dictionary<string, CommandTemplate> GetCommandTemplateNameMap(CommandType type, bool removeSpaces)
+        {
+            Dictionary<int, CommandTemplate> commandTemplateMap = commandTemplateMaps[type];
+            Dictionary<string, CommandTemplate> result = new Dictionary<string, CommandTemplate>();
+
+            foreach (CommandTemplate commandTemplate in commandTemplateMap.Values)
+            {
+                string name = commandTemplate.Name;
+
+                if (commandTemplate.IsUnknown)
+                    name = String.Format("{{{0}}}", commandTemplate.ID.ToString("X" + (commandTemplate.ByteLength << 1)));
+                else if (removeSpaces)
+                    name = PatcherLib.Utilities.Utilities.RemoveWhitespace(commandTemplate.Name);
+
+                result.Add(name, commandTemplate);
+            }
 
             return result;
         }
@@ -385,6 +597,8 @@ namespace EntryEdit
                 XmlAttribute attrName = node.Attributes["name"];
                 XmlAttribute attrBytes = node.Attributes["bytes"];
                 XmlAttribute attrDefault = node.Attributes["default"];
+                XmlAttribute attrUnknown = node.Attributes["unknown"];
+                XmlAttribute attrSentinel = node.Attributes["sentinel"];
 
                 if (nodeValue >= 0)
                 {
@@ -398,6 +612,9 @@ namespace EntryEdit
                     string commandTemplateName = (attrName != null) ? attrName.InnerText : CommandTemplate.DefaultName;
                     int commandTemplateByteLength = byteLength;
                     bool isDefault = (attrDefault != null) && (attrDefault.InnerText.ToLower().Trim() == strTrue);
+                    string lowerCommandTemplateName = commandTemplateName.ToLower().Trim();
+                    bool isUnknown = ((lowerCommandTemplateName.Equals(StrUnknown)) || (lowerCommandTemplateName.Equals(StrBlank)) || ((attrUnknown != null) && (attrUnknown.InnerText.ToLower().Trim() == strTrue)));
+                    bool isSentinel = ((attrSentinel != null) && (attrSentinel.InnerText.ToLower().Trim() == strTrue));
 
                     List<CommandParameterTemplate> commandTemplateParameters = new List<CommandParameterTemplate>();
                     foreach (XmlNode parameterNode in node.SelectNodes("Parameter"))
@@ -456,7 +673,7 @@ namespace EntryEdit
                         commandTemplateParameters.Add(new CommandParameterTemplate(parameterTemplateName, parameterTemplateByteLength, isHex, isSigned, isTextReference, parameterTemplateType, defaultValue));
                     }
 
-                    CommandTemplate commandTemplate = new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, type, commandTemplateParameters);
+                    CommandTemplate commandTemplate = new CommandTemplate(commandTemplateID, commandTemplateName, commandTemplateByteLength, isUnknown, isSentinel, type, commandTemplateParameters);
                     result.Add(commandTemplateID, commandTemplate);
                     if (isDefault)
                     {
@@ -605,7 +822,8 @@ namespace EntryEdit
 
         public Event GetEventFromBytes(int index, IList<byte> bytes)
         {
-            List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), new HashSet<int>() { 0xDB, 0xE3 });
+            //List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), new HashSet<int>() { 0xDB, 0xE3 });
+            List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), FindSentinelCommandIDs(CommandType.EventCommand));
 
             int numCommandBytes = 0;
             foreach (Command command in commandList)
@@ -823,11 +1041,29 @@ namespace EntryEdit
             foreach (CommandParameterTemplate parameterTemplate in template.Parameters)
             {
                 int byteLength = parameterTemplate.ByteLength;
-                parameters.Add(new CommandParameter(parameterTemplate, bytes.SubLength(index, byteLength).ToIntLE()));
+                int initialValue = bytes.SubLength(index, byteLength).ToIntLE();
+
+                int range = (1 << (parameterTemplate.ByteLength << 3));
+                int paramValue = (parameterTemplate.IsSigned && (initialValue > ((range / 2) - 1))) ? -(range - initialValue) : initialValue;
+
+                parameters.Add(new CommandParameter(parameterTemplate, paramValue));
                 index += byteLength;
             }
 
             return new Command(resultTemplate, parameters);
+        }
+
+        private HashSet<int> FindSentinelCommandIDs(CommandType type)
+        {
+            HashSet<int> result = new HashSet<int>();
+            Dictionary<int, CommandTemplate> templateMap = commandTemplateMaps[type];
+            foreach (CommandTemplate commandTemplate in templateMap.Values)
+            {
+                if (commandTemplate.IsSentinel)
+                    result.Add(commandTemplate.ID);
+            }
+
+            return result;
         }
     }
 }

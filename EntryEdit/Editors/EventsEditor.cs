@@ -50,6 +50,21 @@ namespace EntryEdit.Editors
             }
         }
 
+        public string GetEventScript()
+        {
+            return ((_eventIndex >= 0) && (_events[_eventIndex] != null)) ? _events[_eventIndex].GetScript() : string.Empty;
+        }
+
+        public void LoadEvent(Event inputEvent)
+        {
+            if ((_eventIndex >= 0) && (_events[_eventIndex] != null))
+            {
+                _events[_eventIndex] = inputEvent;
+                _events[_eventIndex].Index = _eventIndex;
+                PopulateEvents(_eventIndex);
+            }
+        }
+
         private void PopulateEvents(int eventIndex = 0, bool reloadEvent = true)
         {
             _isPopulate = true;

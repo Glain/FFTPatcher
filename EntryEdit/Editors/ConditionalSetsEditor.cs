@@ -51,6 +51,11 @@ namespace EntryEdit.Editors
             _isPopulate = false;
         }
 
+        public int GetBlockIndex()
+        {
+            return conditionalSetEditor.BlockIndex;
+        }
+
         public void SaveBlock()
         {
             conditionalSetEditor.SaveBlock();
@@ -69,6 +74,17 @@ namespace EntryEdit.Editors
                 _conditionalSets[_conditionalSetIndex].Index = _conditionalSetIndex;
                 PopulateSets(_conditionalSetIndex);
             }
+        }
+
+        public string GetSelectedBlockCommandListScript()
+        {
+            return (_conditionalSetIndex >= 0) ? conditionalSetEditor.GetCommandListScript() : string.Empty;
+        }
+
+        public void LoadSelectedBlock(ConditionalBlock block)
+        {
+            if (_conditionalSetIndex >= 0)
+                conditionalSetEditor.LoadBlock(block);
         }
 
         private void SetConditionalSetIndex(int index, bool reloadSet = true)
@@ -137,9 +153,9 @@ namespace EntryEdit.Editors
                 _conditionalSets.RemoveAt(_conditionalSetIndex);
                 if (_conditionalSets.Count > 0)
                 {
-                    bool isFirstIndex = (_conditionalSetIndex > 0);
-                    int newIndex = isFirstIndex ? (_conditionalSetIndex - 1) : 0;
-                    int startIndex = isFirstIndex ? (newIndex + 1) : 0;
+                    bool isNotFirstIndex = (_conditionalSetIndex > 0);
+                    int newIndex = isNotFirstIndex ? (_conditionalSetIndex - 1) : 0;
+                    int startIndex = isNotFirstIndex ? (newIndex + 1) : 0;
 
                     for (int index = startIndex; index < _conditionalSets.Count; index++)
                         _conditionalSets[index].DecrementIndex();

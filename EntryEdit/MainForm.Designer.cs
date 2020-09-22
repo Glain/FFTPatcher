@@ -39,6 +39,8 @@
             this.menuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_NewPatch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_File_Separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItem_SaveScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_File_Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Copy = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +48,7 @@
             this.menuItem_Edit_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItem_SetDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_RestoreDefaults = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_LoadScript = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -146,6 +149,9 @@
             this.menuItem_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItem_NewPatch,
             this.menuItem_File_Separator1,
+            this.menuItem_LoadScript,
+            this.menuItem_SaveScript,
+            this.menuItem_File_Separator2,
             this.menuItem_Exit});
             this.menuItem_File.Name = "menuItem_File";
             this.menuItem_File.Size = new System.Drawing.Size(37, 20);
@@ -154,19 +160,32 @@
             // menuItem_NewPatch
             // 
             this.menuItem_NewPatch.Name = "menuItem_NewPatch";
-            this.menuItem_NewPatch.Size = new System.Drawing.Size(131, 22);
+            this.menuItem_NewPatch.Size = new System.Drawing.Size(152, 22);
             this.menuItem_NewPatch.Text = "New Patch";
             this.menuItem_NewPatch.Click += new System.EventHandler(this.menuItem_NewPatch_Click);
             // 
             // menuItem_File_Separator1
             // 
             this.menuItem_File_Separator1.Name = "menuItem_File_Separator1";
-            this.menuItem_File_Separator1.Size = new System.Drawing.Size(128, 6);
+            this.menuItem_File_Separator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // menuItem_SaveScript
+            // 
+            this.menuItem_SaveScript.Enabled = false;
+            this.menuItem_SaveScript.Name = "menuItem_SaveScript";
+            this.menuItem_SaveScript.Size = new System.Drawing.Size(152, 22);
+            this.menuItem_SaveScript.Text = "Save Script...";
+            this.menuItem_SaveScript.Click += new System.EventHandler(this.menuItem_SaveScript_Click);
+            // 
+            // menuItem_File_Separator2
+            // 
+            this.menuItem_File_Separator2.Name = "menuItem_File_Separator2";
+            this.menuItem_File_Separator2.Size = new System.Drawing.Size(149, 6);
             // 
             // menuItem_Exit
             // 
             this.menuItem_Exit.Name = "menuItem_Exit";
-            this.menuItem_Exit.Size = new System.Drawing.Size(131, 22);
+            this.menuItem_Exit.Size = new System.Drawing.Size(152, 22);
             this.menuItem_Exit.Text = "Exit";
             this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
@@ -218,6 +237,14 @@
             this.menuItem_RestoreDefaults.Text = "Restore Defaults";
             this.menuItem_RestoreDefaults.Click += new System.EventHandler(this.menuItem_RestoreDefaults_Click);
             // 
+            // menuItem_LoadScript
+            // 
+            this.menuItem_LoadScript.Enabled = false;
+            this.menuItem_LoadScript.Name = "menuItem_LoadScript";
+            this.menuItem_LoadScript.Size = new System.Drawing.Size(152, 22);
+            this.menuItem_LoadScript.Text = "Load Script...";
+            this.menuItem_LoadScript.Click += new System.EventHandler(this.menuItem_LoadScript_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -259,6 +286,9 @@
         private System.Windows.Forms.ToolStripSeparator menuItem_Edit_Separator1;
         private System.Windows.Forms.ToolStripMenuItem menuItem_SetDefaults;
         private System.Windows.Forms.ToolStripMenuItem menuItem_RestoreDefaults;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_SaveScript;
+        private System.Windows.Forms.ToolStripSeparator menuItem_File_Separator2;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_LoadScript;
     }
 }
 

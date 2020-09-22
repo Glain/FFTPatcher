@@ -71,9 +71,101 @@ namespace EntryEdit
             eventsEditor.SavePage();
         }
 
+        private void LoadScript()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text file (*.txt)|*.txt";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.CheckFileExists = true;
+
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                string script = System.IO.File.ReadAllText(openFileDialog.FileName);
+
+                if (tabControl.SelectedTab == tabPage_BattleConditionals)
+                {
+                    int blockIndex = battleConditionalSetsEditor.GetBlockIndex();
+                    if (blockIndex >= 0)
+                    {
+                        ConditionalBlock loadedBlock = _dataHelper.GetConditionalBlockFromScript(CommandType.BattleConditional, blockIndex, script);
+                        if (loadedBlock != null)
+                        {
+                            battleConditionalSetsEditor.LoadSelectedBlock(loadedBlock);
+                            //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            PatcherLib.MyMessageBox.Show(this, "Error loading script!", "Error", MessageBoxButtons.OK);
+                        }
+                    }
+                }
+                else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+                {
+                    int blockIndex = worldConditionalSetsEditor.GetBlockIndex();
+                    if (blockIndex >= 0)
+                    {
+                        ConditionalBlock loadedBlock = _dataHelper.GetConditionalBlockFromScript(CommandType.WorldConditional, blockIndex, script);
+                        if (loadedBlock != null)
+                        {
+                            worldConditionalSetsEditor.LoadSelectedBlock(loadedBlock);
+                            //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            PatcherLib.MyMessageBox.Show(this, "Error loading script!", "Error", MessageBoxButtons.OK);
+                        }
+                    }
+                }
+                else if (tabControl.SelectedTab == tabPage_Events)
+                {
+                    Event loadedEvent = _dataHelper.GetEventFromScript(script, eventsEditor.CopyEvent());
+                    if (loadedEvent != null)
+                    {
+                        eventsEditor.LoadEvent(loadedEvent);
+                        //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        PatcherLib.MyMessageBox.Show(this, "Error loading script!", "Error", MessageBoxButtons.OK);
+                    }
+                }
+            }
+        }
+
+        private void SaveScript()
+        {
+            string script = string.Empty;
+
+            if (tabControl.SelectedTab == tabPage_BattleConditionals)
+            {
+                script = battleConditionalSetsEditor.GetSelectedBlockCommandListScript();
+            }
+            else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+            {
+                script = worldConditionalSetsEditor.GetSelectedBlockCommandListScript();
+            }
+            else if (tabControl.SelectedTab == tabPage_Events)
+            {
+                script = eventsEditor.GetEventScript();
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.CheckFileExists = false;
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                System.IO.File.WriteAllText(saveFileDialog.FileName, script, Encoding.UTF8);
+                PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+            }
+        }
+
         private void EnableMenu()
         {
             menuItem_Edit.Enabled = true;
+            menuItem_LoadScript.Enabled = true;
+            menuItem_SaveScript.Enabled = true;
         }
 
         private void WriteByteDataToTestFiles()
@@ -130,6 +222,16 @@ namespace EntryEdit
             EnableMenu();
             tabControl.Enabled = true;
             menuBar.Enabled = true;
+        }
+
+        private void menuItem_LoadScript_Click(object sender, EventArgs e)
+        {
+            LoadScript();
+        }
+
+        private void menuItem_SaveScript_Click(object sender, EventArgs e)
+        {
+            SaveScript();
         }
 
         private void menuItem_Exit_Click(object sender, EventArgs e)
