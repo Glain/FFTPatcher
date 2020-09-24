@@ -164,6 +164,7 @@ namespace EntryEdit
         private void EnableMenu()
         {
             menuItem_Edit.Enabled = true;
+            menuItem_View.Enabled = true;
             menuItem_LoadScript.Enabled = true;
             menuItem_SaveScript.Enabled = true;
         }
@@ -289,6 +290,31 @@ namespace EntryEdit
             RestoreDefaults();
             tabControl.Enabled = true;
             menuBar.Enabled = true;
+        }
+
+        private void menuItem_CheckSize_Click(object sender, EventArgs e)
+        {
+            if (menuItem_View.Enabled)
+            {
+                if (tabControl.SelectedTab == tabPage_BattleConditionals)
+                {
+                    battleConditionalSetsEditor.SaveBlock();
+                    byte[] bytes = _dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals);
+                    PatcherLib.MyMessageBox.Show(this, string.Format("All Battle Conditionals Size: {0} / {1} bytes", bytes.Length, Settings.BattleConditionalsSize), "Size", MessageBoxButtons.OK);
+                }
+                else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+                {
+                    worldConditionalSetsEditor.SaveBlock();
+                    byte[] bytes = _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals);
+                    PatcherLib.MyMessageBox.Show(this, string.Format("All World Conditionals Size: {0} / {1} bytes", bytes.Length, Settings.WorldConditionalsSize), "Size", MessageBoxButtons.OK);
+                }
+                else if (tabControl.SelectedTab == tabPage_Events)
+                {
+                    eventsEditor.SavePage();
+                    byte[] bytes = _dataHelper.EventToByteArray(eventsEditor.CopyEvent(), false);
+                    PatcherLib.MyMessageBox.Show(this, string.Format("Event Size: {0} / {1} bytes", bytes.Length, Settings.EventSize), "Size", MessageBoxButtons.OK);
+                }
+            }
         }
     }
 }
