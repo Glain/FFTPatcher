@@ -35,7 +35,6 @@ namespace EntryEdit
 
     public class DataHelper
     {
-        private const int EventSize = 0x2000;
         private const string StrUnknown = "unknown";
         private const string StrBlank = "blank";
         private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
@@ -47,6 +46,42 @@ namespace EntryEdit
         private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
+
+        private int _eventSize = 0;
+        private int EventSize
+        { 
+            get 
+            { 
+                if (_eventSize == 0)
+                    _eventSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["EventSize"]);
+
+                return _eventSize;
+            }
+        }
+
+        private int _battleConditionalsSize = 0;
+        private int BattleConditionalsSize
+        {
+            get
+            {
+                if (_battleConditionalsSize == 0)
+                    _battleConditionalsSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["BattleConditionalsSize"]);
+
+                return _battleConditionalsSize;
+            }
+        }
+
+        private int _worldConditionalsSize = 0;
+        private int WorldConditionalsSize
+        {
+            get
+            {
+                if (_worldConditionalsSize == 0)
+                    _worldConditionalsSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["WorldConditionalsSize"]);
+
+                return _worldConditionalsSize;
+            }
+        }
 
         public DataHelper()
         {
@@ -818,9 +853,9 @@ namespace EntryEdit
             List<Event> result = new List<Event>();
 
             int index = 0;
-            for (int startIndex = 0; startIndex < bytes.Count; startIndex += 0x2000)
+            for (int startIndex = 0; startIndex < bytes.Count; startIndex += EventSize)
             {
-                result.Add(GetEventFromBytes(index, bytes.SubLength(startIndex, 0x2000)));
+                result.Add(GetEventFromBytes(index, bytes.SubLength(startIndex, EventSize)));
                 index++;
             }
 
