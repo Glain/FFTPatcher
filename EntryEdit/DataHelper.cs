@@ -47,41 +47,9 @@ namespace EntryEdit
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
 
-        private int _eventSize = 0;
-        private int EventSize
-        { 
-            get 
-            { 
-                if (_eventSize == 0)
-                    _eventSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["EventSize"]);
-
-                return _eventSize;
-            }
-        }
-
-        private int _battleConditionalsSize = 0;
-        private int BattleConditionalsSize
-        {
-            get
-            {
-                if (_battleConditionalsSize == 0)
-                    _battleConditionalsSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["BattleConditionalsSize"]);
-
-                return _battleConditionalsSize;
-            }
-        }
-
-        private int _worldConditionalsSize = 0;
-        private int WorldConditionalsSize
-        {
-            get
-            {
-                if (_worldConditionalsSize == 0)
-                    _worldConditionalsSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["WorldConditionalsSize"]);
-
-                return _worldConditionalsSize;
-            }
-        }
+        private int EventSize { get { return Settings.EventSize; } }
+        private int BattleConditionalsSize { get { return Settings.BattleConditionalsSize; } }
+        private int WorldConditionalsSize { get { return Settings.WorldConditionalsSize; } }
 
         public DataHelper()
         {

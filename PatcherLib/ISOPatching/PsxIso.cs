@@ -260,6 +260,19 @@ namespace PatcherLib.Iso
             return name ?? ((int)sector).ToString();
         }
 
+        public static PsxIso.Sectors GetSector(string sectorText)
+        {
+            PsxIso.Sectors psxIsoSector = (PsxIso.Sectors)0;
+            int sectorNum = 0;
+            if (!int.TryParse(sectorText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out sectorNum))
+            {
+                if (PatcherLib.Utilities.Utilities.TryParseEnum<PsxIso.Sectors>(sectorText, out psxIsoSector))
+                    return psxIsoSector;
+            }
+
+            return (PsxIso.Sectors)sectorNum;
+        }
+
         public static void PatchPsxIso(Stream iso, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
         {
             foreach (var patch in patches)

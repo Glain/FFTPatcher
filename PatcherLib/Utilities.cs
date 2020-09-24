@@ -457,6 +457,47 @@ namespace PatcherLib.Utilities
             }
         }
 
+        public static bool TryParseInt(string str, out int value)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                value = default( int );
+                return false;
+            }
+            else
+            {
+                str = str.Trim();
+                if (str.StartsWith("-0x"))
+                {
+                    bool isValid = int.TryParse(str.Substring(3), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value);
+                    if (isValid)
+                        value = -value;
+                    return isValid;
+                }
+                else if (str.StartsWith("0x"))
+                    return int.TryParse(str.Substring(2), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value);
+                else
+                    return int.TryParse(str, out value);
+            }
+        }
+
+        public static bool TryParseUint(string str, out uint value)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                value = default( uint );
+                return false;
+            }
+            else
+            {
+                str = str.Trim();
+                if (str.StartsWith("0x"))
+                    return uint.TryParse(str.Substring(2), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value);
+                else
+                    return uint.TryParse(str, out value);
+            }
+        }
+
         public static string RemoveWhitespace(string text)
         {
             return stripRegex.Replace(text, string.Empty);
