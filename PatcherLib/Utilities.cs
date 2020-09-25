@@ -596,6 +596,37 @@ namespace PatcherLib.Utilities
             return sb.ToString();
         }
 
+        public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
+        {
+            if (file.FindEntry(entry, false) == -1)
+            {
+                if (throwOnError)
+                {
+                    throw new FormatException("entry not found");
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                ICSharpCode.SharpZipLib.Zip.ZipEntry zEntry = file.GetEntry(entry);
+                System.IO.Stream s = file.GetInputStream(zEntry);
+                byte[] result = new byte[zEntry.Size];
+                ICSharpCode.SharpZipLib.Core.StreamUtils.ReadFully(s, result);
+                return result;
+            }
+        }
+
+        public static void WriteFileToZip(ICSharpCode.SharpZipLib.Zip.ZipOutputStream stream, string filename, byte[] bytes)
+        {
+            ICSharpCode.SharpZipLib.Zip.ZipEntry ze = new ICSharpCode.SharpZipLib.Zip.ZipEntry(filename);
+            ze.Size = bytes.Length;
+            stream.PutNextEntry(ze);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
         #endregion Methods 
 
     }

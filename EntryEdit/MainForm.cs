@@ -43,6 +43,63 @@ namespace EntryEdit
             PopulateTabs();
         }
 
+        private void LoadPatch()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Patch file (*.eepatch)|*.eepatch";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.CheckFileExists = true;
+
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                LoadPatch(openFileDialog.FileName);
+            }
+        }
+
+        private void LoadPatch(string filepath)
+        {
+            byte[] bytesBattleConditionals, bytesWorldConditionals, bytesEvents;
+            EntryBytes defaultEntryBytes = _dataHelper.LoadDefaultEntryBytes();
+
+            using (ICSharpCode.SharpZipLib.Zip.ZipFile file = new ICSharpCode.SharpZipLib.Zip.ZipFile(filepath))
+            {
+                bytesBattleConditionals = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameBattleConditionals, false) ?? defaultEntryBytes.BattleConditionals;
+                bytesWorldConditionals = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameWorldConditionals, false) ?? defaultEntryBytes.WorldConditionals;
+                bytesEvents = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameEvents, false) ?? defaultEntryBytes.Events;
+            }
+
+            _entryDataDefault = _dataHelper.LoadEntryDataFromBytes(defaultEntryBytes);
+            _entryData = _dataHelper.LoadEntryDataFromBytes(bytesBattleConditionals, bytesWorldConditionals, bytesEvents);
+            PopulateTabs();
+        }
+
+        private void SavePatch()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Patch file (*.eepatch)|*.eepatch";
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.CheckFileExists = false;
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                SavePatch(saveFileDialog.FileName);
+                //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+            }
+        }
+
+        private void SavePatch(string filepath)
+        {
+            SaveFormData();
+            EntryBytes entryBytes = _dataHelper.GetEntryBytesFromData(_entryData);
+
+            using (ICSharpCode.SharpZipLib.Zip.ZipOutputStream stream = new ICSharpCode.SharpZipLib.Zip.ZipOutputStream(System.IO.File.Open(filepath, System.IO.FileMode.Create, System.IO.FileAccess.ReadWrite)))
+            {
+                PatcherLib.Utilities.Utilities.WriteFileToZip(stream, DataHelper.EntryNameBattleConditionals, entryBytes.BattleConditionals);
+                PatcherLib.Utilities.Utilities.WriteFileToZip(stream, DataHelper.EntryNameWorldConditionals, entryBytes.WorldConditionals);
+                PatcherLib.Utilities.Utilities.WriteFileToZip(stream, DataHelper.EntryNameEvents, entryBytes.Events);
+            }
+        }
+
         private void SetDefaults()
         {
             SaveFormData();
@@ -165,6 +222,7 @@ namespace EntryEdit
         {
             menuItem_Edit.Enabled = true;
             menuItem_View.Enabled = true;
+            menuItem_SavePatch.Enabled = true;
             menuItem_LoadScript.Enabled = true;
             menuItem_SaveScript.Enabled = true;
         }
@@ -315,6 +373,25 @@ namespace EntryEdit
                     PatcherLib.MyMessageBox.Show(this, string.Format("Event Size: {0} / {1} bytes", bytes.Length, Settings.EventSize), "Size", MessageBoxButtons.OK);
                 }
             }
+        }
+
+        private void menuItem_LoadPatch_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            LoadPatch();
+            EnableMenu();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
+        }
+
+        private void menuItem_SavePatch_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            SavePatch();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
         }
     }
 }

@@ -35,6 +35,10 @@ namespace EntryEdit
 
     public class DataHelper
     {
+        public const string EntryNameBattleConditionals = "BattleConditionals.bin";
+        public const string EntryNameWorldConditionals = "WorldConditionals.bin";
+        public const string EntryNameEvents = "Events.bin";
+
         private const string StrUnknown = "unknown";
         private const string StrBlank = "blank";
         private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
@@ -750,10 +754,27 @@ namespace EntryEdit
             return new EntryData(LoadBattleConditionalDefaults(), LoadWorldConditionalDefaults(), LoadDefaultEvents());
         }
 
+        public EntryData LoadEntryDataFromBytes(EntryBytes entryBytes)
+        {
+            return LoadEntryDataFromBytes(entryBytes.BattleConditionals, entryBytes.WorldConditionals, entryBytes.Events);
+        }
+
+        public EntryData LoadEntryDataFromBytes(byte[] bytesBattleConditionals, byte[] bytesWorldConditionals, byte[] bytesEvents)
+        {
+            return new EntryData(LoadConditionalSetsFromByteArray(CommandType.BattleConditional, bytesBattleConditionals), LoadConditionalSetsFromByteArray(CommandType.WorldConditional, bytesWorldConditionals),
+                GetEventsFromBytes(bytesEvents));
+        }
+
         public EntryBytes GetEntryBytesFromData(EntryData entryData)
         {
             return new EntryBytes(ConditionalSetsToByteArray(CommandType.BattleConditional, entryData.BattleConditionals), ConditionalSetsToByteArray(CommandType.WorldConditional, entryData.WorldConditionals),
                 EventsToByteArray(entryData.Events));
+        }
+
+        public EntryBytes LoadDefaultEntryBytes()
+        {
+            return new EntryBytes(File.ReadAllBytes(GetDefaultDataFilepath(CommandType.BattleConditional)), File.ReadAllBytes(GetDefaultDataFilepath(CommandType.WorldConditional)),
+                File.ReadAllBytes(GetDefaultDataFilepath(CommandType.EventCommand)));
         }
 
         public byte[] EventsToByteArray(IList<Event> events)
