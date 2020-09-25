@@ -191,6 +191,7 @@ namespace EntryEdit
 
         private void SaveScript()
         {
+            SaveFormData();
             string script = string.Empty;
 
             if (tabControl.SelectedTab == tabPage_BattleConditionals)
