@@ -8,48 +8,51 @@ using PatcherLib.Iso;
 
 namespace EntryEdit
 {
-    internal class Settings
+    internal static class Settings
     {
-        private static Dictionary<string, object> _valueMap = new Dictionary<string, object>();
+        private static readonly int _eventSize = Utilities.ParseInt(ConfigurationManager.AppSettings["EventSize"]); 
+        public static int EventSize { get { return _eventSize; } }
 
-        private static int GetIntValue(string name)
-        {
-            object lookupResult = default(int);
-            if (_valueMap.TryGetValue(name, out lookupResult))
-                return (int)lookupResult;
-            else
-            {
-                int parseResult = default(int);
-                Utilities.TryParseInt(ConfigurationManager.AppSettings[name], out parseResult);
-                _valueMap.Add(name, parseResult);
-                return parseResult;
-            }
-        }
+        private static readonly int _battleConditionalsSize = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalsSize"]);
+        public static int BattleConditionalsSize { get { return _battleConditionalsSize; } }
 
-        private static PsxIso.Sectors GetSectorValue(string name)
-        {
-            object lookupResult = (PsxIso.Sectors)(default(int));
-            if (_valueMap.TryGetValue(name, out lookupResult))
-                return (PsxIso.Sectors)lookupResult;
-            else
-            {
-                PsxIso.Sectors sector = PsxIso.GetSector(ConfigurationManager.AppSettings[name]);
-                _valueMap.Add(name, sector);
-                return sector;
-            }
-        }
+        private static readonly int _worldConditionalsSize = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsSize"]);
+        public static int WorldConditionalsSize { get { return _worldConditionalsSize; } }
 
-        public static int EventSize { get { return GetIntValue("EventSize"); } }
-        public static int BattleConditionalsSize { get { return GetIntValue("BattleConditionalsSize"); } }
-        public static int WorldConditionalsSize { get { return GetIntValue("WorldConditionalsSize"); } }
-        public static PsxIso.Sectors BattleConditionalsSector { get { return GetSectorValue("BattleConditionalsSector"); } }
-        public static int BattleConditionalsOffset { get { return GetIntValue("BattleConditionalsOffset"); } }
-        public static PsxIso.Sectors WorldConditionalsSector { get { return GetSectorValue("WorldConditionalsSector"); } }
-        public static int WorldConditionalsOffset { get { return GetIntValue("WorldConditionalsOffset"); } }
-        public static PsxIso.Sectors EventsSector { get { return GetSectorValue("EventsSector"); } }
-        public static int EventsOffset { get { return GetIntValue("EventsOffset"); } }
-        public static int WorldConditionalsRepoint { get { return GetIntValue("WorldConditionalsRepoint"); } }
-        public static PsxIso.Sectors WorldConditionalsPointerSector { get { return GetSectorValue("WorldConditionalsPointerSector"); } }
-        public static int WorldConditionalsPointerOffset { get { return GetIntValue("WorldConditionalsPointerOffset"); } }
+        private static readonly PsxIso.Sectors _battleConditionalsSector = PsxIso.GetSector(ConfigurationManager.AppSettings["BattleConditionalsSector"]);
+        public static PsxIso.Sectors BattleConditionalsSector { get { return _battleConditionalsSector; } }
+
+        private static readonly int _battleConditionalsOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalsOffset"]);
+        public static int BattleConditionalsOffset { get { return _battleConditionalsOffset; } }
+
+        private static readonly PsxIso.Sectors _worldConditionalsSector = PsxIso.GetSector(ConfigurationManager.AppSettings["WorldConditionalsSector"]);
+        public static PsxIso.Sectors WorldConditionalsSector { get { return _worldConditionalsSector; } }
+
+        private static readonly int _worldConditionalsOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsOffset"]);
+        public static int WorldConditionalsOffset { get { return _worldConditionalsOffset; } }
+
+        private static readonly PsxIso.Sectors _eventsSector = PsxIso.GetSector(ConfigurationManager.AppSettings["EventsSector"]);
+        public static PsxIso.Sectors EventsSector { get { return _eventsSector; } }
+
+        private static readonly int _eventsOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["EventsOffset"]);
+        public static int EventsOffset { get { return _eventsOffset; } }
+
+        private static readonly int _worldConditionalsRepoint = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsRepoint"]);
+        public static int WorldConditionalsRepoint { get { return _worldConditionalsRepoint; } }
+
+        private static readonly PsxIso.Sectors _worldConditionalsPointerSector = PsxIso.GetSector(ConfigurationManager.AppSettings["WorldConditionalsPointerSector"]);
+        public static PsxIso.Sectors WorldConditionalsPointerSector { get { return _worldConditionalsPointerSector; } }
+
+        private static readonly int _worldConditionalsPointerOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsPointerOffset"]);
+        public static int WorldConditionalsPointerOffset { get { return _worldConditionalsPointerOffset; } }
+
+        private static readonly int _battleConditionalBlockOffsetsRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalBlockOffsetsRAMLocation"]);
+        public static int BattleConditionalBlockOffsetsRAMLocation { get { return _battleConditionalBlockOffsetsRAMLocation; } }
+
+        private static readonly int _battleConditionalsRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalsRAMLocation"]);
+        public static int BattleConditionalsRAMLocation { get { return _battleConditionalsRAMLocation; } }
+
+        private static readonly int _eventRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["EventRAMLocation"]);
+        public static int EventRAMLocation { get { return _eventRAMLocation; } }
     }
 }

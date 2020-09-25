@@ -498,6 +498,13 @@ namespace PatcherLib.Utilities
             }
         }
 
+        public static int ParseInt(string str)
+        {
+            int parseResult = default(int);
+            TryParseInt(str, out parseResult);
+            return parseResult;
+        }
+
         public static string RemoveWhitespace(string text)
         {
             return stripRegex.Replace(text, string.Empty);
