@@ -246,6 +246,7 @@ namespace EntryEdit
 
     public class CustomSection : ICopyableEntry<CustomSection>
     {
+        public bool HasDecodedText { get; private set; }
         public List<CustomEntry> CustomEntryList { get; private set; }
 
         public CustomSection(List<CustomEntry> customEntryList)
@@ -259,6 +260,16 @@ namespace EntryEdit
         public CustomSection(IList<byte> bytes)
         {
             CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, new List<byte>(bytes)) };
+        }
+
+        public CustomSection(IList<IList<byte>> byteLists, int numTextEntries)
+        {
+            CustomEntryList = new List<CustomEntry>();
+            int numEntries = Math.Min(numTextEntries, byteLists.Count);
+            for (int index = 0; index < numEntries; index++)
+            {
+                CustomEntryList.Add(new CustomEntry(index, new List<byte>(byteLists[index])));
+            }
         }
 
         public CustomSection(IList<IList<byte>> byteLists, IList<string> textList, int numTextEntries)
@@ -284,6 +295,19 @@ namespace EntryEdit
                 byteList.AddRange(entry.Bytes);
 
             return byteList.ToArray();
+        }
+
+        public void DecodeText(bool forceDecode = false)
+        {
+            if ((!HasDecodedText) || (forceDecode))
+            {
+                foreach (CustomEntry entry in CustomEntryList)
+                {
+                    entry.SetText(TextUtility.Decode(entry.Bytes), false);
+                }
+
+                HasDecodedText = true;
+            }
         }
 
         public CustomSection Copy()
@@ -355,10 +379,14 @@ namespace EntryEdit
             return (Index + 1).ToString("X2");
         }
 
-        public void SetText(string text)
+        public void SetText(string text, bool encode = true)
         {
             Text = text;
-            Bytes = TextUtility.Encode(text);
+
+            if (encode)
+            {
+                Bytes = TextUtility.Encode(text);
+            }
         }
 
         public void SetHex(string hex, bool isText = false)

@@ -35,6 +35,11 @@ namespace EntryEdit.Editors
             this._defaultCustomSections = defaultCustomSections;
             this._defaultOriginalTextSection = defaultOriginalTextSection;
 
+            customSections[(int)CustomEntryEditor.EditorMode.Text].DecodeText();
+            defaultCustomSections[(int)CustomEntryEditor.EditorMode.Text].DecodeText();
+            originalTextSection.DecodeText();
+            defaultOriginalTextSection.DecodeText();
+
             _customSectionIndex = 0;
             _editorMode = CustomEntryEditor.EditorMode.Data;
 
