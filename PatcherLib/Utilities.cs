@@ -505,6 +505,14 @@ namespace PatcherLib.Utilities
             return parseResult;
         }
 
+        public static bool ParseBool(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return false;
+            else
+                return str.ToLower().Trim().Equals(bool.TrueString.ToLower().Trim());
+        }
+
         public static string RemoveWhitespace(string text)
         {
             return stripRegex.Replace(text, string.Empty);

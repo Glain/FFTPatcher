@@ -116,7 +116,7 @@ namespace EntryEdit
 
         private void PopulateTabs()
         {
-            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, _commandDataMap[CommandType.BattleConditional]);
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, _commandDataMap[CommandType.BattleConditional], _dataHelper.BattleConditionalSetMaxBlocks);
             worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, _commandDataMap[CommandType.WorldConditional]);
             eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, _commandDataMap[CommandType.EventCommand]);
         }
@@ -358,7 +358,42 @@ namespace EntryEdit
                 {
                     battleConditionalSetsEditor.SaveBlock();
                     byte[] bytes = _dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals);
-                    PatcherLib.MyMessageBox.Show(this, string.Format("All Battle Conditionals Size: {0} / {1} bytes", bytes.Length, Settings.BattleConditionalsSize), "Size", MessageBoxButtons.OK);
+                    ConditionalSet selectedConditionalSet = battleConditionalSetsEditor.CopyConditionalSet();
+                    int maxCommands = _dataHelper.BattleConditionalSetMaxCommands;
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("All Battle Conditionals Size: {0} / {1} bytes{2}", bytes.Length, Settings.BattleConditionalsSize, Environment.NewLine);
+                    sb.AppendFormat("{0} {1}: {2} / {3} commands{4}", selectedConditionalSet.Index.ToString("X2"), selectedConditionalSet.Name, selectedConditionalSet.GetNumCommands(), 
+                        maxCommands, Environment.NewLine);
+
+                    bool hasInvalidSets = false;
+                    int highestCommandTotal = 0;
+                    int highestCommandIndex = 0;
+                    for (int index = 0; index < _entryData.BattleConditionals.Count; index++)
+                    {
+                        ConditionalSet conditionalSet = _entryData.BattleConditionals[index];
+                        int numSetCommands = conditionalSet.GetNumCommands();
+
+                        if (highestCommandTotal < numSetCommands)
+                        {
+                            highestCommandTotal = numSetCommands;
+                            highestCommandIndex = index;
+                        }
+
+                        if (numSetCommands > maxCommands)
+                        {
+                            hasInvalidSets = true;
+                            sb.AppendFormat("{0} {1}: {2} / {3} commands{4}", conditionalSet.Index.ToString("X2"), conditionalSet.Name, numSetCommands, maxCommands, Environment.NewLine);
+                        }
+                    }
+
+                    if (!hasInvalidSets)
+                    {
+                        ConditionalSet conditionalSet = _entryData.BattleConditionals[highestCommandIndex];
+                        sb.AppendFormat("Largest set: {0} {1}: {2} / {3} commands{4}", conditionalSet.Index.ToString("X2"), conditionalSet.Name, highestCommandTotal, maxCommands, Environment.NewLine);
+                    }
+
+                    PatcherLib.MyMessageBox.Show(this, sb.ToString(), "Size", MessageBoxButtons.OK);
                 }
                 else if (tabControl.SelectedTab == tabPage_WorldConditionals)
                 {
@@ -369,8 +404,42 @@ namespace EntryEdit
                 else if (tabControl.SelectedTab == tabPage_Events)
                 {
                     eventsEditor.SavePage();
-                    byte[] bytes = _dataHelper.EventToByteArray(eventsEditor.CopyEvent(), false);
-                    PatcherLib.MyMessageBox.Show(this, string.Format("Event Size: {0} / {1} bytes", bytes.Length, Settings.EventSize), "Size", MessageBoxButtons.OK);
+                    Event selectedEvent = eventsEditor.CopyEvent();
+                    byte[] bytes = _dataHelper.EventToByteArray(selectedEvent, false);
+                    int maxEventBytes = _dataHelper.EventSize;
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("{0} {1}: {2} / {3} bytes{4}", selectedEvent.Index.ToString("X4"), selectedEvent.Name, bytes.Length, Settings.EventSize, Environment.NewLine);
+
+                    bool hasInvalidEvents = false;
+                    int highestByteTotal = 0;
+                    int highestByteIndex = 0;
+                    for (int index = 0; index < _entryData.Events.Count; index++)
+                    {
+                        Event ev = _entryData.Events[index];
+                        byte[] eventBytes = _dataHelper.EventToByteArray(ev, false);
+                        int numEventBytes = eventBytes.Length;
+
+                        if (highestByteTotal < numEventBytes)
+                        {
+                            highestByteTotal = numEventBytes;
+                            highestByteIndex = index;
+                        }
+
+                        if (numEventBytes > maxEventBytes)
+                        {
+                            hasInvalidEvents = true;
+                            sb.AppendFormat("{0} {1}: {2} / {3} bytes{4}", ev.Index.ToString("X4"), ev.Name, numEventBytes, maxEventBytes, Environment.NewLine);
+                        }
+                    }
+
+                    if (!hasInvalidEvents)
+                    {
+                        Event ev = _entryData.Events[highestByteIndex];
+                        sb.AppendFormat("Largest event: {0} {1}: {2} / {3} bytes{4}", ev.Index.ToString("X4"), ev.Name, highestByteTotal, maxEventBytes, Environment.NewLine);
+                    }
+
+                    PatcherLib.MyMessageBox.Show(this, sb.ToString(), "Size", MessageBoxButtons.OK);
                 }
             }
         }

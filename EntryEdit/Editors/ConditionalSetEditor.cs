@@ -21,6 +21,8 @@ namespace EntryEdit.Editors
             get { return _blockIndex; } 
         }
 
+        private int _maxBlocks = -1;
+
         private bool _isPopulate = false;
 
         public ConditionalSetEditor()
@@ -28,9 +30,11 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(CommandData commandData)
+        public void Init(CommandData commandData, int maxBlocks = -1)
         {
-            _commandData = commandData;
+            this._commandData = commandData;
+            this._maxBlocks = maxBlocks;
+
             commandListEditor.Init(commandData);
             //commandListEditor.SetSaveCallback(FindBlockName);
         }
@@ -54,6 +58,7 @@ namespace EntryEdit.Editors
                 cmb_Block.SelectedIndex = blockIndex;
                 SetBlockIndex(blockIndex, reloadCommandList);
                 btn_Delete.Enabled = true;
+                btn_Add.Enabled = ((_maxBlocks <= 0) || (_conditionalSet.ConditionalBlocks.Count < (_maxBlocks - 1)));
             }
             else
             {
@@ -77,6 +82,7 @@ namespace EntryEdit.Editors
             commandListEditor.Clear();
             commandListEditor.SetEnabledState(false);
             btn_Delete.Enabled = false;
+            btn_Add.Enabled = true;
         }
 
         public string GetCommandListScript()
@@ -127,9 +133,18 @@ namespace EntryEdit.Editors
         {
             if ((_conditionalSet != null) && (_blockIndex >= 0))
             {
+                bool isBlockSelected = (cmb_Block.SelectedIndex == _blockIndex);
                 _conditionalSet.ConditionalBlocks[_blockIndex].FindName(_commandData.ParameterValueMaps);
                 cmb_Block.Items.Remove(_conditionalSet.ConditionalBlocks[_blockIndex]);
                 cmb_Block.Items.Insert(_blockIndex, _conditionalSet.ConditionalBlocks[_blockIndex]);
+
+                if (isBlockSelected)
+                {
+                    bool tempIsPopulate = _isPopulate;
+                    _isPopulate = true;
+                    cmb_Block.SelectedIndex = _blockIndex;
+                    _isPopulate = tempIsPopulate;
+                }
             }
         }
 
@@ -180,15 +195,18 @@ namespace EntryEdit.Editors
 
         private void btn_Add_Click(object sender, EventArgs e)
         {
-            SaveBlock();
+            if ((_maxBlocks <= 0) || (_conditionalSet.ConditionalBlocks.Count < (_maxBlocks - 1)))
+            {
+                SaveBlock();
 
-            int newIndex = _blockIndex + 1;
-            _conditionalSet.ConditionalBlocks.Insert(newIndex, new ConditionalBlock(newIndex, new List<Command>(), string.Empty));
+                int newIndex = _blockIndex + 1;
+                _conditionalSet.ConditionalBlocks.Insert(newIndex, new ConditionalBlock(newIndex, new List<Command>(), string.Empty));
 
-            for (int index = newIndex + 1; index < _conditionalSet.ConditionalBlocks.Count; index++)
-                _conditionalSet.ConditionalBlocks[index].IncrementIndex();
+                for (int index = newIndex + 1; index < _conditionalSet.ConditionalBlocks.Count; index++)
+                    _conditionalSet.ConditionalBlocks[index].IncrementIndex();
 
-            PopulateBlocks(newIndex);
+                PopulateBlocks(newIndex);
+            }
         }
 
         private void btn_Up_Click(object sender, EventArgs e)

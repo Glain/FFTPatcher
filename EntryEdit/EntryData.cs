@@ -193,6 +193,20 @@ namespace EntryEdit
             AddOffsetToIndex(-1);
         }
 
+        public int GetNumCommands()
+        {
+            int result = 0;
+            if (ConditionalBlocks != null)
+            {
+                foreach (ConditionalBlock block in ConditionalBlocks)
+                {
+                    result += (block.Commands != null) ? block.Commands.Count : 0;
+                }
+            }
+
+            return result;
+        }
+
         public override string ToString()
         {
             return Index.ToString("X2") + " " + Name;

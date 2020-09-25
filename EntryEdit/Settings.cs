@@ -19,6 +19,12 @@ namespace EntryEdit
         private static readonly int _worldConditionalsSize = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsSize"]);
         public static int WorldConditionalsSize { get { return _worldConditionalsSize; } }
 
+        private static readonly int _battleConditionalSetMaxBlocks = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalSetMaxBlocks"]);
+        public static int BattleConditionalSetMaxBlocks { get { return _battleConditionalSetMaxBlocks; } }
+
+        private static readonly int _battleConditionalSetMaxCommands = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalSetMaxCommands"]);
+        public static int BattleConditionalSetMaxCommands { get { return _battleConditionalSetMaxCommands; } }
+
         private static readonly PsxIso.Sectors _battleConditionalsSector = PsxIso.GetSector(ConfigurationManager.AppSettings["BattleConditionalsSector"]);
         public static PsxIso.Sectors BattleConditionalsSector { get { return _battleConditionalsSector; } }
 
@@ -54,5 +60,20 @@ namespace EntryEdit
 
         private static readonly int _eventRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["EventRAMLocation"]);
         public static int EventRAMLocation { get { return _eventRAMLocation; } }
+
+        private static readonly int _eventIDRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["EventIDRAMLocation"]);
+        public static int EventIDRAMLocation { get { return _eventIDRAMLocation; } }
+
+        private static readonly bool _battleConditionalsModifyLimit = Utilities.ParseBool(ConfigurationManager.AppSettings["BattleConditionalsModifyLimit"]);
+        public static bool BattleConditionalsModifyLimit { get { return _battleConditionalsModifyLimit; } }
+
+        private static readonly PsxIso.Sectors _battleConditionalsLimitPatchSector = PsxIso.GetSector(ConfigurationManager.AppSettings["BattleConditionalsLimitPatchSector"]);
+        public static PsxIso.Sectors BattleConditionalsLimitPatchSector { get { return _battleConditionalsLimitPatchSector; } }
+
+        private static readonly int _battleConditionalsLimitPatchOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalsLimitPatchOffset"]);
+        public static int BattleConditionalsLimitPatchOffset { get { return _battleConditionalsLimitPatchOffset; } }
+
+        private static readonly byte[] _battleConditionalsLimitPatchBytes = Utilities.GetBytesFromHexString(ConfigurationManager.AppSettings["BattleConditionalsLimitPatchBytes"].Replace("0x", ""));
+        public static byte[] BattleConditionalsLimitPatchBytes { get { return _battleConditionalsLimitPatchBytes; } }
     }
 }

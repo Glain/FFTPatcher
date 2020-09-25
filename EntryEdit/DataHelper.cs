@@ -39,6 +39,12 @@ namespace EntryEdit
         public const string EntryNameWorldConditionals = "WorldConditionals.bin";
         public const string EntryNameEvents = "Events.bin";
 
+        public int BattleConditionalsSize { get { return Settings.BattleConditionalsSize; } }
+        public int WorldConditionalsSize { get { return Settings.WorldConditionalsSize; } }
+        public int EventSize { get { return Settings.EventSize; } }
+        public int BattleConditionalSetMaxBlocks { get { return Settings.BattleConditionalSetMaxBlocks; } }
+        public int BattleConditionalSetMaxCommands { get { return Settings.BattleConditionalSetMaxCommands; } }
+
         private const string StrUnknown = "unknown";
         private const string StrBlank = "blank";
         private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
@@ -50,10 +56,6 @@ namespace EntryEdit
         private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
-
-        private int EventSize { get { return Settings.EventSize; } }
-        private int BattleConditionalsSize { get { return Settings.BattleConditionalsSize; } }
-        private int WorldConditionalsSize { get { return Settings.WorldConditionalsSize; } }
 
         public DataHelper()
         {
