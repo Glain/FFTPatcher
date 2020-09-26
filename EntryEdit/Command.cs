@@ -246,8 +246,9 @@ namespace EntryEdit
 
     public class CustomSection : ICopyableEntry<CustomSection>
     {
-        public bool HasDecodedText { get; private set; }
         public List<CustomEntry> CustomEntryList { get; private set; }
+        public bool IsTextDecoded { get; private set; }
+        public int NumTextEntries { get; private set; }
 
         public CustomSection(List<CustomEntry> customEntryList)
         {
@@ -257,21 +258,28 @@ namespace EntryEdit
         public CustomSection(CustomEntry customEntry): this(new List<CustomEntry>() { customEntry }) { }
         public CustomSection() : this(new List<CustomEntry>()) { }
 
-        public CustomSection(IList<byte> bytes)
+        public CustomSection(IList<byte> bytes, int numTextEntries = 0)
         {
-            CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, new List<byte>(bytes)) };
+            this.IsTextDecoded = false;
+            this.NumTextEntries = numTextEntries;
+            this.CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, bytes) };
         }
 
-        public CustomSection(IList<IList<byte>> byteLists, int numTextEntries)
+        /*
+        public CustomSection(IList<byte> bytes, int numTextEntries)
         {
-            CustomEntryList = new List<CustomEntry>();
-            int numEntries = Math.Min(numTextEntries, byteLists.Count);
+            IsTextDecoded = false;
+            NumTextEntries = Math.Min(numTextEntries, byteLists.Count);;
+            CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, bytes) };
+            
             for (int index = 0; index < numEntries; index++)
             {
-                CustomEntryList.Add(new CustomEntry(index, new List<byte>(byteLists[index])));
+                CustomEntryList.Add(new CustomEntry(index, byteLists[index]));
             }
+            
         }
-
+        */
+        /*
         public CustomSection(IList<IList<byte>> byteLists, IList<string> textList, int numTextEntries)
         {
             CustomEntryList = new List<CustomEntry>();
@@ -286,6 +294,7 @@ namespace EntryEdit
                 }
             }
         }
+        */
 
         public byte[] ToByteArray()
         {
@@ -299,16 +308,39 @@ namespace EntryEdit
 
         public void DecodeText(bool forceDecode = false)
         {
-            if ((!HasDecodedText) || (forceDecode))
+            if ((!IsTextDecoded) || (forceDecode))
+            {
+                if (CustomEntryList.Count > 0)
+                {
+                    IList<byte> textBytes = CustomEntryList[0].Bytes;
+                    IList<IList<byte>> textByteLists = textBytes.Split((byte)0xFE);
+                    NumTextEntries = (NumTextEntries == -1) ? textByteLists.Count : NumTextEntries;
+
+                    CustomEntryList.Clear();
+                    for (int index = 0; index < NumTextEntries; index++)
+                    {
+                        CustomEntryList.Add(new CustomEntry(index, textByteLists[index], TextUtility.Decode(textByteLists[index])));
+                    }
+                }
+
+                IsTextDecoded = true;
+            }
+        }
+
+        /*
+        public void DecodeText(bool forceDecode = false)
+        {
+            if ((!IsTextDecoded) || (forceDecode))
             {
                 foreach (CustomEntry entry in CustomEntryList)
                 {
                     entry.SetText(TextUtility.Decode(entry.Bytes), false);
                 }
 
-                HasDecodedText = true;
+                IsTextDecoded = true;
             }
         }
+        */
 
         public CustomSection Copy()
         {
@@ -347,11 +379,11 @@ namespace EntryEdit
     public class CustomEntry : ICopyableEntry<CustomEntry>
     {
         public int Index { get; private set; }
-        public List<byte> Bytes { get; private set; }
+        public IList<byte> Bytes { get; private set; }
         public string Text { get; private set; }
         public string ASM { get; private set; }
 
-        public CustomEntry(int index, List<byte> bytes, string text, string asm)
+        public CustomEntry(int index, IList<byte> bytes, string text, string asm)
         {
             this.Index = index;
             this.Bytes = bytes;
@@ -359,8 +391,8 @@ namespace EntryEdit
             this.ASM = asm;
         }
 
-        public CustomEntry(int index, List<byte> bytes, string text) : this(index, bytes, text, "") { }
-        public CustomEntry(int index, List<byte> bytes) : this(index, bytes, "", "") { }
+        public CustomEntry(int index, IList<byte> bytes, string text) : this(index, bytes, text, "") { }
+        public CustomEntry(int index, IList<byte> bytes) : this(index, bytes, "", "") { }
         public CustomEntry(int index) : this(index, new List<byte>(), "", "") { }
 
         public CustomEntry(int index, string text)

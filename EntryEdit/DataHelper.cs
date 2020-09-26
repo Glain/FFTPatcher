@@ -881,12 +881,14 @@ namespace EntryEdit
                 int numTextEntries = Event.FindNumTextEntries(commandList);
                 numTextEntries = (numTextEntries > 0) ? numTextEntries : 1;
                 IList<byte> textBytes = bytes.Sub(textOffset);
-                IList<IList<byte>> textByteLists = textBytes.Split((byte)0xFE);
+                //IList<IList<byte>> textByteLists = textBytes.Split((byte)0xFE);
                 //IList<string> textList = TextUtility.DecodeList(textBytes);
                 //textSection = new CustomSection(textByteLists, textList, numTextEntries);
                 //originalTextSection = new CustomSection(textByteLists, textList, textByteLists.Count);
-                textSection = new CustomSection(textByteLists, numTextEntries);
-                originalTextSection = new CustomSection(textByteLists, textByteLists.Count);
+                //textSection = new CustomSection(textByteLists, numTextEntries);
+                //originalTextSection = new CustomSection(textByteLists, textByteLists.Count);
+                textSection = new CustomSection(textBytes, numTextEntries);
+                originalTextSection = new CustomSection(textBytes, -1);
             }
 
             return new Event(index, entryNameMaps[CommandType.EventCommand][index], commandList, dataSection, textSection, originalTextSection, new List<byte>(bytes));
