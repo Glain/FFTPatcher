@@ -250,9 +250,11 @@ namespace EntryEdit
         public bool IsTextDecoded { get; private set; }
         public int NumTextEntries { get; private set; }
 
-        public CustomSection(List<CustomEntry> customEntryList)
+        public CustomSection(List<CustomEntry> customEntryList, int numTextEntries = 0, bool isTextDecoded = false)
         {
             this.CustomEntryList = customEntryList;
+            this.IsTextDecoded = isTextDecoded;
+            this.NumTextEntries = numTextEntries;
         }
 
         public CustomSection(CustomEntry customEntry): this(new List<CustomEntry>() { customEntry }) { }
@@ -344,7 +346,7 @@ namespace EntryEdit
 
         public CustomSection Copy()
         {
-            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList));
+            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList), NumTextEntries, IsTextDecoded);
         }
 
         public string GetCombinedByteString()
