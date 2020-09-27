@@ -118,8 +118,23 @@ namespace EntryEdit
 
         private void PopulateTabs()
         {
+            PopulateBattleTab();
+            PopulateWorldTab();
+            PopulateEventTab();
+        }
+
+        private void PopulateBattleTab()
+        {
             battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, _commandDataMap[CommandType.BattleConditional], _dataHelper.BattleConditionalSetMaxBlocks);
+        }
+
+        private void PopulateWorldTab()
+        {
             worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, _commandDataMap[CommandType.WorldConditional]);
+        }
+
+        private void PopulateEventTab()
+        {
             eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, _commandDataMap[CommandType.EventCommand]);
         }
 
@@ -307,6 +322,76 @@ namespace EntryEdit
             }
         }
 
+        private void ClearAll()
+        {
+            if (tabControl.SelectedTab == tabPage_BattleConditionals)
+            {
+                foreach (ConditionalSet set in _entryData.BattleConditionals)
+                {
+                    set.Clear();
+                }
+
+                PopulateBattleTab();
+            }
+            else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+            {
+                foreach (ConditionalSet set in _entryData.WorldConditionals)
+                {
+                    set.Clear();
+                }
+
+                PopulateWorldTab();
+            }
+            else if (tabControl.SelectedTab == tabPage_Events)
+            {
+                foreach (Event ev in _entryData.Events)
+                {
+                    ev.Clear();
+                }
+
+                PopulateEventTab();
+            }
+        }
+
+        private void DeleteAll()
+        {
+            if (tabControl.SelectedTab == tabPage_BattleConditionals)
+            {
+                _entryData.BattleConditionals.Clear();
+                PopulateBattleTab();
+            }
+            else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+            {
+                _entryData.WorldConditionals.Clear();
+                PopulateWorldTab();
+            }
+            else if (tabControl.SelectedTab == tabPage_Events)
+            {
+                //_entryData.Events.Clear();
+                //PopulateEventTab();
+                PatcherLib.MyMessageBox.Show(this, "Deleting All Events not supported.", "Info", MessageBoxButtons.OK);
+            }
+        }
+
+        private void ReloadAll()
+        {
+            if (tabControl.SelectedTab == tabPage_BattleConditionals)
+            {
+                _entryData.BattleConditionals = CopyableEntry.CopyList<ConditionalSet>(_entryDataDefault.BattleConditionals);
+                PopulateBattleTab();
+            }
+            else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+            {
+                _entryData.WorldConditionals = CopyableEntry.CopyList<ConditionalSet>(_entryDataDefault.WorldConditionals);
+                PopulateWorldTab();
+            }
+            else if (tabControl.SelectedTab == tabPage_Events)
+            {
+                _entryData.Events = CopyableEntry.CopyList<Event>(_entryDataDefault.Events);
+                PopulateEventTab();
+            }
+        }
+
         private void EnableMenu()
         {
             menuItem_Edit.Enabled = true;
@@ -469,6 +554,33 @@ namespace EntryEdit
             menuBar.Enabled = true;
         }
 
+        private void menuItem_ClearAll_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            ClearAll();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
+        }
+
+        private void menuItem_DeleteAll_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            DeleteAll();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
+        }
+
+        private void menuItem_ReloadAll_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            ReloadAll();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
+        }
+
         private void menuItem_CheckSize_Click(object sender, EventArgs e)
         {
             if (menuItem_View.Enabled)
@@ -478,38 +590,42 @@ namespace EntryEdit
                     battleConditionalSetsEditor.SaveBlock();
                     byte[] bytes = _dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals);
                     ConditionalSet selectedConditionalSet = battleConditionalSetsEditor.CopyConditionalSet();
-                    int maxCommands = _dataHelper.BattleConditionalSetMaxCommands;
 
                     StringBuilder sb = new StringBuilder();
                     sb.AppendFormat("All Battle Conditionals Size: {0} / {1} bytes{2}", bytes.Length, Settings.BattleConditionalsSize, Environment.NewLine);
-                    sb.AppendFormat("{0} {1}: {2} / {3} commands{4}", selectedConditionalSet.Index.ToString("X2"), selectedConditionalSet.Name, selectedConditionalSet.GetNumCommands(), 
-                        maxCommands, Environment.NewLine);
 
-                    bool hasInvalidSets = false;
-                    int highestCommandTotal = 0;
-                    int highestCommandIndex = 0;
-                    for (int index = 0; index < _entryData.BattleConditionals.Count; index++)
+                    if (selectedConditionalSet != null)
                     {
-                        ConditionalSet conditionalSet = _entryData.BattleConditionals[index];
-                        int numSetCommands = conditionalSet.GetNumCommands();
+                        int maxCommands = _dataHelper.BattleConditionalSetMaxCommands;
+                        sb.AppendFormat("{0} {1}: {2} / {3} commands{4}", selectedConditionalSet.Index.ToString("X2"), selectedConditionalSet.Name, selectedConditionalSet.GetNumCommands(),
+                            maxCommands, Environment.NewLine);
 
-                        if (highestCommandTotal < numSetCommands)
+                        bool hasInvalidSets = false;
+                        int highestCommandTotal = 0;
+                        int highestCommandIndex = 0;
+                        for (int index = 0; index < _entryData.BattleConditionals.Count; index++)
                         {
-                            highestCommandTotal = numSetCommands;
-                            highestCommandIndex = index;
+                            ConditionalSet conditionalSet = _entryData.BattleConditionals[index];
+                            int numSetCommands = conditionalSet.GetNumCommands();
+
+                            if (highestCommandTotal < numSetCommands)
+                            {
+                                highestCommandTotal = numSetCommands;
+                                highestCommandIndex = index;
+                            }
+
+                            if (numSetCommands > maxCommands)
+                            {
+                                hasInvalidSets = true;
+                                sb.AppendFormat("{0} {1}: {2} / {3} commands{4}", conditionalSet.Index.ToString("X2"), conditionalSet.Name, numSetCommands, maxCommands, Environment.NewLine);
+                            }
                         }
 
-                        if (numSetCommands > maxCommands)
+                        if (!hasInvalidSets)
                         {
-                            hasInvalidSets = true;
-                            sb.AppendFormat("{0} {1}: {2} / {3} commands{4}", conditionalSet.Index.ToString("X2"), conditionalSet.Name, numSetCommands, maxCommands, Environment.NewLine);
+                            ConditionalSet conditionalSet = _entryData.BattleConditionals[highestCommandIndex];
+                            sb.AppendFormat("Largest set: {0} {1}: {2} / {3} commands{4}", conditionalSet.Index.ToString("X2"), conditionalSet.Name, highestCommandTotal, maxCommands, Environment.NewLine);
                         }
-                    }
-
-                    if (!hasInvalidSets)
-                    {
-                        ConditionalSet conditionalSet = _entryData.BattleConditionals[highestCommandIndex];
-                        sb.AppendFormat("Largest set: {0} {1}: {2} / {3} commands{4}", conditionalSet.Index.ToString("X2"), conditionalSet.Name, highestCommandTotal, maxCommands, Environment.NewLine);
                     }
 
                     PatcherLib.MyMessageBox.Show(this, sb.ToString(), "Size", MessageBoxButtons.OK);
@@ -581,6 +697,12 @@ namespace EntryEdit
             SavePatch();
             tabControl.Enabled = true;
             menuBar.Enabled = true;
+        }
+
+        void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            TabPage tabPage = (sender as TabControl).SelectedTab;
+            menuItem_DeleteAll.Enabled = (tabPage != tabPage_Events);
         }
     }
 }

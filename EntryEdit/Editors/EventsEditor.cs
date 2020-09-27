@@ -98,9 +98,7 @@ namespace EntryEdit.Editors
         {
             if ((_eventIndex >= 0) && (_events[_eventIndex].CommandList.Count > 0) || (_events[_eventIndex].TextSection.CustomEntryList.Count > 0) || (_events[_eventIndex].DataSection.CustomEntryList.Count > 0))
             {
-                _events[_eventIndex].CommandList.Clear();
-                _events[_eventIndex].TextSection.CustomEntryList.Clear();
-                _events[_eventIndex].DataSection.CustomEntryList.Clear();
+                _events[_eventIndex].Clear();
                 PopulateEvents(_eventIndex);
             }
         }

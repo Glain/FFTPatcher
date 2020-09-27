@@ -248,13 +248,13 @@ namespace EntryEdit
     {
         public List<CustomEntry> CustomEntryList { get; private set; }
         public bool IsTextDecoded { get; private set; }
-        public int NumTextEntries { get; private set; }
+        public int NumDecodeTextEntries { get; private set; }
 
         public CustomSection(List<CustomEntry> customEntryList, int numTextEntries = 0, bool isTextDecoded = false)
         {
             this.CustomEntryList = customEntryList;
             this.IsTextDecoded = isTextDecoded;
-            this.NumTextEntries = numTextEntries;
+            this.NumDecodeTextEntries = numTextEntries;
         }
 
         public CustomSection(CustomEntry customEntry): this(new List<CustomEntry>() { customEntry }) { }
@@ -263,7 +263,7 @@ namespace EntryEdit
         public CustomSection(IList<byte> bytes, int numTextEntries = 0)
         {
             this.IsTextDecoded = false;
-            this.NumTextEntries = numTextEntries;
+            this.NumDecodeTextEntries = numTextEntries;
             this.CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, bytes) };
         }
 
@@ -316,10 +316,10 @@ namespace EntryEdit
                 {
                     IList<byte> textBytes = CustomEntryList[0].Bytes;
                     IList<IList<byte>> textByteLists = textBytes.Split((byte)0xFE);
-                    NumTextEntries = (NumTextEntries == -1) ? textByteLists.Count : NumTextEntries;
+                    NumDecodeTextEntries = (NumDecodeTextEntries == -1) ? textByteLists.Count : NumDecodeTextEntries;
 
                     CustomEntryList.Clear();
-                    for (int index = 0; index < NumTextEntries; index++)
+                    for (int index = 0; index < NumDecodeTextEntries; index++)
                     {
                         CustomEntryList.Add(new CustomEntry(index, textByteLists[index], TextUtility.Decode(textByteLists[index])));
                     }
@@ -344,9 +344,16 @@ namespace EntryEdit
         }
         */
 
+        public void Clear()
+        {
+            CustomEntryList.Clear();
+            IsTextDecoded = true;
+            NumDecodeTextEntries = 0;
+        }
+
         public CustomSection Copy()
         {
-            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList), NumTextEntries, IsTextDecoded);
+            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList), NumDecodeTextEntries, IsTextDecoded);
         }
 
         public string GetCombinedByteString()

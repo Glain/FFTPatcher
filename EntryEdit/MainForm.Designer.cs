@@ -30,11 +30,8 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage_BattleConditionals = new System.Windows.Forms.TabPage();
-            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_WorldConditionals = new System.Windows.Forms.TabPage();
-            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_Events = new System.Windows.Forms.TabPage();
-            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.menuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_NewPatch = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,6 +54,13 @@
             this.menuItem_RestoreDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_View = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_CheckSize = new System.Windows.Forms.ToolStripMenuItem();
+            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
+            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
+            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
+            this.menuItem_Edit_Separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItem_ClearAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_DeleteAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_ReloadAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -77,6 +81,7 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1000, 791);
             this.tabControl.TabIndex = 0;
+            this.tabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(tabControl_Selecting);
             // 
             // tabPage_BattleConditionals
             // 
@@ -89,36 +94,16 @@
             this.tabPage_BattleConditionals.Text = "Battle Conditionals";
             this.tabPage_BattleConditionals.UseVisualStyleBackColor = true;
             // 
-            // battleConditionalSetsEditor
-            // 
-            this.battleConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
-            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
-            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
-            this.battleConditionalSetsEditor.TabIndex = 0;
-            // 
             // tabPage_WorldConditionals
             // 
             this.tabPage_WorldConditionals.Controls.Add(this.worldConditionalSetsEditor);
             this.tabPage_WorldConditionals.Location = new System.Drawing.Point(4, 22);
             this.tabPage_WorldConditionals.Name = "tabPage_WorldConditionals";
             this.tabPage_WorldConditionals.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_WorldConditionals.Size = new System.Drawing.Size(952, 765);
+            this.tabPage_WorldConditionals.Size = new System.Drawing.Size(992, 765);
             this.tabPage_WorldConditionals.TabIndex = 1;
             this.tabPage_WorldConditionals.Text = "World Conditionals";
             this.tabPage_WorldConditionals.UseVisualStyleBackColor = true;
-            // 
-            // worldConditionalSetsEditor
-            // 
-            this.worldConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
-            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
-            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(947, 762);
-            this.worldConditionalSetsEditor.TabIndex = 1;
             // 
             // tabPage_Events
             // 
@@ -126,20 +111,10 @@
             this.tabPage_Events.Location = new System.Drawing.Point(4, 22);
             this.tabPage_Events.Name = "tabPage_Events";
             this.tabPage_Events.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_Events.Size = new System.Drawing.Size(952, 765);
+            this.tabPage_Events.Size = new System.Drawing.Size(992, 765);
             this.tabPage_Events.TabIndex = 2;
             this.tabPage_Events.Text = "Events";
             this.tabPage_Events.UseVisualStyleBackColor = true;
-            // 
-            // eventsEditor
-            // 
-            this.eventsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventsEditor.Location = new System.Drawing.Point(4, 4);
-            this.eventsEditor.Name = "eventsEditor";
-            this.eventsEditor.Size = new System.Drawing.Size(947, 762);
-            this.eventsEditor.TabIndex = 0;
             // 
             // menuBar
             // 
@@ -260,7 +235,11 @@
             this.menuItem_Paste,
             this.menuItem_Edit_Separator1,
             this.menuItem_SetDefaults,
-            this.menuItem_RestoreDefaults});
+            this.menuItem_RestoreDefaults,
+            this.menuItem_Edit_Separator2,
+            this.menuItem_ClearAll,
+            this.menuItem_DeleteAll,
+            this.menuItem_ReloadAll});
             this.menuItem_Edit.Enabled = false;
             this.menuItem_Edit.Name = "menuItem_Edit";
             this.menuItem_Edit.Size = new System.Drawing.Size(39, 20);
@@ -317,6 +296,62 @@
             this.menuItem_CheckSize.Text = "Check Size";
             this.menuItem_CheckSize.Click += new System.EventHandler(this.menuItem_CheckSize_Click);
             // 
+            // battleConditionalSetsEditor
+            // 
+            this.battleConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
+            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
+            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
+            this.battleConditionalSetsEditor.TabIndex = 0;
+            // 
+            // worldConditionalSetsEditor
+            // 
+            this.worldConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
+            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
+            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
+            this.worldConditionalSetsEditor.TabIndex = 1;
+            // 
+            // eventsEditor
+            // 
+            this.eventsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eventsEditor.Location = new System.Drawing.Point(4, 4);
+            this.eventsEditor.Name = "eventsEditor";
+            this.eventsEditor.Size = new System.Drawing.Size(987, 762);
+            this.eventsEditor.TabIndex = 0;
+            // 
+            // menuItem_Edit_Separator2
+            // 
+            this.menuItem_Edit_Separator2.Name = "menuItem_Edit_Separator2";
+            this.menuItem_Edit_Separator2.Size = new System.Drawing.Size(217, 6);
+            // 
+            // menuItem_ClearAll
+            // 
+            this.menuItem_ClearAll.Name = "menuItem_ClearAll";
+            this.menuItem_ClearAll.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_ClearAll.Text = "Clear All";
+            this.menuItem_ClearAll.Click += new System.EventHandler(this.menuItem_ClearAll_Click);
+            // 
+            // menuItem_DeleteAll
+            // 
+            this.menuItem_DeleteAll.Name = "menuItem_DeleteAll";
+            this.menuItem_DeleteAll.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_DeleteAll.Text = "Delete All";
+            this.menuItem_DeleteAll.Click += new System.EventHandler(this.menuItem_DeleteAll_Click);
+            // 
+            // menuItem_ReloadAll
+            // 
+            this.menuItem_ReloadAll.Name = "menuItem_ReloadAll";
+            this.menuItem_ReloadAll.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_ReloadAll.Text = "Reload All";
+            this.menuItem_ReloadAll.Click += new System.EventHandler(this.menuItem_ReloadAll_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -369,6 +404,10 @@
         private System.Windows.Forms.ToolStripMenuItem menuItem_LoadAllScripts;
         private System.Windows.Forms.ToolStripMenuItem menuItem_SaveAllScripts;
         private System.Windows.Forms.ToolStripSeparator menuItem_File_Separator4;
+        private System.Windows.Forms.ToolStripSeparator menuItem_Edit_Separator2;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_ClearAll;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_DeleteAll;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_ReloadAll;
     }
 }
 

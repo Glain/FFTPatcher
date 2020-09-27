@@ -139,6 +139,13 @@ namespace EntryEdit
             return sb.ToString();
         }
 
+        public void Clear()
+        {
+            CommandList.Clear();
+            TextSection.Clear();
+            DataSection.Clear();
+        }
+
         public override string ToString()
         {
             return Index.ToString("X4") + " " + Name;
@@ -206,6 +213,11 @@ namespace EntryEdit
             }
 
             return result;
+        }
+
+        public void Clear()
+        {
+            ConditionalBlocks.Clear();
         }
 
         public override string ToString()
