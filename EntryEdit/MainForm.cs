@@ -272,6 +272,8 @@ namespace EntryEdit
 
         private void SaveAllScripts()
         {
+            SaveFormData();
+
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
             dialog.InitialDirectory = ".";
             dialog.IsFolderPicker = true;
