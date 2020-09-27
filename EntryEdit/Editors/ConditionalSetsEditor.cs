@@ -41,7 +41,8 @@ namespace EntryEdit.Editors
                 cmb_ConditionalSet.Items.AddRange(_conditionalSets.ToArray());
                 cmb_ConditionalSet.SelectedIndex = index;
                 SetConditionalSetIndex(index, reloadSet);
-                btn_Delete.Enabled = true;
+                SetEntryButtonsEnabledState(true);
+                //btn_Delete.Enabled = true;
             }
             else
             {
@@ -102,7 +103,8 @@ namespace EntryEdit.Editors
             _conditionalSetIndex = -1;
             conditionalSetEditor.ClearBlock();
             conditionalSetEditor.SetEnabledState(false);
-            btn_Delete.Enabled = false;
+            SetEntryButtonsEnabledState(false);
+            //btn_Delete.Enabled = false;
         }
 
         private void SwapSetByOffset(int offset)
@@ -116,7 +118,7 @@ namespace EntryEdit.Editors
 
         private void Clear()
         {
-            if (_conditionalSets[_conditionalSetIndex].ConditionalBlocks.Count > 0)
+            if ((_conditionalSetIndex >= 0) && (_conditionalSets[_conditionalSetIndex].ConditionalBlocks.Count > 0))
             {
                 _conditionalSets[_conditionalSetIndex].ConditionalBlocks.Clear();
                 PopulateSets(_conditionalSetIndex);
@@ -125,13 +127,22 @@ namespace EntryEdit.Editors
 
         private void Reload()
         {
-            if ((_defaultConditionalSets != null) && (_conditionalSetIndex < _defaultConditionalSets.Count))
+            if ((_conditionalSetIndex >= 0) && (_defaultConditionalSets != null) && (_conditionalSetIndex < _defaultConditionalSets.Count))
             {
                 _conditionalSets[_conditionalSetIndex].ConditionalBlocks.Clear();
                 _conditionalSets[_conditionalSetIndex].ConditionalBlocks.AddRange(CopyableEntry.CopyList<ConditionalBlock>(_defaultConditionalSets[_conditionalSetIndex].ConditionalBlocks));
                 _conditionalSets[_conditionalSetIndex].Name = _defaultConditionalSets[_conditionalSetIndex].Name;
                 PopulateSets(_conditionalSetIndex);
             }
+        }
+
+        private void SetEntryButtonsEnabledState(bool isEnabled)
+        {
+            btn_Delete.Enabled = isEnabled;
+            btn_Clear.Enabled = isEnabled;
+            btn_Reload.Enabled = isEnabled;
+            btn_Up.Enabled = isEnabled;
+            btn_Down.Enabled = isEnabled;
         }
 
         private void cmb_ConditionalSet_SelectedIndexChanged(object sender, EventArgs e)
