@@ -26,6 +26,7 @@ namespace EntryEdit
         {
             InitializeComponent();
             Start();
+            //WriteLoadedDataToTestFiles();
             //WriteByteDataToTestFiles();
         }
 
@@ -315,6 +316,17 @@ namespace EntryEdit
             menuItem_SaveScript.Enabled = true;
             menuItem_LoadAllScripts.Enabled = true;
             menuItem_SaveAllScripts.Enabled = true;
+        }
+
+        private void WriteLoadedDataToTestFiles()
+        {
+            _entryData = _dataHelper.LoadDefaultEntryData();
+            List<ConditionalSet> battleConditionals = _dataHelper.LoadAllConditionalSetScripts(CommandType.BattleConditional, "./EntryData/scripts/battle/1");
+            List<ConditionalSet> worldConditionals = _dataHelper.LoadAllConditionalSetScripts(CommandType.WorldConditional, "./EntryData/scripts/world/1");
+            List<Event> events = _dataHelper.LoadAllEventScripts(_entryData.Events, "./EntryData/scripts/event/1");
+            System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", _dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, battleConditionals));
+            System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, worldConditionals));
+            System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", _dataHelper.EventsToByteArray(events));
         }
 
         private void WriteByteDataToTestFiles()
