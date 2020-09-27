@@ -332,7 +332,6 @@ namespace EntryEdit
         private void WriteByteDataToTestFiles()
         {
             _entryData = _dataHelper.LoadDefaultEntryData();
-            _entryDataDefault = _entryData.Copy();
             System.IO.File.WriteAllBytes("EntryData/TestBattle.bin", _dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals));
             System.IO.File.WriteAllBytes("EntryData/TestWorld.bin", _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals));
             System.IO.File.WriteAllBytes("EntryData/TestEvents.bin", _dataHelper.EventsToByteArray(_entryData.Events));
@@ -537,6 +536,7 @@ namespace EntryEdit
                     for (int index = 0; index < _entryData.Events.Count; index++)
                     {
                         Event ev = _entryData.Events[index];
+                        ev.TextSection.DecodeText();
                         byte[] eventBytes = _dataHelper.EventToByteArray(ev, false);
                         int numEventBytes = eventBytes.Length;
 
