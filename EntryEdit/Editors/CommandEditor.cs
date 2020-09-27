@@ -208,6 +208,7 @@ namespace EntryEdit.Editors
 
                 ComboBox comboBox = new ComboBox();
                 comboBox.Visible = false;
+                comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
                 groupBox.Controls.Add(spinner);
                 spinner.Location = new Point(5, 15);

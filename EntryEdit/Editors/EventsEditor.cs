@@ -96,7 +96,7 @@ namespace EntryEdit.Editors
 
         private void Clear()
         {
-            if ((_events[_eventIndex].CommandList.Count > 0) || (_events[_eventIndex].TextSection.CustomEntryList.Count > 0) || (_events[_eventIndex].DataSection.CustomEntryList.Count > 0))
+            if ((_eventIndex >= 0) && (_events[_eventIndex].CommandList.Count > 0) || (_events[_eventIndex].TextSection.CustomEntryList.Count > 0) || (_events[_eventIndex].DataSection.CustomEntryList.Count > 0))
             {
                 _events[_eventIndex].CommandList.Clear();
                 _events[_eventIndex].TextSection.CustomEntryList.Clear();
@@ -107,7 +107,7 @@ namespace EntryEdit.Editors
 
         private void Reload()
         {
-            if ((_defaultEvents != null) && (_eventIndex < _defaultEvents.Count))
+            if ((_eventIndex >= 0) && (_defaultEvents != null) && (_eventIndex < _defaultEvents.Count))
             {
                 _events[_eventIndex].CommandList.Clear();
                 _events[_eventIndex].CommandList.AddRange(CopyableEntry.CopyList<Command>(_defaultEvents[_eventIndex].CommandList));
