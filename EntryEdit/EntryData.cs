@@ -25,9 +25,9 @@ namespace EntryEdit
 
     public class EntryData : ICopyableEntry<EntryData>
     {
-        public List<ConditionalSet> BattleConditionals { get; private set; }
-        public List<ConditionalSet> WorldConditionals { get; private set; }
-        public List<Event> Events { get; private set; }
+        public List<ConditionalSet> BattleConditionals { get; set; }
+        public List<ConditionalSet> WorldConditionals { get; set; }
+        public List<Event> Events { get; set; }
 
         public static T GetEntry<T>(IList<T> list, int index) where T: class
         {
@@ -119,6 +119,7 @@ namespace EntryEdit
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(DataHelper.GetCommandListScript(CommandList));
 
+            TextSection.DecodeText();
             string strTextSection = TextSection.GetCombinedTextString();
             if (!string.IsNullOrEmpty(strTextSection))
             {

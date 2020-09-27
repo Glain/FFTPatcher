@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace EntryEdit
 {
@@ -219,6 +220,90 @@ namespace EntryEdit
             }
         }
 
+        private void LoadAllScripts()
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                string path = dialog.FileName;
+                if (tabControl.SelectedTab == tabPage_BattleConditionals)
+                {
+                    List<ConditionalSet> conditionalSets = _dataHelper.LoadAllConditionalSetScripts(CommandType.BattleConditional, path);
+                    if (conditionalSets != null)
+                    {
+                        _entryData.BattleConditionals = conditionalSets;
+                    }
+                    else
+                    {
+                        PatcherLib.MyMessageBox.Show(this, "Error loading scripts!", "Error", MessageBoxButtons.OK);
+                    }
+                }
+                else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+                {
+                    List<ConditionalSet> conditionalSets = _dataHelper.LoadAllConditionalSetScripts(CommandType.WorldConditional, path);
+                    if (conditionalSets != null)
+                    {
+                        _entryData.WorldConditionals = conditionalSets;
+                    }
+                    else
+                    {
+                        PatcherLib.MyMessageBox.Show(this, "Error loading scripts!", "Error", MessageBoxButtons.OK);
+                    }
+                }
+                else if (tabControl.SelectedTab == tabPage_Events)
+                {
+                    List<Event> events = _dataHelper.LoadAllEventScripts(_entryData.Events, path);
+                    if (events != null)
+                    {
+                        _entryData.Events = events;
+                    }
+                    else
+                    {
+                        PatcherLib.MyMessageBox.Show(this, "Error loading scripts!", "Error", MessageBoxButtons.OK);
+                    }
+                }
+
+                PopulateTabs();
+            } 
+        }
+
+        private void SaveAllScripts()
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                string path = dialog.FileName;
+                bool isSuccess = false;
+                if (tabControl.SelectedTab == tabPage_BattleConditionals)
+                {
+                    isSuccess = _dataHelper.SaveAllConditionalSetScripts(_entryData.BattleConditionals, path);
+                }
+                else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+                {
+                    isSuccess = _dataHelper.SaveAllConditionalSetScripts(_entryData.WorldConditionals, path);
+                }
+                else if (tabControl.SelectedTab == tabPage_Events)
+                {
+                    isSuccess = _dataHelper.SaveAllEventScripts(_entryData.Events, path);
+                }
+
+                if (isSuccess)
+                {
+                    PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    PatcherLib.MyMessageBox.Show(this, "Error saving scripts!", "Error", MessageBoxButtons.OK);
+                }
+            }
+        }
+
         private void EnableMenu()
         {
             menuItem_Edit.Enabled = true;
@@ -226,6 +311,8 @@ namespace EntryEdit
             menuItem_SavePatch.Enabled = true;
             menuItem_LoadScript.Enabled = true;
             menuItem_SaveScript.Enabled = true;
+            menuItem_LoadAllScripts.Enabled = true;
+            menuItem_SaveAllScripts.Enabled = true;
         }
 
         private void WriteByteDataToTestFiles()
@@ -292,6 +379,24 @@ namespace EntryEdit
         private void menuItem_SaveScript_Click(object sender, EventArgs e)
         {
             SaveScript();
+        }
+
+        private void menuItem_LoadAllScripts_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            LoadAllScripts();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
+        }
+
+        private void menuItem_SaveAllScripts_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            SaveAllScripts();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
         }
 
         private void menuItem_Exit_Click(object sender, EventArgs e)

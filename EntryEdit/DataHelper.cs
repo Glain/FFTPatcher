@@ -125,6 +125,132 @@ namespace EntryEdit
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
 
+        public List<ConditionalSet> LoadAllConditionalSetScripts(CommandType type, string path)
+        {
+            try
+            {
+                List<ConditionalSet> result = new List<ConditionalSet>();
+
+                string[] innerPaths = Directory.GetDirectories(path);
+                innerPaths.Sort();
+                for (int index = 0; index < innerPaths.Length; index++)
+                {
+                    string name = entryNameMaps[type][index];
+                    List<ConditionalBlock> blocks = LoadAllConditionalBlockScripts(type, innerPaths[index]);
+                    result.Add(new ConditionalSet(index, name, blocks));
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public bool SaveAllConditionalSetScripts(IList<ConditionalSet> conditionalSets, string path)
+        {
+            try
+            {
+                for (int index = 0; index < conditionalSets.Count; index++)
+                {
+                    ConditionalSet set = conditionalSets[index];
+                    string innerDirectoryName = string.Format("{0} {1} {2}", set.Index.ToString("000"), set.Index.ToString("X2"), set.Name);
+                    string innerFilepath = Path.Combine(path, innerDirectoryName);
+                    Directory.CreateDirectory(innerFilepath);
+                    SaveAllConditionalBlockScripts(set.ConditionalBlocks, innerFilepath);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public List<Event> LoadAllEventScripts(IList<Event> events, string path)
+        {
+            try
+            {
+                List<Event> result = new List<Event>();
+
+                string[] filepaths = Directory.GetFiles(path);
+                filepaths.Sort();
+                for (int index = 0; index < filepaths.Length; index++)
+                {
+                    string script = File.ReadAllText(filepaths[index]);
+                    result.Add(GetEventFromScript(script, events[index]));
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public bool SaveAllEventScripts(IList<Event> events, string path)
+        {
+            try
+            {
+                for (int index = 0; index < events.Count; index++)
+                {
+                    Event ev = events[index];
+                    string filename = string.Format("{0} {1} {2}.txt", ev.Index.ToString("000"), ev.Index.ToString("X4"), ev.Name);
+                    File.WriteAllText(Path.Combine(path, filename), ev.GetScript(), Encoding.UTF8);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private List<ConditionalBlock> LoadAllConditionalBlockScripts(CommandType type, string path)
+        {
+            try
+            {
+                List<ConditionalBlock> result = new List<ConditionalBlock>();
+
+                string[] filepaths = Directory.GetFiles(path);
+                filepaths.Sort();
+                for (int index = 0; index < filepaths.Length; index++)
+                {
+                    string script = File.ReadAllText(filepaths[index]);
+                    result.Add(GetConditionalBlockFromScript(type, index, script));
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private bool SaveAllConditionalBlockScripts(IList<ConditionalBlock> conditionalBlocks, string path)
+        {
+            try
+            {
+                for (int index = 0; index < conditionalBlocks.Count; index++)
+                {
+                    ConditionalBlock block = conditionalBlocks[index];
+                    string filename = string.Format("{0} {1} {2}.txt", block.Index.ToString("000"), block.Index.ToString("X2"), block.Name);
+                    File.WriteAllText(Path.Combine(path, filename), block.GetScript(), Encoding.UTF8);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public ConditionalBlock GetConditionalBlockFromScript(CommandType type, int blockIndex, string script)
         {
             List<Command> commandList = GetCommandListFromScript(type, script);

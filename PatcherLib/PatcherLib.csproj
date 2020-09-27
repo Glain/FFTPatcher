@@ -178,6 +178,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\FFTPackFiles.xml" />
+    <None Include="Resources\Microsoft.WindowsAPICodePack.dll" />
+    <None Include="Resources\Microsoft.WindowsAPICodePack.Shell.dll" />
     <None Include="Resources\ICSharpCode.SharpZipLib.dll" />
   </ItemGroup>
   <ItemGroup />
