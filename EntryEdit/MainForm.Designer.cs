@@ -30,8 +30,11 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage_BattleConditionals = new System.Windows.Forms.TabPage();
+            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_WorldConditionals = new System.Windows.Forms.TabPage();
+            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_Events = new System.Windows.Forms.TabPage();
+            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.menuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_NewPatch = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,15 +55,18 @@
             this.menuItem_Edit_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItem_SetDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_RestoreDefaults = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem_View = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem_CheckSize = new System.Windows.Forms.ToolStripMenuItem();
-            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
-            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
-            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
             this.menuItem_Edit_Separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItem_ClearAll = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_DeleteAll = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_ReloadAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_View = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_CheckSize = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_Patch = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_LoadISO = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_PatchISO = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_Patch_Separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItem_PatchPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_LoadPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -81,7 +87,7 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1000, 791);
             this.tabControl.TabIndex = 0;
-            this.tabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(tabControl_Selecting);
+            this.tabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl_Selecting);
             // 
             // tabPage_BattleConditionals
             // 
@@ -94,6 +100,16 @@
             this.tabPage_BattleConditionals.Text = "Battle Conditionals";
             this.tabPage_BattleConditionals.UseVisualStyleBackColor = true;
             // 
+            // battleConditionalSetsEditor
+            // 
+            this.battleConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
+            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
+            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
+            this.battleConditionalSetsEditor.TabIndex = 0;
+            // 
             // tabPage_WorldConditionals
             // 
             this.tabPage_WorldConditionals.Controls.Add(this.worldConditionalSetsEditor);
@@ -104,6 +120,16 @@
             this.tabPage_WorldConditionals.TabIndex = 1;
             this.tabPage_WorldConditionals.Text = "World Conditionals";
             this.tabPage_WorldConditionals.UseVisualStyleBackColor = true;
+            // 
+            // worldConditionalSetsEditor
+            // 
+            this.worldConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
+            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
+            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
+            this.worldConditionalSetsEditor.TabIndex = 1;
             // 
             // tabPage_Events
             // 
@@ -116,12 +142,23 @@
             this.tabPage_Events.Text = "Events";
             this.tabPage_Events.UseVisualStyleBackColor = true;
             // 
+            // eventsEditor
+            // 
+            this.eventsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eventsEditor.Location = new System.Drawing.Point(4, 4);
+            this.eventsEditor.Name = "eventsEditor";
+            this.eventsEditor.Size = new System.Drawing.Size(987, 762);
+            this.eventsEditor.TabIndex = 0;
+            // 
             // menuBar
             // 
             this.menuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItem_File,
             this.menuItem_Edit,
-            this.menuItem_View});
+            this.menuItem_View,
+            this.menuItem_Patch});
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
             this.menuBar.Size = new System.Drawing.Size(1004, 24);
@@ -280,52 +317,6 @@
             this.menuItem_RestoreDefaults.Text = "Restore Defaults";
             this.menuItem_RestoreDefaults.Click += new System.EventHandler(this.menuItem_RestoreDefaults_Click);
             // 
-            // menuItem_View
-            // 
-            this.menuItem_View.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItem_CheckSize});
-            this.menuItem_View.Enabled = false;
-            this.menuItem_View.Name = "menuItem_View";
-            this.menuItem_View.Size = new System.Drawing.Size(44, 20);
-            this.menuItem_View.Text = "View";
-            // 
-            // menuItem_CheckSize
-            // 
-            this.menuItem_CheckSize.Name = "menuItem_CheckSize";
-            this.menuItem_CheckSize.Size = new System.Drawing.Size(130, 22);
-            this.menuItem_CheckSize.Text = "Check Size";
-            this.menuItem_CheckSize.Click += new System.EventHandler(this.menuItem_CheckSize_Click);
-            // 
-            // battleConditionalSetsEditor
-            // 
-            this.battleConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
-            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
-            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
-            this.battleConditionalSetsEditor.TabIndex = 0;
-            // 
-            // worldConditionalSetsEditor
-            // 
-            this.worldConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
-            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
-            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
-            this.worldConditionalSetsEditor.TabIndex = 1;
-            // 
-            // eventsEditor
-            // 
-            this.eventsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventsEditor.Location = new System.Drawing.Point(4, 4);
-            this.eventsEditor.Name = "eventsEditor";
-            this.eventsEditor.Size = new System.Drawing.Size(987, 762);
-            this.eventsEditor.TabIndex = 0;
-            // 
             // menuItem_Edit_Separator2
             // 
             this.menuItem_Edit_Separator2.Name = "menuItem_Edit_Separator2";
@@ -351,6 +342,68 @@
             this.menuItem_ReloadAll.Size = new System.Drawing.Size(220, 22);
             this.menuItem_ReloadAll.Text = "Reload All";
             this.menuItem_ReloadAll.Click += new System.EventHandler(this.menuItem_ReloadAll_Click);
+            // 
+            // menuItem_View
+            // 
+            this.menuItem_View.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItem_CheckSize});
+            this.menuItem_View.Enabled = false;
+            this.menuItem_View.Name = "menuItem_View";
+            this.menuItem_View.Size = new System.Drawing.Size(44, 20);
+            this.menuItem_View.Text = "View";
+            // 
+            // menuItem_CheckSize
+            // 
+            this.menuItem_CheckSize.Name = "menuItem_CheckSize";
+            this.menuItem_CheckSize.Size = new System.Drawing.Size(152, 22);
+            this.menuItem_CheckSize.Text = "Check Size";
+            this.menuItem_CheckSize.Click += new System.EventHandler(this.menuItem_CheckSize_Click);
+            // 
+            // menuItem_Patch
+            // 
+            this.menuItem_Patch.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItem_PatchISO,
+            this.menuItem_LoadISO,
+            this.menuItem_Patch_Separator1,
+            this.menuItem_PatchPSXSaveState,
+            this.menuItem_LoadPSXSaveState});
+            this.menuItem_Patch.Enabled = false;
+            this.menuItem_Patch.Name = "menuItem_Patch";
+            this.menuItem_Patch.Size = new System.Drawing.Size(49, 20);
+            this.menuItem_Patch.Text = "Patch";
+            // 
+            // menuItem_LoadISO
+            // 
+            this.menuItem_LoadISO.Name = "menuItem_LoadISO";
+            this.menuItem_LoadISO.Size = new System.Drawing.Size(192, 22);
+            this.menuItem_LoadISO.Text = "Load ISO...";
+            this.menuItem_LoadISO.Click += new System.EventHandler(this.menuItem_LoadISO_Click);
+            // 
+            // menuItem_PatchISO
+            // 
+            this.menuItem_PatchISO.Name = "menuItem_PatchISO";
+            this.menuItem_PatchISO.Size = new System.Drawing.Size(192, 22);
+            this.menuItem_PatchISO.Text = "Patch ISO...";
+            this.menuItem_PatchISO.Click += new System.EventHandler(this.menuItem_PatchISO_Click);
+            // 
+            // menuItem_Patch_Separator1
+            // 
+            this.menuItem_Patch_Separator1.Name = "menuItem_Patch_Separator1";
+            this.menuItem_Patch_Separator1.Size = new System.Drawing.Size(189, 6);
+            // 
+            // menuItem_PatchPSXSaveState
+            // 
+            this.menuItem_PatchPSXSaveState.Name = "menuItem_PatchPSXSaveState";
+            this.menuItem_PatchPSXSaveState.Size = new System.Drawing.Size(192, 22);
+            this.menuItem_PatchPSXSaveState.Text = "Patch pSX Save State...";
+            this.menuItem_PatchPSXSaveState.Click += new System.EventHandler(this.menuItem_PatchPSXSaveState_Click);
+            // 
+            // menuItem_LoadPSXSaveState
+            // 
+            this.menuItem_LoadPSXSaveState.Name = "menuItem_LoadPSXSaveState";
+            this.menuItem_LoadPSXSaveState.Size = new System.Drawing.Size(192, 22);
+            this.menuItem_LoadPSXSaveState.Text = "Load pSX Save State...";
+            this.menuItem_LoadPSXSaveState.Click += new System.EventHandler(this.menuItem_LoadPSXSaveState_Click);
             // 
             // MainForm
             // 
@@ -408,6 +461,12 @@
         private System.Windows.Forms.ToolStripMenuItem menuItem_ClearAll;
         private System.Windows.Forms.ToolStripMenuItem menuItem_DeleteAll;
         private System.Windows.Forms.ToolStripMenuItem menuItem_ReloadAll;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_Patch;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_PatchISO;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_LoadISO;
+        private System.Windows.Forms.ToolStripSeparator menuItem_Patch_Separator1;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_PatchPSXSaveState;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_LoadPSXSaveState;
     }
 }
 

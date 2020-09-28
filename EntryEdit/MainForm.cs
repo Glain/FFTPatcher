@@ -396,6 +396,7 @@ namespace EntryEdit
         {
             menuItem_Edit.Enabled = true;
             menuItem_View.Enabled = true;
+            menuItem_Patch.Enabled = true;
             menuItem_SavePatch.Enabled = true;
             menuItem_LoadScript.Enabled = true;
             menuItem_SaveScript.Enabled = true;
@@ -703,6 +704,26 @@ namespace EntryEdit
         {
             TabPage tabPage = (sender as TabControl).SelectedTab;
             menuItem_DeleteAll.Enabled = (tabPage != tabPage_Events);
+        }
+
+        private void menuItem_PatchISO_Click(object sender, EventArgs e)
+        {
+            PatcherLib.MyMessageBox.Show(this, "Not implemented yet!", "Info", MessageBoxButtons.OK);
+        }
+
+        private void menuItem_LoadISO_Click(object sender, EventArgs e)
+        {
+            new LoadForm().Show();
+        }
+
+        private void menuItem_PatchPSXSaveState_Click(object sender, EventArgs e)
+        {
+            PatcherLib.MyMessageBox.Show(this, "Not implemented yet!", "Info", MessageBoxButtons.OK);
+        }
+
+        private void menuItem_LoadPSXSaveState_Click(object sender, EventArgs e)
+        {
+            new LoadForm().Show();
         }
     }
 }
