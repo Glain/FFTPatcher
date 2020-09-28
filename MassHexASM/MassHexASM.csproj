@@ -113,11 +113,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProfilingSessions\Session20120415_110511.sdps" />
-    <Content Include="ProfilingSessions\Session20120415_111001.sdps" />
-    <Content Include="ProfilingSessions\Session20120415_111038.sdps" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ASMEncoding\ASMEncoding.csproj">
       <Project>{4AB43571-545C-4F80-AFF1-F6E43DE31F47}</Project>
       <Name>ASMEncoding</Name>
