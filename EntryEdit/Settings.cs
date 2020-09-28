@@ -10,6 +10,8 @@ namespace EntryEdit
 {
     internal static class Settings
     {
+        public const int FFTPatcherSuiteRevision = 493;
+
         private static readonly int _eventSize = Utilities.ParseInt(ConfigurationManager.AppSettings["EventSize"]); 
         public static int EventSize { get { return _eventSize; } }
 

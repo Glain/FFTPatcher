@@ -30,7 +30,11 @@ namespace FFTPatcher
         {
             InitializeComponent();
             textBox.Text =
-@"Credits:
+@"This version of FFTPatcher is based on the FFTPatcher Suite continuation project at https://github.com/Glain/FFTPatcher/.
+
+Original documentation:
+
+Credits:
     Xifanie: For her awesome Excel spreadsheets on which this application is based.
     Dakitty: Found the locations of the Dark Knight, Onion Knight, Balthier, Luso, Argath, Aliste, and Bremondt sprites in the fftpack.bin file
     NeXaR: Gave me the hint that I could just overwrite the encrypted PSP binary with a decrypted version

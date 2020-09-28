@@ -37,7 +37,11 @@ namespace FFTPatcher.TextEditor
         {
             InitializeComponent();
             textBox.Text =
-@"Credits:
+@"This version of FFTactext is based on the FFTPatcher Suite continuation project at https://github.com/Glain/FFTPatcher/.
+
+Original documentation:
+
+Credits:
   Gomtuu: His page helped me understand the text compression algorithm and how the double-byte characters were processed. Check out his page at http://gomtuu.org/fft/
   Xifanie: Got me started with a list of text locations in the Playstation version.
 

@@ -62,11 +62,12 @@
             this.menuItem_View = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_CheckSize = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Patch = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem_LoadISO = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_PatchISO = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_LoadISO = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Patch_Separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItem_PatchPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_LoadPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -158,7 +159,8 @@
             this.menuItem_File,
             this.menuItem_Edit,
             this.menuItem_View,
-            this.menuItem_Patch});
+            this.menuItem_Patch,
+            this.menuItem_About});
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
             this.menuBar.Size = new System.Drawing.Size(1004, 24);
@@ -355,7 +357,7 @@
             // menuItem_CheckSize
             // 
             this.menuItem_CheckSize.Name = "menuItem_CheckSize";
-            this.menuItem_CheckSize.Size = new System.Drawing.Size(152, 22);
+            this.menuItem_CheckSize.Size = new System.Drawing.Size(130, 22);
             this.menuItem_CheckSize.Text = "Check Size";
             this.menuItem_CheckSize.Click += new System.EventHandler(this.menuItem_CheckSize_Click);
             // 
@@ -372,19 +374,19 @@
             this.menuItem_Patch.Size = new System.Drawing.Size(49, 20);
             this.menuItem_Patch.Text = "Patch";
             // 
-            // menuItem_LoadISO
-            // 
-            this.menuItem_LoadISO.Name = "menuItem_LoadISO";
-            this.menuItem_LoadISO.Size = new System.Drawing.Size(192, 22);
-            this.menuItem_LoadISO.Text = "Load ISO...";
-            this.menuItem_LoadISO.Click += new System.EventHandler(this.menuItem_LoadISO_Click);
-            // 
             // menuItem_PatchISO
             // 
             this.menuItem_PatchISO.Name = "menuItem_PatchISO";
             this.menuItem_PatchISO.Size = new System.Drawing.Size(192, 22);
             this.menuItem_PatchISO.Text = "Patch ISO...";
             this.menuItem_PatchISO.Click += new System.EventHandler(this.menuItem_PatchISO_Click);
+            // 
+            // menuItem_LoadISO
+            // 
+            this.menuItem_LoadISO.Name = "menuItem_LoadISO";
+            this.menuItem_LoadISO.Size = new System.Drawing.Size(192, 22);
+            this.menuItem_LoadISO.Text = "Load ISO...";
+            this.menuItem_LoadISO.Click += new System.EventHandler(this.menuItem_LoadISO_Click);
             // 
             // menuItem_Patch_Separator1
             // 
@@ -404,6 +406,13 @@
             this.menuItem_LoadPSXSaveState.Size = new System.Drawing.Size(192, 22);
             this.menuItem_LoadPSXSaveState.Text = "Load pSX Save State...";
             this.menuItem_LoadPSXSaveState.Click += new System.EventHandler(this.menuItem_LoadPSXSaveState_Click);
+            // 
+            // menuItem_About
+            // 
+            this.menuItem_About.Name = "menuItem_About";
+            this.menuItem_About.Size = new System.Drawing.Size(61, 20);
+            this.menuItem_About.Text = "About...";
+            this.menuItem_About.Click += new System.EventHandler(this.menuItem_About_Click);
             // 
             // MainForm
             // 
@@ -467,6 +476,7 @@
         private System.Windows.Forms.ToolStripSeparator menuItem_Patch_Separator1;
         private System.Windows.Forms.ToolStripMenuItem menuItem_PatchPSXSaveState;
         private System.Windows.Forms.ToolStripMenuItem menuItem_LoadPSXSaveState;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_About;
     }
 }
 

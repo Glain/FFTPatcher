@@ -725,5 +725,15 @@ namespace EntryEdit
         {
             new LoadForm().Show();
         }
+
+        private void menuItem_About_Click(object sender, EventArgs e)
+        {
+            PatcherLib.MyMessageBox.Show(this, string.Format(@"EntryEdit is a modding tool created by Glain that makes use of modified FFTPatcher suite project libraries originally created by melonhead.
+
+This version of EntryEdit is included in the FFTPatcher Suite continuation project at https://github.com/Glain/FFTPatcher/.
+
+FFTPatcher Suite version 0.{0}", Settings.FFTPatcherSuiteRevision),
+    "About", MessageBoxButtons.OK);
+        }
     }
 }

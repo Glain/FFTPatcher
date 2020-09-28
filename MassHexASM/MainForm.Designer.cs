@@ -61,6 +61,7 @@ namespace MassHexASM
             this.menu_Top = new System.Windows.Forms.MenuStrip();
             this.menuItem_Form = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Form_LEDecoder = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.pnl_RightSide.SuspendLayout();
             this.pnl_BottomSection.SuspendLayout();
             this.menu_Top.SuspendLayout();
@@ -286,7 +287,8 @@ namespace MassHexASM
             // menu_Top
             // 
             this.menu_Top.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItem_Form});
+            this.menuItem_Form,
+            this.menuItem_About});
             this.menu_Top.Location = new System.Drawing.Point(0, 0);
             this.menu_Top.Name = "menu_Top";
             this.menu_Top.Size = new System.Drawing.Size(837, 24);
@@ -307,6 +309,13 @@ namespace MassHexASM
             this.menuItem_Form_LEDecoder.Size = new System.Drawing.Size(152, 22);
             this.menuItem_Form_LEDecoder.Text = "LEDecoder";
             this.menuItem_Form_LEDecoder.Click += new System.EventHandler(this.menuItem_Form_LEDecoder_Click);
+            // 
+            // menuItem_About
+            // 
+            this.menuItem_About.Name = "menuItem_About";
+            this.menuItem_About.Size = new System.Drawing.Size(61, 20);
+            this.menuItem_About.Text = "About...";
+            this.menuItem_About.Click += new System.EventHandler(this.menuItem_About_Click);
             // 
             // MainForm
             // 
@@ -355,5 +364,6 @@ namespace MassHexASM
         private System.Windows.Forms.MenuStrip menu_Top;
         private System.Windows.Forms.ToolStripMenuItem menuItem_Form;
         private System.Windows.Forms.ToolStripMenuItem menuItem_Form_LEDecoder;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_About;
 	}
 }
