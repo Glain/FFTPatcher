@@ -15,7 +15,6 @@ namespace MassHexASM
 {		
 	public partial class MainForm : Form
 	{
-        const int FFTPatcherSuiteRevision = 493;
 		public ASMEncodingUtility _asmUtility;
 		
 		public MainForm()
@@ -160,12 +159,7 @@ namespace MassHexASM
 
         private void menuItem_About_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this, string.Format(@"MassHexASM, LEDecoder, and the underlying ASMEncoding library are MIPS assembly/disassembly tools created by Glain.
-
-This version of MassHexASM is included in the FFTPatcher Suite continuation project at https://github.com/Glain/FFTPatcher/.
-
-FFTPatcher Suite version 0.{0}", FFTPatcherSuiteRevision),  
-                "About", MessageBoxButtons.OK);
+            MessageBox.Show(this, About.Message, About.Title, MessageBoxButtons.OK);
         }
 	}
 }

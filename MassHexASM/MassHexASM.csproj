@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs" />
     <Compile Include="LEDecoder.cs">
       <SubType>Form</SubType>
     </Compile>

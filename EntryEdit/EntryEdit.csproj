@@ -89,6 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="Editors\CommandEditor.cs">
