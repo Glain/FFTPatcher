@@ -253,7 +253,7 @@ namespace ASMEncoding.Helpers
             return result.ToArray();
         }
 
-        public static uint[] GetUintArrayFromBytes(IEnumerable<byte> bytes, bool littleEndian = false)
+        public static uint[] GetUintArrayFromBytes(IEnumerable<byte> bytes, bool littleEndian)
         {
             List<uint> uintList = new List<uint>();
 

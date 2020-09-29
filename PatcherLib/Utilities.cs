@@ -553,7 +553,7 @@ namespace PatcherLib.Utilities
             return result.ToString();
         }
 
-        public static uint[] GetUintArrayFromBytes(IEnumerable<byte> bytes, bool littleEndian = false)
+        public static uint[] GetUintArrayFromBytes(IEnumerable<byte> bytes, bool littleEndian)
         {
             List<uint> uintList = new List<uint>();
 
