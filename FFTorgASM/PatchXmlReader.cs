@@ -231,15 +231,7 @@ namespace FFTorgASM
                     bool.TryParse(attrMovable.InnerText, out isMoveSimple);
                 }
 
-                Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
-                try
-                {
-                    ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
-                }
-                catch (Exception)
-                {
-                    ftrOffset = null;
-                }
+                int ftrOffset = PsxIso.GetRamOffset(sector);
 
                 int offsetIndex = 0;
                 foreach (string strOffset in strOffsets)
@@ -249,7 +241,7 @@ namespace FFTorgASM
                     UInt32 ramOffset = offset;
                     UInt32 fileOffset = offset;
 
-                    if (ftrOffset.HasValue)
+                    if (ftrOffset >= 0)
                     {
                         try
                         {
@@ -335,15 +327,7 @@ namespace FFTorgASM
                         if (isSpecific)
                         {
                             sector = specifics[offsetIndex].Sector;
-
-                            try
-                            {
-                                ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
-                            }
-                            catch (Exception)
-                            {
-                                ftrOffset = null;
-                            }
+                            ftrOffset = PsxIso.GetRamOffset(sector);
                         }
                     }
                 }
@@ -516,16 +500,7 @@ namespace FFTorgASM
                             isRamOffset = true;
                     }
 
-                    Nullable<PsxIso.FileToRamOffsets> ftrOffset = null;
-                    try
-                    {
-                        ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
-                        //ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + fileAttribute.InnerText);
-                    }
-                    catch (Exception)
-                    {
-                        ftrOffset = null;
-                    }
+                    int ftrOffset = PsxIso.GetRamOffset(sector);
 
                     XmlAttribute defaultAttr = varNode.Attributes["default"];
                     Byte[] byteArray = new Byte[numBytes];
@@ -548,7 +523,7 @@ namespace FFTorgASM
                         //UInt32 ramOffset = offset;
                         UInt32 fileOffset = offset;
 
-                        if (ftrOffset.HasValue)
+                        if (ftrOffset >= 0)
                         {
                             try
                             {
@@ -570,15 +545,7 @@ namespace FFTorgASM
                             if (isSpecific)
                             {
                                 sector = specifics[offsetIndex].Sector;
-
-                                try
-                                {
-                                    ftrOffset = (PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + Enum.GetName(typeof(PsxIso.Sectors), sector));
-                                }
-                                catch (Exception)
-                                {
-                                    ftrOffset = null;
-                                }
+                                ftrOffset = PsxIso.GetRamOffset(sector);
                             }
                         }
                     }

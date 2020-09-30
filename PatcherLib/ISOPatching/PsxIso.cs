@@ -40,6 +40,46 @@ namespace PatcherLib.Iso
 
     public static class PsxIso
     {
+        private static readonly Dictionary<PsxIso.Sectors, int> FileToRamOffsets = new Dictionary<PsxIso.Sectors, int>()
+        {
+            { Sectors.SCUS_942_21, 0xF800 },
+            { Sectors.BATTLE_BIN, 0x67000 },
+            { Sectors.WORLD_WLDCORE_BIN, 0x67000 },
+            { Sectors.OPEN_OPEN_BIN, 0x67000 },
+            { Sectors.WORLD_WORLD_BIN, 0xE0000 },
+            { Sectors.EVENT_ATTACK_OUT, 0x1BF000 },
+            { Sectors.EVENT_REQUIRE_OUT, 0x1BF000 },
+            { Sectors.EVENT_EQUIP_OUT, 0x1BF000 },
+            { Sectors.EVENT_OPTION_OUT, 0x1BF000 },
+            { Sectors.EVENT_ETC_OUT, 0x1BF000 },
+            { Sectors.EVENT_BUNIT_OUT, 0x1BF000 },
+            { Sectors.EVENT_CARD_OUT, 0x1BF000 },
+            { Sectors.EVENT_HELPMENU_OUT, 0x1DF000 },
+            { Sectors.EVENT_JOBSTTS_OUT, 0x1DF000 }
+        };
+
+        private static readonly Dictionary<PsxIso.Sectors, KeyValuePair<int, byte[]>> FileCheckValues = new Dictionary<PsxIso.Sectors, KeyValuePair<int, byte[]>>()
+        {
+            { Sectors.SCUS_942_21, new KeyValuePair<int, byte[]>(0x800, new byte[4] { 0x00, 0x70, 0x06, 0x80 }) },
+
+            { Sectors.BATTLE_BIN, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x88, 0x88, 0x06, 0x80 }) },
+            { Sectors.WORLD_WLDCORE_BIN, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x44, 0x8a, 0x06, 0x80 }) },
+            { Sectors.OPEN_OPEN_BIN, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x78, 0xF2, 0x06, 0x80 }) },
+
+            { Sectors.WORLD_WORLD_BIN, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x70, 0x73, 0x5f, 0x73 }) },
+
+            { Sectors.EVENT_ATTACK_OUT, new KeyValuePair<int, byte[]>(4, new byte[4] { 0x16, 0x80, 0x02, 0x3c }) },
+            { Sectors.EVENT_REQUIRE_OUT, new KeyValuePair<int, byte[]>(0x20, new byte[4] { 0x88, 0x5F, 0x42, 0x8C }) },
+            { Sectors.EVENT_EQUIP_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x44 }) },
+            { Sectors.EVENT_OPTION_OUT, new KeyValuePair<int, byte[]>(0x50, new byte[4] { 0xac, 0x5f, 0xb5, 0x26 }) },
+            { Sectors.EVENT_ETC_OUT, new KeyValuePair<int, byte[]>(0x20, new byte[4] { 0x14, 0x00, 0xB1, 0xAF }) },
+            { Sectors.EVENT_BUNIT_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x00, 0x00, 0xc7, 0x14 }) },
+            { Sectors.EVENT_CARD_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x42, 0x41, 0x53, 0x43 }) },
+
+            { Sectors.EVENT_HELPMENU_OUT, new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x04, 0x75, 0xa5, 0x24 }) },
+            { Sectors.EVENT_JOBSTTS_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }) }
+        };
+
         #region Public Properties (19)
 
         public static KnownPosition Abilities { get; private set; }
@@ -158,22 +198,17 @@ namespace PatcherLib.Iso
             foreach (PatchedByteArray patch in patches)
             {
                 PsxIso.Sectors sector = (PsxIso.Sectors)patch.SectorEnum;
-                string filename = patch.SectorEnum.ToString();
 
                 if (!FailedFiles.Contains(sector))
                 {
-                    bool valid = true;
-                    int ramOffset = 0;
+                    bool isValid = true;
+                    int ramOffset = PsxIso.GetRamOffset(sector);
 
-                    try
-                    {
-                        ramOffset = (int)(PsxIso.FileToRamOffsets)Enum.Parse(typeof(PsxIso.FileToRamOffsets), "OFFSET_" + filename.ToUpper().Trim());
-                    }
-                    catch (Exception)
+                    if (ramOffset < 0)
                     {
                         FailedFiles.Add(sector);
                         result.UnsupportedFiles.Add(sector);
-                        valid = false;
+                        isValid = false;
                         continue;
                     }
 
@@ -181,7 +216,7 @@ namespace PatcherLib.Iso
 
                     if (!LoadedFiles.Contains(sector))
                     {
-                        KeyValuePair<int, byte[]> checkValue = FileCheckValue.Get(sector);
+                        KeyValuePair<int, byte[]> checkValue = FileCheckValues[sector];
                         byte[] buffer = new byte[4];
                         stream.Seek(startOffset + checkValue.Key, SeekOrigin.Begin);
                         stream.Read(buffer, 0, 4);
@@ -192,13 +227,18 @@ namespace PatcherLib.Iso
                             {
                                 FailedFiles.Add(sector);
                                 result.AbsentFiles.Add(sector);
-                                valid = false;
+                                isValid = false;
                                 break;
                             }
                         }
+
+                        if (isValid)
+                        {
+                            LoadedFiles.Add(sector);
+                        }
                     }
 
-                    if (valid)
+                    if (isValid)
                     {
                         stream.WriteArrayToPosition(patch.GetBytes(), patch.Offset + startOffset);
                     }
@@ -244,28 +284,22 @@ namespace PatcherLib.Iso
 
         public static uint GetRamOffset(PsxIso.Sectors sector, bool useKSeg0 = true)
         {
-            return GetRamOffset(sector, 0, useKSeg0);
+            int fileToRamOffset = GetRamOffset(sector);
+            return (fileToRamOffset == -1) ? 0U : (uint)fileToRamOffset | (useKSeg0 ? 0x80000000U : 0U);
         }
 
-        public static uint GetRamOffset(int sector, uint offset, bool useKSeg0)
+        public static int GetRamOffset(int sector)
         {
-            return GetRamOffset((PsxIso.Sectors)sector, offset, useKSeg0);
+            return GetRamOffset((PsxIso.Sectors)sector);
         }
 
-        public static uint GetRamOffset(PsxIso.Sectors sector, uint offset, bool useKSeg0)
+        public static int GetRamOffset(PsxIso.Sectors sector)
         {
-            string sectorName = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), sector);
-            uint fileToRamOffset = 0;
-            try
-            {
-                fileToRamOffset = (uint)(PatcherLib.Iso.PsxIso.FileToRamOffsets)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.FileToRamOffsets), "OFFSET_" + sectorName.ToUpper().Trim());
-            }
-            catch (Exception) { }
+            int fileToRamOffset = 0;
+            if (!FileToRamOffsets.TryGetValue(sector, out fileToRamOffset))
+                fileToRamOffset = -1;
 
-            if (useKSeg0)
-                fileToRamOffset |= 0x80000000U;
-
-            return offset + fileToRamOffset;
+            return fileToRamOffset;
         }
 
         public static string GetSectorName(int sector)
@@ -405,51 +439,6 @@ namespace PatcherLib.Iso
         }
 
         #endregion Public Methods
-
-        public static class FileCheckValue
-        {
-            public static KeyValuePair<int, byte[]> SCUS_942_21 = new KeyValuePair<int, byte[]>(0x800, new byte[4] { 0x00, 0x70, 0x06, 0x80 });
-
-            public static KeyValuePair<int, byte[]> BATTLE_BIN = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x88, 0x88, 0x06, 0x80 });
-            public static KeyValuePair<int, byte[]> WORLD_WLDCORE_BIN = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x44, 0x8a, 0x06, 0x80 });
-            public static KeyValuePair<int, byte[]> OPEN_OPEN_BIN = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x78, 0xF2, 0x06, 0x80 });
-
-            public static KeyValuePair<int, byte[]> WORLD_WORLD_BIN = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x70, 0x73, 0x5f, 0x73 });
-
-            public static KeyValuePair<int, byte[]> EVENT_ATTACK_OUT = new KeyValuePair<int, byte[]>(4, new byte[4] { 0x16, 0x80, 0x02, 0x3c });
-            public static KeyValuePair<int, byte[]> EVENT_REQUIRE_OUT = new KeyValuePair<int, byte[]>(0x20, new byte[4] { 0x88, 0x5F, 0x42, 0x8C });
-            public static KeyValuePair<int, byte[]> EVENT_EQUIP_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x44 });
-            public static KeyValuePair<int, byte[]> EVENT_OPTION_OUT = new KeyValuePair<int, byte[]>(0x50, new byte[4] { 0xac, 0x5f, 0xb5, 0x26 });
-            public static KeyValuePair<int, byte[]> EVENT_ETC_OUT = new KeyValuePair<int, byte[]>(0x20, new byte[4] { 0x14, 0x00, 0xB1, 0xAF });
-            public static KeyValuePair<int, byte[]> EVENT_BUNIT_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x00, 0x00, 0xc7, 0x14 });
-            public static KeyValuePair<int, byte[]> EVENT_CARD_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x42, 0x41, 0x53, 0x43 });
-
-            public static KeyValuePair<int, byte[]> EVENT_HELPMENU_OUT = new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x04, 0x75, 0xa5, 0x24 });
-            public static KeyValuePair<int, byte[]> EVENT_JOBSTTS_OUT = new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 });
-
-            public static KeyValuePair<int, byte[]> Get(PsxIso.Sectors sector)
-            {
-                return (KeyValuePair<int, byte[]>)typeof(FileCheckValue).GetField(sector.ToString()).GetValue(null);
-            }
-        }
-
-        public enum FileToRamOffsets
-        {
-            OFFSET_SCUS_942_21 = 0xF800,
-            OFFSET_BATTLE_BIN = 0x67000,
-            OFFSET_WORLD_WLDCORE_BIN = 0x67000,
-            OFFSET_OPEN_OPEN_BIN = 0x67000,
-            OFFSET_WORLD_WORLD_BIN = 0xE0000,
-            OFFSET_EVENT_ATTACK_OUT = 0x1BF000,
-            OFFSET_EVENT_REQUIRE_OUT = 0x1BF000,
-            OFFSET_EVENT_EQUIP_OUT = 0x1BF000,
-            OFFSET_EVENT_OPTION_OUT = 0x1BF000,
-            OFFSET_EVENT_ETC_OUT = 0x1BF000,
-            OFFSET_EVENT_BUNIT_OUT = 0x1BF000,
-            OFFSET_EVENT_CARD_OUT = 0x1BF000,
-            OFFSET_EVENT_HELPMENU_OUT = 0x1DF000,
-            OFFSET_EVENT_JOBSTTS_OUT = 0x1DF000
-        }
 
         public enum Sectors
         {

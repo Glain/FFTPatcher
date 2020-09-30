@@ -473,17 +473,7 @@ namespace FFTorgASM
             foreach (MovePatchRange patchRange in movePatchRanges)
             {
                 //PatchRange patchRange = movePair.Key;
-                /*
-                string sectorName = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchRange.Sector);
-                int fileToRamOffset = 0;
-                try
-                {
-                    fileToRamOffset = (int)(PatcherLib.Iso.PsxIso.FileToRamOffsets)Enum.Parse(typeof(PatcherLib.Iso.PsxIso.FileToRamOffsets), "OFFSET_" + sectorName.ToUpper().Trim());
-                }
-                catch (Exception) { }
-                */
-
-                uint fileToRamOffset = PatcherLib.Iso.PsxIso.GetRamOffset(patchRange.Sector);
+                uint fileToRamOffset = PatcherLib.Iso.PsxIso.GetRamOffset(patchRange.Sector, true);
                 ASMEncoding.Helpers.BlockMove blockMove = new ASMEncoding.Helpers.BlockMove();
                 blockMove.Location = (uint)patchRange.StartOffset + fileToRamOffset;
                 blockMove.EndLocation = (uint)patchRange.EndOffset + fileToRamOffset;
