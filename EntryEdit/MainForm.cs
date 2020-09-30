@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using EntryEdit.Forms;
 
 namespace EntryEdit
 {
@@ -21,6 +22,18 @@ namespace EntryEdit
         private ConditionalSet _battleConditionalSetCopy;
         private ConditionalSet _worldConditionalSetCopy;
         private Event _eventCopy;
+
+        private LoadForm _loadForm = null;
+        public LoadForm LoadForm
+        {
+            get
+            {
+                if (_loadForm == null)
+                    _loadForm = new LoadForm();
+
+                return _loadForm;
+            }
+        }
 
         public MainForm()
         {
@@ -713,7 +726,7 @@ namespace EntryEdit
 
         private void menuItem_LoadISO_Click(object sender, EventArgs e)
         {
-            new LoadForm().Show();
+            LoadForm.InitDialog();
         }
 
         private void menuItem_PatchPSXSaveState_Click(object sender, EventArgs e)
@@ -723,7 +736,7 @@ namespace EntryEdit
 
         private void menuItem_LoadPSXSaveState_Click(object sender, EventArgs e)
         {
-            new LoadForm().Show();
+            LoadForm.InitDialog();
         }
 
         private void menuItem_About_Click(object sender, EventArgs e)

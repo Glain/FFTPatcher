@@ -7,13 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace EntryEdit
+namespace EntryEdit.Forms
 {
     public partial class LoadForm : Form
     {
         public LoadForm()
         {
             InitializeComponent();
+        }
+
+        public DialogResult InitDialog()
+        {
+            return ShowDialog();
         }
     }
 }

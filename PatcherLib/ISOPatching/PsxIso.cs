@@ -208,6 +208,25 @@ namespace PatcherLib.Iso
             return result;
         }
 
+        public static void PatchPsxSaveState(string filepath, Dictionary<int, byte[]> ramPatches)
+        {
+            using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
+            {
+                PatchPsxSaveState(reader, ramPatches);
+            }
+        }
+
+        public static void PatchPsxSaveState(BinaryReader reader, Dictionary<int, byte[]> ramPatches)
+        {
+            Stream stream = reader.BaseStream;
+            int ramToPsvOffset = FindRamToPsvOffset(stream);
+
+            foreach (KeyValuePair<int, byte[]> ramPatch in ramPatches)
+            {
+                stream.WriteArrayToPosition(ramPatch.Value, ramPatch.Key + ramToPsvOffset);
+            }
+        }
+
         private static int FindRamToPsvOffset(Stream psv)
         {
             byte[] buffer = new byte[1024];
@@ -258,6 +277,33 @@ namespace PatcherLib.Iso
         {
             string name = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), sector);
             return name ?? ((int)sector).ToString();
+        }
+
+        public static string GetModifiedSectorName(int sector)
+        {
+            return GetModifiedSectorName((PsxIso.Sectors)sector);
+        }
+
+        public static string GetModifiedSectorName(PsxIso.Sectors sector)
+        {
+            if (sector == Sectors.SCUS_942_21)
+            {
+                return "SCUS_942.21";
+            }
+
+            string name = GetSectorName(sector);
+            int backslashIndex = name.IndexOf('_');
+            int dotIndex = name.LastIndexOf('_');
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length);
+            sb.Append(name.Substring(0, backslashIndex));
+            sb.Append(@"\");
+            sb.Append(name.Substring(backslashIndex + 1, dotIndex - backslashIndex + 1));
+            sb.Append(".");
+            sb.Append(name.Substring(dotIndex + 1));
+
+            return sb.ToString();
+            //return name.Remove(backslashIndex).Insert(backslashIndex, @"\").Remove(dotIndex).Insert(dotIndex, ".");
         }
 
         public static PsxIso.Sectors GetSector(string sectorText)

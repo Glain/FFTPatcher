@@ -64,8 +64,8 @@ namespace EntryEdit
         private static readonly int _eventIDRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["EventIDRAMLocation"]);
         public static int EventIDRAMLocation { get { return _eventIDRAMLocation; } }
 
-        private static readonly bool _battleConditionalsModifyLimit = Utilities.ParseBool(ConfigurationManager.AppSettings["BattleConditionalsModifyLimit"]);
-        public static bool BattleConditionalsModifyLimit { get { return _battleConditionalsModifyLimit; } }
+        private static readonly bool _battleConditionalsApplyLimitPatch = Utilities.ParseBool(ConfigurationManager.AppSettings["BattleConditionalsApplyLimitPatch"]);
+        public static bool BattleConditionalsApplyLimitPatch { get { return _battleConditionalsApplyLimitPatch; } }
 
         private static readonly PsxIso.Sectors _battleConditionalsLimitPatchSector = PsxIso.GetSector(ConfigurationManager.AppSettings["BattleConditionalsLimitPatchSector"]);
         public static PsxIso.Sectors BattleConditionalsLimitPatchSector { get { return _battleConditionalsLimitPatchSector; } }

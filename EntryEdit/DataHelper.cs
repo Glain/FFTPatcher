@@ -125,6 +125,42 @@ namespace EntryEdit
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
 
+        public ConditionalSet LoadActiveConditionalSet(CommandType type, IList<byte> blockOffsetBytes, IList<byte> commandBytes)
+        {
+            int blockOffsetCount = blockOffsetBytes.Count / 2;
+            UInt16[] blockOffsets = new UInt16[blockOffsetCount];
+            for (int index = 0; index < blockOffsets.Length; index++)
+            {
+                blockOffsets[index] = (UInt16)((blockOffsetBytes[index * 2] | (blockOffsetBytes[(index * 2) + 1] << 8)) + blockOffsetBytes.Count + 2);
+            }
+
+            List<byte> setBytes = new List<byte>(commandBytes.Count + blockOffsetBytes.Count + 2);
+            setBytes.AddRange(new byte[2] { 0x02, 0x00 });
+            setBytes.AddRange(blockOffsets.ToBytesLE());
+            setBytes.AddRange(commandBytes);
+
+            List<ConditionalSet> resultSets = LoadConditionalSetsFromByteArray(type, setBytes);
+            return ((resultSets.Count > 0) ? resultSets[0] : null);
+        }
+
+        public KeyValuePair<byte[], byte[]> ConditionalSetToActiveByteArrays(CommandType type, ConditionalSet conditionalSet)
+        {
+            int blockOffsetCount = conditionalSet.ConditionalBlocks.Count;
+            int commandByteIndex = (blockOffsetCount * 2) + 2;
+
+            byte[] rawBytes = ConditionalSetsToByteArray(type, new List<ConditionalSet>() { conditionalSet });
+            IList<byte> blockOffsetBytes = rawBytes.Sub(2, commandByteIndex - 1);
+            IList<byte> commandBytes = rawBytes.Sub(commandByteIndex);
+
+            UInt16[] blockOffsets = new UInt16[blockOffsetCount];
+            for (int index = 0; index < blockOffsets.Length; index++)
+            {
+                blockOffsets[index] = (UInt16)((blockOffsetBytes[index * 2] | (blockOffsetBytes[(index * 2) + 1] << 8)) - blockOffsetBytes.Count - 2);
+            }
+
+            return new KeyValuePair<byte[], byte[]>(blockOffsets.ToBytesLE().ToArray(), commandBytes.ToArray());
+        }
+
         public List<ConditionalSet> LoadAllConditionalSetScripts(CommandType type, string path)
         {
             try
@@ -200,47 +236,6 @@ namespace EntryEdit
                     Event ev = events[index];
                     string filename = string.Format("{0} {1} {2}.txt", ev.Index.ToString("000"), ev.Index.ToString("X4"), ev.Name);
                     File.WriteAllText(Path.Combine(path, filename), ev.GetScript(), Encoding.UTF8);
-                }
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private List<ConditionalBlock> LoadAllConditionalBlockScripts(CommandType type, string path)
-        {
-            try
-            {
-                List<ConditionalBlock> result = new List<ConditionalBlock>();
-
-                string[] filepaths = Directory.GetFiles(path);
-                filepaths.Sort();
-                for (int index = 0; index < filepaths.Length; index++)
-                {
-                    string script = File.ReadAllText(filepaths[index]);
-                    result.Add(GetConditionalBlockFromScript(type, index, script));
-                }
-
-                return result;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        private bool SaveAllConditionalBlockScripts(IList<ConditionalBlock> conditionalBlocks, string path)
-        {
-            try
-            {
-                for (int index = 0; index < conditionalBlocks.Count; index++)
-                {
-                    ConditionalBlock block = conditionalBlocks[index];
-                    string filename = string.Format("{0} {1} {2}.txt", block.Index.ToString("000"), block.Index.ToString("X2"), block.Name);
-                    File.WriteAllText(Path.Combine(path, filename), block.GetScript(), Encoding.UTF8);
                 }
 
                 return true;
@@ -466,6 +461,47 @@ namespace EntryEdit
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        private List<ConditionalBlock> LoadAllConditionalBlockScripts(CommandType type, string path)
+        {
+            try
+            {
+                List<ConditionalBlock> result = new List<ConditionalBlock>();
+
+                string[] filepaths = Directory.GetFiles(path);
+                filepaths.Sort();
+                for (int index = 0; index < filepaths.Length; index++)
+                {
+                    string script = File.ReadAllText(filepaths[index]);
+                    result.Add(GetConditionalBlockFromScript(type, index, script));
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private bool SaveAllConditionalBlockScripts(IList<ConditionalBlock> conditionalBlocks, string path)
+        {
+            try
+            {
+                for (int index = 0; index < conditionalBlocks.Count; index++)
+                {
+                    ConditionalBlock block = conditionalBlocks[index];
+                    string filename = string.Format("{0} {1} {2}.txt", block.Index.ToString("000"), block.Index.ToString("X2"), block.Name);
+                    File.WriteAllText(Path.Combine(path, filename), block.GetScript(), Encoding.UTF8);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
