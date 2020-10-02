@@ -276,7 +276,7 @@ namespace EntryEdit.Editors
             {
                 result = Math.Max(result, TextRenderer.MeasureText(str, font).Width);
             }
-            return result + 15;
+            return result + 20;
         }
 
         private void cmb_Command_SelectedIndexChanged(object sender, EventArgs e)

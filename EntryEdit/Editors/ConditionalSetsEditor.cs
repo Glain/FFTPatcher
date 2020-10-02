@@ -14,6 +14,11 @@ namespace EntryEdit.Editors
         private List<ConditionalSet> _defaultConditionalSets;
 
         private int _conditionalSetIndex = 0;
+        public int GetSetIndex()
+        {
+            return _conditionalSetIndex;
+        }
+
         private bool _isPopulate = false;
 
         public ConditionalSetsEditor()

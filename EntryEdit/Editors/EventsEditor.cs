@@ -14,6 +14,11 @@ namespace EntryEdit.Editors
         private List<Event> _defaultEvents;
 
         private int _eventIndex = 0;
+        public int GetEventIndex()
+        {
+            return _eventIndex;
+        }
+
         private bool _isPopulate = false;
 
         public EventsEditor()

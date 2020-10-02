@@ -23,6 +23,20 @@ namespace EntryEdit
         }
     }
 
+    public class SelectedIndexResult
+    {
+        public int BattleConditionalIndex { get; private set; }
+        public int WorldConditionalIndex { get; private set; }
+        public int EventIndex { get; private set; }
+
+        public SelectedIndexResult(int battleConditionalIndex, int worldConditionalIndex, int eventIndex)
+        {
+            this.BattleConditionalIndex = battleConditionalIndex;
+            this.WorldConditionalIndex = worldConditionalIndex;
+            this.EventIndex = eventIndex;
+        }
+    }
+
     public class EntryData : ICopyableEntry<EntryData>
     {
         public List<ConditionalSet> BattleConditionals { get; set; }
@@ -209,6 +223,22 @@ namespace EntryEdit
                 foreach (ConditionalBlock block in ConditionalBlocks)
                 {
                     result += (block.Commands != null) ? block.Commands.Count : 0;
+                }
+            }
+
+            return result;
+        }
+
+        public int GetMaxBlockCommands()
+        {
+            int result = 0;
+
+            if (ConditionalBlocks != null)
+            {
+                foreach (ConditionalBlock block in ConditionalBlocks)
+                {
+                    int numCommands = (block.Commands != null) ? block.Commands.Count : 0;
+                    result = Math.Max(result, numCommands);
                 }
             }
 

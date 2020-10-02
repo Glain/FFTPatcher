@@ -14,6 +14,8 @@ namespace EntryEdit
 
 This version of EntryEdit is included in the FFTPatcher Suite continuation project at https://github.com/Glain/FFTPatcher/.
 
+Special thanks to the FFT modding community for providing reference information on conditionals and events, including spreadsheets and documentation by Xifanie and documentation of world conditionals by Pride!
+
 FFTPatcher Suite version 0.{0}", FFTPatcherSuiteRevision);
     }
 }

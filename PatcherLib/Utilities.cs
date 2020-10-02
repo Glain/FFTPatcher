@@ -505,6 +505,13 @@ namespace PatcherLib.Utilities
             return parseResult;
         }
 
+        public static uint ParseUint(string str)
+        {
+            uint parseResult = default(uint);
+            TryParseUint(str, out parseResult);
+            return parseResult;
+        }
+
         public static bool ParseBool(string str)
         {
             if (string.IsNullOrEmpty(str))

@@ -23,15 +23,15 @@ namespace EntryEdit
         private ConditionalSet _worldConditionalSetCopy;
         private Event _eventCopy;
 
-        private LoadForm _loadForm = null;
-        public LoadForm LoadForm
+        private StateForm _stateForm = null;
+        public StateForm StateForm
         {
             get
             {
-                if (_loadForm == null)
-                    _loadForm = new LoadForm();
+                if (_stateForm == null)
+                    _stateForm = new StateForm();
 
-                return _loadForm;
+                return _stateForm;
             }
         }
 
@@ -68,6 +68,7 @@ namespace EntryEdit
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 LoadPatch(openFileDialog.FileName);
+                EnableMenu();
             }
         }
 
@@ -409,12 +410,19 @@ namespace EntryEdit
         {
             menuItem_Edit.Enabled = true;
             menuItem_View.Enabled = true;
-            menuItem_Patch.Enabled = true;
             menuItem_SavePatch.Enabled = true;
             menuItem_LoadScript.Enabled = true;
             menuItem_SaveScript.Enabled = true;
             menuItem_LoadAllScripts.Enabled = true;
             menuItem_SaveAllScripts.Enabled = true;
+            menuItem_PatchISO.Enabled = true;
+            menuItem_PatchPSXSaveState.Enabled = true;
+            menuItem_LoadPSXSaveState.Enabled = true;
+        }
+
+        private SelectedIndexResult GetSelectedIndexResult()
+        {
+            return new SelectedIndexResult(battleConditionalSetsEditor.GetSetIndex(), worldConditionalSetsEditor.GetSetIndex(), eventsEditor.GetEventIndex());
         }
 
         private void WriteLoadedDataToTestFiles()
@@ -699,8 +707,7 @@ namespace EntryEdit
             menuBar.Enabled = false;
             tabControl.Enabled = false;
             LoadPatch();
-            EnableMenu();
-            tabControl.Enabled = true;
+            tabControl.Enabled = (_entryData != null);
             menuBar.Enabled = true;
         }
 
@@ -726,17 +733,25 @@ namespace EntryEdit
 
         private void menuItem_LoadISO_Click(object sender, EventArgs e)
         {
-            LoadForm.InitDialog();
+            PatcherLib.MyMessageBox.Show(this, "Not implemented yet!", "Info", MessageBoxButtons.OK);
         }
 
         private void menuItem_PatchPSXSaveState_Click(object sender, EventArgs e)
         {
-            PatcherLib.MyMessageBox.Show(this, "Not implemented yet!", "Info", MessageBoxButtons.OK);
+            SaveFormData();
+            if (StateForm.InitDialog(_dataHelper, _entryData, GetSelectedIndexResult(), StateForm.Mode.Patch) == DialogResult.OK)
+            {
+                //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+            }
         }
 
         private void menuItem_LoadPSXSaveState_Click(object sender, EventArgs e)
         {
-            LoadForm.InitDialog();
+            SaveFormData();
+            if (StateForm.InitDialog(_dataHelper, _entryData, GetSelectedIndexResult(), StateForm.Mode.Load) == DialogResult.OK)
+            {
+                PopulateTabs();
+            }
         }
 
         private void menuItem_About_Click(object sender, EventArgs e)

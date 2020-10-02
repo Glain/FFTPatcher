@@ -287,7 +287,7 @@
             // menuItem_Copy
             // 
             this.menuItem_Copy.Name = "menuItem_Copy";
-            this.menuItem_Copy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            //this.menuItem_Copy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.menuItem_Copy.Size = new System.Drawing.Size(220, 22);
             this.menuItem_Copy.Text = "Copy Entry";
             this.menuItem_Copy.Click += new System.EventHandler(this.menuItem_Copy_Click);
@@ -295,7 +295,7 @@
             // menuItem_Paste
             // 
             this.menuItem_Paste.Name = "menuItem_Paste";
-            this.menuItem_Paste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            //this.menuItem_Paste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.menuItem_Paste.Size = new System.Drawing.Size(220, 22);
             this.menuItem_Paste.Text = "Paste Entry";
             this.menuItem_Paste.Click += new System.EventHandler(this.menuItem_Paste_Click);
@@ -369,13 +369,13 @@
             this.menuItem_Patch_Separator1,
             this.menuItem_PatchPSXSaveState,
             this.menuItem_LoadPSXSaveState});
-            this.menuItem_Patch.Enabled = false;
             this.menuItem_Patch.Name = "menuItem_Patch";
             this.menuItem_Patch.Size = new System.Drawing.Size(49, 20);
             this.menuItem_Patch.Text = "Patch";
             // 
             // menuItem_PatchISO
             // 
+            this.menuItem_PatchISO.Enabled = false;
             this.menuItem_PatchISO.Name = "menuItem_PatchISO";
             this.menuItem_PatchISO.Size = new System.Drawing.Size(192, 22);
             this.menuItem_PatchISO.Text = "Patch ISO...";
@@ -395,6 +395,7 @@
             // 
             // menuItem_PatchPSXSaveState
             // 
+            this.menuItem_PatchPSXSaveState.Enabled = false;
             this.menuItem_PatchPSXSaveState.Name = "menuItem_PatchPSXSaveState";
             this.menuItem_PatchPSXSaveState.Size = new System.Drawing.Size(192, 22);
             this.menuItem_PatchPSXSaveState.Text = "Patch pSX Save State...";
@@ -402,6 +403,7 @@
             // 
             // menuItem_LoadPSXSaveState
             // 
+            this.menuItem_LoadPSXSaveState.Enabled = false;
             this.menuItem_LoadPSXSaveState.Name = "menuItem_LoadPSXSaveState";
             this.menuItem_LoadPSXSaveState.Size = new System.Drawing.Size(192, 22);
             this.menuItem_LoadPSXSaveState.Text = "Load pSX Save State...";

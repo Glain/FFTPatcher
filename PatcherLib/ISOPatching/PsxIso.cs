@@ -248,7 +248,7 @@ namespace PatcherLib.Iso
             return result;
         }
 
-        public static void PatchPsxSaveState(string filepath, Dictionary<int, byte[]> ramPatches)
+        public static void PatchPsxSaveState(string filepath, Dictionary<uint, byte[]> ramPatches)
         {
             using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
             {
@@ -256,15 +256,68 @@ namespace PatcherLib.Iso
             }
         }
 
-        public static void PatchPsxSaveState(BinaryReader reader, Dictionary<int, byte[]> ramPatches)
+        public static void PatchPsxSaveState(BinaryReader reader, Dictionary<uint, byte[]> ramPatches)
         {
             Stream stream = reader.BaseStream;
             int ramToPsvOffset = FindRamToPsvOffset(stream);
 
-            foreach (KeyValuePair<int, byte[]> ramPatch in ramPatches)
+            foreach (KeyValuePair<uint, byte[]> ramPatch in ramPatches)
             {
-                stream.WriteArrayToPosition(ramPatch.Value, ramPatch.Key + ramToPsvOffset);
+                uint ramOffset = ramPatch.Key & 0x7FFFFFFFU;
+                stream.WriteArrayToPosition(ramPatch.Value, ramOffset + ramToPsvOffset);
             }
+        }
+
+        public static bool IsSectorInPsxSaveState(Stream stream, PsxIso.Sectors sector)
+        {
+            int ramOffset = PsxIso.GetRamOffset(sector);
+            int ramToPsvOffset = FindRamToPsvOffset(stream);
+            int startOffset = ramOffset + ramToPsvOffset;
+
+            KeyValuePair<int, byte[]> checkValue = FileCheckValues[sector];
+            byte[] buffer = new byte[4];
+            stream.Seek(startOffset + checkValue.Key, SeekOrigin.Begin);
+            stream.Read(buffer, 0, 4);
+
+            for (int index = 0; index < 4; index++)
+            {
+                if (checkValue.Value[index] != buffer[index])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static byte[] LoadFromPsxSaveState(BinaryReader reader, uint ramLocation, int length)
+        {
+            return LoadFromPsxSaveState(reader, new KeyValuePair<uint, int>(ramLocation, length));
+        }
+
+        public static byte[] LoadFromPsxSaveState(BinaryReader reader, KeyValuePair<uint, int> ramPosition)
+        {
+            return LoadFromPsxSaveState(reader, new List<KeyValuePair<uint, int>>() { ramPosition })[0];
+        }
+
+        public static List<byte[]> LoadFromPsxSaveState(BinaryReader reader, IList<KeyValuePair<uint, int>> ramPositions)
+        {
+            List<byte[]> result = new List<byte[]>(ramPositions.Count);
+
+            Stream stream = reader.BaseStream;
+            int ramToPsvOffset = FindRamToPsvOffset(stream);
+
+            foreach (KeyValuePair<uint, int> ramPosition in ramPositions)
+            {
+                uint ramOffset = ramPosition.Key & 0x7FFFFFFFU;
+                int psvLocation = (int)(ramOffset + ramToPsvOffset);
+                byte[] buffer = new byte[ramPosition.Value];
+                stream.Seek(psvLocation, SeekOrigin.Begin);
+                stream.Read(buffer, 0, ramPosition.Value);
+                result.Add(buffer);
+            }
+
+            return result;
         }
 
         private static int FindRamToPsvOffset(Stream psv)

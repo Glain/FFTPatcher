@@ -78,7 +78,7 @@
         <Parameter name="Y" bytes="2" />
         <Parameter name="Z" bytes="2" />
     </Command>
-    <Command hex="0019" name="Run Scenario">
+    <Command hex="0019" name="Run Scenario" sentinel="true">
         <Parameter name="Scenario" bytes="2" type="Scenario" />
     </Command>
     <Command hex="0025" name="Team Unit Location">

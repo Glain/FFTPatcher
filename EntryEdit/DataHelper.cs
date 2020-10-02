@@ -38,6 +38,9 @@ namespace EntryEdit
         public const string EntryNameBattleConditionals = "BattleConditionals.bin";
         public const string EntryNameWorldConditionals = "WorldConditionals.bin";
         public const string EntryNameEvents = "Events.bin";
+        public const uint BlankTextOffsetValue = 0xF2F2F2F2U;
+
+        public static readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
 
         public int BattleConditionalsSize { get { return Settings.BattleConditionalsSize; } }
         public int WorldConditionalsSize { get { return Settings.WorldConditionalsSize; } }
@@ -47,7 +50,6 @@ namespace EntryEdit
 
         private const string StrUnknown = "unknown";
         private const string StrBlank = "blank";
-        private readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
 
         private readonly List<string> parameterTypes;
         private readonly Dictionary<CommandType, int> defaultCommandByteLengthMaps;
@@ -56,6 +58,7 @@ namespace EntryEdit
         private readonly Dictionary<string, Dictionary<int, string>> parameterValueMaps;
         private readonly Dictionary<CommandType, Dictionary<int, CommandTemplate>> commandTemplateMaps;
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
+        private readonly Dictionary<CommandType, HashSet<int>> sentinelCommandIDMap;
 
         public DataHelper()
         {
@@ -66,6 +69,7 @@ namespace EntryEdit
             commandTemplateMaps = GetCommandTemplateMaps();
             parameterValueMaps = GetParameterValueMaps();
             entryNameMaps = GetEntryNameMaps();
+            sentinelCommandIDMap = GetSentinelCommandIDMap();
         }
 
         public static string GetCommandListScript(IEnumerable<Command> commands)
@@ -125,25 +129,45 @@ namespace EntryEdit
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
 
-        public ConditionalSet LoadActiveConditionalSet(CommandType type, IList<byte> blockOffsetBytes, IList<byte> commandBytes)
+        public ConditionalSet LoadActiveConditionalSet(int setIndex, string name, CommandType type, IList<byte> blockOffsetBytes, IList<byte> commandBytes)
         {
-            int blockOffsetCount = blockOffsetBytes.Count / 2;
-            UInt16[] blockOffsets = new UInt16[blockOffsetCount];
-            for (int index = 0; index < blockOffsets.Length; index++)
+            List<UInt16> blockOffsets = new List<UInt16>(blockOffsetBytes.Count / 2);
+
+            for (int index = 0; index < blockOffsetBytes.Count; index += 2)
             {
-                blockOffsets[index] = (UInt16)((blockOffsetBytes[index * 2] | (blockOffsetBytes[(index * 2) + 1] << 8)) + blockOffsetBytes.Count + 2);
+                UInt16 blockOffset = (UInt16)((blockOffsetBytes[index] | (blockOffsetBytes[index + 1] << 8)));
+
+                if ((blockOffset != 0) || (index == 0))
+                    blockOffsets.Add(blockOffset);
+                else
+                    break;
             }
 
-            List<byte> setBytes = new List<byte>(commandBytes.Count + blockOffsetBytes.Count + 2);
+            int numRealBlockOffsetBytes = blockOffsets.Count * 2;
+            UInt16 blockOffsetAddend = (UInt16)(numRealBlockOffsetBytes + 2);
+            for (int index = 0; index < blockOffsets.Count; index++)
+            {
+                blockOffsets[index] += blockOffsetAddend;
+            }
+
+            List<byte> setBytes = new List<byte>(commandBytes.Count + numRealBlockOffsetBytes + 2);
             setBytes.AddRange(new byte[2] { 0x02, 0x00 });
             setBytes.AddRange(blockOffsets.ToBytesLE());
             setBytes.AddRange(commandBytes);
 
             List<ConditionalSet> resultSets = LoadConditionalSetsFromByteArray(type, setBytes);
-            return ((resultSets.Count > 0) ? resultSets[0] : null);
+            ConditionalSet result = ((resultSets.Count > 0) ? resultSets[0] : null);
+
+            if (result != null)
+            {
+                result.Index = setIndex;
+                result.Name = name;
+            }
+
+            return result;
         }
 
-        public KeyValuePair<byte[], byte[]> ConditionalSetToActiveByteArrays(CommandType type, ConditionalSet conditionalSet)
+        public List<byte[]> ConditionalSetToActiveByteArrays(CommandType type, ConditionalSet conditionalSet)
         {
             int blockOffsetCount = conditionalSet.ConditionalBlocks.Count;
             int commandByteIndex = (blockOffsetCount * 2) + 2;
@@ -158,7 +182,7 @@ namespace EntryEdit
                 blockOffsets[index] = (UInt16)((blockOffsetBytes[index * 2] | (blockOffsetBytes[(index * 2) + 1] << 8)) - blockOffsetBytes.Count - 2);
             }
 
-            return new KeyValuePair<byte[], byte[]>(blockOffsets.ToBytesLE().ToArray(), commandBytes.ToArray());
+            return new List<byte[]>() { blockOffsets.ToBytesLE().ToArray(), commandBytes.ToArray() };
         }
 
         public List<ConditionalSet> LoadAllConditionalSetScripts(CommandType type, string path)
@@ -210,13 +234,13 @@ namespace EntryEdit
             try
             {
                 List<Event> result = new List<Event>();
-
+                HashSet<int> sentinelCommands = sentinelCommandIDMap[CommandType.EventCommand];
                 string[] filepaths = Directory.GetFiles(path);
                 filepaths.Sort();
                 for (int index = 0; index < filepaths.Length; index++)
                 {
                     string script = File.ReadAllText(filepaths[index]);
-                    result.Add(GetEventFromScript(script, events[index]));
+                    result.Add(GetEventFromScript(script, events[index], sentinelCommands));
                 }
 
                 return result;
@@ -261,7 +285,7 @@ namespace EntryEdit
             }
         }
 
-        public Event GetEventFromScript(string script, Event originalEvent)
+        public Event GetEventFromScript(string script, Event originalEvent, HashSet<int> sentinelCommands = null)
         {
             //int textMarkerIndex = script.LastIndexOf("{TEXT}");
             //int dataMarkerIndex = script.LastIndexOf("{DATA}");
@@ -314,7 +338,7 @@ namespace EntryEdit
                 CustomSection dataSection = GetCustomSectionFromScript(strDataSection, false);
 
                 Event newEvent = new Event(originalEvent.Index, originalEvent.Name, commandList, dataSection, textSection, textSection, originalEvent.OriginalBytes);
-                return GetEventFromBytes(originalEvent.Index, EventToByteArray(newEvent, true));
+                return GetEventFromBytes(originalEvent.Index, EventToByteArray(newEvent, true), false, sentinelCommands);
             }
             catch (Exception)
             {
@@ -716,6 +740,16 @@ namespace EntryEdit
             return result;
         }
 
+        private Dictionary<CommandType, HashSet<int>> GetSentinelCommandIDMap()
+        {
+            return new Dictionary<CommandType, HashSet<int>>()
+            {
+                { CommandType.BattleConditional, FindSentinelCommandIDs(CommandType.BattleConditional) },
+                { CommandType.WorldConditional, FindSentinelCommandIDs(CommandType.WorldConditional) },
+                { CommandType.EventCommand, FindSentinelCommandIDs(CommandType.EventCommand) }
+            };
+        }
+
         private Dictionary<int, string> GetXMLNameMap(string filepath)
         {
             Dictionary<int, string> result = new Dictionary<int, string>();
@@ -1006,19 +1040,20 @@ namespace EntryEdit
             List<Event> result = new List<Event>();
 
             int index = 0;
+            HashSet<int> sentinelCommands = sentinelCommandIDMap[CommandType.EventCommand];
             for (int startIndex = 0; startIndex < bytes.Count; startIndex += EventSize)
             {
-                result.Add(GetEventFromBytes(index, bytes.SubLength(startIndex, EventSize)));
+                result.Add(GetEventFromBytes(index, bytes.SubLength(startIndex, EventSize), false, sentinelCommands));
                 index++;
             }
 
             return result;
         }
 
-        public Event GetEventFromBytes(int index, IList<byte> bytes)
+        public Event GetEventFromBytes(int index, IList<byte> bytes, bool forceNaturalTextOffset = false, HashSet<int> sentinelCommands = null)
         {
             //List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), new HashSet<int>() { 0xDB, 0xE3 });
-            List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), FindSentinelCommandIDs(CommandType.EventCommand));
+            List<Command> commandList = CommandsFromByteArray(CommandType.EventCommand, bytes.Sub(4), sentinelCommands ?? sentinelCommandIDMap[CommandType.EventCommand]);
 
             int numCommandBytes = 0;
             foreach (Command command in commandList)
@@ -1026,12 +1061,12 @@ namespace EntryEdit
                     numCommandBytes += command.GetTotalByteLength();
 
             int naturalTextOffset = numCommandBytes + 4;
-            uint textOffset = bytes.SubLength(0, 4).ToUInt32();
+            uint textOffset = forceNaturalTextOffset ? (uint)naturalTextOffset : bytes.SubLength(0, 4).ToUInt32();
 
             CustomSection dataSection, textSection;
 
             CustomSection originalTextSection = null;
-            if (textOffset == 0xF2F2F2F2U)
+            if (textOffset == BlankTextOffsetValue)
             {
                 dataSection = new CustomSection();
                 textSection = new CustomSection();
@@ -1094,21 +1129,12 @@ namespace EntryEdit
             return bytes.ToArray();
         }
 
-        private List<ConditionalSet> LoadConditionalSetDefaults(CommandType type)
-        {
-            return LoadConditionalSetsFromFile(type, GetDefaultDataFilepath(type));
-        }
-
-        private List<ConditionalSet> LoadConditionalSetsFromFile(CommandType type, string filepath)
-        {
-            return LoadConditionalSetsFromByteArray(type, File.ReadAllBytes(filepath));
-        }
-
-        private List<ConditionalSet> LoadConditionalSetsFromByteArray(CommandType type, IList<byte> bytes)
+        public List<ConditionalSet> LoadConditionalSetsFromByteArray(CommandType type, IList<byte> bytes)
         {
             int setByteOffset = bytes.ToUInt16LE();
             int numSets = setByteOffset / 2;
             List<ConditionalSet> result = new List<ConditionalSet>(numSets);
+            HashSet<int> sentinelCommands = sentinelCommandIDMap[type];
 
             Dictionary<int, string> setNameMap = entryNameMaps[type];
 
@@ -1125,9 +1151,9 @@ namespace EntryEdit
 
                 int numBlocks = 0;
                 UInt16 prevBlockIndex = 0;
-                for (int setByteIndex = setStartIndex; setByteIndex < setEndIndex; setByteIndex += 2)
+                for (int setByteIndex = setStartIndex; setByteIndex <= setEndIndex; setByteIndex += 2)
                 {
-                    UInt16 blockIndex = bytes.SubLength(setByteIndex, 2).ToUInt16LE();
+                    UInt16 blockIndex = (setByteIndex == setEndIndex) ? (UInt16)0 : bytes.SubLength(setByteIndex, 2).ToUInt16LE();
                     if (prevBlockIndex != 0)
                     {
                         int startIndex = prevBlockIndex;
@@ -1141,7 +1167,7 @@ namespace EntryEdit
                             setIndexAddend++;
                         }
 
-                        ConditionalBlock newBlock = new ConditionalBlock(numBlocks, CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex)));
+                        ConditionalBlock newBlock = new ConditionalBlock(numBlocks, CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex), sentinelCommands));
                         newBlock.FindName(parameterValueMaps);
                         conditionalBlocks.Add(newBlock);
                         numBlocks++;
@@ -1154,6 +1180,16 @@ namespace EntryEdit
             }
 
             return result;
+        }
+
+        private List<ConditionalSet> LoadConditionalSetDefaults(CommandType type)
+        {
+            return LoadConditionalSetsFromFile(type, GetDefaultDataFilepath(type));
+        }
+
+        private List<ConditionalSet> LoadConditionalSetsFromFile(CommandType type, string filepath)
+        {
+            return LoadConditionalSetsFromByteArray(type, File.ReadAllBytes(filepath));
         }
 
         private byte[] CommandsToByteArray(IEnumerable<Command> commands)

@@ -141,11 +141,11 @@
       <DependentUpon>EventsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="EntryData.cs" />
-    <Compile Include="Forms\LoadForm.cs">
+    <Compile Include="Forms\StateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\LoadForm.Designer.cs">
-      <DependentUpon>LoadForm.cs</DependentUpon>
+    <Compile Include="Forms\StateForm.Designer.cs">
+      <DependentUpon>StateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -181,8 +181,8 @@
     <EmbeddedResource Include="Editors\EventsEditor.resx">
       <DependentUpon>EventsEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LoadForm.resx">
-      <DependentUpon>LoadForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\StateForm.resx">
+      <DependentUpon>StateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
