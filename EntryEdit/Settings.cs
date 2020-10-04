@@ -19,6 +19,9 @@ namespace EntryEdit
         private static readonly int _worldConditionalsSize = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsSize"]);
         public static int WorldConditionalsSize { get { return _worldConditionalsSize; } }
 
+        private static readonly int _numEvents = Utilities.ParseInt(ConfigurationManager.AppSettings["NumEvents"]);
+        public static int NumEvents { get { return _numEvents; } }
+
         private static readonly int _battleConditionalSetMaxBlocks = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalSetMaxBlocks"]);
         public static int BattleConditionalSetMaxBlocks { get { return _battleConditionalSetMaxBlocks; } }
 
@@ -43,8 +46,8 @@ namespace EntryEdit
         private static readonly int _eventsOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["EventsOffset"]);
         public static int EventsOffset { get { return _eventsOffset; } }
 
-        private static readonly int _worldConditionalsRepoint = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsRepoint"]);
-        public static int WorldConditionalsRepoint { get { return _worldConditionalsRepoint; } }
+        private static readonly bool _worldConditionalsRepoint = Utilities.ParseBool(ConfigurationManager.AppSettings["WorldConditionalsRepoint"]);
+        public static bool WorldConditionalsRepoint { get { return _worldConditionalsRepoint; } }
 
         private static readonly PsxIso.Sectors _worldConditionalsPointerSector = PsxIso.GetSector(ConfigurationManager.AppSettings["WorldConditionalsPointerSector"]);
         public static PsxIso.Sectors WorldConditionalsPointerSector { get { return _worldConditionalsPointerSector; } }
@@ -91,13 +94,22 @@ namespace EntryEdit
         private static readonly int _textOffsetRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["TextOffsetRAMLocation"]);
         public static int TextOffsetRAMLocation { get { return _textOffsetRAMLocation; } }
 
+        private static readonly int _maxSectors = Utilities.ParseInt(ConfigurationManager.AppSettings["MaxSectors"]);
+        public static int MaxSectors { get { return _maxSectors; } }
+
+        public static readonly int _totalEventSize = Settings.EventSize * Settings.NumEvents;
+        public static int TotalEventSize { get { return _totalEventSize; } }
+
         private static readonly int _worldConditionalsPointerRAMLocation = PsxIso.GetRamOffset(Settings.WorldConditionalsPointerSector) + Settings.WorldConditionalsPointerOffset;
         public static int WorldConditionalsPointerRAMLocation { get { return _worldConditionalsPointerRAMLocation; } }
 
-        private static readonly int _battleConditionalsLimitPatchRamLocation = PsxIso.GetRamOffset(Settings.BattleConditionalsLimitPatchSector) + Settings.BattleConditionalsLimitPatchOffset;
-        public static int BattleConditionalsLimitPatchRamLocation { get { return _battleConditionalsLimitPatchRamLocation; } }
+        private static readonly int _battleConditionalsLimitPatchRAMLocation = PsxIso.GetRamOffset(Settings.BattleConditionalsLimitPatchSector) + Settings.BattleConditionalsLimitPatchOffset;
+        public static int BattleConditionalsLimitPatchRAMLocation { get { return _battleConditionalsLimitPatchRAMLocation; } }
 
-        private static readonly int _scenariosRamLocation = PsxIso.GetRamOffset(Settings.ScenariosSector) + Settings.ScenariosOffset;
-        public static int ScenariosRamLocation { get { return _scenariosRamLocation; } }
+        private static readonly int _scenariosRAMLocation = PsxIso.GetRamOffset(Settings.ScenariosSector) + Settings.ScenariosOffset;
+        public static int ScenariosRAMLocation { get { return _scenariosRAMLocation; } }
+
+        private static readonly int _worldConditionalsCalcRAMLocation = PsxIso.GetRamOffset(Settings.WorldConditionalsSector) + Settings.WorldConditionalsOffset;
+        public static int WorldConditionalsCalcRAMLocation { get { return _worldConditionalsCalcRAMLocation; } }
     }
 }

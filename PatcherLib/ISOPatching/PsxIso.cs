@@ -38,6 +38,23 @@ namespace PatcherLib.Iso
         }
     }
 
+    public class PsxSectorPair
+    {
+        public PsxIso.Sectors Sector { get; private set; }
+        public string SectorName { get; private set; }
+
+        public PsxSectorPair(PsxIso.Sectors sector, string sectorName)
+        {
+            this.Sector = sector;
+            this.SectorName = sectorName;
+        }
+
+        public override string ToString()
+        {
+            return SectorName;
+        }
+    }
+
     public static class PsxIso
     {
         private static readonly Dictionary<PsxIso.Sectors, int> FileToRamOffsets = new Dictionary<PsxIso.Sectors, int>()
@@ -178,7 +195,7 @@ namespace PatcherLib.Iso
 
         #endregion Constructors
 
-        #region Public Methods (3)
+        #region Public Methods
 
         public static byte[] GetBlock(Stream iso, KnownPosition knownPositions)
         {
@@ -320,14 +337,22 @@ namespace PatcherLib.Iso
             return result;
         }
 
-        private static int FindRamToPsvOffset(Stream psv)
+        public static PsxSectorPair[] GetSectorPairs()
         {
-            byte[] buffer = new byte[1024];
-            psv.Seek(0, SeekOrigin.Begin);
-            psv.Read(buffer, 0, 1024);
-            byte[] bytesToFind = new byte[4] { 0x52, 0x41, 0x4D, 0x00 };
-            int position = buffer.FindBytes(bytesToFind);
-            return position + 12;
+            PsxIso.Sectors[] sectors = (PsxIso.Sectors[])Enum.GetValues(typeof(PsxIso.Sectors));
+
+            int numSectorPairs = sectors.Length;
+            List<PsxSectorPair> result = new List<PsxSectorPair>();
+
+            for (int index = 0; index < numSectorPairs; index++)
+            {
+                PsxIso.Sectors sector = sectors[index];
+                string sectorName = GetModifiedSectorName(sector);
+                if ((!sectorName.StartsWith("EFFECT")) && (!sectorName.StartsWith("MAP")) && (sectorName.EndsWith("21") || sectorName.EndsWith("OUT") || sectorName.EndsWith("BIN") || sectorName.EndsWith("EVT")))
+                    result.Add(new PsxSectorPair(sector, sectorName));
+            }
+
+            return result.ToArray();
         }
 
         public static uint GetRamOffset(int sector, bool useKSeg0 = true)
@@ -382,14 +407,21 @@ namespace PatcherLib.Iso
             int backslashIndex = name.IndexOf('_');
             int dotIndex = name.LastIndexOf('_');
 
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length);
-            sb.Append(name.Substring(0, backslashIndex));
-            sb.Append(@"\");
-            sb.Append(name.Substring(backslashIndex + 1, dotIndex - backslashIndex + 1));
-            sb.Append(".");
-            sb.Append(name.Substring(dotIndex + 1));
-
-            return sb.ToString();
+            if (backslashIndex == dotIndex)
+            {
+                return name.Replace('_', '.');
+            }
+            else
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length);
+                sb.Append(name.Substring(0, backslashIndex));
+                sb.Append(@"\");
+                sb.Append(name.Substring(backslashIndex + 1, dotIndex - backslashIndex - 1));
+                sb.Append(".");
+                sb.Append(name.Substring(dotIndex + 1));
+                return sb.ToString();
+            }
+            
             //return name.Remove(backslashIndex).Insert(backslashIndex, @"\").Remove(dotIndex).Insert(dotIndex, ".");
         }
 
@@ -492,6 +524,16 @@ namespace PatcherLib.Iso
         }
 
         #endregion Public Methods
+
+        private static int FindRamToPsvOffset(Stream psv)
+        {
+            byte[] buffer = new byte[1024];
+            psv.Seek(0, SeekOrigin.Begin);
+            psv.Read(buffer, 0, 1024);
+            byte[] bytesToFind = new byte[4] { 0x52, 0x41, 0x4D, 0x00 };
+            int position = buffer.FindBytes(bytesToFind);
+            return position + 12;
+        }
 
         public enum Sectors
         {

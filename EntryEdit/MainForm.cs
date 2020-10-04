@@ -35,6 +35,18 @@ namespace EntryEdit
             }
         }
 
+        private ISOForm _isoForm = null;
+        public ISOForm ISOForm
+        {
+            get
+            {
+                if (_isoForm == null)
+                    _isoForm = new ISOForm();
+
+                return _isoForm;
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -728,12 +740,29 @@ namespace EntryEdit
 
         private void menuItem_PatchISO_Click(object sender, EventArgs e)
         {
-            PatcherLib.MyMessageBox.Show(this, "Not implemented yet!", "Info", MessageBoxButtons.OK);
+            SaveFormData();
+            if (ISOForm.InitDialog(_dataHelper, _entryData, ISOForm.Mode.Patch) == DialogResult.OK)
+            {
+                //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+            }
         }
 
         private void menuItem_LoadISO_Click(object sender, EventArgs e)
         {
-            PatcherLib.MyMessageBox.Show(this, "Not implemented yet!", "Info", MessageBoxButtons.OK);
+            EntryData inputEntryData = _entryData ?? new EntryData(null, null, null);
+            if (ISOForm.InitDialog(_dataHelper, inputEntryData, ISOForm.Mode.Load) == DialogResult.OK)
+            {
+                _entryDataDefault = _entryDataDefault ?? _dataHelper.LoadDefaultEntryData();
+
+                _entryData = _entryData ?? inputEntryData;
+                _entryData.BattleConditionals = inputEntryData.BattleConditionals ?? _entryData.BattleConditionals ?? CopyableEntry.CopyList<ConditionalSet>(_entryDataDefault.BattleConditionals);
+                _entryData.WorldConditionals = inputEntryData.WorldConditionals ?? _entryData.WorldConditionals ?? CopyableEntry.CopyList<ConditionalSet>(_entryDataDefault.WorldConditionals);
+                _entryData.Events = inputEntryData.Events ?? _entryData.Events ?? CopyableEntry.CopyList<Event>(_entryDataDefault.Events);
+
+                PopulateTabs();
+                EnableMenu();
+                tabControl.Enabled = true;
+            }
         }
 
         private void menuItem_PatchPSXSaveState_Click(object sender, EventArgs e)

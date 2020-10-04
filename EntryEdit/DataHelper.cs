@@ -119,6 +119,22 @@ namespace EntryEdit
             return result;
         }
 
+        public static int GetMaxBlocks(IEnumerable<ConditionalSet> conditionalSets)
+        {
+            int result = 0;
+
+            if (conditionalSets != null)
+            {
+                foreach (ConditionalSet conditionalSet in conditionalSets)
+                {
+                    if (conditionalSet.ConditionalBlocks != null)
+                        result = Math.Max(result, conditionalSet.ConditionalBlocks.Count);
+                }
+            }
+
+            return result;
+        }
+
         public List<ConditionalSet> LoadBattleConditionalDefaults()
         {
             return LoadConditionalSetDefaults(CommandType.BattleConditional);

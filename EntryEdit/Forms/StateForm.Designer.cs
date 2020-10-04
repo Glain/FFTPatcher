@@ -48,12 +48,15 @@
             this.chk_WorldConditionals = new System.Windows.Forms.CheckBox();
             this.btn_Load = new System.Windows.Forms.Button();
             this.btn_Patch = new System.Windows.Forms.Button();
+            this.lbl_WorldConditionals_Size = new System.Windows.Forms.Label();
+            this.spinner_WorldConditionals_Size = new System.Windows.Forms.NumericUpDown();
             this.pnl_Battle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_BattleConditionals_RamLocation_Commands)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Event_RamLocation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_BattleConditionals_RamLocation_Blocks)).BeginInit();
             this.pnl_World.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_WorldConditionals_RamLocation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spinner_WorldConditionals_Size)).BeginInit();
             this.SuspendLayout();
             // 
             // txt_File
@@ -213,6 +216,8 @@
             // 
             // pnl_World
             // 
+            this.pnl_World.Controls.Add(this.spinner_WorldConditionals_Size);
+            this.pnl_World.Controls.Add(this.lbl_WorldConditionals_Size);
             this.pnl_World.Controls.Add(this.spinner_WorldConditionals_RamLocation);
             this.pnl_World.Controls.Add(this.lbl_WorldConditionals_RamLocation);
             this.pnl_World.Controls.Add(this.chk_WorldConditionals);
@@ -279,6 +284,27 @@
             this.btn_Patch.UseVisualStyleBackColor = true;
             this.btn_Patch.Click += new System.EventHandler(this.btn_Patch_Click);
             // 
+            // lbl_WorldConditionals_Size
+            // 
+            this.lbl_WorldConditionals_Size.AutoSize = true;
+            this.lbl_WorldConditionals_Size.Location = new System.Drawing.Point(416, 9);
+            this.lbl_WorldConditionals_Size.Name = "lbl_WorldConditionals_Size";
+            this.lbl_WorldConditionals_Size.Size = new System.Drawing.Size(30, 13);
+            this.lbl_WorldConditionals_Size.TabIndex = 5;
+            this.lbl_WorldConditionals_Size.Text = "Size:";
+            // 
+            // spinner_WorldConditionals_Size
+            // 
+            this.spinner_WorldConditionals_Size.Location = new System.Drawing.Point(450, 7);
+            this.spinner_WorldConditionals_Size.Maximum = new decimal(new int[] {
+            2097151,
+            0,
+            0,
+            0});
+            this.spinner_WorldConditionals_Size.Name = "spinner_WorldConditionals_Size";
+            this.spinner_WorldConditionals_Size.Size = new System.Drawing.Size(57, 20);
+            this.spinner_WorldConditionals_Size.TabIndex = 6;
+            // 
             // StateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -306,6 +332,7 @@
             this.pnl_World.ResumeLayout(false);
             this.pnl_World.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_WorldConditionals_RamLocation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spinner_WorldConditionals_Size)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -333,5 +360,7 @@
         private System.Windows.Forms.Button btn_Patch;
         private System.Windows.Forms.Label lbl_BattleConditionals_RamLocation_Commands;
         private System.Windows.Forms.NumericUpDown spinner_BattleConditionals_RamLocation_Commands;
+        private System.Windows.Forms.NumericUpDown spinner_WorldConditionals_Size;
+        private System.Windows.Forms.Label lbl_WorldConditionals_Size;
     }
 }

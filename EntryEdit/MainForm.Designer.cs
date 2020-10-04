@@ -287,7 +287,6 @@
             // menuItem_Copy
             // 
             this.menuItem_Copy.Name = "menuItem_Copy";
-            //this.menuItem_Copy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.menuItem_Copy.Size = new System.Drawing.Size(220, 22);
             this.menuItem_Copy.Text = "Copy Entry";
             this.menuItem_Copy.Click += new System.EventHandler(this.menuItem_Copy_Click);
@@ -295,7 +294,6 @@
             // menuItem_Paste
             // 
             this.menuItem_Paste.Name = "menuItem_Paste";
-            //this.menuItem_Paste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.menuItem_Paste.Size = new System.Drawing.Size(220, 22);
             this.menuItem_Paste.Text = "Paste Entry";
             this.menuItem_Paste.Click += new System.EventHandler(this.menuItem_Paste_Click);
@@ -357,7 +355,7 @@
             // menuItem_CheckSize
             // 
             this.menuItem_CheckSize.Name = "menuItem_CheckSize";
-            this.menuItem_CheckSize.Size = new System.Drawing.Size(130, 22);
+            this.menuItem_CheckSize.Size = new System.Drawing.Size(152, 22);
             this.menuItem_CheckSize.Text = "Check Size";
             this.menuItem_CheckSize.Click += new System.EventHandler(this.menuItem_CheckSize_Click);
             // 
@@ -378,14 +376,14 @@
             this.menuItem_PatchISO.Enabled = false;
             this.menuItem_PatchISO.Name = "menuItem_PatchISO";
             this.menuItem_PatchISO.Size = new System.Drawing.Size(192, 22);
-            this.menuItem_PatchISO.Text = "Patch ISO...";
+            this.menuItem_PatchISO.Text = "Patch PSX ISO...";
             this.menuItem_PatchISO.Click += new System.EventHandler(this.menuItem_PatchISO_Click);
             // 
             // menuItem_LoadISO
             // 
             this.menuItem_LoadISO.Name = "menuItem_LoadISO";
             this.menuItem_LoadISO.Size = new System.Drawing.Size(192, 22);
-            this.menuItem_LoadISO.Text = "Load ISO...";
+            this.menuItem_LoadISO.Text = "Load PSX ISO...";
             this.menuItem_LoadISO.Click += new System.EventHandler(this.menuItem_LoadISO_Click);
             // 
             // menuItem_Patch_Separator1

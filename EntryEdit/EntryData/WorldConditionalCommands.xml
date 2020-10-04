@@ -87,11 +87,11 @@
         <Parameter name="Unused" bytes="2" />
         <Parameter name="Unused" bytes="2" />
     </Command>
-    <Command hex="0019" name="Run Scenario">
+    <Command hex="0019" name="Run Scenario" sentinel="true">
         <Parameter name="Scenario ID" bytes="2" type="Scenario" />
         <Parameter name="Transition" bytes="2" />
     </Command>
-    <Command hex="001A" name="Scenario List">
+    <Command hex="001A" name="Scenario List" sentinel="true">
         <Parameter name="Map (1)" bytes="2" type="Map" />
         <Parameter name="Scenario (1)" bytes="2" type="Scenario" />
         <Parameter name="Map (2)" bytes="2" type="Map" />
@@ -105,14 +105,14 @@
         <Parameter name="Unused" bytes="2" />
         <Parameter name="Unused" bytes="2" />
     </Command>
-    <Command hex="001C" name="Set Variable">
+    <Command hex="001C" name="Set Variable" sentinel="true">
         <Parameter name="Variable" bytes="2" type="Variable" />
         <Parameter name="Value" bytes="2" />
     </Command>
-    <Command hex="001D" name="Display Text">
+    <Command hex="001D" name="Display Text" sentinel="true">
         <Parameter name="Message" bytes="2" />
     </Command>
-    <Command hex="001E" name="Deep Dungeon Choice">
+    <Command hex="001E" name="Deep Dungeon Choice" sentinel="true">
         <Parameter name="Battle Slot" bytes="2" />
         <Parameter name="Scenario" bytes="2" type="Scenario" />
         <Parameter name="Random Mod" bytes="2" />
@@ -121,21 +121,21 @@
         <Parameter name="Unknown" bytes="2" />
         <Parameter name="Unknown" bytes="2" />
     </Command>
-    <Command hex="0020" name="Draw Path">
+    <Command hex="0020" name="Draw Path" sentinel="true">
         <Parameter name="From Location" bytes="2" type="Location" />
         <Parameter name="To Location" bytes="2" type="Location" />
     </Command>
-    <Command hex="0021" name="Erase Path">
+    <Command hex="0021" name="Erase Path" sentinel="true">
         <Parameter name="From Location" bytes="2" type="Location" />
         <Parameter name="To Location" bytes="2" type="Location" />
     </Command>
-    <Command hex="0022" name="Draw Location">
+    <Command hex="0022" name="Draw Location" sentinel="true">
         <Parameter name="Location ID" bytes="2" type="Location" />
     </Command>
-    <Command hex="0023" name="Erase Location">
+    <Command hex="0023" name="Erase Location" sentinel="true">
         <Parameter name="Location ID" bytes="2" type="Location" />
     </Command>
-    <Command hex="0024" name="Focus Location">
+    <Command hex="0024" name="Focus Location" sentinel="true">
         <Parameter name="Location ID" bytes="2" type="Location" />
     </Command>
     <Command hex="0025" name="Main Character Brave &gt;=">
