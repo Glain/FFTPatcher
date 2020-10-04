@@ -19,6 +19,9 @@ namespace EntryEdit
         private EntryData _entryData;
         private EntryData _entryDataDefault;
 
+        private List<Command> _commandListCopy;
+        private CommandType _commandListCopyType;
+
         private ConditionalSet _battleConditionalSetCopy;
         private ConditionalSet _worldConditionalSetCopy;
         private Event _eventCopy;
@@ -536,7 +539,48 @@ namespace EntryEdit
             Close();
         }
 
-        private void menuItem_Copy_Click(object sender, EventArgs e)
+        private void menuItem_CopyCommands_Click(object sender, EventArgs e)
+        {
+            if (menuItem_Edit.Enabled)
+            {
+                if (tabControl.SelectedTab == tabPage_BattleConditionals)
+                {
+                    _commandListCopy = battleConditionalSetsEditor.CopyCommandList();
+                    _commandListCopyType = CommandType.BattleConditional;
+                }
+                else if (tabControl.SelectedTab == tabPage_WorldConditionals)
+                {
+                    _commandListCopy = worldConditionalSetsEditor.CopyCommandList();
+                    _commandListCopyType = CommandType.WorldConditional;
+                }
+                else if (tabControl.SelectedTab == tabPage_Events)
+                {
+                    _commandListCopy = eventsEditor.CopyCommandList();
+                    _commandListCopyType = CommandType.EventCommand;
+                }
+            }
+        }
+
+        private void menuItem_PasteCommands_Click(object sender, EventArgs e)
+        {
+            if ((menuItem_Edit.Enabled) && (_commandListCopy != null))
+            {
+                if ((tabControl.SelectedTab == tabPage_BattleConditionals) && (_commandListCopyType == CommandType.BattleConditional))
+                {
+                    battleConditionalSetsEditor.PasteCommandList(_commandListCopy);
+                }
+                else if ((tabControl.SelectedTab == tabPage_WorldConditionals) && (_commandListCopyType == CommandType.WorldConditional))
+                {
+                    worldConditionalSetsEditor.PasteCommandList(_commandListCopy);
+                }
+                else if ((tabControl.SelectedTab == tabPage_Events) && (_commandListCopyType == CommandType.EventCommand))
+                {
+                    eventsEditor.PasteCommandList(_commandListCopy);
+                }
+            }
+        }
+
+        private void menuItem_CopyEntry_Click(object sender, EventArgs e)
         {
             if (menuItem_Edit.Enabled)
             {
@@ -555,7 +599,7 @@ namespace EntryEdit
             }
         }
 
-        private void menuItem_Paste_Click(object sender, EventArgs e)
+        private void menuItem_PasteEntry_Click(object sender, EventArgs e)
         {
             if (menuItem_Edit.Enabled)
             {

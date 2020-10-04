@@ -40,8 +40,25 @@ namespace EntryEdit.Editors
             eventEditor.SavePage();
         }
 
+        public List<Command> CopyCommandList()
+        {
+            return (_eventIndex >= 0) ? eventEditor.CopyCommandList() : null;
+        }
+
+        public void PasteCommandList(List<Command> commandList)
+        {
+            if ((_eventIndex >= 0) && (commandList != null))
+            {
+                SavePage();
+                Event e = _events[_eventIndex];
+                _events[_eventIndex] = new Event(e.Index, e.Name, commandList, e.DataSection, e.TextSection, e.OriginalTextSection, e.OriginalBytes);
+                PopulateEvents(_eventIndex);
+            }
+        }
+
         public Event CopyEvent()
         {
+            SavePage();
             return (_eventIndex >= 0) ? _events[_eventIndex].Copy() : null;
         }
 
@@ -49,8 +66,10 @@ namespace EntryEdit.Editors
         {
             if ((_eventIndex >= 0) && (inputEvent != null))
             {
+                string name = _events[_eventIndex].Name;
                 _events[_eventIndex] = inputEvent.Copy();
                 _events[_eventIndex].Index = _eventIndex;
+                _events[_eventIndex].Name = name;
                 PopulateEvents(_eventIndex);
             }
         }

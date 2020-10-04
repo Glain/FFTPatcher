@@ -28,9 +28,20 @@ namespace EntryEdit.Editors
             this._event = inputEvent;
             this._defaultEvent = defaultEvent;
 
-            commandListEditor.Populate(inputEvent.CommandList, defaultEvent.CommandList);
-            textSectionEditor.Populate(new CustomSection[2] { inputEvent.TextSection, inputEvent.DataSection }, inputEvent.OriginalTextSection,
-                new CustomSection[2] { defaultEvent.TextSection, defaultEvent.DataSection }, defaultEvent.OriginalTextSection);
+            commandListEditor.Populate(_event.CommandList, _defaultEvent.CommandList);
+            textSectionEditor.Populate(new CustomSection[2] { _event.TextSection, _event.DataSection }, _event.OriginalTextSection,
+                new CustomSection[2] { _defaultEvent.TextSection, _defaultEvent.DataSection }, _defaultEvent.OriginalTextSection);
+        }
+
+        public List<Command> CopyCommandList()
+        {
+            commandListEditor.SavePage();
+            return CopyableEntry.CopyList<Command>(commandListEditor.CommandList);
+        }
+
+        public void RefreshCommandList()
+        {
+            commandListEditor.Populate(_event.CommandList, _defaultEvent.CommandList);
         }
 
         public void SavePage()

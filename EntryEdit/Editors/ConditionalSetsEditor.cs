@@ -67,8 +67,22 @@ namespace EntryEdit.Editors
             conditionalSetEditor.SaveBlock();
         }
 
+        public List<Command> CopyCommandList()
+        {
+            return conditionalSetEditor.CopyCommandList();
+        }
+
+        public void PasteCommandList(List<Command> commandList)
+        {
+            if ((_conditionalSetIndex >= 0) && (commandList != null))
+            {
+                conditionalSetEditor.PasteCommandList(commandList);
+            }
+        }
+
         public ConditionalSet CopyConditionalSet()
         {
+            SaveBlock();
             return (_conditionalSetIndex >= 0) ? _conditionalSets[_conditionalSetIndex].Copy() : null;
         }
 

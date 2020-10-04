@@ -90,6 +90,22 @@ namespace EntryEdit.Editors
             return ((_conditionalSet != null) && (_blockIndex >= 0)) ? _conditionalSet.ConditionalBlocks[_blockIndex].GetScript() : string.Empty;   
         }
 
+        public List<Command> CopyCommandList()
+        {
+            SaveBlock();
+            return ((_conditionalSet != null) && (_blockIndex >= 0)) ? _conditionalSet.ConditionalBlocks[_blockIndex].Commands : null;
+        }
+
+        public void PasteCommandList(List<Command> commandList)
+        {
+            if ((_conditionalSet != null) && (_blockIndex >= 0))
+            {
+                ConditionalBlock newBlock = new ConditionalBlock(_blockIndex, commandList);
+                newBlock.FindName(_commandData.ParameterValueMaps);
+                LoadBlock(newBlock);
+            }
+        }
+
         public void LoadBlock(ConditionalBlock block)
         {
             if ((_conditionalSet != null) && (_blockIndex >= 0))
