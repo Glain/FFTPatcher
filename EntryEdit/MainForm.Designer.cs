@@ -30,8 +30,11 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage_BattleConditionals = new System.Windows.Forms.TabPage();
+            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_WorldConditionals = new System.Windows.Forms.TabPage();
+            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
             this.tabPage_Events = new System.Windows.Forms.TabPage();
+            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.menuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_NewPatch = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +50,8 @@
             this.menuItem_File_Separator4 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_CopyCommands = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_PasteCommands = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_CopyEntry = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_PasteEntry = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Edit_Separator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -65,11 +70,7 @@
             this.menuItem_PatchPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_LoadPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
-            this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
-            this.worldConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
-            this.eventsEditor = new EntryEdit.Editors.EventsEditor();
-            this.menuItem_CopyCommands = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem_PasteCommands = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_UseTrimmedDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -103,6 +104,16 @@
             this.tabPage_BattleConditionals.Text = "Battle Conditionals";
             this.tabPage_BattleConditionals.UseVisualStyleBackColor = true;
             // 
+            // battleConditionalSetsEditor
+            // 
+            this.battleConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
+            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
+            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
+            this.battleConditionalSetsEditor.TabIndex = 0;
+            // 
             // tabPage_WorldConditionals
             // 
             this.tabPage_WorldConditionals.Controls.Add(this.worldConditionalSetsEditor);
@@ -114,6 +125,16 @@
             this.tabPage_WorldConditionals.Text = "World Conditionals";
             this.tabPage_WorldConditionals.UseVisualStyleBackColor = true;
             // 
+            // worldConditionalSetsEditor
+            // 
+            this.worldConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
+            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
+            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
+            this.worldConditionalSetsEditor.TabIndex = 1;
+            // 
             // tabPage_Events
             // 
             this.tabPage_Events.Controls.Add(this.eventsEditor);
@@ -124,6 +145,16 @@
             this.tabPage_Events.TabIndex = 2;
             this.tabPage_Events.Text = "Events";
             this.tabPage_Events.UseVisualStyleBackColor = true;
+            // 
+            // eventsEditor
+            // 
+            this.eventsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eventsEditor.Location = new System.Drawing.Point(4, 4);
+            this.eventsEditor.Name = "eventsEditor";
+            this.eventsEditor.Size = new System.Drawing.Size(987, 762);
+            this.eventsEditor.TabIndex = 0;
             // 
             // menuBar
             // 
@@ -247,6 +278,7 @@
             this.menuItem_CopyEntry,
             this.menuItem_PasteEntry,
             this.menuItem_Edit_Separator1,
+            this.menuItem_UseTrimmedDefaults,
             this.menuItem_SetDefaults,
             this.menuItem_RestoreDefaults,
             this.menuItem_Edit_Separator2,
@@ -257,6 +289,20 @@
             this.menuItem_Edit.Name = "menuItem_Edit";
             this.menuItem_Edit.Size = new System.Drawing.Size(39, 20);
             this.menuItem_Edit.Text = "Edit";
+            // 
+            // menuItem_CopyCommands
+            // 
+            this.menuItem_CopyCommands.Name = "menuItem_CopyCommands";
+            this.menuItem_CopyCommands.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_CopyCommands.Text = "Copy Commands";
+            this.menuItem_CopyCommands.Click += new System.EventHandler(this.menuItem_CopyCommands_Click);
+            // 
+            // menuItem_PasteCommands
+            // 
+            this.menuItem_PasteCommands.Name = "menuItem_PasteCommands";
+            this.menuItem_PasteCommands.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_PasteCommands.Text = "Paste Commands";
+            this.menuItem_PasteCommands.Click += new System.EventHandler(this.menuItem_PasteCommands_Click);
             // 
             // menuItem_CopyEntry
             // 
@@ -388,49 +434,12 @@
             this.menuItem_About.Text = "About...";
             this.menuItem_About.Click += new System.EventHandler(this.menuItem_About_Click);
             // 
-            // battleConditionalSetsEditor
+            // menuItem_UseTrimmedDefaults
             // 
-            this.battleConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.battleConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
-            this.battleConditionalSetsEditor.Name = "battleConditionalSetsEditor";
-            this.battleConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
-            this.battleConditionalSetsEditor.TabIndex = 0;
-            // 
-            // worldConditionalSetsEditor
-            // 
-            this.worldConditionalSetsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.worldConditionalSetsEditor.Location = new System.Drawing.Point(4, 4);
-            this.worldConditionalSetsEditor.Name = "worldConditionalSetsEditor";
-            this.worldConditionalSetsEditor.Size = new System.Drawing.Size(987, 762);
-            this.worldConditionalSetsEditor.TabIndex = 1;
-            // 
-            // eventsEditor
-            // 
-            this.eventsEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eventsEditor.Location = new System.Drawing.Point(4, 4);
-            this.eventsEditor.Name = "eventsEditor";
-            this.eventsEditor.Size = new System.Drawing.Size(987, 762);
-            this.eventsEditor.TabIndex = 0;
-            // 
-            // menuItem_CopyCommands
-            // 
-            this.menuItem_CopyCommands.Name = "menuItem_CopyCommands";
-            this.menuItem_CopyCommands.Size = new System.Drawing.Size(220, 22);
-            this.menuItem_CopyCommands.Text = "Copy Commands";
-            this.menuItem_CopyCommands.Click += new System.EventHandler(this.menuItem_CopyCommands_Click);
-            // 
-            // menuItem_PasteCommands
-            // 
-            this.menuItem_PasteCommands.Name = "menuItem_PasteCommands";
-            this.menuItem_PasteCommands.Size = new System.Drawing.Size(220, 22);
-            this.menuItem_PasteCommands.Text = "Paste Commands";
-            this.menuItem_PasteCommands.Click += new System.EventHandler(this.menuItem_PasteCommands_Click);
+            this.menuItem_UseTrimmedDefaults.Name = "menuItem_UseTrimmedDefaults";
+            this.menuItem_UseTrimmedDefaults.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_UseTrimmedDefaults.Text = "Use Trimmed Defaults";
+            this.menuItem_UseTrimmedDefaults.Click += new System.EventHandler(this.menuItem_UseTrimmedDefaults_Click);
             // 
             // MainForm
             // 
@@ -497,6 +506,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuItem_About;
         private System.Windows.Forms.ToolStripMenuItem menuItem_CopyCommands;
         private System.Windows.Forms.ToolStripMenuItem menuItem_PasteCommands;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_UseTrimmedDefaults;
     }
 }
 

@@ -145,6 +145,11 @@ namespace EntryEdit
             return LoadConditionalSetDefaults(CommandType.WorldConditional);
         }
 
+        public List<ConditionalSet> LoadTrimmedBattleConditionals()
+        {
+            return LoadConditionalSetsFromFile(CommandType.BattleConditional, Settings.FilepathTrimmedBattleConditionals);
+        }
+
         public ConditionalSet LoadActiveConditionalSet(int setIndex, string name, CommandType type, IList<byte> blockOffsetBytes, IList<byte> commandBytes)
         {
             List<UInt16> blockOffsets = new List<UInt16>(blockOffsetBytes.Count / 2);
@@ -636,9 +641,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return "EntryData/BattleConditionals.bin";
-                case CommandType.WorldConditional: return "EntryData/WorldConditionals.bin";
-                case CommandType.EventCommand: return "EntryData/Events.bin";
+                case CommandType.BattleConditional: return Settings.FilepathDefaultBattleConditionals;
+                case CommandType.WorldConditional: return Settings.FilepathDefaultWorldConditionals;
+                case CommandType.EventCommand: return Settings.FilepathDefaultEvents;
                 default: return null;
             }
         }
@@ -647,9 +652,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return "EntryData/BattleConditionalCommands.xml";
-                case CommandType.WorldConditional: return "EntryData/WorldConditionalCommands.xml";
-                case CommandType.EventCommand: return "EntryData/EventCommands.xml";
+                case CommandType.BattleConditional: return Settings.FilepathCommandBattleConditionals;
+                case CommandType.WorldConditional: return Settings.FilepathCommandWorldConditionals;
+                case CommandType.EventCommand: return Settings.FilepathCommandEvents;
                 default: return null;
             }
         }
@@ -658,9 +663,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return "EntryData/ConditionalSets.xml";
-                case CommandType.WorldConditional: return "EntryData/LocationNames.xml";
-                case CommandType.EventCommand: return "EntryData/ScenarioNames.xml";
+                case CommandType.BattleConditional: return Settings.FilepathNamesBattleConditionals;
+                case CommandType.WorldConditional: return Settings.FilepathNamesWorldConditionals;
+                case CommandType.EventCommand: return Settings.FilepathNamesEvents;
                 default: return null;
             }
         }
@@ -966,6 +971,11 @@ namespace EntryEdit
         public EntryData LoadDefaultEntryData()
         {
             return new EntryData(LoadBattleConditionalDefaults(), LoadWorldConditionalDefaults(), LoadDefaultEvents());
+        }
+
+        public EntryData LoadTrimmedEntryData()
+        {
+            return new EntryData(LoadTrimmedBattleConditionals(), LoadWorldConditionalDefaults(), LoadDefaultEvents());
         }
 
         public EntryData LoadEntryDataFromBytes(EntryBytes entryBytes)

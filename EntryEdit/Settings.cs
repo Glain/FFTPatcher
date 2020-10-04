@@ -97,7 +97,40 @@ namespace EntryEdit
         private static readonly int _maxSectors = Utilities.ParseInt(ConfigurationManager.AppSettings["MaxSectors"]);
         public static int MaxSectors { get { return _maxSectors; } }
 
-        public static readonly int _totalEventSize = Settings.EventSize * Settings.NumEvents;
+        private static readonly string _filepathDefaultBattleConditionals = ConfigurationManager.AppSettings["FilepathDefaultBattleConditionals"];
+        public static string FilepathDefaultBattleConditionals { get { return _filepathDefaultBattleConditionals; } }
+
+        private static readonly string _filepathTrimmedBattleConditionals = ConfigurationManager.AppSettings["FilepathTrimmedBattleConditionals"];
+        public static string FilepathTrimmedBattleConditionals { get { return _filepathTrimmedBattleConditionals; } }
+
+        private static readonly string _filepathDefaultWorldConditionals = ConfigurationManager.AppSettings["FilepathDefaultWorldConditionals"];
+        public static string FilepathDefaultWorldConditionals { get { return _filepathDefaultWorldConditionals; } }
+
+        private static readonly string _filepathDefaultEvents = ConfigurationManager.AppSettings["FilepathDefaultEvents"];
+        public static string FilepathDefaultEvents { get { return _filepathDefaultEvents; } }
+
+        private static readonly string _filepathCommandBattleConditionals = ConfigurationManager.AppSettings["FilepathCommandBattleConditionals"];
+        public static string FilepathCommandBattleConditionals { get { return _filepathCommandBattleConditionals; } }
+
+        private static readonly string _filepathCommandWorldConditionals = ConfigurationManager.AppSettings["FilepathCommandWorldConditionals"];
+        public static string FilepathCommandWorldConditionals { get { return _filepathCommandWorldConditionals; } }
+
+        private static readonly string _filepathCommandEvents = ConfigurationManager.AppSettings["FilepathCommandEvents"];
+        public static string FilepathCommandEvents { get { return _filepathCommandEvents; } }
+
+        private static readonly string _filepathNamesBattleConditionals = ConfigurationManager.AppSettings["FilepathNamesBattleConditionals"];
+        public static string FilepathNamesBattleConditionals { get { return _filepathNamesBattleConditionals; } }
+
+        private static readonly string _filepathNamesWorldConditionals = ConfigurationManager.AppSettings["FilepathNamesWorldConditionals"];
+        public static string FilepathNamesWorldConditionals { get { return _filepathNamesWorldConditionals; } }
+
+        private static readonly string _filepathNamesEvents = ConfigurationManager.AppSettings["FilepathNamesEvents"];
+        public static string FilepathNamesEvents { get { return _filepathNamesEvents; } }
+
+
+
+
+        private static readonly int _totalEventSize = Settings.EventSize * Settings.NumEvents;
         public static int TotalEventSize { get { return _totalEventSize; } }
 
         private static readonly int _worldConditionalsPointerRAMLocation = PsxIso.GetRamOffset(Settings.WorldConditionalsPointerSector) + Settings.WorldConditionalsPointerOffset;

@@ -133,6 +133,7 @@ namespace EntryEdit
 
         private void SetDefaults()
         {
+            menuItem_UseTrimmedDefaults.Checked = false;
             SaveFormData();
             _entryDataDefault = _entryData.Copy();
             PopulateTabs();
@@ -140,6 +141,7 @@ namespace EntryEdit
 
         private void RestoreDefaults()
         {
+            menuItem_UseTrimmedDefaults.Checked = false;
             SaveFormData();
             _entryDataDefault = _dataHelper.LoadDefaultEntryData();
             PopulateTabs();
@@ -616,6 +618,14 @@ namespace EntryEdit
                     eventsEditor.PasteEvent(_eventCopy);
                 }
             }
+        }
+
+        private void menuItem_UseTrimmedDefaults_Click(object sender, EventArgs e)
+        {
+            menuItem_UseTrimmedDefaults.Checked = !menuItem_UseTrimmedDefaults.Checked;
+            SaveFormData();
+            _entryDataDefault = menuItem_UseTrimmedDefaults.Checked ? _dataHelper.LoadTrimmedEntryData() : _dataHelper.LoadDefaultEntryData();
+            PopulateTabs();
         }
 
         private void menuItem_SetDefaults_Click(object sender, EventArgs e)
