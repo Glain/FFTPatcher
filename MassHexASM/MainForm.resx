@@ -117,25 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="menu_Top.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAMDAAAAAAIAD2AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgCAAAA2GBu0AAAAARn
-        QU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKYSURBVFhHzZa9alRRFIUDPoetYOcLKIi1
-        nY0QRdDEh0ghWPgYdjYWgkVKSxFBxcLGTqwU/1CTTFAS3fEM396z1j0XU53AB9l7fesO45mZ6127u3Wy
-        0H04ug9H9+HoPhzdh6P7cHQfTk6vn188XGwe7G28enaBsPHg/umdz9d+79ysKsJ3by8/fniGBHoq8o/v
-        r+x+vf5nfzP49uGqd3JqpQZhEK/y88u6qxbGuySBnqqv0/BOTrVHGMirkHsCPXUULpYKpJNTrdaTJGx4
-        TgI9VfM6V3KiEXCS8XnVPPA+CfRUzetcyelI2yH5p77SX02gp2pe50pONBrtkCQMvE8Ck6oedq8T5LRs
-        lEPafnSWGbT/32+oHnas8Q/2TpATbVh8vyFJ4H0SmFSEL56ej/XJ9rmYf3xal1tRTssL7GcpaP/4b4hk
-        8naVExcc7N5idrxPApPKQ0+CnNDtMCtxyMzeJ4FJ5aEnQU5VMwftI2ed7AuTykNPgpyqZm6r2F4Ck8pD
-        T4KcquY32VaxkggHe/kVpFz7M0mQU9V8jdrnJVaSGSjLXbHhSZDTpAa3R6vfI1aS25T9v6DgcH+jDdSC
-        nOiRVNx6Aq5IHLk3Lv8ENEgqbj0BV8vETvTXvy9rvTcu/wSUSCpuPQFXnvTyOVdx6wm48qSXz7mKW0/A
-        lSe9fM5V3HoCrjzp5XOu4tYTcOVJL59zFbeegKj6oEen4Y9p6XrXNNx6AqK4K755eYlOwx/T0rVrApKK
-        W09AFOu9O6fogDympeAykopbT0CUrILYrhDcegKiZBXEdoXg1hMQJasgtisEt56AKFkFsSn8F1hxO9MX
-        daxXTtF+gTyRCW5n+qKO9cor7iSg+3B0H47uw9F9OLoPR/fBbK39BTMJnXKF79WuAAAAAElFTkSuQmCC
-</value>
+  <data name="menu_Top.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\mha.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

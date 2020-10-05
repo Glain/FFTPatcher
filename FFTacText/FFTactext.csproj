@@ -73,6 +73,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\fftp_g.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\PatcherLib\Resources\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -216,6 +219,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\fftp_g.ico" />
     <Content Include="Resources\bg.gif" />
     <Content Include="Files\PSP\FileContents.txt" />
     <Content Include="Files\PSX\FileContents.txt" />

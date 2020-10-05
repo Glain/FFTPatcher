@@ -117,58 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="separator1.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="separator1.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator2.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator2.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator3.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator3.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="utilitiesMenuItem.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="utilitiesMenuItem.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator6.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator6.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator5.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator5.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="generateResourcesMenuItem.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="generateResourcesMenuItem.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator7.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator7.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>120, 17</value>
-  </metadata>
-  <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>244, 17</value>
-  </metadata>
-  <metadata name="applyPatchOpenFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>366, 17</value>
-  </metadata>
-  <metadata name="patchPsxBackgroundWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>709, 17</value>
-  </metadata>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAMDAAAAAAIABBAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgCAAAA2GBu0AAAAAFz
-        UkdCAK7OHOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1klEQVRYR82WsUoD
-        URBFN42CoqAYTCFGN6XaijYWNv6EQbAI+heCv+JX2FmrvY0IFhZqa5t1kvcye7m7zthN4MDkzj1uXgI+
-        UtwU8wXncDiHwzkczuFwDodzOJzD4RwO53A4h8M5nDy+j7rVqKyuB8p42H89WFPPFp4HqxKxRehRX731
-        cblSnde+CG/7WchSdVX/fc2oTK0rGKfJzEw5Oh6lZlS+703ONHs/qqf8nPZS6wqfhxtUTYDPoGZ1uatL
-        Znpofr+Hbv3dIq6AVBc7Exm+YEWfI3ycbcnm5XhTNxLZS7GJKyCGrBV+MF3K65ZVK66AGHJrhUvLQ1wB
-        MeRmdTdXB7pfXBj3l3HZ7jVxBcSQtark9fYSXQEiNLwZdJtRK5CAqEN7QasmTyddEUwPL0aqEm3/2IIK
-        tBe0Ih6npxEs7/8XI6EC7QWtFD1Kgj0tCFdADLm1uu109HUerR7iCoghG1UiD9dzBcSQjSqRh+u5AmLI
-        RpXIw/VcATFko0rk4XqugBiyUSXycD1XQAzZqBJ5uJ4rIIZsVIk85M61PVdADNl9Th7pN+hfN6/gCogh
-        u8/hHA7ncDiHwzkczuFwDodzOJzD4RwO53A4h8M5HM7hcA6mKH4BYqMjCOdImXYAAAAASUVORK5CYII=
-</value>
+  <data name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
+  </data>
+  <data name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>120, 17</value>
+  </data>
+  <data name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>244, 17</value>
+  </data>
+  <data name="applyPatchOpenFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>366, 17</value>
+  </data>
+  <data name="patchPsxBackgroundWorker.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>709, 17</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\fftp_r.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -117,43 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="separator2.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="separator2.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator3.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator3.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator4.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator4.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="separator5.GenerateMember" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  </data>
+  <data name="separator5.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
-  </metadata>
-  <metadata name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>120, 17</value>
-  </metadata>
-  <metadata name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>244, 17</value>
-  </metadata>
-  <metadata name="patchPsxBackgroundWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>373, 17</value>
-  </metadata>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAMDAAAAAAIABBAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgCAAAA2GBu0AAAAAFz
-        UkdCAK7OHOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1klEQVRYR82WsUoD
-        URBFN42CohAxmEKMJqXaijYWNv6EIliI/kXAX/Er7KzV3kYECwu1tc1zNvOYnb15zthN4MBw5x6Wt4F9
-        pKrGcwbmcDCHgzkczOFgDgdzOJjDwRwO5nAwh4M5HB6978NhuhqlG2EwOe++7otnC6vPI4q61cCj1r76
-        K5PhIJ21hLe9LPAYpWupBTpBljzBOA0jZn10dRSBhO77bu2wBzXT/znh1hXWPw+gmtK8g5g76VKWQD40
-        e7LtPvR4A7iCZjtdkKl/YEGeQ2x+nNJm4+VINrUDHsdZXEFjyFLpF5NlHQurEq6gMeRi1VoWViVcQWPI
-        hepung60cL+4PBm0lkVvFlfQGHJTpWopbcEVUDvgCXCbQUuAoBEH9oRUs/SejmvH8PR3CxVT/LAJEWBP
-        SAX0HqenIQzv/xcjIALsCamE5igMD6mboo0raAy5WHVuO03kUfQ0rqAxZKPK8HA9V9AYslFleLieK2gM
-        2agyPFzPFTSGbFQZHq7nChpDNqoMD9dzBY0hG1WGh+u5gsaQjSrDg+5c23MFjSH7z+HB/0H/unkJV9AY
-        sv8czOFgDgdzOJjDwRwO5nAwh4M5HMzhYA4HcziYw8EcDuZYxtUv4nQjCKFDtJYAAAAASUVORK5CYII=
-</value>
+  <data name="mainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
+  </data>
+  <data name="openFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>120, 17</value>
+  </data>
+  <data name="saveFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>244, 17</value>
+  </data>
+  <data name="patchPsxBackgroundWorker.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>373, 17</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\fftp_g.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

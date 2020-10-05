@@ -117,23 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAMDAAAAAAIABjAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgGAAAAVwL5hwAAAARn
-        QU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAIFSURBVGhD1ZexSkNBEEWTRkFRiBhMIUaT
-        Um1FmxQ2/oQiWIj+RcBf8SvsrNXeRgQLC7W1zeq+zMvOTu4+Z+ymODDcOfdlk2IfabVa4+AbGHoChp6A
-        oSdg6AkYegKGnoChJ2DoCRh6AoaegKEnaOgefoXBZQjD65z+2SR09l+yktZdHT5VmfQk6DPWep9hZTAJ
-        /VPg7r0yl4bhVS5y4mFTQe9qDl/De9UXFwfnRLez+0Y+lZBY0zv+nj3c4q4ffECnQvwIvLdzke8Q6QtT
-        iS873fvZwxAWV7J9Lg8wD39+ZPPkvco3jp6zfOqDUp2VsLgSTZc78gfiu2lWXJSxuBJNt8mZ3xUXZSyu
-        RNMtO7dgR8v5RRmLK9F0kbOweBeW+/mtNt01lEpYXImmmzshLG393v/gWp36oMRBLxnkRZAr4T7aR7hT
-        ojt6JF9RklcecmqarscId9E+wh1Ed/TAfEXpvy8yBHfRPsIdTn7wGhq4mAvzWFyJptvktNs3IqOhqSSx
-        uBJNV+MkaLCULK5E09U4CRosJYsr0XQ1ToIGS8niSjRdjZOgwVKyuBJNV+MkaLCULK5E09U4CRosJYsr
-        0XQ1ToKG+AbVliyuRNO1PZ+G+u/fX2/SiMWVaLq258PQEzD0BAw9AUNPwNATMPQEDD0BQ0/A0BMw9AQM
-        PQFDT8DQEzD0wjj8ANT3Go8VV43ZAAAAAElFTkSuQmCC
-</value>
+  <data name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\fftp_b.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
