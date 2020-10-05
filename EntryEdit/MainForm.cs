@@ -94,16 +94,23 @@ namespace EntryEdit
             byte[] bytesBattleConditionals, bytesWorldConditionals, bytesEvents;
             EntryBytes defaultEntryBytes = _dataHelper.LoadDefaultEntryBytes();
 
-            using (ICSharpCode.SharpZipLib.Zip.ZipFile file = new ICSharpCode.SharpZipLib.Zip.ZipFile(filepath))
+            try
             {
-                bytesBattleConditionals = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameBattleConditionals, false) ?? defaultEntryBytes.BattleConditionals;
-                bytesWorldConditionals = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameWorldConditionals, false) ?? defaultEntryBytes.WorldConditionals;
-                bytesEvents = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameEvents, false) ?? defaultEntryBytes.Events;
-            }
+                using (ICSharpCode.SharpZipLib.Zip.ZipFile file = new ICSharpCode.SharpZipLib.Zip.ZipFile(filepath))
+                {
+                    bytesBattleConditionals = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameBattleConditionals, false) ?? defaultEntryBytes.BattleConditionals;
+                    bytesWorldConditionals = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameWorldConditionals, false) ?? defaultEntryBytes.WorldConditionals;
+                    bytesEvents = PatcherLib.Utilities.Utilities.GetZipEntry(file, DataHelper.EntryNameEvents, false) ?? defaultEntryBytes.Events;
+                }
 
-            _entryDataDefault = _dataHelper.LoadEntryDataFromBytes(defaultEntryBytes);
-            _entryData = _dataHelper.LoadEntryDataFromBytes(bytesBattleConditionals, bytesWorldConditionals, bytesEvents);
-            PopulateTabs();
+                _entryDataDefault = _dataHelper.LoadEntryDataFromBytes(defaultEntryBytes);
+                _entryData = _dataHelper.LoadEntryDataFromBytes(bytesBattleConditionals, bytesWorldConditionals, bytesEvents);
+                PopulateTabs();
+            }
+            catch (Exception ex)
+            {
+                PatcherLib.MyMessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK);
+            }
         }
 
         private void SavePatch()

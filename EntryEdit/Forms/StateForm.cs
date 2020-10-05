@@ -80,59 +80,66 @@ namespace EntryEdit.Forms
 
         private void CheckStateFile(string filepath)
         {
-            using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
+            try
             {
-                Stream stream = reader.BaseStream;
-
-                pnl_Battle.Visible = false;
-                pnl_World.Visible = false;
-
-                if (PsxIso.IsSectorInPsxSaveState(stream, PsxIso.Sectors.BATTLE_BIN))
+                using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
                 {
-                    pnl_Battle.Visible = true;
-                    EnableActionButton();
+                    Stream stream = reader.BaseStream;
 
-                    spinner_BattleConditionals_RamLocation_Blocks.Value = Settings.BattleConditionalBlockOffsetsRAMLocation;
-                    spinner_BattleConditionals_RamLocation_Commands.Value = Settings.BattleConditionalsRAMLocation;
-                    spinner_Event_RamLocation.Value = Settings.EventRAMLocation;
+                    pnl_Battle.Visible = false;
+                    pnl_World.Visible = false;
 
-                    chk_BattleConditionals.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.BattleConditionalBlockOffsetsRAMLocation, 4).ToIntLE() != 0);
-                    chk_Event.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.EventRAMLocation, 1).ToIntLE() != 0);
-
-                    int loadedEventID = PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.EventIDRAMLocation, 2).ToIntLE();
-                    cmb_Event.SelectedIndex = ((loadedEventID >= 0) && (loadedEventID < _entryData.Events.Count)) ? loadedEventID : ((_selectedIndexResult.EventIndex >= 0) ? _selectedIndexResult.EventIndex : 0);
-
-                    int battleConditionalsIndex = 0;
-                    if (PsxIso.IsSectorInPsxSaveState(stream, Settings.ScenariosSector))
-                        battleConditionalsIndex = PsxIso.LoadFromPsxSaveState(reader, (uint)(Settings.ScenariosRAMLocation + (loadedEventID * 24) + 22), 2).ToIntLE();
-                    else
-                        battleConditionalsIndex = (_selectedIndexResult.BattleConditionalIndex >= 0) ? _selectedIndexResult.BattleConditionalIndex : 0;
-
-                    cmb_BattleConditionals_ConditionalSet.SelectedIndex = battleConditionalsIndex;
-                }
-                else if (PsxIso.IsSectorInPsxSaveState(stream, PsxIso.Sectors.WORLD_WLDCORE_BIN))
-                {
-                    pnl_World.Visible = true;
-                    EnableActionButton();
-
-                    bool isLoad = (_mode == Mode.Load);
-                    lbl_WorldConditionals_Size.Visible = isLoad;
-                    spinner_WorldConditionals_Size.Visible = isLoad;
-
-                    spinner_WorldConditionals_Size.Value = Settings.WorldConditionalsSize;
-                    spinner_WorldConditionals_RamLocation.Value = Settings.WorldConditionalsRepoint
-                        ? PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 3).ToIntLE()
-                        : Settings.WorldConditionalsCalcRAMLocation;
-
-                    if (_mode == Mode.Patch)
+                    if (PsxIso.IsSectorInPsxSaveState(stream, PsxIso.Sectors.BATTLE_BIN))
                     {
-                        worldConditionalsBytes = _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals);
-                        if (worldConditionalsBytes.Length > Settings.WorldConditionalsSize)
+                        pnl_Battle.Visible = true;
+                        EnableActionButton();
+
+                        spinner_BattleConditionals_RamLocation_Blocks.Value = Settings.BattleConditionalBlockOffsetsRAMLocation;
+                        spinner_BattleConditionals_RamLocation_Commands.Value = Settings.BattleConditionalsRAMLocation;
+                        spinner_Event_RamLocation.Value = Settings.EventRAMLocation;
+
+                        chk_BattleConditionals.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.BattleConditionalBlockOffsetsRAMLocation, 4).ToIntLE() != 0);
+                        chk_Event.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.EventRAMLocation, 1).ToIntLE() != 0);
+
+                        int loadedEventID = PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.EventIDRAMLocation, 2).ToIntLE();
+                        cmb_Event.SelectedIndex = ((loadedEventID >= 0) && (loadedEventID < _entryData.Events.Count)) ? loadedEventID : ((_selectedIndexResult.EventIndex >= 0) ? _selectedIndexResult.EventIndex : 0);
+
+                        int battleConditionalsIndex = 0;
+                        if (PsxIso.IsSectorInPsxSaveState(stream, Settings.ScenariosSector))
+                            battleConditionalsIndex = PsxIso.LoadFromPsxSaveState(reader, (uint)(Settings.ScenariosRAMLocation + (loadedEventID * 24) + 22), 2).ToIntLE();
+                        else
+                            battleConditionalsIndex = (_selectedIndexResult.BattleConditionalIndex >= 0) ? _selectedIndexResult.BattleConditionalIndex : 0;
+
+                        cmb_BattleConditionals_ConditionalSet.SelectedIndex = battleConditionalsIndex;
+                    }
+                    else if (PsxIso.IsSectorInPsxSaveState(stream, PsxIso.Sectors.WORLD_WLDCORE_BIN))
+                    {
+                        pnl_World.Visible = true;
+                        EnableActionButton();
+
+                        bool isLoad = (_mode == Mode.Load);
+                        lbl_WorldConditionals_Size.Visible = isLoad;
+                        spinner_WorldConditionals_Size.Visible = isLoad;
+
+                        spinner_WorldConditionals_Size.Value = Settings.WorldConditionalsSize;
+                        spinner_WorldConditionals_RamLocation.Value = Settings.WorldConditionalsRepoint
+                            ? PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 3).ToIntLE()
+                            : Settings.WorldConditionalsCalcRAMLocation;
+
+                        if (_mode == Mode.Patch)
                         {
-                            chk_WorldConditionals.Checked = false;
+                            worldConditionalsBytes = _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals);
+                            if (worldConditionalsBytes.Length > Settings.WorldConditionalsSize)
+                            {
+                                chk_WorldConditionals.Checked = false;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                PatcherLib.MyMessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK);
             }
         }
 
@@ -203,62 +210,70 @@ namespace EntryEdit.Forms
 
             if (!string.IsNullOrEmpty(filepath))
             {
-                using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
+                try
                 {
-                    if (pnl_Battle.Visible)
+                    using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
                     {
-                        if (chk_BattleConditionals.Checked)
+                        if (pnl_Battle.Visible)
                         {
-                            List<byte[]> byteArrays = PsxIso.LoadFromPsxSaveState(reader, new List<KeyValuePair<uint, int>>() 
+                            if (chk_BattleConditionals.Checked)
+                            {
+                                List<byte[]> byteArrays = PsxIso.LoadFromPsxSaveState(reader, new List<KeyValuePair<uint, int>>() 
                             { 
                                 new KeyValuePair<uint, int>((uint)spinner_BattleConditionals_RamLocation_Blocks.Value, Settings.BattleConditionalBlockOffsetsRAMLength),
                                 new KeyValuePair<uint, int>((uint)spinner_BattleConditionals_RamLocation_Commands.Value, Settings.BattleConditionalsRAMLength)
                             });
 
-                            int setIndex = cmb_BattleConditionals_ConditionalSet.SelectedIndex;
-                            if (setIndex >= 0)
-                            {
-                                _entryData.BattleConditionals[setIndex] = _dataHelper.LoadActiveConditionalSet(setIndex, _entryData.BattleConditionals[setIndex].Name, 
-                                    CommandType.BattleConditional, byteArrays[0], byteArrays[1]);
-                            }
-                        }
-
-                        if (chk_Event.Checked)
-                        {
-                            int eventIndex = cmb_Event.SelectedIndex;
-                            if (eventIndex >= 0)
-                            {
-                                int eventRamLocation = (int)spinner_Event_RamLocation.Value;
-                                byte[] eventBytes = PsxIso.LoadFromPsxSaveState(reader, (uint)eventRamLocation, Settings.EventSize);
-
-                                if (eventBytes.SubLength(0, 4).ToUInt32() == DataHelper.BlankTextOffsetValue)
+                                int setIndex = cmb_BattleConditionals_ConditionalSet.SelectedIndex;
+                                if (setIndex >= 0)
                                 {
-                                    int textRamLocation = PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.TextOffsetRAMLocation, 3).ToIntLE();
-                                    int textOffset = textRamLocation - eventRamLocation;
-
-                                    if (textOffset < Settings.EventSize)
-                                    {
-                                        byte[] textOffsetBytes = ((uint)textOffset).ToBytes();
-                                        Array.Copy(textOffsetBytes, 0, eventBytes, 0, 4);
-                                    }
+                                    _entryData.BattleConditionals[setIndex] = _dataHelper.LoadActiveConditionalSet(setIndex, _entryData.BattleConditionals[setIndex].Name,
+                                        CommandType.BattleConditional, byteArrays[0], byteArrays[1]);
                                 }
+                            }
 
-                                _entryData.Events[eventIndex] = _dataHelper.GetEventFromBytes(eventIndex, eventBytes, true);
+                            if (chk_Event.Checked)
+                            {
+                                int eventIndex = cmb_Event.SelectedIndex;
+                                if (eventIndex >= 0)
+                                {
+                                    int eventRamLocation = (int)spinner_Event_RamLocation.Value;
+                                    byte[] eventBytes = PsxIso.LoadFromPsxSaveState(reader, (uint)eventRamLocation, Settings.EventSize);
+
+                                    if (eventBytes.SubLength(0, 4).ToUInt32() == DataHelper.BlankTextOffsetValue)
+                                    {
+                                        int textRamLocation = PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.TextOffsetRAMLocation, 3).ToIntLE();
+                                        int textOffset = textRamLocation - eventRamLocation;
+
+                                        if (textOffset < Settings.EventSize)
+                                        {
+                                            byte[] textOffsetBytes = ((uint)textOffset).ToBytes();
+                                            Array.Copy(textOffsetBytes, 0, eventBytes, 0, 4);
+                                        }
+                                    }
+
+                                    _entryData.Events[eventIndex] = _dataHelper.GetEventFromBytes(eventIndex, eventBytes, true);
+                                }
+                            }
+                        }
+                        else if (pnl_World.Visible)
+                        {
+                            if (chk_WorldConditionals.Checked)
+                            {
+                                byte[] bytes = PsxIso.LoadFromPsxSaveState(reader, (uint)spinner_WorldConditionals_RamLocation.Value, (int)spinner_WorldConditionals_Size.Value);
+                                _entryData.WorldConditionals = _dataHelper.LoadConditionalSetsFromByteArray(CommandType.WorldConditional, bytes);
                             }
                         }
                     }
-                    else if (pnl_World.Visible)
-                    {
-                        if (chk_WorldConditionals.Checked)
-                        {
-                            byte[] bytes = PsxIso.LoadFromPsxSaveState(reader, (uint)spinner_WorldConditionals_RamLocation.Value, (int)spinner_WorldConditionals_Size.Value);
-                            _entryData.WorldConditionals = _dataHelper.LoadConditionalSetsFromByteArray(CommandType.WorldConditional, bytes);
-                        }
-                    }
-                }
 
-                DialogResult = DialogResult.OK;
-                Close();
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                catch (Exception ex)
+                {
+                    PatcherLib.MyMessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK);
+                    btn_Load.Enabled = true;
+                }
             }
         }
 
@@ -270,71 +285,79 @@ namespace EntryEdit.Forms
 
             if (!string.IsNullOrEmpty(filepath))
             {
-                using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
+                try
                 {
-                    if (pnl_Battle.Visible)
+                    using (BinaryReader reader = new BinaryReader(File.Open(filepath, FileMode.Open)))
                     {
-                        if (chk_BattleConditionals.Checked)
+                        if (pnl_Battle.Visible)
                         {
-                            int setIndex = cmb_BattleConditionals_ConditionalSet.SelectedIndex;
-                            if (setIndex >= 0)
+                            if (chk_BattleConditionals.Checked)
                             {
-                                uint blockRamOffset = (uint)spinner_BattleConditionals_RamLocation_Blocks.Value;
-                                uint commandRamOffset = (uint)spinner_BattleConditionals_RamLocation_Commands.Value;
-
-                                List<byte[]> byteArrays = _dataHelper.ConditionalSetToActiveByteArrays(CommandType.BattleConditional, _entryData.BattleConditionals[setIndex]);
-                                ramPatches.Add(blockRamOffset, byteArrays[0]);
-                                ramPatches.Add(commandRamOffset, byteArrays[1]);
-
-                                if (Settings.BattleConditionalsApplyLimitPatch)
+                                int setIndex = cmb_BattleConditionals_ConditionalSet.SelectedIndex;
+                                if (setIndex >= 0)
                                 {
-                                    int numBlocks = _entryData.BattleConditionals[setIndex].ConditionalBlocks.Count;
-                                    if (numBlocks > 10)
+                                    uint blockRamOffset = (uint)spinner_BattleConditionals_RamLocation_Blocks.Value;
+                                    uint commandRamOffset = (uint)spinner_BattleConditionals_RamLocation_Commands.Value;
+
+                                    List<byte[]> byteArrays = _dataHelper.ConditionalSetToActiveByteArrays(CommandType.BattleConditional, _entryData.BattleConditionals[setIndex]);
+                                    ramPatches.Add(blockRamOffset, byteArrays[0]);
+                                    ramPatches.Add(commandRamOffset, byteArrays[1]);
+
+                                    if (Settings.BattleConditionalsApplyLimitPatch)
                                     {
-                                        ramPatches.Add((uint)Settings.BattleConditionalsLimitPatchRAMLocation, Settings.BattleConditionalsLimitPatchBytes);
+                                        int numBlocks = _entryData.BattleConditionals[setIndex].ConditionalBlocks.Count;
+                                        if (numBlocks > 10)
+                                        {
+                                            ramPatches.Add((uint)Settings.BattleConditionalsLimitPatchRAMLocation, Settings.BattleConditionalsLimitPatchBytes);
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            if (chk_Event.Checked)
+                            {
+                                int eventIndex = cmb_Event.SelectedIndex;
+                                if (eventIndex >= 0)
+                                {
+                                    uint eventRamOffset = (uint)spinner_Event_RamLocation.Value;
+                                    byte[] eventBytes = _dataHelper.EventToByteArray(_entryData.Events[eventIndex], true);
+                                    ramPatches.Add(eventRamOffset, eventBytes);
+
+                                    uint eventRamOffsetKSeg0 = eventRamOffset | PsxIso.KSeg0Mask;
+                                    uint textOffset = eventBytes.SubLength(0, 4).ToUInt32();
+                                    if (textOffset != DataHelper.BlankTextOffsetValue)
+                                    {
+                                        ramPatches.Add((uint)Settings.TextOffsetRAMLocation, (eventRamOffsetKSeg0 + textOffset).ToBytes().ToArray());
                                     }
                                 }
                             }
-
                         }
-
-                        if (chk_Event.Checked)
+                        else if (pnl_World.Visible)
                         {
-                            int eventIndex = cmb_Event.SelectedIndex;
-                            if (eventIndex >= 0)
+                            if (chk_WorldConditionals.Checked)
                             {
-                                uint eventRamOffset = (uint)spinner_Event_RamLocation.Value;
-                                byte[] eventBytes = _dataHelper.EventToByteArray(_entryData.Events[eventIndex], true);
-                                ramPatches.Add(eventRamOffset, eventBytes);
-
-                                uint eventRamOffsetKSeg0 = eventRamOffset | PsxIso.KSeg0Mask;
-                                uint textOffset = eventBytes.SubLength(0, 4).ToUInt32();
-                                if (textOffset != DataHelper.BlankTextOffsetValue)
+                                uint ramOffset = (uint)spinner_WorldConditionals_RamLocation.Value;
+                                ramPatches.Add(ramOffset, worldConditionalsBytes);
+                                uint ramOffsetKSeg0 = ramOffset | PsxIso.KSeg0Mask;
+                                if ((Settings.WorldConditionalsRepoint) && (ramOffsetKSeg0 != PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 4).ToUInt32()))
                                 {
-                                    ramPatches.Add((uint)Settings.TextOffsetRAMLocation, (eventRamOffsetKSeg0 + textOffset).ToBytes().ToArray());
+                                    ramPatches.Add((uint)Settings.WorldConditionalsPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
                                 }
                             }
                         }
-                    }
-                    else if (pnl_World.Visible)
-                    {
-                        if (chk_WorldConditionals.Checked)
-                        {
-                            uint ramOffset = (uint)spinner_WorldConditionals_RamLocation.Value;
-                            ramPatches.Add(ramOffset, worldConditionalsBytes);
-                            uint ramOffsetKSeg0 = ramOffset | PsxIso.KSeg0Mask;
-                            if ((Settings.WorldConditionalsRepoint) && (ramOffsetKSeg0 != PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 4).ToUInt32()))
-                            {
-                                ramPatches.Add((uint)Settings.WorldConditionalsPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
-                            }
-                        }
+
+                        PsxIso.PatchPsxSaveState(reader, ramPatches);
                     }
 
-                    PsxIso.PatchPsxSaveState(reader, ramPatches);
+                    DialogResult = DialogResult.OK;
+                    Close();
                 }
-
-                DialogResult = DialogResult.OK;
-                Close();
+                catch (Exception ex)
+                {
+                    PatcherLib.MyMessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK);
+                    btn_Patch.Enabled = true;
+                }
             }
         }
     }

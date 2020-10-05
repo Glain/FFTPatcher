@@ -259,38 +259,46 @@ namespace EntryEdit.Forms
 
             if (!string.IsNullOrEmpty(filepath))
             {
-                using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.Read))
+                try
                 {
-                    if (chk_BattleConditionals.Checked)
+                    using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.Read))
                     {
-                        PsxIso.Sectors battleSector = (PsxIso.Sectors)spinner_BattleConditionals_Sector.Value;
-                        int battleOffset = (int)spinner_BattleConditionals_Offset.Value;
-                        int battleSize = (int)spinner_BattleConditionals_Size.Value;
-                        byte[] battleBytes = PsxIso.ReadFile(file, battleSector, battleOffset, battleSize);
-                        _entryData.BattleConditionals = _dataHelper.LoadConditionalSetsFromByteArray(CommandType.BattleConditional, battleBytes);
+                        if (chk_BattleConditionals.Checked)
+                        {
+                            PsxIso.Sectors battleSector = (PsxIso.Sectors)spinner_BattleConditionals_Sector.Value;
+                            int battleOffset = (int)spinner_BattleConditionals_Offset.Value;
+                            int battleSize = (int)spinner_BattleConditionals_Size.Value;
+                            byte[] battleBytes = PsxIso.ReadFile(file, battleSector, battleOffset, battleSize);
+                            _entryData.BattleConditionals = _dataHelper.LoadConditionalSetsFromByteArray(CommandType.BattleConditional, battleBytes);
+                        }
+
+                        if (chk_WorldConditionals.Checked)
+                        {
+                            PsxIso.Sectors worldSector = (PsxIso.Sectors)spinner_WorldConditionals_Sector.Value;
+                            int worldOffset = (int)spinner_WorldConditionals_Offset.Value;
+                            int worldSize = (int)spinner_WorldConditionals_Size.Value;
+                            byte[] worldBytes = PsxIso.ReadFile(file, worldSector, worldOffset, worldSize);
+                            _entryData.WorldConditionals = _dataHelper.LoadConditionalSetsFromByteArray(CommandType.WorldConditional, worldBytes);
+                        }
+
+                        if (chk_Events.Checked)
+                        {
+                            PsxIso.Sectors eventSector = (PsxIso.Sectors)spinner_Events_Sector.Value;
+                            int eventOffset = (int)spinner_Events_Offset.Value;
+                            int eventSize = (int)spinner_Events_Size.Value;
+                            byte[] eventBytes = PsxIso.ReadFile(file, eventSector, eventOffset, eventSize);
+                            _entryData.Events = _dataHelper.GetEventsFromBytes(eventBytes);
+                        }
                     }
 
-                    if (chk_WorldConditionals.Checked)
-                    {
-                        PsxIso.Sectors worldSector = (PsxIso.Sectors)spinner_WorldConditionals_Sector.Value;
-                        int worldOffset = (int)spinner_WorldConditionals_Offset.Value;
-                        int worldSize = (int)spinner_WorldConditionals_Size.Value;
-                        byte[] worldBytes = PsxIso.ReadFile(file, worldSector, worldOffset, worldSize);
-                        _entryData.WorldConditionals = _dataHelper.LoadConditionalSetsFromByteArray(CommandType.WorldConditional, worldBytes);
-                    }
-
-                    if (chk_Events.Checked)
-                    {
-                        PsxIso.Sectors eventSector = (PsxIso.Sectors)spinner_Events_Sector.Value;
-                        int eventOffset = (int)spinner_Events_Offset.Value;
-                        int eventSize = (int)spinner_Events_Size.Value;
-                        byte[] eventBytes = PsxIso.ReadFile(file, eventSector, eventOffset, eventSize);
-                        _entryData.Events = _dataHelper.GetEventsFromBytes(eventBytes);
-                    }
+                    DialogResult = DialogResult.OK;
+                    Close();
                 }
-
-                DialogResult = DialogResult.OK;
-                Close();
+                catch (Exception ex)
+                {
+                    PatcherLib.MyMessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK);
+                    btn_Load.Enabled = true;
+                }
             }
         }
 
@@ -338,13 +346,21 @@ namespace EntryEdit.Forms
                     patches.Add(new PatchedByteArray(eventSector, eventOffset, eventBytes));
                 }
 
-                using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite))
+                try
                 {
-                    PsxIso.PatchPsxIso(file, patches);
-                }
+                    using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite))
+                    {
+                        PsxIso.PatchPsxIso(file, patches);
+                    }
 
-                DialogResult = DialogResult.OK;
-                Close();
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                catch (Exception ex)
+                {
+                    PatcherLib.MyMessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK);
+                    btn_Patch.Enabled = true;
+                }
             }
         }
     }
