@@ -469,7 +469,7 @@
     <Command hex="7B" name="Unknown">
         <Parameter name="Unknown" bytes="2" mode="hex" />
     </Command>
-    <Command hex="7C" name="Stop Sound Effect?" />
+    <Command hex="7C" name="Unknown" />
     <Command hex="7D" name="Show Graphic">
         <Parameter name="Graphic" bytes="1" mode="hex" />
     </Command>
