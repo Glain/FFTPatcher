@@ -188,7 +188,7 @@ namespace LEDecoder
             this.lbl_Mode.TabIndex = 14;
             this.lbl_Mode.Text = "Mode:";
             // 
-            // MainForm
+            // LEDecoder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -210,7 +210,11 @@ namespace LEDecoder
             this.Controls.Add(this.lbl_InputFile);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "MainForm";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "LEDecoder";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "LEDecoder";
             ((System.ComponentModel.ISupportInitialize)(this.pic_LED)).EndInit();
             this.ResumeLayout(false);

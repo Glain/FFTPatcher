@@ -156,7 +156,7 @@ namespace MassHexASM
 
         private void menuItem_Form_LEDecoder_Click(object sender, EventArgs e)
         {
-            new LEDecoder.LEDecoder().Show();
+            new LEDecoder.LEDecoder().ShowDialog();
         }
 
         private void menuItem_About_Click(object sender, EventArgs e)
