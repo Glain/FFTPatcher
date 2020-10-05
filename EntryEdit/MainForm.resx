@@ -120,4 +120,15 @@
   <metadata name="menuBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAMDAAAAAAIAAjAQAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgCAAAA2GBu0AAAAARn
+        QU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADFSURBVFhH7dYhDsJQEEVRlsF68GwAWcMG
+        atAQMCwAh0JV1rCBakir0BDYBob8kOn0P5IRQHKToxrezw1qRuOi/CkEKQQpBClO0HRXLc/XTfcYsmgu
+        k+3erJLg3Alat3fzRN/qdDOrJDj3gjr94uxwNKskOHeC0sx8/1BwTpBCkEKQQpBCkEKQ4gW1rxeH5A+a
+        4Dz3D2VkDhrzSxf3UGBOkEKQQpBCkEKQ8hdBnB/vnKB53Zh9X+Z+CM6doO8iSCFIISivKJ/aGk9dZpAN
+        tAAAAABJRU5ErkJggg==
+</value>
+  </data>
 </root>

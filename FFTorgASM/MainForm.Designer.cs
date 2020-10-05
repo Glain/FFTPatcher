@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnPatch = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.reloadButton = new System.Windows.Forms.Button();
@@ -42,10 +43,10 @@
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
             this.btn_ViewFreeSpace = new System.Windows.Forms.Button();
             this.txt_Messages = new System.Windows.Forms.TextBox();
-            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             this.btn_UncheckAll = new System.Windows.Forms.Button();
             this.btn_SavePatchXML = new System.Windows.Forms.Button();
+            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -197,17 +198,6 @@
             this.txt_Messages.Size = new System.Drawing.Size(543, 96);
             this.txt_Messages.TabIndex = 15;
             // 
-            // variableSpinner
-            // 
-            this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.variableSpinner.Hexadecimal = true;
-            this.variableSpinner.Location = new System.Drawing.Point(179, 602);
-            this.variableSpinner.Name = "variableSpinner";
-            this.variableSpinner.Size = new System.Drawing.Size(102, 20);
-            this.variableSpinner.TabIndex = 5;
-            this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.variableSpinner.Visible = false;
-            // 
             // clb_Patches
             // 
             this.clb_Patches.AllowDrop = true;
@@ -248,6 +238,17 @@
             this.btn_SavePatchXML.UseVisualStyleBackColor = true;
             this.btn_SavePatchXML.Click += new System.EventHandler(this.btn_SavePatchXML_Click);
             // 
+            // variableSpinner
+            // 
+            this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.variableSpinner.Hexadecimal = true;
+            this.variableSpinner.Location = new System.Drawing.Point(179, 602);
+            this.variableSpinner.Name = "variableSpinner";
+            this.variableSpinner.Size = new System.Drawing.Size(102, 20);
+            this.variableSpinner.TabIndex = 5;
+            this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.variableSpinner.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -270,6 +271,7 @@
             this.Controls.Add(this.reloadButton);
             this.Controls.Add(this.btnPatch);
             this.Controls.Add(this.clb_Patches);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(583, 743);
             this.Name = "MainForm";
             this.Text = "FFTorgASM";

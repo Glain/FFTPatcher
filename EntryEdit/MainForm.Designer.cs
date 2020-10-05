@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage_BattleConditionals = new System.Windows.Forms.TabPage();
             this.battleConditionalSetsEditor = new EntryEdit.Editors.ConditionalSetsEditor();
@@ -55,6 +56,7 @@
             this.menuItem_CopyEntry = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_PasteEntry = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Edit_Separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItem_UseTrimmedDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_SetDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_RestoreDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_Edit_Separator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -70,7 +72,6 @@
             this.menuItem_PatchPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_LoadPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem_UseTrimmedDefaults = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -323,6 +324,13 @@
             this.menuItem_Edit_Separator1.Name = "menuItem_Edit_Separator1";
             this.menuItem_Edit_Separator1.Size = new System.Drawing.Size(217, 6);
             // 
+            // menuItem_UseTrimmedDefaults
+            // 
+            this.menuItem_UseTrimmedDefaults.Name = "menuItem_UseTrimmedDefaults";
+            this.menuItem_UseTrimmedDefaults.Size = new System.Drawing.Size(220, 22);
+            this.menuItem_UseTrimmedDefaults.Text = "Use Trimmed Defaults";
+            this.menuItem_UseTrimmedDefaults.Click += new System.EventHandler(this.menuItem_UseTrimmedDefaults_Click);
+            // 
             // menuItem_SetDefaults
             // 
             this.menuItem_SetDefaults.Name = "menuItem_SetDefaults";
@@ -434,13 +442,6 @@
             this.menuItem_About.Text = "About...";
             this.menuItem_About.Click += new System.EventHandler(this.menuItem_About_Click);
             // 
-            // menuItem_UseTrimmedDefaults
-            // 
-            this.menuItem_UseTrimmedDefaults.Name = "menuItem_UseTrimmedDefaults";
-            this.menuItem_UseTrimmedDefaults.Size = new System.Drawing.Size(220, 22);
-            this.menuItem_UseTrimmedDefaults.Text = "Use Trimmed Defaults";
-            this.menuItem_UseTrimmedDefaults.Click += new System.EventHandler(this.menuItem_UseTrimmedDefaults_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -448,6 +449,7 @@
             this.ClientSize = new System.Drawing.Size(1004, 821);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuBar);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuBar;
             this.Name = "MainForm";
             this.Text = "EntryEdit";

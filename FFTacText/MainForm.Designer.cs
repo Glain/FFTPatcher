@@ -55,6 +55,7 @@ namespace FFTPatcher.TextEditor
             System.Windows.Forms.MenuItem separator3;
             System.Windows.Forms.MenuItem separator4;
             System.Windows.Forms.MenuItem separator5;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.fileMenuItem = new System.Windows.Forms.MenuItem();
             this.openMenuItem = new System.Windows.Forms.MenuItem();
@@ -252,6 +253,7 @@ namespace FFTPatcher.TextEditor
             this.ClientSize = new System.Drawing.Size(778, 402);
             this.Controls.Add(this.fileEditor1);
             this.Controls.Add(this.progressBar);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu;
             this.Name = "MainForm";
             this.Text = "FFTacText Editor";

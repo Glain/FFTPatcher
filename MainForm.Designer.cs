@@ -56,6 +56,7 @@ namespace FFTPatcher
             System.Windows.Forms.MenuItem separator5;
             System.Windows.Forms.MenuItem generateResourcesMenuItem;
             System.Windows.Forms.MenuItem separator7;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.extractFFTPackMenuItem = new System.Windows.Forms.MenuItem();
             this.rebuildFFTPackMenuItem = new System.Windows.Forms.MenuItem();
             this.decryptMenuItem = new System.Windows.Forms.MenuItem();
@@ -77,6 +78,9 @@ namespace FFTPatcher
             this.openPatchedPspItem = new System.Windows.Forms.MenuItem();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.editMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem_SetCurrentDataAsDefaults = new System.Windows.Forms.MenuItem();
+            this.menuItem_RestoreDefaults = new System.Windows.Forms.MenuItem();
+            this.separator_Edit1 = new System.Windows.Forms.MenuItem();
             this.menuItem_ConsolidateItemAttributes = new System.Windows.Forms.MenuItem();
             this.menuItem_ConsolidateInflictStatuses = new System.Windows.Forms.MenuItem();
             this.aboutMenuItem = new System.Windows.Forms.MenuItem();
@@ -86,9 +90,6 @@ namespace FFTPatcher
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.fftPatchEditor1 = new FFTPatcher.Editors.FFTPatchEditor();
-            this.menuItem_SetCurrentDataAsDefaults = new System.Windows.Forms.MenuItem();
-            this.menuItem_RestoreDefaults = new System.Windows.Forms.MenuItem();
-            this.separator_Edit1 = new System.Windows.Forms.MenuItem();
             separator1 = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
@@ -290,6 +291,25 @@ namespace FFTPatcher
             this.menuItem_ConsolidateInflictStatuses});
             this.editMenuItem.Text = "Edit";
             // 
+            // menuItem_SetCurrentDataAsDefaults
+            // 
+            this.menuItem_SetCurrentDataAsDefaults.Enabled = false;
+            this.menuItem_SetCurrentDataAsDefaults.Index = 0;
+            this.menuItem_SetCurrentDataAsDefaults.Text = "Set Current Data as Defaults";
+            this.menuItem_SetCurrentDataAsDefaults.Click += new System.EventHandler(this.menuItem_SetCurrentDataAsDefaults_Click);
+            // 
+            // menuItem_RestoreDefaults
+            // 
+            this.menuItem_RestoreDefaults.Enabled = false;
+            this.menuItem_RestoreDefaults.Index = 1;
+            this.menuItem_RestoreDefaults.Text = "Restore Defaults";
+            this.menuItem_RestoreDefaults.Click += new System.EventHandler(this.menuItem_RestoreDefaults_Click);
+            // 
+            // separator_Edit1
+            // 
+            this.separator_Edit1.Index = 2;
+            this.separator_Edit1.Text = "-";
+            // 
             // menuItem_ConsolidateItemAttributes
             // 
             this.menuItem_ConsolidateItemAttributes.Enabled = false;
@@ -343,25 +363,6 @@ namespace FFTPatcher
             this.fftPatchEditor1.Size = new System.Drawing.Size(910, 557);
             this.fftPatchEditor1.TabIndex = 0;
             // 
-            // menuItem_SetCurrentDataAsDefaults
-            // 
-            this.menuItem_SetCurrentDataAsDefaults.Enabled = false;
-            this.menuItem_SetCurrentDataAsDefaults.Index = 0;
-            this.menuItem_SetCurrentDataAsDefaults.Text = "Set Current Data as Defaults";
-            this.menuItem_SetCurrentDataAsDefaults.Click += new System.EventHandler(this.menuItem_SetCurrentDataAsDefaults_Click);
-            // 
-            // menuItem_RestoreDefaults
-            // 
-            this.menuItem_RestoreDefaults.Enabled = false;
-            this.menuItem_RestoreDefaults.Index = 1;
-            this.menuItem_RestoreDefaults.Text = "Restore Defaults";
-            this.menuItem_RestoreDefaults.Click += new System.EventHandler(this.menuItem_RestoreDefaults_Click);
-            // 
-            // separator_Edit1
-            // 
-            this.separator_Edit1.Index = 2;
-            this.separator_Edit1.Text = "-";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -371,6 +372,7 @@ namespace FFTPatcher
             this.ClientSize = new System.Drawing.Size(910, 557);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.fftPatchEditor1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu;
             this.Name = "MainForm";
             this.Text = "FFTPatcher";

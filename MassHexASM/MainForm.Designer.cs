@@ -37,6 +37,7 @@ namespace MassHexASM
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.txt_ASM = new System.Windows.Forms.TextBox();
             this.txt_Hex = new System.Windows.Forms.TextBox();
             this.btn_Encode = new System.Windows.Forms.Button();
@@ -306,7 +307,7 @@ namespace MassHexASM
             // menuItem_Form_LEDecoder
             // 
             this.menuItem_Form_LEDecoder.Name = "menuItem_Form_LEDecoder";
-            this.menuItem_Form_LEDecoder.Size = new System.Drawing.Size(152, 22);
+            this.menuItem_Form_LEDecoder.Size = new System.Drawing.Size(130, 22);
             this.menuItem_Form_LEDecoder.Text = "LEDecoder";
             this.menuItem_Form_LEDecoder.Click += new System.EventHandler(this.menuItem_Form_LEDecoder_Click);
             // 
@@ -327,6 +328,7 @@ namespace MassHexASM
             this.Controls.Add(this.lbl_ASM_Text);
             this.Controls.Add(this.txt_ASM);
             this.Controls.Add(this.menu_Top);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menu_Top;
             this.Name = "MainForm";
             this.Text = "MassHexASM";
