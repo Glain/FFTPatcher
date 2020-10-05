@@ -33,6 +33,8 @@ namespace MassHexASM
             txt_SpacePad.Enabled = false;
             chk_littleEndian.Checked = true;
 
+            Text = string.Format("MassHexASM (FFTPS v0.{0})", About.FFTPatcherSuiteRevision);
+
             cb_Mode.Items.Add("Base");
             cb_Mode.Items.Add("PSX");
             cb_Mode.Items.Add("PSP");

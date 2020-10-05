@@ -450,7 +450,7 @@
             this.Controls.Add(this.menuBar);
             this.MainMenuStrip = this.menuBar;
             this.Name = "MainForm";
-            this.Text = "Entry Edit";
+            this.Text = "EntryEdit";
             this.tabControl.ResumeLayout(false);
             this.tabPage_BattleConditionals.ResumeLayout(false);
             this.tabPage_WorldConditionals.ResumeLayout(false);

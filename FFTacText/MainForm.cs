@@ -38,6 +38,8 @@ namespace FFTPatcher.TextEditor
         {
             InitializeComponent();
 
+            Text = string.Format("FFTactext (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
+
             exitMenuItem.Click += exitMenuItem_Click;
             aboutMenuItem.Click += aboutMenuItem_Click;
             allowedSymbolsMenuItem.Click += allowedSymbolsMenuItem_Click;

@@ -63,6 +63,8 @@ namespace EntryEdit
             _dataHelper = new DataHelper();
             _commandDataMap = _dataHelper.GetCommandDataMap();
 
+            Text = string.Format("EntryEdit (FFTPS v0.{0})", About.FFTPatcherSuiteRevision);
+
             tabControl.Enabled = false;
         }
 

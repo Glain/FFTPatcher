@@ -85,6 +85,8 @@ namespace FFTPatcher
             InitializeComponent();
             Settings.LoadSettingsXml();
 
+            Text = string.Format("FFTPatcher (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
+
             openMenuItem.Click += openMenuItem_Click;
             saveMenuItem.Click += saveMenuItem_Click;
             saveAsPspMenuItem.Click += saveAsPspMenuItem_Click;
