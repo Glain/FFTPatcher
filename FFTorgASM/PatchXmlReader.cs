@@ -253,7 +253,7 @@ namespace FFTorgASM
                         catch (Exception) { }
                     }
 
-                    ramOffset = ramOffset | 0x80000000;     // KSEG0
+                    ramOffset = ramOffset | PsxIso.KSeg0Mask;     // KSEG0
 
                     byte[] bytes;
                     string errorText = "";
@@ -535,7 +535,7 @@ namespace FFTorgASM
                             catch (Exception) { }
                         }
 
-                        //ramOffset = ramOffset | 0x80000000;     // KSEG0
+                        //ramOffset = ramOffset | PsxIso.KSeg0Mask;     // KSEG0
 
                         patchedByteArrayList.Add(new PatchedByteArray(sector, fileOffset, byteArray));
 

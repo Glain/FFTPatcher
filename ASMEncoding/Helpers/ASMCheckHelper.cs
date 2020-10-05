@@ -48,6 +48,7 @@ namespace ASMEncoding.Helpers
 
     public class ASMCheckHelper
     {
+        private const uint KSeg0Mask = 0x80000000U;
         private StringBuilder _errorTextBuilder;
 
         public ASMEncoder Encoder { get; private set; }
@@ -484,7 +485,7 @@ namespace ASMEncoding.Helpers
                     if (regLuiIndexes[regNum] >= 0)
                     {
                         short offset = ASMValueHelper.UnsignedShortToSignedShort((ushort)(uBinaryLine & 0xffff));
-                        uint targetAddress = (uint)((regLuiValues[regNum] << 16) + offset) | (0x80000000U);
+                        uint targetAddress = (uint)((regLuiValues[regNum] << 16) + offset) | (KSeg0Mask);
 
                         foreach (BlockMove blockMove in blockMoves)
                         {

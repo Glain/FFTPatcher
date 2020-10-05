@@ -325,7 +325,7 @@ namespace EntryEdit.Forms
 
                     if (Settings.WorldConditionalsRepoint)
                     {
-                        byte[] patchBytes = (PsxIso.GetRamOffset(worldSector) + worldOffset).ToBytesLE().SubLength(0, 3).ToArray();
+                        byte[] patchBytes = (((uint)(PsxIso.GetRamOffset(worldSector) + worldOffset)) | PsxIso.KSeg0Mask).ToBytes();
                         patches.Add(new PatchedByteArray(Settings.WorldConditionalsPointerSector, Settings.WorldConditionalsPointerOffset, patchBytes));
                     }
                 }

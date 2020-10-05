@@ -57,6 +57,8 @@ namespace PatcherLib.Iso
 
     public static class PsxIso
     {
+        public const uint KSeg0Mask = 0x80000000U;
+
         private static readonly Dictionary<PsxIso.Sectors, int> FileToRamOffsets = new Dictionary<PsxIso.Sectors, int>()
         {
             { Sectors.SCUS_942_21, 0xF800 },
@@ -363,7 +365,7 @@ namespace PatcherLib.Iso
         public static uint GetRamOffset(PsxIso.Sectors sector, bool useKSeg0 = true)
         {
             int fileToRamOffset = GetRamOffset(sector);
-            return (fileToRamOffset == -1) ? 0U : (uint)fileToRamOffset | (useKSeg0 ? 0x80000000U : 0U);
+            return (fileToRamOffset == -1) ? 0U : (uint)fileToRamOffset | (useKSeg0 ? KSeg0Mask : 0U);
         }
 
         public static int GetRamOffset(int sector)

@@ -307,10 +307,11 @@ namespace EntryEdit.Forms
                                 byte[] eventBytes = _dataHelper.EventToByteArray(_entryData.Events[eventIndex], true);
                                 ramPatches.Add(eventRamOffset, eventBytes);
 
+                                uint eventRamOffsetKSeg0 = eventRamOffset | PsxIso.KSeg0Mask;
                                 uint textOffset = eventBytes.SubLength(0, 4).ToUInt32();
                                 if (textOffset != DataHelper.BlankTextOffsetValue)
                                 {
-                                    ramPatches.Add((uint)Settings.TextOffsetRAMLocation, (eventRamOffset + textOffset).ToBytes().SubLength(0, 3).ToArray());
+                                    ramPatches.Add((uint)Settings.TextOffsetRAMLocation, (eventRamOffsetKSeg0 + textOffset).ToBytes().ToArray());
                                 }
                             }
                         }
@@ -321,9 +322,10 @@ namespace EntryEdit.Forms
                         {
                             uint ramOffset = (uint)spinner_WorldConditionals_RamLocation.Value;
                             ramPatches.Add(ramOffset, worldConditionalsBytes);
-                            if ((Settings.WorldConditionalsRepoint) && (ramOffset != PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 3).ToIntLE()))
+                            uint ramOffsetKSeg0 = ramOffset | PsxIso.KSeg0Mask;
+                            if ((Settings.WorldConditionalsRepoint) && (ramOffsetKSeg0 != PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 4).ToUInt32()))
                             {
-                                ramPatches.Add((uint)Settings.WorldConditionalsPointerRAMLocation, ramOffset.ToBytes().SubLength(0, 3).ToArray());
+                                ramPatches.Add((uint)Settings.WorldConditionalsPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
                             }
                         }
                     }
