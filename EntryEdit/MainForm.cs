@@ -50,22 +50,35 @@ namespace EntryEdit
             }
         }
 
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
-            Start();
+            Start(args);
             //WriteLoadedDataToTestFiles();
             //WriteByteDataToTestFiles();
         }
 
-        private void Start()
+        private void Start(string[] args)
         {
+            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+
             _dataHelper = new DataHelper();
             _commandDataMap = _dataHelper.GetCommandDataMap();
 
             Text = string.Format("EntryEdit (FFTPS v0.{0})", About.FFTPatcherSuiteRevision);
 
             tabControl.Enabled = false;
+
+            if (args.Length > 0)
+            {
+                string filepath = args[0];
+                if ((filepath.ToLower().Trim().EndsWith(".eepatch")) && (System.IO.File.Exists(filepath)))
+                {
+                    LoadPatch(filepath);
+                    EnableMenu();
+                    tabControl.Enabled = (_entryData != null);
+                }
+            }
         }
 
         private void LoadNewPatch()

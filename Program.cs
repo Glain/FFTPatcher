@@ -33,7 +33,7 @@ namespace FFTPatcher
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -51,7 +51,7 @@ namespace FFTPatcher
             dummy = SpecialName.GetSpecialNames(PatcherLib.Datatypes.Context.US_PSX);
             dummy = Event.GetEventNames(PatcherLib.Datatypes.Context.US_PSX);
 
-            Application.Run(new MainForm());
+            Application.Run(new MainForm(args));
         }
 
 		#endregion Private Methods 

@@ -34,10 +34,11 @@ namespace FFTPatcher.TextEditor
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
         /// </summary>
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
 
+            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
             Text = string.Format("FFTactext (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
 
             exitMenuItem.Click += exitMenuItem_Click;
@@ -52,6 +53,15 @@ namespace FFTPatcher.TextEditor
             regulateNewlinesMenuItem.Click += new EventHandler(regulateNewlinesMenuItem_Click);
             fileMenuItem.Popup += new EventHandler(menuItem_Popup);
             isoMenuItem.Popup += new EventHandler(menuItem_Popup);
+
+            if (args.Length > 0)
+            {
+                string filepath = args[0];
+                if ((filepath.ToLower().Trim().EndsWith(".ffttext")) && (System.IO.File.Exists(filepath)))
+                {
+                    LoadFile(LoadType.Open, filepath, null, null);
+                }
+            }
         }
 
         private void GenerateResourcesZip()

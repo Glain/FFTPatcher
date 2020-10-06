@@ -80,9 +80,11 @@ namespace FFTPatcher
 
         #region Constructors (1)
 
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
+
+            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
             Settings.LoadSettingsXml();
 
             Text = string.Format("FFTPatcher (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
@@ -110,6 +112,20 @@ namespace FFTPatcher
             editMenuItem.Popup += new EventHandler(editMenuItem_Popup);
             psxMenu.Popup += new EventHandler( psxMenu_Popup );
             pspMenu.Popup += new EventHandler( pspMenu_Popup );
+
+            if (args.Length > 0)
+            {
+                string filepath = args[0];
+                if ((filepath.ToLower().Trim().EndsWith(".fftpatch")) && (System.IO.File.Exists(filepath)))
+                {
+                    Environment.CurrentDirectory = Path.GetDirectoryName(filepath);
+                    TryAndHandle(delegate()
+                    {
+                        FFTPatch.LoadPatch(filepath);
+                        fftPatchEditor1.LoadFFTPatch(FFTPatch);
+                    }, true);
+                }
+            }
         }
 
         #endregion Constructors
