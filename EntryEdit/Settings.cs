@@ -5,11 +5,15 @@ using System.Text;
 using System.Configuration;
 using PatcherLib.Utilities;
 using PatcherLib.Iso;
+using System.IO;
 
 namespace EntryEdit
 {
     internal static class Settings
     {
+        private static readonly string _modSuffix = ConfigurationManager.AppSettings["ModSuffix"];
+        public static string ModSuffix { get { return _modSuffix; } }
+
         private static readonly int _eventSize = Utilities.ParseInt(ConfigurationManager.AppSettings["EventSize"]); 
         public static int EventSize { get { return _eventSize; } }
 
@@ -97,36 +101,35 @@ namespace EntryEdit
         private static readonly int _maxSectors = Utilities.ParseInt(ConfigurationManager.AppSettings["MaxSectors"]);
         public static int MaxSectors { get { return _maxSectors; } }
 
-        private static readonly string _filepathDefaultBattleConditionals = ConfigurationManager.AppSettings["FilepathDefaultBattleConditionals"];
+        private static readonly string _filepathDefaultBattleConditionals = GetModFilepathFromKey("FilepathDefaultBattleConditionals");
         public static string FilepathDefaultBattleConditionals { get { return _filepathDefaultBattleConditionals; } }
 
-        private static readonly string _filepathTrimmedBattleConditionals = ConfigurationManager.AppSettings["FilepathTrimmedBattleConditionals"];
+        private static readonly string _filepathTrimmedBattleConditionals = GetModFilepathFromKey("FilepathTrimmedBattleConditionals");
         public static string FilepathTrimmedBattleConditionals { get { return _filepathTrimmedBattleConditionals; } }
 
-        private static readonly string _filepathDefaultWorldConditionals = ConfigurationManager.AppSettings["FilepathDefaultWorldConditionals"];
+        private static readonly string _filepathDefaultWorldConditionals = GetModFilepathFromKey("FilepathDefaultWorldConditionals");
         public static string FilepathDefaultWorldConditionals { get { return _filepathDefaultWorldConditionals; } }
 
-        private static readonly string _filepathDefaultEvents = ConfigurationManager.AppSettings["FilepathDefaultEvents"];
+        private static readonly string _filepathDefaultEvents = GetModFilepathFromKey("FilepathDefaultEvents");
         public static string FilepathDefaultEvents { get { return _filepathDefaultEvents; } }
 
-        private static readonly string _filepathCommandBattleConditionals = ConfigurationManager.AppSettings["FilepathCommandBattleConditionals"];
+        private static readonly string _filepathCommandBattleConditionals = GetModFilepathFromKey("FilepathCommandBattleConditionals");
         public static string FilepathCommandBattleConditionals { get { return _filepathCommandBattleConditionals; } }
 
-        private static readonly string _filepathCommandWorldConditionals = ConfigurationManager.AppSettings["FilepathCommandWorldConditionals"];
+        private static readonly string _filepathCommandWorldConditionals = GetModFilepathFromKey("FilepathCommandWorldConditionals");
         public static string FilepathCommandWorldConditionals { get { return _filepathCommandWorldConditionals; } }
 
-        private static readonly string _filepathCommandEvents = ConfigurationManager.AppSettings["FilepathCommandEvents"];
+        private static readonly string _filepathCommandEvents = GetModFilepathFromKey("FilepathCommandEvents");
         public static string FilepathCommandEvents { get { return _filepathCommandEvents; } }
 
-        private static readonly string _filepathNamesBattleConditionals = ConfigurationManager.AppSettings["FilepathNamesBattleConditionals"];
+        private static readonly string _filepathNamesBattleConditionals = GetModFilepathFromKey("FilepathNamesBattleConditionals");
         public static string FilepathNamesBattleConditionals { get { return _filepathNamesBattleConditionals; } }
 
-        private static readonly string _filepathNamesWorldConditionals = ConfigurationManager.AppSettings["FilepathNamesWorldConditionals"];
+        private static readonly string _filepathNamesWorldConditionals = GetModFilepathFromKey("FilepathNamesWorldConditionals");
         public static string FilepathNamesWorldConditionals { get { return _filepathNamesWorldConditionals; } }
 
-        private static readonly string _filepathNamesEvents = ConfigurationManager.AppSettings["FilepathNamesEvents"];
+        private static readonly string _filepathNamesEvents = GetModFilepathFromKey("FilepathNamesEvents");
         public static string FilepathNamesEvents { get { return _filepathNamesEvents; } }
-
 
 
 
@@ -144,5 +147,29 @@ namespace EntryEdit
 
         private static readonly int _worldConditionalsCalcRAMLocation = PsxIso.GetRamOffset(Settings.WorldConditionalsSector) + Settings.WorldConditionalsOffset;
         public static int WorldConditionalsCalcRAMLocation { get { return _worldConditionalsCalcRAMLocation; } }
+
+
+        private static string GetModFilepathFromKey(string key)
+        {
+            return GetModFilepath(ConfigurationManager.AppSettings[key]);
+        }
+
+        private static string GetModFilepath(string filepath)
+        {
+            if (!string.IsNullOrEmpty(ModSuffix))
+            {
+                int extensionIndex = filepath.LastIndexOf(".xml");
+                if (extensionIndex >= 0)
+                {
+                    string modFilepath = filepath.Substring(0, extensionIndex) + ModSuffix + ".xml";
+                    if (File.Exists(modFilepath))
+                    {
+                        return modFilepath;
+                    }
+                }
+            }
+
+            return filepath;
+        }
     }
 }

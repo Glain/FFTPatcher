@@ -672,7 +672,17 @@ namespace EntryEdit
 
         private string GetParameterValueListFilepath(string type)
         {
-            return "EntryData/" + type + "Names.xml";
+            string normalFilepath = "EntryData/" + type + "Names.xml";
+
+            if (!string.IsNullOrEmpty(Settings.ModSuffix))
+            {
+                string typeSuffixFilepath = "EntryData/" + type + "Names" + Settings.ModSuffix + ".xml";
+                return File.Exists(typeSuffixFilepath) ? typeSuffixFilepath : normalFilepath;
+            }
+            else
+            {
+                return normalFilepath;
+            }
         }
 
         /*
