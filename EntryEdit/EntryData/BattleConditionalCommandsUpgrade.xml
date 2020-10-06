@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Commands bytes="2">
+    <Command hex="0001" name="Variable =" default="true">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="0002" name="Variable &gt;=">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="0003" name="Variable &lt;=">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Value" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="0004" name="Unit Present">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="0005" name="HP &gt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0006" name="HP &lt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0007" name="HP % &gt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0008" name="HP % &lt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0009" name="MP &gt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000A" name="MP &lt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000B" name="Active Turn">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+    </Command>
+    <Command hex="000D" name="Main Character Equip">
+        <Parameter name="Item" bytes="2" type="Item" />
+    </Command>
+    <Command hex="000E" name="Gil &gt;=">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="000F" name="Gil &lt;=">
+        <Parameter name="Unused" bytes="2" />
+        <Parameter name="Value" bytes="2" />
+    </Command>
+    <Command hex="0010" name="Date &gt;=">
+        <Parameter name="Month" bytes="2" />
+        <Parameter name="Day" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0011" name="Date &lt;=">
+        <Parameter name="Month" bytes="2" />
+        <Parameter name="Day" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0012" name="Casualties &gt;=">
+        <Parameter name="Value" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0013" name="Casualties &lt;=">
+        <Parameter name="Value" bytes="2" />
+        <Parameter name="Unused" bytes="2" />
+    </Command>
+    <Command hex="0014" name="Has Status">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Status" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="0015" name="Missing Status">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Status" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="0016" name="Victory" />
+    <Command hex="0017" name="Defeat" />
+    <Command hex="0018" name="Unit Location">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="X" bytes="2" />
+        <Parameter name="Y" bytes="2" />
+        <Parameter name="Z" bytes="2" />
+    </Command>
+    <Command hex="0019" name="Run Scenario" sentinel="true">
+        <Parameter name="Scenario" bytes="2" type="Scenario" />
+    </Command>
+    <Command hex="001C" name="Set Variable" sentinel="true">
+        <Parameter name="Variable" bytes="2" type="Variable" />
+        <Parameter name="Variable" bytes="2" type="Variable" />
+    </Command>
+    <Command hex="0021" name="Units In Range &gt;=">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="0022" name="Units In Range &lt;=">
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="hex" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+        <Parameter name="Unknown" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="0023" name="Unit Distance &gt;=">
+        <Parameter name="Unit (1)" bytes="2" type="Unit" />
+        <Parameter name="Unit (2)" bytes="2" type="Unit" />
+        <Parameter name="Distance" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="0024" name="Unit Distance &lt;=">
+        <Parameter name="Unit (1)" bytes="2" type="Unit" />
+        <Parameter name="Unit (2)" bytes="2" type="Unit" />
+        <Parameter name="Distance" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="0025" name="Team Unit Location">
+        <Parameter name="Team ID" bytes="2" />
+        <Parameter name="X" bytes="2" />
+        <Parameter name="Y" bytes="2" />
+        <Parameter name="Z" bytes="2" />
+    </Command>
+    <Command hex="0026" name="Turn Count &gt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Count" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="0027" name="Turn Count &lt;=">
+        <Parameter name="Unit" bytes="2" type="Unit" />
+        <Parameter name="Count" bytes="2" mode="unsigned" />
+    </Command>
+</Commands>

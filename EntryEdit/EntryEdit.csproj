@@ -248,6 +248,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EntryData\BattleConditionalCommandsUpgrade.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EntryData\EventCommandsUpgrade.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EntryData\VariableNamesUpgrade.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\ee.ico" />
     <Content Include="EntryData\AbilityEffectNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
