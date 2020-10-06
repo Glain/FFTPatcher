@@ -454,6 +454,9 @@ namespace EntryEdit
         private void WriteLoadedDataToTestFiles()
         {
             _entryData = _dataHelper.LoadDefaultEntryData();
+            _dataHelper.SaveAllConditionalSetScripts(_entryData.BattleConditionals, "./EntryData/scripts/battle/1");
+            _dataHelper.SaveAllConditionalSetScripts(_entryData.WorldConditionals, "./EntryData/scripts/world/1");
+            _dataHelper.SaveAllEventScripts(_entryData.Events, "./EntryData/scripts/event/1");
             List<ConditionalSet> battleConditionals = _dataHelper.LoadAllConditionalSetScripts(CommandType.BattleConditional, "./EntryData/scripts/battle/1");
             List<ConditionalSet> worldConditionals = _dataHelper.LoadAllConditionalSetScripts(CommandType.WorldConditional, "./EntryData/scripts/world/1");
             List<Event> events = _dataHelper.LoadAllEventScripts(_entryData.Events, "./EntryData/scripts/event/1");
