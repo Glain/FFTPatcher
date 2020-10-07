@@ -86,7 +86,8 @@ namespace ASMEncoding.Helpers
 				case "div":
 				case "rem":
 				case "mod":
-					if ((encoding.Command == "div") && (args.Length < 3))
+                    if (((encoding.Command == "mul") && (encoding.Opcode == ASMFormatHelper.Opcodes.Special2))
+                        || ((encoding.Command == "div") && (args.Length < 3)))
 					{
 						result.Add(new EncodeLine(parts,index));
 						break;
