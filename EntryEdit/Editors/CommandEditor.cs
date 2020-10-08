@@ -124,7 +124,11 @@ namespace EntryEdit.Editors
                     //if (parameter.Template.Type == CommandParameterType.Number)
                     Dictionary<int, string> parameterValueMap = null;
                     //groupBox.AutoSize = true;
-                    if (!_commandData.ParameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap))
+
+                    bool hasParameterValueMap = _commandData.ParameterValueMaps.TryGetValue(parameter.Template.Type, out parameterValueMap);
+                    List<string> entryNames = hasParameterValueMap ? DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap) : null;
+
+                    if ((!hasParameterValueMap) || (parameter.Value >= entryNames.Count))
                     {
                         parameterData.IsSpinner = true;
                         //NumericUpDown spinner = new NumericUpDown();
@@ -142,7 +146,7 @@ namespace EntryEdit.Editors
                     {
                         parameterData.IsSpinner = false;
                         //ComboBox comboBox = new ComboBox();
-                        List<string> entryNames = DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap);
+                        //List<string> entryNames = DataHelper.GetParameterEntryNames(parameter.Template, parameterValueMap);
                         comboBox.Width = GetComboBoxWidth(comboBox, parameter.Template.Type, entryNames);
 
                         comboBox.Items.Clear();

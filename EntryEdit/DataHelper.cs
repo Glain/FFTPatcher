@@ -714,7 +714,9 @@ namespace EntryEdit
 
             foreach (string type in parameterTypes)
             {
-                result.Add(type, GetXMLNameMap(GetParameterValueListFilepath(type)));
+                Dictionary<int, string> map = GetXMLNameMap(GetParameterValueListFilepath(type));
+                if (map.Count > 0)
+                    result.Add(type, map);
             }
 
             return result;
@@ -734,7 +736,6 @@ namespace EntryEdit
             result.Add(CommandParameterType.Spritesheet, GetXMLNameMap(GetParameterValueListFilepath(CommandParameterType.Spritesheet)));
             return result;
         }
-        */
 
         private Dictionary<int, string> GetParameterValueMap(string type)
         {
@@ -743,24 +744,30 @@ namespace EntryEdit
             //if (type != CommandParameterType.Number)
             if (!string.IsNullOrEmpty(type))
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(GetParameterValueListFilepath(type));
-                XmlNodeList nodeList = xmlDocument.SelectNodes("//Entry");
+                string filepath = GetParameterValueListFilepath(type);
 
-                foreach (XmlNode node in nodeList)
+                if (!string.IsNullOrEmpty(filepath) && File.Exists(filepath))
                 {
-                    int nodeValue = GetNodeValue(node);
-                    XmlAttribute attrName = node.Attributes["name"];
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(filepath);
+                    XmlNodeList nodeList = xmlDocument.SelectNodes("//Entry");
 
-                    if ((nodeValue >= 0) && (attrName != null))
+                    foreach (XmlNode node in nodeList)
                     {
-                        result.Add(nodeValue, attrName.InnerText.Trim());
+                        int nodeValue = GetNodeValue(node);
+                        XmlAttribute attrName = node.Attributes["name"];
+
+                        if ((nodeValue >= 0) && (attrName != null))
+                        {
+                            result.Add(nodeValue, attrName.InnerText.Trim());
+                        }
                     }
                 }
             }
 
             return result;
         }
+        */
 
         private Dictionary<CommandType, Dictionary<int, string>> GetEntryNameMaps()
         {
