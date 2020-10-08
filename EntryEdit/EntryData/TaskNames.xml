@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Entries>
+    <Entry hex="01" name="Message" />
+    <Entry hex="04" name="Camera" />
+    <Entry hex="06" name="Map Darkness" />
+    <Entry hex="07" name="Map Light" />
+    <Entry hex="08" name="Block" />
+    <Entry hex="0B" name="Unit Anim" />
+    <Entry hex="0C" name="Color Screen" />
+    <Entry hex="34" name="Load EVTCHR" />
+    <Entry hex="36" name="Dark Screen" />
+    <Entry hex="38" name="Display Conditions" />
+    <Entry hex="3D" name="Show Graphic" />
+    <Entry hex="41" name="Effect" />
+    <Entry hex="43" name="Inflict Status" />
+</Entries>
