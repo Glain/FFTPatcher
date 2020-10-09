@@ -123,7 +123,7 @@ namespace EntryEdit.Forms
 
                         spinner_WorldConditionals_Size.Value = Settings.WorldConditionalsSize;
                         spinner_WorldConditionals_RamLocation.Value = Settings.WorldConditionalsRepoint
-                            ? PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 3).ToIntLE()
+                            ? PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsWorkingPointerRAMLocation, 3).ToIntLE()
                             : Settings.WorldConditionalsCalcRAMLocation;
 
                         if (_mode == Mode.Patch)
@@ -343,6 +343,7 @@ namespace EntryEdit.Forms
                                 if ((Settings.WorldConditionalsRepoint) && (ramOffsetKSeg0 != PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 4).ToUInt32()))
                                 {
                                     ramPatches.Add((uint)Settings.WorldConditionalsPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
+                                    ramPatches.Add((uint)Settings.WorldConditionalsWorkingPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
                                 }
                             }
                         }

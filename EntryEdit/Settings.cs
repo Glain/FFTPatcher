@@ -62,6 +62,9 @@ namespace EntryEdit
         private static readonly int _worldConditionalsPointerOffset = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsPointerOffset"]);
         public static int WorldConditionalsPointerOffset { get { return _worldConditionalsPointerOffset; } }
 
+        private static readonly int _worldConditionalsWorkingPointerRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["WorldConditionalsWorkingPointerRAMLocation"]);
+        public static int WorldConditionalsWorkingPointerRAMLocation { get { return _worldConditionalsWorkingPointerRAMLocation; } }
+        
         private static readonly int _battleConditionalBlockOffsetsRAMLocation = Utilities.ParseInt(ConfigurationManager.AppSettings["BattleConditionalBlockOffsetsRAMLocation"]);
         public static int BattleConditionalBlockOffsetsRAMLocation { get { return _battleConditionalBlockOffsetsRAMLocation; } }
 
