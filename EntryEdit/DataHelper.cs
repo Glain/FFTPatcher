@@ -712,11 +712,14 @@ namespace EntryEdit
         {
             Dictionary<string, Dictionary<int, string>> result = new Dictionary<string, Dictionary<int, string>>();
 
-            foreach (string type in parameterTypes)
+            if (!Settings.IgnoreParameterTypes)
             {
-                Dictionary<int, string> map = GetXMLNameMap(GetParameterValueListFilepath(type));
-                if (map.Count > 0)
-                    result.Add(type, map);
+                foreach (string type in parameterTypes)
+                {
+                    Dictionary<int, string> map = GetXMLNameMap(GetParameterValueListFilepath(type));
+                    if (map.Count > 0)
+                        result.Add(type, map);
+                }
             }
 
             return result;

@@ -305,7 +305,7 @@ namespace EntryEdit
                         {
                             if ((parameter != null) && (parameter.Template != null))
                             {
-                                string parameterName = parameter.Value.ToString();
+                                string parameterName = "0x" + parameter.Value.ToString("X");
 
                                 if (!string.IsNullOrEmpty(parameter.Template.Type))
                                 {
@@ -316,6 +316,10 @@ namespace EntryEdit
                                         valueMap.TryGetValue(parameter.Value, out parameterName);
                                     }
 
+                                    sb.AppendFormat(" ({0})", parameterName);
+                                }
+                                else if (Settings.IgnoreParameterTypes)
+                                {
                                     sb.AppendFormat(" ({0})", parameterName);
                                 }
                             }

@@ -14,6 +14,9 @@ namespace EntryEdit
         private static readonly string _modSuffix = ConfigurationManager.AppSettings["ModSuffix"];
         public static string ModSuffix { get { return _modSuffix; } }
 
+        private static readonly bool _ignoreParameterTypes = Utilities.ParseBool(ConfigurationManager.AppSettings["IgnoreParameterTypes"]);
+        public static bool IgnoreParameterTypes { get { return _ignoreParameterTypes; } }
+
         private static readonly int _eventSize = Utilities.ParseInt(ConfigurationManager.AppSettings["EventSize"]); 
         public static int EventSize { get { return _eventSize; } }
 
