@@ -25,7 +25,7 @@ namespace EntryEdit.Editors
 
         private List<Command> _defaultCommandList;
 
-        private Action _saveCallback = null;
+        private Action _loadCallback = null;
 
         private bool _isEnabled = false;
 
@@ -61,9 +61,9 @@ namespace EntryEdit.Editors
             btn_Reload.Enabled = _isEnabled && (_defaultCommandList != null) && (_defaultCommandList.Count > 0);
         }
 
-        public void SetSaveCallback(Action saveCallback)
+        public void SetLoadCallback(Action callback)
         {
-            this._saveCallback = saveCallback;
+            this._loadCallback = callback;
         }
 
         public void Clear()
@@ -84,11 +84,6 @@ namespace EntryEdit.Editors
                 }
 
                 commandIndex++;
-            }
-
-            if (_saveCallback != null)
-            {
-                _saveCallback();
             }
         }
 
@@ -114,6 +109,11 @@ namespace EntryEdit.Editors
                 ClearChecksOnPage();
 
             SetCommandPageIndex(pageIndex);
+
+            if (_loadCallback != null)
+            {
+                _loadCallback();
+            }
 
             _isPopulate = false;
         }

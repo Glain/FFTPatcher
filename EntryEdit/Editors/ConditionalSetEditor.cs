@@ -36,7 +36,7 @@ namespace EntryEdit.Editors
             this._maxBlocks = maxBlocks;
 
             commandListEditor.Init(commandData);
-            //commandListEditor.SetSaveCallback(FindBlockName);
+            commandListEditor.SetLoadCallback(FindBlockName);
         }
 
         public void Populate(ConditionalSet conditionalSet, ConditionalSet defaultConditionalSet)
