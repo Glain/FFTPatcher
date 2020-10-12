@@ -112,7 +112,10 @@ namespace PatcherLib.Datatypes
         [DebuggerStepThrough]
         public static IList<T> SubLength<T>(this IList<T> list, int start, int length)
         {
-            return new SubArray<T>(list, (uint)start, (uint)(start + length - 1));
+            if (length > 0)
+                return new SubArray<T>(list, (uint)start, (uint)(start + length - 1));
+            else
+                return new T[0];
         }
 
         [DebuggerStepThrough]
@@ -130,7 +133,10 @@ namespace PatcherLib.Datatypes
         [DebuggerStepThrough]
         public static IList<T> SubLength<T>(this IList<T> list, uint start, uint length)
         {
-            return new SubArray<T>(list, start, (start + length - 1));
+            if (length > 0)
+                return new SubArray<T>(list, start, (start + length - 1));
+            else
+                return new T[0];
         }
 
 		#endregion Public Methods 
