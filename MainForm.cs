@@ -83,7 +83,7 @@ namespace FFTPatcher
         public MainForm(string[] args)
         {
             InitializeComponent();
-
+            string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".fftpatch");
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
             Settings.LoadSettingsXml();
 
@@ -113,18 +113,14 @@ namespace FFTPatcher
             psxMenu.Popup += new EventHandler( psxMenu_Popup );
             pspMenu.Popup += new EventHandler( pspMenu_Popup );
 
-            if (args.Length > 0)
+            if (!string.IsNullOrEmpty(inputFilepath))
             {
-                string filepath = args[0];
-                if ((filepath.ToLower().Trim().EndsWith(".fftpatch")) && (System.IO.File.Exists(filepath)))
+                Environment.CurrentDirectory = Path.GetDirectoryName(inputFilepath);
+                TryAndHandle(delegate()
                 {
-                    Environment.CurrentDirectory = Path.GetDirectoryName(filepath);
-                    TryAndHandle(delegate()
-                    {
-                        FFTPatch.LoadPatch(filepath);
-                        fftPatchEditor1.LoadFFTPatch(FFTPatch);
-                    }, true);
-                }
+                    FFTPatch.LoadPatch(inputFilepath);
+                    fftPatchEditor1.LoadFFTPatch(FFTPatch);
+                }, true);
             }
         }
 

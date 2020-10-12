@@ -37,7 +37,7 @@ namespace FFTPatcher.TextEditor
         public MainForm(string[] args)
         {
             InitializeComponent();
-
+            string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".ffttext");
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
             Text = string.Format("FFTactext (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
 
@@ -54,13 +54,9 @@ namespace FFTPatcher.TextEditor
             fileMenuItem.Popup += new EventHandler(menuItem_Popup);
             isoMenuItem.Popup += new EventHandler(menuItem_Popup);
 
-            if (args.Length > 0)
+            if (!string.IsNullOrEmpty(inputFilepath))
             {
-                string filepath = args[0];
-                if ((filepath.ToLower().Trim().EndsWith(".ffttext")) && (System.IO.File.Exists(filepath)))
-                {
-                    LoadFile(LoadType.Open, filepath, null, null);
-                }
+                LoadFile(LoadType.Open, inputFilepath, null, null);
             }
         }
 

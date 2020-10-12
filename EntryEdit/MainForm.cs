@@ -60,6 +60,7 @@ namespace EntryEdit
 
         private void Start(string[] args)
         {
+            string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".eepatch");
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
 
             _dataHelper = new DataHelper();
@@ -69,15 +70,11 @@ namespace EntryEdit
 
             tabControl.Enabled = false;
 
-            if (args.Length > 0)
+            if (!string.IsNullOrEmpty(inputFilepath))
             {
-                string filepath = args[0];
-                if ((filepath.ToLower().Trim().EndsWith(".eepatch")) && (System.IO.File.Exists(filepath)))
-                {
-                    LoadPatch(filepath);
-                    EnableMenu();
-                    tabControl.Enabled = (_entryData != null);
-                }
+                LoadPatch(inputFilepath);
+                EnableMenu();
+                tabControl.Enabled = (_entryData != null);
             }
         }
 

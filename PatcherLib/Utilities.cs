@@ -611,6 +611,29 @@ namespace PatcherLib.Utilities
             return sb.ToString();
         }
 
+        public static string GetInputFilepath(string[] args, string extension)
+        {
+            string filepath = (args.Length > 0) ? args[0] : "";
+
+            if (!string.IsNullOrEmpty(filepath))
+            {
+                try
+                {
+                    filepath = System.IO.Path.GetFullPath(filepath);
+                    if (!((filepath.ToLower().Trim().EndsWith(extension)) && (System.IO.File.Exists(filepath))))
+                    {
+                        filepath = "";
+                    }
+                }
+                catch (Exception)
+                {
+                    filepath = "";
+                }
+            }
+
+            return filepath;
+        }
+
         public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
         {
             if (file.FindEntry(entry, false) == -1)
