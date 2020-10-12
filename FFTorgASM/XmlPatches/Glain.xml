@@ -1595,44 +1595,42 @@ SKP:  j       0x80180848            #   Skip this ability
         .label  @address_ability_effect_array, 0x801b63f0
 
         @geomancy_replace:
-                addiu   sp, sp, -16
-                sw      ra, 4(sp)
-                
                 lbu     t0, @address_caster_tile_type
+                la      t3, @address_geomancy_properties_array
+                lbu     t0, @address_geomancy_tile_array (t0)       #   LookupID
                 lbu     t1, @address_ability_id
-                lbu     t0, @address_geomancy_tile_array (t0)       #   LookupID   
-                sll     t2, t1, 1                                   #   Ability ID * 2
-                addu    t1, t2, t1                                  #   Ability ID * 3
-                la      t2, @address_geomancy_properties_array
-                addu    t1, t1, t2                                  #   Address for geomancy property
                 
-                #addiu   t0, t0, -126                                #   EntryID = LookupID - 126
-                addiu   t0, t0, -%GeomancyAbilityID
+                addiu   t4, t0, -126                                #   EntryID = LookupID - 126
+                sll     t2, t4, 1                                   #   EntryID * 2
+                addu    t2, t2, t4                                  #   EntryID * 3
                 
-                lbu     t2, 0(t1)                                   #   Inflict Status ID
-                lbu     t3, 1(t1)                                   #   Element
-                lbu     t4, 2(t1)                                   #   Effect ID
+                addu    t2, t3, t2                                  #   Address for geomancy property
                 
-                sb      t2, @address_ability_inflict_status_id      #   Store new Inflict Status ID
-                sb      t3, @address_ability_element                #   Store new Element
-                sll     t2, t0, 1
-                sb      t4, @address_ability_effect_array (t2)      #   Store new Effect ID
+                lbu     t3, 0(t2)                                   #   Inflict Status ID
+                lbu     t4, 1(t2)                                   #   Element
+                lbu     t5, 2(t2)                                   #   Effect ID
                 
-                jal     0x80185d40                                  #   Set (PA + Y) / 2 as Y
-                nop
+                sb      t3, @address_ability_inflict_status_id      #   Store new Inflict Status ID
+                sb      t4, @address_ability_element                #   Store new Element
+                sll     t6, t1, 1
+                sb      t5, @address_ability_effect_array (t6)      #   Store new Effect ID
                 
-                lw      ra, 4(sp)
-                addiu   sp, sp, 16
-                jr      ra
+                j       0x80185d40                                  #   Set (PA + Y) / 2 as Y
                 nop
     </Location>
     <Location file="BATTLE_BIN" offset="1896CC" mode="ASM" offsetMode="RAM">
         jal     @geomancy_replace
     </Location>
-    <Location file="BATTLE_BIN" offset="17E348" mode="ASM" offsetMode="RAM">
-        li      a2, 0x007e
+    <Location file="BATTLE_BIN" offset="17A9D8" mode="ASM" offsetMode="RAM">
+        li      s4, %GeomancyAbilityID
     </Location>
-    <Variable name="Geomancy Ability ID" file="BATTLE_BIN" offset="117348" bytes="2" default="007E" />
+    <Location file="BATTLE_BIN" offset="17E348,18227C" mode="ASM" offsetMode="RAM">
+        li      a2, %GeomancyAbilityID
+    </Location>
+    <Location file="BATTLE_BIN" offset="17F308,19B7A4" mode="ASM" offsetMode="RAM">
+        li      v0, %GeomancyAbilityID
+    </Location>
+    <Variable name="Geomancy Ability ID" file="BATTLE_BIN" offset="17E348" offsetMode="RAM" bytes="2" default="007E" />
   </Patch>
   <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu)">
     <Description>
