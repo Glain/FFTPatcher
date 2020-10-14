@@ -466,6 +466,9 @@ namespace EntryEdit
                         continue;
 
                     string line = PatcherLib.Utilities.Utilities.RemoveWhitespace(origLine.Trim());
+
+                    if (string.IsNullOrEmpty(line))
+                        continue;
                     if (line.StartsWith("//"))
                         continue;
 
