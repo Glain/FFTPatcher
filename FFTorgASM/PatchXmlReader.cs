@@ -446,7 +446,14 @@ namespace FFTorgASM
 
                     List<SpecificLocation> specifics = FillSpecificAttributeData(attrSpecific, defaultSector);
 
-                    if (specifics.Count > 0)
+                    XmlAttribute symbolAttribute = varNode.Attributes["symbol"];
+                    bool isSymbol = (symbolAttribute != null) && PatcherLib.Utilities.Utilities.ParseBool(symbolAttribute.InnerText);
+
+                    if (isSymbol)
+                    {
+                        strOffsets = new string[0];
+                    }
+                    else if (specifics.Count > 0)
                     {
                         isSpecific = true;
                         List<string> newStrOffsets = new List<string>(specifics.Count);
@@ -487,7 +494,7 @@ namespace FFTorgASM
                         int lastIndex = variables[variables.Count - 1].content.Count - 1;
                         sector = (PsxIso.Sectors)(variables[variables.Count - 1].content[lastIndex].Sector);
                     }
-                    else
+                    else if (!isSymbol)
                     {
                         throw new Exception("Error in patch XML: Invalid file/sector!");
                     }
