@@ -28,12 +28,14 @@ namespace PatcherLib.Controls
         {
             if (m.Msg == 0x0102) // WM_CHAR
             {
+                bool isHandled = false;
                 char key = (char)m.WParam;
 
                 if (key == 27) // Escape
                 {
                     // Reset cache if ESC pressed
                     selectionCache.Length = 0;
+                    isHandled = true;
                 }
                 else if (key == 8) // Backspace
                 {
@@ -43,16 +45,21 @@ namespace PatcherLib.Controls
                         selectionCache.Length--;
                         SelectFirstItemMatching(selectionCache.ToString());
                     }
+                    isHandled = true;
                 }
-                else if ((Char.IsLetterOrDigit(key)) || (key == ' '))
+                else if ((Char.IsLetterOrDigit(key)) || ((key == ' ') && (selectionCache.Length > 0)))
                 {
                     selectionCache.Append(Char.ToLower(key));
                     SelectFirstItemMatching(selectionCache.ToString());
+                    isHandled = true;
                 }
 
-                // Do not call base.WndProc as we want to eat the message
-                // so that the control does not respond to it.
-                return;
+                if (isHandled)
+                {
+                    // Do not call base.WndProc as we want to eat the message
+                    // so that the control does not respond to it.
+                    return;
+                }
             }
 
             base.WndProc(ref m);
