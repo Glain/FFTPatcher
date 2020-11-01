@@ -183,6 +183,7 @@ namespace ASMEncoding.Helpers
                     endParenIndex = args[1].IndexOf(')', (startParenIndex >= 0) ? startParenIndex : 0);
                     isStore = encoding.Command.ToLower().StartsWith("s");
 					useAT = ((startParenIndex >= 0) || (isStore));
+                    //useAT = isStore;
 					
 					if (startParenIndex >= 0)
 					{
@@ -220,6 +221,7 @@ namespace ASMEncoding.Helpers
 							newParts = new string[2];
 							newParts[0] = "addu";
 							newParts[1] = "at,at," + regS;
+                            //newParts[1] = (useAT ? "at,at," : (args[0] + "," + args[0] + ",")) + regS;
 							result.Add(new EncodeLine(newParts,index));
 						}
 						
