@@ -92,13 +92,11 @@ SKP:  move    t4,v1
         The format for the multipliers is 16.16 fixed point (e.g. 1.25 = 00014000).
         A multiplier of zero (default) will be ignored.
     </Description>
-    <Location file="BATTLE_BIN" offset="F5D30" mode="ASM">
+    <Location file="BATTLE_BIN" offset="F5D20" mode="ASM">
 .label  @get_source_unit_misc_data_pointer, 0x8007a218
     
 .label  @elemental_nullify, 0x80184e40
 .label  @apply_elemental, 0x80186ffc
-.label  @address_damage_multiplier, 0x8015cd20
-.label  @address_healing_multiplier, 0x8015cd24
 
 # ROUTINE: Formula tail routine
 @formula_tail:
@@ -379,11 +377,12 @@ SKP:  move    t4,v1
         
     adhm_damage:
         beq     t5, zero, adhm_healing
-        nop
+        #nop
         
-        la      a0, @address_damage_multiplier
-        lw      a0, 0(a0)
-        nop
+        la      a0, %DamageMultiplier
+        #la      a0, @address_damage_multiplier
+        #lw      a0, 0(a0)
+        #nop
         
         beq     a0, zero, adhm_healing
         nop
@@ -393,11 +392,12 @@ SKP:  move    t4,v1
         
     adhm_healing:
         beq     t6, zero, adhm_end
-        nop
+        #nop
         
-        la      a0, @address_healing_multiplier
-        lw      a0, 0(a0)
-        nop
+        la      a0, %HealingMultiplier
+        #la      a0, @address_healing_multiplier
+        #lw      a0, 0(a0)
+        #nop
         
         beq     a0, zero, adhm_end
         nop
@@ -642,8 +642,8 @@ SKP:  move    t4,v1
       ori     t0,t0,0x08            # Add status change
       sb      t0,0x25(a0)           # Save as action type
     </Location>
-    <Variable name="Damage Multiplier" file="BATTLE_BIN" offset="F5D20" bytes="4" default="00000000" />
-    <Variable name="Healing Multiplier" file="BATTLE_BIN" offset="F5D24" bytes="4" default="00000000" /> 
+    <Variable name="Damage Multiplier" bytes="4" default="00000000" symbol="true" />
+    <Variable name="Healing Multiplier" bytes="4" default="00000000" symbol="true" /> 
   </Patch>
   <Patch name="Swordskill element strengthen and Dark/Night Sword elemental (v2)">
     <Description>
@@ -960,12 +960,12 @@ SKP:  j       0x80180848            #   Skip this ability
     <Location file="BATTLE_BIN" offset="F2250" mode="ASM">
       @hide_excessive_recovery:
 
-              addiu   sp, sp, -24
-              sw      ra, 4(sp)
-              sw      s0, 8(sp)
-              sw      s1, 12(sp)
-              sw      s2, 16(sp)
-              sw      s3, 20(sp)
+              addiu   sp, sp, -32
+              sw      s0, 4(sp)
+              sw      s1, 8(sp)
+              sw      s2, 12(sp)
+              sw      s3, 16(sp)
+              sw      ra, 20(sp)
 
               lui     t0, 0x8019
               lbu     t1, 0x38e8(t0)  # Active ability?
@@ -988,16 +988,14 @@ SKP:  j       0x80180848            #   Skip this ability
               move    a1, s3
 
         hide_excessive_recovery_end:
-
-              lw      s3, 20(sp)
-              lw      s2, 16(sp)
-              lw      s1, 12(sp)
-              lw      s0, 8(sp)
-              lw      ra, 4(sp)
-              addiu   sp, sp, 24
-
+              lw      ra, 20(sp)
+              lw      s3, 16(sp)
+              lw      s2, 12(sp)
+              lw      s1, 8(sp)
+              lw      s0, 4(sp)
               jr      ra
-              nop
+              addiu   sp, sp, 32
+
 
       # a0 = Action, a1 = Target
       @hide_excessive_recovery_single:
@@ -1023,11 +1021,12 @@ SKP:  j       0x80180848            #   Skip this ability
 
               and     t4, t4, t5      # Action type: HP recovery flag zeroed out if HP is max
               and     t4, t4, t6      # Action type: MP recovery flag zeroed out if MP is max
-
-        hide_excessive_recovery_single_end:
-
-              jr      ra
+              
               sb      t4, 0x25(a0)    # Save action display type
+              
+        hide_excessive_recovery_single_end:
+              jr      ra
+              nop
     </Location>
     <Location file="BATTLE_BIN" offset="18BFD0" mode="ASM" offsetMode="RAM">
       lui     s1, 0x8019
@@ -1588,17 +1587,32 @@ SKP:  j       0x80180848            #   Skip this ability
     </Location>
     <Location file="BATTLE_BIN" offset="15D374" mode="ASM" offsetMode="RAM">
         .label  @address_geomancy_tile_array, 0x8005e9d0
-        .label  @address_caster_tile_type, 0x801938cd
+        .label  @address_inflict_status_data, 0x80063fc4
+        .label  @address_tile_array, 0x8018f8cc
         .label  @address_ability_id, 0x801938d6
         .label  @address_ability_element, 0x801938f7
         .label  @address_ability_inflict_status_id, 0x801938fb
+        .label  @address_ability_inflict_status_data, 0x80193906
         .label  @address_ability_effect_array, 0x801b63f0
 
         @geomancy_replace:
-                lbu     t0, @address_caster_tile_type
+                addiu   sp, sp, -16
+                sw      ra, 4(sp)
+        
+                #   Get acting unit tile ID
+                lw      a0, 0x80192d94
+                jal     0x801810a0
+                nop
+                
+                lui     t6, %hi(@address_ability_id)
+                sll     v0, v0, 3
+                addu    at, t6, v0
+                lbu     t0, %lo(@address_tile_array) (at)
                 la      t3, @address_geomancy_properties_array
+                andi    t0, t0, 0x3f
+        
                 lbu     t0, @address_geomancy_tile_array (t0)       #   LookupID
-                lbu     t1, @address_ability_id
+                lbu     t1, %lo(@address_ability_id) (t6)
                 
                 addiu   t4, t0, -126                                #   EntryID = LookupID - 126
                 sll     t2, t4, 1                                   #   EntryID * 2
@@ -1610,13 +1624,26 @@ SKP:  j       0x80180848            #   Skip this ability
                 lbu     t4, 1(t2)                                   #   Element
                 lbu     t5, 2(t2)                                   #   Effect ID
                 
-                sb      t3, @address_ability_inflict_status_id      #   Store new Inflict Status ID
-                sb      t4, @address_ability_element                #   Store new Element
-                sll     t6, t1, 1
-                sb      t5, @address_ability_effect_array (t6)      #   Store new Effect ID
+                sb      t3, 0x38fb(t6)
+                sb      t3, 0x3905(t6)
                 
-                j       0x80185d40                                  #   Set (PA + Y) / 2 as Y
-                nop
+                sb      t4, %lo(@address_ability_element) (t6)      #   Store new Element
+                sll     t1, t1, 1
+                sh      t5, @address_ability_effect_array (t1)      #   Store new Effect ID
+                
+                #   Copy inflict status data
+                sll     t2, t3, 1
+                addu    t2, t2, t3
+                sll     t2, t2, 1
+                la      a0, @address_inflict_status_data
+                addu    a0, t2, a0
+                addiu   a1, t6, %lo(@address_ability_inflict_status_data)
+                jal     0x8005e254                                  #   Copy bytes
+                li      a2, 6
+                
+                lw      ra, 4(sp)
+                j       0x80185d40                                  #   Store MA and PA + Y / 2
+                addiu   sp, sp, 16
     </Location>
     <Location file="BATTLE_BIN" offset="1896CC" mode="ASM" offsetMode="RAM">
         jal     @geomancy_replace
@@ -1824,10 +1851,9 @@ SKP:  j       0x80180848            #   Skip this ability
     </Description>
     <Location file="BATTLE_BIN" offset="15C9F0" mode="ASM" offsetMode="RAM">
         @text_delay_hook:
-                .eqv    %max_normal_delay, 2
                 .eqv    %min_hard_stop, 45
 
-                li      t2, %max_normal_delay
+                li      t2, %TextDelay
                 sltiu   t1, t0, %min_hard_stop
                 beq     t1, zero, text_delay_hook_end
                 sltu    t1, t0, t2
@@ -1843,7 +1869,7 @@ SKP:  j       0x80180848            #   Skip this ability
     <Location file="BATTLE_BIN" offset="132718" mode="ASM" offsetMode="RAM">
         jal     @text_delay_hook
     </Location>
-    <Variable name="Text delay" file="BATTLE_BIN" offset="F59F0" bytes="1" default="2" /> 
+    <Variable name="Text Delay" bytes="1" default="2" symbol="true" /> 
   </Patch>
   <Patch name="Switch unit number with L1 and R1 buttons (formation)">
     <Description>
@@ -2180,6 +2206,7 @@ SKP:  j       0x80180848            #   Skip this ability
                 sw      s0, 8(sp)
                 sw      s1, 12(sp)
                 
+                li      a0, 0x000c
                 move    s1, a0
                 jal     0x8001db58
                 move    s0, v0
@@ -2190,16 +2217,14 @@ SKP:  j       0x80180848            #   Skip this ability
                 li      v0, 0
         
             close_formation_screen_hook_end:
+                lw      ra, 4(sp)
                 lw      s1, 12(sp)
                 lw      s0, 8(sp)
-                lw      ra, 4(sp)
-                addiu   sp, sp, 24
                 jr      ra
-                nop
+                addiu   sp, sp, 24
       </Location>
       <Location file="WORLD_WLDCORE_BIN" offset="685D8" mode="ASM" offsetMode="RAM">
           j       @close_formation_screen_hook
-          li      a0, 0x000c
       </Location>
       <Location file="SCUS_942_21" offset="27200" mode="ASM" offsetMode="RAM">
         @load_formation_hook:
@@ -2844,6 +2869,501 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="MENU_TUTO4_SCR" offset="5C">8C</Location>
         <Location file="MENU_TUTO4_SCR" offset="65">06</Location>
     </Patch>
+    <Patch name="Jump single ability">
+        <Description>
+            Makes an ability function as Jump.  It should be placed in a normal skillset with Default action menu.  Recommended to use the default ability ID, 0x018A Level Jump2.
+        </Description>
+        <Location file="BATTLE_BIN" offset="15D4B0" mode="ASM" offsetMode="RAM">
+            #   Parameters:
+            #       a0 = Ability ID
+            #       s0 = Battle unit data pointer
+            #   Returns:
+            #       s0 = CT (if jump)
+            #       a2 = sp + 16 (if jump)
+            #   Preserve: v1
+            @set_jump_ability_data:
+        
+                    li      t0, %JumpAbilityID
+                    bne     a0, t0, set_jump_ability_data_end
+                    li      t1, 50
+        
+                    lbu     t0, 0x38(s0)
+                    la      ra, 0x80181ad8
+                    divu    t1, t0
+                    mflo    s0
+                    addiu   a2, sp, 16
+        
+                set_jump_ability_data_end:
+                    jr      ra
+                    nop
+        
+        
+            @ai_ability_data_setting_hook:
+                    bne     v0, zero, ai_ability_data_setting_hook_end
+                    move    t0, s1
+        
+                    lui     v0, 0x8019
+                    ori     a0, t1, 0x5a90
+                    j       @generic_jump_hook
+                    ori     v0, t1, 0x5c00
+        
+        
+                ai_ability_data_setting_hook_end:
+                    jr      ra
+                    nop
+        
+        
+            #   Parameters:        
+            #       v0 = Normal return location
+            #       a0 = Alternate return location
+            #       t0 = Ability ID
+            @generic_jump_hook:
+
+                    li      t1, %JumpAbilityID
+                    bne     t0, t1, generic_jump_hook_end
+                    nop
+        
+                    move    v0, a0
+        
+                generic_jump_hook_end:
+                    jr      v0
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="174328" mode="DATA" offsetMode="RAM">
+            28
+        </Location>
+        <Location file="BATTLE_BIN" offset="179E38" mode="ASM" offsetMode="RAM">
+            sw      a0, 0x0c(sp)
+        </Location>
+        <Location file="BATTLE_BIN" offset="179EA4" mode="ASM" offsetMode="RAM">
+                li      s4, 8               #   Range
+                lbu     t3, 0xd9(sp)
+                li      t4, 0x34
+                beq     t3, t4, jump_range_end
+                li      s0, 8               #   Vertical
+        
+                lw      t3, 0x0c(sp)        #   Unit
+                nop
+                lbu     t3, 0xd8(t3)        #   Geomancer/Lancer Job Level
+                nop
+                andi    t3, t3, 0x0f        #   Lancer Job Level
+        
+                move    s4, t3
+                move    s0, t3
+        
+            jump_range_end:
+                j       0x80179f1c
+                nop
+        </Location>    
+        <Location file="BATTLE_BIN" offset="17A934" mode="ASM" offsetMode="RAM">
+            lhu     t0, 0x12(sp)
+        </Location>
+        <Location file="BATTLE_BIN" offset="17A950" mode="ASM" offsetMode="RAM">
+            lui     a0, 0x8017
+            j       @generic_jump_hook
+            ori     a0, a0, 0xaa18
+        </Location>
+        <Location file="BATTLE_BIN" offset="17AB18" mode="ASM" offsetMode="RAM">
+            lhu     t0, 0x12(sp)
+        </Location>
+        <Location file="BATTLE_BIN" offset="17ABA0" mode="ASM" offsetMode="RAM">
+            lui     a0, 0x8017
+            j       @generic_jump_hook
+            ori     a0, a0, 0xabb8
+        </Location>
+        <Location file="BATTLE_BIN" offset="17C498" mode="ASM" offsetMode="RAM">
+            lhu     t0, 0x12(sp)
+        </Location>
+        <Location file="BATTLE_BIN" offset="17C53C" mode="ASM" offsetMode="RAM">
+            lui     a0, 0x8017
+            j       @generic_jump_hook
+            ori     a0, a0, 0xc730
+        </Location>
+        <Location file="BATTLE_BIN" offset="181AB4" mode="ASM" offsetMode="RAM">
+            jal     @set_jump_ability_data
+            addiu   v0, a0, -0x0196
+        </Location>
+        <Location file="BATTLE_BIN" offset="18B610" mode="ASM" offsetMode="RAM">
+            lui     t1, 0x8018
+        </Location>
+        <Location file="BATTLE_BIN" offset="18B674" mode="ASM" offsetMode="RAM">
+            lhu     t0, 0x12(sp)
+            j       @generic_jump_hook
+            ori     a0, t1, 0xb7dc
+        </Location>
+        <Location file="BATTLE_BIN" offset="1958C4" mode="ASM" offsetMode="RAM">
+            lbu     t2, 2(s4)
+            lui     t1, 0x8019
+            sb      t2, 0(s0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="195920" mode="ASM" offsetMode="RAM">
+            jal     @ai_ability_data_setting_hook
+        </Location>
+        <Location file="BATTLE_BIN" offset="195B6C" mode="ASM" offsetMode="RAM">
+            lbu     t0, 0xd8(s2)
+            li      t1, 0x34
+            beq     t2, t1, 0x80195b80
+            li      v0, 8
+            andi    v0, t0, 0x0f
+        </Location>
+        <Location file="BATTLE_BIN" offset="195B98" mode="ASM" offsetMode="RAM">
+            j       0x80195968
+        </Location>
+        <Variable name="Jump Ability ID" bytes="2" default="018A" symbol="true" />
+        <Variable name="Jump Formula" bytes="1" default="64" file="BATTLE_BIN" offset="18B7E0" offsetMode="RAM" />
+    </Patch>
+    <Patch name="Skillset learned ability fix">
+        <Description>When determining usable abilities in a skillset, finds the learned abilities based on the job instead of skillset ID.  
+        Fixes an issue where changing the skillset for a generic job to an unused skillset resulted in those abilities all being auto-learned.</Description>
+        <Location file="BATTLE_BIN" offset="1818D0" mode="ASM" offsetMode="RAM">
+            .label  skillsetIndexTest, 0x8018193c
+
+                lbu     t2, 6(s0)               #   Flags
+                lbu     t1, 0xb8(sp)            #   Skillset
+                andi    t2, t2, 0x20
+                bne     t2, zero, skillsetIndexTest
+                li      a1, -1
+        
+                li      t0, 0x4a                #   Job ID
+                li      t4, 0x80061e98
+            job_loop:
+                lbu     t2, 0(t4)               #   Job skillset
+                addiu   t4, t4, 0x30
+                beq     t2, t1, past_job_loop
+                li      t3, 1
+                addiu   t0, t0, 1
+                sltiu   t2, t0, 0x5d
+                bne     t2, zero, job_loop
+                li      t3, 0
+        
+            past_job_loop:
+                bne     t3, zero, skillsetIndexTest
+                addiu   a1, t0, -0x4a
+        
+                lbu     t2, 0x0012(s0)          #   Unit primary skillset
+                lbu     t3, 0x0162(s0)          #   Unit special skillset
+                beq     t2, t1, skillsetIndexTest
+                li      a1, 0
+                beq     t3, t1, skillsetIndexTest
+                nop
+                j       skillsetIndexTest
+                li      a1, -1
+        </Location>
+        <Location file="BATTLE_BIN" offset="19AA68" mode="ASM" offsetMode="RAM">
+                lbu     t2, 6(a0)               #   Flags
+                li      t0, 0x4a                #   Job ID
+                andi    t2, t2, 0x20
+                bne     t2, zero, return_known
+                lui     t4, 0x8006
+        
+                ori     t4, t4, 0x1e98
+            job_loop:
+                lbu     t2, 0(t4)               #   Job skillset
+                addiu   t4, t4, 0x30
+                beq     t2, a1, past_job_loop
+                li      t3, 1
+                addiu   t0, t0, 1
+                sltiu   t2, t0, 0x5d
+                bne     t2, zero, job_loop
+                li      t3, 0
+        
+            past_job_loop:
+                move    t5, a1
+                bne     t3, zero, skillset_index_lookup
+                addiu   a1, t0, -0x4a
+        
+                lbu     t2, 0x0012(a0)          #   Unit primary skillset
+                lbu     t3, 0x0162(a0)          #   Unit special skillset
+                beq     t2, t5, skillset_index_lookup
+                li      a1, 0
+                beq     t3, t5, skillset_index_lookup
+                nop
+        
+            return_known:
+                j       0x8019ab00
+                li      v0, 1
+        
+            skillset_index_lookup:
+                sll     v0, a1, 1
+                addu    v0, v0, a1
+                addu    v0, v0, a0
+                addiu   v0, v0, 0x99
+                sra     a0, a2, 3
+        </Location>
+    </Patch>
+    <Patch name="Skillset menu hardcoding fix">
+        <Description>Skillset menu actions based on action menu instead of being hardcoded to skillset ID.  Fixes some issues resulting from changing action menus on generic skillsets.  Similar to (and mutually exclusive with) Generic Skillset Fix / Skillset Behaviors hack, but based on action menu.</Description>
+        <Location file="BATTLE_BIN" offset="1411B4" mode="ASM" offsetMode="RAM">
+                li      v0, 0x12
+                lui     t7, 0x8016
+                lbu     a2, 0x5ee4(t7)
+                lbu     a3, 0x5ee6(t7)
+                lhu     t1, 0x5ee8(t7)
+                lui     t8, 0x8017
+                sw      a2, -0x67d8(t8)
+                beq     a2, v0, near_end
+                move    t6, a3
+        
+                andi    v1, a2, 0xfe
+                li      v0, 0xfe
+                beq     v1, v0, near_end
+                li      t0, 0 
+        
+                lui     t3, 0x8015
+                addiu   a0, t3, -0x2c88
+                lw      v1, 0x5f84(t7)
+                li      a1, 0
+         
+            loop_start:
+                addu    at, t3, a1
+                lhu     v0, -0x2c8c(at)
+                lw      t9, 0(a0)
+                bne     v1, v0, loop_bottom
+                li      t2, 0xff
+                beq     a2, t2, no_menu_selection
+                li      t2, 105
+                beq     v1, t2, menu_105
+                li      t2, 25
+                beq     v1, t2, menu_default
+                slti    t2, v1, 100
+                bne     t2, zero, menu_alternate
+                nop
+        
+            menu_default:
+                addu    v0, t9, a3
+                lbu     a2, 1(v0)
+                j       past_loop
+                li      a3, 0xfffe
+        
+            menu_alternate:
+                addu    v0, t9, a2
+                lbu     a2, 1(v0)
+                j       past_loop_next
+                li      v0, 0x1f
+        
+            no_menu_selection:
+                lbu     a2, 0(t9)
+                j       past_loop_next
+                li      v0, 0x1f
+        
+            loop_bottom:
+                addiu   a0, a0, 8
+                addiu   t0, t0, 1
+                slti    v0, t0, 0x1f
+                bne     v0, zero, loop_start
+                addiu   a1, a1, 8
+        
+            past_loop:
+                li      v0, 0x1f
+        
+            past_loop_next:
+                bne     t0, v0, store_primary
+                slti    v0, t0, 16
+                li      a2, 7
+        
+            store_primary:
+                beq     v0, zero, store_primary_alternate
+                addiu   v0, a2, -5
+                sw      a2, -0x2cec(t3)
+                j       set_selected
+                li      v0, 1
+    
+            menu_105:
+                lw      a2, 0x5f78(t7)
+                lbu     v0, 0x5f7c(t7)
+                li      a3, 0xfffe
+                j       past_loop
+                sb      v0, -0x67cc(t8)
+    
+            store_primary_alternate:
+                sltiu   v0, v0, 2
+                beq     v0, zero, set_selected
+                li      v0, 1
+                sb      a2, -0x67ca(t8)
+    
+            set_selected:
+                bne     a2, v0, past_set_selected
+                li      v0, 12
+                li      t9, 1
+                sb      t9, -0x2cdc(t3)
+        
+            past_set_selected:
+                bne     a2, v0, find_skillset
+                slti    v0, a3, 3
+                beq     v0, zero, find_setting_alternate
+                addiu   v0, a3, -1
+                sll     v0, v0, 1
+                addiu   v1, t1, 12
+                j       setting
+                addu    a2, v0, v1
+        
+            find_setting_alternate:
+                addiu   a2, a3, 13
+        
+            setting:
+                li      a3, 0xfffe
+                li      t1, 0xfffe
+                sw      a2, -0x2cec(t3)
+        
+            find_skillset:
+                sw      a2, -0x67d8(t8)
+                andi    v1, a3, 0xfe
+                li      v0, 0xfe
+                beq     v1, v0, end
+                andi    v0, a3, 0xff
+                addu    at, t8, t6
+                lbu     a3, 0x4060(at)
+        
+                lui     t7, 0x8006
+                addu    t7, t7, a3
+                lbu     t7, 0x5cb4(t7)
+        
+                #   Action menus: 08 Attack, 0B Defend, 0C Equip Change, 0D Unknown, 04 Elements, 09 Jump
+                li      t9, 4
+                beq     t7, t9, action_menu_check_true
+                li      t9, 8
+                beq     t7, t9, action_menu_check_true
+                li      t9, 9
+                beq     t7, t9, action_menu_check_true
+                li      t9, 11
+                beq     t7, t9, action_menu_check_true
+                li      t9, 12
+                beq     t7, t9, action_menu_check_true
+                li      t9, 13
+                bne     t7, t9, action_menu_check_false
+                li      v0, 0xbc
+        
+            action_menu_check_true:
+                sh      zero, -0x67d2(t8)
+                j       past_action_menu_check
+                li      t1, 0xfffe
+        
+            action_menu_check_false:
+                bne     a3, v0, past_bc_check
+                nop
+                lw      v0, -0x67c0(t8)
+                nop
+                bne     v0, zero, past_bc_check
+                li      v0, 0xfffe
+                lhu     t1, -0x1bd8(t1)
+                j       past_action_menu_branch_2
+                nop
+        
+            past_bc_check:
+                lw      v0, 0x4048(t8)
+                sll     v1, t1, 1
+                addu    v1, v1, v0
+                lhu     v0, 0(v1)
+                nop
+                andi    t1, v0, 0x01ff
+        
+            past_action_menu_check:
+                li      v0, 0xfffe
+    
+            past_action_menu_branch_2:
+                sb      a3, -0x67d3(t8)
+                sw      a3, -0x2cf4(t3)
+                beq     t1, v0, end
+                andi    v0, a3, 0xff
+        
+                #   Action menu check (Item Inventory, Weapon Inventory, Draw Out)
+                li      t9, 1
+                beq     t7, t9, action_menu_second_block
+                li      t9, 2
+                beq     t7, t9, action_menu_second_block
+                li      t9, 7
+                bne     t7, t9, action_menu_second_else
+                nop
+    
+            action_menu_second_block:
+                j       past_action_menu_second_check
+                sb      t1, -0x67cc(t8)
+        
+            action_menu_second_else:
+                sh      t1, -0x67d2(t8)
+        
+            past_action_menu_second_check:
+                sw      t1, -0x2cf0(t3)
+    
+            near_end:
+                andi    v0, a3, 0xff
+        
+            end:
+                sll     v0, v0, 8
+                or      v0, a2, v0
+                sll     v1, t1, 0x10
+                jr      ra
+                or      v0, v0, v1
+        </Location>
+    </Patch>
+    <Patch name="Save between battles after formation screen">
+        <Description>
+            Allows saving between battles AFTER the formation screen.  Saving before the formation screen still functions as normal.
+        </Description>
+        <Location file="WORLD_WLDCORE_BIN" offset="6858C" mode="ASM" offsetMode="RAM">
+                addiu   sp, sp, -24
+                sw      s0, 12(sp)
+                sw      ra, 16(sp)
+                lui     s0, 0x8005
+                lw      v0, 0x7870(s0)
+                lw      t2, -0x26b0(s0)
+                beq     v0, zero, end
+                lui     t3, 0xfffe
+        
+                ori     t3, t3, 0xffff
+                and     t2, t2, t3
+                jal     0x80106660
+                sw      t2, -0x26b0(s0)
+                jal     0x8012f0f8
+                li      a0, 2
+                sw      zero, 0x7870(s0)
+                li      v0, 1
+                
+            end:
+                lw      ra, 16(sp)
+                lw      s0, 12(sp)
+                addiu   sp, sp, 24                
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1067B8" mode="ASM" offsetMode="RAM">
+                nop
+                nop
+                nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12F7EC" mode="ASM" offsetMode="RAM">
+                li      t0, 1
+                beq     v0, t0, 0x8012f810
+                sltiu   v0, v0, 1
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="12F170" mode="ASM" offsetMode="RAM">
+                sh      zero, -0x2e6c(at)
+                sh      zero, -0x27b4(at)
+                sh      zero, -0x27b8(at)
+                sh      zero, -0x2e64(at)
+                sh      zero, -0x27b0(at)
+                sh      zero, -0x2e54(at)
+                sh      zero, -0x2e88(at)
+                sh      zero, -0x2e84(at)
+                sh      zero, -0x2e78(at)
+                sh      zero, -0x2e80(at)
+                sh      zero, -0x2e7c(at)
+                sh      zero, -0x2e74(at)
+                sh      t0, -0x2bc8(at)
+                sh      zero, -0x2aac(at)
+                sh      zero, -0x2a24(at)
+                sh      zero, -0x2918(at)
+                sh      zero, -0x26d0(at)
+                sh      zero, -0x2e2c(at)
+                sh      zero, -0x2df0(at)
+                sh      t0, -0x2dd8(at)
+        
+                li      t2, 2
+                bne     s0, t2, 0x8012f210
+                li      t3, 0xc01e
+                lui     t2, 0x8019
+                j       0x8012f210
+                sh      t3, 0x3e18(t2)
+        </Location>
+    </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
         Changes formula 3B to a mana burn/feedback ability 
@@ -2851,7 +3371,7 @@ SKP:  j       0x80180848            #   Skip this ability
         For magic evade, change '0x80188510' to '0x801885b8'. To overwrite
         a different formula, change the offset of the second Location tag.
     </Description>
-    <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
+    <Location file="BATTLE_BIN" offset="F6430" mode="ASM">
     @formula_feedback:
       
         addiu   sp, sp, -0x18
