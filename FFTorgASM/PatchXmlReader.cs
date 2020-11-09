@@ -28,14 +28,16 @@ namespace FFTorgASM
         public string Description {get; set; }
         public IList<PatchedByteArray> StaticPatches { get; set; }
         public bool HideInDefault { get; set; }
+        public bool IsHidden { get; set; }
         public string ErrorText { get; set; }
 
-        public GetPatchResult(string Name, string Description, IList<PatchedByteArray> StaticPatches, bool HideInDefault, string ErrorText)
+        public GetPatchResult(string Name, string Description, IList<PatchedByteArray> StaticPatches, bool HideInDefault, bool IsHidden, string ErrorText)
         {
             this.Name = Name;
             this.Description = Description;
             this.StaticPatches = StaticPatches;
             this.HideInDefault = HideInDefault;
+            this.IsHidden = IsHidden;
             this.ErrorText = ErrorText;
         }
     }
@@ -81,6 +83,14 @@ namespace FFTorgASM
             {
                 if (attrHideInDefault.InnerText.ToLower().Trim() == "true")
                     hideInDefault = true;
+            }
+
+            bool isHidden = false;
+            XmlAttribute attrIsHidden = node.Attributes["hidden"];
+            if (attrIsHidden != null)
+            {
+                if (attrIsHidden.InnerText.ToLower().Trim() == "true")
+                    isHidden = true;
             }
 
             bool hasDefaultSector = false;
@@ -358,7 +368,7 @@ namespace FFTorgASM
                 patches.Add(new STRPatchedByteArray(sector, filename));
             }
 
-            return new GetPatchResult(nameDesc.Key, nameDesc.Value, patches.AsReadOnly(), hideInDefault, sbOuterErrorText.ToString());
+            return new GetPatchResult(nameDesc.Key, nameDesc.Value, patches.AsReadOnly(), hideInDefault, isHidden, sbOuterErrorText.ToString());
         }
 
         public static IList<AsmPatch> GetPatches( XmlNode rootNode, string xmlFilename, ASMEncodingUtility asmUtility )
@@ -368,6 +378,13 @@ namespace FFTorgASM
             if (attrHideInDefault != null)
             {
                 rootHideInDefault = (attrHideInDefault.InnerText.ToLower().Trim() == "true");
+            }
+
+            bool rootIsHidden = false;
+            XmlAttribute attrIsHidden = rootNode.Attributes["hidden"];
+            if (attrIsHidden != null)
+            {
+                rootIsHidden = (attrIsHidden.InnerText.ToLower().Trim() == "true");
             }
 
             string shortXmlFilename = xmlFilename.Substring(xmlFilename.LastIndexOf("\\") + 1);
@@ -599,7 +616,7 @@ namespace FFTorgASM
                 patches.AddRange(getPatchResult.StaticPatches);
 
                 AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, patches, 
-                    (getPatchResult.HideInDefault | rootHideInDefault), variables);
+                    (getPatchResult.HideInDefault | rootHideInDefault), (getPatchResult.IsHidden | rootIsHidden), variables);
                 
                 asmPatch.ErrorText = getPatchResult.ErrorText;
                 result.Add(asmPatch);

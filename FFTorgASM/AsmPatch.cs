@@ -31,7 +31,7 @@ namespace FFTorgASM
 
         private InputFilePatch patch;
         public FileAsmPatch( string name, string filename, string description, InputFilePatch patch )
-            : base( name, filename, description, new PatchedByteArray[] { patch }, false )
+            : base( name, filename, description, new PatchedByteArray[] { patch }, false, false )
         {
             this.patch = patch;
         }
@@ -125,6 +125,7 @@ namespace FFTorgASM
         private IEnumerator<PatchedByteArray> enumerator;
 
         public bool HideInDefault { get; private set; }
+        public bool IsHidden { get; private set; }
 
         public string ErrorText { get; set; }
 
@@ -133,7 +134,7 @@ namespace FFTorgASM
             return true;
         }
 
-        public AsmPatch( string name, string filename, string description, IEnumerable<PatchedByteArray> patches, bool hideInDefault )
+        public AsmPatch( string name, string filename, string description, IEnumerable<PatchedByteArray> patches, bool hideInDefault, bool isHidden )
         {
             enumerator = new AsmPatchEnumerator( this );
             this.Name = name;
@@ -144,10 +145,11 @@ namespace FFTorgASM
             varInnerList = new List<PatchedByteArray>();
             blockMoveList = new List<ASMEncoding.Helpers.BlockMove>();
             this.HideInDefault = hideInDefault;
+            this.IsHidden = isHidden;
         }
 
-        public AsmPatch(string name, string filename, string description, IEnumerable<PatchedByteArray> patches, bool hideInDefault, IList<VariableType> variables)
-            : this( name, filename, description, patches, hideInDefault )
+        public AsmPatch(string name, string filename, string description, IEnumerable<PatchedByteArray> patches, bool hideInDefault, bool isHidden, IList<VariableType> variables)
+            : this( name, filename, description, patches, hideInDefault, isHidden )
         {
         	VariableType[] myVars = new VariableType[variables.Count];
             variables.CopyTo( myVars, 0 );

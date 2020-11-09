@@ -49,15 +49,18 @@ namespace FFTorgASM
                 {
                     foreach (AsmPatch patch in tryPatches)
                     {
-                        Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
-                        FilePatches[index].Patches.Add(patch);
-                        fileColorList.Add(bgColor);
-
-                        AllPatches.Add(patch);
-                        if (!patch.HideInDefault)
+                        if (!patch.IsHidden)
                         {
-                            AllShownPatches.Add(patch);
-                            allColorList.Add(bgColor);
+                            Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+                            FilePatches[index].Patches.Add(patch);
+                            fileColorList.Add(bgColor);
+
+                            AllPatches.Add(patch);
+                            if (!patch.HideInDefault)
+                            {
+                                AllShownPatches.Add(patch);
+                                allColorList.Add(bgColor);
+                            }
                         }
                     }
 
@@ -115,11 +118,15 @@ namespace FFTorgASM
                 foreach (AsmPatch patch in patchFile.Patches)
                 {
                     Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
-                    AllPatches.Add(patch);
-                    if (!patch.HideInDefault)
+
+                    if (!patch.IsHidden)
                     {
-                        AllShownPatches.Add(patch);
-                        allColorList.Add(bgColor);
+                        AllPatches.Add(patch);
+                        if (!patch.HideInDefault)
+                        {
+                            AllShownPatches.Add(patch);
+                            allColorList.Add(bgColor);
+                        }
                     }
                 }
             }
