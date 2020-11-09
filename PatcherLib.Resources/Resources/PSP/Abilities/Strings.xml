@@ -50,7 +50,7 @@
     <string value="0" name="Force Self-Target"/>
     <string value="1" name=""/>
     <string value="2" name="Weapon Range"/>
-    <string value="3" name="Vertical Fixed"/>
+    <string value="3" name="Linear Range"/>
     <string value="4" name="Vertical Tolerance"/>
     <string value="5" name="Weapon Strike"/>
     <string value="6" name="Auto"/>
@@ -60,7 +60,7 @@
     <string value="10" name="Top-Down Target"/>
     <string value="11" name="Follow Target"/>
     <string value="12" name="Random Fire"/>
-    <string value="13" name="Linear Attack"/>
+    <string value="13" name="Linear AoE"/>
     <string value="14" name="3 Directions"/>
     <string value="15" name="Hit Caster"/>
     <string value="16" name="Reflect"/>
