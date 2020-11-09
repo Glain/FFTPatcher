@@ -347,7 +347,21 @@ namespace FFTorgASM
             AsmPatch p = clb_Patches.SelectedItem as AsmPatch;
             if (p != null)
             {
-                textBox1.Text = p.Description;
+                string description = "";
+                if (!string.IsNullOrEmpty(p.Description))
+                {
+                    StringBuilder sb = new StringBuilder();
+                    string[] lines = p.Description.Split('\n');
+                    foreach (string line in lines)
+                    {
+                        string newLine = line.Trim().Replace("\r", "");
+                        if (!string.IsNullOrEmpty(newLine))
+                            sb.AppendLine(newLine);
+                    }
+                    description = sb.ToString();
+                }
+
+                textBox1.Text = description;
 
                 int index = clb_Patches.SelectedIndex;
                 txt_Messages.Text = p.ErrorText;
