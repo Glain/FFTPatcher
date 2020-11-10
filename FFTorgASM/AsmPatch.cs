@@ -614,8 +614,11 @@ namespace FFTorgASM
 
                 string strDefault = variable.isReference ? "" : String.Format(" default=\"{0}\"", value.ToString("X"));
 
-                sb.AppendFormat("        <Variable name=\"{0}\" specific=\"{1}\" bytes=\"{2}\"{3}{4} />{5}",
-                    variable.name, sbSpecific.ToString(), variable.numBytes, strDefault, strVariableReference, Environment.NewLine);
+                string strSpecific = sbSpecific.ToString();
+                string strContent = string.IsNullOrEmpty(strSpecific) ? "symbol=\"true\"" : String.Format("specific=\"{0}\"", strSpecific);
+
+                sb.AppendFormat("        <Variable name=\"{0}\" {1} bytes=\"{2}\"{3}{4} />{5}",
+                    variable.name, strContent, variable.numBytes, strDefault, strVariableReference, Environment.NewLine);
             }
 
             sb.AppendLine("    </Patch>");
