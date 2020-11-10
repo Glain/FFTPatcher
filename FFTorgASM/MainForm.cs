@@ -213,7 +213,13 @@ namespace FFTorgASM
 
         private void SavePatchXML()
         {
-            string xml = PatchXmlReader.CreatePatchXML(GetCurrentFileSelectedPatches());
+            List<AsmPatch> patches = GetCurrentFileSelectedPatches();
+            foreach (AsmPatch patch in patches)
+            {
+                patch.Update(asmUtility);
+            }
+
+            string xml = PatchXmlReader.CreatePatchXML(patches);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "XML file (*.xml)|*.xml";
