@@ -93,10 +93,15 @@ namespace ASMEncoding.Helpers
         public EncodeLine[] PreprocessLines(string[] lines, uint pc)
         {
             ASMProcessEquivalencesResult processEquivalencesResult = ASMEquivalenceHelper.ProcessEquivalences(lines);
+
             if (processEquivalencesResult.ErrorCode > 0)
+            {
                 _errorTextBuilder.Append(processEquivalencesResult.ErrorMessage);
+            }
             else
+            {
                 lines = processEquivalencesResult.Lines;
+            }
 
             EncodeLine[] encodeLines = TranslatePseudo(lines, pc, true);
 
@@ -104,7 +109,7 @@ namespace ASMEncoding.Helpers
             if (findLabelsResult.ErrorCode > 0)
                 _errorTextBuilder.Append(findLabelsResult.ErrorMessage);
 
-            encodeLines = TranslatePseudo(lines, pc);
+            encodeLines = TranslatePseudo(lines, pc, false);
 
             if (encodeLines == null)
                 encodeLines = new List<EncodeLine>().ToArray();
@@ -202,7 +207,12 @@ namespace ASMEncoding.Helpers
                 EncodingFormat encodingOrNull = FormatHelper.FindFormatByCommand(parts[0]);
                 if (encodingOrNull != null)
                 {
-                    if (includeAddress)
+                    EncodeLine eLine = new EncodeLine();
+
+                    if ((encodeLines.Length > 0) && (encodeLineIndex < encodeLines.Length))
+                        eLine = encodeLines[encodeLineIndex];
+
+                    if ((eLine.LineIndex == lineIndex) && (encodeLineIndex < encodeLines.Length) && (includeAddress))
                     {
                         newTextASMLineBuilder.Append("[0x");
                         newTextASMLineBuilder.Append(ASMValueHelper.UnsignedToHex_WithLength(pc, 8));
@@ -210,11 +220,6 @@ namespace ASMEncoding.Helpers
                     }
 
                     newTextASMLineBuilder.AppendLine(modLine);
-
-                    EncodeLine eLine = new EncodeLine();
-
-                    if (encodeLines.Length > 0)
-                        eLine = encodeLines[encodeLineIndex];
 
                     while ((eLine.LineIndex == lineIndex) && (encodeLineIndex < encodeLines.Length))
                     {
@@ -240,7 +245,7 @@ namespace ASMEncoding.Helpers
                 else
                 {
                     if (!string.IsNullOrEmpty(parts[0]))
-                        if ((parts[0] != ".org") && (parts[0] != ".label") && (parts[0] != ".eqv") && (!parts[0].EndsWith(":")))
+                        if ((parts[0] != ".org") && (parts[0] != ".label") && (parts[0] != ".eqv") && (parts[0] != ".if") && (parts[0] != ".endif") && (!parts[0].EndsWith(":")))
                             _errorTextBuilder.AppendLine("WARNING: Ignoring unknown command \"" + parts[0] + "\".");
                 }
 				

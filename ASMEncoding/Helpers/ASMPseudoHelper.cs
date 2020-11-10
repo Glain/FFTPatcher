@@ -302,7 +302,10 @@ namespace ASMEncoding.Helpers
 			List<EncodeLine> resultLines = new List<EncodeLine>();
 			int index = 0;
 			uint pc = startPC;
-			
+
+            List<bool> isSkippingLine = new List<bool>() { false };
+            int ifNestLevel = 0;
+
 			foreach (string line in lines)
 			{
 				if (string.IsNullOrEmpty(line))
@@ -319,21 +322,112 @@ namespace ASMEncoding.Helpers
                 ASMProcessPCResult processPCResult = ASMPCHelper.ProcessOrg(pc, parts, false);
                 pc = processPCResult.PC;
                 _errorTextBuilder.Append(processPCResult.ErrorMessage);
+
+                string firstPart = parts[0].ToLower().Trim();
+
+                if (firstPart == ".endif")
+                {
+                    if (ifNestLevel > 0)
+                        ifNestLevel--;
+                }
+                else if (firstPart == ".if")
+                {
+                    try
+                    {
+                        string[] innerParts = parts[1].Split(',');
+
+                        if (!parts[1].Contains(","))
+                        {
+                            _errorTextBuilder.AppendLine("WARNING: Unreachable code inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
+                            isSkippingLine.Add(true);
+                            ifNestLevel++;
+                        }
+                        else if (innerParts.Length < 2)
+                        {
+                            _errorTextBuilder.AppendLine("WARNING: Unreachable code inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
+                            isSkippingLine.Add(true);
+                            ifNestLevel++;
+                        }
+                        else if (isSkippingLine[ifNestLevel])
+                        {
+                            isSkippingLine.Add(true);
+                            ifNestLevel++;
+                        }
+                        else
+                        {
+                            string operation = string.Empty;
+                            string eqvKey, eqvValue;
+
+                            if (innerParts.Length >= 3)
+                            {
+                                operation = ASMStringHelper.RemoveSpaces(innerParts[0]);
+                                eqvKey = ASMStringHelper.RemoveSpaces(innerParts[1]);
+                                eqvValue = ASMStringHelper.RemoveSpaces(innerParts[2]);
+                            }
+                            else
+                            {
+                                operation = "=";
+                                eqvKey = ASMStringHelper.RemoveSpaces(innerParts[0]);
+                                eqvValue = ASMStringHelper.RemoveSpaces(innerParts[1]);
+                            }
+
+                            int intKey = 0;
+                            int intValue = 0;
+                            bool isKeyInt = int.TryParse(eqvKey, out intKey);
+                            bool isValueInt = int.TryParse(eqvValue, out intValue);
+                            bool isIntCompare = isKeyInt && isValueInt;
+
+                            bool isPass = false;
+                            switch (operation)
+                            {
+                                case "=":
+                                case "==":
+                                    isPass = eqvKey.Equals(eqvValue);
+                                    break;
+                                case "<":
+                                    isPass = isIntCompare && (intKey < intValue);
+                                    break;
+                                case ">":
+                                    isPass = isIntCompare && (intKey > intValue);
+                                    break;
+                                case "<=":
+                                    isPass = isIntCompare && (intKey <= intValue);
+                                    break;
+                                case ">=":
+                                    isPass = isIntCompare && (intKey >= intValue);
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            isSkippingLine.Add(!isPass);
+                            ifNestLevel++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _errorTextBuilder.AppendLine("Error on .if statement: " + ex.Message + "\r\n");
+                    }
+                }
 				
 				// If this is an ASM command, pass off line to translating routine
                 EncodingFormat encodingOrNull = FormatHelper.FindFormatByCommand(parts[0]);
 				if (encodingOrNull != null)
 				{
-                    // DEBUG 1/16
 					try
 					{
-						EncodingFormat encoding = encodingOrNull;
-						EncodeLine[] encodeLines = TranslatePseudoSingle(encoding, parts, index, pc, skipLabelAssertion);
-						foreach (EncodeLine encodeLine in encodeLines)
-						{
-							resultLines.Add(encodeLine);
-							pc += 4;
-						}
+                        if (!isSkippingLine[ifNestLevel])
+                        {
+                            EncodingFormat encoding = encodingOrNull;
+                            EncodeLine[] encodeLines = TranslatePseudoSingle(encoding, parts, index, pc, skipLabelAssertion);
+                            foreach (EncodeLine encodeLine in encodeLines)
+                            {
+                                resultLines.Add(encodeLine);
+                                pc += 4;
+                            }
+
+                            //index++;
+                        }
 					}
 					catch (Exception ex)
 					{
@@ -341,6 +435,7 @@ namespace ASMEncoding.Helpers
                         _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
 						//result.lines = null;
                         //return result;
+                        //index++;
 					}
 					
 					index++;

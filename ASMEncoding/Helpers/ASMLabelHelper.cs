@@ -99,7 +99,7 @@ namespace ASMEncoding.Helpers
 				if (encodingOrNull != null)
 				{
 					EncodeLine eLine = new EncodeLine();
-					if (encodeLines.Length > 0)
+					if ((encodeLines.Length > 0) && (encodeLineIndex < encodeLines.Length))
 						eLine = encodeLines[encodeLineIndex];
 					
 					while ((eLine.LineIndex == lineIndex) && (encodeLineIndex < encodeLines.Length))
