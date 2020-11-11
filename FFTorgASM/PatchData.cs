@@ -90,9 +90,12 @@ namespace FFTorgASM
             {
                 foreach (AsmPatch patch in tryPatches)
                 {
-                    Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
-                    patchFile.Patches.Add(patch);
-                    fileColorList.Add(bgColor);
+                    if (!patch.IsHidden)
+                    {
+                        Color bgColor = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+                        patchFile.Patches.Add(patch);
+                        fileColorList.Add(bgColor);
+                    }
                 }
 
                 LoadedCorrectly[index] = true;
