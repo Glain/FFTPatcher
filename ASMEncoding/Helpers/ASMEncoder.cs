@@ -799,9 +799,9 @@ namespace ASMEncoding.Helpers
             return uValue;
         }
 
-        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool skipAssertion = false)
         {
-            return ValueHelper.LabelHelper.ReplaceLabelsInHex(hex, littleEndian);
+            return ValueHelper.LabelHelper.ReplaceLabelsInHex(hex, littleEndian, skipAssertion);
         }
 
 		private void ClearErrorText()
