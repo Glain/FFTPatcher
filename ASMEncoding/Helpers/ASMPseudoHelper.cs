@@ -61,6 +61,8 @@ namespace ASMEncoding.Helpers
 			bool doesBranchIfEqual = false;
 			bool isStore = false;
 			bool useAT = false;
+            bool isHiLo = false;
+            bool isLabel = false;
 			
 			// Find args
 			string strArgs = "";
@@ -177,7 +179,7 @@ namespace ASMEncoding.Helpers
 				case "sb":
 				case "sh":
 				case "sw":
-                    bool isHiLo = ((args[1].ToLower().StartsWith("%hi")) || (args[1].ToLower().StartsWith("%lo")));
+                    isHiLo = ((args[1].ToLower().StartsWith("%hi")) || (args[1].ToLower().StartsWith("%lo")));
 
 					startParenIndex = args[1].IndexOf('(', (isHiLo ? 4 : 0)); // check -1
                     endParenIndex = args[1].IndexOf(')', (startParenIndex >= 0) ? startParenIndex : 0);
@@ -195,7 +197,7 @@ namespace ASMEncoding.Helpers
 						
 					ivalue = ValueHelper.GetAnyUnsignedValue(strImmed, skipLabelAssertion);
 
-                    bool isLabel = !(
+                    isLabel = !(
                             ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
                         || (ASMStringHelper.StringIsNumeric(strImmed))
                         || ((strImmed.StartsWith("-")) && (strImmed.Length > 1))
@@ -253,14 +255,16 @@ namespace ASMEncoding.Helpers
                     ivalue = ValueHelper.GetAnyUnsignedValue(args[1], skipLabelAssertion);
 
                     bool isLA = encoding.Command.Equals("la");
+
+                    isHiLo = ((args[1].ToLower().StartsWith("%hi")) || (args[1].ToLower().StartsWith("%lo")));
+                    isLabel = !(
+                            ((args[1].StartsWith("0x")) || (args[1].StartsWith("-0x")))
+                        || (ASMStringHelper.StringIsNumeric(args[1]))
+                        || ((args[1].StartsWith("-")) && (args[1].Length > 1))
+                        || (isHiLo)
+                    );
 					
-					if (ivalue >= 0xffff8000)
-					{
-						parts[0] = "addiu";
-						parts[1] = args[0] + ",zero," + ((ushort)(ivalue & 0xffff));
-						result.Add(new EncodeLine(parts,index));
-					}
-					else if ((ivalue > 0xffff) || isLA)
+					if (((ivalue > 0xffff) && (ivalue < 0xffff8000)) || isLA || isLabel)
 					{
 						newParts = new string[2];
 						newParts[0] = "lui";
@@ -268,17 +272,23 @@ namespace ASMEncoding.Helpers
 						result.Add(new EncodeLine(newParts,index));
 						
 						ushortval = (ushort)(ivalue & 0xffff);
-						if ((ushortval > 0) || (isLA))
+						if ((ushortval > 0) || (isLA) || (isLabel))
 						{
 							parts[0] = "ori";
 							parts[1] = args[0] + "," + args[0] + "," + ushortval;
 							result.Add(new EncodeLine(parts,index));
 						}
 					}
+                    else if (ivalue >= 0xffff8000)
+					{
+						parts[0] = "addiu";
+						parts[1] = args[0] + ",zero," + ((ushort)(ivalue & 0xffff));
+						result.Add(new EncodeLine(parts,index));
+					}
 					else
 					{
-						if (!((args[1].StartsWith("0x") || ASMStringHelper.StringIsNumeric(args[1]))))
-							parts[1] = args[0] + "," + ValueHelper.LabelHelper.LabelToUnsigned(args[1], skipLabelAssertion);
+						//if (!((args[1].StartsWith("0x") || ASMStringHelper.StringIsNumeric(args[1]))))
+						//	parts[1] = args[0] + "," + ValueHelper.LabelHelper.LabelToUnsigned(args[1], skipLabelAssertion);
 						
 						result.Add(new EncodeLine(parts,index));
 					}
