@@ -124,9 +124,9 @@ namespace ASMEncoding
             return _helper[EncodingMode].UpdateBlockReferences(bytes, pc, littleEndian, blockMoves);
         }
 
-        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool skipAssertion = false)
         {
-            return _helper[EncodingMode].ReplaceLabelsInHex(hex, littleEndian);
+            return _helper[EncodingMode].ReplaceLabelsInHex(hex, littleEndian, skipAssertion);
         }
 
         public static uint ProcessStartPC(string asm, string pcText)

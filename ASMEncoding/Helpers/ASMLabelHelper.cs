@@ -311,7 +311,7 @@ namespace ASMEncoding.Helpers
             return uValue & 0xffff;
         }
 
-        public string ReplaceLabelsInHex(string hex, bool littleEndian)
+        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool skipAssertion = false)
         {
             string result = hex.ToUpper();
 
@@ -321,7 +321,7 @@ namespace ASMEncoding.Helpers
 
             foreach (string label in labels)
             {
-                uint labelValue = LabelToUnsigned(label);
+                uint labelValue = LabelToUnsigned(label, skipAssertion);
                 labelValue = littleEndian ? ASMValueHelper.ReverseBytes(labelValue) : labelValue;
                 string labelHex = ASMValueHelper.UnsignedToHex_WithLength(labelValue, 8).ToUpper();
                 result = result.Replace(label, labelHex);
