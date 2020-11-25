@@ -30,7 +30,7 @@ namespace FFTPatcher
             new StatValueSet { HP = 507904, MP = 237568, SP = 98304, PA = 81920, MA = 65536 },
             new StatValueSet { HP = 475136, MP = 253952, SP = 98304, PA = 65536, MA = 81920 },
             new StatValueSet { HP = 507904, MP = 253952, SP = 98304, PA = 81920, MA = 81920 },
-            new StatValueSet { HP = 598016, MP = 77880, SP = 81920, PA = 90112, MA = 90112 }
+            new StatValueSet { HP = 598016, MP = 139264, SP = 81920, PA = 90112, MA = 90112 }
         };
 
         private Dictionary<Spinner, Label> baseStatControlMap; 
