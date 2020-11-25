@@ -48,19 +48,19 @@ namespace ASMEncoding
             return resultSet;
         }
 
-        public ASMEncoderResult EncodeASM(string asm, string pcText, string spacePadding, bool includeAddress, bool littleEndian)
+        public ASMEncoderResult EncodeASM(string asm, string pcText, string spacePadding, bool includeAddress, bool littleEndian, bool skipLabelAssertion = false)
         {
-            return _helper[EncodingMode].EncodeASM(asm, pcText, spacePadding, includeAddress, littleEndian);
+            return _helper[EncodingMode].EncodeASM(asm, pcText, spacePadding, includeAddress, littleEndian, skipLabelAssertion);
         }
 
-        public ASMEncoderResult EncodeASM(string asm, uint pc, string spacePadding, bool includeAddress, bool littleEndian)
+        public ASMEncoderResult EncodeASM(string asm, uint pc, string spacePadding, bool includeAddress, bool littleEndian, bool skipLabelAssertion = false)
         {
-            return _helper[EncodingMode].EncodeASM(asm, pc, spacePadding, includeAddress, littleEndian);
+            return _helper[EncodingMode].EncodeASM(asm, pc, spacePadding, includeAddress, littleEndian, skipLabelAssertion);
         }
 
-        public ASMEncoderResult EncodeASM(string asm, uint pc)
+        public ASMEncoderResult EncodeASM(string asm, uint pc, bool skipLabelAssertion = false)
         {
-            return _helper[EncodingMode].EncodeASM(asm, pc);
+            return _helper[EncodingMode].EncodeASM(asm, pc, skipLabelAssertion);
         }
 
         public ASMDecoderResult DecodeASM(string hex, string pcText, string spacePadding, bool littleEndian, bool includeAddress, bool useRegAliases)
@@ -124,9 +124,9 @@ namespace ASMEncoding
             return _helper[EncodingMode].UpdateBlockReferences(bytes, pc, littleEndian, blockMoves);
         }
 
-        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool skipAssertion = false)
+        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool replaceAll = false)
         {
-            return _helper[EncodingMode].ReplaceLabelsInHex(hex, littleEndian, skipAssertion);
+            return _helper[EncodingMode].ReplaceLabelsInHex(hex, littleEndian, replaceAll);
         }
 
         public static uint ProcessStartPC(string asm, string pcText)

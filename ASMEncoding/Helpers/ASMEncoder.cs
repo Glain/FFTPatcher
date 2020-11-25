@@ -90,7 +90,7 @@ namespace ASMEncoding.Helpers
             return encodeLines;
         }
 
-        public EncodeLine[] PreprocessLines(string[] lines, uint pc)
+        public EncodeLine[] PreprocessLines(string[] lines, uint pc, bool skipLabelAssertion = false)
         {
             ASMProcessEquivalencesResult processEquivalencesResult = ASMEquivalenceHelper.ProcessEquivalences(lines);
 
@@ -109,7 +109,7 @@ namespace ASMEncoding.Helpers
             if (findLabelsResult.ErrorCode > 0)
                 _errorTextBuilder.Append(findLabelsResult.ErrorMessage);
 
-            encodeLines = TranslatePseudo(lines, pc, false);
+            encodeLines = TranslatePseudo(lines, pc, skipLabelAssertion);
 
             if (encodeLines == null)
                 encodeLines = new List<EncodeLine>().ToArray();
@@ -146,16 +146,16 @@ namespace ASMEncoding.Helpers
             return resultLines.ToArray();
         }
 
-        public ASMEncoderResult EncodeASM(string asm, string pcText, string spacePadding, bool includeAddress, bool littleEndian)
+        public ASMEncoderResult EncodeASM(string asm, string pcText, string spacePadding, bool includeAddress, bool littleEndian, bool skipLabelAssertion = false)
         {
             ClearErrorText();
             ASMProcessPCResult result = ASMPCHelper.ProcessPC(0, pcText, true, true);
             uint pc = result.PC;
             _errorTextBuilder.Append(result.ErrorMessage);
-            return EncodeASM(asm, pc, spacePadding, includeAddress, littleEndian, false);
+            return EncodeASM(asm, pc, spacePadding, includeAddress, littleEndian, false, skipLabelAssertion);
         }
 
-		public ASMEncoderResult EncodeASM(string asm, uint pc, string spacePadding, bool includeAddress, bool littleEndian, bool clearErrorText)
+        public ASMEncoderResult EncodeASM(string asm, uint pc, string spacePadding, bool includeAddress, bool littleEndian, bool clearErrorText, bool skipLabelAssertion = false)
 		{
             if (clearErrorText)
                 ClearErrorText();
@@ -165,7 +165,7 @@ namespace ASMEncoding.Helpers
             string[] processLines = AddLabelLines(lines);
 
             string oldErrorText = _errorTextBuilder.ToString();
-            EncodeLine[] encodeLines = PreprocessLines(processLines, pc);
+            EncodeLine[] encodeLines = PreprocessLines(processLines, pc, skipLabelAssertion);
 
 			int encodeLineIndex = 0;
 			int lineIndex = 0;
@@ -799,9 +799,9 @@ namespace ASMEncoding.Helpers
             return uValue;
         }
 
-        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool skipAssertion = false)
+        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool replaceAll = false)
         {
-            return ValueHelper.LabelHelper.ReplaceLabelsInHex(hex, littleEndian, skipAssertion);
+            return ValueHelper.LabelHelper.ReplaceLabelsInHex(hex, littleEndian, replaceAll);
         }
 
 		private void ClearErrorText()

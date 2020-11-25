@@ -311,7 +311,7 @@ namespace ASMEncoding.Helpers
             return uValue & 0xffff;
         }
 
-        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool skipAssertion = false)
+        public string ReplaceLabelsInHex(string hex, bool littleEndian, bool replaceAll = false)
         {
             string result = hex.ToUpper();
 
@@ -321,10 +321,31 @@ namespace ASMEncoding.Helpers
 
             foreach (string label in labels)
             {
-                uint labelValue = LabelToUnsigned(label, skipAssertion);
+                uint labelValue = LabelToUnsigned(label);
                 labelValue = littleEndian ? ASMValueHelper.ReverseBytes(labelValue) : labelValue;
                 string labelHex = ASMValueHelper.UnsignedToHex_WithLength(labelValue, 8).ToUpper();
                 result = result.Replace(label, labelHex);
+            }
+
+            if (replaceAll)
+            {
+                int persistentLabelIndex = result.IndexOf(PersistentLabelPrefix);
+                HashSet<char> endChars = new HashSet<char>() { ' ', '\t', '\r', '\n' };
+
+                while (persistentLabelIndex != -1)
+                {
+                    int endIndex = persistentLabelIndex;
+                    for (; endIndex < result.Length; endIndex++)
+                    {
+                        if (endChars.Contains(result[endIndex]))
+                            break;
+                    }
+
+                    string label = (endIndex < result.Length) ? result.Substring(persistentLabelIndex, endIndex - persistentLabelIndex) : result.Substring(persistentLabelIndex);
+                    result = result.Replace(label, "00000000");
+
+                    persistentLabelIndex = result.IndexOf(PersistentLabelPrefix);
+                }
             }
 
             return result;
