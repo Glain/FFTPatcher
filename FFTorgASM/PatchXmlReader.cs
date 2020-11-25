@@ -113,6 +113,8 @@ namespace FFTorgASM
             List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count );
             StringBuilder sbOuterErrorText = new StringBuilder();
 
+            Dictionary<PatchedByteArray, string> replaceLabelsContentMap = new Dictionary<PatchedByteArray, string>();
+
             foreach ( XmlNode location in currentLocs )
             {
                 //UInt32 offset = UInt32.Parse( location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
@@ -219,14 +221,14 @@ namespace FFTorgASM
                 }
                 if (replaceLabels)
                 {
+                    StringBuilder sbLabels = new StringBuilder();
                     foreach (PatchedByteArray currentPatchedByteArray in patches)
                     {
-                        StringBuilder sbLabels = new StringBuilder();
                         if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
                             sbLabels.Append(String.Format(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine));
-                        asmUtility.EncodeASM(sbLabels.ToString(), 0);
                     }
-                    content = asmUtility.ReplaceLabelsInHex(content, true);
+                    asmUtility.EncodeASM(sbLabels.ToString(), 0);
+                    content = asmUtility.ReplaceLabelsInHex(content, true, true);
                 }
 
                 string label = "";
@@ -285,7 +287,7 @@ namespace FFTorgASM
 
                         encodeContent = sbPrefix.ToString() + content;
 
-                        ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, ramOffset);
+                        ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, ramOffset, true);
                         bytes = result.EncodedBytes;
                         errorText = result.ErrorText;
                     }
@@ -294,6 +296,7 @@ namespace FFTorgASM
                         bytes = GetBytes(content);
                     }
 
+                    /*
                     bool isCheckedAsm = false;
                     if (!markedAsData)
                     {
@@ -314,20 +317,24 @@ namespace FFTorgASM
                             }
                         }
                     }
+                    */
 
-                    if (!string.IsNullOrEmpty(errorText))
-                        sbOuterErrorText.Append(errorText);
+                    //if (!string.IsNullOrEmpty(errorText))
+                    //    sbOuterErrorText.Append(errorText);
 
                     PatchedByteArray patchedByteArray = new PatchedByteArray(sector, fileOffset, bytes);
                     patchedByteArray.IsAsm = asmMode;
                     patchedByteArray.MarkedAsData = markedAsData;
-                    patchedByteArray.IsCheckedAsm = isCheckedAsm;
+                    patchedByteArray.IsCheckedAsm = false; // isCheckedAsm;
                     patchedByteArray.IsSequentialOffset = isSequentialOffset;
                     patchedByteArray.IsMoveSimple = isMoveSimple;
                     patchedByteArray.AsmText = asmMode ? content : "";
                     patchedByteArray.RamOffset = ramOffset;
                     patchedByteArray.ErrorText = errorText;
                     patchedByteArray.Label = label;
+
+                    if (replaceLabels)
+                        replaceLabelsContentMap.Add(patchedByteArray, content);
                     
                     patches.Add(patchedByteArray);
 
@@ -343,6 +350,62 @@ namespace FFTorgASM
                 }
             }
 
+            StringBuilder sbEncodePrefix = new StringBuilder();
+            foreach (PatchedByteArray currentPatchedByteArray in patches)
+            {
+                if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
+                    sbEncodePrefix.Append(String.Format(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine));
+            }
+            foreach (VariableType variable in variables)
+            {
+                sbEncodePrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""),
+                    AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
+            }
+            string strEncodePrefix = sbEncodePrefix.ToString();
+            asmUtility.EncodeASM(strEncodePrefix, 0);
+
+            foreach (PatchedByteArray patchedByteArray in patches)
+            {
+                string replaceLabelsContent;
+                if (replaceLabelsContentMap.TryGetValue(patchedByteArray, out replaceLabelsContent))
+                {
+                    if (!string.IsNullOrEmpty(replaceLabelsContent))
+                        patchedByteArray.SetBytes(GetBytes(asmUtility.ReplaceLabelsInHex(replaceLabelsContent, true, false)));
+                }
+
+                string errorText = string.Empty;
+                if (patchedByteArray.IsAsm)
+                {
+                    string encodeContent = strEncodePrefix + patchedByteArray.AsmText;
+                    ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset);
+                    patchedByteArray.SetBytes(result.EncodedBytes);
+                    errorText = result.ErrorText;
+                }
+
+                if (!patchedByteArray.MarkedAsData)
+                {
+                    ASMCheckResult checkResult = asmUtility.CheckASMFromBytes(patchedByteArray.GetBytes(), (uint)patchedByteArray.RamOffset, true, false, new HashSet<ASMCheckCondition>() {
+                            ASMCheckCondition.LoadDelay,
+                            ASMCheckCondition.UnalignedOffset,
+                            ASMCheckCondition.MultCountdown,
+                            ASMCheckCondition.StackPointerOffset4,
+                            ASMCheckCondition.BranchInBranchDelaySlot
+                        });
+
+                    if (checkResult.IsASM)
+                    {
+                        patchedByteArray.IsCheckedAsm = true;
+                        if (!string.IsNullOrEmpty(checkResult.ErrorText))
+                        {
+                            errorText += checkResult.ErrorText;
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(errorText))
+                    sbOuterErrorText.Append(errorText);
+            }
+            
             currentLocs = node.SelectNodes("STRLocation");
             foreach (XmlNode location in currentLocs)
             {
@@ -619,6 +682,8 @@ namespace FFTorgASM
                     (getPatchResult.HideInDefault | rootHideInDefault), (getPatchResult.IsHidden | rootIsHidden), variables);
                 
                 asmPatch.ErrorText = getPatchResult.ErrorText;
+                //asmPatch.Update(asmUtility);
+
                 result.Add(asmPatch);
             }
 
