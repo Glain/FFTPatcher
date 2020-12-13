@@ -358,13 +358,16 @@ namespace FFTorgASM
                 {
                     StringBuilder sb = new StringBuilder();
                     string[] lines = p.Description.Split('\n');
-                    foreach (string line in lines)
+
+                    for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
                     {
+                        string line = lines[lineIndex];
                         string newLine = line.Trim().Replace("\r", "");
-                        if (!string.IsNullOrEmpty(newLine))
+                        if (((lineIndex != 0) && (lineIndex < (lines.Length - 1))) || (!string.IsNullOrEmpty(newLine)))
                             sb.AppendLine(newLine);
                     }
                     description = sb.ToString();
+                    description = description.Substring(0, description.LastIndexOf(Environment.NewLine));
                 }
 
                 textBox1.Text = description;
