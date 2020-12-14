@@ -530,14 +530,18 @@ namespace PatcherLib.Iso
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x271514, 0x24C6),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x271514, 0x24C6) }.AsReadOnly();
             AbilityEffects = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3177B4, 0x2E0),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3177B4, 0x2E0)}.AsReadOnly();
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3177B4, 0x38C),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3177B4, 0x38C)}.AsReadOnly();
+            
+            /*
             ItemAbilityEffects = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x317A94, 0x1C),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x317A94, 0x1C)}.AsReadOnly();
             ReactionAbilityEffects = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x317B00, 0x40),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x317B00, 0x40)}.AsReadOnly();
+            */
+
             ActionEvents = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x276CA4, 227),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x276CA4, 227)}.AsReadOnly();

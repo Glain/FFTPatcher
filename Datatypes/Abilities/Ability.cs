@@ -742,7 +742,8 @@ namespace FFTPatcher.Datatypes
             IsOther = ( Offset >= 0x1A6 );
             bool IsReaction = Offset >= 422 && Offset <= 453;
 
-            if (IsNormal || IsItem || IsReaction)
+            //if (IsNormal || IsItem || IsReaction)
+            if ((Offset >= 0x000) && (Offset <= 0x1C5))
             {
                 reader.MoveToAttribute( "value" );
                 ushort effectIndex = (ushort)reader.ReadElementContentAsInt();

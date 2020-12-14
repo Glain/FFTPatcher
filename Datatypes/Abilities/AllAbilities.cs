@@ -65,24 +65,24 @@ namespace FFTPatcher.Datatypes
         public override IList<PatchedByteArray> GetPatches( Context context )
         {
             byte[] effects = owner.ToEffectsByteArray();
-            byte[] itemEffects = owner.ToItemEffectsByteArray();
-            byte[] otherEffects = owner.ToReactionEffectsByteArray();
+            //byte[] itemEffects = owner.ToItemEffectsByteArray();
+            //byte[] otherEffects = owner.ToReactionEffectsByteArray();
 
             List<PatchedByteArray> result = new List<PatchedByteArray>( 2 );
             if (context == Context.US_PSX)
             {
                 result.Add(PatcherLib.Iso.PsxIso.AbilityEffects.GetPatchedByteArray(effects));
-                result.Add(PatcherLib.Iso.PsxIso.ItemAbilityEffects.GetPatchedByteArray(itemEffects));
-                result.Add( PatcherLib.Iso.PsxIso.ReactionAbilityEffects.GetPatchedByteArray( otherEffects ) );
+                //result.Add(PatcherLib.Iso.PsxIso.ItemAbilityEffects.GetPatchedByteArray(itemEffects));
+                //result.Add( PatcherLib.Iso.PsxIso.ReactionAbilityEffects.GetPatchedByteArray( otherEffects ) );
             }
             else if (context == Context.US_PSP)
             {
                 PatcherLib.Iso.PspIso.AbilityEffects.ForEach(
                     kl => result.Add( kl.GetPatchedByteArray( effects ) ) );
-                PatcherLib.Iso.PspIso.ItemAbilityEffects.ForEach(
-                    kl => result.Add( kl.GetPatchedByteArray( itemEffects ) ) );
-                PatcherLib.Iso.PspIso.ReactionAbilityEffects.ForEach(
-                    kl => result.Add( kl.GetPatchedByteArray( otherEffects ) ) );
+                //PatcherLib.Iso.PspIso.ItemAbilityEffects.ForEach(
+                //    kl => result.Add( kl.GetPatchedByteArray( itemEffects ) ) );
+                //PatcherLib.Iso.PspIso.ReactionAbilityEffects.ForEach(
+                //    kl => result.Add( kl.GetPatchedByteArray( otherEffects ) ) );
             }
 
             return result;
@@ -211,20 +211,19 @@ namespace FFTPatcher.Datatypes
 
         private IList<byte> defaultBytes;
 
-        public AllAbilities(IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects, Context context)
-            : this(bytes, effectsBytes, itemEffects, reactionEffects, null, null, null, null, context)
+        public AllAbilities(IList<byte> bytes, IList<byte> effectsBytes, Context context)
+            : this(bytes, effectsBytes, null, null, context)
         { }
 
-        public AllAbilities( IList<byte> bytes, IList<byte> effectsBytes, IList<byte> itemEffects, IList<byte> reactionEffects, 
-            IList<byte> defaultBytes, IList<byte> defaultEffects, IList<byte> defaultItemEffects, IList<byte> defaultReaction, Context context )
+        public AllAbilities( IList<byte> bytes, IList<byte> effectsBytes, IList<byte> defaultBytes, IList<byte> defaultEffects, Context context )
         {
             AllEffects = new AllAbilityEffects( this );
             this.defaultBytes = defaultBytes ?? (context == Context.US_PSP ? PSPResources.Binaries.Abilities : PSXResources.Binaries.Abilities);
             
             IDictionary<UInt16, Effect> effects = context == Context.US_PSP ? Effect.PSPEffects : Effect.PSXEffects;
             defaultEffects = defaultEffects ?? (context == Context.US_PSP ? PSPResources.Binaries.AbilityEffects : PSXResources.Binaries.AbilityEffects);
-            defaultItemEffects = defaultItemEffects ?? (context == Context.US_PSP ? PSPResources.Binaries.ItemAbilityEffects : PSXResources.Binaries.ItemAbilityEffects);
-            defaultReaction = defaultReaction ?? (context == Context.US_PSP ? PSPResources.Binaries.ReactionAbilityEffects : PSXResources.Binaries.ReactionAbilityEffects);
+            //defaultItemEffects = defaultItemEffects ?? (context == Context.US_PSP ? PSPResources.Binaries.ItemAbilityEffects : PSXResources.Binaries.ItemAbilityEffects);
+            //defaultReaction = defaultReaction ?? (context == Context.US_PSP ? PSPResources.Binaries.ReactionAbilityEffects : PSXResources.Binaries.ReactionAbilityEffects);
 
             Abilities = new Ability[512];
             DefaultAbilities = new Ability[512];
@@ -237,6 +236,23 @@ namespace FFTPatcher.Datatypes
                 Effect effect = null;
                 Effect defaultEffect = null;
 
+                if (i <= 0x1C5)
+                {
+                    bool isItemOrThrowEffect = ((i >= 0x170) && (i <= 0x189));
+
+                    ushort effectIndex = PatcherLib.Utilities.Utilities.BytesToUShort(effectsBytes[i * 2], effectsBytes[i * 2 + 1]);
+                    ushort defaultEffectIndex = PatcherLib.Utilities.Utilities.BytesToUShort(defaultEffects[i * 2], defaultEffects[i * 2 + 1]);
+
+                    if ((isItemOrThrowEffect) && (effectIndex != 0xFFFF))
+                    {
+                        effectIndex = (ushort)(effectIndex & ~Ability.ItemEffectPrefixValue);
+                        defaultEffectIndex = (ushort)(defaultEffectIndex & ~Ability.ItemEffectPrefixValue);
+                    }
+
+                    effect = effects[effectIndex];
+                    defaultEffect = effects[defaultEffectIndex];
+                }
+
                 if( i <= 0x16F )
                 {
                     second = bytes.Sub( 0x1000 + 14 * i, 0x1000 + 14 * i + 13 );
@@ -248,8 +264,8 @@ namespace FFTPatcher.Datatypes
                 {
                     second = bytes.Sub( 0x2420 + i - 0x170, 0x2420 + i - 0x170 );
                     defaultSecond = defaultBytes.Sub( 0x2420 + i - 0x170, 0x2420 + i - 0x170 );
-                    effect = effects[(ushort)(PatcherLib.Utilities.Utilities.BytesToUShort(itemEffects[(i - 368) * 2], itemEffects[(i - 368) * 2 + 1]) & ~Ability.ItemEffectPrefixValue)];
-                    defaultEffect = effects[(ushort)(PatcherLib.Utilities.Utilities.BytesToUShort(defaultItemEffects[(i - 368) * 2], defaultItemEffects[(i - 368) * 2 + 1]) & ~Ability.ItemEffectPrefixValue)];
+                    //effect = effects[(ushort)(PatcherLib.Utilities.Utilities.BytesToUShort(itemEffects[(i - 368) * 2], itemEffects[(i - 368) * 2 + 1]) & ~Ability.ItemEffectPrefixValue)];
+                    //defaultEffect = effects[(ushort)(PatcherLib.Utilities.Utilities.BytesToUShort(defaultItemEffects[(i - 368) * 2], defaultItemEffects[(i - 368) * 2 + 1]) & ~Ability.ItemEffectPrefixValue)];
                 }
                 else if( i <= 0x189 )
                 {
@@ -273,11 +289,13 @@ namespace FFTPatcher.Datatypes
                 }
                 else
                 {
+                    /*
                     if (i >= 422 && i <= 453)
                     {
                         effect = effects[PatcherLib.Utilities.Utilities.BytesToUShort( reactionEffects[(i - 422) * 2], reactionEffects[(i - 422) * 2 + 1] )];
                         defaultEffect = effects[PatcherLib.Utilities.Utilities.BytesToUShort( defaultReaction[(i - 422) * 2], defaultReaction[(i - 422) * 2 + 1] )];
                     }
+                    */
                     second = bytes.Sub( 0x246C + i - 0x1A6, 0x246C + i - 0x1A6 );
                     defaultSecond = defaultBytes.Sub( 0x246C + i - 0x1A6, 0x246C + i - 0x1A6 );
                 }
@@ -309,15 +327,15 @@ namespace FFTPatcher.Datatypes
             {
                 result.AddRange( Codes.GenerateCodes( Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.Abilities], this.ToByteArray(), 0x2754C0 ) );
                 result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.AbilityEffects], this.ToEffectsByteArray(), 0x31B760));
-                result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ItemAbilityEffects], this.ToItemEffectsByteArray(), 0x31B760 + 0x2E0));
-                result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ReactionAbilityEffects], this.ToReactionEffectsByteArray(), 0x31B760 + 0x34C));
+                //result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ItemAbilityEffects], this.ToItemEffectsByteArray(), 0x31B760 + 0x2E0));
+                //result.AddRange(Codes.GenerateCodes(Context.US_PSP, fftPatch.Defaults[FFTPatch.ElementName.ReactionAbilityEffects], this.ToReactionEffectsByteArray(), 0x31B760 + 0x34C));
             }
             else
             {
                 result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.Abilities], this.ToByteArray(), 0x05EBF0));
                 result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.AbilityEffects], this.ToEffectsByteArray(), 0x1B63F0, Codes.CodeEnabledOnlyWhen.Battle));
-                result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ItemAbilityEffects], this.ToItemEffectsByteArray(), 0x1B66D0, Codes.CodeEnabledOnlyWhen.Battle));
-                result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ReactionAbilityEffects], this.ToReactionEffectsByteArray(), 0x1B673C, Codes.CodeEnabledOnlyWhen.Battle));
+                //result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ItemAbilityEffects], this.ToItemEffectsByteArray(), 0x1B66D0, Codes.CodeEnabledOnlyWhen.Battle));
+                //result.AddRange(Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.ReactionAbilityEffects], this.ToReactionEffectsByteArray(), 0x1B673C, Codes.CodeEnabledOnlyWhen.Battle));
             }
             return result.AsReadOnly();
         }
@@ -346,18 +364,28 @@ namespace FFTPatcher.Datatypes
 
         public byte[] ToEffectsByteArray()
         {
-            List<byte> result = new List<byte>( 0x2E0 );
+            List<byte> result = new List<byte>( 0x38C );
             foreach (Ability a in Abilities)
             {
-                if (a.IsNormal)
+                //if (a.IsNormal)
+                if ((a.Offset <= 0x1C5) && (a.Effect != null))
                 {
-                    result.AddRange( a.Effect.Value.ToBytes() );
+                    bool isItemOrThrowEffect = ((a.Offset >= 0x170) && (a.Offset <= 0x189));
+                    ushort value = a.Effect.Value;
+
+                    if ((isItemOrThrowEffect) && (value != 0xFFFF))
+                    {
+                        value = (ushort)(value | Ability.ItemEffectPrefixValue);
+                    }
+
+                    result.AddRange(value.ToBytes());
                 }
             }
 
             return result.ToArray();
         }
 
+        /*
         public byte[] ToItemEffectsByteArray()
         {
             List<byte> result = new List<byte>( 0x1C );
@@ -386,6 +414,7 @@ namespace FFTPatcher.Datatypes
 
             return result.ToArray();
         }
+        */
 
         public void WriteXmlDigest(XmlWriter writer, FFTPatch FFTPatch)
         {
