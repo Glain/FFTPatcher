@@ -24,13 +24,13 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using PatcherLib.Datatypes;
+using System.Runtime.InteropServices;
 
 namespace FFTPatcher.TextEditor
 {
     static class Program
     {
-
-		#region Methods (2) 
+		#region Methods
 
 
         private static bool HandleArgs( string[] args )
@@ -208,13 +208,32 @@ namespace FFTPatcher.TextEditor
 
                 //    FFTTextFactory.WriteXml( psxtext, @"N:\dev\fft\ita\virginimages\psxxx.ffttext" );
                 //}
-
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault( false );
-                Application.Run( new MainForm(args) );
+                
+                if (!HandleCommandLinePatch(args))
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new MainForm(args));
+                }
             }
         }
 
+        private static bool HandleCommandLinePatch(string[] args)
+        {
+            System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepaths(args, ".ffttext", new string[3] { ".bin", ".iso", ".img" });
+
+            if ((string.IsNullOrEmpty(patchFilepaths.Key)) || (string.IsNullOrEmpty(patchFilepaths.Value)))
+            {
+                return false;
+            }
+            else
+            {
+                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+                FFTText fftText = FFTTextFactory.GetFilesXml(patchFilepaths.Key);
+                fftText.PatchISOSimple(patchFilepaths.Value);
+                return true;
+            }
+        }
 
 		#endregion Methods 
 

@@ -26,6 +26,7 @@ namespace FFTorgASM
         public MainForm()
         {
             InitializeComponent();
+            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
 
             asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
             string versionText = string.Format("v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString());

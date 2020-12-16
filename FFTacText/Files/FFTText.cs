@@ -293,6 +293,62 @@ namespace FFTPatcher.TextEditor
             }
         }
 
+        public void PatchISOSimple(string filename)
+        {
+            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite))
+            {
+                if (stream == null)
+                {
+                    throw new Exception("Could not open ISO file");
+                }
+
+                IList<ISerializableFile> files = new List<ISerializableFile>(Files.Count);
+                Files.FindAll(f => f is ISerializableFile).ForEach(f => files.Add((ISerializableFile)f));
+
+                List<ISerializableFile> dteFiles = new List<ISerializableFile>();
+                List<ISerializableFile> nonDteFiles = new List<ISerializableFile>();
+                List<PatchedByteArray> patches = new List<PatchedByteArray>();
+
+                foreach (ISerializableFile file in files)
+                {
+                    if (file.IsDteNeeded())
+                    {
+                        dteFiles.Add(file);
+                    }
+                    else
+                    {
+                        nonDteFiles.Add(file);
+                    }
+                }
+                if (dteFiles.Count > 0)
+                {
+                    BackgroundWorker worker = new BackgroundWorker();
+                    worker.WorkerReportsProgress = true;
+
+                    var dtePatches = DoDteCrap(dteFiles, worker, new DoWorkEventArgs(""));
+                    if (dtePatches == null)
+                    {
+                        return;
+                    }
+                    patches.AddRange(dtePatches);
+                }
+
+                foreach (var file in nonDteFiles)
+                {
+                    patches.AddRange(file.GetNonDtePatches());
+                }
+
+                if (Filetype == Context.US_PSP)
+                {
+                    PatcherLib.Iso.PspIso.PatchISO(stream, patches);
+                }
+                else if (Filetype == Context.US_PSX)
+                {
+                    PatcherLib.Iso.PsxIso.PatchPsxIso(stream, patches);
+                }
+            }
+        }
+
         private void WriteChangesToFile(IEnumerable<PatchedByteArray> patches, string filepath)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();

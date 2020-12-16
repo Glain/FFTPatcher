@@ -611,23 +611,82 @@ namespace PatcherLib.Utilities
             return sb.ToString();
         }
 
+        public static KeyValuePair<string, string> GetPatchFilepaths(string[] args, string srcExtension, IEnumerable<string> destExtensions = null)
+        { 
+            int modLength = args.Length - 2;
+            destExtensions = destExtensions ?? new string[4] { ".bin", ".iso", ".img", ".psv" };
+
+            for (int index = 0; index < modLength; index++)
+            {
+                if (args[index].ToLower().Trim().Equals("-patch"))
+                {
+                    string patchPath = GetInputFilepath(args[index + 1], srcExtension);
+                    string isoPath = GetInputFilepath(args[index + 2], destExtensions);
+
+                    if (string.IsNullOrEmpty(patchPath))
+                    {
+                        patchPath = GetInputFilepath(args[index + 2], srcExtension);
+                        isoPath = GetInputFilepath(args[index + 1], destExtensions);
+                    }
+
+                    return new KeyValuePair<string, string>(patchPath, isoPath);
+                }
+            }
+
+            return new KeyValuePair<string, string>(null, null);
+        }
+
         public static string GetInputFilepath(string[] args, string extension)
         {
             string filepath = (args.Length > 0) ? args[0] : "";
+            return GetInputFilepath(filepath, extension);
+        }
 
+        public static string GetInputFilepath(string filepath, string extension)
+        {
+            return GetInputFilepath(filepath, new string[1] { extension });
+        }
+
+        public static string GetInputFilepath(string filepath, IEnumerable<string> validExtensions)
+        {
             if (!string.IsNullOrEmpty(filepath))
             {
                 try
                 {
                     filepath = System.IO.Path.GetFullPath(filepath);
-                    if (!((filepath.ToLower().Trim().EndsWith(extension)) && (System.IO.File.Exists(filepath))))
+
+                    //if (!((filepath.ToLower().Trim().EndsWith(extension)) && (System.IO.File.Exists(filepath))))
+                    //{
+                    //    filepath = "";
+                    //}
+
+                    if (!System.IO.File.Exists(filepath))
                     {
-                        filepath = "";
+                        filepath = string.Empty;
+                    }
+                    else
+                    {
+                        bool hasValidExtension = false;
+                        string modFilepath = filepath.ToLower().Trim();
+
+                        foreach (string extension in validExtensions)
+                        {
+                            if (modFilepath.EndsWith(extension.ToLower().Trim()))
+                            {
+                                hasValidExtension = true;
+                                break;
+                            }
+                        }
+
+                        if (!hasValidExtension)
+                        {
+                            filepath = string.Empty;
+                        }
                     }
                 }
                 catch (Exception)
                 {
-                    filepath = "";
+                    filepath = string.Empty;
                 }
             }
 

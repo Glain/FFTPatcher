@@ -203,6 +203,70 @@ namespace FFTPatcher
             }
         }
 
+        public static void PatchISOSimple(FFTPatch FFTPatch, string filename)
+        {
+            FileStream stream = null;
+            try
+            {
+                stream = new FileStream(filename, FileMode.Open);
+                PatchISOSimple(FFTPatch, stream);
+            }
+            catch (NotSupportedException)
+            {
+                throw;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Flush();
+                    stream.Close();
+                    stream = null;
+                }
+            }
+        }
 
+        public static void PatchISOSimple(FFTPatch FFTPatch, Stream stream)
+        {
+            PatcherLib.Iso.PspIso.PspIsoInfo info = PatcherLib.Iso.PspIso.PspIsoInfo.GetPspIsoInfo(stream);
+
+            if (PatcherLib.Iso.PspIso.IsJP(stream, info))
+            {
+                throw new NotSupportedException("Unrecognized image.");
+            }
+
+            List<PatchedByteArray> patches = new List<PatchedByteArray>();
+            PatcherLib.Iso.PspIso.DecryptISO(stream, info);
+            const Context context = Context.US_PSP;
+
+            patches.AddRange(FFTPatch.Abilities.GetPatches(context));
+            patches.AddRange(FFTPatch.AbilityAnimations.GetPatches(context));
+            patches.AddRange(FFTPatch.Abilities.AllEffects.GetPatches(context));
+            patches.AddRange(FFTPatch.ActionMenus.GetPatches(context));
+
+            IList<PatchedByteArray> entdPatches = FFTPatch.ENTDs.GetPatches(context);
+            for (int i = 0; i < 5; i++)
+            {
+                patches.Add(entdPatches[i]);
+            }
+
+            patches.AddRange(FFTPatch.InflictStatuses.GetPatches(context));
+            patches.AddRange(FFTPatch.ItemAttributes.GetPatches(context));
+            patches.AddRange(FFTPatch.Items.GetPatches(context));
+            patches.AddRange(FFTPatch.JobLevels.GetPatches(context));
+            patches.AddRange(FFTPatch.Jobs.GetPatches(context));
+            patches.AddRange(FFTPatch.MonsterSkills.GetPatches(context));
+            patches.AddRange(FFTPatch.MoveFind.GetPatches(context));
+            patches.AddRange(FFTPatch.PoachProbabilities.GetPatches(context));
+            patches.AddRange(FFTPatch.SkillSets.GetPatches(context));
+            patches.AddRange(FFTPatch.StatusAttributes.GetPatches(context));
+            patches.AddRange(FFTPatch.StoreInventories.GetPatches(context));
+            patches.AddRange(FFTPatch.Propositions.GetPatches(context));
+
+            foreach (PatchedByteArray patch in patches)
+            {
+                PatcherLib.Iso.PspIso.ApplyPatch(stream, info, patch);
+            }
+        }
     }
 }

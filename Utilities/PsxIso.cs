@@ -148,6 +148,44 @@ namespace FFTPatcher
 
         }
 
+        public static void PatchPsxIsoSimple(FFTPatch fftPatch, string filename)
+        {
+            List<PatchedByteArray> patches = new List<PatchedByteArray>();
+            const Context context = Context.US_PSX;
+
+            patches.AddRange(fftPatch.Abilities.GetPatches(context));
+            patches.AddRange(fftPatch.AbilityAnimations.GetPatches(context));
+            patches.AddRange(fftPatch.Abilities.AllEffects.GetPatches(context));
+            patches.AddRange(fftPatch.ActionMenus.GetPatches(context));
+
+            IList<PatchedByteArray> entdPatches = fftPatch.ENTDs.GetPatches(context);
+            for (int i = 0; i < 4; i++)
+            {
+                patches.Add(entdPatches[i]);
+            }
+
+            patches.AddRange(fftPatch.InflictStatuses.GetPatches(context));
+            patches.AddRange(fftPatch.ItemAttributes.GetPatches(context));
+            patches.AddRange(fftPatch.Items.GetPatches(context));
+            patches.AddRange(fftPatch.JobLevels.GetPatches(context));
+            patches.AddRange(fftPatch.Jobs.GetPatches(context));
+            patches.AddRange(fftPatch.MonsterSkills.GetPatches(context));
+            patches.AddRange(fftPatch.MoveFind.GetPatches(context));
+            patches.AddRange(fftPatch.PoachProbabilities.GetPatches(context));
+            patches.AddRange(fftPatch.SkillSets.GetPatches(context));
+            patches.AddRange(fftPatch.StatusAttributes.GetPatches(context));
+            patches.AddRange(fftPatch.StoreInventories.GetPatches(context));
+            patches.AddRange(fftPatch.Propositions.GetPatches(context));
+
+            using (FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite))
+            {
+                foreach (PatchedByteArray patch in patches)
+                {
+                    IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, stream, true, patch.Sector, patch.Offset, patch.GetBytes(), true);
+                }
+            }
+        }
+
         public static void PatchPsxSavestate(FFTPatch FFTPatch, BackgroundWorker backgroundWorker, DoWorkEventArgs e, IGeneratePatchList patchList)
         {
             
@@ -276,6 +314,39 @@ namespace FFTPatcher
             
         }
 
+        public static void PatchPsxSavestateSimple(FFTPatch FFTPatch, string filename)
+        {
+            List<PatchedByteArray> patches = new List<PatchedByteArray>();
+            const Context context = Context.US_PSX;
 
+            patches.AddRange(FFTPatch.Abilities.GetPatches(context));
+            patches.AddRange(FFTPatch.AbilityAnimations.GetPatches(context));
+            patches.AddRange(FFTPatch.Abilities.AllEffects.GetPatches(context));
+            patches.AddRange(FFTPatch.ActionMenus.GetPatches(context));
+
+            IList<PatchedByteArray> entdPatches = FFTPatch.ENTDs.GetPatches(context);
+            for (int i = 0; i < 4; i++)
+            {
+                patches.Add(entdPatches[i]);
+            }
+
+            patches.AddRange(FFTPatch.InflictStatuses.GetPatches(context));
+            patches.AddRange(FFTPatch.ItemAttributes.GetPatches(context));
+            patches.AddRange(FFTPatch.Items.GetPatches(context));
+            patches.AddRange(FFTPatch.JobLevels.GetPatches(context));
+            patches.AddRange(FFTPatch.Jobs.GetPatches(context));
+            patches.AddRange(FFTPatch.MonsterSkills.GetPatches(context));
+            patches.AddRange(FFTPatch.MoveFind.GetPatches(context));
+            patches.AddRange(FFTPatch.PoachProbabilities.GetPatches(context));
+            patches.AddRange(FFTPatch.SkillSets.GetPatches(context));
+            patches.AddRange(FFTPatch.StatusAttributes.GetPatches(context));
+            patches.AddRange(FFTPatch.StoreInventories.GetPatches(context));
+            patches.AddRange(FFTPatch.Propositions.GetPatches(context));
+
+            using (BinaryReader reader = new BinaryReader(File.Open(filename, FileMode.Open)))
+            {
+                PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ASMEncoding;
+using PatcherLib.Datatypes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -135,6 +136,38 @@ namespace FFTorgASM
             }
 
             BackgroundColors[0] = allColorList.ToArray();
+        }
+
+        public void PatchAllISO(ASMEncodingUtility asmUtility, string filename)
+        {
+            using (Stream file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite))
+            {
+                foreach (AsmPatch asmPatch in AllPatches)
+                {
+                    //ModifyPatch(patch);
+                    asmPatch.Update(asmUtility);
+                    PatcherLib.Iso.PsxIso.PatchPsxIso(file, asmPatch);
+                }
+            }
+        }
+
+        public void PatchAllSaveState(ASMEncodingUtility asmUtility, string filename)
+        {
+            using (BinaryReader reader = new BinaryReader(File.Open(filename, FileMode.Open)))
+            {
+                List<PatchedByteArray> patches = new List<PatchedByteArray>();
+                foreach (AsmPatch asmPatch in AllPatches)
+                {
+                    //ModifyPatch(asmPatch);
+                    asmPatch.Update(asmUtility);
+                    foreach (PatchedByteArray innerPatch in asmPatch)
+                    {
+                        patches.Add(innerPatch);
+                    }
+                }
+
+                PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
+            }
         }
     }
 }

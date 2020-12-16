@@ -358,6 +358,11 @@ namespace FFTPatcher.TextEditor
             return result;
         }
 
+        public static FFTText GetFilesXml(string filename)
+        {
+            return GetFilesXml(filename, new BackgroundWorker());
+        }
+
         public static FFTText GetFilesXml(string filename, BackgroundWorker worker)
         {
             XmlDocument doc = new XmlDocument();

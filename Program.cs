@@ -51,7 +51,46 @@ namespace FFTPatcher
             dummy = SpecialName.GetSpecialNames(PatcherLib.Datatypes.Context.US_PSX);
             dummy = Event.GetEventNames(PatcherLib.Datatypes.Context.US_PSX);
 
-            Application.Run(new MainForm(args));
+            if (!HandleCommandLinePatch(args))
+                Application.Run(new MainForm(args));
+        }
+
+        private static bool HandleCommandLinePatch(string[] args)
+        {
+            System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepaths(args, ".fftpatch");
+
+            if ((string.IsNullOrEmpty(patchFilepaths.Key)) || (string.IsNullOrEmpty(patchFilepaths.Value)))
+            {
+                return false;
+            }
+            else
+            {
+                Environment.CurrentDirectory = System.IO.Path.GetDirectoryName(patchFilepaths.Key);
+
+                FFTPatch fftPatch = new FFTPatch();
+                fftPatch.LoadPatch(patchFilepaths.Key);
+
+                if (fftPatch.Context == PatcherLib.Datatypes.Context.US_PSP)
+                {
+                    if (!patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
+                    {
+                        PspIso.PatchISOSimple(fftPatch, patchFilepaths.Value);
+                    }
+                }
+                else
+                {
+                    if (patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
+                    {
+                        PsxIso.PatchPsxSavestateSimple(fftPatch, patchFilepaths.Value);
+                    }
+                    else
+                    {
+                        PsxIso.PatchPsxIsoSimple(fftPatch, patchFilepaths.Value);
+                    }
+                }
+
+                return true;
+            }
         }
 
 		#endregion Private Methods 
