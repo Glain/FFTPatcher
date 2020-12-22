@@ -308,6 +308,8 @@ namespace ASMEncoding.Helpers
 		{
             _errorTextBuilder.Length = 0;
 
+            bool reportErrors = skipLabelAssertion;
+
             ASMTranslatePseudoResult result = new ASMTranslatePseudoResult();
 			List<EncodeLine> resultLines = new List<EncodeLine>();
 			int index = 0;
@@ -337,8 +339,27 @@ namespace ASMEncoding.Helpers
 
                 if (firstPart == ".endif")
                 {
-                    if (ifNestLevel > 0)
+                    if (ifNestLevel == 0)
+                    {
+                        if (reportErrors)
+                            _errorTextBuilder.AppendLine("WARNING: No matching .if statement for .endif statement at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8));
+                    }
+                    else
+                    {
                         ifNestLevel--;
+                    }
+                }
+                else if (firstPart == ".else")
+                {
+                    if (ifNestLevel == 0)
+                    {
+                        if (reportErrors)
+                            _errorTextBuilder.AppendLine("WARNING: No matching .if statement for .else statement at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8));
+                    }
+                    else if (!isSkippingLine[ifNestLevel - 1])
+                    {
+                        isSkippingLine[ifNestLevel] = !isSkippingLine[ifNestLevel];
+                    }
                 }
                 else if (firstPart == ".if")
                 {
@@ -348,13 +369,19 @@ namespace ASMEncoding.Helpers
 
                         if (!parts[1].Contains(","))
                         {
-                            _errorTextBuilder.AppendLine("WARNING: Unreachable code inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
+                            if (reportErrors)
+                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) 
+                                    + " inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
+
                             isSkippingLine.Add(true);
                             ifNestLevel++;
                         }
                         else if (innerParts.Length < 2)
                         {
-                            _errorTextBuilder.AppendLine("WARNING: Unreachable code inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
+                            if (reportErrors)
+                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) + 
+                                    " inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
+
                             isSkippingLine.Add(true);
                             ifNestLevel++;
                         }
@@ -394,6 +421,10 @@ namespace ASMEncoding.Helpers
                                 case "==":
                                     isPass = eqvKey.Equals(eqvValue);
                                     break;
+                                case "!=":
+                                case "<>":
+                                    isPass = !eqvKey.Equals(eqvValue);
+                                    break;
                                 case "<":
                                     isPass = isIntCompare && (intKey < intValue);
                                     break;
@@ -416,7 +447,8 @@ namespace ASMEncoding.Helpers
                     }
                     catch (Exception ex)
                     {
-                        _errorTextBuilder.AppendLine("Error on .if statement: " + ex.Message + "\r\n");
+                        if (reportErrors)
+                            _errorTextBuilder.AppendLine("Error on .if statement: " + ex.Message + "\r\n");
                     }
                 }
 				
@@ -441,8 +473,11 @@ namespace ASMEncoding.Helpers
 					}
 					catch (Exception ex)
 					{
-                        //result.errorMessage = "Error translating pseudoinstruction: " + line;
-                        _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
+                        if (reportErrors)
+                        {
+                            //result.errorMessage = "Error translating pseudoinstruction: " + line;
+                            _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
+                        }
 						//result.lines = null;
                         //return result;
                         //index++;

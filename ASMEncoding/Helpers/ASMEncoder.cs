@@ -245,7 +245,7 @@ namespace ASMEncoding.Helpers
                 else
                 {
                     if (!string.IsNullOrEmpty(parts[0]))
-                        if ((parts[0] != ".org") && (parts[0] != ".label") && (parts[0] != ".eqv") && (parts[0] != ".if") && (parts[0] != ".endif") && (!parts[0].EndsWith(":")))
+                        if ((parts[0] != ".org") && (parts[0] != ".label") && (parts[0] != ".eqv") && (parts[0] != ".if") && (parts[0] != ".else") && (parts[0] != ".endif") && (!parts[0].EndsWith(":")))
                             _errorTextBuilder.AppendLine("WARNING: Ignoring unknown command \"" + parts[0] + "\".");
                 }
 				
