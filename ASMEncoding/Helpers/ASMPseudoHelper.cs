@@ -346,6 +346,7 @@ namespace ASMEncoding.Helpers
                     }
                     else
                     {
+                        isSkippingLine.RemoveAt(isSkippingLine.Count - 1);
                         ifNestLevel--;
                     }
                 }
