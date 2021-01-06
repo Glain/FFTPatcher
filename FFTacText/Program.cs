@@ -218,6 +218,10 @@ namespace FFTPatcher.TextEditor
             }
         }
 
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+        private const int ATTACH_PARENT_PROCESS = -1;
+
         private static bool HandleCommandLinePatch(string[] args)
         {
             System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepaths(args, ".ffttext", new string[3] { ".bin", ".iso", ".img" });
@@ -229,8 +233,18 @@ namespace FFTPatcher.TextEditor
             else
             {
                 System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
-                FFTText fftText = FFTTextFactory.GetFilesXml(patchFilepaths.Key);
-                fftText.PatchISOSimple(patchFilepaths.Value);
+
+                try
+                {
+                    FFTText fftText = FFTTextFactory.GetFilesXml(patchFilepaths.Key);
+                    fftText.PatchISOSimple(patchFilepaths.Value);
+                }
+                catch (Exception ex)
+                {
+                    AttachConsole(ATTACH_PARENT_PROCESS);
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
                 return true;
             }
         }

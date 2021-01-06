@@ -151,7 +151,7 @@ namespace FFTorgASM
             }
         }
 
-        public void PatchAllSaveState(ASMEncodingUtility asmUtility, string filename)
+        public PatcherLib.Iso.PatchPsxSaveStateResult PatchAllSaveState(ASMEncodingUtility asmUtility, string filename)
         {
             using (BinaryReader reader = new BinaryReader(File.Open(filename, FileMode.Open)))
             {
@@ -166,7 +166,7 @@ namespace FFTorgASM
                     }
                 }
 
-                PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
+                return PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
             }
         }
     }

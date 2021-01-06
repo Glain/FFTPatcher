@@ -55,6 +55,10 @@ namespace FFTPatcher
                 Application.Run(new MainForm(args));
         }
 
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+        private const int ATTACH_PARENT_PROCESS = -1;
+
         private static bool HandleCommandLinePatch(string[] args)
         {
             System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepaths(args, ".fftpatch");
@@ -67,26 +71,34 @@ namespace FFTPatcher
             {
                 Environment.CurrentDirectory = System.IO.Path.GetDirectoryName(patchFilepaths.Key);
 
-                FFTPatch fftPatch = new FFTPatch();
-                fftPatch.LoadPatch(patchFilepaths.Key);
+                try
+                {
+                    FFTPatch fftPatch = new FFTPatch();
+                    fftPatch.LoadPatch(patchFilepaths.Key);
 
-                if (fftPatch.Context == PatcherLib.Datatypes.Context.US_PSP)
-                {
-                    if (!patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
+                    if (fftPatch.Context == PatcherLib.Datatypes.Context.US_PSP)
                     {
-                        PspIso.PatchISOSimple(fftPatch, patchFilepaths.Value);
-                    }
-                }
-                else
-                {
-                    if (patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
-                    {
-                        PsxIso.PatchPsxSavestateSimple(fftPatch, patchFilepaths.Value);
+                        if (!patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
+                        {
+                            PspIso.PatchISOSimple(fftPatch, patchFilepaths.Value);
+                        }
                     }
                     else
                     {
-                        PsxIso.PatchPsxIsoSimple(fftPatch, patchFilepaths.Value);
+                        if (patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
+                        {
+                            PsxIso.PatchPsxSavestateSimple(fftPatch, patchFilepaths.Value);
+                        }
+                        else
+                        {
+                            PsxIso.PatchPsxIsoSimple(fftPatch, patchFilepaths.Value);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    AttachConsole(ATTACH_PARENT_PROCESS);
+                    Console.WriteLine("Error: " + ex.Message);
                 }
 
                 return true;
