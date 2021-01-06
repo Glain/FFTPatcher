@@ -1,5 +1,180 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Patches>
+    <Patch name="Set Action Mods" hidden="true">
+        <Location file="BATTLE_BIN" offset="1594A8" mode="ASM" offsetMode="RAM">
+            #   ROUTINE: Apply addend/multiplier to actions (Standard and return/drain action)
+            #   Parameters: a0 = Multiplier (16.16 fixed point)
+            #       NOTE: This routine does not modify temporary (t) registers.
+
+            @set_action_mods:
+
+                addiu   sp, sp, -16
+                sw      ra, 4(sp)
+                sw      s0, 8(sp)
+
+                move    s0, a0
+
+                #   Standard action
+                lui     a1, 0x8019
+                lw      a1, 0x2d90(a1)
+                jal     @set_action_mod
+                nop
+
+                #   Return action (drain)
+                lui     a1, 0x8019
+                lw      a1, 0x2d8c(a1)
+                jal     @set_action_mod
+                move    a0, s0
+
+                lw      s0, 8(sp)
+                lw      ra, 4(sp)
+                addiu   sp, sp, 16
+
+                jr      ra
+                nop
+
+            #   ROUTINE: Apply addend/multiplier to action
+            #   Parameters: a0 = Multiplier (16.16 fixed point), a1 = Action
+            #       NOTE: This routine does not modify temporary (t) registers.
+
+            @set_action_mod:
+
+                    addiu   sp, sp, -16
+                    sw      ra, 4(sp)
+                    sw      s0, 8(sp)
+                    sw      s1, 12(sp)
+
+                    beq     a1, zero, set_action_mod_end
+                    move    s0, a0
+                    move    s1, a1
+
+                    #   HP Damage
+                    jal     @set_action_property_mod
+                    li      a2, 4
+
+                    #   HP Healing
+                    move    a0, s0
+                    move    a1, s1
+                    jal     @set_action_property_mod
+                    li      a2, 6
+
+                    #   MP Damage
+                    move    a0, s0
+                    move    a1, s1
+                    jal     @set_action_property_mod
+                    li      a2, 8
+
+                    #   MP Healing
+                    move    a0, s0
+                    move    a1, s1
+                    jal     @set_action_property_mod
+                    li      a2, 10
+
+                set_action_mod_end:
+                    lw      s1, 12(sp)
+                    lw      s0, 8(sp)
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 16
+                    jr      ra
+                    nop
+
+            #   ROUTINE: Apply addend/multiplier to action property (offset)
+            #   Parameters: a0 = Multiplier (16.16 fixed point), a1 = Action, a2 = Offset
+            #       NOTE: This routine does not modify temporary (t) registers.
+
+            @set_action_property_mod:
+
+                    addu    a3, a1, a2
+                    lhu     v0, 0(a3)
+                    nop
+
+                    beq     v0, zero, set_action_property_mod_end
+                    nop
+
+                    multu   v0, a0
+
+                    #   Multiplying integer (32.0) by (16.16) fixed point gives (48.16) result
+                    #   HI: [16 | 16], LO: [16 | 16]; Significant 32 bit integer part is the two middle 16s
+
+                    #   a1: [ HI RIGHT 16 | ZERO ]
+                    mfhi    a1
+                    sll     a1, a1, 16
+
+                    #   a2: [ ZERO | LO LEFT 16 ]
+                    mflo    v1
+                    srl     a2, v1, 16
+
+                    #   Check decimal part to determine whether to round up (add one to integer part).
+                    sll     v1, v1, 16
+                    srl     v1, v1, 31
+                    addu    a2, a2, v1
+
+                    #   v0: [ HI RIGHT 16 | LO LEFT 16 ]
+                    or      v0, a1, a2
+
+                    #   Cap value at 999
+                    #sltiu   v1, v0, 1000
+                    #bne     v1, zero, set_action_property_mod_end
+                    #nop
+                    #li      v0, 999
+
+                set_action_property_mod_end:
+                    jr      ra
+                    sh      v0, 0(a3)
+
+
+            #   ROUTINE: Set action types
+            @set_action_types:
+
+                    addiu   sp, sp, -8
+                    sw      ra, 4(sp)
+
+                    lui     a0, 0x8019
+                    lw      a0, 0x2d90(a0)
+                    jal     @set_action_type
+                    nop
+
+                    lui     a0, 0x8019
+                    lw      a0, 0x2d8c(a0)
+                    jal     @set_action_type
+                    nop
+
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 8
+                    jr      ra
+                    nop
+
+            #   ROUTINE: Set action type (a0 = Action)
+            @set_action_type:
+
+                    lbu     t0, 0x25(a0)
+
+                    lbu     t1, 4(a0)
+                    lbu     t2, 6(a0)
+                    lbu     t3, 8(a0)
+                    lbu     t4, 10(a0)
+
+                    sltu    t1, zero, t1
+                    sltu    t2, zero, t2
+                    sltu    t3, zero, t3
+                    sltu    t4, zero, t4
+
+                    sll     t1, t1, 7
+                    sll     t2, t2, 6
+                    sll     t3, t3, 5
+                    sll     t4, t4, 4
+
+                    andi    t0, t0, 0x0f
+
+                    or      t0, t0, t1
+                    or      t0, t0, t2
+                    or      t0, t0, t3
+                    or      t0, t0, t4
+
+                    jr      ra
+                    sb      t0, 0x25(a0)
+        </Location>
+    </Patch>
   <Patch name="Random unit gear based on story progression - override with 0x16b">
     <Description>
       Random unit gear based on story progression, but can be overridden with 0x16b for any unit.
@@ -92,6 +267,7 @@ SKP:  move    t4,v1
         The format for the multipliers is 16.16 fixed point (e.g. 1.25 = 00014000).
         A multiplier of zero (default) will be ignored.
     </Description>
+    <Include patch="Set Action Mods" />
     <Location file="BATTLE_BIN" offset="F5D20" mode="ASM">
 .label  @get_source_unit_misc_data_pointer, 0x8007a218
     
@@ -410,179 +586,6 @@ SKP:  move    t4,v1
         addiu   sp, sp, 8
         jr      ra
         nop
-        
-# ROUTINE: Apply addend/multiplier to actions (Standard and return/drain action)
-# Parameters: a0 = Multiplier (16.16 fixed point)
-#   NOTE: This routine does not modify temporary (t) registers.
-
-@set_action_mods:
-    
-        addiu   sp, sp, -16
-        sw      ra, 4(sp)
-        sw      s0, 8(sp)
-        
-        move    s0, a0
-        
-        #   Standard action
-        lui     a1, 0x8019
-        lw      a1, 0x2d90(a1)
-        jal     @set_action_mod
-        nop
-        
-        #   Return action (drain)
-        lui     a1, 0x8019
-        lw      a1, 0x2d8c(a1)
-        jal     @set_action_mod
-        move    a0, s0
-        
-        lw      s0, 8(sp)
-        lw      ra, 4(sp)
-        addiu   sp, sp, 16
-        
-        jr      ra
-        nop
-    
-# ROUTINE: Apply addend/multiplier to action
-# Parameters: a0 = Multiplier (16.16 fixed point), a1 = Action
-#   NOTE: This routine does not modify temporary (t) registers.
-
-@set_action_mod:
-
-        addiu   sp, sp, -16
-        sw      ra, 4(sp)
-        sw      s0, 8(sp)
-        sw      s1, 12(sp)
-        
-        beq     a1, zero, set_action_mod_end
-        move    s0, a0
-        move    s1, a1
-
-        #   HP Damage
-        jal     @set_action_property_mod
-        li      a2, 4
-        
-        #   HP Healing
-        move    a0, s0
-        move    a1, s1
-        jal     @set_action_property_mod
-        li      a2, 6
-        
-        #   MP Damage
-        move    a0, s0
-        move    a1, s1
-        jal     @set_action_property_mod
-        li      a2, 8
-    
-        #   MP Healing
-        move    a0, s0
-        move    a1, s1
-        jal     @set_action_property_mod
-        li      a2, 10
-        
-    set_action_mod_end:
-        lw      s1, 12(sp)
-        lw      s0, 8(sp)
-        lw      ra, 4(sp)
-        addiu   sp, sp, 16
-        jr      ra
-        nop
-
-# ROUTINE: Apply addend/multiplier to action property (offset)
-# Parameters: a0 = Multiplier (16.16 fixed point), a1 = Action, a2 = Offset
-#   NOTE: This routine does not modify temporary (t) registers.
-
-@set_action_property_mod:
-
-        add     a3, a1, a2
-        lhu     v0, 0(a3)  
-        nop
-        
-        beq     v0, zero, set_action_property_mod_end
-        nop
-        
-        multu   v0, a0
-        
-        # Multiplying integer (32.0) by (16.16) fixed point gives (48.16) result
-        # HI: [16 | 16], LO: [16 | 16]; Significant 32 bit integer part is the two middle 16s
-        
-        # a1: [ HI RIGHT 16 | ZERO ]
-        mfhi    a1
-        sll     a1, a1, 16
-        
-        # a2: [ ZERO | LO LEFT 16 ]
-        mflo    v1
-        srl     a2, v1, 16
-        
-        # Check decimal part to determine whether to round up (add one to integer part).
-        sll     v1, v1, 16
-        srl     v1, v1, 31
-        addu    a2, a2, v1
-        
-        # v0: [ HI RIGHT 16 | LO LEFT 16 ]
-        or      v0, a1, a2
-        
-        # Cap value at 999
-        sltiu   v1, v0, 1000
-        bne     v1, zero, set_action_property_mod_end
-        nop
-        li      v0, 999
-    
-    set_action_property_mod_end:
-        jr      ra
-        sh      v0, 0(a3)
-        
-        
-# ROUTINE: Set action types
-@set_action_types:
-
-        addiu   sp, sp, -8
-        sw      ra, 4(sp)
-        
-        lui     a0, 0x8019
-        lw      a0, 0x2d90(a0)
-        jal     @set_action_type
-        nop
-        
-        lui     a0, 0x8019
-        lw      a0, 0x2d8c(a0)
-        jal     @set_action_type
-        nop
-        
-        lw      ra, 4(sp)
-        addiu   sp, sp, 8
-        jr      ra
-        nop
-        
-# ROUTINE: Set action type (a0 = Action)
-@set_action_type:
-
-        lbu     t0, 0x25(a0)
-        
-        lbu     t1, 4(a0)
-        lbu     t2, 6(a0)
-        lbu     t3, 8(a0)
-        lbu     t4, 10(a0)
-        
-        sltu    t1, zero, t1
-        sltu    t2, zero, t2
-        sltu    t3, zero, t3
-        sltu    t4, zero, t4
-        
-        sll     t1, t1, 7
-        sll     t2, t2, 6
-        sll     t3, t3, 5
-        sll     t4, t4, 4
-        
-        andi    t0, t0, 0x0f
-        
-        or      t0, t0, t1
-        or      t0, t0, t2
-        or      t0, t0, t3
-        or      t0, t0, t4
-        
-        jr      ra
-        sb      t0, 0x25(a0)
-        
     </Location>
     <Location file="BATTLE_BIN" offset="11DE98" mode="ASM">
         jr      ra                      # Return immediately from original routine
@@ -803,7 +806,126 @@ SKP:  move    t4,v1
     </Location>
     <Variable name="Use MA" file="BATTLE_BIN" offset="F5BCF" bytes="1" default="00" />
   </Patch>
-  <Patch name="Apply defense (v2): Item (Unknown 1) = Physical damage reduction (%); (Unknown 2) = Magical damage reduction (%)">
+    <Patch name="Apply defense (Item HP/MP bonuses and type multipliers)">
+        <Description>
+            Reduces damage based on defense.
+            Defense for Shield, Head, and Armor slots is determined by taking their HP Bonus and MP Bonus and using a multiplier to convert to damage reduction (Shields use Block Rate).
+            Total defense is multiplicative per slot.  
+            The multipliers are in the form X / 128.  To change these values, edit the values in the first Location tag.
+            The values are in (Physical, Magical) pairs and go in order of item type: Shield, Helmet, Hat, HairAdornment, Armor, Clothing, Robe.
+            To only write out the routine without calling it, set Apply variable to 0.
+        </Description>
+        <Include patch="Set Action Mods" />
+        <Location file="BATTLE_BIN" offset="159120" mode="DATA" offsetMode="RAM" label="addr_defense_type_multipliers">
+            2D 2D 1A 13 13 1A 0D 1A 26 0D 1A 1A 0D 26
+        </Location>
+        <Location file="BATTLE_BIN" offset="159130" mode="ASM" offsetMode="RAM">
+            @defense:
+                    lui     t0, 0x8019
+                    lhu     t2, 0x38d6(t0)                  #   Ability ID
+                    lw      t1, 0x2d98(t0)                  #   Target unit
+                    lw      t5, 0x2d90(t0)                  #   Action
+          
+                    sll     t4, t2, 3                       #   Ability ID * 8
+                    lui     t2, 0x8006                      #   Base address for item data (%hi)
+                    addu    t4, t2, t4
+                    lbu     t4, %lo(0xebf6) (t4)            #   Ability AI Behavior Flags 3
+                    li      t3, 0xff                        #   Code for empty slot
+                    #addiu   t1, t1, 0x1a                    #   Unit equipment offset
+        
+                    lhu     t5, 4(t5)                       #   Action HP Damage
+                    andi    t8, t4, 0x01                    #   Use physical defense (1 = true, 0 = false)
+                    sltu    t5, zero, t5
+                    or      t8, t8, t5
+        
+                    andi    t9, t4, 0x02                    #   Use magical defense (2 = true, 0 = false)              
+        
+                    sll     t8, t8, 31
+                    sra     t8, t8, 31                      #   Use physical defense (0xffffffff = true, 0 = false)
+                    sll     t9, t9, 30
+                    sra     t9, t9, 31                      #   Use magical defense (0xffffffff = true, 0 = false)
+                  
+                    li      v0, 128                         #   Damage Multiplier (Numerator) = 128 (to be divided by 128 later)
+                    li      v1, 0                           #   Loop counter = 0
+      
+                defense_loop_start:  
+                    lbu     t4, 0x1a(t1)                    #   ItemID for current equipment slot
+                    addiu   t1, t1, 1                       #   Increment slot
+                    beq     t4, t3, defense_loop_bottom     #   If ItemID == 0xff (empty slot), skip this item and continue loop
+                    sll     t7, t4, 1                       #   ItemID * 2
+                    beq     t4, zero, defense_loop_bottom   #   If ItemID == 0 (nothing), skip this item and continue loop
+                    addu    t5, t7, t4                      #   ItemID * 3
+                    sll     t5, t5, 2                       #   ItemID * 12
+                    addu    t5, t2, t5                  
+        
+                    lbu     t6, 0x2ebd(t5)                  #   Item type (0x05)
+                    addu    t4, t2, t7
+                    addiu   t7, t6, -0x13
+                    sltiu   t5, t7, 7
+                    beq     t5, zero, defense_loop_bottom
+                    sll     t7, t7, 1
+        
+                    #   Secondary data at 0x80063db8 + (ItemID * 2)
+                    lui     t5, %hi(@addr_defense_type_multipliers)
+                    addu    t5, t5, t7
+                    lhu     t5, %lo(@addr_defense_type_multipliers) (t5)
+                    lbu     t6, 0x3db8(t4)                  #   HP Bonus
+                    lbu     t7, 0x3db9(t4)                  #   MP Bonus
+                    andi    t4, t5, 0xff                    #   HP Multiplier
+                    srl     t5, t5, 8                       #   MP Multiplier
+        
+                    and     t6, t6, t8                      #   Effective physical defense (0 if unused)
+                    and     t7, t7, t9                      #   Effective magical defense (0 if unused)
+        
+                    beq     t6, zero, defense_magical_multiplier
+                    li      a0, 128
+                    #subu    t6, a0, t6
+                    multu   t6, t4
+                    mflo    t6
+                    addiu   t6, t6, 64
+                    srl     t6, t6, 7
+                    subu    t6, a0, t6
+                    multu   v0, t6
+                    mflo    v0
+                    addiu   v0, v0, 64
+                    srl     v0, v0, 7
+        
+                defense_magical_multiplier:
+                    beq     t7, zero, defense_loop_bottom
+                    nop
+                    #subu    t7, a0, t7
+                    multu   t7, t5
+                    mflo    t7
+                    addiu   t7, t7, 64
+                    srl     t7, t7, 7
+                    subu    t7, a0, t7
+                    multu   v0, t7
+                    mflo    v0
+                    addiu   v0, v0, 64
+                    srl     v0, v0, 7
+      
+                defense_loop_bottom:  
+                    sltiu   t6, v1, 7
+                    bne     t6, zero, defense_loop_start    #   Loop while counter is less than 7
+                    addiu   v1, v1, 1                       #   Increment loop counter
+      
+                    #   Convert (X / 128) to 16.16 fixed point
+                    srl     t0, v0, 7
+                    andi    t1, v0, 0x7f
+                    sll     t0, t0, 16
+                    sll     t1, t1, 9
+        
+                    j       @set_action_mods
+                    or      a0, t0, t1
+        </Location>
+        <Location file="BATTLE_BIN" offset="1249F0" mode="ASM">
+                .if     >, %Apply, 0
+                    j       @defense
+                .endIf
+        </Location>
+        <Variable name="Apply" bytes="1" default="01" symbol="true" />
+    </Patch>
+  <Patch name="Apply defense: Item (Unknown 1) = Physical damage reduction (%); (Unknown 2) = Magical damage reduction (%)">
     <Description>
       In the item data, this patch interprets Unknown 1 as Physical damage reduction (percentage) and Unknown 2 as Magical damage reduction (percentage).
       The damage reduction percentage for each piece of equipment is added to determine the total damage reduction.
@@ -957,7 +1079,7 @@ SKP:  j       0x80180848            #   Skip this ability
     <Description>
       Excessive HP/MP recovery is not displayed.
     </Description>
-    <Location file="BATTLE_BIN" offset="F2250" mode="ASM">
+    <Location file="BATTLE_BIN" offset="F2260" mode="ASM">
       @hide_excessive_recovery:
 
               addiu   sp, sp, -32
@@ -2144,7 +2266,7 @@ SKP:  j       0x80180848            #   Skip this ability
     </Location>
     <Variable name="Buttons" file="BATTLE_BIN" offset="F23AE" bytes="2" default="104" /> 
   </Patch>
-  <Patch name="Load Formation ignored if unit not in party">
+  <Patch name="Load Formation ignored if unit not in party" hidden="true">
     <Location file="SCUS_942_21" offset="27200" mode="ASM" offsetMode="RAM">
         @load_formation_hook:
                 addiu   sp, sp, -24
@@ -2177,88 +2299,58 @@ SKP:  j       0x80180848            #   Skip this ability
         jal     @load_formation_hook
     </Location>
   </Patch>
-  <Patch name="Break out of multi-battle sequences">
-      <Description>
-        Break out of multi-battle sequences by pressing a button combination directly after exiting the formation screen.  Default is L1 + R1.
-        Includes the "Load Formation ignored if unit not in party" patch, because that situation can occur if breaking out of a sequence where a Guest has already left the party.
-        Button codes:
-            0x8000  Left
-            0x4000  Down
-            0x2000  Right
-            0x1000  Up
-            0x0800  Start
-            0x0400  R3
-            0x0200  L3
-            0x0100  Select
-            0x0080  Square
-            0x0040  X
-            0x0020  Circle
-            0x0010  Triangle
-            0x0008  R1
-            0x0004  L1
-            0x0002  R2
-            0x0001  L2
-      </Description>
-      <Location file="WORLD_WORLD_BIN" offset="148150" mode="ASM" offsetMode="RAM">
-        @close_formation_screen_hook:
-                addiu   sp, sp, -24
-                sw      ra, 4(sp)
-                sw      s0, 8(sp)
-                sw      s1, 12(sp)
+    <Patch name="Break out of multi-battle sequences">
+        <Description>
+            Break out of multi-battle sequences by pressing a button combination directly after exiting the formation screen.  Default is L1 + R1.
+            Includes the "Load Formation ignored if unit not in party" patch, because that situation can occur if breaking out of a sequence where a Guest has already left the party.
+            Button codes:
+                0x8000  Left
+                0x4000  Down
+                0x2000  Right
+                0x1000  Up
+                0x0800  Start
+                0x0400  R3
+                0x0200  L3
+                0x0100  Select
+                0x0080  Square
+                0x0040  X
+                0x0020  Circle
+                0x0010  Triangle
+                0x0008  R1
+                0x0004  L1
+                0x0002  R2
+                0x0001  L2
+        </Description>
+        <Include patch="Rewrite ENTD Data Calculation Routine" />
+        <Location file="WORLD_WORLD_BIN" offset="148150" mode="ASM" offsetMode="RAM">
+            @close_formation_screen_hook:
+                    addiu   sp, sp, -24
+                    sw      ra, 4(sp)
+                    sw      s0, 8(sp)
+                    sw      s1, 12(sp)
                 
-                li      a0, 0x000c
-                move    s1, a0
-                jal     0x8001db58
-                move    s0, v0
-                and     t0, v0, s1
-                bne     t0, s1, close_formation_screen_hook_end
-                move    v0, s0
+                    li      a0, 0x000c
+                    move    s1, a0
+                    jal     0x8001db58
+                    move    s0, v0
+                    and     t0, v0, s1
+                    bne     t0, s1, close_formation_screen_hook_end
+                    move    v0, s0
         
-                li      v0, 0
+                    li      v0, 0
         
-            close_formation_screen_hook_end:
-                lw      ra, 4(sp)
-                lw      s1, 12(sp)
-                lw      s0, 8(sp)
-                jr      ra
-                addiu   sp, sp, 24
-      </Location>
-      <Location file="WORLD_WLDCORE_BIN" offset="685D8" mode="ASM" offsetMode="RAM">
-          j       @close_formation_screen_hook
-      </Location>
-      <Location file="SCUS_942_21" offset="27200" mode="ASM" offsetMode="RAM">
-        @load_formation_hook:
-                addiu   sp, sp, -24
-                sw      ra, 4(sp)
-                sw      a0, 8(sp)
-                sw      a1, 12(sp)
-        
-                lbu     a0, 0(s2)
-                jal     0x80059f94
-                nop
-        
-                li      t0, -1
-                bne     v0, t0, load_formation_hook_end
-                li      t0, 8
-                
-                lbu     t1, 1(s2)
-                not     t0, t0
-                and     t0, t1, t0
-                sb      t0, 1(s2)
-                
-            load_formation_hook_end:
-                lw      a1, 12(sp)
-                lw      a0, 8(sp)
-                lw      ra, 4(sp)
-                addiu   sp, sp, 24
-                jr      ra
-                nop
-    </Location>
-    <Location file="SCUS_942_21" offset="5AC5C" mode="ASM" offsetMode="RAM">
-        jal     @load_formation_hook
-    </Location>
-    <Variable name="Buttons" file="WORLD_WLDCORE_BIN" offset="15DC" bytes="2" default="C" /> 
-  </Patch>
+                close_formation_screen_hook_end:
+                    lw      ra, 4(sp)
+                    lw      s1, 12(sp)
+                    lw      s0, 8(sp)
+                    jr      ra
+                    addiu   sp, sp, 24
+        </Location>
+        <Location file="WORLD_WLDCORE_BIN" offset="685D8" mode="ASM" offsetMode="RAM">
+                    j       @close_formation_screen_hook
+        </Location>
+        <Variable name="Buttons" file="WORLD_WLDCORE_BIN" offset="15DC" bytes="2" default="C" /> 
+    </Patch>
   <Patch name="Equipment duplication glitch fixes">
     <Description>
         Fixes the equipment duplication glitches that can be triggered from using Best Fit in the shops.
@@ -3298,7 +3390,9 @@ SKP:  j       0x80180848            #   Skip this ability
     </Patch>
     <Patch name="Save between battles after formation screen">
         <Description>
-            Allows saving between battles AFTER the formation screen.  Saving before the formation screen still functions as normal.
+            Allows saving between battles AFTER the formation screen.  
+            Loading a save made this way will still load the formation screen, but with the latest changes saved. 
+            Saving before the formation screen still functions as normal.
         </Description>
         <Location file="WORLD_WLDCORE_BIN" offset="6858C" mode="ASM" offsetMode="RAM">
                 addiu   sp, sp, -24
@@ -3362,6 +3456,1798 @@ SKP:  j       0x80180848            #   Skip this ability
                 lui     t2, 0x8019
                 j       0x8012f210
                 sh      t3, 0x3e18(t2)
+        </Location>
+    </Patch>
+    <Patch name="Gained JP functions as if Gained JP UP was always active">
+        <Description>
+            All gained JP gets the boost that Gained JP UP would have given.  Gained JP UP has no effect.
+        </Description>
+        <Location file="BATTLE_BIN" offset="17E9A4" mode="ASM" offsetMode="RAM">
+            nop
+	    </Location>
+        <Location file="BATTLE_BIN" offset="18DEC0" mode="ASM" offsetMode="RAM">
+		    nop
+	    </Location>
+    </Patch>
+    <Patch name="Equippable R/S/M only limited by job innates">
+        <Description> 
+            Similar to Inherent R/S/M limitation hack, but checks full ability IDs.
+        </Description>
+        <Location file="WORLD_WORLD_BIN" offset="122D6C" mode="ASM" offsetMode="RAM">
+                lui     t3, 0x8006
+                sll     t2, a3, 1
+                addu    t2, t2, a3
+                sll     t2, t2, 4
+                addu    t2, t2, t3
+
+                li      t4, 0
+            loop:
+                lbu     t3, 0x10ba(t2)
+                lbu     t5, 0x10b9(t2)
+                sll     t3, t3, 8
+                or      t3, t3, t5
+    
+                xor     t5, t3, a2
+                sltiu   t5, t5, 1
+                sll     t5, t5, 14
+                or      a2, a2, t5
+    
+                addiu   t2, t2, 2
+                sltiu   t5, t4, 4
+                bne     t5, zero, loop
+                addiu   t4, t4, 1
+    
+                j       0x80122dd0
+                addiu   s0, s0, 1
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="124B08" mode="ASM" offsetMode="RAM">
+                lui     t1, 0x8006
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="124B28" mode="ASM" offsetMode="RAM">
+                lui     t1, 0x8006
+
+                sll     t0, v1, 1
+                addu    t0, t0, v1
+                sll     t0, t0, 4
+                addu    t0, t0, t1
+
+                li      t2, 0
+            loop:
+                lbu     t1, 0x10ba(t0)
+                lbu     t3, 0x10b9(t0)
+                sll     t1, t1, 8
+                or      t1, t1, t3
+
+                move    t3, a0
+                li      t4, -1
+            inner_loop:
+                lhu     t5, 0x62(t3)
+                addiu   t4, t4, 1
+                xor     t6, t5, t1
+                sltu    t6, zero, t6
+                sll     t6, t6, 31
+                sra     t6, t6, 31
+                and     t5, t5, t6
+                sh      t5, 0x62(t3)
+
+                sltiu   t5, t4, 3
+                bne     t5, zero, inner_loop
+                addiu   t3, t3, 2
+
+                addiu   t0, t0, 2
+                sltiu   t3, t2, 4
+                bne     t3, zero, loop
+                addiu   t2, t2, 1
+
+                j       0x80124bf8
+                nop
+        </Location>
+    </Patch>
+    <Patch name="All (and only) player human units can find items on moving">
+        <Description>
+            All player human units can find items on moving without needing Move-Find Item (which now has no function).  Enemy units cannot find items.
+        </Description>
+        <Location file="BATTLE_BIN" offset="1800A8" mode="ASM" offsetMode="RAM">
+                jal     0x801802c8
+                srl     a2, a2, 0x0f
+        
+                lbu     t0, 6(s2)
+                lbu     t1, 0x1ba(s2)
+                lbu     t3, 0(v0)
+                andi    t0, t0, 0x20
+                andi    t1, t1, 0x30
+                andi    t2, t3, 0x01
+                sltiu   t2, t2, 1
+                or      t0, t0, t1
+                or      t0, t0, t2
+
+                beq     t0, zero, end
+                li      t4, 4
+
+                andi    t2, t3, 0x02
+                bne     t2, zero, end
+                li      t4, 8
+                
+                li      t4, 0
+                
+            end:
+                or      s1, s1, t4
+                nop
+        </Location>
+    </Patch>
+    <Patch name="Blade Grasp dodge percentage is (Brave * Multiplier) / 1024 and only affects certain weapons">
+        <Description>
+            Blade grasp only affects weapons with ID from 0x01 up to Max Weapon ID.  
+            By default, this includes all edged weapons: daggers and swords.
+            Example multiplier values:
+                0x400 (vanilla) -> 1024 / 1024 (full)
+                0x200 (half)    -> 512 / 1024 (1/2)
+                0x180 (default) -> 384 / 1024 (3/8)
+                0x100 (quarter) -> 256 / 1024 (1/4)
+        </Description>
+        <Location file="BATTLE_BIN" offset="18D050" mode="ASM" offsetMode="RAM">
+                lui     t0, 0x8019
+                lbu     t1, 0x38f6(t0)
+                lbu     t2, 0x38d8(t0)
+                addiu   sp, sp, -24
+                andi    t1, t1, 0x10
+                addiu   t2, t2, -1
+                sltiu   t2, t2, %MaxWeaponID
+                sltu    t1, zero, t1
+                sltu    t2, zero, t2
+                and     t1, t1, t2
+                beq     t1, zero, end
+                sw      ra, 16(sp)
+                lw      a0, 0x2d98(t0)
+                li      t3, 100
+                lbu     t1, 0x24(a0)
+                lw      t2, 0x2d90(t0)
+                li      a1, %Multiplier
+                multu   t1, a1
+                mflo    t1
+                addiu   t1, t1, 512
+                srl     t1, t1, 10
+                subu    t1, t3, t1
+                jal     0x8018d388
+                sh      t1, 0x2a(t2)
+                bne     v0, zero, end
+                lui     t0, 0x8019
+                lw      t1, -0x0a04(t0)
+                lw      t2, 0x2d90(t0)
+                bne     t1, zero, end
+                li      t3, 11
+                sb      zero, 0(t2)
+                sb      t3, 2(t2)
+                li      t3, 0x01c3
+                sh      t3, 14(t2)
+        
+            end:
+                lw      ra, 16(sp)
+                addiu   sp, sp, 24
+                jr      ra
+                nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="18D384" mode="ASM" offsetMode="RAM">
+                li      a1, 1024
+                lui     v0, 0x8019
+                lw      v0, -0x0a04(v0)
+                lbu     t0, 0x24(a0)
+                bne     v0, zero, end
+                multu   t0, a1
+                mflo    t0
+                addiu   t0, t0, 512
+                srl     a1, t0, 10
+                j       0x8005e0cc
+                li      a0, 100
+
+            end:
+                jr      ra
+                nop
+        </Location>
+        <Variable name="Multiplier" bytes="2" default="180" symbol="true" />
+        <Variable name="Max Weapon ID" bytes="1" default="2F" symbol="true" />
+    </Patch>
+    <Patch name="Abandon multiplies evasion by 1024 / Divisor">
+        <Description>
+            Normally evasion is doubled.  Example divisor values:
+                0x400 = 1024 -> (Evasion * 1.0)
+                0x333 = 819 -> (Evasion * 1.25)
+                0x2AB = 683 -> (Evasion * 1.5)
+                0x249 = 585 -> (Evasion * 1.75)
+                0x200 = 512 -> (Evasion * 2.0)
+                0x100 = 256 -> (Evasion * 4.0)
+        </Description>
+        <Location file="BATTLE_BIN" offset="18537C" mode="ASM" offsetMode="RAM">
+                addiu   sp, sp, -24
+                sw      ra, 16(sp)
+
+                lw      a0, 0x80192d98
+                jal     0x8018130c
+                nop
+
+                bne     v0, zero, end
+                lui     t0, 0x8019
+
+                lw      t1, 0x2d98(t0)
+                lw      t2, 0x2d90(t0)
+                lbu     t1, 0x8e(t1)
+                lbu     t3, 0x38dc(t0)
+                andi    t1, t1, 0x10
+                beq     t1, zero, end
+                li      t4, 0x01c1
+    
+                #   Base hit * (Divisor / 1024) to cause Evasion * (1024 / Divisor)
+                li      t5, %Divisor
+                multu   t3, t5
+                mflo    t3
+                addiu   t3, t3, 512
+                srl     t3, t3, 10
+    
+                sb      t3, 0x38dc(t0)
+                sh      t4, 14(t2)
+    
+            end:    
+                lw      ra, 16(sp)
+                addiu   sp, sp, 24
+                jr      ra
+                nop         
+        </Location>
+        <Variable name="Divisor" bytes="2" default="200" symbol="true" />
+    </Patch>
+    <Patch name="Require Sword and Require Materia Blade check only first weapon">
+        <Location file="SCUS_942_21" offset="5C5DC" mode="ASM" offsetMode="RAM">
+            sw      ra, 0x1c(sp)
+            addiu   a0, s1, 0x33
+            jal     0x8005e644
+            li      a1, 3
+            move    a0, s1
+            jal     0x8005b880
+            addiu   a1, s0, 1
+            li      t3, 0
+            sb      zero, 0x184(s1)
+            addiu   a0, s1, 0x33
+            li      t2, 0
+            addu    v0, s1, t2
+
+            lbu     a1, 0x1a(v0)
+            bne     t3, zero, 0x8005c688
+            sltiu   t4, a1, 0x80
+            beq     t4, zero, 0x8005c688
+            li      v0, 0x20
+            li      t3, 1
+        </Location>
+        <Location file="SCUS_942_21" offset="5C7D4" mode="ASM" offsetMode="RAM">
+            li      s0, 999
+        </Location>
+        <Location file="SCUS_942_21" offset="5C824" mode="ASM" offsetMode="RAM">
+            bne     v0, zero, 0x8005c60c
+        </Location>
+        <Location file="SCUS_942_21" offset="5C8D4" mode="ASM" offsetMode="RAM">
+            nop
+        </Location>
+    </Patch>
+    <Patch name="Rewrite Init Party Battle Data Routine" hidden="true">
+        <Description>
+            Frees RAM 0x8005b1bc - 0x8005b2b0.
+        </Description>
+        <Location file="SCUS_942_21" offset="5B0D0" mode="ASM" offsetMode="RAM">
+                addiu   sp, sp, -32
+                sw      s0, 16(sp)
+                sw      s1, 20(sp)
+                sw      ra, 24(sp)
+
+                move    s1, a0
+                move    s0, a1
+        
+                lbu     t0, 0(s0)
+                lbu     t1, 1(s0)
+        
+                sltiu   t2, t0, 4
+                beq     t2, zero, store_entd_flags
+                li      t2, 0x08
+                li      t2, 0x0b
+        
+            store_entd_flags:
+                sb      t2, 5(s1)
+                sb      t2, 0x1ba(s1)
+        
+                lbu     t2, 2(s0)
+                sb      t0, 0(s1)
+                sb      t1, 2(s1)
+                sb      t2, 3(s1)
+                lbu     t2, 3(s0)
+                sltiu   t1, t1, 16
+                beq     t1, zero, store_palette
+                addiu   a0, s0, 7
+                li      t2, 0
+        
+            store_palette:
+                sb      t2, 4(s1)
+        
+                lbu     t0, 4(s0)
+                addiu   a1, s1, 0x13
+                sb      t0, 6(s1)
+        
+                lbu     t0, 5(s0)
+                lbu     t1, 6(s0)
+                sb      t0, 8(s1)
+                sb      t1, 9(s1)
+        
+                jal     0x8005e254
+                li      a2, 16
+        
+                addiu   a0, s0, 0x19
+                addiu   a1, s1, 0x72
+                jal     0x8005e254
+                li      a2, 15
+        
+                lbu     t0, 0x17(s0)
+                lbu     t1, 0x18(s0)
+                sb      t0, 0x24(s1)
+                sb      t0, 0x23(s1)
+                sb      t1, 0x26(s1)
+                sb      t1, 0x25(s1)
+                
+                addiu   a0, s0, 0x28
+                addiu   a1, s1, 0x96
+                jal     0x8005e254
+                li      a2, 0xa6
+     
+                lbu     t0, 0xce(s0)
+                lbu     t1, 0xcf(s0)
+                sb      t0, 0x16c(s1)
+                sb      t1, 0x16d(s1)
+        
+                addiu   a0, s1, 0x165
+                jal     0x8005e644
+                li      a1, 7
+        
+                lw      ra, 24(sp)
+                lw      s1, 20(sp)
+                lw      s0, 16(sp)
+                jr      ra
+                addiu   sp, sp, 32
+        </Location>
+    </Patch>
+    <Patch name="ENTD Job Level also applies to Job and secondary skillset job">
+        <Description>
+            ENTD Job Level (next to Job Unlocked) also applies to current job and the job containing the secondary skillset, if applicable.
+        </Description>
+        <Include patch="Rewrite Init Party Battle Data Routine" />
+        <Location file="SCUS_942_21" offset="5B1C0" mode="ASM" offsetMode="RAM">
+            @job_unlocked_loop:
+                    addiu   sp, sp, -56
+                    sw      s0, 16(sp)
+                    sw      s1, 20(sp)
+                    sw      s2, 24(sp)
+                    sw      s3, 28(sp)
+                    sw      s4, 32(sp)
+                    sw      s5, 36(sp)
+                    sw      s6, 40(sp)
+                    sw      s7, 44(sp)
+                    sw      ra, 48(sp)
+        
+                    move    s0, a0
+                    move    s1, a2
+        
+                    lbu     s3, 8(a1)               #   Job Unlocked
+                    lbu     s4, 9(a1)               
+                    li      s2, 0                   #   Loop Counter
+                    andi    s4, s4, 0x0f            #   Job Level
+
+                outer_loop:    
+                    sltiu   t1, s3, 20
+                    beq     t1, zero, outer_loop_bottom
+                    andi    t1, s3, 1
+        
+                    srl     s7, s3, 1
+                    addu    s7, s0, s7
+                    lbu     a0, 0xd2(s7)
+        
+                    sltiu   t1, t1, 1
+                    sll     t1, t1, 2
+                    sllv    a1, s4, t1
+
+                    #   Save job level
+                    #or      v0, a0, a1
+                    jal     @calc_job_level
+                    nop
+                    sb      v0, 0xd2(s7)
+        
+                    li      s5, 0
+                    lui     s6, 0x8006
+         
+                    sll     t0, s3, 2
+                    addu    t0, t0, s3
+                    sll     t0, t0, 1
+                    addu    s6, t0, s6
+
+                inner_loop:
+                    lbu     a1, 0x60ba(s6)
+                    bne     s3, zero, handle_job_level
+                    addu    t1, s0, s5
+                    li      a1, 0
+        
+                handle_job_level:
+                    lbu     a0, 0xd2(t1)
+        
+                    jal     @calc_job_level
+                    nop
+        
+                    addiu   s6, s6, 1
+                    addu    t1, s0, s5
+                    addiu   s5, s5, 1
+                    sltiu   t0, s5, 10
+                    bne     t0, zero, inner_loop
+                    sb      v0, 0xd2(t1)
+        
+                outer_loop_bottom:
+                    sltiu   t0, s2, 2
+                    addiu   s2, s2, 1
+                    addu    s3, s1, s2
+                    lbu     s3, 0(s3)
+                    bne     t0, zero, outer_loop
+                    nop
+        
+                    j       0x800173f4
+                    nop
+        
+                    #lw      ra, 48(sp)
+                    #lw      s7, 44(sp)
+                    #lw      s6, 40(sp)
+                    #lw      s5, 36(sp)
+                    #lw      s4, 32(sp)
+                    #lw      s3, 28(sp)
+                    #lw      s2, 24(sp)
+                    #lw      s1, 20(sp)
+                    #lw      s0, 16(sp)
+                    #jr      ra
+                    #addiu   sp, sp, 56
+        </Location>
+        <Location file="SCUS_942_21" offset="5B2B4" mode="ASM" offsetMode="RAM">
+            @calc_jobs_mod: 
+                    addiu   sp, sp, -32
+                    sw      s0, 16(sp)
+                    sw      s1, 20(sp)
+                    sw      s2, 24(sp)
+                    sw      ra, 28(sp)
+        
+                    move    s0, a0
+                    move    s1, a1
+        
+                    addiu   a0, s0, 0xd2
+                    jal     0x8005e644
+                    li      a1, 10
+
+                    bne     s1, zero, handle_job_data
+                    li      a1, 0
+        
+                    jal     0x8005b5dc
+                    move    a0, s0
+        
+                    addiu   a0, s0, 0x96
+                    jal     0x8005ded8
+                    li      a1, 0
+        
+                    li      t0, 0x20
+                    sb      t0, 6(s0)
+                    j       end
+                    sb      zero, 0x13(s0)
+        
+                handle_job_data:
+                    lbu     t0, 10(s1)
+                    lbu     t1, 0(s0)
+                    move    a0, s0
+        
+                    beq     t0, t1, store_current_job_index
+                    li      t2, 0
+                    addiu   t2, t0, -0x4a
+        
+                store_current_job_index:
+                    sb      t2, 13(sp)
+        
+                    jal     0x8005b5dc
+                    sb      t0, 3(s0)
+        
+                    lbu     t0, 30(s1)
+                    li      t1, 0xff
+                    beq     t0, t1, handle_secondary_skillset
+                    li      s2, 0
+                    beq     t0, zero, handle_secondary_skillset
+                    lui     t4, 0x8006
+        
+                    sb      t0, 0x12(s0)
+                    sb      t1, 0x189(s0)
+        
+                handle_secondary_skillset:
+                    li      t3, -1
+                    lbu     t0, 11(s1)
+                    li      t1, 0xfe
+                    lbu     t2, 6(s0)
+                    bne     t0, t1, find_secondary_job
+                    andi    t2, t2, 0x20
+                    #li      s2, 0
+                    #bne     t2, zero, store_secondary_skillset
+                    #li      t0, 0
+                    bne     t2, zero, store_secondary_skillset
+                    li      t0, 0
+                    j       store_secondary_skillset
+                    li      s2, 1
+        
+                find_secondary_job:
+                    lbu     t2, 0(s0)               #   Base class
+                    li      t1, 0x4a                #   Job ID
+                    sltiu   t5, t2, 0x80
+                    beq     t5, zero, job_loop
+                    sll     t5, t2, 1
+                    addu    t5, t5, t2
+                    sll     t5, t5, 4
+                    addu    t5, t5, t4
+                    lbu     t2, 0x10b8(t5)          #   Base class skillset
+                    nop
+                    beq     t2, t0, store_secondary_skillset
+                    li      t3, 0
+          
+                job_loop:
+                    lbu     t2, 0x1e98(t4)          #   Job skillset
+                    addiu   t4, t4, 0x30
+                    beq     t2, t0, store_secondary_skillset
+                    addiu   t3, t1, -0x4a
+                    addiu   t1, t1, 1
+                    sltiu   t2, t1, 0x5d
+                    bne     t2, zero, job_loop
+                    li      t3, -1
+        
+                store_secondary_skillset:
+                    sb      t0, 0x13(s0)
+                    sb      t3, 14(sp)
+    
+                    #   Jobs unlocked
+                    lbu     a3, 1(s1)               #   ENTD Flags
+                    nop
+        
+                    andi    t1, a3, 0x20
+                    bne     t1, zero, store_jobs_unlocked
+                    li      a1, 0
+        
+                    move    a0, s0
+                    move    a1, s1
+                    jal     @job_unlocked_loop
+                    addiu   a2, sp, 12
+    
+                    #   Clear bard/dancer job levels if necessary
+                    lbu     a3, 1(s1)               #   ENTD Flags
+                    lbu     t2, 0xda(s0)
+                    lbu     t3, 0xdb(s0)
+                    andi    t0, a3, 0x40
+                    beq     t0, zero, check_dancer
+                    andi    t2, t2, 0xf0
+                    sb      t2, 0xda(s0)
+        
+                check_dancer:
+                    andi    t0, a3, 0x80
+                    beq     t0, zero, calc_jobs_unlocked
+                    andi    t3, t3, 0x0f
+                    sb      t3, 0xdb(s0)
+    
+                calc_jobs_unlocked:
+                    addiu   a0, s0, 0xd2
+                    jal     0x8005dc14
+                    move    a1, a3
+                    move    a1, v0
+    
+                store_jobs_unlocked:
+                    jal     0x8005ded8
+                    addiu   a0, s0, 0x96
+    
+                handle_random_secondary_skillset:
+                    beq     s2, zero, end
+                    lui     s2, 0x8006
+                    jal     0x8005b500
+                    move    a0, s0
+                    beq     v0, zero, store_secondary_skillset_redux
+                    li      t0, 0
+                    sll     t1, v0, 1
+                    addu    t1, t1, v0
+                    sll     t1, t1, 4
+                    addu    t1, t1, s2
+                    lbu     t1, 0x10b8(t1)
+                    lbu     t2, 0x12(s0)
+                    nop
+                    beq     t1, t2, store_secondary_skillset_redux
+                    li      t0, 0
+        
+                    move    t0, t1
+    
+                store_secondary_skillset_redux:
+                    sb      t0, 0x13(s0)
+    
+                end:
+                    j       0x8001231c
+                    nop
+        
+                    #lw      ra, 28(sp)
+                    #lw      s2, 24(sp)
+                    #lw      s1, 20(sp)
+                    #lw      s0, 16(sp)
+                    #jr      ra
+                    #addiu   sp, sp, 32
+
+            #   a0, a1 -> Job levels to max   
+            @calc_job_level:
+                    andi    t3, a1, 0x0f
+                    andi    t4, a0, 0x0f
+        
+                    sltu    t5, t3, t4
+                    beq     t5, zero, calc_high_job_level
+                    move    t5, t3
+                    move    t5, t4
+      
+                calc_high_job_level:      
+                    sltiu   t3, t5, 1
+                    or      t5, t5, t3
+    
+                    andi    t3, a1, 0xf0
+                    andi    t4, a0, 0xf0
+                    sltu    t6, t3, t4
+                    beq     t6, zero, calc_final_job_level
+                    move    t6, t3
+                    move    t6, t4
+    
+                calc_final_job_level:    
+                    sltiu   t3, t6, 1
+                    sll     t3, t3, 4
+                    or      t6, t6, t3
+                    jr      ra
+                    or      v0, t5, t6
+        </Location>
+    </Patch>
+    <Patch name="Enhanced ENTD">
+        <Description>
+            ENTD can now specify extra parameters for units.
+            
+            Experience: Multiplier for raw stats (HP, MP, SP, PA, MA) or calculated stats (C-EV, Move, Jump) (X / 128)
+            First (left) unknown: Inflict status ID to apply to unit.  0x80 flag being set makes it Innate.  Cancel creates status immunity.
+            Second (right) unknown: Flags for stat multiplier (HP, MP, SP, PA, MA, C-EV, Move, Jump)
+            
+            Extra (empty) ENTD unit slots can be used to specify additional parameters.
+            The extra slot will have Unit set to 00 and Unit ID to be equal to an earlier unit's Unit ID.
+            Then the following properties on the extra slot will modify the original unit:
+            
+            Name and Job: Extra inflict status IDs
+            
+            Skills: Innates (overwrites job innates) (Primary and Secondary combine as first Innate with Primary as low byte and Secondary as high byte)
+            Equipment: Elemental Weak, Strengthen, Absorb, Nullify, Half
+            
+            Bonus Money: HP Raw Stat Bonus
+            War Trophy: MP Raw Stat Bonus
+            AI Target Unit ID: SP Raw Stat Bonus (fourths)
+            Target X: PA Raw Stat Bonus (fourths)
+            Target Y: MA Raw Stat Bonus (fourths)
+            
+            Experience: C-EV Bonus
+            Left Unknown: Move Bonus
+            Right Unknown: Jump Bonus
+        </Description>
+        <Location file="BATTLE_BIN" offset="159640" mode="DATA" offsetMode="RAM" label="address_unit_mult">
+            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        </Location>
+        <Location file="BATTLE_BIN" offset="159658" mode="DATA" offsetMode="RAM" label="address_unit_elem">
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+            00 00 00 00 00
+        </Location>
+        <Location file="BATTLE_BIN" offset="1596C8" mode="DATA" offsetMode="RAM" label="address_unit_extra_stat_addends">
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+            00 00 00
+        </Location>
+        <Location file="BATTLE_BIN" offset="159708" mode="DATA" offsetMode="RAM" label="address_unit_extra_inflict_status">
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+            00 00
+        </Location>
+        <Location file="BATTLE_BIN" offset="159738" mode="DATA" offsetMode="RAM" label="address_unit_stat_offset">
+            04 43 02 3A 01 3B 00 00
+        </Location>
+        <Location file="BATTLE_BIN" offset="159740" mode="DATA" offsetMode="RAM" label="address_unit_raw_stat_addends">
+            00 00 00 00 00
+        </Location>
+        <Location file="BATTLE_BIN" offset="159750" mode="ASM" offsetMode="RAM">
+            #   s0 = Unit, s1 = ENTD Unit
+            @stat_hook:
+                    #lbu     t0, 0x25(s1)        #   InflictStatusID
+                    lbu     t5, 0x27(s1)        #   Flags
+        
+                    addiu   t1, s0, 0x72        #   Unit Raw Stats
+                    lbu     t3, 0x1c(s1)        #   Stat Multiplier
+                    li      t2, 0x80
+                    li      t7, 0x08
+                    lui     t9, %hi(@address_unit_raw_stat_addends)
+                    lbu     t4, 1(s0)
+                    lui     t8, %hi(@address_unit_mult)
+                    sltiu   t6, t4, 21
+                    beq     t6, zero, stat_hook_stat_loop
+                    addu    t8, t8, t4
+                    sb      t3, %lo(@address_unit_mult)(t8)
+        
+                stat_hook_stat_loop:    
+                    #   Load Raw stat value
+                    lbu     t4, 0(t1)
+                    lbu     t0, 1(t1)
+                    lbu     t6, 2(t1)
+                    sll     t0, t0, 8
+                    sll     t6, t6, 16
+                    or      t4, t4, t0
+                    or      t4, t4, t6
+        
+                    lbu     t0, %lo(@address_unit_raw_stat_addends)(t9)
+                    sltiu   t8, t2, 0x40
+                    bne     t8, zero, stat_hook_stat_add
+                    sll     t0, t0, 12      #   0.25 increments (PA, MA, SP)
+                    sll     t0, t0, 2       #   1 increments (HP, MP)
+                stat_hook_stat_add:
+                    addu    t4, t4, t0
+        
+                    #   Skip multiplier if flag not set
+                    and     t0, t5, t2
+                    beq     t0, zero, stat_hook_stat_loop_store
+                    nop
+        
+                    #   Raw stat value * Stat Multiplier / 128 (Rounded)
+                    multu   t4, t3
+                    mflo    t4
+                    #addiu   t4, t4, 64
+                    srl     t4, t4, 7
+      
+                stat_hook_stat_loop_store:
+                    #   Store Raw stat value
+                    sb      t4, 0(t1)
+                    srl     t4, t4, 8
+                    sb      t4, 1(t1)
+                    srl     t4, t4, 8
+                    sb      t4, 2(t1)
+       
+                stat_hook_stat_loop_bottom:
+                    addiu   t1, t1, 3
+                    addiu   t9, t9, 1
+                    bne     t2, t7, stat_hook_stat_loop
+                    srl     t2, t2, 1
+
+                    #   Clear raw stat addends
+                    la      a0, @address_unit_raw_stat_addends
+                    #jal     0x8005e644
+                    j       0x8005e644
+                    li      a1, 5
+
+                    #jr      ra
+                    #nop
+
+
+            #   s1 = Unit
+            @equip_hook:        
+                    addiu   sp, sp, -8
+                    sw      ra, 4(sp)
+
+                    lbu     t0, 0x169(s1)        #   InflictStatusID
+                    lbu     t5, 0x16b(s1)        #   Flags
+        
+                    lbu     t1, 1(s1)
+                    lui     t6, 0x8006        
+                    sll     t1, t1, 1
+                    lui     t7, %hi(@address_unit_extra_inflict_status)
+                    addu    t7, t7, t1
+                    li      t8, 0
+    
+                equip_hook_status_outer_loop:
+                    andi    t4, t0, 0x80
+                    andi    t0, t0, 0x7f
+    
+                    beq     t0, zero, equip_hook_status_outer_loop_bottom
+                    sll     t2, t0, 2           #   InflictStatusID * 4
+                    addu    t2, t2, t0          #   InflictStatusID * 5
+                    addu    t0, t2, t0          #   InflictStatusID * 6
+                    addu    t1, t6, t0
+        
+                    lbu     t0, 0x3fc4(t1)
+                    li      t2, 0
+                    andi    t0, t0, 0x10
+        
+                    bne     t4, zero, equip_hook_status_loop
+                    addiu   t3, s1, 0x4e        #   Unit Innate Statuses
+                    bne     t0, zero, equip_hook_status_loop
+                    addiu   t3, s1, 0x53        #   Unit Immune Statuses
+                    addiu   t3, s1, 0x58        #   Unit Current Statuses
+        
+                equip_hook_status_loop:
+                    lbu     t0, 0(t3)           #   Unit Status value
+                    lbu     t4, 0x3fc5(t1)      #   Inflict Status value
+                    addiu   t1, t1, 1
+                    or      t0, t0, t4          #   Combine values
+                    sb      t0, 0(t3)           #   Store as Unit Status value
+                    addiu   t2, t2, 1
+                    sltiu   t0, t2, 5
+                    bne     t0, zero, equip_hook_status_loop
+                    addiu   t3, t3, 1
+        
+                equip_hook_status_outer_loop_bottom:
+                    lbu     t0, %lo(@address_unit_extra_inflict_status)(t7)
+                    addiu   t8, t8, 1
+                    sltiu   t9, t8, 3
+                    bne     t9, zero, equip_hook_status_outer_loop
+                    addiu   t7, t7, 1
+    
+                equip_hook_stat:
+                    lbu     t0, 1(s1)
+                    lui     t1, %hi(@address_unit_mult)
+                    sltiu   t2, t0, 21
+                    beq     t2, zero, equip_hook_end
+                    addu    t1, t1, t0
+                    lbu     t3, %lo(@address_unit_mult)(t1)
+        
+                    lui     t6, %hi(@address_unit_extra_stat_addends)
+                    sll     t7, t0, 1
+                    addu    t7, t7, t0
+                    addu    t6, t6, t7
+    
+                #equip_hook_evade:
+                    #andi    t0, t5, 0x04
+                    #lbu     t4, 0x43(s1)
+                    #beq     t0, zero, equip_hook_move  
+                    #nop
+                    #multu   t4, t3
+                    #mflo    t4
+                    ##addiu   t4, t4, 64
+                    #srl     t4, t4, 7
+                    #sb      t4, 0x43(s1)
+    
+                #equip_hook_move:
+                    #andi    t0, t5, 0x02
+                    #lbu     t4, 0x3a(s1)
+                    #beq     t0, zero, equip_hook_end
+                    #nop
+                    #multu   t4, t3
+                    #mflo    t4
+                    ##addiu   t4, t4, 64
+                    #srl     t4, t4, 7
+                    #sb      t4, 0x3a(s1)
+        
+                    la      t2, @address_unit_stat_offset
+                    lbu     t0, 0(t2)
+                    lbu     t1, 1(t2)
+                equip_hook_extra_stat_loop:
+                    lbu     t7, %lo(@address_unit_extra_stat_addends)(t6)
+                    addu    t1, s1, t1
+                    lbu     t4, 0(t1)
+                    and     t0, t5, t0
+                    beq     t0, zero, equip_hook_extra_stat_loop_store
+                    addu    t4, t4, t7
+                    multu   t4, t3
+                    mflo    t4
+                    #addiu   t4, t4, 64
+                    srl     t4, t4, 7
+                equip_hook_extra_stat_loop_store:
+                    sb      t4, 0(t1)
+        
+                equip_hook_extra_stat_loop_bottom:
+                    lbu     t0, 2(t2)
+                    lbu     t1, 3(t2)
+                    addiu   t6, t6, 1
+                    bne     t0, zero, equip_hook_extra_stat_loop
+                    addiu   t2, t2, 2
+        
+                equip_hook_elem:
+                    lbu     t0, 1(s1)
+                    la      t1, @address_unit_elem
+                    sll     t2, t0, 2
+                    addu    t0, t2, t0
+                    addu    a0, t1, t0
+        
+                    #lbu     t1, 0(a0)
+                    #lbu     t2, 1(a0)
+                    #lbu     t3, 2(a0)
+                    #lbu     t4, 3(a0)
+                    #lbu     t5, 4(a0)
+                    #sb      t1, 0x6d(s1)
+                    #sb      t2, 0x6e(s1)
+                    #sb      t3, 0x6f(s1)
+                    #sb      t4, 0x70(s1)
+                    #sb      t5, 0x71(s1)
+        
+                    addiu   a1, s1, 0x6d
+                    jal     0x8005e254
+                    li      a2, 5
+       
+                equip_hook_end:
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 8
+                    jr      ra
+                    nop
+
+
+            #   s2 = Unit index; s7 = ENTD Unit; Return v0 = 1, a2 = 0
+            @load_entd_pre_hook:
+    
+                    move    t6, sp
+                    addiu   sp, sp, -8
+                    sw      ra, 4(sp)
+        
+                    lbu     t4, 0x20(s7)        #   Original UnitID
+                    lbu     t5, 0x0a(s7)        #   JobID
+                    sw      zero, 0(t6)         #   (Default) Job pointer = 0 (no change to be made)
+        
+                    li      t2, 0xff
+                    beq     t4, t2, load_entd_pre_hook_end
+                    addiu   t0, s2, 1           #   Unit index
+                    sltiu   t2, t0, 16
+                    beq     t2, zero, load_entd_pre_hook_end
+                    addiu   t1, s7, 0x28        #   ENTD Unit
+        
+                load_entd_pre_hook_loop:
+                    lbu     t2, 0(t1)           #   BaseClass
+                    lbu     t3, 0x20(t1)        #   UnitID
+                    bne     t2, zero, load_entd_pre_hook_loop_bottom
+                    lui     t2, 0x8006
+                    bne     t3, t4, load_entd_pre_hook_loop_bottom
+                    addiu   t2, t2, 0x10b8      #   Job data pointer
+        
+                    sll     t3, t5, 1           #   JobID * 2
+                    addu    t3, t3, t5          #   JobID * 3
+                    sll     t3, t3, 4           #   JobID * 48
+                    addu    t3, t3, t2          #   Job pointer
+                    sw      t3, 0(t6)
+        
+                    #   Copy innates - does not modify temp registers
+                    addiu   a0, t3, 1
+                    addiu   a1, t6, 4
+                    jal     0x8005e254
+                    li      a2, 8
+        
+                    #   Copy elemental mods - does not modify temp registers
+                    #addiu   a0, t3, 0x29
+                    #addiu   a1, t6, 12
+                    #jal     0x8005e254
+                    #li      a2, 4
+        
+                    #   Copy primary skillset
+                    lbu     t7, 0x1d(t1)
+                    addiu   a0, t1, 0x0b
+                    sb      t7, 1(t3)
+        
+                    #   Copy innates - does not modify temp registers
+                    addiu   a1, t3, 2
+                    jal     0x8005e254
+                    li      a2, 7
+        
+                    #   Copy elemental mods - does not modify temp registers
+                    #addiu   a0, t1, 0x12
+                    #addiu   a1, t3, 0x29
+                    #jal     0x8005e254
+                    #li      a2, 4
+        
+                    la      a1, @address_unit_elem
+                    sll     t7, s2, 2
+                    addu    t7, t7, s2
+                    addu    a1, a1, t7
+        
+                    #   Copy elemental mods - does not modify temp registers
+                    addiu   a0, t1, 0x12
+                    jal     0x8005e254
+                    li      a2, 5
+        
+                    #   Copy raw stat addends
+                    #   0x1f, 0x1e, 0x24, 0x21, 0x22
+                    #addiu   a0, t1, 0x1e
+                    #la      a1, @address_unit_raw_stat_addends
+                    #jal     0x8005e254
+                    #li      a2, 5
+                    la      t0, @address_unit_raw_stat_addends
+                    lbu     t2, 0x1f(t1)
+                    lbu     t3, 0x1e(t1)
+                    lbu     t4, 0x24(t1)
+                    lbu     t5, 0x21(t1)
+                    lbu     t6, 0x22(t1)
+                    sb      t2, 0(t0)
+                    sb      t3, 1(t0)
+                    sb      t4, 2(t0)
+                    sb      t5, 3(t0)
+                    sb      t6, 4(t0)
+        
+                    #   Copy extra addends (C-EV, Move, Jump)
+                    la      t0, @address_unit_extra_stat_addends
+                    sll     t2, s2, 1
+                    addu    t2, t2, s2
+                    addu    t0, t0, t2
+        
+                    lbu     t2, 0x1c(t1)
+                    lbu     t3, 0x25(t1)
+                    lbu     t4, 0x27(t1)
+                    sb      t2, 0(t0)
+                    sb      t3, 1(t0)
+                    sb      t4, 2(t0)
+        
+                    #   Copy extra inflict statuses
+                    la      t0, @address_unit_extra_inflict_status
+                    sll     t2, s2, 1
+                    addu    t0, t0, t2
+        
+                    lbu     t2, 2(t1)
+                    lbu     t3, 10(t1)
+                    sb      t2, 0(t0)
+                    sb      t3, 1(t0)
+        
+                    #   Break
+                    j       load_entd_pre_hook_end
+                    nop
+        
+                load_entd_pre_hook_loop_bottom:
+                    addiu   t0, t0, 1
+                    sltiu   t2, t0, 16
+                    bne     t2, zero, load_entd_pre_hook_loop
+                    addiu   t1, t1, 0x28
+
+                load_entd_pre_hook_end:
+                    li      a2, 0
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 8
+                    jr      ra
+                    li      v0, 1
+
+
+            #   s2 = Unit index; s7 = ENTD Unit
+            @load_entd_post_hook:
+                    move    t6, sp
+                    addiu   sp, sp, -8
+                    sw      ra, 4(sp)
+
+                    lw      t3, 0(t6)       #   Job pointer
+                    addiu   a0, t6, 4
+                    beq     t3, zero, load_entd_post_hook_end
+                    addiu   a1, t3, 1
+        
+                    #   Copy innates - does not modify temp registers
+                    jal     0x8005e254
+                    li      a2, 8
+        
+                    #   Copy elemental mods - does not modify temp registers
+                    #addiu   a0, t6, 12
+                    #addiu   a1, t3, 0x29
+                    #jal     0x8005e254
+                    #li      a2, 4
+        
+                load_entd_post_hook_end:
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 8
+                    jr      ra
+                    nop
+
+
+            #   Return s2 = 0
+            @clear_unit_extra_data:
+                    addiu   sp, sp, -8
+                    sw      ra, 4(sp)
+               
+                    la      a0, @address_unit_mult
+                    jal     0x8005e644
+                    li      a1, 21
+        
+                    la      a0, @address_unit_elem
+                    jal     0x8005e644
+                    li      a1, 105
+        
+                    la      a0, @address_unit_raw_stat_addends
+                    jal     0x8005e644
+                    li      a1, 5
+        
+                    la      a0, @address_unit_extra_stat_addends
+                    jal     0x8005e644
+                    li      a1, 63
+        
+                    la      a0, @address_unit_extra_inflict_status
+                    jal     0x8005e644
+                    li      a1, 42
+        
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 8
+                    jr      ra
+                    li      s2, 0
+        </Location>
+        <Location file="BATTLE_BIN" offset="17F944" mode="ASM" offsetMode="RAM">
+                    jal     @clear_unit_extra_data
+        </Location>
+        <Location file="BATTLE_BIN" offset="17F988" mode="ASM" offsetMode="RAM">
+                    jal     @load_entd_pre_hook
+                    sb      s2, 1(s0)
+                    move    a0, s0
+        </Location>
+        <Location file="BATTLE_BIN" offset="17F9A8" mode="ASM" offsetMode="RAM">
+                    jal     @load_entd_post_hook
+                    nop
+                    nop
+                    nop
+        </Location>
+        <Location file="SCUS_942_21" offset="5A9B4" mode="ASM" offsetMode="RAM">
+            @unit_battle_init:
+                    addiu   sp, sp, -0x20
+                    sw      s0, 0x10(sp)
+                    sw      s1, 0x14(sp)
+                    sw      s2, 0x18(sp)
+                    sw      ra, 0x1c(sp)
+        
+                    move    s0, a0
+                    move    s1, a1
+                    move    s2, a3
+        
+                    lui     t1, 0x8006
+                    li      t0, 0x82
+                    beq     s2, t0, past_init
+                    sw      a2, 0x6200(t1)
+        
+                    jal     0x8005dfac
+                    nop
+                    move    a0, s0
+                    jal     0x8005ac1c
+                    move    a1, s1
+                    bne     v0, zero, end
+                    li      v0, -1
+        
+                past_init:
+                    lbu     t0, 1(s1)
+                    lbu     t1, 0(s1)
+                    lbu     t2, 4(s1)
+       
+                    bne     s2, zero, calc
+                    andi    t0, t0, 0x08
+                    bne     t0, zero, end
+                    li      v0, 0
+                    sltiu   t1, t1, 4
+                    beq     t1, zero, calc
+                    nop
+                    beq     t2, zero, end
+                    li      v0, 0
+       
+                calc:
+                    move    a0, s0
+                    jal     0x8005b2b4
+                    move    a1, s1
+        
+                    move    a0, s0
+                    jal     0x8005ba70
+                    move    a1, s1
+        
+                    jal     0x8005b7a0
+                    move    a0, s0
+        
+                    jal     0x8005a400
+                    move    a0, s0
+        
+                    jal     0x8005a520
+                    move    a0, s0
+        
+                    lbu     t0, 2(s0)
+                    li      t1, 0xff
+                    sb      t0, 0x0c(sp)
+                    bne     t0, t1, stat
+                    li      t0, 0xfe
+                    sb      t0, 2(s0)
+        
+                stat:
+                    lui     v1, %hi(@stat_hook)
+                    jal     @call_if_battle
+                    addiu   v1, v1, %lo(@stat_hook)
+    
+                stat_orig:
+                    move    a0, s0
+                    jal     0x8005b880
+                    li      a1, 0
+        
+                    lbu     t0, 0x0c(sp)
+                    jal     0x8005c27c
+                    sb      t0, 2(s0)
+        
+                    lbu     t0, 2(s0)
+                    li      t1, 0x82
+                    beq     s2, t1, past_entd_equip
+                    sltiu   t0, t0, 20
+                    bne     t0, zero, past_entd_equip
+                    move    a0, s0
+        
+                    jal     0x8005bdf0
+                    move    a1, s1
+        
+                past_entd_equip:
+                    jal     0x8005ab00
+                    move    a0, s0
+        
+                    jal     0x8005ab48
+                    move    a0, s0
+        
+                    li      v0, 0
+
+                end:
+                    j       0x80012268
+                    nop
+        
+                    #lw      ra, 0x1c(sp)
+                    #lw      s2, 0x18(sp)
+                    #lw      s1, 0x14(sp)
+                    #lw      s0, 0x10(sp)
+                    #jr      ra
+                    #addiu   sp, sp, 0x20
+
+            # v1 = Function pointer, a0 to a3 = args
+            @call_if_battle:
+                    lui     t0, 0x8006
+                    lw      t1, 0x7000(t0)
+                    ori     t2, t0, 0x8888
+                    bne     t1, t2, call_if_battle_end
+                    move    t0, ra
+                    move    t0, v1
+    
+                call_if_battle_end:
+                    jr      t0
+                    nop
+        </Location>
+        <Location file="SCUS_942_21" offset="5AFC0" mode="ASM" offsetMode="RAM">
+                    li      s0, 0
+        </Location>
+        <Location file="SCUS_942_21" offset="5B010" mode="ASM" offsetMode="RAM">
+                    j   0x80016d3c
+                    nop
+        </Location>
+        <Location file="SCUS_942_21" offset="5B018" mode="ASM" offsetMode="RAM">
+            @equip_outer_hook:
+                    move    s1, a0
+                    sw      s0, 0x10(sp)
+                    move    s0, a1
+                    
+                    lui     v1, %hi(@equip_hook)
+                    j       @call_if_battle
+                    addiu   v1, v1, %lo(@equip_hook)
+        </Location>
+        <Location file="SCUS_942_21" offset="5C5CC" mode="ASM" offsetMode="RAM">
+                    sw      ra, 0x1c(sp)
+                    jal     @equip_outer_hook
+                    sw      s1, 0x14(sp)
+                    lw      ra, 0x1c(sp)
+        </Location>
+    </Patch>
+    <Patch name="Defense Up and Defend status multiply damage by Multiplier / 1024">
+        <Description>
+            Example multiplier values:
+            0x400 (full)    -> 1024 / 1024 (1)
+            0x2AB (default) -> 683 / 1024 (~2/3)
+            0x200 (half)    -> 512 / 1024 (1/2)
+            0x100 (quarter) -> 256 / 1024 (1/4)
+        </Description>
+        <Location file="BATTLE_BIN" offset="1862CC" mode="ASM" offsetMode="RAM">
+                    lui     t0, 0x8019
+                    lw      t1, 0x2d98(t0)
+                    li      t2, %Multiplier
+                    lbu     t3, 0x90(t1)
+                    lbu     t4, 0x58(t1)
+                    andi    t3, t3, 0x08
+                    andi    t4, t4, 0x02
+                    or      t3, t3, t4
+                    beq     t3, zero, end
+                    nop
+        
+                    lh      t4, 0x38ce(t0)
+                    nop
+                    mult    t4, t2
+                    mflo    t4
+                    addiu   t4, t4, 512
+                    srl     t4, t4, 10
+                    sh      t4, 0x38ce(t0)
+    
+                end:
+                    jr      ra
+                    nop
+        </Location>
+        <Variable name="Multiplier" bytes="2" default="2AB" symbol="true" />
+    </Patch>
+    <Patch name="Rewrite ENTD Data Calculation Routine" hidden="false">
+        <Description>
+            Frees RAM (0x5af4c to 0x5b034), and provides some new options.
+            Ignores Load Formation if unit is not in the party.
+            Unknown Month is treated as Serpentarius for non-Ramza units.
+            
+            Change Party Level Random (0 = default, non-zero = change):  
+                In FFTPatcher ENTD tab by default, Party Level - Random finds highest party level and rolls between Level - (Level / 8) and Level.
+                This option changes it to roll between Level - (Level / 16) and Level + (Level / 16).
+            
+            Change Party Level Addend (0 = default, non-zero = change):
+                Party Level + 51 and beyond is Party Level - (Value - 50).  Party Level + 51 is Party Level - 1, etc.
+            
+            Brave and Faith Minimum and Range: Use rand(0..Range) + Minimum
+        </Description>
+        <Location file="SCUS_942_21" offset="5AC1C" mode="ASM" offsetMode="RAM">      
+                    addiu   sp, sp, -0x30
+                    sw      ra, 0x28(sp)
+                    sw      s5, 0x24(sp)
+                    sw      s4, 0x20(sp)
+                    sw      s3, 0x1c(sp)
+                    sw      s2, 0x18(sp)
+                    sw      s1, 0x14(sp)
+                    sw      s0, 0x10(sp)
+        
+                    move    s2, a1
+                    move    s3, a0
+        
+                    lbu     t0, 0x17(s2)
+                    lbu     t1, 0x18(s2)
+                    sb      t0, 4(s3)
+                    sb      t1, 5(s3)
+                    sb      t1, 0x1ba(s3)
+                        
+                    #   Ignore Load Formation if unit not in party
+                    lbu     a0, 0(s2)
+                    jal     0x80059f94
+                    li      s1, -1
+                    lbu     s0, 1(s2)
+                    bne     v0, s1, check_load_formation
+                    li      t0, 0xf7
+                    and     s0, s0, t0
+                    sb      s0, 1(s2)
+        
+                check_load_formation:
+                    andi    t0, s0, 0x08
+                    beq     t0, zero, check_ramza_init
+                    li      s1, 0
+        
+                    jal     0x8005b038
+                    nop
+                    j       past_ramza_init
+                    move    s4, v0
+        
+                check_ramza_init:
+                    lbu     t0, 0(s2)
+                    lbu     t1, 4(s2)
+                    sltiu   t0, t0, 4
+                    lui     s5, 0x8006
+                    beq     t0, zero, past_ramza_init
+                    ori     s5, s5, 0x10e8
+                    bne     t1, zero, past_ramza_init
+                    nop
+        
+                check_ramza_init_loop:
+                    jal     0x80059af0
+                    move    a0, s1
+                    move    a0, v0
+                    lbu     t1, 1(a0)       #   Party index
+                    li      t0, 0xff
+                    lbu     t2, 0(a0)       #   Base class
+                    lbu     t3, 2(a0)       #   Job
+                    lbu     t4, 0(s2)       #   ENTD base class
+                    lbu     t5, 7(a0)       #   Secondary skillset
+                    beq     t1, t0, check_ramza_init_loop_bottom
+                    sltiu   t2, t2, 4
+                    beq     t2, zero, check_ramza_init_loop_bottom
+                    sltiu   t3, t3, 3
+                    sb      t4, 0(a0)
+                    beq     t3, zero, check_ramza_init_loop_past_job_store
+                    nop
+        
+                    sb      t4, 2(a0)
+        
+                check_ramza_init_loop_past_job_store:
+                    lbu     t0, 0x00(s5)
+                    lbu     t1, 0x30(s5)
+                    lbu     t2, 0x60(s5)
+                    beq     t0, t5, check_ramza_init_store_secondary_skillset
+                    nop
+                    beq     t1, t5, check_ramza_init_store_secondary_skillset
+                    nop
+                    bne     t2, t5, check_ramza_init_routine
+                    nop
+        
+                check_ramza_init_store_secondary_skillset:
+                    sll     t0, t4, 1
+                    addu    t0, t0, t4
+                    sll     t0, t0, 4
+                    addu    t0, s5, t0
+                    lbu     t0, -0x30(t0)
+                    nop
+                    sb      t0, 7(a0)
+        
+                check_ramza_init_routine:
+                    move    a0, s3
+                    jal     0x8005b038
+                    move    a1, s2
+                    move    s4, v0
+                    li      s0, 0x08
+    
+                check_ramza_init_loop_bottom:
+                    addiu   s1, s1, 1
+                    sltiu   t0, s1, 20
+                    bne     t0, zero, check_ramza_init_loop
+                    nop
+        
+                past_ramza_init:
+                    li      a0, 0
+                    lw      t3, 0x80066238
+        
+                ai_data_loop:
+                    addu    t1, s3, a0
+                    addu    t2, t3, a0
+                    lbu     t2, 0x21(t2)
+                    addiu   a0, a0, 1
+                    sb      t2, 0x0165(t1)
+                    sltiu   t2, a0, 7
+                    bne     t2, zero, ai_data_loop
+                    andi    t0, s0, 0x08
+                    bne     t0, zero, end
+                    move    v0, s4
+        
+                    sb      s0, 6(s3)
+                    lbu     t0, 0(s2)
+                    li      t1, 0xff
+                    sb      t1, 2(s3)
+                    sb      t0, 0(s3)
+        
+                    lbu     s0, 3(s2)
+                    lbu     t2, 0x80066308
+                    beq     s0, zero, party_level_random
+                    li      t1, 0xfe
+                    bne     s0, t1, level_addend_check
+                    sltiu   t0, s0, 100
+        
+                party_level_random:
+                    srl     t1, t2, 3
+        
+                    .if     >, %ChangePartyLevelRandom, 0
+                        srl     t3, t2, 4
+                    .else
+                        move    t3, t1
+                    .endif
+        
+                    subu    s1, t2, t3
+                    jal     0x8002230c
+                    addiu   s0, t1, 1
+                    multu   s0, v0
+                    mflo    t0
+                    addiu   t0, t0, 0x7fff
+                    sra     t0, t0, 15
+                    j       min_level_check
+                    addu    s0, s1, t0
+        
+                level_addend_check:
+                    sltiu   t0, s0, 100
+                    bne     t0, zero, min_level_check
+                    addiu   t0, s0, -100
+     
+                    .if     >, %ChangePartyLevelAddend, 0
+                        li      t1, 51
+                        sltu    t1, t0, t1
+                        bne     t1, zero, min_level_check
+                        addu    s0, t2, t0
+        
+                        addiu   t1, t0, -50
+                        sltu    t3, t2, t1
+                        bne     t3, zero, min_level_check
+                        li      s0, 1
+                        subu    s0, t2, t1
+                    .else
+                        addu    s0, t2, t0
+                    .endif
+    
+                min_level_check:
+                    bne     s0, zero, max_level_check
+                    nop
+                    li      s0, 1
+    
+                max_level_check:
+                    sltiu   t0, s0, 100
+                    bne     t0, zero, store_level
+                    nop
+                    li      s0, 99
+        
+                store_level:
+                    sb      s0, 0x22(s3)
+        
+                    lbu     s1, 4(s2)           #   Birth month
+                    lbu     s0, 5(s2)           #   Birth day
+        
+                    beq     s1, zero, birthday_random
+                    sltiu   t1, s1, 13
+                    beq     t1, zero, birthday_random
+                    nop
+                    beq     s0, zero, birthday_random
+                    sltiu   t1, s0, 32
+                    bne     t1, zero, birthday_specific
+                    sll     t1, s1, 1
+
+                birthday_random:
+                    jal     0x8002230c
+                    nop
+                    sll     t0, v0, 3           #   result * 8
+                    addu    t0, t0, v0          #   result * 9
+                    sll     t0, t0, 3           #   result * 72
+                    addu    t0, t0, v0          #   result * 73
+                    sll     t1, t0, 2           #   result * 292
+                    addu    t0, t1, t0          #   result * 365
+                    sra     t0, t0, 15
+                    j       birthday_zodiac
+                    addiu   s0, t0, 1
+        
+                birthday_specific:
+                    lhu     t0, 0x800661ce(t1)
+                    nop
+                    addu    s0, t0, s0
+        
+                birthday_zodiac:
+                    #lbu     t1, 10(s2)          #   ENTD Job ID
+                    #li      t2, 0x97
+                    #lbu     t1, 4(s2)           #   Month = Unknown -> Serpentarius
+                    #li      t2, 0
+                    #beq     t1, t2, birthday_store
+                    #li      v0, 12
+        
+                    lbu     t0, 0(s2)           #   ENTD base class
+                    nop
+                    sltiu   t0, t0, 4
+                    or      t0, t0, s1          #   If not Ramza and birth month = Unknown, use Serpentarius
+                    beq     t0, zero, birthday_store
+                    li      v0, 12
+    
+                calc_zodiac:
+                    jal     0x8005e5d8
+                    move    a0, s0
+        
+                birthday_store:
+                    sll     t0, v0, 12
+                    andi    t1, s0, 0x01ff
+                    or      t0, t0, t1
+                    sh      t0, 8(s3)
+        
+                    #   Brave
+                    lbu     s0, 6(s2)
+                    lbu     s1, 7(s2)
+                    sltiu   t0, s0, 101
+                    bne     t0, zero, brave_store
+                    nop
+        
+                    #jal     0x8002230c
+                    #nop
+                    #sll     t0, v0, 4           #   result * 16
+                    #subu    t0, t0, v0          #   result * 15
+                    #sll     t0, t0, 1           #   result * 30
+                    #sra     t0, t0, 15
+                    #addiu   s0, t0, 45          #   Brave = 45 + rand(0..29)
+        
+                    jal     0x8002230c
+                    li      s5, %BraveRange
+                    multu   v0, s5
+                    mflo    t0
+                    sra     t0, t0, 15
+                    addiu   s0, t0, %BraveMinimum
+        
+                brave_store:
+                    sb      s0, 0x24(s3)
+                    sb      s0, 0x23(s3)
+        
+                    #   Faith
+                    sltiu   t0, s1, 101
+                    bne     t0, zero, faith_store
+                    nop
+        
+                    #jal     0x8002230c
+                    #nop
+                    #sll     t0, v0, 4           #   result * 16
+                    #subu    t0, t0, v0          #   result * 15
+                    #sll     t0, t0, 1           #   result * 30
+                    #sra     t0, t0, 15
+                    #addiu   s1, t0, 45          #   Faith = 45 + rand(0..29)
+        
+                    jal     0x8002230c
+                    li      s5, %FaithRange
+                    multu   v0, s5
+                    mflo    t0
+                    sra     t0, t0, 15
+                    addiu   s1, t0, %FaithMinimum
+        
+                faith_store:
+                    sb      s1, 0x26(s3)
+                    sb      s1, 0x25(s3)
+        
+                    lbu     t0, 2(s2)
+                    sb      zero, 0x21(s3)      #   Experience = 0
+                    sb      t0, 0x16c(s3)       #   Name ID
+        
+                    li      v0, 0
+        
+                end:
+                    j       0x80016d3c
+                    nop
+        
+                    #lw      ra, 0x28(sp)
+                    #lw      s5, 0x24(sp)
+                    #lw      s4, 0x20(sp)
+                    #lw      s3, 0x1c(sp)
+                    #lw      s2, 0x18(sp)
+                    #lw      s1, 0x14(sp)
+                    #lw      s0, 0x10(sp)
+                    #addiu   sp, sp, 0x30
+                    #jr      ra
+                    #nop
+        </Location>
+        <Variable name="Change Party Level Random" bytes="1" default="00" symbol="true" />
+        <Variable name="Change Party Level Addend" bytes="1" default="00" symbol="true" />
+        <Variable name="Brave Range" bytes="1" default="1E" symbol="true" />
+        <Variable name="Brave Minimum" bytes="1" default="2D" symbol="true" />
+        <Variable name="Faith Range" bytes="1" default="1E" symbol="true" />
+        <Variable name="Faith Minimum" bytes="1" default="2D" symbol="true" />
+    </Patch>
+    <Patch name="Stat variation">
+        <Description>
+            Base stats for PA and HP vary based on Brave, while MA and MP vary based on Faith.  Starting job stat multipliers also cause further variation.
+            Also includes "Rewrite ENTD Data Calculation Routine", with the same options.
+        </Description>
+        <Include patch="Rewrite ENTD Data Calculation Routine" />
+        <Location file="SCUS_942_21" offset="5A520" mode="ASM" offsetMode="RAM">
+                    addiu   sp, sp, -24
+                    sw      s0, 16(sp)
+                    sw      ra, 20(sp)
+
+                    move    s0, a0              #   Unit
+
+                    lbu     t0, 3(a0)           #   JobID
+                    addiu   a1, a0, 0x81        #   UnitGrowthPtr
+                    li      a2, 10              #   Size
+
+                    sll     t1, t0, 1           #   JobID * 2
+                    addu    t1, t1, t0          #   JobID * 3
+                    sll     t1, t1, 4           #   JobID * 48
+
+                    lui     t0, 0x8006
+                    addu    t0, t0, t1
+                    jal     0x8005e254
+                    addiu   a0, t0, 0x10c5      #   JobPtr + 13 (Growth offset)
+    
+                    jal     @stat_variation
+                    move    a0, s0
+    
+                    j       0x80017d90
+                    nop
+        </Location>
+        <Location file="SCUS_942_21" offset="5AF50" mode="ASM" offsetMode="RAM">
+            #   a0 = Unit
+            @stat_variation:        
+                    addiu   sp, sp, -24
+        
+                    addiu   t3, a0, 0x72        #   Raw stat pointer
+                    addiu   t4, a0, 0x82        #   Stat Multiplier pointer
+        
+                    addiu   t5, sp, 8
+                    lbu     t0, 0x24(a0)        #   Brave
+                    lbu     t1, 0x26(a0)        #   Faith
+                    li      t2, %NegativeAddend
+                    sll     t7, t0, 1
+                    sll     t8, t1, 1
+                    sh      t7, 0(t5)
+                    sh      t8, 2(t5)
+                    sh      t2, 4(t5)
+                    sh      t0, 6(t5)
+                    sh      t1, 8(t5)
+        
+                    li      t6, 0               #   Index
+        
+                stat_variation_loop:   
+                    lhu     t7, 0(t5)
+                    lbu     t8, 0(t4)
+
+                    #   Load Raw stat value
+                    lbu     t0, 0(t3)
+                    lbu     t1, 1(t3)
+                    lbu     t2, 2(t3)
+                    sll     t1, t1, 8
+                    sll     t2, t2, 16
+                    or      t0, t0, t1
+                    or      t0, t0, t2
+        
+                    addiu   t7, t7, -%NegativeAddend    #   (Mod - NegativeAddend)
+        
+                    mult    t7, t8
+                    mflo    t1                  #   (Mod - NegativeAddend) * StatMultiplier
+        
+                    li      t2, %Multiplier 
+                    nop
+                    mult    t1, t2
+                    mflo    t1                  #   Addend = ((Mod - NegativeAddend) * StatMultiplier) * Multiplier
+
+                    addu    t0, t0, t1          #   Stat + Addend
+        
+                    #   Store Raw stat value
+                    sb      t0, 0(t3)
+                    srl     t0, t0, 8
+                    sb      t0, 1(t3)
+                    srl     t0, t0, 8
+                    sb      t0, 2(t3)
+        
+                    addiu   t3, t3, 3           #   Next Raw stat
+                    addiu   t4, t4, 2           #   Next Stat Multiplier
+        
+                    addiu   t6, t6, 1
+                    sltiu   t0, t6, 5
+                    bne     t0, zero, stat_variation_loop
+                    addiu   t5, t5, 2           #   Stat offset
+
+                    jr      ra
+                    addiu   sp, sp, 24
+        </Location>
+        <Variable name="Negative Addend" bytes="2" default="003C" symbol="true" />
+        <Variable name="Multiplier" bytes="2" default="0008" symbol="true" />
+    </Patch>
+    <Patch name="Disable Train and Secret Hunt">
+        <Description>
+            Frees entire routine at 0x80187ca0.
+        </Description>
+        <Location file="BATTLE_BIN" offset="18B988" mode="ASM" offsetMode="RAM">
+            nop
+        </Location>
+    </Patch>
+    <Patch name="Axes/Flails/Bags maximum damage is doubled">
+        <Location file="BATTLE_BIN" offset="185C34" mode="ASM" offsetMode="RAM">
+            sll     s0, s0, 1
+        </Location>
+    </Patch>
+    <Patch name="Swords use XA = (PA + SP) / 2">
+        <Location file="BATTLE_BIN" offset="185B48" mode="ASM" offsetMode="RAM">
+            beq     v1, v0, 0x80185b94
         </Location>
     </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
