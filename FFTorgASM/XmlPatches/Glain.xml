@@ -5232,6 +5232,21 @@ SKP:  j       0x80180848            #   Skip this ability
         <Variable name="Negative Addend" bytes="2" default="003C" symbol="true" />
         <Variable name="Multiplier" bytes="2" default="0008" symbol="true" />
     </Patch>
+    <Patch name="Base stat decrease">
+        <Description>
+            Base speed is 5 for humans and 4 for monsters (instead of 6 and 5, respectively).  Base PA and MA use values of 3.25 and 4 instead of 4 and 5.
+            Male and female soldier office recruits both have Broad Swords.
+        </Description>
+        <Location file="SCUS_942_21" offset="5A49C" mode="ASM" offsetMode="RAM">
+            sll     s0, s0, 12
+        </Location>
+        <Location file="SCUS_942_21" offset="5E90C" mode="DATA" offsetMode="RAM">
+            78 38 14 10 0D 9D BA FF 13 FF FF FF
+            70 3C 14 0D 10 9D BA FF 13 FF FF FF
+            78 3C 14 10 10 9D BA D0 13 FF FF FF
+            8C 20 10 10 10 FF FF FF FF FF FF FF
+        </Location>
+    </Patch>
     <Patch name="Disable Train and Secret Hunt">
         <Description>
             Frees entire routine at 0x80187ca0.
