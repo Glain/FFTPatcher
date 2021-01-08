@@ -206,10 +206,12 @@ namespace FFTPatcher.Editors
         {
             if (e.TabPage == inflictStatusesTabPage)
             {
+                allInflictStatusesEditor1.UpdateSelectedEntry();
                 allInflictStatusesEditor1.UpdateListBox();
             }
             else if (e.TabPage == itemAttributesTabPage)
             {
+                allItemAttributesEditor1.UpdateSelectedEntry();
                 allItemAttributesEditor1.UpdateListBox();
             }
         }
