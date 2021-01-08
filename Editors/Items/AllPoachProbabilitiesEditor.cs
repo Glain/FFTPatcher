@@ -162,8 +162,11 @@ namespace FFTPatcher.Editors
             if (e.Button == MouseButtons.Right)
             {
                 DataGridView.HitTestInfo hitTest = dataGridView.HitTest(e.Location.X, e.Location.Y);
-                dataGridView.CurrentCell = dataGridView[hitTest.ColumnIndex, hitTest.RowIndex];
-                dataGridView.ContextMenu.Show(dataGridView, new Point(e.X, e.Y));
+                if ((hitTest.ColumnIndex >= 0) && (hitTest.RowIndex >= 0))
+                {
+                    dataGridView.CurrentCell = dataGridView[hitTest.ColumnIndex, hitTest.RowIndex];
+                    dataGridView.ContextMenu.Show(dataGridView, new Point(e.X, e.Y));
+                }
             }
         }
 
