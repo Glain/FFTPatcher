@@ -2010,14 +2010,14 @@ SKP:  j       0x80180848            #   Skip this ability
                 jal     @swap_formation_unit
                 move    a0, t0
                 sw      v0, 12(sp)
-                
+        
                 sb      zero, 0x8018bad4
                 jal     0x801140bc
                 nop
-                
+        
                 jal     0x80108920
                 nop
-                
+        
                 lw      v0, 12(sp)
                 lw      a3, 8(sp)
                 lw      ra, 4(sp)
@@ -2029,26 +2029,26 @@ SKP:  j       0x80180848            #   Skip this ability
                 lui     t2, %hi(@address_skip_portrait_transition)
                 lbu     t1, %lo(@address_skip_portrait_transition) (t2)
                 nop
-                
+        
                 beq     t1, zero, portrait_transition_hook_default
                 addiu   t1, t1, -1
-                
+        
                 sw      v1, 0x0058(sp)
                 j       portrait_transition_hook_end
                 sb      t1, %lo(@address_skip_portrait_transition) (t2)
-                
+        
             portrait_transition_hook_default:    
                 sw      v0, 0x0050(sp)
-                
+        
             portrait_transition_hook_end:
                 jr      ra
                 nop
-                
+        
         #   swap_formation_unit (formationIndex, offset)
         @swap_formation_unit:
                 addiu   sp, sp, -16
                 sw      ra, 4(sp)
-                
+        
                 move    v0, a0                  #   formationIndex
                 sll     t0, a0, 2
                 lw      t0, 0x801cd5ec(t0)
@@ -2056,7 +2056,7 @@ SKP:  j       0x80180848            #   Skip this ability
                 lhu     a0, 0x2c(t0)            #   unitIndex
                 move    t2, a1                  #   offset
                 addu    a1, a0, a1              #   offsetUnitIndex
-                
+        
                 #   Skip if either unit index = 0 or either unit index >= 16
                 beq     a0, zero, swap_formation_unit_end
                 nop
@@ -2066,27 +2066,32 @@ SKP:  j       0x80180848            #   Skip this ability
                 sltiu   t0, a1, 16
                 beq     t0, zero, swap_formation_unit_end
                 nop
-                
+        
                 #   Find unit index of offset formation unit
                 sll     t0, t1, 2
                 lw      t0, 0x801cd5ec(t0)
                 nop
+        
+                #   If null, skip index check
+                beq     t0, zero, swap_formation_unit_swap
+                nop
+        
                 lhu     t0, 0x2c(t0)
                 nop
-                
+        
                 #   If it's the same as the offset unit index...
                 bne     t0, a1, swap_formation_unit_swap
                 li      t0, 1
                 #   ...move the selected formation unit index.
                 addu    v0, v0, t2
-                
+        
             swap_formation_unit_swap:
                 sb      t0, @address_skip_portrait_transition
                 sw      v0, 8(sp)
                 jal     @swap_unit_data
                 nop
                 lw      v0, 8(sp)
-                
+        
             swap_formation_unit_end:
                 lw      ra, 4(sp)
                 addiu   sp, sp, 16
@@ -2101,35 +2106,45 @@ SKP:  j       0x80180848            #   Skip this ability
                 sw      s1, 12(sp)
                 sw      s2, 16(sp)
                 sw      s3, 20(sp)
-                
+        
                 move    s0, a0
                 move    s1, a1
-                
+        
                 sll     s2, a0, 8
                 sll     s3, a1, 8
                 la      t0, 0x80057f74
                 addu    s2, s2, t0
                 addu    s3, s3, t0
-                
+        
                 move    a0, s2
                 move    a1, s3
                 jal     @swap_data
                 li      a2, 256
-                
+        
+                lbu     t0, 0xd0(s2)
+                lbu     t1, 0xd0(s3)
+                nop
+                or      t0, t0, t1
+                beq     t0, zero, swap_unit_data_first_index
+        
+                move    a0, s0
+                jal     @swap_proposition_data
+                move    a1, s1
+        
             swap_unit_data_first_index:
                 lbu     t1, 1(s2)
                 li      t0, 0xff
                 beq     t1, t0, swap_unit_data_second_index
                 nop
                 sb      s0, 1(s2)
-            
+    
             swap_unit_data_second_index:    
                 lbu     t1, 1(s3)
                 nop
                 beq     t1, t0, swap_unit_data_end
                 nop
                 sb      s1, 1(s3)
-            
+    
             swap_unit_data_end:    
                 lw      s3, 20(sp)
                 lw      s2, 16(sp)
@@ -2139,7 +2154,7 @@ SKP:  j       0x80180848            #   Skip this ability
                 addiu   sp, sp, 32
                 jr      ra
                 nop
-                
+        
         #   swap_data (ptr1, ptr2, size)
         @swap_data:
                 beq     a2, zero, swap_data_end
@@ -2151,8 +2166,57 @@ SKP:  j       0x80180848            #   Skip this ability
                 addiu   a0, a0, 1
                 j       @swap_data
                 addiu   a1, a1, 1
-                
+        
             swap_data_end:
+                jr      ra
+                nop
+
+        #   swap_proposition_data (index1, index2)
+        @swap_proposition_data:
+                lui     t0, 0x8005
+                lbu     t7, 0x7ce8(t0)      #   Number of active propositions
+                ori     t0, t0, 0x7eec
+                li      t1, 0
+        
+            swap_proposition_data_loop:
+                beq     t1, t7, swap_proposition_data_end
+                nop
+    
+                lbu     t2, 0(t0)
+                lbu     t3, 5(t0)
+                beq     t2, zero, swap_proposition_data_loop_bottom
+                li      t4, 0
+                addiu   t5, t0, 6
+        
+            swap_proposition_data_inner_loop:
+                beq     t4, t3, swap_proposition_data_loop_bottom
+                nop
+                lbu     t6, 0(t5)
+                nop
+                bne     t6, a0, swap_proposition_data_inner_loop_second_check
+                nop
+                sb      a1, 0(t5)
+                j       swap_proposition_data_inner_loop_bottom
+                nop
+        
+            swap_proposition_data_inner_loop_second_check:
+                bne     t6, a1, swap_proposition_data_inner_loop_bottom
+                nop
+                sb      a0, 0(t5)
+    
+            swap_proposition_data_inner_loop_bottom:
+                addiu   t4, t4, 1
+                sltiu   t6, t4, 3
+                bne     t6, zero, swap_proposition_data_inner_loop
+                addiu   t5, t5, 1
+        
+            swap_proposition_data_loop_bottom:
+                addiu   t1, t1, 1
+                sltiu   t2, t1, 8
+                bne     t2, zero, swap_proposition_data_loop
+                addiu   t0, t0, 9
+
+            swap_proposition_data_end:
                 jr      ra
                 nop
     </Location>
