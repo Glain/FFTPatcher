@@ -3604,7 +3604,7 @@ SKP:  j       0x80180848            #   Skip this ability
                 addiu   t2, t2, 1
 
                 j       0x80124bf8
-                nop
+                sll     v0, s4, 2
         </Location>
     </Patch>
     <Patch name="All (and only) player human units can find items on moving">
