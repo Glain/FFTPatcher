@@ -69,6 +69,7 @@ namespace FFTPatcher
             this.okButton = new System.Windows.Forms.Button();
             this.patchIsoDialog = new System.Windows.Forms.SaveFileDialog();
             this.isoPathTextBox = new System.Windows.Forms.TextBox();
+            this.chk_ApplySlowdownfix = new System.Windows.Forms.CheckBox();
             bootBinGroupBox = new System.Windows.Forms.GroupBox();
             cancelButton = new System.Windows.Forms.Button();
             isoBrowseButton = new System.Windows.Forms.Button();
@@ -335,6 +336,18 @@ namespace FFTPatcher
             this.isoPathTextBox.Size = new System.Drawing.Size(273, 20);
             this.isoPathTextBox.TabIndex = 10;
             // 
+            // chk_ApplySlowdownfix
+            // 
+            this.chk_ApplySlowdownfix.AutoSize = true;
+            this.chk_ApplySlowdownfix.Location = new System.Drawing.Point(265, 312);
+            this.chk_ApplySlowdownfix.Name = "chk_ApplySlowdownfix";
+            this.chk_ApplySlowdownfix.Size = new System.Drawing.Size(120, 17);
+            this.chk_ApplySlowdownfix.TabIndex = 14;
+            this.chk_ApplySlowdownfix.Tag = "ApplySlowdownFix";
+            this.chk_ApplySlowdownfix.Text = "Apply Slowdown Fix";
+            this.chk_ApplySlowdownfix.UseVisualStyleBackColor = true;
+            this.chk_ApplySlowdownfix.CheckedChanged += new System.EventHandler(this.entd2CheckBox_CheckedChanged);
+            // 
             // PatchPSPForm
             // 
             this.AcceptButton = this.okButton;
@@ -343,6 +356,7 @@ namespace FFTPatcher
             this.CancelButton = cancelButton;
             this.ClientSize = new System.Drawing.Size(395, 408);
             this.ControlBox = false;
+            this.Controls.Add(this.chk_ApplySlowdownfix);
             this.Controls.Add(isoLabel);
             this.Controls.Add(isoBrowseButton);
             this.Controls.Add(this.okButton);
@@ -390,6 +404,7 @@ namespace FFTPatcher
         private System.Windows.Forms.TextBox isoPathTextBox;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox icon0GroupBox;
+        private System.Windows.Forms.CheckBox chk_ApplySlowdownfix;
 
     }
 }

@@ -31,7 +31,7 @@ namespace FFTPatcher
 {
     public partial class PatchPSPForm : Form, IGeneratePatchList
     {
-		#region Instance Variables (4) 
+		#region Instance Variables
 
         Bitmap blankICON0 = new Bitmap( 144, 80 );
         private bool[] bootBinPatchable = new bool[Enum.GetValues( typeof( BootBinPatchable ) ).Length];
@@ -40,7 +40,7 @@ namespace FFTPatcher
 
 		#endregion Instance Variables 
 
-		#region Public Properties (27) 
+		#region Public Properties 
 
         public bool Abilities
         {
@@ -67,7 +67,7 @@ namespace FFTPatcher
             set { bootBinPatchable[(int)BootBinPatchable.ActionMenus] = value; }
         }
 
-public string CustomICON0FileName
+        public string CustomICON0FileName
         {
             get { return icon0FileNameTextBox.Text; }
         }
@@ -146,14 +146,10 @@ public string CustomICON0FileName
         {
             get
             {
-                if( ICON0 == CustomICON0.NoChange )
-                {
-                    return new PatchedByteArray[0];
-                }
-                else
-                {
-                    return new PatchedByteArray[] { new PatchedByteArray( PatcherLib.Iso.PspIso.Sectors.PSP_GAME_ICON0_PNG, 0, ICON0_PNG ) };
-                }
+                List<PatchedByteArray> otherPatches = new List<PatchedByteArray>();
+                otherPatches.AddRange(GetICON0Patches());
+                otherPatches.AddRange(GetSlowdownFixPatches());
+                return otherPatches.ToArray();
             }
         }
 
@@ -171,6 +167,9 @@ public string CustomICON0FileName
                 if( ItemAttributes ) result += 4;
                 if( Items ) result += 4;
 
+                if (ApplySlowdownFix)
+                    result += 6;
+
                 return result;
             }
         }
@@ -182,6 +181,8 @@ public string CustomICON0FileName
         }
 
         public bool RegenECC { get; private set; }
+
+        public bool ApplySlowdownFix { get; private set; }
 
         public bool Skillsets
         {
@@ -209,7 +210,7 @@ public string CustomICON0FileName
 
 		#endregion Public Properties 
 
-		#region Constructors (1) 
+		#region Constructors
 
         public PatchPSPForm()
         {
@@ -218,7 +219,7 @@ public string CustomICON0FileName
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
         public DialogResult CustomShowDialog( IWin32Window owner, FFTPatch FFTPatch )
         {
@@ -247,6 +248,7 @@ public string CustomICON0FileName
             entd4CheckBox.Checked = FFTPatch.ENTDs.ENTDs[3].HasChanged;
             entd5CheckBox.Checked = FFTPatch.ENTDs.PSPEvent.Exists( e => e.HasChanged );
             decryptCheckBox.Checked = true;
+            chk_ApplySlowdownfix.Checked = false;
 
             UpdateNextEnabled();
 
@@ -255,7 +257,7 @@ public string CustomICON0FileName
 
 		#endregion Public Methods 
 
-		#region Private Methods (10) 
+		#region Private Methods 
 
         private void BuildICON0Preview(Image i)
         {
@@ -271,6 +273,38 @@ public string CustomICON0FileName
             return Color.FromArgb( r, g, b );
         }
 
+        private IList<PatchedByteArray> GetICON0Patches()
+        {
+            if (ICON0 == CustomICON0.NoChange)
+            {
+                return new PatchedByteArray[0];
+            }
+            else
+            {
+                return new PatchedByteArray[] { new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_ICON0_PNG, 0, ICON0_PNG) };
+            }
+        }
+
+        private IList<PatchedByteArray> GetSlowdownFixPatches()
+        {
+            if (ApplySlowdownFix)
+            {
+                return new PatchedByteArray[6] {
+                    new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x20AFD4, new byte[1] { 0x02 }),
+                    new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x20AFE4, new byte[1] { 0x03 }),
+                    new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x20AFF0, new byte[1] { 0x02 }),
+
+                    new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x20AFD4, new byte[1] { 0x02 }),
+                    new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x20AFE4, new byte[1] { 0x03 }),
+                    new PatchedByteArray(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x20AFF0, new byte[1] { 0x02 })
+                };
+            }
+            else
+            {
+                return new PatchedByteArray[0];
+            }
+        }
+
         private void clb_Patches_ItemCheck( object sender, ItemCheckEventArgs e )
         {
             CheckedListBox clb = (CheckedListBox)sender;
@@ -282,7 +316,7 @@ public string CustomICON0FileName
             UpdateNextEnabled();
         }
 
-private void entd2CheckBox_CheckedChanged( object sender, EventArgs e )
+        private void entd2CheckBox_CheckedChanged( object sender, EventArgs e )
         {
             CheckBox box = (CheckBox)sender;
             Checkboxes cb = (Checkboxes)Enum.Parse( typeof( Checkboxes ), box.Tag as string );
@@ -305,6 +339,9 @@ private void entd2CheckBox_CheckedChanged( object sender, EventArgs e )
                     break;
                 case Checkboxes.Decrypt:
                     RegenECC = box.Checked;
+                    break;
+                case Checkboxes.ApplySlowdownFix:
+                    ApplySlowdownFix = box.Checked;
                     break;
                 default:
                     break;
@@ -377,7 +414,7 @@ private void entd2CheckBox_CheckedChanged( object sender, EventArgs e )
             UpdateNextEnabled();
         }
 
-private void UpdateNextEnabled()
+        private void UpdateNextEnabled()
         {
             bool enabled = true;
             enabled = enabled &&
@@ -385,7 +422,7 @@ private void UpdateNextEnabled()
                  ValidateICON0( icon0FileNameTextBox.Text ) );
             enabled = enabled && ValidateISO( isoPathTextBox.Text );
             enabled = enabled &&
-                (ENTD1 || ENTD2 || ENTD3 || ENTD4 || ENTD5 || RegenECC || Abilities || Items ||
+                (ENTD1 || ENTD2 || ENTD3 || ENTD4 || ENTD5 || RegenECC || ApplySlowdownFix || Abilities || Items ||
                   ItemAttributes || Jobs || JobLevels || Skillsets || MonsterSkills || ActionMenus ||
                   StatusAttributes || InflictStatus || Poach || (ICON0 != CustomICON0.NoChange) ||
                   AbilityEffects || MoveFindItems || StoreInventory || AbilityAnimations || Propositions);
@@ -428,7 +465,8 @@ private void UpdateNextEnabled()
             Default,
             Custom
         }
-private enum Checkboxes
+
+        private enum Checkboxes
         {
             ENTD1,
             ENTD2,
@@ -436,8 +474,10 @@ private enum Checkboxes
             ENTD4,
             ENTD5,
             Decrypt,
+            ApplySlowdownFix
         }
-private enum BootBinPatchable
+
+        private enum BootBinPatchable
         {
             Abilities,
             AbilityAnimations,
