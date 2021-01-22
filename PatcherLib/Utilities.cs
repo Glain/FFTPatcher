@@ -693,6 +693,42 @@ namespace PatcherLib.Utilities
             return filepath;
         }
 
+        public static void WriteChangesToFile(IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches, string filepath)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            foreach (PatcherLib.Datatypes.PatchedByteArray patchedByteArray in patches)
+            {
+                byte[] bytes = patchedByteArray.GetBytes();
+
+                string sectorName = "";
+                try
+                {
+                    sectorName = Enum.GetName(patchedByteArray.SectorEnum.GetType(), patchedByteArray.SectorEnum);
+                }
+                catch (Exception)
+                {
+                    sectorName = patchedByteArray.Sector.ToString();
+                }
+
+                sb.AppendLine(String.Format("Sector: {0} ({1}), Offset: {2}, Bytes: {3}", patchedByteArray.Sector, sectorName, patchedByteArray.Offset, bytes.Length));
+                sb.AppendLine();
+
+                for (int index = 0; index < bytes.Length; index++)
+                {
+                    sb.Append(bytes[index].ToString("X2"));
+
+                    if ((index % 16) == 15)
+                        sb.AppendLine();
+                    else
+                        sb.Append(" ");
+                }
+
+                sb.AppendLine();
+                sb.AppendLine();
+            }
+            System.IO.File.WriteAllText(filepath, sb.ToString());
+        }
+
         public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
         {
             if (file.FindEntry(entry, false) == -1)
