@@ -1690,7 +1690,10 @@ SKP:  j       0x80180848            #   Skip this ability
     <Variable name="CT Factor" file="BATTLE_BIN" offset="F628F" bytes="1" default="05" />
   </Patch>
   <Patch name="Geomancy single ability">
-    <Description>Geomancy single ability</Description>
+    <Description>
+        Creates a single ability for Geomancy that changes its properties based on the tile the caster is standing on.
+        Should be used inside a Default skillset.  Ability ID can be specified; default is 0x7E (Pitfall)
+    </Description>
     <!-- Ability properties corresponding to vanilla elemental ability order (Pitfall to Lava Ball) -->
     <!-- Each entry has format [Inflict Status ID, Element, Effect ID] -->
     <Location file="BATTLE_BIN" offset="15D350" mode="DATA" offsetMode="RAM" label="address_geomancy_properties_array">
@@ -3028,6 +3031,7 @@ SKP:  j       0x80180848            #   Skip this ability
     <Patch name="Jump single ability">
         <Description>
             Makes an ability function as Jump.  It should be placed in a normal skillset with Default action menu.  Recommended to use the default ability ID, 0x018A Level Jump2.
+            Range (Both level and vertical) are based on Lancer job level.
         </Description>
         <Location file="BATTLE_BIN" offset="15D4B0" mode="ASM" offsetMode="RAM">
             #   Parameters:
