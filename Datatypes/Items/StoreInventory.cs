@@ -256,7 +256,7 @@ namespace FFTPatcher.Datatypes
             }
             else
             {
-                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.StoreInventories], this.ToByteArray(), 0x18D840, Codes.CodeEnabledOnlyWhen.World);
+                return Codes.GenerateCodes(Context.US_PSX, fftPatch.Defaults[FFTPatch.ElementName.StoreInventories], this.ToByteArray(), 0x18D844, Codes.CodeEnabledOnlyWhen.World);
             }
         }
 
