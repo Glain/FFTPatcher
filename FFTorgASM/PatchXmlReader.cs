@@ -128,6 +128,7 @@ namespace FFTorgASM
                 XmlAttribute attrLabel = location.Attributes["label"];
                 XmlAttribute attrSpecific = location.Attributes["specific"];
                 XmlAttribute attrMovable = location.Attributes["movable"];
+                XmlAttribute attrAlign = location.Attributes["align"];
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -136,6 +137,34 @@ namespace FFTorgASM
                 bool isSequentialOffset = false;
 
                 List<SpecificLocation> specifics = FillSpecificAttributeData(attrSpecific, defaultSector);
+
+                bool isAsmMode = false;
+                bool markedAsData = false;
+                if (modeAttribute != null)
+                {
+                    string modeAttributeText = modeAttribute.InnerText.ToLower().Trim();
+                    if (modeAttributeText == "asm")
+                    {
+                        isAsmMode = true;
+                    }
+                    else if (modeAttributeText == "data")
+                    {
+                        markedAsData = true;
+                    }
+                }
+
+                int align = 0;
+                if (attrAlign != null)
+                {
+                    Int32.TryParse(sectorAttribute.InnerText, out align);
+
+                    if (align < 0)
+                        align = 0;
+                }
+                else if (isAsmMode)
+                {
+                    align = 4;
+                }
 
                 if (specifics.Count > 0)
                 {
@@ -154,6 +183,17 @@ namespace FFTorgASM
                     strOffsets = new string[1] { strOffset };
                     ignoreOffsetMode = true;
                     isSequentialOffset = true;
+
+                    // Advance offset to match up with alignment, if necessary
+                    if (align > 0)
+                    {
+                        int offsetAlign = (int)(offset % align);
+                        if (offsetAlign > 0)
+                        {
+                            offset += (align - offsetAlign);
+                            isSequentialOffset = false;
+                        }
+                    }
                 }
 
                 PsxIso.Sectors sector = (PsxIso.Sectors)0;
@@ -180,21 +220,6 @@ namespace FFTorgASM
                 else
                 {
                     throw new Exception("Error in patch XML: Invalid file/sector!");
-                }
-
-                bool asmMode = false;
-                bool markedAsData = false;
-                if (modeAttribute != null)
-                {
-                    string modeAttributeText = modeAttribute.InnerText.ToLower().Trim();
-                    if (modeAttributeText == "asm")
-                	{
-                		asmMode = true;
-                	}
-                    else if (modeAttributeText == "data")
-                    {
-                        markedAsData = true;
-                    }
                 }
                 
                 bool isRamOffset = false;
@@ -237,7 +262,7 @@ namespace FFTorgASM
                     label = attrLabel.InnerText.Replace(" ", "");
                 }
 
-                bool isMoveSimple = asmMode;
+                bool isMoveSimple = isAsmMode;
                 if (attrMovable != null)
                 {
                     bool.TryParse(attrMovable.InnerText, out isMoveSimple);
@@ -269,7 +294,7 @@ namespace FFTorgASM
 
                     byte[] bytes;
                     string errorText = "";
-                    if (asmMode)
+                    if (isAsmMode)
                     {
                         string encodeContent = content;
 
@@ -323,12 +348,12 @@ namespace FFTorgASM
                     //    sbOuterErrorText.Append(errorText);
 
                     PatchedByteArray patchedByteArray = new PatchedByteArray(sector, fileOffset, bytes);
-                    patchedByteArray.IsAsm = asmMode;
+                    patchedByteArray.IsAsm = isAsmMode;
                     patchedByteArray.MarkedAsData = markedAsData;
                     patchedByteArray.IsCheckedAsm = false; // isCheckedAsm;
                     patchedByteArray.IsSequentialOffset = isSequentialOffset;
                     patchedByteArray.IsMoveSimple = isMoveSimple;
-                    patchedByteArray.AsmText = asmMode ? content : "";
+                    patchedByteArray.AsmText = isAsmMode ? content : "";
                     patchedByteArray.RamOffset = ramOffset;
                     patchedByteArray.ErrorText = errorText;
                     patchedByteArray.Label = label;
@@ -514,6 +539,7 @@ namespace FFTorgASM
                     XmlAttribute fileAttribute = varNode.Attributes["file"];
                     XmlAttribute sectorAttribute = varNode.Attributes["sector"];
                     XmlAttribute attrSpecific = varNode.Attributes["specific"];
+                    XmlAttribute attrAlign = varNode.Attributes["align"];
 
                     //PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
                     //UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
@@ -525,6 +551,15 @@ namespace FFTorgASM
                     bool isSpecific = false;
 
                     List<SpecificLocation> specifics = FillSpecificAttributeData(attrSpecific, defaultSector);
+
+                    int align = 0;
+                    if (attrAlign != null)
+                    {
+                        Int32.TryParse(sectorAttribute.InnerText, out align);
+
+                        if (align < 0)
+                            align = 0;
+                    }
 
                     XmlAttribute symbolAttribute = varNode.Attributes["symbol"];
                     bool isSymbol = (symbolAttribute != null) && PatcherLib.Utilities.Utilities.ParseBool(symbolAttribute.InnerText);
@@ -550,6 +585,14 @@ namespace FFTorgASM
                         string strOffset = offset.ToString("X");
                         strOffsets = new string[1] { strOffset };
                         ignoreOffsetMode = true;
+
+                        // Advance offset to match up with alignment, if necessary
+                        if (align > 0)
+                        {
+                            int offsetAlign = (int)(offset % align);
+                            if (offsetAlign > 0)
+                                offset += (align - offsetAlign);
+                        }
                     }
 
                     PsxIso.Sectors sector = (PsxIso.Sectors)0;
