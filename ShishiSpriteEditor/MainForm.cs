@@ -138,7 +138,7 @@ namespace FFTPatcher.SpriteEditor
             openFileDialog.FileName = string.Empty;
             if (openFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
-                Stream openedStream = File.Open( openFileDialog.FileName, FileMode.Open, FileAccess.ReadWrite );
+                Stream openedStream = File.Open( openFileDialog.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read );
                 if (openedStream != null)
                 {
                     bool psx = openedStream.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode2Form1] == 0;

@@ -450,7 +450,7 @@ namespace FFTorgASM
             saveFileDialog1.FileName = string.Empty;
             if ( saveFileDialog1.ShowDialog( this ) == DialogResult.OK )
             {
-                using ( Stream file = File.Open( saveFileDialog1.FileName, FileMode.Open, FileAccess.ReadWrite ) )
+                using (Stream file = File.Open(saveFileDialog1.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
                     foreach ( AsmPatch patch in clb_Patches.CheckedItems )
                     {

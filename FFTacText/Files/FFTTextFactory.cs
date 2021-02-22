@@ -677,7 +677,7 @@ namespace FFTPatcher.TextEditor
 
         public static void WriteXml(FFTText text, string filename)
         {
-            using (Stream stream = File.Open(filename, FileMode.Create, FileAccess.ReadWrite))
+            using (Stream stream = File.Open(filename, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
             {
                 WriteXml(text, stream);
             }

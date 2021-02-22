@@ -160,7 +160,7 @@ namespace FFTPatcher.SpriteEditor
 
         public void PatchPsxISO( string filename, BackgroundWorker worker, IList<PatchedByteArray> patches )
         {
-            using ( Stream stream = File.Open( filename, FileMode.Open, FileAccess.ReadWrite ) )
+            using ( Stream stream = File.Open( filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read ) )
             {
                 PatchPsxISO( stream, worker, patches );
             }
@@ -200,7 +200,7 @@ namespace FFTPatcher.SpriteEditor
 
         public void PatchPspISO( string filename, BackgroundWorker worker, IList<PatchedByteArray> patches )
         {
-            using ( Stream stream = File.Open( filename, FileMode.Open, FileAccess.ReadWrite ) )
+            using ( Stream stream = File.Open( filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read ) )
             {
                 PatchPspISO( stream, worker, patches );
             }

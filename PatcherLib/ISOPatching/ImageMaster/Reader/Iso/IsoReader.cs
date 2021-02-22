@@ -75,7 +75,7 @@ namespace ImageMaster
 
         public static ImageRecord GetRecord(string filename)
         {
-            using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read))
+            using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 return GetRecord(stream);
             }

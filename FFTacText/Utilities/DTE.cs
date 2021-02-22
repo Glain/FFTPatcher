@@ -461,7 +461,7 @@ namespace FFTPatcher.TextEditor
 
         public static GenericCharMap GenerateCharMap( string filename )
         {
-            using ( System.IO.Stream stream = System.IO.File.OpenRead( filename ) )
+            using ( System.IO.Stream stream = System.IO.File.Open( filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read ) )
             {
                 return GenerateCharMap( stream );
             }

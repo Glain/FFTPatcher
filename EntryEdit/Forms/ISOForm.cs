@@ -261,7 +261,7 @@ namespace EntryEdit.Forms
             {
                 try
                 {
-                    using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.Read))
+                    using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         if (chk_BattleConditionals.Checked)
                         {
@@ -348,7 +348,7 @@ namespace EntryEdit.Forms
 
                 try
                 {
-                    using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite))
+                    using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                     {
                         PsxIso.PatchPsxIso(file, patches);
                     }

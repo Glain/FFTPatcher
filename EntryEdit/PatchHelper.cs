@@ -60,8 +60,8 @@ namespace EntryEdit
                 int eventOffset = Settings.EventsOffset;
                 byte[] eventBytes = dataHelper.EventsToByteArray(entryData.Events);
                 patches.Add(new PatchedByteArray(eventSector, eventOffset, eventBytes));
-                
-                using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite))
+
+                using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
                     PsxIso.PatchPsxIso(file, patches);
                 }

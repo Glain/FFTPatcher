@@ -140,7 +140,7 @@ namespace FFTorgASM
 
         public void PatchAllISO(ASMEncodingUtility asmUtility, string filename)
         {
-            using (Stream file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite))
+            using (Stream file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
                 foreach (AsmPatch asmPatch in AllPatches)
                 {

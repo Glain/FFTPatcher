@@ -89,7 +89,7 @@ namespace FFTPatcher.TextEditor.Editors
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog(this.TopLevelControl as Form) == DialogResult.OK)
             {
-                using (System.IO.Stream stream = System.IO.File.OpenRead(openFileDialog1.FileName))
+                using (System.IO.Stream stream = System.IO.File.Open(openFileDialog1.FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
                 {
                     (boundFile as AbstractFile).RestoreFile(stream);
                 }

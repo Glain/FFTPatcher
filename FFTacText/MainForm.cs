@@ -183,7 +183,7 @@ namespace FFTPatcher.TextEditor
                                 else missingPrompt();
                                 if (missingFilesResult == DialogResult.Yes)
                                 {
-                                    using (Stream missingStream = File.OpenRead( missingFilesIsoFilename ))
+                                    using (Stream missingStream = File.Open( missingFilesIsoFilename, FileMode.Open, FileAccess.Read, FileShare.Read ))
                                     {
                                         text = FFTTextFactory.GetFilesXml( filename, worker, missing, missingStream );
                                     }

@@ -219,7 +219,7 @@ namespace FFTPatcher.TextEditor
                 throw new ArgumentNullException("Patcher", "Patcher cannot be null");
             }
 
-            using (Stream stream = File.Open(patchArgs.Filename, FileMode.Open, FileAccess.ReadWrite))
+            using (Stream stream = File.Open(patchArgs.Filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
                 if (stream == null)
                 {
@@ -295,7 +295,7 @@ namespace FFTPatcher.TextEditor
 
         public void PatchISOSimple(string filename)
         {
-            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite))
+            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
                 if (stream == null)
                 {
@@ -521,7 +521,7 @@ namespace FFTPatcher.TextEditor
 
         public static FFTText ReadPSPIso(string filename, BackgroundWorker worker)
         {
-            using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read))
+            using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 return ReadPSPIso(stream, worker);
             }
@@ -534,7 +534,7 @@ namespace FFTPatcher.TextEditor
 
         public static FFTText ReadPSXIso(string filename, BackgroundWorker worker)
         {
-            using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read))
+            using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 return ReadPSXIso(stream, worker);
             }
