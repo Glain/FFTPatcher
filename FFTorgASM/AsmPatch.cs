@@ -559,41 +559,7 @@ namespace FFTorgASM
                 sb.AppendFormat("        <Description>{0}</Description>{1}", Description, Environment.NewLine);
             }
 
-            foreach (PatchedByteArray patchedByteArray in innerList)
-            {
-                byte[] bytes = patchedByteArray.GetBytes();
-                int byteCount = bytes.Length;
-
-                if (byteCount > 0)
-                {
-                    List<uint> fourByteSets = new List<uint>(ASMEncoding.Helpers.ASMValueHelper.GetUintArrayFromBytes(bytes, false));
-
-                    //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
-                    string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
-                    sb.AppendFormat("        <Location file=\"{0}\"{1}{2}>{3}", file,
-                        (patchedByteArray.IsSequentialOffset ? "" : String.Format(" offset=\"{0}\"", patchedByteArray.Offset.ToString("X"))),
-                        (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""), Environment.NewLine);
-
-                    foreach (uint fourByteSet in fourByteSets)
-                    {
-                        sb.AppendFormat("            {0}{1}", fourByteSet.ToString("X8"), Environment.NewLine);
-                    }
-
-                    int remainingBytes = byteCount % 4;
-                    if (remainingBytes > 0)
-                    {
-                        int remainingBytesIndex = byteCount - remainingBytes;
-                        System.Text.StringBuilder sbRemainingBytes = new System.Text.StringBuilder(remainingBytes * 2);
-                        for (int index = remainingBytesIndex; index < byteCount; index++)
-                        {
-                            sbRemainingBytes.Append(bytes[index].ToString("X2"));
-                        }
-                        sb.AppendFormat("            {0}{1}", sbRemainingBytes.ToString(), Environment.NewLine);
-                    }
-
-                    sb.AppendLine("        </Location>");
-                }
-            }
+            sb.Append(PatcherLib.Utilities.Utilities.CreatePatchXML(innerList));
 
             foreach (VariableType variable in Variables)
             {

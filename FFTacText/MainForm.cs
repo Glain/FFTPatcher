@@ -120,6 +120,28 @@ namespace FFTPatcher.TextEditor
             fileEditor1.RefreshText();
         }
 
+        private void menuItem_SavePatchXML_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.FileName = string.Empty;
+            dialog.CheckFileExists = false;
+            dialog.OverwritePrompt = true;
+            dialog.Filter = "XML files (*.xml)|*.xml";
+
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    File.WriteAllText(dialog.FileName, internalFile.CreatePatchXML(), System.Text.Encoding.UTF8);
+                    PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                }
+                catch (Exception)
+                {
+                    MyMessageBox.Show(this, "Could not save patch XML.", "Error", MessageBoxButtons.OK);
+                }
+            }
+        }
+
         void worker_RunWorkerCompleted( object sender, RunWorkerCompletedEventArgs e )
         {
             BackgroundWorker worker = sender as BackgroundWorker;
@@ -228,6 +250,7 @@ namespace FFTPatcher.TextEditor
                     generateResourcesZipMenuItem.Enabled = true;
                     editMenuItem.Enabled = true;
                     regulateNewlinesMenuItem.Enabled = true;
+                    menuItem_SavePatchXML.Enabled = true;
                     Cursor = Cursors.Default;
                 };
             worker.RunWorkerCompleted +=
@@ -255,6 +278,7 @@ namespace FFTPatcher.TextEditor
             generateResourcesZipMenuItem.Enabled = false;
             editMenuItem.Enabled = false;
             regulateNewlinesMenuItem.Enabled = false;
+            menuItem_SavePatchXML.Enabled = false;
             Cursor = Cursors.WaitCursor;
             worker.RunWorkerAsync();
         }
@@ -315,6 +339,7 @@ namespace FFTPatcher.TextEditor
                 generateResourcesZipMenuItem.Enabled = true;
                 editMenuItem.Enabled = true;
                 regulateNewlinesMenuItem.Enabled = true;
+                menuItem_SavePatchXML.Enabled = true;
             };
 
             if ( this.InvokeRequired )

@@ -32,40 +32,57 @@ namespace EntryEdit
         {
             if (!string.IsNullOrEmpty(filepath))
             {
-                dataHelper = dataHelper ?? new DataHelper();
-                List<PatchedByteArray> patches = new List<PatchedByteArray>();
-
-                PsxIso.Sectors battleSector = Settings.BattleConditionalsSector;
-                int battleOffset = Settings.BattleConditionalsOffset;
-                byte[] battleBytes = dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, entryData.BattleConditionals);
-                patches.Add(new PatchedByteArray(battleSector, battleOffset, battleBytes));
-
-                if ((Settings.BattleConditionalsApplyLimitPatch) && (DataHelper.GetMaxBlocks(entryData.BattleConditionals) > 10))
-                {
-                    patches.Add(new PatchedByteArray(Settings.BattleConditionalsLimitPatchSector, Settings.BattleConditionalsLimitPatchOffset, Settings.BattleConditionalsLimitPatchBytes));
-                }
-
-                PsxIso.Sectors worldSector = Settings.WorldConditionalsSector;
-                int worldOffset = Settings.WorldConditionalsOffset;
-                byte[] worldBytes = dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, entryData.WorldConditionals);
-                patches.Add(new PatchedByteArray(worldSector, worldOffset, worldBytes));
-
-                if (Settings.WorldConditionalsRepoint)
-                {
-                    byte[] patchBytes = (((uint)(PsxIso.GetRamOffset(worldSector) + worldOffset)) | PsxIso.KSeg0Mask).ToBytes();
-                    patches.Add(new PatchedByteArray(Settings.WorldConditionalsPointerSector, Settings.WorldConditionalsPointerOffset, patchBytes));
-                }
-
-                PsxIso.Sectors eventSector = Settings.EventsSector;
-                int eventOffset = Settings.EventsOffset;
-                byte[] eventBytes = dataHelper.EventsToByteArray(entryData.Events);
-                patches.Add(new PatchedByteArray(eventSector, eventOffset, eventBytes));
+                List<PatchedByteArray> patches = GetISOPatches(entryData, dataHelper);
 
                 using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
                     PsxIso.PatchPsxIso(file, patches);
                 }
             }
+        }
+
+        public static void SavePatchXML(EntryData entryData, string filepath, DataHelper dataHelper = null)
+        {
+            File.WriteAllText(filepath, CreatePatchXML(entryData, dataHelper), System.Text.Encoding.UTF8);
+        }
+
+        public static string CreatePatchXML(EntryData entryData, DataHelper dataHelper = null)
+        {
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetISOPatches(entryData, dataHelper), true, true, "EntryEdit Edits");
+        }
+
+        public static List<PatchedByteArray> GetISOPatches(EntryData entryData, DataHelper dataHelper = null)
+        {
+            dataHelper = dataHelper ?? new DataHelper();
+            List<PatchedByteArray> patches = new List<PatchedByteArray>();
+
+            PsxIso.Sectors battleSector = Settings.BattleConditionalsSector;
+            int battleOffset = Settings.BattleConditionalsOffset;
+            byte[] battleBytes = dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, entryData.BattleConditionals);
+            patches.Add(new PatchedByteArray(battleSector, battleOffset, battleBytes));
+
+            if ((Settings.BattleConditionalsApplyLimitPatch) && (DataHelper.GetMaxBlocks(entryData.BattleConditionals) > 10))
+            {
+                patches.Add(new PatchedByteArray(Settings.BattleConditionalsLimitPatchSector, Settings.BattleConditionalsLimitPatchOffset, Settings.BattleConditionalsLimitPatchBytes));
+            }
+
+            PsxIso.Sectors worldSector = Settings.WorldConditionalsSector;
+            int worldOffset = Settings.WorldConditionalsOffset;
+            byte[] worldBytes = dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, entryData.WorldConditionals);
+            patches.Add(new PatchedByteArray(worldSector, worldOffset, worldBytes));
+
+            if (Settings.WorldConditionalsRepoint)
+            {
+                byte[] patchBytes = (((uint)(PsxIso.GetRamOffset(worldSector) + worldOffset)) | PsxIso.KSeg0Mask).ToBytes();
+                patches.Add(new PatchedByteArray(Settings.WorldConditionalsPointerSector, Settings.WorldConditionalsPointerOffset, patchBytes));
+            }
+
+            PsxIso.Sectors eventSector = Settings.EventsSector;
+            int eventOffset = Settings.EventsOffset;
+            byte[] eventBytes = dataHelper.EventsToByteArray(entryData.Events);
+            patches.Add(new PatchedByteArray(eventSector, eventOffset, eventBytes));
+
+            return patches;
         }
 
         public static void PatchPsxSaveState(EntryData entryData, string filepath, DataHelper dataHelper = null)

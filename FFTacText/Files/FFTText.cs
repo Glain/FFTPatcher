@@ -295,63 +295,72 @@ namespace FFTPatcher.TextEditor
 
         public void PatchISOSimple(string filename)
         {
-            using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+            List<PatchedByteArray> patches = GetPatches();
+            if (patches != null)
             {
-                if (stream == null)
+                using (Stream stream = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
-                    throw new Exception("Could not open ISO file");
-                }
-
-                IList<ISerializableFile> files = new List<ISerializableFile>(Files.Count);
-                Files.FindAll(f => f is ISerializableFile).ForEach(f => files.Add((ISerializableFile)f));
-
-                List<ISerializableFile> dteFiles = new List<ISerializableFile>();
-                List<ISerializableFile> nonDteFiles = new List<ISerializableFile>();
-                List<PatchedByteArray> patches = new List<PatchedByteArray>();
-
-                foreach (ISerializableFile file in files)
-                {
-                    if (file.IsDteNeeded())
+                    if (stream == null)
                     {
-                        dteFiles.Add(file);
+                        throw new Exception("Could not open ISO file");
                     }
-                    else
+
+                    if (Filetype == Context.US_PSP)
                     {
-                        nonDteFiles.Add(file);
+                        PatcherLib.Iso.PspIso.PatchISO(stream, patches);
                     }
-                }
-                if (dteFiles.Count > 0)
-                {
-                    BackgroundWorker worker = new BackgroundWorker();
-                    worker.WorkerReportsProgress = true;
-
-                    var dtePatches = DoDteCrap(dteFiles, worker, new DoWorkEventArgs(""));
-                    if (dtePatches == null)
+                    else if (Filetype == Context.US_PSX)
                     {
-                        return;
+                        PatcherLib.Iso.PsxIso.PatchPsxIso(stream, patches);
                     }
-                    patches.AddRange(dtePatches);
-                }
-
-                foreach (var file in nonDteFiles)
-                {
-                    patches.AddRange(file.GetNonDtePatches());
-                }
-
-                if (Filetype == Context.US_PSP)
-                {
-                    PatcherLib.Iso.PspIso.PatchISO(stream, patches);
-                }
-                else if (Filetype == Context.US_PSX)
-                {
-                    PatcherLib.Iso.PsxIso.PatchPsxIso(stream, patches);
                 }
             }
         }
 
-        private void WriteChangesToFile(IEnumerable<PatchedByteArray> patches, string filepath)
+        private List<PatchedByteArray> GetPatches()
         {
-            PatcherLib.Utilities.Utilities.WriteChangesToFile(patches, filepath);
+            IList<ISerializableFile> files = new List<ISerializableFile>(Files.Count);
+            Files.FindAll(f => f is ISerializableFile).ForEach(f => files.Add((ISerializableFile)f));
+
+            List<ISerializableFile> dteFiles = new List<ISerializableFile>();
+            List<ISerializableFile> nonDteFiles = new List<ISerializableFile>();
+            List<PatchedByteArray> patches = new List<PatchedByteArray>();
+
+            foreach (ISerializableFile file in files)
+            {
+                if (file.IsDteNeeded())
+                {
+                    dteFiles.Add(file);
+                }
+                else
+                {
+                    nonDteFiles.Add(file);
+                }
+            }
+            if (dteFiles.Count > 0)
+            {
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.WorkerReportsProgress = true;
+
+                var dtePatches = DoDteCrap(dteFiles, worker, new DoWorkEventArgs(""));
+                if (dtePatches == null)
+                {
+                    return null;
+                }
+                patches.AddRange(dtePatches);
+            }
+
+            foreach (var file in nonDteFiles)
+            {
+                patches.AddRange(file.GetNonDtePatches());
+            }
+
+            return patches;
+        }
+
+        public string CreatePatchXML()
+        {
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(), true, true, "FFTTacText Edits", null);
         }
 
         public void GenerateResourcesZip(string filepath)

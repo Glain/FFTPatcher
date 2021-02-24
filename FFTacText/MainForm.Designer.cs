@@ -78,6 +78,7 @@ namespace FFTPatcher.TextEditor
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.progressBar = new PatcherLib.Controls.ProgressBarWithText();
             this.fileEditor1 = new FFTPatcher.TextEditor.Editors.FileEditor();
+            this.menuItem_SavePatchXML = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
             separator4 = new System.Windows.Forms.MenuItem();
@@ -86,7 +87,7 @@ namespace FFTPatcher.TextEditor
             // 
             // separator2
             // 
-            separator2.Index = 2;
+            separator2.Index = 3;
             separator2.Text = "-";
             // 
             // separator3
@@ -119,6 +120,7 @@ namespace FFTPatcher.TextEditor
             this.fileMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.openMenuItem,
             this.saveMenuItem,
+            this.menuItem_SavePatchXML,
             separator2,
             this.generateResourcesZipMenuItem,
             this.separatorGenerateResourcesZip,
@@ -139,17 +141,17 @@ namespace FFTPatcher.TextEditor
             // generateResourcesZipMenuItem
             // 
             this.generateResourcesZipMenuItem.Enabled = false;
-            this.generateResourcesZipMenuItem.Index = 3;
+            this.generateResourcesZipMenuItem.Index = 4;
             this.generateResourcesZipMenuItem.Text = "Generate Resources.zip";
             // 
             // separatorGenerateResourcesZip
             // 
-            this.separatorGenerateResourcesZip.Index = 4;
+            this.separatorGenerateResourcesZip.Index = 5;
             this.separatorGenerateResourcesZip.Text = "-";
             // 
             // exitMenuItem
             // 
-            this.exitMenuItem.Index = 5;
+            this.exitMenuItem.Index = 6;
             this.exitMenuItem.Text = "E&xit";
             // 
             // editMenuItem
@@ -246,6 +248,13 @@ namespace FFTPatcher.TextEditor
             this.fileEditor1.Size = new System.Drawing.Size(753, 377);
             this.fileEditor1.TabIndex = 4;
             // 
+            // menuItem_SavePatchXML
+            // 
+            this.menuItem_SavePatchXML.Index = 2;
+            this.menuItem_SavePatchXML.Text = "Save Patch XML...";
+            this.menuItem_SavePatchXML.Enabled = false;
+            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,6 +294,7 @@ namespace FFTPatcher.TextEditor
         private System.Windows.Forms.MenuItem separatorGenerateResourcesZip;
         private System.Windows.Forms.MenuItem editMenuItem;
         private System.Windows.Forms.MenuItem regulateNewlinesMenuItem;
+        private System.Windows.Forms.MenuItem menuItem_SavePatchXML;
 
     }
 }

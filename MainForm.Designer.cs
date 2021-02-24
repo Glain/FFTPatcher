@@ -89,6 +89,7 @@ namespace FFTPatcher
             this.applyPatchOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.menuItem_SavePatchXML = new System.Windows.Forms.MenuItem();
             this.fftPatchEditor1 = new FFTPatcher.Editors.FFTPatchEditor();
             separator1 = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
@@ -107,7 +108,7 @@ namespace FFTPatcher
             // 
             // separator2
             // 
-            separator2.Index = 6;
+            separator2.Index = 7;
             separator2.Text = "-";
             // 
             // separator3
@@ -152,13 +153,13 @@ namespace FFTPatcher
             // 
             // generateResourcesMenuItem
             // 
-            generateResourcesMenuItem.Index = 7;
+            generateResourcesMenuItem.Index = 8;
             generateResourcesMenuItem.Text = "&Generate Resources.zip...";
             generateResourcesMenuItem.Click += new System.EventHandler(this.generateResourcesMenuItem_Click);
             // 
             // separator7
             // 
-            separator7.Index = 8;
+            separator7.Index = 9;
             separator7.Text = "-";
             // 
             // fileMenuItem
@@ -171,6 +172,7 @@ namespace FFTPatcher
             this.openMenuItem,
             this.saveMenuItem,
             this.saveAsPspMenuItem,
+            this.menuItem_SavePatchXML,
             separator2,
             generateResourcesMenuItem,
             separator7,
@@ -206,7 +208,7 @@ namespace FFTPatcher
             // 
             // exitMenuItem
             // 
-            this.exitMenuItem.Index = 9;
+            this.exitMenuItem.Index = 10;
             this.exitMenuItem.Text = "E&xit";
             // 
             // psxMenu
@@ -354,6 +356,13 @@ namespace FFTPatcher
             this.patchPsxBackgroundWorker.WorkerReportsProgress = true;
             this.patchPsxBackgroundWorker.WorkerSupportsCancellation = true;
             // 
+            // menuItem_SavePatchXML
+            // 
+            this.menuItem_SavePatchXML.Enabled = false;
+            this.menuItem_SavePatchXML.Index = 6;
+            this.menuItem_SavePatchXML.Text = "Save Patch XML...";
+            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
+            // 
             // fftPatchEditor1
             // 
             this.fftPatchEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -415,6 +424,7 @@ namespace FFTPatcher
         private System.Windows.Forms.MenuItem menuItem_SetCurrentDataAsDefaults;
         private System.Windows.Forms.MenuItem menuItem_RestoreDefaults;
         private System.Windows.Forms.MenuItem separator_Edit1;
+        private System.Windows.Forms.MenuItem menuItem_SavePatchXML;
 
     }
 }

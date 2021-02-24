@@ -72,6 +72,7 @@
             this.menuItem_PatchPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_LoadPSXSaveState = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItem_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItem_SavePatchXML = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPage_BattleConditionals.SuspendLayout();
             this.tabPage_WorldConditionals.SuspendLayout();
@@ -178,6 +179,7 @@
             this.menuItem_File_Separator1,
             this.menuItem_LoadPatch,
             this.menuItem_SavePatch,
+            this.menuItem_SavePatchXML,
             this.menuItem_File_Separator2,
             this.menuItem_LoadScript,
             this.menuItem_SaveScript,
@@ -193,19 +195,19 @@
             // menuItem_NewPatch
             // 
             this.menuItem_NewPatch.Name = "menuItem_NewPatch";
-            this.menuItem_NewPatch.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_NewPatch.Size = new System.Drawing.Size(167, 22);
             this.menuItem_NewPatch.Text = "New Patch";
             this.menuItem_NewPatch.Click += new System.EventHandler(this.menuItem_NewPatch_Click);
             // 
             // menuItem_File_Separator1
             // 
             this.menuItem_File_Separator1.Name = "menuItem_File_Separator1";
-            this.menuItem_File_Separator1.Size = new System.Drawing.Size(161, 6);
+            this.menuItem_File_Separator1.Size = new System.Drawing.Size(164, 6);
             // 
             // menuItem_LoadPatch
             // 
             this.menuItem_LoadPatch.Name = "menuItem_LoadPatch";
-            this.menuItem_LoadPatch.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_LoadPatch.Size = new System.Drawing.Size(167, 22);
             this.menuItem_LoadPatch.Text = "Load Patch...";
             this.menuItem_LoadPatch.Click += new System.EventHandler(this.menuItem_LoadPatch_Click);
             // 
@@ -213,20 +215,20 @@
             // 
             this.menuItem_SavePatch.Enabled = false;
             this.menuItem_SavePatch.Name = "menuItem_SavePatch";
-            this.menuItem_SavePatch.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_SavePatch.Size = new System.Drawing.Size(167, 22);
             this.menuItem_SavePatch.Text = "Save Patch...";
             this.menuItem_SavePatch.Click += new System.EventHandler(this.menuItem_SavePatch_Click);
             // 
             // menuItem_File_Separator2
             // 
             this.menuItem_File_Separator2.Name = "menuItem_File_Separator2";
-            this.menuItem_File_Separator2.Size = new System.Drawing.Size(161, 6);
+            this.menuItem_File_Separator2.Size = new System.Drawing.Size(164, 6);
             // 
             // menuItem_LoadScript
             // 
             this.menuItem_LoadScript.Enabled = false;
             this.menuItem_LoadScript.Name = "menuItem_LoadScript";
-            this.menuItem_LoadScript.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_LoadScript.Size = new System.Drawing.Size(167, 22);
             this.menuItem_LoadScript.Text = "Load Script...";
             this.menuItem_LoadScript.Click += new System.EventHandler(this.menuItem_LoadScript_Click);
             // 
@@ -234,20 +236,20 @@
             // 
             this.menuItem_SaveScript.Enabled = false;
             this.menuItem_SaveScript.Name = "menuItem_SaveScript";
-            this.menuItem_SaveScript.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_SaveScript.Size = new System.Drawing.Size(167, 22);
             this.menuItem_SaveScript.Text = "Save Script...";
             this.menuItem_SaveScript.Click += new System.EventHandler(this.menuItem_SaveScript_Click);
             // 
             // menuItem_File_Separator3
             // 
             this.menuItem_File_Separator3.Name = "menuItem_File_Separator3";
-            this.menuItem_File_Separator3.Size = new System.Drawing.Size(161, 6);
+            this.menuItem_File_Separator3.Size = new System.Drawing.Size(164, 6);
             // 
             // menuItem_LoadAllScripts
             // 
             this.menuItem_LoadAllScripts.Enabled = false;
             this.menuItem_LoadAllScripts.Name = "menuItem_LoadAllScripts";
-            this.menuItem_LoadAllScripts.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_LoadAllScripts.Size = new System.Drawing.Size(167, 22);
             this.menuItem_LoadAllScripts.Text = "Load All Scripts...";
             this.menuItem_LoadAllScripts.Click += new System.EventHandler(this.menuItem_LoadAllScripts_Click);
             // 
@@ -255,19 +257,19 @@
             // 
             this.menuItem_SaveAllScripts.Enabled = false;
             this.menuItem_SaveAllScripts.Name = "menuItem_SaveAllScripts";
-            this.menuItem_SaveAllScripts.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_SaveAllScripts.Size = new System.Drawing.Size(167, 22);
             this.menuItem_SaveAllScripts.Text = "Save All Scripts...";
             this.menuItem_SaveAllScripts.Click += new System.EventHandler(this.menuItem_SaveAllScripts_Click);
             // 
             // menuItem_File_Separator4
             // 
             this.menuItem_File_Separator4.Name = "menuItem_File_Separator4";
-            this.menuItem_File_Separator4.Size = new System.Drawing.Size(161, 6);
+            this.menuItem_File_Separator4.Size = new System.Drawing.Size(164, 6);
             // 
             // menuItem_Exit
             // 
             this.menuItem_Exit.Name = "menuItem_Exit";
-            this.menuItem_Exit.Size = new System.Drawing.Size(164, 22);
+            this.menuItem_Exit.Size = new System.Drawing.Size(167, 22);
             this.menuItem_Exit.Text = "Exit";
             this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
@@ -442,6 +444,14 @@
             this.menuItem_About.Text = "About...";
             this.menuItem_About.Click += new System.EventHandler(this.menuItem_About_Click);
             // 
+            // menuItem_SavePatchXML
+            // 
+            this.menuItem_SavePatchXML.Enabled = false;
+            this.menuItem_SavePatchXML.Name = "menuItem_SavePatchXML";
+            this.menuItem_SavePatchXML.Size = new System.Drawing.Size(167, 22);
+            this.menuItem_SavePatchXML.Text = "Save Patch XML...";
+            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -509,6 +519,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuItem_CopyCommands;
         private System.Windows.Forms.ToolStripMenuItem menuItem_PasteCommands;
         private System.Windows.Forms.ToolStripMenuItem menuItem_UseTrimmedDefaults;
+        private System.Windows.Forms.ToolStripMenuItem menuItem_SavePatchXML;
     }
 }
 

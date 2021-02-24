@@ -729,6 +729,73 @@ namespace PatcherLib.Utilities
             System.IO.File.WriteAllText(filepath, sb.ToString());
         }
 
+        public static string CreatePatchXML(IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patchedByteArrays, bool includePatchTag = false, bool includeRootTag = false, string name = null, string description = null)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (includeRootTag)
+            {
+                sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\" ?>"); 
+                sb.AppendLine("<Patches>");
+            }
+
+            if ((includePatchTag) && (!string.IsNullOrEmpty(name)))
+            {
+                sb.AppendFormat("    <Patch name=\"{0}\">{1}", name, Environment.NewLine);
+
+                if (!string.IsNullOrEmpty(description))
+                {
+                    sb.AppendFormat("        <Description>{0}</Description>{1}", description, Environment.NewLine);
+                }
+            }
+
+            foreach (PatcherLib.Datatypes.PatchedByteArray patchedByteArray in patchedByteArrays)
+            {
+                byte[] bytes = patchedByteArray.GetBytes();
+                int byteCount = bytes.Length;
+
+                if (byteCount > 0)
+                {
+                    List<uint> fourByteSets = new List<uint>(GetUintArrayFromBytes(bytes, false));
+
+                    string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
+                    sb.AppendFormat("        <Location file=\"{0}\"{1}{2}>{3}", file,
+                        (patchedByteArray.IsSequentialOffset ? "" : String.Format(" offset=\"{0}\"", patchedByteArray.Offset.ToString("X"))),
+                        (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""), Environment.NewLine);
+
+                    foreach (uint fourByteSet in fourByteSets)
+                    {
+                        sb.AppendFormat("            {0}{1}", fourByteSet.ToString("X8"), Environment.NewLine);
+                    }
+
+                    int remainingBytes = byteCount % 4;
+                    if (remainingBytes > 0)
+                    {
+                        int remainingBytesIndex = byteCount - remainingBytes;
+                        System.Text.StringBuilder sbRemainingBytes = new System.Text.StringBuilder(remainingBytes * 2);
+                        for (int index = remainingBytesIndex; index < byteCount; index++)
+                        {
+                            sbRemainingBytes.Append(bytes[index].ToString("X2"));
+                        }
+                        sb.AppendFormat("            {0}{1}", sbRemainingBytes.ToString(), Environment.NewLine);
+                    }
+
+                    sb.AppendLine("        </Location>");
+                }
+            }
+
+            if (includePatchTag)
+            {
+                sb.AppendLine("    </Patch>");
+            }
+            if (includeRootTag)
+            {
+                sb.AppendLine("</Patches>");
+            }
+
+            return sb.ToString();
+        }
+
         public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
         {
             if (file.FindEntry(entry, false) == -1)

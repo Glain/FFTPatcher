@@ -234,9 +234,27 @@ namespace FFTPatcher
             {
                 throw new NotSupportedException("Unrecognized image.");
             }
+            else
+            {
+                PatcherLib.Iso.PspIso.DecryptISO(stream, info);
+            }
 
+            List<PatchedByteArray> patches = GetPatches(FFTPatch);
+            
+            foreach (PatchedByteArray patch in patches)
+            {
+                PatcherLib.Iso.PspIso.ApplyPatch(stream, info, patch);
+            }
+        }
+
+        public static string CreatePatchXML(FFTPatch FFTPatch)
+        {
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(FFTPatch), true, true, "FFTPatcher Edits", null);
+        }
+
+        public static List<PatchedByteArray> GetPatches(FFTPatch FFTPatch)
+        {
             List<PatchedByteArray> patches = new List<PatchedByteArray>();
-            PatcherLib.Iso.PspIso.DecryptISO(stream, info);
             const Context context = Context.US_PSP;
 
             patches.AddRange(FFTPatch.Abilities.GetPatches(context));
@@ -263,10 +281,7 @@ namespace FFTPatcher
             patches.AddRange(FFTPatch.StoreInventories.GetPatches(context));
             patches.AddRange(FFTPatch.Propositions.GetPatches(context));
 
-            foreach (PatchedByteArray patch in patches)
-            {
-                PatcherLib.Iso.PspIso.ApplyPatch(stream, info, patch);
-            }
+            return patches;
         }
     }
 }

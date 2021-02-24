@@ -150,6 +150,26 @@ namespace EntryEdit
             }
         }
 
+        private void SavePatchXML()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.CheckFileExists = false;
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                SavePatchXML(saveFileDialog.FileName);
+                //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+            }
+        }
+
+        private void SavePatchXML(string filepath)
+        {
+            SaveFormData();
+            PatchHelper.SavePatchXML(_entryData, filepath, _dataHelper);
+        }
+
         private void SetDefaults()
         {
             menuItem_UseTrimmedDefaults.Checked = false;
@@ -447,6 +467,7 @@ namespace EntryEdit
             menuItem_Edit.Enabled = true;
             menuItem_View.Enabled = true;
             menuItem_SavePatch.Enabled = true;
+            menuItem_SavePatchXML.Enabled = true;
             menuItem_LoadScript.Enabled = true;
             menuItem_SaveScript.Enabled = true;
             menuItem_LoadAllScripts.Enabled = true;
@@ -804,6 +825,15 @@ namespace EntryEdit
             menuBar.Enabled = false;
             tabControl.Enabled = false;
             SavePatch();
+            tabControl.Enabled = true;
+            menuBar.Enabled = true;
+        }
+
+        private void menuItem_SavePatchXML_Click(object sender, EventArgs e)
+        {
+            menuBar.Enabled = false;
+            tabControl.Enabled = false;
+            SavePatchXML();
             tabControl.Enabled = true;
             menuBar.Enabled = true;
         }

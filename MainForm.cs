@@ -100,6 +100,7 @@ namespace FFTPatcher
             aboutMenuItem.Click += aboutMenuItem_Click;
             saveMenuItem.Enabled = false;
             saveAsPspMenuItem.Enabled = false;
+            menuItem_SavePatchXML.Enabled = false;
 
             extractFFTPackMenuItem.Click += extractFFTPackMenuItem_Click;
             rebuildFFTPackMenuItem.Click += rebuildFFTPackMenuItem_Click;
@@ -276,6 +277,7 @@ namespace FFTPatcher
             openMenuItem.Enabled = true;
             saveAsPspMenuItem.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
             saveMenuItem.Enabled = fftPatchEditor1.Enabled;
+            menuItem_SavePatchXML.Enabled = fftPatchEditor1.Enabled;
         }
 
         private void editMenuItem_Popup(object sender, EventArgs e)
@@ -686,6 +688,34 @@ namespace FFTPatcher
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)) == DialogResult.Yes)
             {
                 fftPatchEditor1.ConsolidateInflictStatuses();
+            }
+        }
+
+        private void menuItem_SavePatchXML_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.FileName = string.Empty;
+            dialog.CheckFileExists = false;
+            dialog.OverwritePrompt = true;
+            dialog.Filter = "XML files (*.xml)|*.xml";
+
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    string xml = null;
+                    if (fftPatch.Context == Context.US_PSX)
+                        xml = PsxIso.CreatePatchXML(fftPatch);
+                    else if (fftPatch.Context == Context.US_PSP)
+                        xml = PspIso.CreatePatchXML(fftPatch);
+
+                    File.WriteAllText(dialog.FileName, xml, System.Text.Encoding.UTF8);
+                    PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                }
+                catch (Exception)
+                {
+                    MyMessageBox.Show(this, "Could not save patch XML.", "Error", MessageBoxButtons.OK);
+                }
             }
         }
     }
