@@ -361,6 +361,7 @@ namespace FFTPatcher
             this.menuItem_SavePatchXML.Enabled = false;
             this.menuItem_SavePatchXML.Index = 6;
             this.menuItem_SavePatchXML.Text = "Save Patch XML...";
+            this.menuItem_SavePatchXML.Visible = false;            
             this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
             // 
             // fftPatchEditor1
