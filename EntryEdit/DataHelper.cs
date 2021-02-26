@@ -1193,7 +1193,13 @@ namespace EntryEdit
             for (int setIndex = 0; setIndex < numSets; setIndex++)
             {
                 List<ConditionalBlock> conditionalBlocks = new List<ConditionalBlock>();
-                string setName = setNameMap[setIndex];
+
+                string setName = null;
+                setNameMap.TryGetValue(setIndex, out setName);
+                if (string.IsNullOrEmpty(setName))
+                    setName = "New Set";
+
+                //string setName = setNameMap[setIndex];
 
                 int setStartIndex = setOffsets[setIndex];
                 int setEndIndex = ((setIndex < (numSets - 1)) ? setOffsets[setIndex + 1] : blockByteOffset);
