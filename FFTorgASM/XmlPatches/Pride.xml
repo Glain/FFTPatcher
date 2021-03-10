@@ -318,7 +318,24 @@ Still in testing. Please message me on the forums (Pride) or on discord (@Pride)
                                                addiu r29,r29,0x0018                         #
 			</Location>
 	</Patch>
-	
+    
+    <Patch name="Get Common Labels" hidden="true">
+        <Location file="BATTLE_BIN" offset="180000" mode="ASM" offsetMode="RAM">
+            #Data Locations
+            .label @Item_Data,0x80062eb8
+
+            #Ram Locations
+            .label @Attacker_Current_Action,0x80192d8c
+            .label @Target_Current_Action,0x80192d90
+            .label @Attacker_Data,0x80192d94
+            .label @Target_Data,0x80192d98
+
+            #Routine Locations
+            .label @Weapon_Guard_Usability,0x8018130c
+            .label @Get_Item_Data_Pointer,0x8005a884
+        </Location>
+    </Patch>
+    
     <Patch name="Equipment Evasion Settings">
 
 		<Description>Rewrites the Physical Equipment Evasion Routine (0x80184F9C) and removes the need for the Magical counterpart. Also includes Choto's "Evade Boost" as that increase Accessory evade by 10 if the R/S/M is equiped to avoid obvious conflict issues.
@@ -341,10 +358,9 @@ This conflicts with:
 	FFMaster - Darkness status reduces accuracy by XX% (Not replicating, this ASM checks for darkness status on the attacker and increases accessory invade by 32 so Evade boost can be easily changed to do this as well. I'm also not sure it works? It doesn't look like it.)
 	Xifanie - Weapon Guard Innate All (Can do the same thing)
 	Xifanie - Weapon Guard Innate All v2 (Can do the same thing)</Description>
-
+            <Include patch="Get Common Labels" />
 			<Location file="BATTLE_BIN" offset="184f9c" mode="ASM" offsetMode="RAM">
-			<Include patch="Get Common Labels" />
-
+			
 							@Equipment_Evasion_Setting:			    #
 								addiu r29, r29, -0x001c			    #
 								sw    r17, 0x0018  (r29)		    #
@@ -2140,22 +2156,5 @@ Movement.CE.end:				jr    r31									#
 		<Location file="BATTLE_BIN" offset="195d1c" mode="ASM" offsetMode="RAM">
 			                    andi  r2,r3,0x0004
 		</Location>
-	</Patch>
-
-	<Patch name="Get Common Labels" hidden="true">
-		<Location file="BATTLE_BIN" offset="180000" mode="ASM" offsetMode="RAM">
-                            #Data Locations
-                            .label @Item_Data,0x80062eb8
-                            
-                            #Ram Locations
-                            .label @Attacker_Current_Action,0x80192d8c
-                            .label @Target_Current_Action,0x80192d90
-                            .label @Attacker_Data,0x80192d94
-                            .label @Target_Data,0x80192d98
-                            
-                            #Routine Locations
-                            .label @Weapon_Guard_Usability,0x8018130c
-                            .label @Get_Item_Data_Pointer,0x8005a884
-		</Location>					
 	</Patch>
 </Patches>
