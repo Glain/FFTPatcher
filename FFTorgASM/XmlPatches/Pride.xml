@@ -6,7 +6,7 @@
 	<Description>Adds in extra job requirements for Unit Level, Required Gender, and Story Progression. Use the Data field below to set the new requirements. 
 The 1st byte sets a level restriction. The 2nd is the gender requirement: 80 for male, 40 for female. Default set as Male for Bard and Female for Dancer. The 3rd is for Story Progression (variable x6e).
 	
-Still in testing. Please message me on the forums (Pride) or on discord (@Pride) if you find any bugs. This does not remove the gender restriction on Bard/Dancer.
+Still in testing. Please message me on the forums (Pride) or on discord (@Pride) if you find any bugs. This does not remove the gender restriction on Bard/Dancer.</Description>
 			<Location file="SCUS_942_21" offset="5c504" mode="DATA" offsetMode="RAM" label="JobUnlockRequirements">
 			<!-- 
 			     1st byte = Minimum Unit Level
