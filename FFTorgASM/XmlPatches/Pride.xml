@@ -1,8 +1,326 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Patches>
-    <Patch name="Equipment Evasion Settings">
+
+	<Patch name="Job Unlock Requirements v1">
+	<Description>Adds in extra job requirements for Unit Level, Required Gender, and Story Progression. Use the Data field below to set the new requirements. 
+The 1st byte sets a level restriction. The 2nd is the gender requirement: 80 for male, 40 for female. Default set as Male for Bard and Female for Dancer. The 3rd is for Story Progression (variable x6e).
+	
+Still in testing. Please message me on the forums (Pride) or on discord (@Pride) if you find any bugs. This does not remove the gender restriction on Bard/Dancer.
+			<Location file="SCUS_942_21" offset="5c504" mode="DATA" offsetMode="RAM" label="JobUnlockRequirements">
+			<!-- 
+			     1st byte = Minimum Unit Level
+			     2nd byte = Required Gender (x80 - Male; x40 - Female; x20 - Monster)
+				 3rd byte = Minimum Story Progression 
+			-->	 
+									00 00 00 	<!-- Squire -->
+									00 00 00 	<!-- Chemist -->
+									00 00 00 	<!-- Knight -->
+									00 00 00 	<!-- Archer -->
+									00 00 00 	<!-- Monk -->
+									00 00 00 	<!-- Priest -->
+									00 00 00 	<!-- Wizard -->
+									00 00 00 	<!-- Time Mage -->
+									00 00 00 	<!-- Summoner -->
+									00 00 00 	<!-- Thief -->
+									00 00 00 	<!-- Mediator -->
+									00 00 00 	<!-- Oracle -->
+									00 00 00 	<!-- Geomancer -->
+									00 00 00 	<!-- Lancer -->
+									00 00 00 	<!-- Samurai -->
+									00 00 00 	<!-- Ninja -->
+									00 00 00 	<!-- Calculator -->
+									00 80 00 	<!-- Bard -->
+									00 40 00 	<!-- Dancer -->
+									00 00 00 	<!-- Mime -->
+			</Location>
+			<Location file="WORLD_WORLD_BIN" offset="12257c" mode="ASM" offsetMode="RAM">
+							.label @Store_Data_Pointer,         0x8012b1b4
+							.label @Get_Base_Job,               0x8012243c
+							.label @Special_Monster_Check,      0x80120b90
+							.label @Check_Flags,                0x8012b1ec
+							.label @Allied_Job_Unlock,          0x80122488
+							.label @Get_Script_Variable_WORLD,  0x800ef1a8
+							.label @Get_Script_Variable_BATTLE, 0x8013b590 
+
+							.label @Formation_Data_Pointer,    0x801cd5ec
+							.label @Story_Progression,         0x800578D4
+
+                                @JobWheel:
+                                     addiu r29, r29, -0x0030                                #
+                                     sw    r31, 0x002c (r29)                                #
+                                     sw    r22, 0x0028 (r29)                                #
+                                     sw    r21, 0x0024 (r29)                                #
+                                     sw    r20, 0x0020 (r29)                                #
+									 sw    r19, 0x001c (r29)                                #
+									 sw    r18, 0x0018 (r29)                                #
+                                     sw    r17, 0x0014 (r29)                                #
+                                     sw    r16, 0x0010 (r29)                                #
+                                     move  r17, r4                                          #Unit Party ID
+                                     la    r3,  @Formation_Data_Pointer                     #r3 = 0x801cd5ec (pointer to formation data... pointer)
+                                     sll   r2,  r17,  2                                     #ID * 4           
+                                     addu  r19, r2,  r3                                     #r19 = Pointer to Formation Data
+                                     move  r22, r5                                          #r22 = Job Wheel Data Pointer (801c83f8)
+									 move  r21, r6                                          #r21 = (valid inputs are 0, 1, 2; 1 = Skillset display, 2 = Job Wheel display (grayed out sprite))
+                                     lw    r20, 0x0000  (r19)                               #r20 = Unit Formation Data
+                                     li    r18, 0                                           #Clear r18 (Counter)
+                                     jal   @Store_Data_Pointer                              #Store Unit Job Unlock Pointer to 0x801CA6F0 and x01 to 0x8018E47C
+                                     addiu r4,r20,0x0077                                    #r4 = Pointer to Job Unlocks
+                                     jal   @Get_Base_Job                                    #Get Base Job
+                                     andi  r4,r17,0x00ff                                    #r4 = Party Data ID
+                                     addu  r16,r2,r0                                        #r16 = Base Job
+                                     ori   r2,r0,0x0002                                     #r2 = x02 (on the Job Wheel)
+                                     bne   r21,r2, @NotOnTheJobWheel                        #Skip if we're not on the job wheel
+                                     sll   r2,r18,0x01                                      #Counter * 2
+                                     lh    r2,0x0024(r20)                                   #Load Unit's Job
+                                     nop						                            #
+                                     bne   r16,r2, @NotOnTheJobWheel                        #Branch if Current Job is not Base Job
+                                     sll   r2,r18,0x01			                            #Counter * 2
+                                     ori   r16,r16,0x4000                                   #grey out job (Flag x4000)
+@NotOnTheJobWheel:                   addu  r2,r2,r22                                        #r2 = Position in Job Wheel Data
+                                     sh    r16,0x0000(r2)		                            #Store Base Job into Job Wheel
+                                     lh    r4,0x0024(r20)                                   #Load Unit's Job
+                                     jal   @Special_Monster_Check                           #Special monster check	
+                                     addiu r18,r18,0x0001                                   #Counter ++
+                                     bne   r2,r0, @EndPrep                                  #Branch if unit is a special monster
+                                     sll   r2,r18,0x01                                      #r2 = Counter * 2
+                                     lh    r2,0x003e(r20)                                   #Lucavi Skillset Check (Skillset ID x50 - x80)
+                                     nop                                                    #
+                                     bne   r2,r0, @EndPrep                                  #Branch if using a Monster Skillset
+                                     sll   r2,r18,0x01                                      #
+                                     jal   @Check_Flags                                     #Check Job Unlock (Only pushes pointer forward, doesn't check for job unlock)
+                                     ori   r4,r0,0x0001                                     #r4 = 0x01
+                                     ori   r19,r0,0x0001                                    #r19 = 0x1 (counter)
+                                     sll   r2,r18,0x01                                      #r2 = Counter * 2
+                                     addu  r17,r2,r22                                       #r17 = Current Pointer to Job Wheel
+									 
+								@JobWheelLoop:
+									 addiu r16,r19,0x004a                                   #Counter + 0x4a (Generic Jobs)
+                                     jal   @Check_Flags                                     #Check Job Unlock	
+                                     li    r4,  1                                           #r4 = 0x1
+                                     move  r3,  r2                                          #r3 = 1 if job is unlocked
+									 
+									 la    r4,  @JobUnlockRequirements                      #r4 = Pointer to Job Unlock Requirements
+									 sll   r2,  r19, 1                                      #Counter * 2
+									 addu  r2,  r2,  r19                                    #Counter * 3
+									 addu  r5,  r4,  r2                                     #r5 = Job Unlock Requirements
+									 lbu   r4,  1  (r5)                                     #Load Gender Requirement
+									 lbu   r2,  0x0070  (r20)                               #Load Unit Gender
+									 beq   r4,  r0,  @GenderSkip                            #Skip Requirements if = 0
+									 andi  r2,  r2,  0x00e0                                 #Remove extra bits from Gender byte
+									 bne   r2,  r4,  @DontStoreJob                          #Don't Store job if Requirements are not met
+									 nop                                                    #
+									 
+@GenderSkip:						 lbu   r2,  0x0000  (r20)                               #r2 = Unit Level
+									 lbu   r4,  0  (r5)                                     #Load Required Unit Level
+									 nop                                                    #
+									 sltu  r4,  r2,  r4                                     #If Unit Level is less than Job Level, r4 = 1; else r4 = 0
+									 bne   r4,  r0,  @JobNotUnlocked                        #Branch if Unit doesn't meet Level requirements
+									 li    r2,  2                                           #r2 = 2
+									 
+									 lw    r4,  @Story_Progression                          #Load Story Progression variable
+									 lbu   r6,  2 (r5)                                      #Load Required Story Progression
+									 nop                                                    #
+									 sltu  r4,  r4, r6                                      #If Story Progression is less than Required SP, r4 = 1; else r4 = 0
+									 bne   r4,  r0,  @DontStoreJob                          #Branch if Story Progression doesn't meet requirement
+									 nop                                                    #
+									 
+									 bne   r21, r2,  @2ndOnTheJobWheel                      #Skip if we're not on the job wheel
+                                     nop                                                    #		
+                                     lh    r2,0x0024(r20)                                   #Load Unit's Current Job
+                                     nop                                                    #		
+                                     beq   r16,r2, @StoreJobInData                          #Branch if currently checked job == unit's current job
+                                     ori   r2,r16,0x4000                                    #Gray out Job
+@2ndOnTheJobWheel:                   beq   r3,r0, @JobNotUnlocked                           #Branch if Job is not unlocked	
+                                     ori   r2,r0,0x0002                                     #	
+                                     j     @JobUnlockedSkip                                 #Continue to check next jobs (increase all counters)		
+                                     sh    r16,0x0000(r17)                                  #Store r16 into Job Wheel
+@JobNotUnlocked:                     bne   r21,r2, @DontStoreJob                            #Skip if we're not on the job wheel (only increase counter)
+                                     nop                                                    #	
+                                     jal   @Allied_Job_Unlock                               #Check to see if allies have job active
+                                     andi  r4,r16,0x00FF                                    #Remove flag x4000 (Gray Out)
+                                     bne   r2,r0, @DontStoreJob                             #Branch if no allies have Job unlocked
+                                     addiu r2,r16,0x4000                                    #Gray out Job (Flag x4000)
+@StoreJobInData:                     sh    r2,0x0000(r17)                                   #Store grayed out job into Job Wheel
+@JobUnlockedSkip:                    addiu r17,r17,0x0002                                   #r17 + 2 (used for pointer in RAM data)
+                                     addiu r18,r18,0x0001                                   #r18 + 1
+@DontStoreJob:                       addiu r19,r19,0x0001                                   #r19 (Counter) + 1
+                                     slti  r2,r19,0x0014                                    #
+                                     bne   r2,r0, @JobWheelLoop                             #Branch if all jobs haven't been check
+                                     sll   r2,r18,0x01                                      #Job counter * 2
+									 
+@EndPrep:                            addu  r2,r2,r22                                        #Job Wheel Pointer * Job counter * 2	
+                                     addiu r3,r0,0xffff                                     #r3 + 0xffff
+                                     sh    r3,0x0000(r2)                                    #Store xFFFF as last entry in Job Wheel (end of job wheel)
+                                     addu  r2,r18,r0                                        #r2 = Unlocked Job Counter
+                                     lw    r31,0x002c(r29)                                  #
+                                     lw    r22,0x0028(r29)                                  #
+                                     lw    r21,0x0024(r29)                                  #
+                                     lw    r20,0x0020(r29)                                  #
+                                     lw    r19,0x001c(r29)                                  #
+                                     lw    r18,0x0018(r29)                                  #
+                                     lw    r17,0x0014(r29)                                  #
+                                     lw    r16,0x0010(r29)                                  #
+                                     jr    r31                                              #
+                                     addiu r29,r29,0x0030                                   #
+			</Location>
+
+		<Location file="EVENT_BUNIT_OUT" offset="1c7378" mode="ASM" offsetMode="RAM">
+									#r3 = 1 (if Job met Job Level requirements) or 0 (if it didn't) 
+								.label @BUNIT_DontStoreJob,  0x801c73d8
+								
+									 lw    r7,  0x0000 (r19)                                #
+									 lui   r4,  0x8006                                      #
+									 sll   r2,  r17, 1                                      #Counter * 2
+									 addu  r2,  r2,  r17                                    #Counter * 3
+									 addu  r5,  r4,  r2                                     #0x80050000 + Counter * 3
+									 lbu   r4,  -0x3AFC  (r5)                               #r4 = Level Requirement
+									 lbu   r6,  -0x3AFB  (r5)                               #r6 = Gender Requirement
+									 lbu   r8,  0x0000  (r7)                                #
+									 lbu   r2,  0x0070  (r7)                                #Load Unit Gender
+									 beq   r6,  r0,  @BUNIT_GenderSkip                      #Skip Requirements if = 0
+									 andi  r2,  r2,  0x00e0                                 #Remove extra bits from Gender byte
+									 bne   r2,  r6,  @BUNIT_DontStoreJob                    #Don't Store job if Requirements are not met
+@BUNIT_GenderSkip:					 sltu  r4,  r8,  r4                                     #If Unit Level is less than Job Level, r4 = 1; else r4 = 0
+									 bne   r4,  r0,  @BUNIT_DontStoreJob                    #Branch if Unit doesn't meet Level requirements
+									 nop                                                    #
+									 jal   0x8015ea48                                       #
+									 nop                                                    #
+									 beq   r2,  r0,  @BUNIT_DontStoreJob                    #
+									 nop                                                    #
+									 beq   r3,  r0,  @BUNIT_DontStoreJob                    #
+		</Location>
 		
+		<Location file="BATTLE_BIN" offset="15EA48" mode="ASM" offsetMode="RAM">
+									 lw    r4,  @Story_Progression                          #Load Story Progression variable
+									 lbu   r6,  -0x3AFA (r5)                                #Load Required Story Progression
+									 nop                                                    #
+									 sltu  r4,  r4, r6                                      #If Story Progression is less than Required SP, r4 = 1; else r4 = 0
+									 bne   r4,  r0,  @BUNIT_DontStoreJob                    #Branch if Story Progression doesn't meet requirement
+									 li    r2,  0                                           #		
+									 li    r2,  1                                           #
+@BUNIT_DontStoreJob:				 jr    r31                                              #
+									 nop                                                    #
+		</Location>
+		
+		<Location file="SCUS_942_21" offset="5c398" mode="ASM" offsetMode="RAM">
+										@Equipment_Stat_Setting:  #ESS #0x0005c398
+										
+										#Routine Locations
+										.label @Get_Item_Data_Pointer,  0x8005a884
+										.label @Get_Job_Data_Pointer,   0x8005a8a4 
+										
+										#Data Locations
+										.label @AccessorySecondaryData, 0x80063f58
+										.label @ShieldSecondaryData,    0x80063eb8
+										.label @WeaponSecondaryData,    0x80063ab8	
+										
+										#Rewrite of the Equipment Stat Settings
+										#Saves 0x8005c504 - 0x8005c5c4
+										#More could be saved with a loop
+                                               addiu r29, r29, -0x0018                      #
+                                               sw    r16, 0x0010  (r29)                     #
+											   sw    r31, 0x0014  (r29)                     #
+                                               move  r16, r4		                        #r16 = Unit Data Pointer
+											   
+                                               addiu r4,  r16,  0x003c                      #r4 = Unit's Data Pointer (WP 1)
+                                               jal   0x0005e644		                        #Null Equipment Stats (Unit Data 0x3c - 0x46)
+                                               li    r5,  11		                        #r5 = 11 (Limit)
+											   lbu   r4,  0x0003  (r16)                     #Load Unit's Job
+                                               jal   @Get_Job_Data_Pointer                  #r2 = Job Data Pointer
+											   nop                                          #
+                                               lbu   r3,  0x0019  (r2)                      #Load Job's C-EV
+											   
+@ESS.Accessory: 							   lbu   r4,  0x001c  (r16)                     #Load Unit's Accessory ID
+                                               sb    r3,  0x0043  (r16)                     #Store Job's C-EV into Unit Data						                                  
+                                               jal   @Get_Item_Data_Pointer                 #Get Accessory Data
+                                               nop          		                        #
+                                               lbu   r4,  0x03  (r2)	                    #Load Accessory's Item Type
+											   lbu   r3,  0x04  (r2)                        #Load Accessory's Second Table ID
+                                               andi  r4,  r4,  0x08                         #
+                                               beq   r4,  r0,  @ESS.RH_shield               #Branch if Accessory isn't an Accessory
+											   
+											   sll   r3,  r3,  1                            #ID * 2
+                                               la    r4,  @AccessorySecondaryData           #r4 = Accessory Evade Data
+                                               addu  r2,  r4,  r3                           #
+                                               lbu   r3,  0x00  (r2)                        #Load Accessory's P-EV
+                                               lbu   r2,  0x01  (r2)                        #Load Accessory's M-EV
+                                               sb    r3,  0x0040  (r16)	                    #Store Accessory's P-EV into Unit's
+                                               sb    r2,  0x0044  (r16)	                    #Store Accessory's M-EV into Unit's
+											   
+@ESS.RH_shield:                                lbu   r4,  0x001e  (r16)                     #Load Unit's RH Shield
+                                               jal   @Get_Item_Data_Pointer                 #Get Accessory Data
+                                               nop          		                        #
+                                               lbu   r4,  0x03  (r2)	                    #Load Shield's Item Type
+											   lbu   r3,  0x04  (r2)                        #Load Shield's Second Table ID
+                                               andi  r4,  r4,  0x40                         #
+                                               beq   r4,  r0,  @ESS.LH_shield               #Branch if Shield isn't a Shield
+											   
+											   sll   r3,  r3,  1                            #ID * 2
+                                               la    r4,  @ShieldSecondaryData              #r4 = Shield Evade Data
+                                               addu  r2,  r4,  r3                           #
+                                               lbu   r3,  0x00  (r2)                        #Load Shield's P-EV
+                                               lbu   r2,  0x01  (r2)                        #Load Shield's M-EV
+                                               sb    r3,  0x0041  (r16)	                    #Store RH Shield's P-EV into Unit's
+                                               sb    r2,  0x0045  (r16)                     #Store RH Shield's M-EV into Unit's
+											   
+@ESS.LH_shield:                                lbu   r4,  0x0020  (r16)                     #Load Unit's LH Shield
+                                               jal   @Get_Item_Data_Pointer                 #Get Accessory Data
+                                               nop          		                        #
+                                               lbu   r4,  0x03  (r2)	                    #Load Shield's Item Type
+											   lbu   r3,  0x04  (r2)                        #Load Shield's Second Table ID
+                                               andi  r4,  r4,  0x40                         #
+                                               beq   r4,  r0,  @ESS.RH_weapon               #Branch if Shield isn't a Shield
+
+											   sll   r3,  r3,  1                            #ID * 2
+                                               la    r4,  @ShieldSecondaryData              #r4 = Shield Evade Data
+                                               addu  r2,  r4,  r3                           #
+                                               lbu   r3,  0x00  (r2)                        #Load Shield's P-EV
+                                               lbu   r2,  0x01  (r2  )                      #Load Shield's M-EV
+                                               sb    r3,  0x0042  (r16)	                    #Store LH Shield's P-EV into Unit's
+                                               sb    r2,  0x0046  (r16)                     #Store LH Shield's M-EV into Unit's
+											   
+@ESS.RH_weapon:                                lbu   r4,  0x001d  (r16)                     #Load Unit's RH Weapon
+                                               jal   @Get_Item_Data_Pointer                 #Get Accessory Data
+                                               nop          		                        #
+                                               lbu   r4,  0x03  (r2)	                    #Load Weapon's Item Type
+											   lbu   r3,  0x04  (r2)                        #Load Weapon's Second Table ID
+                                               andi  r4,  r4,  0x80                         #
+                                               beq   r4,  r0,  @ESS.LH_weapon               #Branch if Weapon isn't a Weapon
+											   
+                                               sll   r3,  r3,  3	                        #Original ID * 8
+                                               la    r4,  @WeaponSecondaryData              #r4 = Weapon Secondary Data
+                                               addu  r2,  r4,  r3                           #
+                                               lbu   r3,  0x04  (r2)                        #Load Weapon's WP
+                                               lbu   r4,  0x05  (r2)                        #
+                                               sb    r3,  0x003c  (r16)                     #Store RH Weapon's WP into Unit's
+                                               sb    r4,  0x003e  (r16)	                    #Store RH Weapon's W-EV into Unit's
+											   
+@ESS.LH_weapon:                                lbu   r4,  0x001f  (r16)                     #Load Unit's LH Weapon
+                                               jal   @Get_Item_Data_Pointer                 #Get Accessory Data
+                                               nop          		                        #
+                                               lbu   r4,  0x03  (r2)	                    #Load Weapon's Item Type
+											   lbu   r3,  0x04  (r2)                        #Load Weapon's Second Table ID
+                                               andi  r4,  r4,  0x80                         #
+                                               beq   r4,  r0,  @ESS.end                     #Branch if Weapon isn't a Weapon
+											   
+                                               sll   r3,  r3,  3	                        #Original ID * 8
+                                               la    r4,  @WeaponSecondaryData              #r4 = Weapon Secondary Data
+                                               addu  r2,  r4,  r3                           #
+                                               lbu   r3,  0x04  (r2)                        #Load Weapon's WP
+                                               lbu   r4,  0x05  (r2)                        #
+                                               sb    r3,  0x003d  (r16)                     #Store LH Weapon's WP into Unit's
+                                               sb    r4,  0x003f  (r16)	                    #Store LH Weapon's W-EV into Unit's
+											   
+@ESS.end:                                      lw r31,0x0014(r29)                           #
+                                               lw r16,0x0010(r29)                           #
+                                               jr r31                                       #
+                                               addiu r29,r29,0x0018                         #
+			</Location>
+	</Patch>
+	
+    <Patch name="Equipment Evasion Settings">
+
 		<Description>Rewrites the Physical Equipment Evasion Routine (0x80184F9C) and removes the need for the Magical counterpart. Also includes Choto's "Evade Boost" as that increase Accessory evade by 10 if the R/S/M is equiped to avoid obvious conflict issues.
 		
 Allows some custom settings for Physical, Physical (Charge), and Magical Equipment. Such as allowing free weapon guard for physical attacks (98 instead of d8) but requiring magical attacks to have weapon guard (68 instead of 20). Or allow Magical attacks to use Class Evade.
@@ -25,165 +343,154 @@ This conflicts with:
 	Xifanie - Weapon Guard Innate All v2 (Can do the same thing)</Description>
 
 			<Location file="BATTLE_BIN" offset="184f9c" mode="ASM" offsetMode="RAM">
-                            #Data Locations
-                            .label @Item_Data,0x80062eb8
-                            
-                            #Ram Locations
-                            .label @Attacker_Current_Action,0x80192d8c
-                            .label @Target_Current_Action,0x80192d0
-                            .label @Attacker_Data,0x80192d94
-                            .label @Target_Data,0x080192d98
-                            
-                            #Routine Locations
-                            .label @Weapon_Guard_Usability,0x8018130c
-                            .label @Get_Item_Data_Pointer,0x8005a884
+			<Include patch="Get Common Labels" />
 
-							@Equipment_Evasion_Setting:			#
-								addiu r29,r29,-0x001c			#
-								sw r17,0x0018(r29)				#
-								sw r16,0x0014(r29)				#
-								lw r16, @Target_Data            #Load Target Data Pointer
-								addu r17,r4,r0					#Move r4 to r17 (Input)
-								sw r31,0x0010(r29)				#
-								andi r3,r17,0x0008				#
-								beq r3,r0, @EES.No_Weapon_Guard	#Branch if not using Weapon Evade
-								addu r7,r0,r0					#Clear r7 (No weapon evade)
-								andi r3,r17,0x0040				#
-								beq r3,r0, @EES.No_WG_Req		#Branch if Weapon Guard (reaction) not required
-								nop								#
-								lbu r2,0x008e(r16)				#Load 4th set of Reactions (Target)
-								nop								#
-								andi r2,r2,0x0040				#
-								beq r2,r0, @EES.No_Weapon_Guard	#Branch if No Weapon Guard
-								addu r7,r0,r0					#Fail Weapon Guard
-@EES.No_WG_Req:					jal @Weapon_Guard_Usability		#Weapon Guard Usability
-								addu r4,r16,r0					#r4 = Target Data Pointer
-								sltiu r7,r2,0x0001				#r7 = 1 if able to use WG
-@EES.No_Weapon_Guard:			ori r2,r0,0x0064				#r2 = 100 (Base Hit)
-								lui r1,0x8019					#
-								sb r2,0x38dc(r1)				#Base Hit Rate = 100
-								sh r0,0x38de(r1)				#Accessory Evade and Right Hand Evade = 0
-								lbu r2,0x0043(r16)				#Load Character's Class Evade
-								sh r0,0x38e0(r1)				#Left Hand and Class Evade Evade = 0
-								andi r6,r17,0x0030				#
-								srl r6,r6,0x05					#r6 = 1 for Magical Evade; 0 for Physical Evade
-								andi r3,r17,0x0080				#
-								beq r3,r0, @EES.Skip_CL_Evade   #Branch if not using Class Evade
-								nop								#
-								sb r2,0x38e1(r1)				#Store Class Evade
-@EES.Skip_CL_Evade:				lbu r4,0x001c(r16)				#Load Target's Accessory ID
-								jal @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
-								nop								#
-								lbu r3,0x0003(r2)				#Load Item Type
-								lbu r4,0x0004(r2)				#Load 2nd Table ID
-								andi r3,r3,0x0008				#
-								beq r2,r0, @EES.Not_Acc			#Branch if Accessory isn't an  Accessory
-								nop								#
-								lui r1,0x8006					#
-								sll r4,r4,0x01					#Acc. ID * 2
-								addu r1,r1,r4					#
-								addu r1,r1,r6					#r6 = 1 for Magical or 0 for Physical
-								lbu r2,0x3f58(r1)				#Load Accessory's Evade
-								andi r3,r17,0x0004				#
-								beq r3,r0, @EES.store_acc_evade	#Branch if not using "Evade" Boost
-								nop								#
-								lbu r3,0x0095(r16)				#Load Target Set (default - Movement Set x03)
-								nop								#
-								andi r3,r3,0x0002				#
-								beq r3,r0, @EES.store_acc_evade	#Branch if "Evade Boost" not active
-								nop								#
-								addiu r2,r2,0x000a				#Acc. Evade + 10
-@EES.store_acc_evade:			lui r1,0x8019					#
-								sb r2,0x38de(r1)				#Store Accessory's Evade
-@EES.Not_Acc:					lbu r4,0x001d(r16)				#Load Target's RH Weapon
-								jal @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
-								nop								#
-								lbu r3,0x0003(r2)				#Load Equipment Type
-								lbu r4,0x0004(r2)				#Load 2nd Table ID
-								andi r3,r3,0x0080				#
-								beq r3,r0, @EES.Check_RHS		#Branch if not a Weapon
-								nop								#
-								beq r7,r0, @EES.Check_RHS		#Branch if not using Weapon Guard
-								nop								#
-								sll r2,r4,0x03					#Weapon ID * 8
-								lui r1,0x8006					#
-								addu r1,r1,r2					#
-								j @EES.store_RH_evade			#
-								lbu r2,0x3abd(r1)				#Load Weapon Evade								
-@EES.Check_RHS:					lbu r4,0x001e(r16)              #Load Target's RH Shield ID
-								jal @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
-								nop								#
-								lbu r3,0x0003(r2)				#Load Equipment Type
-								lbu r4,0x0004(r2)				#Load 2nd Table ID
-								andi r3,r3,0x0040				#
-								beq r3,r0, @EES.Check_LH        #Branch if not a Shield
-								nop								#
-								sll r2,r4,0x01					#Shield ID * 2
-								lui r1,0x8006					#
-								addu r1,r1,r2					#
-								addu r1,r1,r6					#r6 = 1 for Magical or 0 for Physical
-								lbu r2,0x3eb8(r1)				#Load RH Shield's Evade
-@EES.store_RH_evade:			lui r1,0x8019					#
-								sb r2,0x38df(r1)				#Store RH Equipment's Evade
-@EES.Check_LH:					lbu r4,0x001f(r16)				#Load LH Weapon ID
-								jal @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
-								nop								#
-								lbu r3,0x0003(r2)				#Load Equipment Type
-								lbu r4,0x0004(r2)				#Load 2nd Table ID
-								andi r3,r3,0x0080				#
-								beq r3,r0, @EES.Check_LHS		#
-								nop								#
-								beq r7,r0, @EES.Check_LHS		#								
-								nop								#
-								sll r2,r4,0x03					#Weapon ID * 8
-								lui r1,0x8006					#
-								addu r1,r1,r2					#
-								j @EES.store_LH_evade			#
-								lbu r2,0x3abd(r1)				#Load Weapon Evade	
-@EES.Check_LHS:					lbu r4,0x0020(r16)				#Load LH Shield ID
-								jal @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
-								nop								#
-								lbu r3,0x0003(r2)				#Load Equipment Type
-								lbu r4,0x0004(r2)				#Load 2nd Table ID
-								andi r3,r3,0x0040				#
-								beq r3,r0, @EES.END				#Branch if LH Shield is not a Shield								
-								nop								#
-								sll r2,r4,0x01					#Shield ID * 2
-								lui r1,0x8006					#
-								addu r1,r1,r2					#
-								addu r1,r1,r6					#r6 = 1 for Magical or 0 for Physical
-								lbu r2,0x3eb8(r1)				#Load LH Sheild Evade
-@EES.store_LH_evade:			lui r1,0x8019					#
-								sb r2,0x38e0(r1)				#Store LH Equipment's Evade
-@EES.END:						lw r31,0x0010(r29)				#
-								lw r16,0x0014(r29)				#
-								lw r17,0x0018(r29)				#
-								jr r31							#
-								addiu r29,r29,0x001c			#
+							@Equipment_Evasion_Setting:			    #
+								addiu r29, r29, -0x001c			    #
+								sw    r17, 0x0018  (r29)		    #
+								sw    r16, 0x0014  (r29)		    #
+								lw    r16, @Target_Data             #Load Target Data Pointer
+								move  r17, r4					    #Move r4 to r17 (Input)
+								sw    r31, 0x0010  (r29)		    #
+								andi  r3,  r17, 0x0008			    #
+								beq   r3,  r0, @EES.No_Weapon_Guard	#Branch if not using Weapon Evade
+								li    r7,  0	                    #Clear r7 (No weapon evade)
+								andi  r3,  r17, 0x40                #
+								beq   r3,  r0, @EES.No_WG_Req       #Branch if Weapon Guard (reaction) not required
+								nop                                 #
+								lbu   r2,  %WeaponGuardR/S/MSet(r16)#Load 4th Reaction Set (Default: x008e)
+								nop                                 #
+								andi  r2,  r2, %WeaponGuardR/S/MBit #(Default: x0040)
+								beq   r2,  r0, @EES.No_Weapon_Guard	#Branch if No Weapon Guard
+								li    r7,  0						#Fail Weapon Guard
+@EES.No_WG_Req:					jal   @Weapon_Guard_Usability		#Weapon Guard Usability
+								move  r4,  r16						#r4 = Target Data Pointer
+								sltiu r7,  r2, 0x01					#r7 = 1 if able to use WG
+@EES.No_Weapon_Guard:			li    r2,  100						#r2 = 100 (Base Hit)
+								lui   r1,  0x8019					#
+								sb    r2,  0x38dc(r1)				#Base Hit Rate = 100
+								sh    r0,  0x38de(r1)				#Accessory Evade and Right Hand Evade = 0
+								lbu   r2,  0x0043(r16)				#Load Character's Class Evade
+								sh    r0,  0x38e0(r1)				#Left Hand and Class Evade Evade = 0
+								andi  r6,  r17, 0x30				#
+								srl   r6,  r6,  0x05				#r6 = 1 for Magical Evade; 0 for Physical Evade
+								andi  r3,  r17, 0x80				#
+								beq   r3,  r0, @EES.Skip_CL_Evade   #Branch if not using Class Evade
+								nop									#
+								sb    r2,  0x38e1(r1)				#Store Class Evade
+@EES.Skip_CL_Evade:				lbu   r4,  0x001c(r16)				#Load Target's Accessory ID
+								jal   @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
+								nop									#
+								lbu   r3,  0x0003(r2)				#Load Item Type
+								lbu   r4,  0x0004(r2)				#Load 2nd Table ID
+								andi  r3,  r3, 0x08					#
+								beq   r2,  r0, @EES.Not_Acc			#Branch if Accessory isn't an  Accessory
+								nop									#
+								lui   r1,  0x8006					#
+								sll   r4,  r4, 0x01					#Acc. ID * 2
+								addu  r1,  r1, r4					#
+								addu  r1,  r1, r6					#r6 = 1 for Magical or 0 for Physical
+								lbu   r2,  0x3f58(r1)				#Load Accessory's Evade
+								andi  r3,  r17, 0x04				#
+								beq   r3,  r0, @EES.store_acc_evade	#Branch if not using "Evade" Boost
+								nop									#
+								lbu   r3,  %EvadeBoostR/S/MSet(r16) #Load Target Set (Default: x0095)
+								nop									#
+								andi r3,  r3, %EvadeBoostR/S/MBit	#(Default: x0002)
+								beq  r3,  r0, @EES.store_acc_evade	#Branch if "Evade Boost" not active
+								nop									#
+								addiu r2,r2, %EvadeBoostIncrease	#Acc. Evade + (Default: x000a)
+@EES.store_acc_evade:			lui   r1,  0x8019					#
+								sb    r2,  0x38de(r1)				#Store Accessory's Evade
+@EES.Not_Acc:					lbu   r4,  0x001d(r16)				#Load Target's RH Weapon
+								jal   @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
+								nop									#
+								lbu   r3,  0x0003(r2)				#Load Equipment Type
+								lbu   r4,  0x0004(r2)				#Load 2nd Table ID
+								andi  r3,  r3, 0x80					#
+								beq   r3,  r0, @EES.Check_RHS		#Branch if not a Weapon
+								nop									#
+								beq   r7,  r0, @EES.Check_RHS		#Branch if not using Weapon Guard
+								nop									#
+								sll   r2,  r4, 0x03					#Weapon ID * 8
+								lui   r1,  0x8006					#
+								addu  r1,  r1, r2					#
+								j     @EES.store_RH_evade			#
+								lbu   r2,  0x3abd(r1)				#Load Weapon Evade								
+@EES.Check_RHS:					lbu   r4,  0x001e(r16)              #Load Target's RH Shield ID
+								jal   @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
+								nop									#
+								lbu   r3,  0x0003(r2)				#Load Equipment Type
+								lbu   r4,  0x0004(r2)				#Load 2nd Table ID
+								andi  r3,  r3, 0x40					#
+								beq   r3,  r0, @EES.Check_LH        #Branch if not a Shield
+								nop									#
+								sll   r2,  r4,0x01					#Shield ID * 2
+								lui   r1,  0x8006					#
+								addu  r1,  r1, r2					#
+								addu  r1,  r1, r6					#r6 = 1 for Magical or 0 for Physical
+								lbu   r2,  0x3eb8(r1)				#Load RH Shield's Evade
+@EES.store_RH_evade:			lui   r1,  0x8019					#
+								sb    r2,  0x38df(r1)				#Store RH Equipment's Evade
+@EES.Check_LH:					lbu   r4,  0x001f(r16)				#Load LH Weapon ID
+								jal   @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
+								nop									#
+								lbu   r3,  0x0003(r2)				#Load Equipment Type
+								lbu   r4,  0x0004(r2)				#Load 2nd Table ID
+								andi  r3,  r3, 0x80					#
+								beq   r3,  r0, @EES.Check_LHS		#
+								nop									#
+								beq   r7,  r0, @EES.Check_LHS		#								
+								nop									#
+								sll   r2,  r4, 0x03					#Weapon ID * 8
+								lui   r1,  0x8006					#
+								addu  r1,  r1, r2					#
+								j     @EES.store_LH_evade			#
+								lbu   r2,  0x3abd(r1)				#Load Weapon Evade	
+@EES.Check_LHS:					lbu   r4,  0x0020(r16)				#Load LH Shield ID
+								jal   @Get_Item_Data_Pointer		#Input r4 with Item ID; Return r2 with Item Data Pointer
+								nop									#
+								lbu   r3,  0x0003(r2)				#Load Equipment Type
+								lbu   r4,  0x0004(r2)				#Load 2nd Table ID
+								andi  r3,  r3, 0x40					#
+								beq   r3,  r0, @EES.END				#Branch if LH Shield is not a Shield								
+								nop									#
+								sll   r2,  r4, 0x01					#Shield ID * 2
+								lui   r1,  0x8006					#
+								addu  r1,  r1, r2					#
+								addu  r1,  r1, r6					#r6 = 1 for Magical or 0 for Physical
+								lbu   r2,  0x3eb8(r1)				#Load LH Sheild Evade
+@EES.store_LH_evade:			lui   r1,  0x8019					#
+								sb   r2,   0x38e0(r1)				#Store LH Equipment's Evade
+@EES.END:						lw   r31,  0x0010(r29)				#
+								lw   r16,  0x0014(r29)				#
+								lw   r17,  0x0018(r29)				#
+								jr   r31							#
+								addiu r29, r29, 0x001c				#
 			</Location>
 			
 			<Location offset="188518" mode="ASM" offsetMode="RAM" label="Physical_Evade">
-								jal @Equipment_Evasion_Setting
-								addiu r4,r0,0x00D8
+								jal   @Equipment_Evasion_Setting
+								addiu r4,  r0, %P.Evade
 			</Location>
 			
 			<Location file="BATTLE_BIN" offset="188570" mode="ASM" offsetMode="RAM" label="Physical_Evade_Charge">
-								jal @Equipment_Evasion_Setting
-								addiu r4,r0,0x00D8
+								jal   @Equipment_Evasion_Setting
+								addiu r4,  r0, %P.Evade(Charge)
 			</Location>
 			
 			<Location file="BATTLE_BIN" offset="1885c0" mode="ASM" offsetMode="RAM" label="Magical_Evade">
-								jal @Equipment_Evasion_Setting
-								addiu r4,r0,0x0020
+								jal   @Equipment_Evasion_Setting
+								addiu r4,  r0, %M.Evade
 			</Location>
-			<Variable name="P. Evade" file="BATTLE_BIN" offset="18851C" offsetMode="RAM" bytes="1" default="D8" />
-			<Variable name="P. Evade (Charge)" file="BATTLE_BIN" offset="188574" offsetMode="RAM" bytes="1" default="D8" />
-			<Variable name="M. Evade" file="BATTLE_BIN" offset="1885c4" offsetMode="RAM" bytes="1" default="20" />
-			<Variable name="Weapon Guard R/S/M Set" file="BATTLE_BIN" offset="184fd0" offsetMode="RAM" bytes="1" default="8E" />
-			<Variable name="Weapon Guard R/S/M Bit" file="BATTLE_BIN" offset="184fd8" offsetMode="RAM" bytes="1" default="40" />
-			<Variable name="Evade Boost R/S/M Set" file="BATTLE_BIN" offset="185060" offsetMode="RAM" bytes="1" default="95" />
-			<Variable name="Evade Boost R/S/M Bit" file="BATTLE_BIN" offset="185068" offsetMode="RAM" bytes="1" default="02" />
-			<Variable name="Evade Boost Increase" file="BATTLE_BIN" offset="185074" offsetMode="RAM" bytes="1" default="0A" />
+			<Variable name="P. Evade" file="BATTLE_BIN" bytes="1" default="00D8" symbol="true" />
+			<Variable name="P. Evade (Charge)" file="BATTLE_BIN" bytes="1" default="00D8" symbol="true" />
+			<Variable name="M. Evade" file="BATTLE_BIN" bytes="1" default="0020" symbol="true" />
+			<Variable name="Weapon Guard R/S/M Set" bytes="2" default="008e" symbol="true" />
+			<Variable name="Weapon Guard R/S/M Bit" bytes="2" default="0095" symbol="true" />
+			<Variable name="Evade Boost R/S/M Set" bytes="2" default="0095" symbol="true" />
+			<Variable name="Evade Boost R/S/M Bit" bytes="2" default="0002" symbol="true" />
+			<Variable name="Evade Boost Increase" bytes="2" default="000a" symbol="true" />
 			
 	</Patch>
 
@@ -193,67 +500,69 @@ This conflicts with:
 This conflicts with:
 	Emmy - Super Duper Reaction Looper Version 1.2 (Nothing to be done about it either, one or the other)
 		</Description>
+
+			<Include patch="Get Common Labels" />
 			<Location file="BATTLE_BIN" offset="18d1b8" mode="ASM" offsetMode="RAM" >
 						.label @Chance_To_React,0x8018D384
 						@MP_Switch_Routine:
-								la r4,0x80192d98				#Target Current Action Data
-								addiu r29,r29,-0x0018			#
-								sw r31,0x0010(r29)				#
-								sw r16,0x0014(r19)			  	#
-								lhu r3,0x0190(r4)			  	#Load HP Damage
-								lhu r2,0x002c(r4)				#Load Current MP
-								beq r3,r0,@MPSwitch.end 		#Branch if not doing HP Damage
-								addu r16,r4,r0			       	#r16 = Target Damage Pointer
-								beq r2,r0,@MPSwitch.end			#Branch if Target has no MP
+								la    r4,  @Target_Data			#Target Data
+								addiu r29, r29, -0x0018			#
+								sw    r31, 0x0010  (r29)		#
+								sw    r16, 0x0014  (r19)	  	#
+								lhu   r3,  0x0190  (r4)		  	#Load HP Damage
+								lhu   r2,  0x002c  (r4)			#Load Current MP
+								beq   r3,  r0,  MPSwitch.end 	#Branch if not doing HP Damage
+								move  r16, r4			       	#r16 = Target Data
+								beq   r2,  r0, MPSwitch.end		#Branch if Target has no MP
 								nop								#
-								jal @Chance_To_React			#
+								jal   @Chance_To_React			#Reaction Chance Roll
 								nop	                            #
-								bne r2,r0,@MPSwitch.end	        #
-								lhu r6,0x0190(r16)	            #Load HP Damage
-								lui r2,0x8019	                #
-								lw r2,-0x0a04(r2)	            #
-								lhu r5,0x0194(r16)	            #Load MP Damage
-								bne r2,r0,@MPSwitch.end	        #
+								bne   r2,  r0,  MPSwitch.end    #
+								lhu   r6,  0x0190  (r16)        #Load HP Damage
+								lui   r2,  0x8019	            #
+								lw    r2,  -0x0a04 (r2)         #
+								lhu   r5,  0x0194  (r16)        #Load MP Damage
+								bne   r2,  r0,  MPSwitch.end    #
 								nop	                            #
-								addu r5,r6,r5	                #
-								sltiu r2,r5,0x03e8	            #
-								bne r2,r0,@MPSwitch.limit	    #Branch if under Damage Cap
+								addu  r5,  r6,  r5              #HP Damage + MP damage
+								sltiu r2,  r5,  1000            #
+								bne   r2,  r0,  MPSwitch.limit  #Branch if under Damage Cap
 								nop	                            #
-								ori r5,r0,0x03e7	            #Cap Damage
-@MPSwitch.limit: 				lhu r3,0x002c(r16)	            #Load Current MP
-								ori r4,r0,0x0040	            #
-								mult r5,r4	                    #Damage * constant
-								mflo r4	                        #
-								srl r4,r4,0x07	                #Damage * constant / 128
-								lui r2,0x8019	                #
-								addiu r2,r2,-0x2d64	            #
-								lbu r2,0x0000(r2)	            #Load always skip flag
+								li    r5,  999  	            #Cap Damage
+MPSwitch.limit: 				lhu   r3,  0x002c  (r16)        #Load Current MP
+								ori   r4,  r0,  %xx	            #xx = input
+								mult  r5,  r4                   #Damage * input
+								mflo  r4                        #
+								srl   r4,  r4, 8                #Damage * input / 256
+								lui   r2,  0x8019               #
+								addiu r2,  r2, -0x2d64          #
+								lbu   r2,  0x0000  (r2)         #Load always skip flag
 								nop	                            #
-								beq r2,r0,@MPSwitch.MPDamage	#Branch if always forcing to only store mp damage
-								slt r2,r3,r4	                #
-								beq r2,r0,@MPSwitch.MPDamage    #Branch if only damaging MP
+								beq   r2,  r0, MPSwitch.MPDamage #Branch if always forcing to only store mp damage
+								slt   r2,  r3, r4	            #
+								beq   r2,  r0, MPSwitch.MPDamage #Branch if only damaging MP
 								nop                             #
-								subu r2,r6,r4                   #HP Damage - MP Damage
-								sh r2,0x0190(r16)               #Store new HP Damage
-								sh r3,0x0194(r16)               #Store MP Damage as Current MP
-								ori r2,r0,0x00a0                #
-								j @MPSwitch.end                 #
-								sb r2,0x01b1(r16)               #Store Hit byte as HP/MP Damage
-@MPSwitch.MPDamage: 			lbu r2,0x01b1(r16)              #
-								ori r3,r0,0x0020                #
-								andi r2,r2,0x007f               #
-								sb r2,0x01b1(r16)               #Remove HP Damage flag
-								sh r0,0x0190(r16)               #Store HP Damage as 0
-								sb r3,0x01b1(r16)               #Store Hit byte as MP Damage
-								sh r4,0x0194(r16)               #Store MP Damage as MP Damage
-								ori r2,r0,0x01b1                #MP Switch Ability ID
-								sh r2,0x000e(r16)               #Store reaction id
-@MPSwitch.end: 					lw r31,0x0010(r29)              #
-								lw r16,0x0014(r29)    	        #
-								jr r31							#
-								addiu r29,r29,0x0018            #
+								subu  r2,  r6,  r4              #HP Damage - MP Damage
+								sh    r2,  0x0190  (r16)        #Store new HP Damage
+								sh    r3,  0x0194  (r16)        #Store MP Damage as Current MP
+								li    r2,  0x00a0               #
+								j     MPSwitch.end              #
+								sb    r2,  0x01b1  (r16)        #Store Hit byte as HP/MP Damage
+MPSwitch.MPDamage: 				lbu   r2,  0x01b1  (r16)        #
+								li    r3,  0x0020               #
+								andi  r2,  r2,  0x007f          #
+								sb    r2,  0x01b1  (r16)        #Remove HP Damage flag
+								sh    r0,  0x0190  (r16)        #Store HP Damage as 0
+								sb    r3,  0x01b1  (r16)        #Store Hit byte as MP Damage
+								sh    r4,  0x0194  (r16)        #Store MP Damage as MP Damage
+								li    r2,  0x01b1               #MP Switch Ability ID
+								sh    r2,  0x000e  (r16)        #Store reaction id
+MPSwitch.end: 					lw    r31, 0x0010  (r29)        #
+								lw    r16, 0x0014  (r29)        #
+								jr    r31						#
+								addiu r29, r29, 0x0018          #
 			</Location>
-			<Variable name="xx" file="BATTLE_BIN" offset="18D220" offsetMode="RAM" bytes="1" default="80" />		
+			<Variable name="xx" bytes="2" default="0100" symbol="true" />	
 			<Variable name="Set to 0 have no spill over" file="BATTLE_BIN" offset="18D256" offsetMode="RAM" bytes="1" default="02" />
 	</Patch>
 
@@ -293,7 +602,6 @@ This conflicts with:
 			04040404		<!-- 74-77 -->
 			04040404		<!-- 78-7B -->
 			04040404		<!-- 7C-7F -->
-
 		</Location>
 
 		<Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="Job_Proc_Chance"> <!-- Job proc rates -->
@@ -351,22 +659,22 @@ This conflicts with:
 									.label @Attackers_Data_Pointer,0x80192d94
 									@Get_Crit_Chance:
                                               addiu r29,r29,-0x0018            #
-											  sw r31,0x0010(r29)               #
-											  lui r2,0x8019                    #r2 = 0x8019									
-									          lbu r5,0x38d8(r2)                #Load Used Weapon ID
-											  lw r6,0x2d94(r2)                 #Attacker's Data
-											  lbu r3,@Item_Proc_Chance(r5)     #Item Proc Chance
-											  lbu r5,0x0003(r6)                #Load Unit Job
-											  lbu r5,@Job_Proc_Chance(r5)      #Load Job Proc Chance
+											  sw    r31,0x0010(r29)            #
+											  lui   r2,0x8019                  #r2 = 0x8019									
+									          lbu   r5,0x38d8(r2)              #Load Used Weapon ID
+											  lw    r6,0x2d94(r2)              #Attacker's Data
+											  lbu   r3,@Item_Proc_Chance(r5)   #Item Proc Chance
+											  lbu   r5,0x0003(r6)              #Load Unit Job
+											  lbu   r5,@Job_Proc_Chance(r5)    #Load Job Proc Chance
 											  nop                              #
-											  addu r5,r3,r5                    #Item + Job Proc Chance
-											  beq r5,r0,@proc_end              #
+											  addu  r5,r3,r5                   #Item + Job Proc Chance
+											  beq   r5,r0,@proc_end            #
 											  nop                              #
-											  jal @Random_Process              #
+											  jal   @Random_Process            #
 											  nop                              #
-@proc_end:                                    lw r31,0x0010(r29)               #
+@proc_end:                                    lw    r31,0x0010(r29)            #
 											  addiu r29,r29,0x0018             #
-											  jr r31                           #
+											  jr    r31                        #
 											  nop                              #
 											  
 									@Calculate_Crit_Damage:		  
@@ -1209,34 +1517,44 @@ Apply after using both of the others.</Description>
 		<Description>Charge can have an assigned status inflict ID, overwriting the weapons status effect (IE Poison Shot inflicts Poison). Use the Patcher to determine what Status ID to use under the Inflict Status tab.</Description>
 			<Location file="BATTLE_BIN" offset="15E62C" mode="ASM" offsetMode="RAM">
 						@Charge.Store:
-								addu r1,r1,r3					#r1 = Offset + Charge Ability ID
-								lbu r3,0x0000(r1)               #Load Status ID
-								ori r16,r0,0x0007               #Formula ID = 07
-								beq r3,r0,@Charge.end			#Branch if Status ID = 0
-								nop                             #
-								sb r3,0x38da(r4)                #Store new Status ID
-@Charge.end: 					jr r31                          #
-								nop                             #
+								addu  r1,r1,r3					#r1 = Offset + Charge Ability ID
+								lbu   r3,0x0000(r1)             #Load Status ID
+								ori   r16,r0,0x0007             #Formula ID = 07
+								beq   r3,r0,@Charge.end			#Branch if Status ID = 0
+								lui   r2,0x8019                 #
+								sb    r3,0x38da(r4)             #Store new Status ID
+@Charge.end: 					jr    r31                       #
+								li    r16, 5                    #Charge uses Formula 05
 								nop								#Charge (+1 - +4) Status Inflict ID
 								nop								#Charge (+5 - +20) Status Inflict ID
 			</Location>
 			
 			<Location file="BATTLE_BIN" offset="18B7E4" mode="ASM" offsetMode="RAM">
-								lhu r3,0x0012(r29)				#Load Ability ID
-								lui r1,0x8006					#
+								lhu   r3,0x0012(r29)			#Load Ability ID
+								lui   r1,0x8006					#
 								addiu r3,r3,-0x0196				#Ability ID - x196
 								sltiu r2,r3,0x0008				#
-								bne r2,r0,@Charge.skip			#Branch if a Charge Ability
-								lui r4,0x8019					#
-								ori r3,r0,0x0000				#r3 = default to charge +1 if not a charge ability (prevent some weird stuff)
-@Charge.skip: 					sll r2,r3,0x01					#ID * 2
-								addu r1,r1,r2					#r1 = x80060000 + ID * 2
-								lbu r2,0x1045(r1)				#Load Charge Power
-								lui r1,0x8016					#
+								bne   r2,r0,@Charge.skip		#Branch if a Charge Ability
+								lui   r4,0x8019					#
+								ori   r3,r0,0x0000				#r3 = default to charge +1 if not a charge ability (prevent some weird stuff)
+@Charge.skip: 					sll   r2,r3,0x01				#ID * 2
+								addu  r1,r1,r2					#r1 = x80060000 + ID * 2
+								lbu   r2,0x1045(r1)				#Load Charge Power
+								lui   r1,0x8016					#
 								addiu r1,r1,-0x19b4				#r1 = Charge Status ID Offset
-								jal @Charge.Store				#Skip loading formula
-								sb r2,0x38e4(r4)				#
+								jal   @Charge.Store				#Skip loading formula
+								sb    r2,0x38e4(r4)				#
 			</Location>
+			
+			<Location file="BATTLE_BIN" offset="188ca4" mode="ASM" offsetMode="RAM">
+								jal   0x80188510                #Normal Physical Evasion for Formula 05
+			</Location>
+			
+			<Location file="BATTLE_BIN" offset="188cd4" mode="ASM" offsetMode="RAM">
+								nop                             #Remove proc chance check for Formula 05
+			</Location>
+			
+			
 			<Variable name="Charge +1" file="BATTLE_BIN" offset="15E64C" offsetMode="RAM" bytes="1" default="00" />
 			<Variable name="Charge +2" file="BATTLE_BIN" offset="15E64D" offsetMode="RAM" bytes="1" default="00" />
 			<Variable name="Charge +3" file="BATTLE_BIN" offset="15E64E" offsetMode="RAM" bytes="1" default="00" />
@@ -1247,62 +1565,46 @@ Apply after using both of the others.</Description>
 			<Variable name="Charge +20" file="BATTLE_BIN" offset="15E653" offsetMode="RAM" bytes="1" default="00" />
 	</Patch>
 
-    <Patch name="Call Function x0C">
-     <Description>Call Function x0C uses variable x01 to determine what song to play.</Description>
-     <Location file="BATTLE_BIN" offset="144028"  mode="ASM" offsetMode="RAM">
-				lw r2,0x80057720			#Load Variable x01
-				lui r1,0x8016				#
-				andi r2,r2,0x00FF			#Remove any potential extra
-				addu r4,r2,r0				#move to r4 too
-				sh r0,0x5fd8(r1)			#
-				sh r2,0x5fd4(r1)			#
-				sh r0,0x5fd6(r1)			#
-     </Location>
-    </Patch>
-
 	<Patch name="Weapon Range and Others Disable Movement">
 		<Description>Weapon Ranged, Linear AOE, and Draw Out AOE type with a Charge Time all disable Movement</Description>
 		<Location file="BATTLE_BIN" offset="15E654" mode="ASM" offsetMode="RAM">
 							@Disable_Move:
-								addiu r29,r29,-0x0028                       #
-								sw r31,0x0020(r29)                          #
 								addiu r2,r16,-0x0196                        #
 								sltiu r2,r2,0x0008                          #
-								bne r2,r0,@Disable_Move.end                 #Branch if it is a Charge Ability 
+								bne   r2,r0,@Disable_Move.end               #Branch if it is a Charge Ability 
 								nop                                         #
-								sll r2,r16,0x03                             #Ability ID * 8 
-								subu r2,r2,r16                              #Ability ID * 7 
-								sll r2,r2,0x01                              #Ability ID * 14 
-								lui r3,0x8006                               #
+								sll   r2,r16,0x03                           #Ability ID * 8 
+								subu  r2,r2,r16                             #Ability ID * 7 
+								sll   r2,r2,0x01                            #Ability ID * 14 
+								lui   r3,0x8006                             #
 								addiu r3,r3,-0x0410                         #
-								addu r6,r3,r2                               #r6 = Ability Data Offset 
-								lbu r2,0x000c(r6)				            #Load Ability CT 
-								lbu r3,0x0003(r6)                           #Load Ability 1st Ability Flags 
-								lbu r4,0x0004(r6)                           #Load Ability 2nd Ability Flags 
-								beq r2,r0,@Disable_Move.end                 #Branch if Ability has no CT 
-								andi r3,r3,0x0020                           #
-								bne r3,r0,@Disable_Move.activate			#Branch if disabling move 
-								andi r4,r4,0x0004                           #
-								bne r4,r0,@Disable_Move.activate            #Branch if Linear Attack is active (Disable Move) 
+								addu   r6,r3,r2                             #r6 = Ability Data Offset 
+								lbu   r2,0x000c(r6)				            #Load Ability CT 
+								lbu   r3,0x0003(r6)                         #Load Ability 1st Ability Flags 
+								lhu   r4,0x0004(r6)                         #Load Ability 2nd Ability Flags 
+								beq   r2,r0,@Disable_Move.end               #Branch if Ability has no CT 
+								andi  r3,r3,0x0020                          #
+								bne   r3,r0,@Disable_Move.activate			#Branch if disabling move 
+								andi  r5,r4,0x0004                          #
+								bne   r5,r0,@Disable_Move.activate          #Branch if Linear Attack is active (Disable Move) 
+								andi  r5,r4,0x0400                          #
+								bne   r5,r0, @Disable_Move.end              #Branch if Performing flag is active (end)
+								lbu   r3,0x0000(r6)                         #Load Ability Range 
+								lbu   r4,0x0001(r6)                         #Load Ability AOE 
+								bne   r3,r0,@Disable_Move.end               #Branch if Ability Range > 0 
 								nop                                         #
-								lbu r3,0x0000(r6)                           #Load Ability Range 
-								lbu r4,0x0001(r6)                           #Load Ability AOE 
-								bne r3,r0,@Disable_Move.end                 #Branch if Ability Range > 0 
+								beq   r4,r0,@Disable_Move.end               #Branch if AOE = 0 
 								nop                                         #
-								beq r4,r0,@Disable_Move.end                 #Branch if AOE = 0 
-								nop                                         #
-@Disable_Move.activate:			ori r2,r0,0x0001                            #
-								addu r23,r0,r0                              #
-								sb r2,0x0187(r19)                           #Store Movement Taken 
-@Disable_Move.end:				sltiu r2,r16,0x0170                         #
-								lw r31,0x0020(r29)                          #
-								addiu r29,r29,0x0028                        #
+@Disable_Move.activate:			ori   r2,r0,0x0001                          #
+								addu  r23,r0,r0                             #
+								sb    r2,0x0187(r19)                        #Store Movement Taken 
+@Disable_Move.end:				andi  r2,r18,0x00ff                         #
 								jr r31                                      #
 								nop                                         #
 		</Location>
-		<Location file="BATTLE_BIN" offset="17C808" mode="ASM" offsetMode="RAM">
-								jal @Disable_Move
-								nop
+		<Location file="BATTLE_BIN" offset="17c8a8" mode="ASM" offsetMode="RAM">
+								jal   @Disable_Move                         #
+								sb    r2,0x0188(r19)                        #
 		</Location>
 	</Patch>
 
@@ -1311,7 +1613,7 @@ Apply after using both of the others.</Description>
 There's an option to increase or decrease the Status CT	timers through the unit data (ie attaching it to a support) and comes with it assigned to Train and Secret Hunt. Edit the dropdowns to change this. Or set both to 0 if you don't want this at all. Ths ASMs to disable the vanilla effect of Train and Secret Hunt are also in my XML,
 		</Description>
 		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
-		<Location file="SCUS_942_21" offset="41034" offsetMode="RAM" mode="DATA" >
+		<Location file="SCUS_942_21" offset="41100" offsetMode="RAM" mode="DATA" >
 								FF FF FF FF								<!-- Blank / Crystal / Dead / Undead  -->
 								FF FF FF FF								<!-- Charging / Jumping / Defending / Performing -->
 								FF FF FF FF								<!-- Petrifty / Invitation / Darkness / Confusion -->
@@ -1324,7 +1626,7 @@ There's an option to increase or decrease the Status CT	timers through the unit 
 								0C 0D 0E 0F								<!-- Dont Move / Dont Act / Reflect / Death Sentence -->
 		</Location>
 		
-		<Location file="SCUS_942_21" offset="40fb0" mode="ASM" offsetMode="RAM">						
+		<Location file="SCUS_942_21" mode="ASM" offsetMode="RAM">						
 						@Set_Dead_CT:
 								lbu r2, 0x0005(r7)						#Load Unit Battle Flags
 								lbu r3, 0x0006(r7)						#Load Unit Gender
@@ -1408,7 +1710,7 @@ There's an option to increase or decrease the Status CT	timers through the unit 
 						@Get_Status_Storage_Location:
 								lui r2, 0x8004							#
 								addu r2, r2, r5							#
-								lbu r2,0x1034(r2)						#r2 = Status Storage Location
+								lbu r2,0x110(r2)                        #r2 = Status Storage Location
 								jr r31									#
 								addu r1, r2, r7							#r1 = Unit Data Pointer + Storage Offset
 		</Location>	
@@ -1509,46 +1811,46 @@ Timer.cannot_remove_status:		lw r31, 0x000C(r29)						#
 		<Location file="SCUS_942_21" offset="5C904" mode="ASM" offsetMode="RAM">
 							.label @Movement.CE,0x80041064
 							@Movement_Edits:
-								lbu r6, 0x0093(r4)							#Load 1st set of Movements
-								lbu r2, 0x003A(r4)							#Load unit's Movement
-								andi r3, r6,0x0080							#
-								beq r3,r0,@Movement.unit_no_move+			#Branch if unit does not have Move +1
-								andi r3,r6,0x0040							#
+								lbu   r6, 0x0093(r4)	    				#Load 1st set of Movements
+								lbu   r2, 0x003A(r4)						#Load unit's Movement
+								andi  r3, r6,0x0080							#
+								beq   r3,r0,@Movement.unit_no_move+			#Branch if unit does not have Move +1
+								andi  r3,r6,0x0040							#
 								addiu r2, r2,0x0001							#Move + 1
-								sb r2,0x003A(r4)							#Store new Move
-@Movement.unit_no_move+:		lbu r5,0x03B(r4)							#Load unit's Jump
-								beq r3,r0, @Movement.unit_no_jump+			#Branch if the unit doesn't have Jump +2
-								andi r3,r6,0x0020							#
+								sb    r2,0x003A(r4)							#Store new Move
+@Movement.unit_no_move+:		lbu   r5,0x03B(r4)							#Load unit's Jump
+								beq   r3,r0, @Movement.unit_no_jump+		#Branch if the unit doesn't have Jump +2
+								andi  r3,r6,0x0020							#
 								addiu r5,r5,0x0002							#Jump + 2
-								sb r5, 0x003B(r4)							#Store new Jump
-@Movement.unit_no_jump+:		lbu r2,0x0036(r4)							#Load Unit's PA
-								beq r3,r0, @Movement.unit_no_pa+			#Branch if unit does not have Attack Boost
-								andi r3,r6, 0x0010							#
+								sb    r5, 0x003B(r4)						#Store new Jump
+@Movement.unit_no_jump+:		lbu   r2,0x0036(r4)							#Load Unit's PA
+								beq   r3,r0, @Movement.unit_no_pa+			#Branch if unit does not have Attack Boost
+								andi  r3,r6, 0x0010							#
 								addiu r2, r2, 0x0002						#PA + 2
-								sb r2,0x0036(r4)							#Store new PA
-@Movement.unit_no_pa+:			lbu r5,0x0037(r4)							#Load Unit's MA
-								beq r3,r0, @Movement.unit_no_ma+			#Branch if the unit doesn't have Magic Boost
-								andi r3,r6, 0x0008							#
+								sb    r2,0x0036(r4)							#Store new PA
+@Movement.unit_no_pa+:			lbu   r5,0x0037(r4)							#Load Unit's MA
+								beq   r3,r0, @Movement.unit_no_ma+			#Branch if the unit doesn't have Magic Boost
+								andi  r3,r6, 0x0008							#
 								addiu r5, r5, 0x0002						#MA + 2
-								sb r5,0x0037(r4)							#Store new MA
-@Movement.unit_no_ma+:			lbu r2,0x0038(r4)							#Load Speed
-								beq r3,r0,@Movement.unit_no_speed+			#
+								sb    r5,0x0037(r4)							#Store new MA
+@Movement.unit_no_ma+:			lbu   r2,0x0038(r4)							#Load Speed
+								beq   r3,r0,@Movement.unit_no_speed+		#
 								nop											#
 								addiu r2, r2, 0x0001						#Speed + 1
-								sb r2,0x0038(r4)							#Store new Speed
-@Movement.unit_no_speed+:		jal @Movement.CE							#
-								andi r3,r6, 0x0004							#Prep Jump +3 check
-								jr r31										#					
+								sb    r2,0x0038(r4)							#Store new Speed
+@Movement.unit_no_speed+:		j     @Movement.CE							#
+								andi  r3,r6, 0x0004							#Prep Jump +3 check
+								jr    r31									#					
 								nop											#							
 		</Location>
 		<Location file="SCUS_942_21" offset="41064" mode="ASM" offsetMode="RAM">
 							@Movement.CE:
-								lbu r2, 0x0043(r4)							#Load Class Evade
-								beq r3, r0, Movement.CE.end					#Branch if not equipped
+								lbu   r2, 0x0043(r4)						#Load Class Evade
+								beq   r3, r0, Movement.CE.end				#Branch if not equipped
 								nop											#
 								addiu r2, r2, 0x0014						#EV + 20
-								sb r2, 0x0043(r4)							#Store new CE
-Movement.CE.end:				jr r31										#
+								sb    r2, 0x0043(r4)						#Store new CE
+Movement.CE.end:				jr    r31									#
 								nop	
 		</Location>
 
@@ -1694,7 +1996,7 @@ Movement.CE.end:				jr r31										#
 		
 		
 	</Patch>
-     	
+	
 	<Patch name="Required Level for World Map Condition">
 		<Location file="WORLD_WORLD_BIN" offset="123164" offsetMode="RAM" mode="ASM">
 						.label @Calculate_Highest_Party_Level,0x8005CBD0
@@ -1735,6 +2037,19 @@ Movement.CE.end:				jr r31										#
 		</Location>
 		
 	</Patch>
+
+    <Patch name="Call Function x0C">
+     <Description>Call Function x0C uses variable x01 to determine what song to play.</Description>
+     <Location file="BATTLE_BIN" offset="144028"  mode="ASM" offsetMode="RAM">
+				lw r2,0x80057720			#Load Variable x01
+				lui r1,0x8016				#
+				andi r2,r2,0x00FF			#Remove any potential extra
+				addu r4,r2,r0				#move to r4 too
+				sh r0,0x5fd8(r1)			#
+				sh r2,0x5fd4(r1)			#
+				sh r0,0x5fd6(r1)			#
+     </Location>
+    </Patch>
 	 
 	<Patch name="Disable Secret Hunt">
 		<Description>Removes the vanilla function of Secret Hunt; poaching monsters.</Description>
@@ -1818,13 +2133,29 @@ Movement.CE.end:				jr r31										#
 	 
     <Patch name="AI CT Charge Supports">
 	<Description>Fixes minor bug where the AI didn't correctly know Short Charge and No Charge saved them CT</Description>
-    <Location file="BATTLE_BIN" offset="195d14" mode="ASM" offsetMode="RAM">
+		<Location file="BATTLE_BIN" offset="195d14" mode="ASM" offsetMode="RAM">
 								andi  r2,r3,0x0008
-	</Location>
+		</Location>
 	
-	<Location file="BATTLE_BIN" offset="195d1c" mode="ASM" offsetMode="RAM">
+		<Location file="BATTLE_BIN" offset="195d1c" mode="ASM" offsetMode="RAM">
 			                    andi  r2,r3,0x0004
-	</Location>
+		</Location>
 	</Patch>
 
+	<Patch name="Get Common Labels" hidden="true">
+		<Location file="BATTLE_BIN" offset="180000" mode="ASM" offsetMode="RAM">
+                            #Data Locations
+                            .label @Item_Data,0x80062eb8
+                            
+                            #Ram Locations
+                            .label @Attacker_Current_Action,0x80192d8c
+                            .label @Target_Current_Action,0x80192d90
+                            .label @Attacker_Data,0x80192d94
+                            .label @Target_Data,0x80192d98
+                            
+                            #Routine Locations
+                            .label @Weapon_Guard_Usability,0x8018130c
+                            .label @Get_Item_Data_Pointer,0x8005a884
+		</Location>					
+	</Patch>
 </Patches>
