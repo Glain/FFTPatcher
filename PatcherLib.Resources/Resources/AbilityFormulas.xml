@@ -50,7 +50,7 @@
   <Ability value="1D">Hit_(X)% NS NE</Ability>
   <Ability value="1E">Dmg_((MA+Y)*MA/2) #Hit(Rdm{1,X}) ME</Ability>
   <Ability value="1F">Dmg_((100-CasF)*(100-TarF)*(MA+Y)*MA/2) #Hit(Rdm{1,X}) ME</Ability>
-  <Ability value="20">Dmg_(MA*Y) NS NE //MayDisplay"Broken"</Ability>
+  <Ability value="20">Dmg_(MA*Y) NE //MayDisplay"Broken"</Ability>
   <Ability value="21">DmgMP_(MA*Y) NS NE //MayDisplay"Broken"</Ability>
   <Ability value="22">Hit_(100%) Status NE //MayDisplay"Broken"</Ability>
   <Ability value="23">Heal_(MA*Y) NS NE //MayDisplay"Broken"</Ability>
@@ -96,7 +96,7 @@
   <Ability value="4B">Heal_(Rdm(1..9)) 100% Status NE</Ability>
   <Ability value="4C">Heal_(MA*Y) NS NE</Ability>
   <Ability value="4D">AbsorbHP_(Y)% Hit_(MA+X)% NS PE</Ability>
-  <Ability value="4E">Dmg_(MA*Y) NS ME</Ability>
+  <Ability value="4E">Dmg_(MA*Y) ME</Ability>
   <Ability value="4F">Dmg_(CasMaxHP-CasCurHP) Hit_(MA+X)% NS PE</Ability>
   <Ability value="50">Hit_(MA+X)% Status PE</Ability>
   <Ability value="51">Hit_(MA+X)% Status NE</Ability>
