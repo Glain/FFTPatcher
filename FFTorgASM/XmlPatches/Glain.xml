@@ -1720,12 +1720,13 @@ SKP:  j       0x80180848            #   Skip this ability
         .label  @address_ability_inflict_status_data, 0x80193906
         .label  @address_ability_effect_array, 0x801b63f0
 
+        #   a0 = Pointer to unit whose tile data is to be loaded
         @geomancy_replace:
                 addiu   sp, sp, -16
                 sw      ra, 4(sp)
         
-                #   Get acting unit tile ID
-                lw      a0, 0x80192d94
+                #   Get unit tile ID
+                lw      a0, 0(a0)
                 jal     0x801810a0
                 nop
                 
@@ -1770,8 +1771,10 @@ SKP:  j       0x80180848            #   Skip this ability
                 j       0x80185d40                                  #   Store MA and PA + Y / 2
                 addiu   sp, sp, 16
     </Location>
-    <Location file="BATTLE_BIN" offset="1896CC" mode="ASM" offsetMode="RAM">
+    <Location file="BATTLE_BIN" offset="1896C8" mode="ASM" offsetMode="RAM">
+        lui     a0, 0x8019
         jal     @geomancy_replace
+        ori     a0, a0, 0x2d94
     </Location>
     <Location file="BATTLE_BIN" offset="17A9D8" mode="ASM" offsetMode="RAM">
         li      s4, %GeomancyAbilityID
@@ -2068,6 +2071,13 @@ SKP:  j       0x80180848            #   Skip this ability
                 beq     t0, zero, swap_formation_unit_end
                 sltiu   t0, a1, 16
                 beq     t0, zero, swap_formation_unit_end
+                li      t4, 1
+        
+                #   If offset formation index >= number of formation units, don't move formation index
+                lbu     t3, 0x801cd788
+                nop
+                sltu    t3, t1, t3
+                beq     t3, zero, swap_formation_unit_swap
                 nop
         
                 #   Find unit index of offset formation unit
@@ -2084,12 +2094,12 @@ SKP:  j       0x80180848            #   Skip this ability
         
                 #   If it's the same as the offset unit index...
                 bne     t0, a1, swap_formation_unit_swap
-                li      t0, 1
+                nop
                 #   ...move the selected formation unit index.
                 addu    v0, v0, t2
         
             swap_formation_unit_swap:
-                sb      t0, @address_skip_portrait_transition
+                sb      t4, @address_skip_portrait_transition
                 sw      v0, 8(sp)
                 jal     @swap_unit_data
                 nop
@@ -3454,6 +3464,24 @@ SKP:  j       0x80180848            #   Skip this ability
                 sll     v1, t1, 0x10
                 jr      ra
                 or      v0, v0, v1
+        </Location>
+    </Patch>
+    <Patch name="Defend and Equip Change treated as Default skillset">
+        <Description>
+            This patch should be applied along with Skillset Menu Hardcoding Fix if changing Defend and Equip Change into Default skillsets in FFTPatcher.
+            AI doesn't use abilities in Defend or Equip Change skillsets.
+        </Description>
+        <Location file="BATTLE_BIN" offset="67594,67598" mode="DATA" offsetMode="RAM">
+            D8510780
+        </Location>
+        <Location file="BATTLE_BIN" offset="675F4,675F8" mode="DATA" offsetMode="RAM">
+            58550780
+        </Location>
+        <Location file="BATTLE_BIN" offset="13628C" mode="ASM" offsetMode="RAM">
+            b   0x801362a4
+        </Location>
+        <Location file="BATTLE_BIN" offset="1692B9" mode="DATA" offsetMode="RAM">
+            01 01
         </Location>
     </Patch>
     <Patch name="Save between battles after formation screen">
@@ -5332,6 +5360,68 @@ SKP:  j       0x80180848            #   Skip this ability
         <Location file="BATTLE_BIN" offset="185B48" mode="ASM" offsetMode="RAM">
             beq     v1, v0, 0x80185b94
         </Location>
+    </Patch>
+    <Patch name="Potions and Ethers use fractions of MaxHP or MaxMP">
+        <Description>
+            Formula = Max(Z * 10, (MaxHP or MaxMP) * (Multiplier) / 128)
+            Examples: 100% is 0x80, 75% is 0x60, 50% is 0x40
+        </Description>
+        <Location file="BATTLE_BIN" offset="15377C" offsetMode="RAM" mode="ASM">
+            @calc_heal_amount:
+                #   (a0 = Amount, a1 = Unit offset for Max value (0x2a = MaxHP, 0x2e = MaxMP), a2 = Store offset for Action (0x04 = HP Damage, 0x0a = MP Healing)
+                    lui     t0, 0x8019
+                    lbu     t1, 0x38db(t0)                  #   ItemID
+                    lw      t2, 0x2d98(t0)                  #   Target
+                    lw      t6, 0x2d90(t0)                  #   Action
+                    sltiu   t3, t1, 5                       #   if (ItemID is less than 5) {
+                    addu    t6, t6, a2
+                    beq     t3, zero, calc_heal_amount_end
+                    addu    t5, t2, a1
+                    lhu     t5, 0(t5)                       #       MaxValue (Target.MaxHP or Target.MaxMP)
+                    lui     t4, 0x8015
+                    addu    t4, t4, t1
+                    lbu     t4, 0x3774(t4)                  #       Multiplier = *(0x80153774 + ItemID)
+                    nop
+                    multu   t4, t5
+                    mflo    t4                      
+                    srl     t4, t4, 7                       #       FractionAmount = (Multiplier * MaxValue) / 128
+                    sltu    t5, a0, t4
+                    beq     t5, zero, calc_heal_amount_end  #       if (Amount is less than FractionAmount)
+                    nop
+                    move    a0, t4                          #           Amount = FractionAmount
+                                                            #   }
+                calc_heal_amount_end:
+                    move    v0, a0
+                    jr      ra                              #   Store and return Amount
+                    sh      v0, 0(t6)                       
+                
+                
+            @item_hp_heal_hook:
+                    li      a1, 0x2a
+                    j       @calc_heal_amount
+                    li      a2, 0x04
+                
+                
+            @item_mp_heal_hook:
+                    li      a1, 0x2e
+                    j       @calc_heal_amount
+                    li      a2, 0x0a
+        </Location>
+        <Location file="BATTLE_BIN" offset="18A284" offsetMode="RAM" mode="ASM">
+                    jal     @item_hp_heal_hook
+                    sll     a0, v0, 1
+                    jal     0x80187350
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="1882BC" offsetMode="RAM" mode="ASM">
+                    sll     a0, v0, 1
+                    j       @item_mp_heal_hook
+        </Location>
+        <Variable file="BATTLE_BIN" offset="153774" offsetMode="RAM" name="Potion Multiplier" />
+        <Variable file="BATTLE_BIN" offset="153775" offsetMode="RAM" name="Hi-Potion Multiplier" />
+        <Variable file="BATTLE_BIN" offset="153776" offsetMode="RAM" name="X-Potion Multiplier" />
+        <Variable file="BATTLE_BIN" offset="153777" offsetMode="RAM" name="Ether Multiplier" />
+        <Variable file="BATTLE_BIN" offset="153778" offsetMode="RAM" name="Hi-Ether Multiplier" />
     </Patch>
   <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
     <Description>
