@@ -1,6 +1,189 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <Patches>
+
+	<Patch name="R/S/M: Damage Manipulation Supports">
+	<Description>Creates 6 new supports to add into the game. If you don't want one to work, leave the data as 0 and it will disable the new functions.
+	
+  Vampire - Heals the Attacker by 50% of damage dealt.
+  Vampire Guard - Attacker damages itself by 50% of HP Recovered. 
+  Mana Burn - Attacker also deals MP Damage equal to MP Cost of the attack.
+  Mana Gift - Attacker also Heals MP equal to MP Cost of the healing spell.
+  CT Burn - Attacker also removes CT to the Target equal to the attacker Speed.
+  CT Gift - Attacker also adds CT to the Target equal to the attacker Speed.</Description>
+	<Location file="BATTLE_BIN" offset="18b97c" mode="ASM" offsetMode="RAM">
+                       jal   @AfterDamageCalculations   #
+					   sltiu r13, r17,  7               #r13 = Weapon Formula check
+					   nop                              #
+					   nop                              #
+	</Location>
+	
+	<Location file="BATTLE_BIN" offset="15ead4" mode="ASM" offsetMode="RAM">
+					@AfterDamageCalculations:
+                       addiu r29, r29, -24              #
+					   sw    r31, 16  (r29)             #
+					   jal   @NewSupports               #New Supports Routine
+					   nop                              #
+					   beq   r13, r0,  ADC.end          #Branch to end if not a weapon formula
+					   nop                              #
+					   jal   0x80187ca0                 #Poach and Train routine
+					   nop                              #
+ADC.end:			   lw    r31, 16  (r29)             #
+					   addiu r29, r29, 24               #
+					   jr    r31                        #
+					   nop                              #
+
+                    @NewSupports:
+					   addiu r29, r29, -24                   #
+					   sw    r31, 20  (r29)
+                       lui   r9,0x8019                       #
+                       lw    r12,0x2d94(r9)                  #
+                       lw    r11,0x2d8c(r9)                  #
+                       lw    r10,0x2d98(r9)                  #
+                       lw    r9,0x2d90(r9)                   #
+                       lbu   r8,%VampireSupportSet(r12)      #Attacker's Vampire support set
+                       lbu   r7,%VampireGuardSupportSet(r10) #Defender's Vampire Guard support set
+                       andi  r2,r8,%VampireSupportBit        #Vampire's Bit
+                       beq   r2,r0, SkipVampire              #Branch if Vampire not active
+                       lbu   r6,%ManaBurnSupportSet(r12)     #Attacker's Mana Burn support set
+                       jal   @Vampire                        #Vampire
+                       nop	                                 #
+SkipVampire:	       andi  r2,r7,%VampireGuardSupportBit   #Vampire Guard's Bit
+                       beq   r2,r0, SkipVampireGuard         #Branch if Vampire Guard not active
+                       lbu   r8,%ManaGiftSupportSet(r12)     #Mana Gift support set
+                       jal   @VampireGuard                   #Vampire Guard Support
+                       nop	                                 #
+SkipVampireGuard:      andi  r2,r6,%ManaBurnSupportBit       #
+                       beq   r2,r0, SkipManaBurn             #Branch if Mana Burn not active
+                       lbu   r7,%CTBurnSupportSet(r12)       #CT Burn support set
+                       jal   @ManaBurn                       #Mana Burn
+                       nop	                                 #
+SkipManaBurn:          andi  r2,r8,%ManaGiftSupportBit       #
+                       beq   r2,r0, SkipManaGift             #Branch if Mana Gift not active
+                       lbu   r6,%CTGiftSupportSet(r12)       #CT Gift support set
+                       jal   @ManaGift                       #Mana Gift
+                       nop	                                 #
+SkipManaGift:          andi  r2,r7,%CTBurnSupportBit         #
+        	           beq   r2,r0, SkipCTBurn               #Branch if CT Burn not active
+        	           nop	                                 #
+        	           jal   @CTBurn                         #CT Burn
+        	           nop	                                 #
+SkipCTBurn:            andi  r2,r6,%CTGiftSupportBit         #
+         	           beq   r2,r0, SkipCTGift               #Branch if CT Gift not active
+         	           nop	                                 #
+         	           jal   @CTGift                         #CT Gift
+         	           nop	                                 #
+SkipCTGift:			   lw    r31, 20  (r29)                  #
+					   addiu r29, r29, 24                    #
+					   jr    r31	                         #
+                       nop                                   #
+
+					@Vampire:
+					   lhu   r3,0x0004(r9)	            #Load Target HP Damage
+                       lhu   r5,0x0006(r11)	            #Load Attacker's HP Recovery
+                       beq   r3,r0, V_NotHPDamage       #Branch if not dealing HP Damage to Target
+                       nop	                            #
+                       srl   r3,r3,0x01	                #HP Damage / 2
+                       lbu   r2,0x0025(r11)	            #Load Hit type flag
+                       addu  r3,r3,r5	                #HP Recovery + Result
+                       ori   r2,r2,0x0040               #
+                       sb    r2,0x0025(r11)	            #Store new hit type
+                       ori   r2,r0,0x0001               #
+                       sb    r2,0x0000(r11)	            #Store attack as hit on attacker
+                       sh    r3,0x0006(r11)	            #Store new HP Recovery
+V_NotHPDamage:         jr    r31                        #
+                       nop	                            #
+
+					@VampireGuard:
+                       lhu   r3,0x0006(r11)	            #Load Attacker's HP Recovery
+                       nop	                            #
+                       beq   r3,r0, VG_NotHPRecovery    #Branch if there is no HP Recovery
+                       srl   r3,r3,0x01                 #HP Recovery / 2
+                       lbu   r2,0x0025(r11)	            #Load Hit Flag
+                       sh    r0,0x0006(r11)	            #Store Attacker HP Recovery as 0
+                       andi  r2,r2,0x00BF	            #Remove HP Recovery
+                       ori   r2,r2,0x0080               #Add HP Damage to attack type
+                       sb    r2,0x0025(r11)	            #Store new hit flag
+                       ori   r2,r0,0x0001               #
+                       sb    r2,0x0000(r11)	            #Store attack as Hit on Attacker
+                       sh    r3,0x0004(r11)	            #Store HP Recovery as HP Damage
+VG_NotHPRecovery:      jr    r31                        #
+         	           nop	                            #
+
+					@ManaBurn:
+        	           lhu   r2,0x0004(r9)	            #Load HP Damage
+                       lui   r3,0x8019	                #
+                       lbu   r3,0x38fd(r3)	            #Load Ability MP Cost
+                       beq   r2,r0, MB_end              #Branch if 0 HP Damage
+                       lhu   r4,0x0008(r9)	            #Load Target MP Damage
+                       beq   r3,r0, MB_end              #Branch if Ability doesn't cost MP
+                       addu  r3,r3,r4	                #MP Cost + MP Damage
+                       lbu   r2,0x0025(r9)	            #Load Target Hit Flag
+                       sh    r3,0x0008(r9)	            #Store new MP Damage
+                       ori   r2,r2,0x0020               #
+                       sb    r2,0x0025(r9)	            #Store New Hit Flag
+MB_end:                jr    r31                        #
+                       nop	                            #
+
+					@ManaGift:
+					   lhu   r2,0x0006(r9)	            #Load Target HP Recovery
+                       lui   r3,0x8019	                #
+                       lbu   r3,0x38fd(r3)	            #Load Ability MP Cost
+                       lhu   r4,0x000a(r9)	            #Load Target MP Recovery
+                       beq   r2,r0, MG_end	            #Branch if Target not recovering HP
+                       nop	                            #
+                       beq   r3,r0, MG_end	            #Branch if Ability has no MP Cost
+                       addu  r3,r3,r4                   #MP Cost + MP Recovery
+                       lbu   r2,0x0025(r9)	            #Load Target Hit Flag
+                       sh    r3,0x000a(r9)              #Store new MP Recovery
+                       ori   r2,r2,0x0010               #
+                       sb    r2,0x0025(r9)              #Store MP Recovery
+MG_end:		           jr    r31                        #
+                       nop	                            #
+
+
+					@CTBurn:
+					   lhu   r3,0x0004(r9)	            #Load Target HP Damage
+                       lhu   r4,0x0008(r9)	            #Load Target MP Damage
+                       beq   r3,r0, CTB_end	            #Run support if HP Damage is being dealt
+                       nop                              #
+                       lbu   r2,0x0038(r12)	            #Load Attacker Speed
+                       lbu   r3,0x0025(r9)	            #Load Hit Type
+                       sb    r2,0x0013(r9)              #Store Attacker Speed as negative CT Change
+                       ori   r3,r3,1	                #
+                       sb    r3,0x0025(r9)              #Store as Psuedo Status Change
+CTB_end:	           jr    r31                        #
+                       nop	                            #
+
+
+					@CTGift:
+					   lhu   r3,0x0006(r9)	            #Load Target HP Recovery
+                       nop	                            #
+                       beq   r3,r0, CTG_end	            #Run support if HP Recovery is being dealt
+                       nop	                            #
+                       lbu   r2,0x0038(r12)	            #Load Attacker Speed
+                       lbu   r3,0x0025(r9)	            #Load Hit Type
+                       ori   r2,r2,0x0080               #
+                       sb    r2,0x0013(r9)              #Store Attacker Speed as postive CT Change
+                       ori   r3,r3,0x0001               #
+                       sb    r3,0x0025(r9)              #Store as Psuedo Status Change
+CTG_end:	           jr    r31                        #
+                       nop	                            #
+
+	</Location>
+
+	<Variable name="Vampire Support Set" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Vampire Support Bit" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Vampire Guard Support Set" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Vampire Guard Support Bit" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Mana Burn Support Set" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Mana Burn Support Bit" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Mana Gift Support Set" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="Mana Gift Support Bit" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="CT Burn Support Set" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="CT Burn Support Bit" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="CT Gift Support Set" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />
+	<Variable name="CT Gift Support Bit" file="BATTLE_BIN" bytes="1" default="0000" symbol="true" />	
+	</Patch>
 
 	<Patch name="Job Unlock Requirements v1">
 	<Description>Adds in extra job requirements for Unit Level, Required Gender, and Story Progression. Use the Data field below to set the new requirements. 
@@ -12,7 +195,7 @@ Still in testing. Please message me on the forums (Pride) or on discord (@Pride)
 			     1st byte = Minimum Unit Level
 			     2nd byte = Required Gender (x80 - Male; x40 - Female; x20 - Monster)
 				 3rd byte = Minimum Story Progression 
-			-->	 
+			-->
 									00 00 00 	<!-- Squire -->
 									00 00 00 	<!-- Chemist -->
 									00 00 00 	<!-- Knight -->
@@ -184,14 +367,15 @@ Still in testing. Please message me on the forums (Pride) or on discord (@Pride)
 @BUNIT_GenderSkip:					 sltu  r4,  r8,  r4                                     #If Unit Level is less than Job Level, r4 = 1; else r4 = 0
 									 bne   r4,  r0,  @BUNIT_DontStoreJob                    #Branch if Unit doesn't meet Level requirements
 									 nop                                                    #
-									 jal   0x8015ea48                                       #
+									 jal   @BUNIT_StoryProgression                          #
 									 nop                                                    #
 									 beq   r2,  r0,  @BUNIT_DontStoreJob                    #
 									 nop                                                    #
 									 beq   r3,  r0,  @BUNIT_DontStoreJob                    #
 		</Location>
 		
-		<Location file="BATTLE_BIN" offset="15EA48" mode="ASM" offsetMode="RAM">
+		<Location file="BATTLE_BIN" offset="15eaac" mode="ASM" offsetMode="RAM">
+								@BUNIT_StoryProgression:
 									 lw    r4,  @Story_Progression                          #Load Story Progression variable
 									 lbu   r6,  -0x3AFA (r5)                                #Load Required Story Progression
 									 nop                                                    #
@@ -318,28 +502,11 @@ Still in testing. Please message me on the forums (Pride) or on discord (@Pride)
                                                addiu r29,r29,0x0018                         #
 			</Location>
 	</Patch>
-    
-    <Patch name="Get Common Labels" hidden="true">
-        <Location file="BATTLE_BIN" offset="180000" mode="ASM" offsetMode="RAM">
-            #Data Locations
-            .label @Item_Data,0x80062eb8
-
-            #Ram Locations
-            .label @Attacker_Current_Action,0x80192d8c
-            .label @Target_Current_Action,0x80192d90
-            .label @Attacker_Data,0x80192d94
-            .label @Target_Data,0x80192d98
-
-            #Routine Locations
-            .label @Weapon_Guard_Usability,0x8018130c
-            .label @Get_Item_Data_Pointer,0x8005a884
-        </Location>
-    </Patch>
-    
+	
     <Patch name="Equipment Evasion Settings">
 
 		<Description>Rewrites the Physical Equipment Evasion Routine (0x80184F9C) and removes the need for the Magical counterpart. Also includes Choto's "Evade Boost" as that increase Accessory evade by 10 if the R/S/M is equiped to avoid obvious conflict issues.
-		
+
 Allows some custom settings for Physical, Physical (Charge), and Magical Equipment. Such as allowing free weapon guard for physical attacks (98 instead of d8) but requiring magical attacks to have weapon guard (68 instead of 20). Or allow Magical attacks to use Class Evade.
 Change the setting byte to make the changes. - Vanilla: x80 + x40 + x10 + x08 = D8.
 	x80 - Use Class Evade
@@ -348,7 +515,7 @@ Change the setting byte to make the changes. - Vanilla: x80 + x40 + x10 + x08 = 
 	x10 - Use Physical Evade
 	x08 - Use Weapon Evade
 	x04 - Use "Evade Boost"
-	
+
 This routine frees up 0x80185184 - 0x801852E0 (384 bytes), plenty of space if you want write your own stuff.
 This conflicts with: 
 
@@ -358,9 +525,22 @@ This conflicts with:
 	FFMaster - Darkness status reduces accuracy by XX% (Not replicating, this ASM checks for darkness status on the attacker and increases accessory invade by 32 so Evade boost can be easily changed to do this as well. I'm also not sure it works? It doesn't look like it.)
 	Xifanie - Weapon Guard Innate All (Can do the same thing)
 	Xifanie - Weapon Guard Innate All v2 (Can do the same thing)</Description>
-            <Include patch="Get Common Labels" />
+
 			<Location file="BATTLE_BIN" offset="184f9c" mode="ASM" offsetMode="RAM">
-			
+                            #Data Locations
+                            .label @Item_Data,0x80062eb8
+                            
+                            #Ram Locations
+                            .label @Attacker_Current_Action,0x80192d8c
+                            .label @Target_Current_Action,0x80192d90
+                            .label @Attacker_Data,0x80192d94
+                            .label @Target_Data,0x80192d98
+                            
+                            #Routine Locations
+                            .label @Weapon_Guard_Usability,0x8018130c
+                            .label @Get_Item_Data_Pointer,0x8005a884
+							.label @Chance_To_React,0x8018D384
+							
 							@Equipment_Evasion_Setting:			    #
 								addiu r29, r29, -0x001c			    #
 								sw    r17, 0x0018  (r29)		    #
@@ -484,12 +664,12 @@ This conflicts with:
 								jr   r31							#
 								addiu r29, r29, 0x001c				#
 			</Location>
-			
+
 			<Location offset="188518" mode="ASM" offsetMode="RAM" label="Physical_Evade">
 								jal   @Equipment_Evasion_Setting
 								addiu r4,  r0, %P.Evade
 			</Location>
-			
+
 			<Location file="BATTLE_BIN" offset="188570" mode="ASM" offsetMode="RAM" label="Physical_Evade_Charge">
 								jal   @Equipment_Evasion_Setting
 								addiu r4,  r0, %P.Evade(Charge)
@@ -499,6 +679,7 @@ This conflicts with:
 								jal   @Equipment_Evasion_Setting
 								addiu r4,  r0, %M.Evade
 			</Location>
+
 			<Variable name="P. Evade" file="BATTLE_BIN" bytes="1" default="00D8" symbol="true" />
 			<Variable name="P. Evade (Charge)" file="BATTLE_BIN" bytes="1" default="00D8" symbol="true" />
 			<Variable name="M. Evade" file="BATTLE_BIN" bytes="1" default="0020" symbol="true" />
@@ -510,16 +691,28 @@ This conflicts with:
 			
 	</Patch>
 
-	<Patch name="MP Switch Overflows damage to HP">
+	<Patch name="R/S/M: MP Switch Overflows damage to HP">
 		<Description>Any excess damage from MP Switch no longer goes to waste. It will damage the target's HP if there is any excess. The Variable changes the % of damage (xx/128) that the MP portion takes, the default is the vanilla 1:1 ratio. Changing this number to x40 would cause the MP damage to take 50% less damage until MP is reduced into spillover range. xC0 would result in MP Damage being increased by 50%.
 		
 This conflicts with:
 	Emmy - Super Duper Reaction Looper Version 1.2 (Nothing to be done about it either, one or the other)
 		</Description>
 
-			<Include patch="Get Common Labels" />
 			<Location file="BATTLE_BIN" offset="18d1b8" mode="ASM" offsetMode="RAM" >
-						.label @Chance_To_React,0x8018D384
+                            #Data Locations
+                            .label @Item_Data,0x80062eb8
+                            
+                            #Ram Locations
+                            .label @Attacker_Current_Action,0x80192d8c
+                            .label @Target_Current_Action,0x80192d90
+                            .label @Attacker_Data,0x80192d94
+                            .label @Target_Data,0x80192d98
+                            
+                            #Routine Locations
+                            .label @Weapon_Guard_Usability,0x8018130c
+                            .label @Get_Item_Data_Pointer,0x8005a884
+							.label @Chance_To_React,0x8018D384
+			
 						@MP_Switch_Routine:
 								la    r4,  @Target_Data			#Target Data
 								addiu r29, r29, -0x0018			#
@@ -748,7 +941,7 @@ MPSwitch.end: 					lw    r31, 0x0010  (r29)        #
     </Location>	
 	</Patch>	
 
-   <Patch name="MP Cost Supports">
+   <Patch name="R/S/M: MP Cost Supports">
    <Description>Creates 3 new Supports: Turbo MP, No MP Cost, Blood Price. Turbo MP defaults to double MP Cost and increase Magic Damage/Accuracy by 1.5 but these values can be changed with the variables. No MP Costs disables the cost of casting spells. And Blood Price uses HP to cast spells when out of MP. Default is 1:1 cost but in FFTA it doubles the cost of the spell to use HP. You're choice how you want this to work.
 	The Multiplier works by Value * Cost(or Damage) / 256. So a value of x0080 would be half or x0100 would be value * 256 / 256 (dont change).
 	Use the unit data chart below to see what ability you want to tie each to. If you want want to use one, leave the Bit as 00.
@@ -762,7 +955,7 @@ MPSwitch.end: 					lw    r31, 0x0010  (r29)        #
       0x04 - Equip Spear                0x04 - Magic Attack UP          0x04 - Maintenance   
       0x02 - Equip Axe                  0x02 - Magic Defense UP         0x02 - Two Hands     
       0x01 - Equip Gun                  0x01 - Concentrate              0x01 - Two Swords    
-	
+
     0x0092: Support 4
         0x80 - Monster Skill
         0x40 - Defend
@@ -772,7 +965,7 @@ MPSwitch.end: 					lw    r31, 0x0010  (r29)        #
         0x04 - Non-Charge
         0x02 - 
         0x01 - 
-	
+
     0x0093: Movement 1           0x0094: Movement 2                 0x0095: Movement 3
        0x80 - Move +1              0x80 - Move-MP UP                  0x80 - Walk on Water
        0x40 - Move +2              0x40 - Move-Get EXP                0x40 - Move in Water
@@ -1118,7 +1311,7 @@ This conflicts with:
 	Xifanie - Require: Materia Blade = Require Item X (This ASM has this setting)
 	
 		</Description>
-		
+
 		<Location file="SCUS_942_21" offset="5c5c8" mode="ASM" offsetMode="RAM">
 								.label @Data_Nullifying,0x8005e644
 								.label @Calculate_Actual_Stats,0x8005b880
@@ -1529,37 +1722,47 @@ Apply after using both of the others.</Description>
 			</Location>
 	</Patch>
 
-	<Patch name="Charge gains unique status effects">
-		<Description>Charge can have an assigned status inflict ID, overwriting the weapons status effect (IE Poison Shot inflicts Poison). Use the Patcher to determine what Status ID to use under the Inflict Status tab.</Description>
+	<Patch name="QOL: Charge gains unique status effects v2">
+		<Description>Charge can have an assigned status inflict ID, overwriting the weapons status effect (IE Poison Shot inflicts Poison). This also sets a default for Charge to use Formula 05.
+The status is applied like Formula 2D: 'all or nothing' inflicts status at a 100% rate and 'seperate' inflicts status at a 25% rate.
+		
+Use the Patcher to determine what Status ID to use under the Inflict Status tab.</Description>
 			<Location file="BATTLE_BIN" offset="15E62C" mode="ASM" offsetMode="RAM">
 						@Charge.Store:
 								addu  r1,r1,r3					#r1 = Offset + Charge Ability ID
 								lbu   r3,0x0000(r1)             #Load Status ID
-								ori   r16,r0,0x0007             #Formula ID = 07
+								nop                             #
 								beq   r3,r0,@Charge.end			#Branch if Status ID = 0
-								lui   r2,0x8019                 #
+								nop                             #
 								sb    r3,0x38da(r4)             #Store new Status ID
 @Charge.end: 					jr    r31                       #
-								li    r16, 5                    #Charge uses Formula 05
+								ori   r16, r0, %ChargeFormulaID #Charge uses Formula 05
 								nop								#Charge (+1 - +4) Status Inflict ID
 								nop								#Charge (+5 - +20) Status Inflict ID
 			</Location>
 			
 			<Location file="BATTLE_BIN" offset="18B7E4" mode="ASM" offsetMode="RAM">
+							@SetChargeData:
 								lhu   r3,0x0012(r29)			#Load Ability ID
+								lbu   r16,0x0002(r17)           #Load Weapon Formula
 								lui   r1,0x8006					#
 								addiu r3,r3,-0x0196				#Ability ID - x196
 								sltiu r2,r3,0x0008				#
-								bne   r2,r0,@Charge.skip		#Branch if a Charge Ability
+								beq   r2,r0,@Charge.skip		#Branch if a Charge Ability
 								lui   r4,0x8019					#
-								ori   r3,r0,0x0000				#r3 = default to charge +1 if not a charge ability (prevent some weird stuff)
-@Charge.skip: 					sll   r2,r3,0x01				#ID * 2
+            					sll   r2,r3,0x01				#ID * 2
 								addu  r1,r1,r2					#r1 = x80060000 + ID * 2
 								lbu   r2,0x1045(r1)				#Load Charge Power
 								lui   r1,0x8016					#
 								addiu r1,r1,-0x19b4				#r1 = Charge Status ID Offset
 								jal   @Charge.Store				#Skip loading formula
-								sb    r2,0x38e4(r4)				#
+								sb    r2,0x38e4(r4)				#Store charge power
+@Charge.skip:					lbu   r2,0x38ff(r4)             #Load Weapon Characteristics
+								nop                             #
+			</Location>
+
+			<Location file="BATTLE_BIN" offset="185f8c" mode="ASM" offsetMode="RAM">
+								lb    r3,0x38e4(r3)             #Load Charge Power
 			</Location>
 			
 			<Location file="BATTLE_BIN" offset="188ca4" mode="ASM" offsetMode="RAM">
@@ -1570,7 +1773,10 @@ Apply after using both of the others.</Description>
 								nop                             #Remove proc chance check for Formula 05
 			</Location>
 			
-			
+			<Location file="BATTLE_BIN" offset="174364" mode="DATA" offsetMode="RAM" replaceLabels="true">
+								@SetChargeData
+			</Location>
+
 			<Variable name="Charge +1" file="BATTLE_BIN" offset="15E64C" offsetMode="RAM" bytes="1" default="00" />
 			<Variable name="Charge +2" file="BATTLE_BIN" offset="15E64D" offsetMode="RAM" bytes="1" default="00" />
 			<Variable name="Charge +3" file="BATTLE_BIN" offset="15E64E" offsetMode="RAM" bytes="1" default="00" />
@@ -1579,9 +1785,10 @@ Apply after using both of the others.</Description>
 			<Variable name="Charge +7" file="BATTLE_BIN" offset="15E651" offsetMode="RAM" bytes="1" default="00" />
 			<Variable name="Charge +10" file="BATTLE_BIN" offset="15E652" offsetMode="RAM" bytes="1" default="00" />
 			<Variable name="Charge +20" file="BATTLE_BIN" offset="15E653" offsetMode="RAM" bytes="1" default="00" />
+			<Variable name="ChargeFormulaID" bytes="2" default="0005" symbol="true" />	
 	</Patch>
 
-	<Patch name="Weapon Range and Others Disable Movement">
+	<Patch name="QOL: Weapon Range and Others Disable Movement">
 		<Description>Weapon Ranged, Linear AOE, and Draw Out AOE type with a Charge Time all disable Movement</Description>
 		<Location file="BATTLE_BIN" offset="15E654" mode="ASM" offsetMode="RAM">
 							@Disable_Move:
@@ -1820,7 +2027,7 @@ Timer.cannot_remove_status:		lw r31, 0x000C(r29)						#
 		<Variable name="CT Decrease bit" file="SCUS_942_21" offset="4101c" offsetMode="RAM" default="40" />
 	</Patch>
 
-	<Patch name="Move +1/2/3 and Jump +1/2/3 edits">
+	<Patch name="R/S/M: Move +1/2/3 and Jump +1/2/3 edits">
 		<Description>Turns Move +1 into Move +?. Turns Move +2 into Jump +?. Turns Move + 3 into PA +?. Turns Jump +1 into MA +?. Turns Jump +2 into Speed +?. Turns Jump +3 into Class Evade +?</Description>
 		
 		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
@@ -1904,7 +2111,7 @@ Movement.CE.end:				jr    r31									#
 								sh r2, 0x0014(r18)							#
 								jr r31										#
 								nop											#
-								
+
 						@Movement.Preview_Ability_Increase:
 								ori r2, r0, 0x01E6							#Movement Ability ID (Move + 1)
 								bne r2, r16, @Preview.no_move+      		#Branch if not Move +1
@@ -1952,14 +2159,13 @@ Movement.CE.end:				jr    r31									#
 								j 0x80122EF0								#
 								nop											#
 		</Location>
-		
+
 		<Variable name="Move +" specific="SCUS_942_21:5C918,WORLD_WORLD_BIN:13E454" offsetMode="RAM" bytes="1" default="01" />
 		<Variable name="Jump +" specific="SCUS_942_21:5C92C,WORLD_WORLD_BIN:13E468" offsetMode="RAM" bytes="1" default="02" />
 		<Variable name="PA +" specific="SCUS_942_21:5C940,WORLD_WORLD_BIN:13E47C" offsetMode="RAM" bytes="1" default="02" />
 		<Variable name="MA +" specific="SCUS_942_21:5C954,WORLD_WORLD_BIN:13E490" offsetMode="RAM" bytes="1" default="02" />
 		<Variable name="Speed +" specific="SCUS_942_21:5C968,WORLD_WORLD_BIN:13E4A4" offsetMode="RAM" bytes="1" default="01" />
-		<Variable name="Class Evasion +" specific="SCUS_942_21:41070,WORLD_WORLD_BIN:13E4B8" offsetMode="RAM" bytes="1" default="14" />
-		
+		<Variable name="Class Evasion +" specific="SCUS_942_21:41070,WORLD_WORLD_BIN:13E4B8" offsetMode="RAM" bytes="1" default="14" />	
 	</Patch>
 
 	<Patch name="Transparent not lost on action or taking damage">
@@ -1982,7 +2188,7 @@ Movement.CE.end:				jr    r31									#
 		</Location>
 	</Patch>
 
-	<Patch name="New Support: Inflict Status (ID) to Weapon Attacks">
+	<Patch name="R/S/M: Inflict Status (ID) to Weapon Attacks">
 		<Description>Inflict Status: ID to weapon attacks (except Fists) that do not have a proc already.&#13;&#10;Check your FFTPatcher to make sure you are adding (or cancelling) the status you want to be. Defaulted to 09 (Poison).&#13;&#10;This is defaulted over Monster Talk. Edit unit data to choose which data is checked. See http://ffhacktics.com/wiki/Data/Table_Locations for more information. The ASM to disable Monster Talk is also found in my XML.</Description>
 		<Location file="BATTLE_BIN" offset="15E788" mode="ASM" offsetMode="RAM">
 						@Inflict_Status_RSM:
@@ -2067,28 +2273,28 @@ Movement.CE.end:				jr    r31									#
      </Location>
     </Patch>
 	 
-	<Patch name="Disable Secret Hunt">
+	<Patch name="R/S/M: Disable Secret Hunt">
 		<Description>Removes the vanilla function of Secret Hunt; poaching monsters.</Description>
 		<Location file="BATTLE_BIN" offset="187D8C" mode="ASM" offsetMode="RAM">
 								j 0x80187DF4								#Unconditional jump
 		</Location>
 	</Patch>
 	
-	<Patch name="Disable Train">
+	<Patch name="R/S/M: Disable Train">
 		<Description>Removes the vanilla function of Train; inviting monsters.</Description>
 		<Location file="BATTLE_BIN" offset="187e44" mode="ASM" offsetMode="RAM">
 								j 0x80187ea4								#Unconditional jump
 		</Location>
 	</Patch>
 	
-	<Patch name="Disable Monster Talk">
+	<Patch name="R/S/M: Disable Monster Talk">
 		<Description>Removes the vanilla function of Monster Talk; Monsters are always affected by Talk Skill. (Formula 2A)</Description>
 		<Location file="BATTLE_BIN" offset="1899ec" mode="ASM" offsetMode="RAM">
 								j 0x801899fc 								#Unconditional jump
 		</Location>
 	</Patch>
 	
-	<Patch name="Disable Gained JP Up">
+	<Patch name="R/S/M: Disable Gained JP Up">
 	  <Description>Disable the vanilla effect of Gained JP Up.</Description>
 	
 	  <Location file="BATTLE_BIN" offset="17e9a4" mode="ASM" offsetMode="RAM">
@@ -2100,8 +2306,8 @@ Movement.CE.end:				jr    r31									#
 	  </Location>
 	
 	</Patch>
-
-	<Patch name="Disable Gained EXP Up">
+	
+	<Patch name="R/S/M: Disable Gained EXP Up">
       <Description>Disable the vanilla effect of Gained EXP Up.</Description>
 	
 	  <Location file="BATTLE_BIN" offset="18d6bc" mode="ASM" offsetMode="RAM">
@@ -2111,6 +2317,69 @@ Movement.CE.end:				jr    r31									#
       <Location file="BATTLE_BIN" offset="18de58" mode="ASM" offsetMode="RAM">
 								j    0x0018dee4 								#Unconditional jump
       </Location>
+	</Patch>
+
+	<Patch name="Special Monster Job Fix">
+	<Description>'Special' Monsters Jobs (x3C - x49) can change jobs and use items.</Description>
+	<Location file="WORLD_WORLD_BIN" offset="120ba0" offsetMode="RAM" mode="ASM">
+								li    r2,  0
+	</Location>
+	</Patch>
+
+	<Patch name="Ramza can change into jobs x01 to x04">
+	<Description>Ramza can change into jobs x01 to x04</Description>  
+		<Location file="SCUS_942_21" offset="5aa24, 5ab64, 5ab94, 5ac90, 5acdc, 5b0f0"  mode="ASM" offsetMode="RAM">
+								sltiu r2, r2, 0x0005
+		</Location>
+		<Location file="SCUS_942_21" offset="5acf0"  mode="ASM" offsetMode="RAM">
+								sltiu r2, r2, 0x0004
+		</Location>		
+	</Patch>
+
+	<Patch name="Deep Dungeon Maps Have Normal Light">
+	<Description>All your Deep Dungeon maps will start fully lit, and stay that way. Unless you ChangeMap() to them with event commands, anyway.
+-Nyzer</Description>
+		<Location file="MAP_MAP105_GNS" offset="44, 58, 6C, 80" mode="DATA">
+								FD
+		</Location>
+		<Location file="MAP_MAP105_GNS" offset="49" mode="DATA">
+								18
+		</Location>
+		<Location file="MAP_MAP106_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								5A
+		</Location>
+		<Location file="MAP_MAP107_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								B9
+		</Location>
+		<Location file="MAP_MAP108_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								19
+		</Location>
+		<Location file="MAP_MAP109_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								7A
+		</Location>		
+		<Location file="MAP_MAP110_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								D9
+		</Location>
+		<Location file="MAP_MAP111_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								36
+		</Location>
+		<Location file="MAP_MAP112_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								95
+		</Location>
+		<Location file="MAP_MAP113_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								F3
+		</Location>
+		<Location file="MAP_MAP114_GNS" offset="30, 44, 58, 6C" mode="DATA">
+								54
+		</Location>		
+	</Patch>
+
+	<Patch name="Blue Team is Immortal">
+	<Description>Player team is "Immortal".</Description>  
+		<Location file="SCUS_942_21" offset="5b0f8"  mode="ASM" offsetMode="RAM">
+								li    r3,  0x0c
+								li    r3,  0x0f
+		</Location>
 	</Patch>
 	
 	<Patch name="Remove Spill Over JP">
@@ -2134,7 +2403,7 @@ Movement.CE.end:				jr    r31									#
 								sw r0,0x001c(r4)
 		</Location>
 	</Patch>
-	
+
 	<Patch name="Ability Animation 07 00 00 will always swing item">
 		<Description>Removes the Ability Flag 'Weapon Strike' from being required to swing a weapon during animation 07 00 00.&#13;&#10;Should be no more unwanted punching while using an attack unless unequipped.</Description>
 		<Location file="BATTLE_BIN" offset="18B760" mode="ASM" offsetMode="RAM">
@@ -2146,15 +2415,16 @@ Movement.CE.end:				jr    r31									#
 		<Description>Removes an (intended?) bug that removed PA Save, MA Save, and Speed Save from being randomly selected on enemies. Vanilla is set to x1A9 for Sunken State.</Description>
 			<Variable name="Reaction ID" file="SCUS_942_21" offset="5D278" offsetMode="RAM" bytes="2" default="01A6" />
 	</Patch>
-	 
+
     <Patch name="AI CT Charge Supports">
 	<Description>Fixes minor bug where the AI didn't correctly know Short Charge and No Charge saved them CT</Description>
 		<Location file="BATTLE_BIN" offset="195d14" mode="ASM" offsetMode="RAM">
 								andi  r2,r3,0x0008
 		</Location>
-	
+
 		<Location file="BATTLE_BIN" offset="195d1c" mode="ASM" offsetMode="RAM">
 			                    andi  r2,r3,0x0004
 		</Location>
 	</Patch>
+
 </Patches>
