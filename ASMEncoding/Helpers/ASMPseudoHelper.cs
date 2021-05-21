@@ -308,7 +308,7 @@ namespace ASMEncoding.Helpers
 		{
             _errorTextBuilder.Length = 0;
 
-            bool reportErrors = skipLabelAssertion;
+            bool reportErrors = !skipLabelAssertion;
 
             ASMTranslatePseudoResult result = new ASMTranslatePseudoResult();
 			List<EncodeLine> resultLines = new List<EncodeLine>();
