@@ -415,7 +415,33 @@ namespace FFTPatcher.TextEditor
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[26], "Errands", "entry", "name", "value", false);
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSP.SkillSetsXML:
-                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN 1"].Sections[0], "SkillSets", "SkillSet", "name", "byte", true);
+                        //result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN 1"].Sections[0], "SkillSets", "SkillSet", "name", "byte", true);
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("SkillSets", new string[3] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 1"].Sections[0], "SkillSet", "name", "byte", true, null, 0, 0, 0xB0),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "SkillSet", "name", "byte", true, null, 0xB0, 0x5E, 0x30),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 1"].Sections[0], "SkillSet", "name", "byte", true, null, 0xE0, 0xE0, 3)
+                        });
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.SpriteFilesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("sprites", new string[11] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0, 0, 0x4A),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "s", "n", true, 0x4A, 0x60),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x60, 0x4A, 17),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x82, 0x5B, 2),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x84, 0x5D, 1),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x86, 0x5E, 0x30, 3),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x96, 0x96, 4),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x9A, 0x91, 1),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x9B, 0xA0, 2),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0x9F, 162, 2),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0xA1, 165, 4)
+                        });
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.SpriteSetsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("Sprites", new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "Sprite", "name", "byte", true, null, 0, 0, 0x4A),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "Sprite", "byte", true, 0x80, 0xFF)
+                        });
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSP.StatusNamesXML:
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN[28E5EC]"].Sections[17], "Statuses", "Status", "name", "offset", false);
@@ -456,7 +482,29 @@ namespace FFTPatcher.TextEditor
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[26], "Propositions", "entry", "name", "value", false);
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSX.SkillSetsXML:
-                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BATTLE.BIN"].Sections[22], "SkillSets", "SkillSet", "name", "byte", true);
+                        //result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BATTLE.BIN"].Sections[22], "SkillSets", "SkillSet", "name", "byte", true);
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("SkillSets", new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BATTLE.BIN"].Sections[22], "SkillSet", "name", "byte", true, null, 0, 0, 0xB0),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "SkillSet", "name", "byte", true, null, 0xB0, 0x5E, 0x30)
+                        });
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.SpriteFilesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("sprites", new string[8] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["ATTACK.OUT"].Sections[1], "s", null, "n", true, null, 0, 0, 0x4A),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "s", "n", true, 0x4A, 0x60),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x60, 0x4A, 17),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "s", null, "n", true, null, 0x82, 0x5B, 2),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x84, 0x5D, 1),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "s", null, "n", true, null, 0x86, 0x5E, 0x30, 3),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "s", null, "n", true, null, 0x96, 0x96, 4),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "s", null, "n", true, null, 0x9A, 0x91, 1)
+                        });
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.SpriteSetsXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("Sprites", new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["ATTACK.OUT"].Sections[1], "Sprite", "name", "byte", true, null, 0, 0, 0x4A),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "Sprite", "byte", true, 0x80, 0xFF)
+                        });
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSX.StatusNamesXML:
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BATTLE.BIN"].Sections[17], "Statuses", "Status", "name", "offset", false);

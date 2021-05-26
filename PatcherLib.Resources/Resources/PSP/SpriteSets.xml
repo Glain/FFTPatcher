@@ -87,23 +87,7 @@
   <Sprite byte="47" name="Summoner (Undead)"/>
   <Sprite byte="48" name="Reis (Dragon)"/>
   <Sprite byte="49" name="Altima, Second Form"/>
-  <Sprite byte="4A" name="Gustav"/>
-  <Sprite byte="4B" name="Milleuda"/>
-  <Sprite byte="4C" name="Gragoroth"/>
-  
-  <Sprite byte="73" name="Construct 7"/>
-  <Sprite byte="74" name="Syneugh"/>
-  <Sprite byte="75" name="Construct 8"/>
-  <Sprite byte="76" name="Boco"/>
-  <Sprite byte="77" name="Elidibus"/>
-  <Sprite byte="78" name="Lavian"/>
-  <Sprite byte="79" name="Alicia"/>
-  <Sprite byte="7A" name="Fukes?"/>
-  <Sprite byte="7B" name="Dish?"/>
-  <Sprite byte="7C" name="Biggs"/>
-  <Sprite byte="7D" name="Wedge"/>
-  <Sprite byte="7E" name="Lezales"/>
-  <Sprite byte="7F" name="Ladd"/>
+
   <Sprite byte="80" name="Generic Male"/>
   <Sprite byte="81" name="Generic Female"/>
   <Sprite byte="82" name="Generic Monster"/>

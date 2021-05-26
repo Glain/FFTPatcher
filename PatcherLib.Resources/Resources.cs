@@ -271,34 +271,106 @@ namespace PatcherLib
             return result;
         }
 
-        public static string GenerateXMLSectionString(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        public static string GenerateXMLSectionEntries(IList<byte> bytes, string entryTitle, string valueTitle, bool isValueHex, int startValue = 0, int endValue = 0)
         {
-            int index = 0;
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-            sb.AppendFormat("<{0}>{1}", sectionTitle, Environment.NewLine);
-            foreach (string entry in section)
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(System.Text.Encoding.UTF8.GetString(bytes.ToArray()));
+            XmlNodeList xmlNodes = xmlDocument.SelectNodes("//" + entryTitle);
+
+            foreach (XmlNode xmlNode in xmlNodes)
             {
-                string valueString = isValueHex ? index.ToString("X2") : index.ToString();
+                string strValue = xmlNode.Attributes[valueTitle].Value;
+                int value = -1;
 
-                if (string.IsNullOrEmpty(attributeTitle))
-                    sb.AppendFormat("    <{0} {3}=\"{1}\">{2}</{0}>{4}", entryTitle, valueString, entry, valueTitle, Environment.NewLine);
-                else
-                    sb.AppendFormat("    <{0} {4}=\"{1}\" {2}=\"{3}\"/>{5}", entryTitle, valueString, attributeTitle, entry, valueTitle, Environment.NewLine);
+                System.Globalization.NumberStyles numberStyle = isValueHex ? System.Globalization.NumberStyles.HexNumber : System.Globalization.NumberStyles.Number;
+                int.TryParse(strValue, numberStyle, System.Globalization.CultureInfo.InvariantCulture, out value);
 
-                index++;
+                bool isWithinStartValue = ((startValue == 0) || (value >= startValue));
+                bool isWithinEndValue = ((endValue == 0) || (value <= endValue));
+
+                if (isWithinStartValue && isWithinEndValue)
+                    sb.AppendLine(xmlNode.OuterXml);
             }
-            sb.AppendFormat("</{0}>{1}", sectionTitle, Environment.NewLine);
 
             return sb.ToString();
         }
 
-        public static string GenerateXMLString(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        public static string GenerateXMLSectionEntries(IList<string> section, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex,
+            IList<string> prefixes = null, int startIndex = 0, int startValue = 0, int length = 0, int indexAddend = 1)
+        {
+            int value = startValue;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            length = (length == 0) ? (section.Count - startIndex) : length;
+            int endIndex = startIndex + length;
+
+            int prefixCount = (prefixes == null) ? 0 : prefixes.Count;
+            int prefixIndex = 0;
+
+            int index = startIndex;
+
+            while (index < endIndex)
+            {
+                string valueString = isValueHex ? value.ToString("X2") : value.ToString();
+                string prefix = (prefixCount > 0) ? prefixes[prefixIndex] : "";
+
+                if (string.IsNullOrEmpty(attributeTitle))
+                    sb.AppendFormat("    <{0} {3}=\"{1}\">{4}{2}</{0}>{5}", entryTitle, valueString, section[index], valueTitle, prefix, Environment.NewLine);
+                else
+                    sb.AppendFormat("    <{0} {4}=\"{1}\" {2}=\"{5}{3}\"/>{6}", entryTitle, valueString, attributeTitle, section[index], valueTitle, prefix, Environment.NewLine);
+
+                if (prefixCount > 0)
+                {
+                    prefixIndex++;
+                    if (prefixIndex >= prefixCount)
+                    {
+                        prefixIndex = 0;
+                        index += indexAddend;
+                    }
+                }
+                else
+                {
+                    index += indexAddend;
+                }
+                
+                value++;
+            }
+
+            return sb.ToString();
+        }
+
+        public static string GenerateXMLSectionString(string sectionTitle, IEnumerable<string> entryStrings)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendFormat("<{0}>{1}", sectionTitle, Environment.NewLine);
+
+            foreach (string entryString in entryStrings)
+            {
+                sb.Append(entryString);
+            }
+
+            sb.AppendFormat("</{0}>{1}", sectionTitle, Environment.NewLine);
+            return sb.ToString();
+        }
+
+        public static string GenerateXMLSectionString(IList<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex,
+            IList<string> prefixes = null, int startIndex = 0, int startValue = 0, int length = 0)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendFormat("<{0}>{1}", sectionTitle, Environment.NewLine);
+            sb.Append(GenerateXMLSectionEntries(section, entryTitle, attributeTitle, valueTitle, isValueHex, prefixes, startIndex, startValue, length));
+            sb.AppendFormat("</{0}>{1}", sectionTitle, Environment.NewLine);
+            return sb.ToString();
+        }
+
+        public static string GenerateXMLString(IList<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
         {
             return GenerateXMLString(new string[1] { GenerateXMLSectionString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex) }, null);
         }
 
-        public static string GenerateXMLString(IEnumerable<string> sections, string outerTitle)
+        public static string GenerateXMLString(IList<string> sections, string outerTitle)
         {
             bool hasOuterNode = !string.IsNullOrEmpty(outerTitle);
 
@@ -320,12 +392,17 @@ namespace PatcherLib
             return sb.ToString();
         }
 
-        public static byte[] GenerateXMLBytes(IEnumerable<string> sections, string outerTitle)
+        public static byte[] GenerateXMLSectionBytes(string sectionTitle, IEnumerable<string> entryStrings)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLSectionString(sectionTitle, entryStrings));
+        }
+
+        public static byte[] GenerateXMLBytes(IList<string> sections, string outerTitle)
         {
             return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(sections, outerTitle));
         }
 
-        public static byte[] GenerateXMLBytes(IEnumerable<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
+        public static byte[] GenerateXMLBytes(IList<string> section, string sectionTitle, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex)
         {
             return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(section, sectionTitle, entryTitle, attributeTitle, valueTitle, isValueHex));
         }

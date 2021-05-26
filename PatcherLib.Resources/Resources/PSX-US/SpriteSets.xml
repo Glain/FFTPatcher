@@ -79,28 +79,12 @@
   <Sprite byte="41" name="Altima"/>
 
   <Sprite byte="43" name="Queklain"/>
-  <Sprite byte="44" name="Rofokare"/>
+
   <Sprite byte="45" name="Adramelk"/>
 
   <Sprite byte="48" name="Holy Dragon"/>
   <Sprite byte="49" name="Altima"/>
-  <Sprite byte="4A" name="Gustav"/>
-  <Sprite byte="4B" name="Miluda"/>
-  <Sprite byte="4C" name="Golagros"/>
 
-  <Sprite byte="73" name="Worker 7"/>
-  <Sprite byte="74" name="Sinogue"/>
-  <Sprite byte="75" name="Worker 8"/>
-  <Sprite byte="76" name="Boco"/>
-  <Sprite byte="77" name="Elidibs"/>
-  <Sprite byte="78" name="Lavian"/>
-  <Sprite byte="79" name="Alicia"/>
-  <Sprite byte="7A" name="Fukes"/>
-  <Sprite byte="7B" name="Dish"/>
-  <Sprite byte="7C" name="Viggs"/>
-  <Sprite byte="7D" name="Wezaleff"/>
-  <Sprite byte="7E" name="Lezales"/>
-  <Sprite byte="7F" name="Rad"/>
   <Sprite byte="80" name="Generic Male"/>
   <Sprite byte="81" name="Generic Female"/>
   <Sprite byte="82" name="Monster"/>
