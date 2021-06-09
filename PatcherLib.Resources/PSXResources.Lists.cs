@@ -277,7 +277,7 @@ namespace PatcherLib
                     new ResourceListInfo {
                         Doc = PSXResources.spriteFilesDoc,
                         XPath = "/sprites/s[@n='{0:X2}']",
-                        Length = 0x9A,
+                        Length = 0x9F,
                         StartIndex = 0 } } };
 
 

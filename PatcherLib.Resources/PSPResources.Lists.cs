@@ -148,7 +148,7 @@ namespace PatcherLib
                     new ResourceListInfo {
                         Doc = PSPResources.spriteFilesDoc,
                         XPath = "/sprites/s[@n='{0:X2}']",
-                        Length = 0xA5,
+                        Length = 0xAA,
                         StartIndex = 0 } } };
 
 

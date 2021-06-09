@@ -432,9 +432,9 @@ namespace FFTPatcher.TextEditor
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x86, 0x5E, 0x30, 3),
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x96, 0x96, 4),
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, null, 0x9A, 0x91, 1),
-                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x9B, 0xA0, 2),
-                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0x9F, 162, 2),
-                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0xA1, 165, 4)
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 2"].Sections[0], "s", null, "n", true, new string[2] { "Male ", "Female " }, 0x9F, 0xA0, 2),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0xA3, 162, 2),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0xA5, 165, 4)
                         });
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSP.SpriteSetsXML:

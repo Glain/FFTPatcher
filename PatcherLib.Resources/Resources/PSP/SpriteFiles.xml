@@ -156,15 +156,16 @@
   <s n="98">Dragon</s>
   <s n="99">Demon</s>
   <s n="9A">Automaton</s>
-  <s n="9B">Male Dark Knight</s>
-  <s n="9C">Female Dark Knight</s>
-  <s n="9D">Male Onion Knight</s>
-  <s n="9E">Female Onion Knight</s>
-  <s n="9F">Balthier</s>
-  <s n="A0">Luso</s>
-  <s n="A1">Argath (Death Knight)</s>
-  <s n="A2">Aliste</s>
-  <s n="A3">Bremondt</s>
-  <s n="A4">Bremondt (Dark Dragon)</s>
-  <s n="A5">???</s>
+    
+  <s n="9F">Male Dark Knight</s>
+  <s n="A0">Female Dark Knight</s>
+  <s n="A1">Male Onion Knight</s>
+  <s n="A2">Female Onion Knight</s>
+  <s n="A3">Balthier</s>
+  <s n="A4">Luso</s>
+  <s n="A5">Argath (Death Knight)</s>
+  <s n="A6">Aliste</s>
+  <s n="A7">Bremondt</s>
+  <s n="A8">Bremondt (Dark Dragon)</s>
+  <s n="A9">???</s>
 </sprites>
