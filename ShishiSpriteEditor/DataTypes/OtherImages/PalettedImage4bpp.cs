@@ -245,7 +245,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        protected List<byte> GetPaletteBytes(IEnumerable<Color> colors, IList<Byte> originalPaletteBytes)
+        protected List<byte> GetPaletteBytes(IEnumerable<Color> colors, IList<byte> originalPaletteBytes)
         {
             List<byte> result = new List<byte>();
             int index = 0;
@@ -268,8 +268,9 @@ namespace FFTPatcher.SpriteEditor
             byte[] fileBytes = System.IO.File.ReadAllBytes(ImportFilename);
             int combinedWidth = (image.Width + 1) / 2;
             int stride = CalculateStride(4);
+            int resultStride = image.Width / 2;
 
-            byte[] resultData = new byte[image.Height * stride];
+            byte[] resultData = new byte[image.Height * resultStride];
             int imageDataOffset = fileBytes[10] | (fileBytes[11] << 8) | (fileBytes[12] << 16) | (fileBytes[13] << 24);
 
             for (int rowIndex = 0; rowIndex < image.Height; rowIndex++)
@@ -277,7 +278,7 @@ namespace FFTPatcher.SpriteEditor
                 for (int colIndex = 0; colIndex < combinedWidth; colIndex++)
                 {
                     int currentByteIndex = imageDataOffset + (rowIndex * stride) + colIndex;
-                    int resultByteIndex = ((image.Height - rowIndex - 1) * stride) + colIndex;
+                    int resultByteIndex = ((image.Height - rowIndex - 1) * resultStride) + colIndex;
                     byte currentByte = fileBytes[currentByteIndex];
                     resultData[resultByteIndex] = (byte)(((currentByte & 0x0F) << 4) | ((currentByte & 0xF0) >> 4));
                 }

@@ -223,13 +223,18 @@ namespace FFTPatcher.SpriteEditor
                         int startIndex = singlePaletteBytes * i;
                         int endIndex = startIndex + singlePaletteBytes - 1;
                         IList<byte> bytes = originalPaletteBytes.Sub(startIndex, endIndex);
-                        Palettes[i] = new Palette(bytes, Palette.ColorDepth._16bit);
+                        Palettes[i] = new Palette(bytes, Palette.ColorDepth._16bit, false, true);
                     }
                     for (int i = 0; i < image.Palette.Entries.Length; i++)
                     {
                         Color c = image.Palette.Entries[i];
-                        Palettes[paletteIndex][i] = Color.FromArgb(c.R & 0xF8, c.G & 0xF8, c.B & 0xF8);
-                        if ((i == 0) && c.ToArgb() == Color.Black.ToArgb())
+                        bool wasTransparent = Palettes[paletteIndex][i] == Color.Transparent;
+                        Palettes[paletteIndex][i] = Color.FromArgb(Palettes[paletteIndex][i].A, c.R & 0xF8, c.G & 0xF8, c.B & 0xF8);
+                        if (
+                            (i == 0) && 
+                            (c.ToArgb() == Color.Black.ToArgb()) &&
+                            ((Palettes[paletteIndex][i].A > 0) || (wasTransparent))
+                        )
                         {
                             Palettes[paletteIndex][i] = Color.Transparent;
                         }
@@ -240,7 +245,7 @@ namespace FFTPatcher.SpriteEditor
                     int combinedWidth = (image.Width + 1) / 2;
                     int stride = (((Width * 4) + 31) / 32) * 4;
 
-                    byte[] resultData = new byte[image.Height * stride];
+                    //byte[] resultData = new byte[image.Height * stride];
                     int imageDataOffset = importBytes[10] | (importBytes[11] << 8) | (importBytes[12] << 16) | (importBytes[13] << 24);
 
                     for (int rowIndex = 0; rowIndex < image.Height; rowIndex++)
@@ -262,6 +267,82 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
+            //System.IO.File.WriteAllBytes(@"pixels4.bin", Pixels.ToArray());    // DEBUG
+            BitmapDirty = true;
+            FirePixelsChanged();
+        }
+
+        public virtual void ImportBitmap8bpp(IList<byte> importBytes, IList<byte> originalPaletteBytes)
+        {
+            using (System.IO.Stream stream = new System.IO.MemoryStream(importBytes.ToArray()))
+            {
+                using (System.Drawing.Image image = System.Drawing.Image.FromStream(stream))
+                {
+                    if (image.PixelFormat != PixelFormat.Format8bppIndexed)
+                    {
+                        throw new BadImageFormatException("Image is not an 8bpp paletted bitmap!");
+                    }
+                    if (image.Width != 256)
+                    {
+                        throw new BadImageFormatException("Image is not 256 pixels wide!");
+                    }
+
+                    const int singlePaletteBytes = 32;
+                    Palettes = new Palette[16];
+
+                    for (int i = 0; i < 16; i++)
+                    {
+                        int startIndex = singlePaletteBytes * i;
+                        int endIndex = startIndex + singlePaletteBytes - 1;
+                        IList<byte> bytes = originalPaletteBytes.Sub(startIndex, endIndex);
+                        Palettes[i] = new Palette(bytes, Palette.ColorDepth._16bit, false, true);
+                    }
+                    for (int i = 0; i < image.Palette.Entries.Length; i++)
+                    {
+                        int paletteIndex = i / 16;
+                        int colorIndex = i % 16;
+
+                        Color c = image.Palette.Entries[i];
+                        bool wasTransparent = Palettes[paletteIndex][colorIndex] == Color.Transparent;
+                        Palettes[paletteIndex][colorIndex] = Color.FromArgb(Palettes[paletteIndex][colorIndex].A, c.R & 0xF8, c.G & 0xF8, c.B & 0xF8);
+                        if (
+                            (colorIndex == 0) &&
+                            (c.ToArgb() == Color.Black.ToArgb()) &&
+                            ((Palettes[paletteIndex][colorIndex].A > 0) || (wasTransparent))
+                        )
+                        {
+                            Palettes[paletteIndex][colorIndex] = Color.Transparent;
+                        }
+                    }
+
+                    Pixels.InitializeElements();
+
+                    int stride = (((image.Width * 8) + 31) / 32) * 4;
+                    //int resultStride = (((image.Width * 4) + 31) / 32) * 4;
+                    //byte[] resultData = new byte[image.Height * resultStride];
+                    int imageDataOffset = importBytes[10] | (importBytes[11] << 8) | (importBytes[12] << 16) | (importBytes[13] << 24);
+
+                    for (int rowIndex = 0; rowIndex < image.Height; rowIndex++)
+                    //for (int rowIndex = 0; rowIndex < 1; rowIndex++)
+                    {
+                        for (int colIndex = 0; colIndex < image.Width; colIndex++)
+                        {
+                            int currentByteIndex = imageDataOffset + (rowIndex * stride) + colIndex;
+                            //int resultByteIndex = ((image.Height - rowIndex - 1) * resultStride) + (colIndex / 2);
+                            int pixelIndex = ((image.Height - rowIndex - 1) * image.Width) + (colIndex);
+                            byte currentByte = importBytes[currentByteIndex];
+                            //resultData[resultByteIndex] |= (((colIndex & 0x01) == 0) ? ((byte)(currentByte & 0x0F)) : ((byte)((currentByte & 0x0F) << 4)));
+
+                            if (pixelIndex < Pixels.Count)
+                            {
+                                Pixels[pixelIndex] = currentByte;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //System.IO.File.WriteAllBytes(@"pixels8.bin", Pixels.ToArray());    // DEBUG
             BitmapDirty = true;
             FirePixelsChanged();
         }
@@ -350,6 +431,43 @@ namespace FFTPatcher.SpriteEditor
             return ToBitmap();
         }
         */
+
+        public List<byte> GetPaletteBytes(IEnumerable<Palette> palettes, IList<byte> originalPaletteBytes, Palette.ColorDepth depth)
+        {
+            List<byte> result = new List<byte>();
+
+            int paletteIndex = 0;
+            foreach (Palette palette in palettes)
+            {
+                int colorSize = (depth == Palette.ColorDepth._32bit) ? 4 : 2;
+                int paletteSize = colorSize * palette.Colors.Length;
+                result.AddRange(GetPaletteBytes(palette.Colors, originalPaletteBytes.SubLength(paletteSize * paletteIndex, paletteSize), depth));
+                paletteIndex++;
+            }
+
+            return result;
+        }
+
+        public List<byte> GetPaletteBytes(IList<Color> colors, IList<byte> originalPaletteBytes, Palette.ColorDepth depth)
+        {
+            List<byte> result = new List<byte>();
+            int index = 0;
+
+            foreach (Color c in colors)
+            {
+                byte alphaByte = (depth == Palette.ColorDepth._32bit ? originalPaletteBytes[index * 4 + 3] : originalPaletteBytes[index * 2 + 1]);
+                result.AddRange(Palette.ColorToBytes(c, alphaByte, depth));
+                index++;
+            }
+
+            if (colors[0] == Color.Transparent)
+            {
+                result[0] = 0x00;
+                result[1] = 0x00;
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Converts this sprite to an array of bytes.

@@ -206,19 +206,19 @@ namespace FFTPatcher.SpriteEditor
 
         private void UpdateImage()
         {
-            if ( sprite != null )
+            if (sprite != null)
             {
-                Bitmap b = new Bitmap( sprite.Width, sprite.Height, PixelFormat.Format32bppArgb );
-                BitmapData bmd = b.LockBits( new Rectangle( Point.Empty, b.Size ), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb );
-                sprite.DrawSprite( bmd, palette, portraitPalette );
-                b.UnlockBits( bmd );
-                if ( tiles != null )
+                Bitmap b = new Bitmap(sprite.Width, sprite.Height, PixelFormat.Format32bppArgb);
+                BitmapData bmd = b.LockBits(new Rectangle(Point.Empty, b.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+                sprite.DrawSprite(bmd, palette, portraitPalette);
+                b.UnlockBits(bmd);
+                if (tiles != null)
                 {
-                    using ( Pen p = new Pen( Color.Yellow ) )
-                    using ( Graphics g = Graphics.FromImage( b ) )
+                    using (Pen p = new Pen(Color.Yellow))
+                    using (Graphics g = Graphics.FromImage(b))
                     {
-                        foreach ( Tile t in tiles )
-                            g.DrawRectangle( p, t.Rectangle );
+                        foreach (Tile t in tiles)
+                            g.DrawRectangle(p, t.Rectangle);
                     }
                 }
 
@@ -226,7 +226,7 @@ namespace FFTPatcher.SpriteEditor
 
                 SuspendLayout();
                 pictureBox1.SuspendLayout();
-                if ( pictureBox1.Image != null )
+                if (pictureBox1.Image != null)
                 {
                     pictureBox1.Image.Dispose();
                     pictureBox1.Image = null;
@@ -234,9 +234,14 @@ namespace FFTPatcher.SpriteEditor
                 pictureBox1.Image = zb;
                 //pictureBox1.Image = b;
                 pictureBox1.ResumeLayout();
-                ResumeLayout( false );
+                ResumeLayout(false);
                 PerformLayout();
-            }           
+            }
+            else if (pictureBox1.Image != null)
+            {
+                pictureBox1.Image.Dispose();
+                pictureBox1.Image = null;
+            }
         }
 
 

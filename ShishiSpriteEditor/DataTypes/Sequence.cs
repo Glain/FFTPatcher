@@ -156,7 +156,10 @@ namespace FFTPatcher.SpriteEditor
             Dictionary<int, System.Drawing.Bitmap> frameToBitmap = new Dictionary<int, System.Drawing.Bitmap>( uniqueFrames.Count );
             foreach ( int frame in uniqueFrames )
             {
-                frameToBitmap[frame] = sprite.Shape.Frames[frame].GetFrame( sprite, paletteIndex );
+                if (sprite != null)
+                    frameToBitmap[frame] = sprite.Shape.Frames[frame].GetFrame( sprite, paletteIndex );
+                else
+                    frameToBitmap[frame] = null;
             }
 
             List<System.Drawing.Bitmap> result = new List<System.Drawing.Bitmap>();

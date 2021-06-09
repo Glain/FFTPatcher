@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using PatcherLib.Datatypes;
 using System.IO;
 using PatcherLib;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -60,7 +61,7 @@ namespace FFTPatcher.SpriteEditor
                 _fileName = openFileDialog.FileName; // R999
 
                 if (importExport8Bpp)
-                    currentSprite.ImportBitmap(currentStream, _fileName);
+                    currentSprite.ImportBitmap8bpp(currentStream, _fileName);
                 else
                     currentSprite.ImportBitmap4bpp(currentStream, _fileName, paletteIndex);
 
@@ -79,7 +80,7 @@ namespace FFTPatcher.SpriteEditor
                 _fileName = filename; // R999
 
                 if (importExport8Bpp)
-                    currentSprite.ImportBitmap(currentStream, filename);
+                    currentSprite.ImportBitmap8bpp(currentStream, filename);
                 else
                     currentSprite.ImportBitmap4bpp(currentStream, filename, paletteIndex);
 
@@ -96,7 +97,7 @@ namespace FFTPatcher.SpriteEditor
             if (_fileName != null && currentSprite != null)
             {
                 if (importExport8Bpp)
-                    currentSprite.ImportBitmap(currentStream, _fileName);
+                    currentSprite.ImportBitmap8bpp(currentStream, _fileName);
                 else
                     currentSprite.ImportBitmap4bpp(currentStream, _fileName, paletteIndex);
 
@@ -305,6 +306,16 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        private void spriteMenuItem_Popup(object sender, EventArgs e)
+        {
+            bool enableMenuItems = ((allSpritesEditor1.CurrentSprite != null) && (allSpritesEditor1.CurrentSprite.Size > 0));
+
+            foreach (MenuItem mi in spriteMenuItem.MenuItems)
+            {
+                mi.Enabled = enableMenuItems;
+            } 
+        }
+
         private void sp2Menu_Popup( object sender, EventArgs e )
         {
             foreach (MenuItem mi in sp2Menu.MenuItems)
@@ -415,14 +426,18 @@ namespace FFTPatcher.SpriteEditor
 
         private void importAllImagesMenuItem_Click( object sender, EventArgs e )
         {
-            using ( Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx() )
-            {
-                fbd.ShowNewFolderButton = true;
-                fbd.ShowFullPathInEditBox = true;
-                fbd.ShowEditBox = true;
-                fbd.ShowBothFilesAndFolders = false;
-                fbd.RootFolder = Environment.SpecialFolder.Desktop;
-                fbd.NewStyle = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            //using ( Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx() )
+            //{
+                //fbd.ShowNewFolderButton = true;
+                //fbd.ShowFullPathInEditBox = true;
+                //fbd.ShowEditBox = true;
+                //fbd.ShowBothFilesAndFolders = false;
+                //fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                //fbd.NewStyle = true;
                 Cursor oldCursor = Cursor;
 
                 ProgressChangedEventHandler progressHandler = delegate( object sender2, ProgressChangedEventArgs args2 )
@@ -452,7 +467,8 @@ namespace FFTPatcher.SpriteEditor
                     else mi();
                 };
 
-                if (fbd.ShowDialog( this ) == DialogResult.OK)
+                //if (fbd.ShowDialog( this ) == DialogResult.OK)
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     progressBar1.Bounds = new Rectangle( ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height );
                     progressBar1.Value = 0;
@@ -464,21 +480,26 @@ namespace FFTPatcher.SpriteEditor
                     tabControl1.Enabled = false;
                     Cursor = Cursors.WaitCursor;
                     progressBar1.BringToFront();
-                    backgroundWorker1.RunWorkerAsync( new AllOtherImages.AllImagesDoWorkData( currentStream, fbd.SelectedPath ) );
+                    //backgroundWorker1.RunWorkerAsync( new AllOtherImages.AllImagesDoWorkData( currentStream, fbd.SelectedPath ) );
+                    backgroundWorker1.RunWorkerAsync(new AllOtherImages.AllImagesDoWorkData(currentStream, dialog.FileName));
                 }
-            }
+            //}
         }
 
         private void dumpAllImagesMenuItem_Click( object sender, EventArgs e )
         {
-            using ( Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx() )
-            {
-                fbd.ShowNewFolderButton = true;
-                fbd.ShowFullPathInEditBox = true;
-                fbd.ShowEditBox = true;
-                fbd.ShowBothFilesAndFolders = false;
-                fbd.RootFolder = Environment.SpecialFolder.Desktop;
-                fbd.NewStyle = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            //using ( Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx() )
+            //{
+                //fbd.ShowNewFolderButton = true;
+                //fbd.ShowFullPathInEditBox = true;
+                //fbd.ShowEditBox = true;
+                //fbd.ShowBothFilesAndFolders = false;
+                //fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                //fbd.NewStyle = true;
                 Cursor oldCursor = Cursor;
 
                 ProgressChangedEventHandler progressHandler = delegate( object sender2, ProgressChangedEventArgs args2 )
@@ -508,7 +529,8 @@ namespace FFTPatcher.SpriteEditor
                     else mi();
                 };
 
-                if (fbd.ShowDialog( this ) == DialogResult.OK)
+                //if (fbd.ShowDialog( this ) == DialogResult.OK)
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     progressBar1.Bounds = new Rectangle( ClientRectangle.Left+10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width-20, progressBar1.Height );
                     progressBar1.Value = 0;
@@ -520,24 +542,28 @@ namespace FFTPatcher.SpriteEditor
                     tabControl1.Enabled = false;
                     Cursor = Cursors.WaitCursor;
                     progressBar1.BringToFront();
-                    backgroundWorker1.RunWorkerAsync( new AllOtherImages.AllImagesDoWorkData( currentStream, fbd.SelectedPath ) );
+                    backgroundWorker1.RunWorkerAsync(new AllOtherImages.AllImagesDoWorkData(currentStream, dialog.FileName)); //fbd.SelectedPath));
                     //backgroundWorker1.RunWorkerCompleted
 
                     //allOtherImagesEditor1.AllOtherImages.DumpAllImages( currentStream, fbd.SelectedPath );
                 }
-            }
+            //}
         }
 
         private void importAllSpritesMenuItem_Click(object sender, EventArgs e)
         {
-            using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
-            {
-                fbd.ShowNewFolderButton = true;
-                fbd.ShowFullPathInEditBox = true;
-                fbd.ShowEditBox = true;
-                fbd.ShowBothFilesAndFolders = false;
-                fbd.RootFolder = Environment.SpecialFolder.Desktop;
-                fbd.NewStyle = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            //using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
+            //{
+                //fbd.ShowNewFolderButton = true;
+                //fbd.ShowFullPathInEditBox = true;
+                //fbd.ShowEditBox = true;
+                //fbd.ShowBothFilesAndFolders = false;
+                //fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                //fbd.NewStyle = true;
                 Cursor oldCursor = Cursor;
 
                 ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
@@ -567,7 +593,8 @@ namespace FFTPatcher.SpriteEditor
                     else mi();
                 };
 
-                if (fbd.ShowDialog(this) == DialogResult.OK)
+                //if (fbd.ShowDialog(this) == DialogResult.OK)
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
                     progressBar1.Value = 0;
@@ -582,21 +609,26 @@ namespace FFTPatcher.SpriteEditor
 
                     bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
                     int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
-                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                    //backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, dialog.FileName, importExport8bpp, paletteIndex));
                 }
-            }
+            //}
         }
 
         private void dumpAllSpritesMenuItem_Click(object sender, EventArgs e)
         {
-            using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
-            {
-                fbd.ShowNewFolderButton = true;
-                fbd.ShowFullPathInEditBox = true;
-                fbd.ShowEditBox = true;
-                fbd.ShowBothFilesAndFolders = false;
-                fbd.RootFolder = Environment.SpecialFolder.Desktop;
-                fbd.NewStyle = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            //using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
+            //{
+                //fbd.ShowNewFolderButton = true;
+                //fbd.ShowFullPathInEditBox = true;
+                //fbd.ShowEditBox = true;
+                //fbd.ShowBothFilesAndFolders = false;
+                //fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                //fbd.NewStyle = true;
                 Cursor oldCursor = Cursor;
 
                 ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
@@ -626,7 +658,8 @@ namespace FFTPatcher.SpriteEditor
                     else mi();
                 };
 
-                if (fbd.ShowDialog(this) == DialogResult.OK)
+                //if (fbd.ShowDialog(this) == DialogResult.OK)
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
                     progressBar1.Value = 0;
@@ -641,9 +674,10 @@ namespace FFTPatcher.SpriteEditor
 
                     bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
                     int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
-                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                    //backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, dialog.FileName, importExport8bpp, paletteIndex));
                 }
-            }
+            //}
         }
 
         private void menuItem_ExpandIso_Click(object sender, EventArgs e)
@@ -667,6 +701,8 @@ namespace FFTPatcher.SpriteEditor
 
                     AllOtherImages otherImages = AllOtherImages.FromIso(currentStream);
                     allOtherImagesEditor1.BindTo(otherImages, currentStream);
+
+                    menuItem_ExpandIso.Enabled = false;
                 }
             }
         }

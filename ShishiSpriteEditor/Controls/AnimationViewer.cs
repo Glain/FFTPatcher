@@ -96,7 +96,8 @@ namespace FFTPatcher.SpriteEditor
             {
                 foreach (Bitmap b in oldBitmaps)
                 {
-                    b.Dispose();
+                    if (b != null)
+                        b.Dispose();
                 }
             }
         }

@@ -47,7 +47,7 @@ namespace FFTPatcher.SpriteEditor
             {
                 comboBox1.Items.Add(Sprites[i]);
             }
-            comboBox1.SelectedIndex = 0;
+            comboBox1.SelectedIndex = 1;
             comboBox1.EndUpdate();
         }
 

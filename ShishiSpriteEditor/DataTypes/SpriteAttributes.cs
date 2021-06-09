@@ -12,14 +12,14 @@ namespace FFTPatcher.SpriteEditor
         TYPE2 = 1,
         CYOKO = 2,
         MON = 3,
-       
-        ARUTE = 6,
+        FOUR = 4,
         RUKA = 5,
+        ARUTE = 6,
         KANZEN = 7,
         WEP1 = 8,
         WEP2 = 9,
         EFF1 = 10,
-        EFF2 = 11,
+        EFF2 = 11
     }
 
     internal class SpriteAttributes

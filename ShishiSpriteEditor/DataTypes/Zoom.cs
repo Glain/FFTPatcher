@@ -26,6 +26,9 @@ namespace FFTPatcher.SpriteEditor.DataTypes
 
         public System.Drawing.Bitmap GetZoomedBitmap(Bitmap image)
         {
+            if (image == null)
+                return null;
+
             int zoomWidth = image.Width * Multiplier;
             int zoomHeight = image.Height * Multiplier;
             Bitmap newImage = new Bitmap(zoomWidth, zoomHeight, PixelFormat.Format32bppArgb);

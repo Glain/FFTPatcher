@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -49,6 +51,7 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
+            result.AddRange(new byte[Math.Max(0, 488 * 256 - result.Count)]);
             return result.ToArray();
         }
 
@@ -83,6 +86,23 @@ namespace FFTPatcher.SpriteEditor
                 bmd.SetPixel8bpp( i % Width, i / Width, Pixels[i] );
             }
         }
+
+        public override Bitmap To4bppBitmapUncached(int whichPalette)
+        {
+            Bitmap result = base.To4bppBitmapUncached(whichPalette);
+
+            BitmapData bmd = result.LockBits(new Rectangle(Point.Empty, result.Size), ImageLockMode.WriteOnly, PixelFormat.Format4bppIndexed);
+
+            for (int i = 256 * 488; (i < Pixels.Count) && (i / Width < Height); i++)
+            {
+                bmd.SetPixel4bpp(i % Width, i / Width, Pixels[i]);
+            }
+
+            result.UnlockBits(bmd);
+
+            return result;
+        }
+
         public override Shape Shape
         {
             get { return Shape.MON; }

@@ -84,6 +84,9 @@ namespace FFTPatcher.SpriteEditor
         {
             Bitmap result = new Bitmap( defaultFrameSize.Width, defaultFrameSize.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
 
+            if (source == null)
+                return result;
+
             Bitmap sourceBmp = source.ToBitmap(paletteIndex, true);
             //sourceBmp = sourceBmp.RotateImg(90, Color.Transparent);
             result.Palette = sourceBmp.Palette;

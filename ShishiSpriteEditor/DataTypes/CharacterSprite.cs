@@ -10,6 +10,7 @@ namespace FFTPatcher.SpriteEditor
     {
         private SpriteAttributes attributes;
         private SpriteLocation location;
+
         public SpriteType SHP { get { return attributes.SHP; } }
         public SpriteType SEQ { get { return attributes.SEQ; } }
         public bool Flag1 { get { return attributes.Flag1; } }
@@ -92,15 +93,41 @@ namespace FFTPatcher.SpriteEditor
             const int totalPaletteBytes = 32 * 16;
             byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
             sprite.ImportBitmap4bpp(paletteIndex, importBytes, originalPaletteBytes);
+
             byte[] sprBytes = sprite.ToByteArray(0);
             if (sprBytes.Length > Size)
             {
                 throw new SpriteTooLargeException(sprBytes.Length, (int)Size);
             }
 
+            //System.IO.File.WriteAllBytes(@"spr4.bin", sprBytes);    // DEBUG
             ImportSprite(iso, sprBytes);
             for (int i = 0; i < NumChildren; i++)
             {
+                //System.IO.File.WriteAllBytes(@"sp2_4.bin", sprite.ToByteArray(i + 1));    // DEBUG
+                ImportSp2(iso, sprite.ToByteArray(i + 1), i);
+            }
+        }
+
+        internal override void ImportBitmap8bpp(Stream iso, string filename)
+        {
+            AbstractSprite sprite = GetAbstractSpriteFromIso(iso);
+            byte[] importBytes = System.IO.File.ReadAllBytes(filename);
+            const int totalPaletteBytes = 512;
+            byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
+            sprite.ImportBitmap8bpp(importBytes, originalPaletteBytes);
+            
+            byte[] sprBytes = sprite.ToByteArray(0);
+            if (sprBytes.Length > Size)
+            {
+                throw new SpriteTooLargeException(sprBytes.Length, (int)Size);
+            }
+
+            //System.IO.File.WriteAllBytes(@"spr8.bin", sprBytes);    // DEBUG
+            ImportSprite(iso, sprBytes);
+            for (int i = 0; i < NumChildren; i++)
+            {
+                //System.IO.File.WriteAllBytes(@"sp2_8.bin", sprite.ToByteArray(i + 1));    // DEBUG
                 ImportSp2(iso, sprite.ToByteArray(i + 1), i);
             }
         }
@@ -156,9 +183,16 @@ namespace FFTPatcher.SpriteEditor
         {
             if (CachedSprite == null || ignoreCache)
             {
+                if (Position.Length == 0)
+                {
+                    CachedSprite = null;
+                    return CachedSprite;
+                }
+
                 IList<byte> bytes = Position.ReadIso(iso);
 
                 System.Diagnostics.Debug.Assert(bytes.Count == this.Size);
+
                 switch (SHP)
                 {
                     case SpriteType.TYPE1:
@@ -202,6 +236,9 @@ namespace FFTPatcher.SpriteEditor
                     //case SpriteType.WEP3:
                     //    cachedSprite = new WEP3Sprite(bytes);
                     //    break;
+                    case SpriteType.FOUR:
+                        CachedSprite = new TYPE1Sprite(bytes);
+                        break;
                     default:
                         CachedSprite = null;
                         break;
@@ -215,7 +252,14 @@ namespace FFTPatcher.SpriteEditor
         {
             if (CachedSprite == null || ignoreCache)
             {
+                if (Position.Length == 0)
+                {
+                    CachedSprite = null;
+                    return CachedSprite;
+                }
+                
                 IList<byte> bytes = Position.ReadIso(iso);
+
                 switch (SHP)
                 {
                     case SpriteType.TYPE1:
@@ -257,6 +301,9 @@ namespace FFTPatcher.SpriteEditor
                         break;
                     case SpriteType.EFF1:
                         CachedSprite = new WEP3Sprite(bytes);
+                        break;
+                    case SpriteType.FOUR:
+                        CachedSprite = new TYPE1Sprite(bytes);
                         break;
                     default:
                         CachedSprite = null;

@@ -108,12 +108,12 @@ namespace FFTPatcher.SpriteEditor
         }
 
 
-        public Palette( IList<byte> bytes, ColorDepth depth, bool useRealTransparentColor = false )
+        public Palette( IList<byte> bytes, ColorDepth depth, bool useRealTransparentColor = false, bool applyTransparent = false )
         {
             switch (depth)
             {
                 case ColorDepth._16bit:
-                    Build16BitPalette( bytes, useRealTransparentColor );
+                    Build16BitPalette(bytes, useRealTransparentColor, applyTransparent);
                     break;
                 case ColorDepth._32bit:
                     Build32BitPalette( bytes );
@@ -135,13 +135,13 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        private void Build16BitPalette( IList<byte> bytes, bool useRealTransparentColor = false )
+        private void Build16BitPalette(IList<byte> bytes, bool useRealTransparentColor = false, bool applyTransparent = false)
         {
             int count = bytes.Count / 2;
             Colors = new Color[count];
             for (int i = 0; i < count; i++)
             {
-                Colors[i] = BytesToColor( bytes[i * 2], bytes[i * 2 + 1] );
+                Colors[i] = BytesToColor(bytes[i * 2], bytes[i * 2 + 1], applyTransparent);
             }
 
             if (Colors[0].ToArgb() == Color.Black.ToArgb())
@@ -177,14 +177,18 @@ namespace FFTPatcher.SpriteEditor
         /// Converts two bytes into a FFT color.
         /// Format is: [GGGRRRRR][ABBBBBGG]; Reversed byte order gives [ABBBBBGG][GGGRRRRR]
         /// </summary>
-        public static Color BytesToColor( byte first, byte second )
+        public static Color BytesToColor(byte first, byte second, bool applyTransparent = false)
         {
             int b = (second & 0x7C) << 1;
             int g = (second & 0x03) << 6 | (first & 0xE0) >> 2;
             int r = (first & 0x1F) << 3;
             //int a = (second & 0x80) >> 7;
+            int a = (((second & 0x80) >> 7) == 1) ? 0 : 255;
 
-            return Color.FromArgb( r, g, b );
+            if (applyTransparent)
+                return Color.FromArgb(a, r, g, b);
+            else
+                return Color.FromArgb(r, g, b);
         }
 
         /// <summary>
@@ -278,12 +282,13 @@ namespace FFTPatcher.SpriteEditor
         public byte[] ToByteArray()
         {
             List<byte> result = new List<byte>( 16 * 2 );
-            foreach( Color c in Colors )
+            for( int index = 0; index < Colors.Length; index++ )
             {
-                result.AddRange( ColorToBytes( c ) );
+                result.AddRange( ColorToBytes( Colors[index] ) );
             }
 
-            if( Colors[0] == Color.Transparent )
+            //if( Colors[0] == Color.Transparent )
+            if (((Colors[0].A > 0) && ((Colors[0].R | Colors[0].G | Colors[0].B) == 0)) || ( Colors[0] == Color.Transparent ))
             {
                 result[0] = 0x00;
                 result[1] = 0x00;

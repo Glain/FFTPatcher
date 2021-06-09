@@ -8,14 +8,14 @@ namespace FFTPatcher.SpriteEditor
 {
     class AllSpriteAttributes
     {
-        const int numPsxSprites = 154;
+        const int numPsxSprites = 159;
         const int numPspSprites=numPsxSprites+11;
 
         private static PatcherLib.Iso.PsxIso.KnownPosition psxPos =
-            new PatcherLib.Iso.PsxIso.KnownPosition(PatcherLib.Iso.PsxIso.Sectors.BATTLE_BIN, 0x2d74c, numPsxSprites * 4);
+            new PatcherLib.Iso.PsxIso.KnownPosition(PatcherLib.Iso.PsxIso.Sectors.BATTLE_BIN, 0x2D748, numPsxSprites * 4);
         private static PatcherLib.Iso.PspIso.KnownPosition pspPos =
-            new PatcherLib.Iso.PspIso.KnownPosition(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x324288,
-                numPspSprites * 4+4*4);
+            new PatcherLib.Iso.PspIso.KnownPosition(PatcherLib.Iso.PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x324284,
+                numPspSprites * 4); //+4*4);
         private IList<SpriteAttributes> sprites;
 
         public int Count { get; private set; }
@@ -49,9 +49,9 @@ namespace FFTPatcher.SpriteEditor
         public static AllSpriteAttributes FromPspIso(Stream iso, PatcherLib.Iso.PspIso.PspIsoInfo info)
         {
             IList<byte> bytes = PatcherLib.Iso.PspIso.GetBlock(iso, info, pspPos);
-            List<byte> realBytes = new List<byte>(bytes.Sub(0, numPsxSprites * 4 - 1));
-            realBytes.AddRange(bytes.Sub(numPsxSprites * 4 + (4 * 4)));
-            bytes = realBytes.AsReadOnly();
+            //List<byte> realBytes = new List<byte>(bytes.Sub(0, numPsxSprites * 4 - 1));
+            //realBytes.AddRange(bytes.Sub(numPsxSprites * 4 + (4 * 4)));
+            //bytes = realBytes.AsReadOnly();
             AllSpriteAttributes result = new AllSpriteAttributes();
             IList<SpriteAttributes> sprites = new SpriteAttributes[numPspSprites];
             for (int i = 0; i < numPspSprites; i++)

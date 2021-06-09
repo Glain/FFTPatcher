@@ -526,7 +526,8 @@ namespace FFTPatcher.SpriteEditor
 
             byte[] fileBytes = System.IO.File.ReadAllBytes(ImportFilename);
             int stride = CalculateStride(8);
-            int resultStride = CalculateStride(8);
+            //int resultStride = CalculateStride(8);
+            int resultStride = image.Width;
             byte[] resultData = new byte[image.Height * resultStride];
             int imageDataOffset = fileBytes[10] | (fileBytes[11] << 8) | (fileBytes[12] << 16) | (fileBytes[13] << 24);
 

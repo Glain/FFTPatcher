@@ -13,10 +13,10 @@ namespace FFTPatcher.SpriteEditor
         public override void ImportBitmap( Bitmap bmp, out bool foundBadPixels )
         {
             base.ImportBitmap( bmp, out foundBadPixels );
-            byte[] portraitArea = Pixels.Sub( Width * ( topHeight + compressedHeight ), Width * ( topHeight + compressedHeight + portraintHeight ) - 1 ).ToArray();
+            byte[] portraitArea = Pixels.Sub( Width * ( topHeight + compressedHeight ), Width * ( topHeight + compressedHeight + portraitHeight ) - 1 ).ToArray();
             byte[] compressedArea = Pixels.Sub( Width * topHeight, Width * ( topHeight + compressedHeight ) - 1 ).ToArray();
             portraitArea.CopyTo( Pixels, Width * topHeight );
-            compressedArea.CopyTo( Pixels, Width * ( topHeight + portraintHeight ) );
+            compressedArea.CopyTo( Pixels, Width * ( topHeight + portraitHeight ) );
             BitmapDirty = true;
 
             FirePixelsChanged();
@@ -25,10 +25,23 @@ namespace FFTPatcher.SpriteEditor
         public override void ImportBitmap4bpp(int paletteIndex, IList<byte> importBytes, IList<byte> originalPaletteBytes)
         {
             base.ImportBitmap4bpp(paletteIndex, importBytes, originalPaletteBytes);
-            byte[] portraitArea = Pixels.Sub(Width * (topHeight + compressedHeight), Width * (topHeight + compressedHeight + portraintHeight) - 1).ToArray();
+            byte[] portraitArea = Pixels.Sub(Width * (topHeight + compressedHeight), Width * (topHeight + compressedHeight + portraitHeight) - 1).ToArray();
             byte[] compressedArea = Pixels.Sub(Width * topHeight, Width * (topHeight + compressedHeight) - 1).ToArray();
             portraitArea.CopyTo(Pixels, Width * topHeight);
-            compressedArea.CopyTo(Pixels, Width * (topHeight + portraintHeight));
+            compressedArea.CopyTo(Pixels, Width * (topHeight + portraitHeight));
+            BitmapDirty = true;
+
+            FirePixelsChanged();
+        }
+
+        public override void ImportBitmap8bpp(IList<byte> importBytes, IList<byte> originalPaletteBytes)
+        {
+            base.ImportBitmap8bpp(importBytes, originalPaletteBytes);
+            //return;     // DEBUG
+            byte[] portraitArea = Pixels.Sub(Width * (topHeight + compressedHeight), Width * (topHeight + compressedHeight + portraitHeight) - 1).ToArray();
+            byte[] compressedArea = Pixels.Sub(Width * topHeight, Width * (topHeight + compressedHeight) - 1).ToArray();
+            portraitArea.CopyTo(Pixels, Width * topHeight);
+            compressedArea.CopyTo(Pixels, Width * (topHeight + portraitHeight));
             BitmapDirty = true;
 
             FirePixelsChanged();
@@ -80,16 +93,16 @@ namespace FFTPatcher.SpriteEditor
             {
                 setPixel( i % Width, i / Width, Palettes[palette].Colors[Pixels[i] % 16] );
             }
-            for ( int i = ( topHeight + portraintHeight ) * Width; i < Pixels.Count && i / Width < ( topHeight + portraintHeight + compressedHeight ); i++ )
+            for ( int i = ( topHeight + portraitHeight ) * Width; i < Pixels.Count && i / Width < ( topHeight + portraitHeight + compressedHeight ); i++ )
             {
-                setPixel( i % Width, i / Width - portraintHeight, Palettes[palette].Colors[Pixels[i] % 16] );
+                setPixel( i % Width, i / Width - portraitHeight, Palettes[palette].Colors[Pixels[i] % 16] );
             }
-            for ( int i = Width * topHeight; i < Pixels.Count && i / Width < ( topHeight + portraintHeight ); i++ )
+            for ( int i = Width * topHeight; i < Pixels.Count && i / Width < ( topHeight + portraitHeight ); i++ )
             {
                 setPixel( i % Width, i / Width + compressedHeight, Palettes[palette].Colors[Pixels[i] % 16] );
             }
 
-            for ( int i = Width * ( topHeight + portraintHeight + compressedHeight ); i < Pixels.Count && ( i / Width < Height ); i++ )
+            for ( int i = Width * ( topHeight + portraitHeight + compressedHeight ); i < Pixels.Count && ( i / Width < Height ); i++ )
             {
                 setPixel( i % Width, i / Width, Palettes[palette].Colors[Pixels[i] % 16] );
             }
@@ -193,6 +206,8 @@ namespace FFTPatcher.SpriteEditor
 
         public override byte[] ToByteArray( int index )
         {
+            //System.IO.File.WriteAllBytes(@"pixels_" + DateTime.Now.Ticks + ".bin", Pixels.ToArray());   // DEBUG
+
             System.Diagnostics.Debug.Assert( index == 0 );
             List<byte> ourResult = new List<byte>( 36864 );
             foreach ( Palette p in Palettes )
@@ -204,7 +219,63 @@ namespace FFTPatcher.SpriteEditor
                 ourResult.Add( (byte)( ( Pixels[2 * i + 1] << 4 ) | ( Pixels[2 * i] & 0x0F ) ) );
             }
 
-            ourResult.AddRange( Recompress( Pixels.Sub( 2 * 36864, 2 * 36864 + 200 * 256 - 1 ) ) );
+            int pixelIndex = Pixels.Count - 1;
+            for (; ((pixelIndex >= 0) && (Pixels[pixelIndex] == 0)); pixelIndex--) ;
+            pixelIndex = (pixelIndex < 0) ? 0 : pixelIndex;
+            int sectorByteIndex = Math.Min(((pixelIndex / 2048) * 2048), 122880);
+            int nextSectorByteIndex = sectorByteIndex + 2048;
+            //int endIndex = Math.Min(nextSectorByteIndex, 124928) - 1;
+            //int endIndex = Math.Min(nextSectorByteIndex + (2048 * 3), 124928) - 1;
+
+            /*
+            // DEBUG
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            for (int testIndex = 99999; testIndex < 111111; testIndex++)
+            {
+                byte[] testBytes = Recompress(Pixels.Sub(2 * 36864, testIndex));
+                int testStartIndex = testBytes.Length - 2;
+                int testEndIndex = testStartIndex + 1;
+                if ((testBytes[testStartIndex] == 0xD8) && (testBytes[testEndIndex] == 0x90))
+                    sb.AppendLine(testIndex.ToString());
+            }
+            string testText = sb.ToString();
+            if (!string.IsNullOrEmpty(testText))
+            {
+                System.IO.File.WriteAllText(@"recompress_index.txt", testText);
+            }
+            */
+
+            //if (OriginalSize > 38912)
+            //if (OriginalSize > 40960)
+            //if (sectorByteIndex > (40960 * 2))
+
+            if (sectorByteIndex > (55296 * 2))
+            {
+                ourResult.AddRange(Recompress(Pixels.Sub(2 * 36864, 2 * 36864 + 200 * 256 - 1)));     // (73728, 124927)
+            }
+            else if (sectorByteIndex > (49152 * 2))
+            {
+                //int endIndex = Math.Min(nextSectorByteIndex + (2048 * 2) + 1024 + 512, 124928) - 1;
+                //int endIndex = Math.Min(nextSectorByteIndex + (2048 * 4), 124928) - 1;
+                int endIndex = Math.Min(nextSectorByteIndex + 6568, 124928) - 1;
+
+                byte[] bytes = Recompress(Pixels.Sub(2 * 36864, endIndex));
+                //bytes[bytes.Length - 2] = 0xD8;
+                //bytes[bytes.Length - 1] = 0x90;
+
+                ourResult.AddRange(bytes);
+            }
+            else if (sectorByteIndex > (38912 * 2))
+            {
+                int endIndex = Math.Min(nextSectorByteIndex + 6568, 124928) - 1;
+                //int endIndex = Math.Min(nextSectorByteIndex + (2048 * 3), 124928) - 1;
+
+                byte[] bytes = Recompress(Pixels.Sub(2 * 36864, endIndex));
+                bytes[bytes.Length - 2] = 0xD8;
+                bytes[bytes.Length - 1] = 0x90;
+
+                ourResult.AddRange(bytes);
+            }             
 
             if ( ourResult.Count < OriginalSize )
             {
@@ -215,7 +286,7 @@ namespace FFTPatcher.SpriteEditor
         }
 
         public const int topHeight = 256;
-        public const int portraintHeight = 32;
+        public const int portraitHeight = 32;
         public const int compressedHeight = 200;
 
         protected override void ToBitmapInner( System.Drawing.Bitmap bmp, System.Drawing.Imaging.BitmapData bmd )
@@ -227,32 +298,32 @@ namespace FFTPatcher.SpriteEditor
             }
 
             // Compressed part
-            for ( int i = ( topHeight + portraintHeight ) * Width; ( i < this.Pixels.Count ) && ( i / Width < Height ); i++ )
+            for ( int i = ( topHeight + portraitHeight ) * Width; ( i < this.Pixels.Count ) && ( i / Width < Height ); i++ )
             {
-                bmd.SetPixel8bpp( i % Width, i / Width - portraintHeight, Pixels[i] );
+                bmd.SetPixel8bpp( i % Width, i / Width - portraitHeight, Pixels[i] );
             }
 
             // Portrait part
-            for ( int i = topHeight * Width; ( i < this.Pixels.Count ) && ( i / Width < ( topHeight + portraintHeight ) ); i++ )
+            for ( int i = topHeight * Width; ( i < this.Pixels.Count ) && ( i / Width < ( topHeight + portraitHeight ) ); i++ )
             {
                 bmd.SetPixel8bpp( i % Width, i / Width + compressedHeight, Pixels[i] );
             }
         }
 
-        public override unsafe Bitmap To4bppBitmapUncached( int whichPalette )
+        public override Bitmap To4bppBitmapUncached( int whichPalette )
         {
             Bitmap result = base.To4bppBitmapUncached( whichPalette );
 
             BitmapData bmd = result.LockBits( new Rectangle( Point.Empty, result.Size ), ImageLockMode.WriteOnly, PixelFormat.Format4bppIndexed ); 
 
             // Compressed part
-            for ( int i = ( topHeight + portraintHeight ) * Width; ( i < this.Pixels.Count ) && ( i / Width < Height ); i++ )
+            for ( int i = ( topHeight + portraitHeight ) * Width; ( i < this.Pixels.Count ) && ( i / Width < Height ); i++ )
             {
-                bmd.SetPixel4bpp( i % Width, i / Width - portraintHeight, Pixels[i] );
+                bmd.SetPixel4bpp( i % Width, i / Width - portraitHeight, Pixels[i] );
             }
 
             // Portrait part
-            for ( int i = topHeight * Width; ( i < this.Pixels.Count ) && ( i / Width < ( topHeight + portraintHeight ) ); i++ )
+            for ( int i = topHeight * Width; ( i < this.Pixels.Count ) && ( i / Width < ( topHeight + portraitHeight ) ); i++ )
             {
                 bmd.SetPixel4bpp( i % Width, i / Width + compressedHeight, Pixels[i] );
             }

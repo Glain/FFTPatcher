@@ -197,6 +197,7 @@ namespace FFTPatcher.SpriteEditor
          
         }
 
+        /*
         protected IList<byte> GetPaletteBytes( Set<Color> colors, Palette.ColorDepth depth )
         {
             List<byte> result = new List<byte>();
@@ -221,6 +222,7 @@ namespace FFTPatcher.SpriteEditor
             result.AddRange( new byte[Math.Max( 0, (int)depth * 256 - result.Count )] );
             return result;
         }
+        */
 
         protected abstract string SaveFileName { get; }
 

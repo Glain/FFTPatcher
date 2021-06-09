@@ -240,6 +240,7 @@ namespace FFTPatcher.SpriteEditor
             this.menuItem_ImportAllSprites,
             this.menuItem_DumpAllSprites});
             this.spriteMenuItem.Text = "Sprite";
+            this.spriteMenuItem.Popup += new System.EventHandler(this.spriteMenuItem_Popup);
             // 
             // importSprMenuItem
             // 

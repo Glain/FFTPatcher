@@ -57,6 +57,30 @@ namespace FFTPatcher.SpriteEditor
             byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
             sprite.ImportBitmap4bpp(paletteIndex, importBytes, originalPaletteBytes);
             byte[] sprBytes = sprite.ToByteArray(0);
+
+            byte[] newPaletteBytes = sprite.GetPaletteBytes(sprite.Palettes, originalPaletteBytes, Palette.ColorDepth._16bit).ToArray();
+            Array.Copy(newPaletteBytes, sprBytes, totalPaletteBytes);
+
+            if (sprBytes.Length > Size)
+            {
+                throw new SpriteTooLargeException(sprBytes.Length, (int)Size);
+            }
+
+            ImportSprite(iso, sprBytes);
+        }
+
+        internal virtual void ImportBitmap8bpp(Stream iso, string filename)
+        {
+            AbstractSprite sprite = GetAbstractSpriteFromIso(iso);
+            byte[] importBytes = System.IO.File.ReadAllBytes(filename);
+            const int totalPaletteBytes = 512;
+            byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
+            sprite.ImportBitmap8bpp(importBytes, originalPaletteBytes);
+            byte[] sprBytes = sprite.ToByteArray(0);
+
+            byte[] newPaletteBytes = sprite.GetPaletteBytes(sprite.Palettes, originalPaletteBytes, Palette.ColorDepth._16bit).ToArray();
+            Array.Copy(newPaletteBytes, sprBytes, totalPaletteBytes);
+
             if (sprBytes.Length > Size)
             {
                 throw new SpriteTooLargeException(sprBytes.Length, (int)Size);

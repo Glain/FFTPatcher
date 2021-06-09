@@ -68,7 +68,7 @@ namespace FFTPatcher.SpriteEditor
                 StringBuilder sb = new StringBuilder("WARNING: This sprite shares an SPR with: ");
                 foreach (int i in sharedSPRs)
                 {
-                    sb.AppendFormat("0x{0:X2} ", i + 1);
+                    sb.AppendFormat("0x{0:X2} ", i);
                 }
                 sharedLabel.Text = sb.ToString();
                 sharedLabel.Visible = true;
@@ -358,19 +358,19 @@ namespace FFTPatcher.SpriteEditor
         {
             if(sprite.ToString() == "WEP1")
             {
-                seqComboBox.SelectedItem = seqComboBox.Items[7];
+                seqComboBox.SelectedItem = SpriteType.WEP1;         //seqComboBox.Items[7];
             }
             else if (sprite.ToString() == "WEP2")
             {
-                seqComboBox.SelectedItem = seqComboBox.Items[8];
+                seqComboBox.SelectedItem = SpriteType.WEP2;         //seqComboBox.Items[8];
             }
             else if (sprite.ToString() == "EFF1")
             {
-                seqComboBox.SelectedItem = seqComboBox.Items[9];
+                seqComboBox.SelectedItem = SpriteType.EFF1;         //seqComboBox.Items[9];
             }
             else if (sprite.ToString() == "EFF2")
             {
-                seqComboBox.SelectedItem = seqComboBox.Items[10];
+                seqComboBox.SelectedItem = SpriteType.EFF2;         //seqComboBox.Items[10];
             }
             
             if (charSprite != null &&
