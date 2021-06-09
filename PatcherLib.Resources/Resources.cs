@@ -276,7 +276,13 @@ namespace PatcherLib
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(System.Text.Encoding.UTF8.GetString(bytes.ToArray()));
+            
+            //xmlDocument.LoadXml(System.Text.Encoding.UTF8.GetString(bytes.ToArray()));
+            using (MemoryStream stream = new MemoryStream(bytes.ToArray()))
+            {
+                xmlDocument.Load(stream);
+            }
+
             XmlNodeList xmlNodes = xmlDocument.SelectNodes("//" + entryTitle);
 
             foreach (XmlNode xmlNode in xmlNodes)
@@ -291,14 +297,14 @@ namespace PatcherLib
                 bool isWithinEndValue = ((endValue == 0) || (value <= endValue));
 
                 if (isWithinStartValue && isWithinEndValue)
-                    sb.AppendLine(xmlNode.OuterXml);
+                    sb.AppendLine("    " + xmlNode.OuterXml);
             }
 
             return sb.ToString();
         }
 
         public static string GenerateXMLSectionEntries(IList<string> section, string entryTitle, string attributeTitle, string valueTitle, bool isValueHex,
-            IList<string> prefixes = null, int startIndex = 0, int startValue = 0, int length = 0, int indexAddend = 1)
+            IList<string> prefixes = null, int startValue = 0, int startIndex = 0, int length = 0, int indexAddend = 1)
         {
             int value = startValue;
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -392,9 +398,9 @@ namespace PatcherLib
             return sb.ToString();
         }
 
-        public static byte[] GenerateXMLSectionBytes(string sectionTitle, IEnumerable<string> entryStrings)
+        public static byte[] GenerateXMLSectionBytes(string sectionTitle, IEnumerable<string> entryStrings, string outerTitle = null)
         {
-            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLSectionString(sectionTitle, entryStrings));
+            return System.Text.Encoding.UTF8.GetBytes(GenerateXMLString(new string[1] { GenerateXMLSectionString(sectionTitle, entryStrings) }, outerTitle));
         }
 
         public static byte[] GenerateXMLBytes(IList<string> sections, string outerTitle)
