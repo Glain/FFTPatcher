@@ -48,3 +48,4 @@ Icon
 
 *.csproj.user
 staging2.bat
+/.vs

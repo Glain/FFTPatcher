@@ -32,10 +32,13 @@ namespace FFTPatcher.Editors
 		#region Instance Variables
 
         private JobLevels levels;
-        Label[] labels;
-        VerticalLabel[] verticalLabels;
-
-		#endregion Instance Variables 
+        private readonly Label[] labels;
+        private readonly VerticalLabel[] verticalLabels;
+        private readonly Label[] pspExtraLabels;
+        private readonly VerticalLabel[] pspExtraVerticalLabels;
+        private readonly System.Drawing.Font font;
+        private readonly System.Drawing.Font fontBold;
+        #endregion Instance Variables 
 
         private ToolTip toolTip;
         public ToolTip ToolTip
@@ -52,12 +55,22 @@ namespace FFTPatcher.Editors
         {
             InitializeComponent();
             requirementsEditor1.DataChanged += OnDataChanged;
+            requirementsEditor1.SelectionChangedEvent += RequirementsEditor1_SelectionChangedEvent;
+            font = chemistLabel.Font;
+            fontBold = new System.Drawing.Font(font, System.Drawing.FontStyle.Bold);
+
             labels = new Label[19] { 
                 chemistLabel, knightLabel, archerLabel, monkLabel, 
                 whiteLabel, blackLabel, timeLabel, summonerLabel, 
                 thiefLabel, oratorLabel, mysticLabel, geomancerLabel, 
                 dragoonLabel, samuraiLabel, ninjaLabel, calcLabel, 
                 bardLabel, dancerLabel, mimeLabel };
+            pspExtraLabels = new Label[]
+            {
+                darkKnightLabel,
+                onionKnightLabel,
+                unknownLabel
+            };
             verticalLabels = new VerticalLabel[20] {
                 verticalSquireLabel, verticalChemistLabel, verticalKnightLabel, 
                 verticalArcherLabel, verticalMonkLabel, verticalWhiteLabel, 
@@ -66,6 +79,13 @@ namespace FFTPatcher.Editors
                 verticalGeomancerLabel, verticalDragoonLabel, 
                 verticalSamuraiLabel, verticalNinjaLabel, verticalCalcLabel,
                 verticalBardLabel, verticalDancerLabel, verticalMimeLabel };
+            pspExtraVerticalLabels = new VerticalLabel[]
+            {
+                darkKnightVerticalLabel,
+                onionKnightVerticalLabel,
+                unknown1VerticalLabel,
+                unknown2VerticalLabel
+            };
         }
 
 		#endregion Constructors 
@@ -110,6 +130,27 @@ namespace FFTPatcher.Editors
                 verticalLabels[i].Text = topNames[i];
             }
             verticalLabels[topNames.Count - 1].Text = topNames[topNames.Count - 1];
+            // Clear any bolded labels
+            foreach( var label in labels )
+			{
+                if( label.Font.Bold )
+                    label.Font = font;
+            }
+            foreach( var label in verticalLabels )
+            {
+                if( label.Font.Bold )
+                    label.Font = font;
+            }
+            foreach( var label in pspExtraLabels)
+            {
+                if( label.Font.Bold )
+                    label.Font = font;
+            }
+            foreach( var label in pspExtraVerticalLabels )
+            {
+                if( label.Font.Bold )
+                    label.Font = font;
+            }
 
             bool psp = context == Context.US_PSP;
             if ( psp )
@@ -129,11 +170,70 @@ namespace FFTPatcher.Editors
 
             //requirementsEditor1.Requirements = reqs;
             requirementsEditor1.SetRequirements(reqs, context);
+
         }
 
-		#endregion Public Methods 
+        #endregion Public Methods 
 
-		#region Private Methods (1) 
+        #region Private Methods (2) 
+
+        private void RequirementsEditor1_SelectionChangedEvent(object sender, EventArgs e)
+        {
+            var grid = sender as DataGridView;
+            if( grid != null && grid.RowCount > 1 && grid.SelectedCells.Count == 1 )
+            {
+                requirementsEditor1.DisableRedraw();
+                var selectedCell = grid.SelectedCells[0];
+                // Highlight the selected cell's row and column up to it.
+                for( int row = 0; row < grid.RowCount; row++ )
+                {
+                    for( int col = 0; col < grid.ColumnCount; col++ )
+                    {
+                        var cell = grid[col, row];
+                        if( row == selectedCell.RowIndex && col < selectedCell.ColumnIndex )
+                            cell.Style.BackColor = System.Drawing.Color.LightGray;
+                        else if( col == selectedCell.ColumnIndex && row < selectedCell.RowIndex )
+                            cell.Style.BackColor = System.Drawing.Color.LightGray;
+                        else if( cell.InheritedStyle.BackColor != System.Drawing.Color.White )
+                            cell.Style.BackColor = System.Drawing.Color.White;
+                    }
+                }
+
+                // Set the vertical label(column label) to bold based on the selection
+                int labelCount = darkKnightVerticalLabel.Visible ? verticalLabels.Length + pspExtraVerticalLabels.Length : verticalLabels.Length;
+                for( int i = 0; i < labelCount; i++ )
+                {
+                    VerticalLabel vLabel;
+                    if( i < verticalLabels.Length )
+                        vLabel = verticalLabels[i];
+                    else
+                        vLabel = pspExtraVerticalLabels[i - verticalLabels.Length];
+
+                    if( selectedCell.ColumnIndex == i )
+                        vLabel.Font = fontBold;
+                    else if( vLabel.Font.Bold )
+                        vLabel.Font = font;
+                }
+
+                // Set the row label to bold based on the selection
+                labelCount = darkKnightLabel.Visible ? labels.Length + pspExtraLabels.Length : labels.Length;
+                for( int i = 0; i < labelCount; i++ )
+                {
+                    Label label;
+                    if( i < labels.Length )
+                        label = labels[i];
+                    else
+                        label = pspExtraLabels[i - labels.Length];
+
+                    if( selectedCell.RowIndex == i )
+                        label.Font = fontBold;
+                    else if( label.Font.Bold )
+                        label.Font = font;
+                }
+                requirementsEditor1.EnableRedraw();
+                grid.Invalidate();
+            }
+        }
 
         private void spinner_ValueChanged( object sender, EventArgs e )
         {

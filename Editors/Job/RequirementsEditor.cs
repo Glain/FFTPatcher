@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
@@ -29,7 +30,16 @@ namespace FFTPatcher.Editors
 {
     public partial class RequirementsEditor : BaseEditor
     {
-		#region Instance Variables (1) 
+        [DllImport( "user32.dll" )]
+        private static extern int SendMessage( IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam );
+        private const int WM_SETREDRAW = 11;
+
+        /// <summary>
+        /// Fires when the DataGridView's selection changes
+        /// </summary>
+        public event EventHandler SelectionChangedEvent;
+
+        #region Instance Variables (1) 
 
         private List<Requirements> requirements;
 
@@ -42,9 +52,9 @@ namespace FFTPatcher.Editors
             get { return requirements; }
         }
 
-		#endregion Public Properties 
+        #endregion Public Properties 
 
-		#region Constructors (1) 
+        #region Constructors (1) 
 
         public RequirementsEditor()
         {
@@ -56,34 +66,56 @@ namespace FFTPatcher.Editors
             dataGridView1.CellFormatting += dataGridView1_CellFormatting;
             dataGridView1.EditingControlShowing += dataGridView1_EditingControlShowing;
             dataGridView1.CellValidated += OnDataChanged;
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
         }
 
 		#endregion Constructors 
 
-        public void SetRequirements(List<Requirements> value, Context context)
-        {
-            if (value == null)
-            {
-                this.Enabled = false;
-                this.requirements = null;
-                dataGridView1.DataSource = null;
-            }
-            else if (value != requirements)
-            {
-                bool isPsp = (context == Context.US_PSP);
-                OnionKnight.Visible = isPsp;
-                DarkKnight.Visible = isPsp;
-                Unknown1.Visible = isPsp;
-                Unknown2.Visible = isPsp;
-                this.Enabled = true;
-                this.requirements = value;
-                dataGridView1.DataSource = value;
-            }
-        }
+		#region Public Methods
+        /// <summary>
+        /// Enables drawing of the disabled grid
+        /// </summary>
+		public void EnableRedraw()
+		{
+			SendMessage( dataGridView1.Handle, WM_SETREDRAW, true, 0 );
+		}
+
+		public void SetRequirements(List<Requirements> value, Context context )
+		{
+			if (value == null)
+			{
+				this.Enabled = false;
+				this.requirements = null;
+				dataGridView1.DataSource = null;
+			}
+			else if (value != requirements)
+			{
+				bool isPsp = (context == Context.US_PSP);
+				OnionKnight.Visible = isPsp;
+				DarkKnight.Visible = isPsp;
+				Unknown1.Visible = isPsp;
+				Unknown2.Visible = isPsp;
+				this.Enabled = true;
+				this.requirements = value;
+				dataGridView1.DataSource = value;
+			}
+		}
+
+        /// <summary>
+        /// Disables drawing of the grid
+        /// </summary>
+        /// <remarks>
+        /// Use EnableRedraw to enable the grid.
+        /// </remarks>
+        public void DisableRedraw()
+		{
+			SendMessage( dataGridView1.Handle, WM_SETREDRAW, false, 0 );
+		} 
+		#endregion
 
 		#region Private Methods (7) 
 
-        private void Control_KeyDown( object sender, KeyEventArgs e )
+		private void Control_KeyDown( object sender, KeyEventArgs e )
         {
             if( (e.KeyData == Keys.F12) &&
                 (dataGridView1.CurrentCell != null) &&
@@ -162,6 +194,12 @@ namespace FFTPatcher.Editors
         private void dataGridView1_EditingControlShowing( object sender, DataGridViewEditingControlShowingEventArgs e )
         {
             e.Control.KeyDown += Control_KeyDown;
+        }
+
+        private void dataGridView1_SelectionChanged( object sender, EventArgs e )
+        {
+            if( SelectionChangedEvent != null )
+                SelectionChangedEvent( sender, e );
         }
 
         private void InvalidateCell( DataGridViewCell cell )
