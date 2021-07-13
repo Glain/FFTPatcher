@@ -422,6 +422,12 @@ namespace FFTPatcher.TextEditor
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN 1"].Sections[0], "SkillSet", "name", "byte", true, null, 0xE0, 0xE0, 3)
                         });
                         break;
+                    case PatcherLib.ResourcesClass.Paths.PSP.SpecialNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("SpecialNames", new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "SpecialName", "name", "byte", true, null, 0, 0, 0xFD),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "SpecialName", "byte", true, 0xFE, 0xFF)
+                        });
+                        break;
                     case PatcherLib.ResourcesClass.Paths.PSP.SpriteFilesXML:
                         result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("sprites", new string[11] {
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BOOT.BIN[29E334]"].Sections[1], "s", null, "n", true, null, 0, 0, 0x4A),
@@ -486,6 +492,12 @@ namespace FFTPatcher.TextEditor
                         result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("SkillSets", new string[2] {
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["BATTLE.BIN"].Sections[22], "SkillSet", "name", "byte", true, null, 0, 0, 0xB0),
                             PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.BIN 02"].Sections[0], "SkillSet", "name", "byte", true, null, 0xB0, 0x5E, 0x30)
+                        });
+                        break;
+                    case PatcherLib.ResourcesClass.Paths.PSX.SpecialNamesXML:
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("SpecialNames", new string[2] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["ATTACK.OUT"].Sections[1], "SpecialName", "name", "byte", true, null, 0, 0, 0xFD),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "SpecialName", "byte", true, 0xFE, 0xFF)
                         });
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSX.SpriteFilesXML:

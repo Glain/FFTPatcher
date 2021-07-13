@@ -89,6 +89,13 @@
   <SpecialName byte="4A" name="Gustav"/>
   <SpecialName byte="4B" name="Milleuda"/>
   <SpecialName byte="4C" name="Gragoroth"/>
+    
+  <SpecialName byte="6E" name="Construct 2"/>
+  <SpecialName byte="6F" name="Gobith"/>
+  <SpecialName byte="70" name="Construct 3"/>
+  <SpecialName byte="71" name="Protoconstruct"/>
+  <SpecialName byte="72" name="Teioh"/>
+    
   <SpecialName byte="73" name="Construct 7"/>
   <SpecialName byte="74" name="Syneugh"/>
   <SpecialName byte="75" name="Construct 8"/>
@@ -102,18 +109,16 @@
   <SpecialName byte="7D" name="Wedge"/>
   <SpecialName byte="7E" name="Lezales"/>
   <SpecialName byte="7F" name="Ladd"/>
-  <SpecialName byte="FE" name="Ramza Beoulve"/>
-  <SpecialName byte="FF" name="&lt;Random&gt;"/>
+  
   <SpecialName byte="A2" name="Balthier"/>
   <SpecialName byte="A3" name="Luso"/>
-
-  <SpecialName byte="6E" name="Construct 2"/>
-  <SpecialName byte="6F" name="Gobith"/>
-  <SpecialName byte="70" name="Construct 3"/>
-  <SpecialName byte="71" name="Protoconstruct"/>
-  <SpecialName byte="72" name="Teioh"/>
+  
   <SpecialName byte="A5" name="Argath (Deathknight)"/>
   <SpecialName byte="A6" name="Aliste"/>
   <SpecialName byte="A7" name="Bremondt"/>
   <SpecialName byte="A8" name="Bremondt (Dark Dragon)"/>
+    
+  <SpecialName byte="FE" name="Ramza Beoulve"/>
+  <SpecialName byte="FF" name="&lt;Random&gt;"/>
+    
 </SpecialNames>
