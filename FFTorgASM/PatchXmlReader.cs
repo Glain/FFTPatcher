@@ -179,8 +179,6 @@ namespace FFTorgASM
                     // No offset defined -- offset is (last patch offset) + (last patch size)
                     PatchedByteArray lastPatchedByteArray = patches[patches.Count - 1];
                     long offset = lastPatchedByteArray.Offset + lastPatchedByteArray.GetBytes().Length;
-                    string strOffset = offset.ToString("X");
-                    strOffsets = new string[1] { strOffset };
                     ignoreOffsetMode = true;
                     isSequentialOffset = true;
 
@@ -194,6 +192,9 @@ namespace FFTorgASM
                             isSequentialOffset = false;
                         }
                     }
+
+                    string strOffset = offset.ToString("X");
+                    strOffsets = new string[1] { strOffset };
                 }
 
                 PsxIso.Sectors sector = (PsxIso.Sectors)0;
