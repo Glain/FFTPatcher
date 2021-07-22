@@ -277,7 +277,8 @@ namespace FFTPatcher.Editors
                     }
                     else
                     {
-                        inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIndexes.Add(itemIndex);
+                        if (weapon.InflictStatus <= 0x7F)
+                            inflictStatuses.InflictStatuses[weapon.InflictStatus].ReferencingItemIndexes.Add(itemIndex);
                     }
 
                     weapon.OldInflictStatus = weapon.InflictStatus;
@@ -298,7 +299,8 @@ namespace FFTPatcher.Editors
                     }
                     else
                     {
-                        inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIndexes.Add(itemIndex);
+                        if (chemistItem.InflictStatus <= 0x7F)
+                            inflictStatuses.InflictStatuses[chemistItem.InflictStatus].ReferencingItemIndexes.Add(itemIndex);
                     }
 
                     chemistItem.OldInflictStatus = chemistItem.InflictStatus;
