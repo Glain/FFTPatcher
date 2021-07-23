@@ -153,14 +153,14 @@ namespace FFTPatcher.Editors
                 int spriteNameCount = spriteNames.Count;
                 cmb_MPortrait.Items.Add("00");
                 cmb_MType.Items.Add("00");
-                for (int index = 0; index < spriteNameCount; index++)
+                for (int index = 1; index < spriteNameCount; index++)
                 {
                     string spriteName = spriteNames[index];
 
-                    cmb_MPortrait.Items.Add(String.Format("{0} {1}", (index + 1).ToString("X2"), spriteName));
-                    if ((index >= 0x85) && (index <= 0x99))
+                    cmb_MPortrait.Items.Add(String.Format("{0} {1}", (index).ToString("X2"), spriteName));
+                    if ((index >= 0x86) && (index <= 0x9A))
                     {
-                        cmb_MType.Items.Add(String.Format("{0} {1}", (index - 0x84).ToString("X2"), spriteName));
+                        cmb_MType.Items.Add(String.Format("{0} {1}", (index - 0x85).ToString("X2"), spriteName));
                     }
                 }
                 for (int index = cmb_MType.Items.Count; index <= spriteNameCount; index++)
