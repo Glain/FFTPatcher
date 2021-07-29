@@ -459,173 +459,122 @@ namespace PatcherLib.Iso
             }
         }
 
-        public static IList<KnownPosition> Abilities { get; private set; }
-
-        public static IList<KnownPosition> AbilityEffects { get; private set; }
-        public static IList<KnownPosition> ItemAbilityEffects { get; private set; }
-        public static IList<KnownPosition> ReactionAbilityEffects { get; private set; }
-
-        public static IList<KnownPosition> ActionEvents { get; private set; }
-
-        public static KnownPosition ENTD1 { get; private set; }
-
-        public static KnownPosition ENTD2 { get; private set; }
-
-        public static KnownPosition ENTD3 { get; private set; }
-
-        public static KnownPosition ENTD4 { get; private set; }
-        public static KnownPosition ENTD5 { get; private set; }
-
-        public static IList<KnownPosition> InflictStatuses { get; private set; }
-
-        public static IList<KnownPosition> JobLevels { get; private set; }
-
-        public static IList<KnownPosition> Jobs { get; private set; }
-
-        public static IList<KnownPosition> MonsterSkills { get; private set; }
-
-        public static IList<KnownPosition> MoveFindItems { get; private set; }
-
-        public static IList<KnownPosition> OldItemAttributes { get; private set; }
-
-        public static IList<KnownPosition> OldItems { get; private set; }
-
-        public static IList<KnownPosition> NewItemAttributes { get; private set; }
-
-        public static IList<KnownPosition> NewItems { get; private set; }
-
-        public static IList<KnownPosition> PoachProbabilities { get; private set; }
-
-        public static IList<KnownPosition> SkillSets { get; private set; }
-
-        public static IList<KnownPosition> StatusAttributes { get; private set; }
-
-        public static IList<KnownPosition> StoreInventories { get; private set; }
-
-        public static IList<KnownPosition> AbilityAnimations { get; private set; }
-
-        public static IList<KnownPosition> Propositions { get; private set; }
-
-        public static IList<KnownPosition> JobFormationSpritesJobCheckID { get; private set; }
-        public static IList<KnownPosition> JobFormationSprites1 { get; private set; }
-        public static IList<KnownPosition> JobFormationSprites2 { get; private set; }
-        public static IList<KnownPosition> JobFormationSprites2A { get; private set; }
-        public static IList<KnownPosition> JobFormationSprites2B { get; private set; }
-        public static IList<KnownPosition> JobFormationSprites2C { get; private set; }
-        public static IList<KnownPosition> JobFormationSprites2D { get; private set; }
-
-        static PspIso()
-        {
-            Propositions = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2E5688,0xA7C),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2E5688, 0xA7C),
-            }.AsReadOnly();
-
-            // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
-            AbilityAnimations = new KnownPosition[] { 
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x32394C, 0x552),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x32394C, 0x552) }.AsReadOnly();
-
-            Abilities = new KnownPosition[] { 
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x271514, 0x24C6),
+        public static IList<KnownPosition> Abilities = new KnownPosition[] { 
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x271514, 0x24C6), 
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x271514, 0x24C6) }.AsReadOnly();
-            AbilityEffects = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3177B4, 0x38C),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3177B4, 0x38C)}.AsReadOnly();
-            
-            /*
-            ItemAbilityEffects = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x317A94, 0x1C),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x317A94, 0x1C)}.AsReadOnly();
-            ReactionAbilityEffects = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x317B00, 0x40),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x317B00, 0x40)}.AsReadOnly();
-            */
 
-            ActionEvents = new KnownPosition[] {
+        public static IList<KnownPosition> AbilityEffects = new KnownPosition[] { 
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3177B4, 0x38C), 
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3177B4, 0x38C)}.AsReadOnly();
+
+        //public static IList<KnownPosition> ItemAbilityEffects = new KnownPosition[] { 
+        //    new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x317A94, 0x1C), 
+        //    new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x317A94, 0x1C)}.AsReadOnly();
+
+        //public static IList<KnownPosition> ReactionAbilityEffects = new KnownPosition[] { 
+        //    new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x317B00, 0x40), 
+        //    new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x317B00, 0x40)}.AsReadOnly();
+
+        public static IList<KnownPosition> ActionEvents = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x276CA4, 227),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x276CA4, 227)}.AsReadOnly();
-            InflictStatuses = new KnownPosition[] {
+
+        public static KnownPosition ENTD1 = new KnownPosition(FFTPack.Files.BATTLE_ENTD1_ENT, 0, 81920);
+
+        public static KnownPosition ENTD2 = new KnownPosition(FFTPack.Files.BATTLE_ENTD2_ENT, 0, 81920);
+
+        public static KnownPosition ENTD3 = new KnownPosition(FFTPack.Files.BATTLE_ENTD3_ENT, 0, 81920);
+
+        public static KnownPosition ENTD4 = new KnownPosition(FFTPack.Files.BATTLE_ENTD4_ENT, 0, 81920);
+
+        public static KnownPosition ENTD5 = new KnownPosition(FFTPack.Files.BATTLE_ENTD5_ENT, 0, 51200);
+
+        public static IList<KnownPosition> InflictStatuses = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3263E8, 0x300),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3263E8, 0x300)}.AsReadOnly();
-            Jobs = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2739DC, 8281),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2739DC, 8281)}.AsReadOnly();
-            JobLevels = new KnownPosition[] {
+
+        public static IList<KnownPosition> JobLevels = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x277084, 280),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x277084, 280)}.AsReadOnly();
-            MonsterSkills = new KnownPosition[] {
+
+        public static IList<KnownPosition> Jobs = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2739DC, 8281),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2739DC, 8281)}.AsReadOnly();
+
+        public static IList<KnownPosition> MonsterSkills = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x276BB4, 0xF0),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x276BB4, 0xF0)}.AsReadOnly();
-            OldItemAttributes = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3266E8, 0x7D0),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3266E8, 0x7D0)}.AsReadOnly();
-            NewItemAttributes = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x25720C, 0x20D),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x25720C, 0x20D)}.AsReadOnly();
 
-            OldItems = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3252DC, 0x110A),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3252DC, 0x110A)}.AsReadOnly();
-            NewItems = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x256E00, 1032),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x256E00, 1032)}.AsReadOnly();
-            PoachProbabilities = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x277024, 0x60),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x277024, 0x60)}.AsReadOnly();
-            StatusAttributes = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x276DA4, 0x280),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x276DA4, 0x280)}.AsReadOnly();
-
-            SkillSets = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x275A38, 4475),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x275A38, 4475)}.AsReadOnly();
-
-            MoveFindItems = new KnownPosition[] {
+        public static IList<KnownPosition> MoveFindItems = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2707A8, 0x800),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2707A8, 0x800)}.AsReadOnly();
 
-            StoreInventories = new KnownPosition[] {
+        public static IList<KnownPosition> OldItemAttributes = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3266E8, 0x7D0),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3266E8, 0x7D0)}.AsReadOnly();
+
+        public static IList<KnownPosition> OldItems = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x3252DC, 0x110A),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x3252DC, 0x110A)}.AsReadOnly();
+
+        public static IList<KnownPosition> NewItemAttributes = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x25720C, 0x20D),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x25720C, 0x20D)}.AsReadOnly();
+
+        public static IList<KnownPosition> NewItems = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x256E00, 1032),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x256E00, 1032)}.AsReadOnly();
+
+        public static IList<KnownPosition> PoachProbabilities = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x277024, 0x60),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x277024, 0x60)}.AsReadOnly();
+
+        public static IList<KnownPosition> SkillSets = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x275A38, 4475),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x275A38, 4475)}.AsReadOnly();
+
+        public static IList<KnownPosition> StatusAttributes = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x276DA4, 0x280),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x276DA4, 0x280)}.AsReadOnly();
+
+        public static IList<KnownPosition> StoreInventories = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2DC8D0, 0x200),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2DC8D0, 0x200)}.AsReadOnly();
 
-            JobFormationSpritesJobCheckID = new KnownPosition[] {
+        // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
+        public static IList<KnownPosition> AbilityAnimations = new KnownPosition[] { new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x32394C, 0x552), 
+            new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x32394C, 0x552) }.AsReadOnly();
+
+        public static IList<KnownPosition> Propositions = new KnownPosition[] { new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2E5688,0xA7C), 
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2E5688, 0xA7C)}.AsReadOnly();
+
+        public static IList<KnownPosition> JobFormationSpritesJobCheckID = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x18D7D8, 1),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x18D7D8, 1)
-            }.AsReadOnly();
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x18D7D8, 1)}.AsReadOnly();
 
-            JobFormationSprites1 = new KnownPosition[] {
+        public static IList<KnownPosition> JobFormationSprites1 = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2DCF08, 0x4A),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2DCF08, 0x4A)
-            }.AsReadOnly();
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2DCF08, 0x4A)}.AsReadOnly();
 
-            JobFormationSprites2 = new KnownPosition[] {
+        public static IList<KnownPosition> JobFormationSprites2 = new KnownPosition[] {
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x29D1F0, 0x94),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x29D1F0, 0x94)
-            }.AsReadOnly();
-            JobFormationSprites2A = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2D7594, 0x94),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2D7594, 0x94)
-            }.AsReadOnly();
-            JobFormationSprites2B = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2F57CC, 0x94),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2F57CC, 0x94)
-            }.AsReadOnly();
-            JobFormationSprites2C = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x31134C, 0x94),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x31134C, 0x94)
-            }.AsReadOnly();
-            JobFormationSprites2D = new KnownPosition[] {
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x312DB0, 0x94),
-                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x312DB0, 0x94)
-            }.AsReadOnly();
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x29D1F0, 0x94)}.AsReadOnly();
 
-            ENTD1 = new KnownPosition( FFTPack.Files.BATTLE_ENTD1_ENT, 0, 81920 );
-            ENTD2 = new KnownPosition( FFTPack.Files.BATTLE_ENTD2_ENT, 0, 81920 );
-            ENTD3 = new KnownPosition( FFTPack.Files.BATTLE_ENTD3_ENT, 0, 81920 );
-            ENTD4 = new KnownPosition( FFTPack.Files.BATTLE_ENTD4_ENT, 0, 81920 );
-            ENTD5 = new KnownPosition( FFTPack.Files.BATTLE_ENTD5_ENT, 0, 51200 );
-        }
+        public static IList<KnownPosition> JobFormationSprites2A = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2D7594, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2D7594, 0x94)}.AsReadOnly();
+
+        public static IList<KnownPosition> JobFormationSprites2B = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x2F57CC, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x2F57CC, 0x94)}.AsReadOnly();
+
+        public static IList<KnownPosition> JobFormationSprites2C = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x31134C, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x31134C, 0x94)}.AsReadOnly();
+
+        public static IList<KnownPosition> JobFormationSprites2D = new KnownPosition[] {
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x312DB0, 0x94),
+                new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x312DB0, 0x94)}.AsReadOnly();
 
         #endregion Private Methods
 

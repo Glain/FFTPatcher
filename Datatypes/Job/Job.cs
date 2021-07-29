@@ -29,15 +29,45 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class AllJobs : PatchableFile, IXmlDigest, IGenerateCodes
     {
-		#region Instance Variables (2) 
+        private static Job[] _pspJobs = null;
+        public static Job[] PspJobs
+        {
+            get
+            {
+                if (_pspJobs == null)
+                {
+                    _pspJobs = new Job[0xAA];
+                    for (int i = 0; i < 0xAA; i++)
+                    {
+                        _pspJobs[i] = new Job((byte)i, PSPNames[i]);
+                    }
+                }
 
-        private static Job[] pspJobs;
-        private static Job[] psxJobs;
-        private Context context;
+                return _pspJobs;
+            }
+        }
 
-		#endregion Instance Variables 
+        private static Job[] _psxJobs = null;
+        public static Job[] PsxJobs
+        {
+            get
+            {
+                if (_psxJobs == null)
+                {
+                    _psxJobs = new Job[0xA0];
+                    for (int i = 0; i < 0xA0; i++)
+                    {
+                        _psxJobs[i] = new Job((byte)i, PSXNames[i]);
+                    }
+                }
 
-		#region Public Properties (6) 
+                return _psxJobs;
+            }
+        }
+
+        //private Context context;
+
+		#region Public Properties
 
         /*
         public static Job[] DummyJobs
@@ -48,7 +78,7 @@ namespace FFTPatcher.Datatypes
 
         public static Job[] GetDummyJobs(Context context)
         {
-            return (context == Context.US_PSP) ? pspJobs : psxJobs;
+            return (context == Context.US_PSP) ? PspJobs : PsxJobs;
         }
 
         /// <summary>
@@ -77,34 +107,27 @@ namespace FFTPatcher.Datatypes
             return (context == Context.US_PSP) ? PSPNames : PSXNames;
         }
 
-        public static IList<string> PSPNames { get; private set; }
+        public static readonly IList<string> PSPNames = PSPResources.Lists.JobNames;
 
-        public static IList<string> PSXNames { get; private set; }
+        private static IList<string> _psxNames = null;
+        public static IList<string> PSXNames 
+        {
+            get
+            {
+                if (_psxNames == null)
+                {
+                    List<string> psxNames = new List<string>(PSXResources.Lists.JobNames);
+                    psxNames.AddRange(new string[9] { "", "", "", "", "", "", "", "", "" });
+                    _psxNames = psxNames.AsReadOnly();
+                }
+
+                return _psxNames;
+            }
+        }
 
 		#endregion Public Properties 
 
 		#region Constructors
-
-        static AllJobs()
-        {
-            pspJobs = new Job[0xAA];
-            psxJobs = new Job[0xA0];
-
-            PSPNames = PSPResources.Lists.JobNames;
-            List<string> psxNames = new List<string>( PSXResources.Lists.JobNames );
-            psxNames.AddRange( new string[9] { "", "", "", "", "", "", "", "", "" } );
-            PSXNames = psxNames.AsReadOnly(); ;
-
-            for( int i = 0; i < 0xAA; i++ )
-            {
-                pspJobs[i] = new Job( (byte)i, PSPNames[i] );
-            }
-
-            for( int i = 0; i < 0xA0; i++ )
-            {
-                psxJobs[i] = new Job( (byte)i, PSXNames[i] );
-            }
-        }
 
         public AllJobs( IList<byte> bytes, IList<byte> formationBytes1, IList<byte> formationBytes2 )
             : this( Context.US_PSP, bytes, formationBytes1, formationBytes2 )

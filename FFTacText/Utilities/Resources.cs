@@ -31,13 +31,14 @@ namespace FFTPatcher.TextEditor
     public static class Resources
     {
 
-        #region Static Fields (1)
+        #region Static Fields
 
         private static Dictionary<string, XmlNode> resourceMapping = new Dictionary<string, XmlNode>();
         private static Dictionary<string, byte[]> otherResources = new Dictionary<string, byte[]>();
+
         #endregion Static Fields
 
-        #region Static Properties (1)
+        #region Static Properties
 
         //public static XmlNode PSX { get { return resourceMapping["psx.xml"]; } }
         //public static XmlNode PSP { get { return resourceMapping["psp.xml"]; } }
@@ -45,9 +46,14 @@ namespace FFTPatcher.TextEditor
 
         #endregion Static Properties
 
-        #region Constructors (1)
+        #region Constructors
 
         static Resources()
+        {
+            LoadResources();
+        }
+
+        private static void LoadResources()
         {
             using ( MemoryStream memStream = new MemoryStream( FFTPatcher.TextEditor.Properties.Resources.Resources_tar, false ) )
             using ( GZipInputStream gzStream = new GZipInputStream( memStream ) )
@@ -75,7 +81,6 @@ namespace FFTPatcher.TextEditor
 
                     entry = tarStream.GetNextEntry();
                 }
-
             }
         }
 

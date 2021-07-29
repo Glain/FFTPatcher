@@ -29,7 +29,7 @@ namespace FFTPatcher.Datatypes
     {
 		#region Instance Variables (1) 
 
-        private static readonly List<string> armorDigestableProperties;
+        private static readonly List<string> armorDigestableProperties = CreateArmorDigestableProperties();
 
 		#endregion Instance Variables 
 
@@ -63,14 +63,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (3) 
-
-        static Armor()
-        {
-            armorDigestableProperties = new List<string>( Item.digestableProperties );
-            armorDigestableProperties.Add( "HPBonus" );
-            armorDigestableProperties.Add( "MPBonus" );
-        }
+		#region Constructors
 
         public Armor(UInt16 offset, IList<byte> itemBytes, IList<byte> armorBytes, PatcherLib.Datatypes.Context context)
             : this( offset, itemBytes, armorBytes, null, context )
@@ -86,6 +79,14 @@ namespace FFTPatcher.Datatypes
         }
 
 		#endregion Constructors 
+
+        private static List<string> CreateArmorDigestableProperties()
+        {
+            List<string> props = new List<string>(Item.digestableProperties);
+            props.Add("HPBonus");
+            props.Add("MPBonus");
+            return props;
+        }
 
 		#region Public Methods (8) 
 

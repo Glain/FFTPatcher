@@ -386,12 +386,7 @@ namespace FFTPatcher.Datatypes
 
     public class ShopAvailability
     {
-
-        #region Static Fields (1)
-
         private static List<ShopAvailability> all;
-
-        #endregion Static Fields
 
         #region Fields
 

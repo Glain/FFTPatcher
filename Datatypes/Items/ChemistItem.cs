@@ -29,7 +29,7 @@ namespace FFTPatcher.Datatypes
     {
 		#region Instance Variables (1) 
 
-        private static readonly List<string> chemistItemDigestableProperties;
+        private static readonly List<string> chemistItemDigestableProperties = CreateChemistItemDigestableProperties();
 
 		#endregion Instance Variables 
 
@@ -70,15 +70,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (3) 
-
-        static ChemistItem()
-        {
-            chemistItemDigestableProperties = new List<string>( Item.digestableProperties );
-            chemistItemDigestableProperties.Add( "Formula" );
-            chemistItemDigestableProperties.Add( "X" );
-            chemistItemDigestableProperties.Add( "InflictStatus" );
-        }
+		#region Constructors 
 
         public ChemistItem(UInt16 offset, IList<byte> itemBytes, IList<byte> chemistBytes, PatcherLib.Datatypes.Context context) :
             this( offset, itemBytes, chemistBytes, null, context )
@@ -97,6 +89,15 @@ namespace FFTPatcher.Datatypes
         }
 
 		#endregion Constructors 
+
+        private static List<string> CreateChemistItemDigestableProperties()
+        {
+            List<string> props = new List<string>(Item.digestableProperties);
+            props.Add("Formula");
+            props.Add("X");
+            props.Add("InflictStatus");
+            return props;
+        }
 
 		#region Public Methods (8) 
 

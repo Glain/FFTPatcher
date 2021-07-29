@@ -29,7 +29,7 @@ namespace FFTPatcher.Datatypes
     {
 		#region Instance Variables (1) 
 
-        private static readonly List<string> accessoryDigestableProperties;
+        private static readonly List<string> accessoryDigestableProperties = CreateAccessoryDigestableProperties();
 
 		#endregion Instance Variables 
 
@@ -63,14 +63,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (3) 
-
-        static Accessory()
-        {
-            accessoryDigestableProperties = new List<string>( Item.digestableProperties );
-            accessoryDigestableProperties.AddRange( new string[] {
-                "PhysicalEvade", "MagicEvade" } );
-        }
+		#region Constructors 
 
         public Accessory(UInt16 offset, IList<byte> itemBytes, IList<byte> accessoryBytes, PatcherLib.Datatypes.Context context)
             : this( offset, itemBytes, accessoryBytes, null, context )
@@ -86,6 +79,13 @@ namespace FFTPatcher.Datatypes
         }
 
 		#endregion Constructors 
+
+        private static List<string> CreateAccessoryDigestableProperties()
+        {
+            List<string> props = new List<string>(Item.digestableProperties);
+            props.AddRange(new string[] {"PhysicalEvade", "MagicEvade" });
+            return props;
+        }
 
 		#region Public Methods (8) 
 

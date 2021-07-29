@@ -59,23 +59,17 @@ namespace Bimixual.Animation
             PM_REMOVE
         }
         public delegate void LoopAction();      // defines the function ptr signature
-        private static LoopAction loopAction;   // our ptr to the function called in each frame iteration
+        private static LoopAction loopAction = DefaultAction;   // our ptr to the function called in each frame iteration
 
         private static Control control;   // The form connected to this controller
 
         /// <summary>
         /// If assigned, then program will sleep between frames instead of looping 
         /// </summary>
-        private static FpsTimer fpsTimer; public static FpsTimer FpsTimer { set { fpsTimer = value; } }
-
-
-        /// <summary>
-        /// Constructor sets Application.Idle handler
-        /// </summary>
-        static LoopControl()
-        {
-            loopAction = DefaultAction;
-            fpsTimer = null;
+        private static FpsTimer fpsTimer = null; 
+        public static FpsTimer FpsTimer 
+        { 
+            set { fpsTimer = value; } 
         }
 
         public static void Stop()

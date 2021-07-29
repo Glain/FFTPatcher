@@ -31,8 +31,8 @@ namespace FFTPatcher.Datatypes
     {
 		#region Instance Variables (2) 
 
-        private static IList<string> pspEventNames;
-        private static IList<string> psxEventNames;
+        private static IList<string> pspEventNames = PSPResources.Lists.EventNames;
+        private static IList<string> psxEventNames = PSXResources.Lists.EventNames;
 
 		#endregion Instance Variables 
 
@@ -69,13 +69,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (2) 
-
-        static Event()
-        {
-            pspEventNames = PSPResources.Lists.EventNames;
-            psxEventNames = PSXResources.Lists.EventNames;
-        }
+		#region Constructors
 
         public Event( int value, IList<byte> bytes, Event defaults, Context context )
         {

@@ -146,14 +146,14 @@ namespace FFTPatcher.Datatypes
     public class AllMonsterSkills : PatchableFile, IXmlDigest, IGenerateCodes
     {
 
-        #region Static Properties (3)
+        #region Static Properties
 
 
         //public static IList<string> Names { get { return FFTPatch.Context == Context.US_PSP ? PSPNames : PSXNames; } }
 
-        public static IList<string> PSPNames { get; private set; }
+        public static readonly IList<string> PSPNames = PSPResources.Lists.MonsterNames;
 
-        public static IList<string> PSXNames { get; private set; }
+        public static readonly IList<string> PSXNames = PSXResources.Lists.MonsterNames;
 
 
         #endregion Static Properties
@@ -184,13 +184,7 @@ namespace FFTPatcher.Datatypes
 
         #endregion Properties
 
-        #region Constructors (2)
-
-        static AllMonsterSkills()
-        {
-            PSPNames = PSPResources.Lists.MonsterNames;
-            PSXNames = PSXResources.Lists.MonsterNames;
-        }
+        #region Constructors
 
         public AllMonsterSkills(IList<byte> bytes, Context context) : this(bytes, null, context) { }
 

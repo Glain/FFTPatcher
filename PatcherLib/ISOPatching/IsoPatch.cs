@@ -57,27 +57,32 @@ namespace PatcherLib.Iso
 
 		#endregion Instance Variables 
 
-		#region Constructors (1) 
+		#region Constructors
 
         static IsoPatch()
         {
+            InitIsoPatch();
+        }
+
+		#endregion Constructors 
+
+        private static void InitIsoPatch()
+        {
             uint j = 0;
             ulong edc = 0;
-            for( uint i = 0; i < 256; i++ )
+            for (uint i = 0; i < 256; i++)
             {
                 j = (uint)((i << 1) ^ ((i & 0x80) == 0x80 ? 0x11D : 0));
                 eccFLUT[i] = (byte)j;
                 eccBLUT[i ^ j] = (byte)i;
                 edc = i;
-                for( j = 0; j < 8; j++ )
+                for (j = 0; j < 8; j++)
                 {
                     edc = (edc >> 1) ^ ((edc & 1) == 1 ? 0xD8018001 : 0);
                 }
                 edcLUT[i] = edc;
             }
         }
-
-		#endregion Constructors 
 
 		#region Public Methods (8) 
 

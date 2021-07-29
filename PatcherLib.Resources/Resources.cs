@@ -163,19 +163,24 @@ namespace PatcherLib
 
         static ResourcesClass()
         {
-            using( MemoryStream memStream = new MemoryStream( PatcherLib.Resources.Properties.Resources.ZippedResources, false ) )
-            using( GZipInputStream gzStream = new GZipInputStream( memStream ) )
-            using( TarInputStream tarStream = new TarInputStream( gzStream ) )
+            InitResourcesClass();
+        }
+
+        private static void InitResourcesClass()
+        {
+            using (MemoryStream memStream = new MemoryStream(PatcherLib.Resources.Properties.Resources.ZippedResources, false))
+            using (GZipInputStream gzStream = new GZipInputStream(memStream))
+            using (TarInputStream tarStream = new TarInputStream(gzStream))
             {
                 var tempDefault = new Dictionary<string, IList<byte>>();
                 TarEntry entry;
                 entry = tarStream.GetNextEntry();
-                while( entry != null )
+                while (entry != null)
                 {
-                    if( entry.Size != 0 )
+                    if (entry.Size != 0)
                     {
                         byte[] bytes = new byte[entry.Size];
-                        StreamUtils.ReadFully( tarStream, bytes );
+                        StreamUtils.ReadFully(tarStream, bytes);
                         tempDefault[entry.Name] = bytes.AsReadOnly();
                     }
                     entry = tarStream.GetNextEntry();
@@ -184,23 +189,23 @@ namespace PatcherLib
                 DefaultZipFileContents = new PatcherLib.Datatypes.ReadOnlyDictionary<string, IList<byte>>(tempDefault);
             }
 
-            string defaultsFile = Path.Combine( Path.GetDirectoryName( System.Windows.Forms.Application.ExecutablePath ), "Resources.zip" );
+            string defaultsFile = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Resources.zip");
 
-            if( File.Exists( defaultsFile ) )
+            if (File.Exists(defaultsFile))
             {
                 var tempContents = new Dictionary<string, IList<byte>>();
                 try
                 {
-                    using( FileStream file = File.Open( defaultsFile, FileMode.Open, FileAccess.Read ) )
-                    using( ZipInputStream zipStream = new ZipInputStream( file ) )
+                    using (FileStream file = File.Open(defaultsFile, FileMode.Open, FileAccess.Read))
+                    using (ZipInputStream zipStream = new ZipInputStream(file))
                     {
                         ZipEntry entry = zipStream.GetNextEntry();
-                        while( entry != null )
+                        while (entry != null)
                         {
-                            if( entry.Size != 0 )
+                            if (entry.Size != 0)
                             {
                                 byte[] bytes = new byte[entry.Size];
-                                StreamUtils.ReadFully( zipStream, bytes );
+                                StreamUtils.ReadFully(zipStream, bytes);
                                 tempContents[entry.Name] = bytes.AsReadOnly();
                             }
                             entry = zipStream.GetNextEntry();
@@ -217,7 +222,7 @@ namespace PatcherLib
 
                     ZipFileContents = new PatcherLib.Datatypes.ReadOnlyDictionary<string, IList<byte>>(tempContents);
                 }
-                catch( Exception )
+                catch (Exception)
                 {
                     ZipFileContents = DefaultZipFileContents;
                 }

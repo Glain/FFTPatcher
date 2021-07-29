@@ -477,8 +477,6 @@ namespace Ionic.Utils
 
     internal static class PInvoke
     {
-        static PInvoke() { }
-
         public delegate int BrowseFolderCallbackProc( IntPtr hwnd, int msg, IntPtr lParam, IntPtr lpData );
 
         internal static class User32

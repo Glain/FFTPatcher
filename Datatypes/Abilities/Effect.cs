@@ -29,33 +29,15 @@ namespace FFTPatcher.Datatypes
 
         public string Name { get; private set; }
 
-        public static IDictionary<UInt16, Effect> PSPEffects { get; private set; }
+        public static readonly IDictionary<UInt16, Effect> PSPEffects = CreateEffectMap(PSPResources.Lists.AbilityEffects);
 
-        public static IDictionary<UInt16, Effect> PSXEffects { get; private set; }
+        public static readonly IDictionary<UInt16, Effect> PSXEffects = CreateEffectMap(PSXResources.Lists.AbilityEffects);
 
         public UInt16 Value { get; private set; }
 
 		#endregion Public Properties 
 
-		#region Constructors (2) 
-
-        static Effect()
-        {
-            PSXEffects = new Dictionary<UInt16, Effect>( 513 );
-            PSPEffects = new Dictionary<UInt16, Effect>( 513 );
-
-            for( UInt16 i = 0; i < 512; i++ )
-            {
-                PSPEffects[i] = new Effect( i, PSPResources.Lists.AbilityEffects[i] );
-                PSXEffects[i] = new Effect( i, PSXResources.Lists.AbilityEffects[i] );
-            }
-
-            PSPEffects[0xFFFF] = new Effect( 0xFFFF, "" );
-            PSXEffects[0xFFFF] = new Effect( 0xFFFF, "" );
-
-            PSPEffects = new PatcherLib.Datatypes.ReadOnlyDictionary<UInt16, Effect>( PSPEffects );
-            PSXEffects = new PatcherLib.Datatypes.ReadOnlyDictionary<UInt16, Effect>( PSXEffects );
-        }
+		#region Constructors
 
         private Effect( UInt16 value, string name )
         {
@@ -65,7 +47,20 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+        private static IDictionary<UInt16, Effect> CreateEffectMap(IList<string> abilityEffects)
+        {
+            Dictionary<UInt16, Effect> effectMap = new Dictionary<UInt16, Effect>(513);
+            
+            for (UInt16 i = 0; i < 512; i++)
+            {
+                effectMap[i] = new Effect(i, abilityEffects[i]);
+            }
+
+            effectMap[0xFFFF] = new Effect(0xFFFF, "");
+            return new PatcherLib.Datatypes.ReadOnlyDictionary<UInt16, Effect>(effectMap);
+        }
+
+		#region Public Methods
 
         public override string ToString()
         {

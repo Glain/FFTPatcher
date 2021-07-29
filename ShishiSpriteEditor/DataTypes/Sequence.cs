@@ -17,9 +17,9 @@ namespace FFTPatcher.SpriteEditor
 
         private Set<int> uniqueFrames;
 
-        public static IDictionary<SpriteType, IList<Sequence>> Sequences { get; private set; }
+        public static readonly IDictionary<SpriteType, IList<Sequence>> Sequences = GetSequences();
 
-        static Sequence()
+        private static IDictionary<SpriteType, IList<Sequence>> GetSequences()
         {
             Dictionary<SpriteType, IList<Sequence>> sequences = new Dictionary<SpriteType,IList<Sequence>>();
             bool mon = false;
@@ -41,7 +41,7 @@ namespace FFTPatcher.SpriteEditor
                 BuildSequences(Properties.Resources.WEP1_SEQ, new string[194].SetAll(string.Empty), mon);
             sequences[SpriteType.WEP2] =
                 BuildSequences(Properties.Resources.WEP2_SEQ, new string[194].SetAll(string.Empty), mon);
-            Sequences = new ReadOnlyDictionary<SpriteType, IList<Sequence>>( sequences );
+            return new ReadOnlyDictionary<SpriteType, IList<Sequence>>( sequences );
         }
 
         public static IList<Sequence> BuildSequences( IList<byte> bytes, IList<string> names,bool mon )

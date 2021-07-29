@@ -27,14 +27,46 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class SpriteSet
     {
-		#region Instance Variables (2) 
+        private static SpriteSet[] _pspSpriteSets;
+        public static SpriteSet[] PspSpriteSets
+        {
+            get
+            {
+                if (_pspSpriteSets == null)
+                {
+                    _pspSpriteSets = new SpriteSet[256];
 
-        private static SpriteSet[] pspSpriteSets = new SpriteSet[256];
-        private static SpriteSet[] psxSpriteSets = new SpriteSet[256];
+                    for (int i = 0; i < 256; i++)
+                    {
+                        _pspSpriteSets[i] = new SpriteSet((byte)i, PSPResources.Lists.SpriteSets[i]);
+                    }
+                }
 
-		#endregion Instance Variables 
+                return _pspSpriteSets;
+            }
+        }
 
-		#region Public Properties (3) 
+        private static SpriteSet[] _psxSpriteSets;
+        public static SpriteSet[] PsxSpriteSets
+        {
+            get
+            {
+                if (_psxSpriteSets == null)
+                {
+                    _psxSpriteSets = new SpriteSet[256];
+
+                    for (int i = 0; i < 256; i++)
+                    {
+                        _psxSpriteSets[i] = new SpriteSet((byte)i, PSXResources.Lists.SpriteSets[i]);
+                    }
+                    
+                }
+
+                return _psxSpriteSets;
+            }
+        }
+
+		#region Public Properties
 
         public string Name { get; private set; }
 
@@ -47,26 +79,14 @@ namespace FFTPatcher.Datatypes
 
         public static SpriteSet[] GetSpriteSets(Context context)
         {
-            return (context == Context.US_PSP) ? pspSpriteSets : psxSpriteSets;
+            return (context == Context.US_PSP) ? PspSpriteSets : PsxSpriteSets;
         }
 
         public byte Value { get; private set; }
 
 		#endregion Public Properties 
 
-		#region Constructors (2) 
-
-        static SpriteSet()
-        {
-            IList<string> pspSpriteNames = PSPResources.Lists.SpriteSets;
-            IList<string> psxSpriteNames = PSXResources.Lists.SpriteSets;
-
-            for( int i = 0; i < 256; i++ )
-            {
-                pspSpriteSets[i] = new SpriteSet( (byte)i, pspSpriteNames[i] );
-                psxSpriteSets[i] = new SpriteSet( (byte)i, psxSpriteNames[i] );
-            }
-        }
+		#region Constructors
 
         private SpriteSet( byte value, string name )
         {

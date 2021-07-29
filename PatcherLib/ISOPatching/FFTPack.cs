@@ -30,11 +30,16 @@ namespace PatcherLib.Iso
 {
     public static class FFTPack
     {
-		#region Public Methods (7) 
+		#region Public Methods
         static XmlNode resourcesDoc;
         public const int NumFftPackFiles = 3970;
 
         static FFTPack()
+        {
+            GetFFTPackResources();
+        }
+
+        private static void GetFFTPackResources()
         {
             using( MemoryStream memStream = new MemoryStream( PatcherLib.Properties.Resources.Resources_tar, false ) )
             using( GZipInputStream gzStream = new GZipInputStream( memStream ) )
@@ -53,6 +58,7 @@ namespace PatcherLib.Iso
                 }
             }
         }
+
         private static Dictionary<int, string> fftPackFiles;
 
         public static Dictionary<int, string> FFTPackFiles

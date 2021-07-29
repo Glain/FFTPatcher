@@ -35,8 +35,9 @@ namespace FFTPatcher.Datatypes
             "Action1", "Action2", "Action3", "Action4", "Action5", "Action6", "Action7", "Action8", 
             "Action9", "Action10", "Action11", "Action12", "Action13", "Action14", "Action15", "Action16", 
             "TheRest1", "TheRest2", "TheRest3", "TheRest4", "TheRest5", "TheRest6" };
-        private static SortedDictionary<byte, SkillSet> pspEventSkills;
-        private static SortedDictionary<byte, SkillSet> psxEventSkills;
+
+        private static readonly SkillSet _skillsetRandom = new SkillSet( "<Random>", 0xFE );
+        private static readonly SkillSet _skillsetEqual = new SkillSet( "<Job's>", 0xFF );
 
 		#endregion Instance Variables 
 
@@ -105,7 +106,7 @@ namespace FFTPatcher.Datatypes
 
         public static SortedDictionary<byte, SkillSet> GetEventSkillSets(Context context)
         {
-            return (context == Context.US_PSP) ? pspEventSkills : psxEventSkills;
+            return (context == Context.US_PSP) ? PspEventSkills : PsxEventSkills;
         }
 
         /// <summary>
@@ -136,13 +137,87 @@ namespace FFTPatcher.Datatypes
 
         public string Name { get; private set; }
 
-        public static IList<string> PSPNames { get; private set; }
+        private static SortedDictionary<byte, SkillSet> _pspEventSkills = null;
+        private static SortedDictionary<byte, SkillSet> PspEventSkills
+        {
+            get
+            {
+                if (_pspEventSkills == null)
+                {
+                    SkillSet[] pspSkills = PSPSkills;
+                    _pspEventSkills = new SortedDictionary<byte, SkillSet>();
+                    for (int i = 0; i < 0xE3; i++)
+                    {
+                        _pspEventSkills.Add((byte)i, pspSkills[i]);
+                    }
+                    _pspEventSkills.Add(0xFE, _skillsetRandom);
+                    _pspEventSkills.Add(0xFF, _skillsetEqual);
+                }
 
-        public static SkillSet[] PSPSkills { get; private set; }
+                return _pspEventSkills;
+            }
+        }
 
-        public static IList<string> PSXNames { get; private set; }
+        public static readonly IList<string> PSPNames = PSPResources.Lists.SkillSets;
 
-        public static SkillSet[] PSXSkills { get; private set; }
+        private static SkillSet[] _pspSkills = null;
+        public static SkillSet[] PSPSkills 
+        {
+            get
+            {
+                if (_pspSkills == null)
+                {
+                    _pspSkills = new SkillSet[0xE3];
+                    for (int i = 0; i < 0xE3; i++)
+                    {
+                        _pspSkills[i] = new SkillSet(PSPNames[i], (byte)(i & 0xFF));
+                    }
+                }
+
+                return _pspSkills;
+            }
+        }
+
+        private static SortedDictionary<byte, SkillSet> _psxEventSkills = null;
+        private static SortedDictionary<byte, SkillSet> PsxEventSkills
+        {
+            get
+            {
+                if (_psxEventSkills == null)
+                {
+                    SkillSet[] psxSkills = PSXSkills;
+                    _psxEventSkills = new SortedDictionary<byte, SkillSet>();
+                    for (int i = 0; i < 0xE0; i++)
+                    {
+                        _psxEventSkills.Add((byte)i, psxSkills[i]);
+                    }
+                    _psxEventSkills.Add(0xFE, _skillsetRandom);
+                    _psxEventSkills.Add(0xFF, _skillsetEqual);
+                }
+
+                return _psxEventSkills;
+            }
+        }
+
+        public static readonly IList<string> PSXNames = PSXResources.Lists.SkillSets;
+
+        private static SkillSet[] _psxSkills = null;
+        public static SkillSet[] PSXSkills
+        {
+            get
+            {
+                if (_psxSkills == null)
+                {
+                    _psxSkills = new SkillSet[0xE0];
+                    for (int i = 0; i < 0xE0; i++)
+                    {
+                        _psxSkills[i] = new SkillSet(PSXNames[i], (byte)(i & 0xFF));
+                    }
+                }
+
+                return _psxSkills;
+            }
+        }
 
         public Ability[] TheRest { get; private set; }
 
@@ -162,39 +237,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (4) 
-
-        static SkillSet()
-        {
-            PSPSkills = new SkillSet[0xE3];
-            pspEventSkills = new SortedDictionary<byte, SkillSet>();
-
-            PSPNames = PSPResources.Lists.SkillSets;
-            PSXNames = PSXResources.Lists.SkillSets;
-
-            for( int i = 0; i < 0xE3; i++ )
-            {
-                string n = PSPNames[i];
-                PSPSkills[i] = new SkillSet( n, (byte)(i & 0xFF) );
-                pspEventSkills.Add( (byte)i, PSPSkills[i] );
-            }
-
-            SkillSet random = new SkillSet( "<Random>", 0xFE );
-            SkillSet equal = new SkillSet( "<Job's>", 0xFF );
-            pspEventSkills.Add( 0xFE, random );
-            pspEventSkills.Add( 0xFF, equal );
-
-            PSXSkills = new SkillSet[0xE0];
-            psxEventSkills = new SortedDictionary<byte, SkillSet>();
-            for( int i = 0; i < 0xE0; i++ )
-            {
-                string n = PSXNames[i];
-                PSXSkills[i] = new SkillSet( n, (byte)(i & 0xFF) );
-                psxEventSkills.Add( (byte)i, PSXSkills[i] );
-            }
-            psxEventSkills.Add( 0xFE, random );
-            psxEventSkills.Add( 0xFF, equal );
-        }
+		#region Constructors
 
         public SkillSet( byte value, IList<byte> bytes, Context context )
             : this( GetDummySkillSets(context)[value].Name, value )

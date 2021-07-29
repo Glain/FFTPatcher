@@ -43,7 +43,7 @@ namespace FFTPatcher.Datatypes
         public bool Striking;
         public bool TwoHands;
         public bool TwoSwords;
-        private static readonly List<string> weaponDigestableProperties;
+        private static readonly List<string> weaponDigestableProperties = GetWeaponDigestableProperties();
 
 		#endregion Instance Variables 
 
@@ -96,16 +96,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Public Properties 
 
-		#region Constructors (3) 
-
-        static Weapon()
-        {
-            weaponDigestableProperties = new List<string>( Item.digestableProperties );
-            weaponDigestableProperties.AddRange( new string[] {
-                "Range", "Formula", "WeaponPower", "EvadePercentage", "InflictStatus",
-                "Striking", "Lunging", "Direct", "Arc", "TwoSwords", "TwoHands", "Throwable",
-                "Force2Hands", "Elements"} );
-        }
+		#region Constructors
 
         public Weapon(UInt16 offset, IList<byte> itemBytes, IList<byte> weaponBytes, PatcherLib.Datatypes.Context context)
             : this( offset, itemBytes, weaponBytes, null, context )
@@ -133,7 +124,18 @@ namespace FFTPatcher.Datatypes
             OldInflictStatus = InflictStatus;
         }
 
-		#endregion Constructors 
+		#endregion Constructors
+
+        private static List<string> GetWeaponDigestableProperties()
+        {
+            List<string> props = new List<string>( Item.digestableProperties );
+            props.AddRange(new string[] {
+                "Range", "Formula", "WeaponPower", "EvadePercentage", "InflictStatus",
+                "Striking", "Lunging", "Direct", "Arc", "TwoSwords", "TwoHands", "Throwable",
+                "Force2Hands", "Elements"} );
+
+            return props;
+        }
 
 		#region Public Methods (9) 
 

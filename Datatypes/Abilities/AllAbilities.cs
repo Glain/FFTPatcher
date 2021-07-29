@@ -96,14 +96,6 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class AllAbilities : PatchableFile, IXmlDigest, IGenerateCodes
     {
-
-        #region Static Fields (2)
-
-        private static Ability[] pspEventAbilites;
-        private static Ability[] psxEventAbilites;
-
-        #endregion Static Fields
-
         #region Static Properties
 
         /*
@@ -132,25 +124,97 @@ namespace FFTPatcher.Datatypes
         }
         */
 
-        public static Ability[] PSPAbilities { get; private set; }
+        private static Ability[] _pspAbilities = null;
+        public static Ability[] PspAbilities 
+        {
+            get
+            {
+                if (_pspAbilities == null)
+                {
+                    _pspAbilities = new Ability[512];
+                    for (int i = 0; i < 512; i++)
+                    {
+                        _pspAbilities[i] = new Ability(PSPNames[i], (UInt16)i, Context.US_PSP);
+                    }
+                }
 
-        public static IList<string> PSPNames { get; private set; }
+                return _pspAbilities;
+            }
+        }
 
-        public static Ability[] PSXAbilities { get; private set; }
+        private static Ability[] _pspEventAbilites = null;
+        private static Ability[] PspEventAbilites
+        {
+            get
+            {
+                if (_pspEventAbilites == null)
+                {
+                    _pspEventAbilites = new Ability[512];
+                    for (int i = 0; i < 512; i++)
+                    {
+                        _pspEventAbilites[i] = new Ability(PSPNames[i], (UInt16)i, Context.US_PSP);
+                    }
+                    _pspEventAbilites[510] = new Ability("<Random>", 510, Context.US_PSP);
+                    _pspEventAbilites[511] = new Ability("Nothing", 511, Context.US_PSX);
+                }
 
-        public static IList<string> PSXNames { get; private set; }
+                return _pspEventAbilites;
+            }
+        }
+
+        public static readonly IList<string> PSPNames = PatcherLib.PSPResources.Lists.AbilityNames;
+
+        private static Ability[] _psxAbilities = null;
+        public static Ability[] PsxAbilities
+        {
+            get
+            {
+                if (_psxAbilities == null)
+                {
+                    _psxAbilities = new Ability[512];
+                    for (int i = 0; i < 512; i++)
+                    {
+                        _psxAbilities[i] = new Ability(PSXNames[i], (UInt16)i, Context.US_PSX);
+                    }
+                }
+
+                return _psxAbilities;
+            }
+        }
+
+        private static Ability[] _psxEventAbilites = null;
+        private static Ability[] PsxEventAbilites
+        {
+            get
+            {
+                if (_psxEventAbilites == null)
+                {
+                    _psxEventAbilites = new Ability[512];
+                    for (int i = 0; i < 512; i++)
+                    {
+                        _psxEventAbilites[i] = new Ability(PSXNames[i], (UInt16)i, Context.US_PSX);
+                    }
+                    _psxEventAbilites[510] = new Ability("<Random>", 510, Context.US_PSP);
+                    _psxEventAbilites[511] = new Ability("Nothing", 511, Context.US_PSX);
+                }
+
+                return _psxEventAbilites;
+            }
+        }
+
+        public static readonly IList<string> PSXNames = PatcherLib.PSXResources.Lists.AbilityNames;
 
 
         #endregion Static Properties
 
         public static Ability[] GetDummyAbilities(Context context)
         {
-            return (context == Context.US_PSP) ? PSPAbilities : PSXAbilities;
+            return (context == Context.US_PSP) ? PspAbilities : PsxAbilities;
         }
 
         public static Ability[] GetEventAbilities(Context context)
         {
-            return (context == Context.US_PSP) ? pspEventAbilites : psxEventAbilites;
+            return (context == Context.US_PSP) ? PspEventAbilites : PsxEventAbilites;
         }
 
         public static IList<string> GetNames(Context context)
@@ -182,34 +246,9 @@ namespace FFTPatcher.Datatypes
 
         #endregion Properties
 
-        #region Constructors
-
-        static AllAbilities()
-        {
-            PSPAbilities = new Ability[512];
-            PSXAbilities = new Ability[512];
-            psxEventAbilites = new Ability[512];
-            pspEventAbilites = new Ability[512];
-
-            PSPNames = PatcherLib.PSPResources.Lists.AbilityNames;
-            PSXNames = PatcherLib.PSXResources.Lists.AbilityNames;
-
-            for( int i = 0; i < 512; i++ )
-            {
-                PSPAbilities[i] = new Ability( PSPNames[i], (UInt16)i, Context.US_PSP );
-                PSXAbilities[i] = new Ability( PSXNames[i], (UInt16)i, Context.US_PSX );
-                pspEventAbilites[i] = new Ability(PSPNames[i], (UInt16)i, Context.US_PSP);
-                psxEventAbilites[i] = new Ability(PSXNames[i], (UInt16)i, Context.US_PSX);
-            }
-
-            pspEventAbilites[510] = new Ability("<Random>", 510, Context.US_PSP);
-            pspEventAbilites[511] = new Ability("Nothing", 511, Context.US_PSX);
-            psxEventAbilites[510] = new Ability("<Random>", 510, Context.US_PSP);
-            psxEventAbilites[511] = new Ability("Nothing", 511, Context.US_PSX);
-
-        }
-
         private IList<byte> defaultBytes;
+
+        #region Constructors
 
         public AllAbilities(IList<byte> bytes, IList<byte> effectsBytes, Context context)
             : this(bytes, effectsBytes, null, null, context)

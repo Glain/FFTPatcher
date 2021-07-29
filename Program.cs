@@ -38,19 +38,6 @@ namespace FFTPatcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Access some class members to force the static constructors to run.
-            object dummy = AllAbilities.PSPNames;
-            dummy = PSPResources.Lists.AbilityAttributes;
-            dummy = PSXResources.Lists.AbilityAttributes;
-            dummy = SkillSet.GetDummySkillSets(PatcherLib.Datatypes.Context.US_PSX);
-            dummy = AllMonsterSkills.PSXNames;
-            dummy = AllJobs.GetNames(PatcherLib.Datatypes.Context.US_PSX);
-            dummy = ActionMenuEntry.AllActionMenuEntries;
-            dummy = ShopAvailability.GetAllAvailabilities(PatcherLib.Datatypes.Context.US_PSX);
-            dummy = SpriteSet.GetSpriteSets(PatcherLib.Datatypes.Context.US_PSX);
-            dummy = SpecialName.GetSpecialNames(PatcherLib.Datatypes.Context.US_PSX);
-            dummy = Event.GetEventNames(PatcherLib.Datatypes.Context.US_PSX);
-
             if (!HandleCommandLinePatch(args))
                 Application.Run(new MainForm(args));
         }

@@ -28,21 +28,7 @@ namespace FFTPatcher.SpriteEditor
     [Serializable]
     public class Tile
     {
-
-        private static IList<Size> sizes;
-
-        public Point Location { get; private set; }
-
-        public Rectangle Rectangle { get; private set; }
-
-        public bool ReverseX { get; private set; }
-        public bool ReverseY { get; private set; }
-
-        public float Rotation;
-
-        static Tile()
-        {
-            sizes = new ReadOnlyCollection<Size>( new Size[16] {
+        private static IList<Size> sizes = new ReadOnlyCollection<Size>( new Size[16] {
                 new Size(  8,  8 ),
                 new Size( 16,  8 ),
                 new Size( 16, 16 ),
@@ -59,7 +45,15 @@ namespace FFTPatcher.SpriteEditor
                 new Size( 40, 32 ),
                 new Size( 48, 48 ),
                 new Size( 56, 56 ) } );
-        }
+
+        public Point Location { get; private set; }
+
+        public Rectangle Rectangle { get; private set; }
+
+        public bool ReverseX { get; private set; }
+        public bool ReverseY { get; private set; }
+
+        public float Rotation;
 
         internal Tile( IList<byte> bytes, int yOffset,int rotation )
         {

@@ -29,9 +29,42 @@ namespace FFTPatcher.Datatypes
     {
 		#region Instance Variables (2) 
 
-        private static SpecialName[] pspNames = new SpecialName[256];
-        private static SpecialName[] psxNames = new SpecialName[256];
+        private static SpecialName[] _pspNames = null;
+        public static SpecialName[] PspNames
+        {
+            get
+            {
+                if (_pspNames == null)
+                {
+                    _pspNames = new SpecialName[256];
+                    for( int i = 0; i < 256; i++ )
+                    {
+                        _pspNames[i] = new SpecialName( (byte)i, PSPResources.Lists.SpecialNames[i] );
+                    }
+                }
 
+                return _pspNames;
+            }
+        }
+        
+        private static SpecialName[] _psxNames = null;
+        public static SpecialName[] PsxNames
+        {
+            get
+            {
+                if (_psxNames == null)
+                {
+                    _psxNames = new SpecialName[256];
+                    for (int i = 0; i < 256; i++)
+                    {
+                        _psxNames[i] = new SpecialName((byte)i, PSXResources.Lists.SpecialNames[i]);
+                    }
+                }
+
+                return _psxNames;
+            }
+        }
+            
 		#endregion Instance Variables 
 
 		#region Public Properties (3) 
@@ -47,26 +80,14 @@ namespace FFTPatcher.Datatypes
 
         public static SpecialName[] GetSpecialNames(Context context)
         {
-            return (context == Context.US_PSP) ? pspNames : psxNames;
+            return (context == Context.US_PSP) ? PspNames : PsxNames;
         }
 
         public byte Value { get; private set; }
 
 		#endregion Public Properties 
 
-		#region Constructors (2) 
-
-        static SpecialName()
-        {
-            IList<string> pspStrings = PSPResources.Lists.SpecialNames;
-            IList<string> psxStrings = PSXResources.Lists.SpecialNames;
-
-            for( int i = 0; i < 256; i++ )
-            {
-                pspNames[i] = new SpecialName( (byte)i, pspStrings[i] );
-                psxNames[i] = new SpecialName( (byte)i, psxStrings[i] );
-            }
-        }
+		#region Constructors
 
         private SpecialName( byte value, string name )
         {

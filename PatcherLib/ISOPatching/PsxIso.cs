@@ -99,103 +99,41 @@ namespace PatcherLib.Iso
             { Sectors.EVENT_JOBSTTS_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }) }
         };
 
-        #region Public Properties (19)
+        public static readonly KnownPosition Abilities = new KnownPosition(Sectors.SCUS_942_21, 0x4F3F0, 9414);
+        public static readonly KnownPosition AbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x14F3F0, 0x38C);
+        //public static readonly KnownPosition ItemAbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x14F6D0, 0x1C);
+        //public static readonly KnownPosition ReactionAbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x014F73C, 0x40);
+        public static readonly KnownPosition ActionEvents = new KnownPosition(Sectors.SCUS_942_21, 0x564B4, 224);
+        public static readonly KnownPosition ENTD1 = new KnownPosition(Sectors.BATTLE_ENTD1_ENT, 0, 81920);
+        public static readonly KnownPosition ENTD2 = new KnownPosition(Sectors.BATTLE_ENTD2_ENT, 0, 81920);
+        public static readonly KnownPosition ENTD3 = new KnownPosition(Sectors.BATTLE_ENTD3_ENT, 0, 81920);
+        public static readonly KnownPosition ENTD4 = new KnownPosition(Sectors.BATTLE_ENTD4_ENT, 0, 81920);
+        public static readonly KnownPosition InflictStatuses = new KnownPosition(Sectors.SCUS_942_21, 0x547C4, 0x300);
+        public static readonly KnownPosition JobLevels = new KnownPosition(Sectors.SCUS_942_21, 0x568C4, 0xD0);
+        public static readonly KnownPosition Jobs = new KnownPosition(Sectors.SCUS_942_21, 0x518B8, 0x1E00);
+        public static readonly KnownPosition MonsterSkills = new KnownPosition(Sectors.SCUS_942_21, 0x563C4, 0xF0);
+        public static readonly KnownPosition MoveFindItems = new KnownPosition(Sectors.BATTLE_BIN, 0x8EE74, 0x800);
+        public static readonly KnownPosition OldItemAttributes = new KnownPosition(Sectors.SCUS_942_21, 0x54AC4, 0x7D0);
+        public static readonly KnownPosition OldItems = new KnownPosition(Sectors.SCUS_942_21, 0x536B8, 0x110A);
+        public static readonly KnownPosition PoachProbabilities = new KnownPosition(Sectors.SCUS_942_21, 0x56864, 0x60);
+        public static readonly KnownPosition SkillSets = new KnownPosition(Sectors.SCUS_942_21, 0x55294, 0x1130);
+        public static readonly KnownPosition StatusAttributes = new KnownPosition(Sectors.SCUS_942_21, 0x565E4, 0x280);
+        public static readonly KnownPosition StoreInventories = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAD844, 0x200);
+        
+        // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
+        public static readonly KnownPosition AbilityAnimations = new KnownPosition(Sectors.BATTLE_BIN, 0x2CE10, 0x552);
 
-        public static KnownPosition Abilities { get; private set; }
+        public static readonly KnownPosition Propositions = new KnownPosition(Sectors.WORLD_WLDCORE_BIN, 0x36380, 0xA7C);
+        public static readonly KnownPosition JobFormationSpritesJobCheckID = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0x458B0, 1);
+        public static readonly KnownPosition JobFormationSprites1 = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xADE34, 0x4A);
+        public static readonly KnownPosition JobFormationSprites2 = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAA168, 0x94);
+        public static readonly KnownPosition JobFormationSprites2A = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAA8B8, 0x94);
+        public static readonly KnownPosition JobFormationSprites2B = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0x74B14, 0x94);
+        public static readonly KnownPosition JobFormationSprites2C = new KnownPosition(Sectors.EVENT_ATTACK_OUT, 0x16BB0, 0x94);
+        public static readonly KnownPosition JobFormationSprites2D = new KnownPosition(Sectors.EVENT_REQUIRE_OUT, 0x11B3C, 0x94);
 
-        public static KnownPosition AbilityEffects { get; private set; }
-        //public static KnownPosition ItemAbilityEffects { get; private set; }
-        //public static KnownPosition ReactionAbilityEffects { get; private set; }
-
-        public static KnownPosition ActionEvents { get; private set; }
-
-        public static KnownPosition ENTD1 { get; private set; }
-
-        public static KnownPosition ENTD2 { get; private set; }
-
-        public static KnownPosition ENTD3 { get; private set; }
-
-        public static KnownPosition ENTD4 { get; private set; }
-
-        public static KnownPosition InflictStatuses { get; private set; }
-
-        public static KnownPosition JobLevels { get; private set; }
-
-        public static KnownPosition Jobs { get; private set; }
-
-        public static KnownPosition MonsterSkills { get; private set; }
-
-        public static KnownPosition MoveFindItems { get; private set; }
-
-        public static KnownPosition OldItemAttributes { get; private set; }
-
-        public static KnownPosition OldItems { get; private set; }
-
-        public static KnownPosition PoachProbabilities { get; private set; }
-
-        public static KnownPosition SkillSets { get; private set; }
-
-        public static KnownPosition StatusAttributes { get; private set; }
-
-        public static KnownPosition StoreInventories { get; private set; }
-
-        public static KnownPosition AbilityAnimations { get; private set; }
-
-        public static KnownPosition Propositions { get; private set; }
-
-        public static KnownPosition JobFormationSpritesJobCheckID { get; private set; }
-        public static KnownPosition JobFormationSprites1 { get; private set; }
-        public static KnownPosition JobFormationSprites2 { get; private set; }
-        public static KnownPosition JobFormationSprites2A { get; private set; }
-        public static KnownPosition JobFormationSprites2B { get; private set; }
-        public static KnownPosition JobFormationSprites2C { get; private set; }
-        public static KnownPosition JobFormationSprites2D { get; private set; }
-
-        public static KnownPosition NumberOfSectorsBigEndian { get; private set; }
-        public static KnownPosition NumberOfSectorsLittleEndian { get; private set; }
-
-        #endregion Public Properties
-
-        #region Constructors (1)
-
-        static PsxIso()
-        {
-            Propositions = new KnownPosition(Sectors.WORLD_WLDCORE_BIN, 0x36380, 0xA7C);
-            Abilities = new KnownPosition(Sectors.SCUS_942_21, 0x4F3F0, 9414);
-            AbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x14F3F0, 0x38C);
-            //ItemAbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x14F6D0, 0x1C);
-            //ReactionAbilityEffects = new KnownPosition(Sectors.BATTLE_BIN, 0x014F73C, 0x40);
-            ActionEvents = new KnownPosition(Sectors.SCUS_942_21, 0x564B4, 224);
-            InflictStatuses = new KnownPosition(Sectors.SCUS_942_21, 0x547C4, 0x300);
-            Jobs = new KnownPosition(Sectors.SCUS_942_21, 0x518B8, 0x1E00);
-            JobLevels = new KnownPosition(Sectors.SCUS_942_21, 0x568C4, 0xD0);
-            MonsterSkills = new KnownPosition(Sectors.SCUS_942_21, 0x563C4, 0xF0);
-            OldItemAttributes = new KnownPosition(Sectors.SCUS_942_21, 0x54AC4, 0x7D0);
-            OldItems = new KnownPosition(Sectors.SCUS_942_21, 0x536B8, 0x110A);
-            PoachProbabilities = new KnownPosition(Sectors.SCUS_942_21, 0x56864, 0x60);
-            StatusAttributes = new KnownPosition(Sectors.SCUS_942_21, 0x565E4, 0x280);
-            SkillSets = new KnownPosition(Sectors.SCUS_942_21, 0x55294, 0x1130);
-            ENTD1 = new KnownPosition(Sectors.BATTLE_ENTD1_ENT, 0, 81920);
-            ENTD2 = new KnownPosition(Sectors.BATTLE_ENTD2_ENT, 0, 81920);
-            ENTD3 = new KnownPosition(Sectors.BATTLE_ENTD3_ENT, 0, 81920);
-            ENTD4 = new KnownPosition(Sectors.BATTLE_ENTD4_ENT, 0, 81920);
-            MoveFindItems = new KnownPosition(Sectors.BATTLE_BIN, 0x8EE74, 0x800);
-            StoreInventories = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAD844, 0x200);
-            JobFormationSpritesJobCheckID = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0x458B0, 1);
-            JobFormationSprites1 = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xADE34, 0x4A);
-            JobFormationSprites2 = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAA168, 0x94);
-            JobFormationSprites2A = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0xAA8B8, 0x94);
-            JobFormationSprites2B = new KnownPosition(Sectors.WORLD_WORLD_BIN, 0x74B14, 0x94);
-            JobFormationSprites2C = new KnownPosition(Sectors.EVENT_ATTACK_OUT, 0x16BB0, 0x94);
-            JobFormationSprites2D = new KnownPosition(Sectors.EVENT_REQUIRE_OUT, 0x11B3C, 0x94);
-            NumberOfSectorsBigEndian = new KnownPosition((Sectors)16, 0x54, 4);
-            NumberOfSectorsLittleEndian = new KnownPosition((Sectors)16, 0x50, 4);
-
-            // Ability animations go down until the Support abilities, so down up to and including 0x1C5 = 0x1C6 * 3 = 0x552 bytes
-            AbilityAnimations = new KnownPosition(Sectors.BATTLE_BIN, 0x2CE10, 0x552);
-        }
-
-        #endregion Constructors
+        public static readonly KnownPosition NumberOfSectorsBigEndian = new KnownPosition((Sectors)16, 0x54, 4);
+        public static readonly KnownPosition NumberOfSectorsLittleEndian = new KnownPosition((Sectors)16, 0x50, 4);
 
         #region Public Methods
 
