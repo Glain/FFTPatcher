@@ -145,9 +145,6 @@
     <Compile Include="Datatypes\Tuples\Quad.cs" />
     <Compile Include="Datatypes\Tuples\Triple.cs" />
     <Compile Include="GZip.cs" />
-    <Compile Include="DotNetZip\FolderBrowserDialogEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ISOPatching\DirectoryEntry.cs" />
     <Compile Include="ISOPatching\ImageMaster\Reader\IImageRecord.cs" />
     <Compile Include="ISOPatching\ImageMaster\Reader\ImageReader.cs" />

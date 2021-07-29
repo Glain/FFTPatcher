@@ -25,6 +25,7 @@ using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 using PatcherLib;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace FFTPatcher
 {
@@ -212,12 +213,18 @@ namespace FFTPatcher
 
         private void extractFFTPackMenuItem_Click( object sender, EventArgs e )
         {
-            using (Ionic.Utils.FolderBrowserDialogEx folderBrowserDialog = new Ionic.Utils.FolderBrowserDialogEx())
-            {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+            dialog.Title = "Where should the files be extracted?";
+
+            //using (Ionic.Utils.FolderBrowserDialogEx folderBrowserDialog = new Ionic.Utils.FolderBrowserDialogEx())
+            //{
                 DoWorkEventHandler doWork =
                     delegate( object sender1, DoWorkEventArgs args )
                     {
-                        FFTPack.DumpToDirectory( openFileDialog.FileName, folderBrowserDialog.SelectedPath, sender1 as BackgroundWorker );
+                        //FFTPack.DumpToDirectory( openFileDialog.FileName, folderBrowserDialog.SelectedPath, sender1 as BackgroundWorker );
+                        FFTPack.DumpToDirectory(openFileDialog.FileName, dialog.FileName, sender1 as BackgroundWorker);
                     };
                 ProgressChangedEventHandler progress =
                     delegate( object sender2, ProgressChangedEventArgs args )
@@ -246,22 +253,24 @@ namespace FFTPatcher
 
                 openFileDialog.Filter = "fftpack.bin|fftpack.bin|All Files (*.*)|*.*";
                 openFileDialog.FilterIndex = 0;
-                folderBrowserDialog.NewStyle = true;
-                folderBrowserDialog.RootFolder = Environment.SpecialFolder.Desktop;
-                folderBrowserDialog.SelectedPath = Environment.CurrentDirectory;
-                folderBrowserDialog.ShowBothFilesAndFolders = false;
-                folderBrowserDialog.ShowEditBox = true;
-                folderBrowserDialog.ShowFullPathInEditBox = false;
-                folderBrowserDialog.ShowNewFolderButton = true;
-                folderBrowserDialog.Description = "Where should the files be extracted?";
+                //folderBrowserDialog.NewStyle = true;
+                //folderBrowserDialog.RootFolder = Environment.SpecialFolder.Desktop;
+                //folderBrowserDialog.SelectedPath = Environment.CurrentDirectory;
+                //folderBrowserDialog.ShowBothFilesAndFolders = false;
+                //folderBrowserDialog.ShowEditBox = true;
+                //folderBrowserDialog.ShowFullPathInEditBox = false;
+                //folderBrowserDialog.ShowNewFolderButton = true;
+                //folderBrowserDialog.Description = "Where should the files be extracted?";
 
-                if ((openFileDialog.ShowDialog( this ) == DialogResult.OK) && (folderBrowserDialog.ShowDialog( this ) == DialogResult.OK))
+                //if ((openFileDialog.ShowDialog( this ) == DialogResult.OK) && (folderBrowserDialog.ShowDialog( this ) == DialogResult.OK))
+                if ((openFileDialog.ShowDialog(this) == DialogResult.OK) && (dialog.ShowDialog() == CommonFileDialogResult.Ok))
                 {
                     patchPsxBackgroundWorker.ProgressChanged += progress;
                     patchPsxBackgroundWorker.RunWorkerCompleted += completed;
                     patchPsxBackgroundWorker.DoWork += doWork;
 
-                    Environment.CurrentDirectory = folderBrowserDialog.SelectedPath;
+                    //Environment.CurrentDirectory = folderBrowserDialog.SelectedPath;
+                    Environment.CurrentDirectory = dialog.FileName;
 
                     Enabled = false;
                     progressBar.Value = 0;
@@ -269,7 +278,7 @@ namespace FFTPatcher
                     progressBar.BringToFront();
                     patchPsxBackgroundWorker.RunWorkerAsync();
                 }
-            }
+            //}
         }
 
         void fileMenuItem_Popup( object sender, EventArgs e )
@@ -451,12 +460,17 @@ namespace FFTPatcher
 
         private void rebuildFFTPackMenuItem_Click( object sender, EventArgs e )
         {
-            using (Ionic.Utils.FolderBrowserDialogEx folderBrowserDialog = new Ionic.Utils.FolderBrowserDialogEx())
-            {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            //using (Ionic.Utils.FolderBrowserDialogEx folderBrowserDialog = new Ionic.Utils.FolderBrowserDialogEx())
+            //{
                 DoWorkEventHandler doWork =
                     delegate( object sender1, DoWorkEventArgs args )
                     {
-                        FFTPack.MergeDumpedFiles( folderBrowserDialog.SelectedPath, saveFileDialog.FileName, sender1 as BackgroundWorker );
+                        //FFTPack.MergeDumpedFiles( folderBrowserDialog.SelectedPath, saveFileDialog.FileName, sender1 as BackgroundWorker );
+                        FFTPack.MergeDumpedFiles(dialog.FileName, saveFileDialog.FileName, sender1 as BackgroundWorker);
                     };
                 ProgressChangedEventHandler progress =
                     delegate( object sender2, ProgressChangedEventArgs args )
@@ -486,29 +500,31 @@ namespace FFTPatcher
                 saveFileDialog.OverwritePrompt = true;
                 saveFileDialog.Filter = "fftpack.bin|fftpack.bin|All Files (*.*)|*.*";
                 saveFileDialog.FilterIndex = 0;
-                folderBrowserDialog.Description = "Where are the extracted files?";
-                folderBrowserDialog.NewStyle = true;
-                folderBrowserDialog.RootFolder = Environment.SpecialFolder.Desktop;
-                folderBrowserDialog.SelectedPath = Environment.CurrentDirectory;
-                folderBrowserDialog.ShowBothFilesAndFolders = false;
-                folderBrowserDialog.ShowEditBox = true;
-                folderBrowserDialog.ShowFullPathInEditBox = false;
-                folderBrowserDialog.ShowNewFolderButton = false;
+                //folderBrowserDialog.Description = "Where are the extracted files?";
+                //folderBrowserDialog.NewStyle = true;
+                //folderBrowserDialog.RootFolder = Environment.SpecialFolder.Desktop;
+                //folderBrowserDialog.SelectedPath = Environment.CurrentDirectory;
+                //folderBrowserDialog.ShowBothFilesAndFolders = false;
+                //folderBrowserDialog.ShowEditBox = true;
+                //folderBrowserDialog.ShowFullPathInEditBox = false;
+                //folderBrowserDialog.ShowNewFolderButton = false;
 
-                if ((folderBrowserDialog.ShowDialog( this ) == DialogResult.OK) && (saveFileDialog.ShowDialog( this ) == DialogResult.OK))
+                //if ((folderBrowserDialog.ShowDialog( this ) == DialogResult.OK) && (saveFileDialog.ShowDialog( this ) == DialogResult.OK))
+                if ((dialog.ShowDialog() == CommonFileDialogResult.Ok) && (saveFileDialog.ShowDialog(this) == DialogResult.OK))
                 {
                     patchPsxBackgroundWorker.ProgressChanged += progress;
                     patchPsxBackgroundWorker.RunWorkerCompleted += completed;
                     patchPsxBackgroundWorker.DoWork += doWork;
 
-                    Environment.CurrentDirectory = folderBrowserDialog.SelectedPath;
+                    //Environment.CurrentDirectory = folderBrowserDialog.SelectedPath;
+                    Environment.CurrentDirectory = dialog.FileName;
                     Enabled = false;
                     progressBar.Value = 0;
                     progressBar.Visible = true;
                     progressBar.BringToFront();
                     patchPsxBackgroundWorker.RunWorkerAsync();
                 }
-            }
+            //}
         }
 
         private void saveAsPspMenuItem_Click( object sender, EventArgs e )
@@ -581,6 +597,7 @@ namespace FFTPatcher
 
         #endregion Private Methods
 
+        /*
         private void generateResourcesMenuItem_Click( object sender, EventArgs e )
         {
             using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
@@ -597,6 +614,19 @@ namespace FFTPatcher
                 {
                     PatcherLib.ResourcesClass.GenerateDefaultResourcesZip( Path.Combine( fbd.SelectedPath, "Resources.zip" ) );
                 }
+            }
+        }
+        */
+
+        private void generateResourcesMenuItem_Click(object sender, EventArgs e)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
+
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                PatcherLib.ResourcesClass.GenerateDefaultResourcesZip(Path.Combine(dialog.FileName, "Resources.zip"));
             }
         }
 
