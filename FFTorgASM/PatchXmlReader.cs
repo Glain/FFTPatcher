@@ -220,7 +220,7 @@ namespace FFTorgASM
                 }
                 else
                 {
-                    throw new Exception("Error in patch XML: Invalid file/sector!");
+                    sbOuterErrorText.AppendLine("Error in patch XML: Invalid file/sector!");
                 }
                 
                 bool isRamOffset = false;
@@ -502,6 +502,8 @@ namespace FFTorgASM
                     hasDefaultSector = true;
                 }
 
+                StringBuilder sbPatchErrorText = new StringBuilder();
+
                 List<VariableType> variables = new List<VariableType>();
                 List<PatchedByteArray> includePatches = new List<PatchedByteArray>();
 
@@ -512,6 +514,8 @@ namespace FFTorgASM
                     if (attrPatch != null)
                     {
                         string patchName = attrPatch.InnerText.ToLower().Trim();
+                        int foundPatchCount = 0;
+
                         foreach (AsmPatch currentAsmPatch in result)
                         {
                             if (currentAsmPatch.Name.ToLower().Trim().Equals(patchName))
@@ -524,7 +528,13 @@ namespace FFTorgASM
                                 {
                                     includePatches.Add(currentAsmPatch[index].Copy());
                                 }
+                                foundPatchCount++;
                             }
+                        }
+
+                        if (foundPatchCount == 0)
+                        {
+                            sbPatchErrorText.AppendLine("Error in patch XML: Missing dependent patch \"" + attrPatch.InnerText + "\"!");
                         }
                     }
                 }
@@ -620,7 +630,7 @@ namespace FFTorgASM
                     }
                     else if (!isSymbol)
                     {
-                        throw new Exception("Error in patch XML: Invalid file/sector!");
+                        sbPatchErrorText.AppendLine("Error in patch XML: Invalid file/sector!");
                     }
 
                     XmlAttribute offsetModeAttribute = varNode.Attributes["offsetMode"];
@@ -725,7 +735,7 @@ namespace FFTorgASM
                 AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, patches, 
                     (getPatchResult.HideInDefault | rootHideInDefault), (getPatchResult.IsHidden | rootIsHidden), variables);
                 
-                asmPatch.ErrorText = getPatchResult.ErrorText;
+                asmPatch.ErrorText = sbPatchErrorText.ToString() + getPatchResult.ErrorText;
                 //asmPatch.Update(asmUtility);
 
                 result.Add(asmPatch);
