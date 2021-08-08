@@ -51,7 +51,7 @@ namespace FFTPatcher.Editors
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( AbilityAttributesEditor ) );
             System.Windows.Forms.Label hLabel2;
             System.Windows.Forms.Label mpLabel;
-            System.Windows.Forms.Label ctLabel;
+            System.Windows.Forms.Label ticksLabel;
             System.Windows.Forms.Label yLabel;
             System.Windows.Forms.Label xLabel;
             System.Windows.Forms.Label formulaLabel;
@@ -63,7 +63,7 @@ namespace FFTPatcher.Editors
             this.inflictStatusLabel = new System.Windows.Forms.LinkLabel();
             this.flagsCheckedListBox = new FFTPatcher.Controls.CheckedListBoxNoHighlightWithDefault();
             this.mpSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
-            this.ctSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
+            this.ticksSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.statusSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.ySpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.xSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
@@ -74,7 +74,7 @@ namespace FFTPatcher.Editors
             attributesGroupBox = new System.Windows.Forms.GroupBox();
             hLabel2 = new System.Windows.Forms.Label();
             mpLabel = new System.Windows.Forms.Label();
-            ctLabel = new System.Windows.Forms.Label();
+            ticksLabel = new System.Windows.Forms.Label();
             yLabel = new System.Windows.Forms.Label();
             xLabel = new System.Windows.Forms.Label();
             formulaLabel = new System.Windows.Forms.Label();
@@ -83,7 +83,7 @@ namespace FFTPatcher.Editors
             rangeLabel = new System.Windows.Forms.Label();
             attributesGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mpSpinner)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ctSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ticksSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ySpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xSpinner)).BeginInit();
@@ -102,7 +102,7 @@ namespace FFTPatcher.Editors
             attributesGroupBox.Controls.Add( hLabel2 );
             attributesGroupBox.Controls.Add( this.flagsCheckedListBox );
             attributesGroupBox.Controls.Add( this.mpSpinner );
-            attributesGroupBox.Controls.Add( this.ctSpinner );
+            attributesGroupBox.Controls.Add( this.ticksSpinner );
             attributesGroupBox.Controls.Add( this.statusSpinner );
             attributesGroupBox.Controls.Add( this.ySpinner );
             attributesGroupBox.Controls.Add( this.xSpinner );
@@ -110,7 +110,7 @@ namespace FFTPatcher.Editors
             attributesGroupBox.Controls.Add( this.effectSpinner );
             attributesGroupBox.Controls.Add( this.rangeSpinner );
             attributesGroupBox.Controls.Add( mpLabel );
-            attributesGroupBox.Controls.Add( ctLabel );
+            attributesGroupBox.Controls.Add( ticksLabel );
             attributesGroupBox.Controls.Add( yLabel );
             attributesGroupBox.Controls.Add( xLabel );
             attributesGroupBox.Controls.Add( formulaLabel );
@@ -223,20 +223,20 @@ namespace FFTPatcher.Editors
             this.mpSpinner.Tag = "MPCost";
             this.mpSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // ctSpinner
+            // ticksSpinner
             // 
-            this.ctSpinner.AutoSize = true;
-            this.ctSpinner.Location = new System.Drawing.Point( 102, 107 );
-            this.ctSpinner.Maximum = new decimal( new int[] {
+            this.ticksSpinner.AutoSize = true;
+            this.ticksSpinner.Location = new System.Drawing.Point( 102, 107 );
+            this.ticksSpinner.Maximum = new decimal( new int[] {
             255,
             0,
             0,
             0} );
-            this.ctSpinner.Name = "ctSpinner";
-            this.ctSpinner.Size = new System.Drawing.Size( 45, 20 );
-            this.ctSpinner.TabIndex = 4;
-            this.ctSpinner.Tag = "CT";
-            this.ctSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ticksSpinner.Name = "ticksSpinner";
+            this.ticksSpinner.Size = new System.Drawing.Size( 45, 20 );
+            this.ticksSpinner.TabIndex = 4;
+            this.ticksSpinner.Tag = "Ticks";
+            this.ticksSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // statusSpinner
             // 
@@ -338,14 +338,14 @@ namespace FFTPatcher.Editors
             mpLabel.TabIndex = 9;
             mpLabel.Text = "MP Cost:";
             // 
-            // ctLabel
+            // ticksLabel
             // 
-            ctLabel.AutoSize = true;
-            ctLabel.Location = new System.Drawing.Point( 6, 109 );
-            ctLabel.Name = "ctLabel";
-            ctLabel.Size = new System.Drawing.Size( 24, 13 );
-            ctLabel.TabIndex = 8;
-            ctLabel.Text = "CT:";
+            ticksLabel.AutoSize = true;
+            ticksLabel.Location = new System.Drawing.Point( 6, 109 );
+            ticksLabel.Name = "ctLabel";
+            ticksLabel.Size = new System.Drawing.Size( 24, 13 );
+            ticksLabel.TabIndex = 8;
+            ticksLabel.Text = "Ticks:";
             // 
             // yLabel
             // 
@@ -424,7 +424,7 @@ namespace FFTPatcher.Editors
             attributesGroupBox.ResumeLayout( false );
             attributesGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mpSpinner)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ctSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ticksSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ySpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xSpinner)).EndInit();
@@ -440,7 +440,7 @@ namespace FFTPatcher.Editors
 
         private ElementsEditor elementsEditor;
         private FFTPatcher.Controls.NumericUpDownWithDefault mpSpinner;
-        private FFTPatcher.Controls.NumericUpDownWithDefault ctSpinner;
+        private FFTPatcher.Controls.NumericUpDownWithDefault ticksSpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault statusSpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault ySpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault xSpinner;

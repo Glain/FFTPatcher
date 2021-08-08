@@ -206,7 +206,7 @@
             </td>
           </tr>
         </xsl:for-each>
-        <xsl:for-each select="ChargeCT|ChargeBonus">
+        <xsl:for-each select="ChargeTicks|ChargeBonus">
           <tr>
             <td>
               Charging:

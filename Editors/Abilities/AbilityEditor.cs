@@ -72,11 +72,11 @@ namespace FFTPatcher.Editors
         {
             InitializeComponent();
             spinners = new List<NumericUpDownWithDefault>( new NumericUpDownWithDefault[] { 
-                arithmeticksSpinner, ctSpinner, powerSpinner, horizontalSpinner, verticalSpinner, idSpinner } );
+                arithmeticksSpinner, ticksSpinner, powerSpinner, horizontalSpinner, verticalSpinner, idSpinner } );
             comboBoxes = new List<ComboBoxWithDefault>( new ComboBoxWithDefault[] { itemUseComboBox, throwingComboBox, effectComboBox } );
 
             arithmeticksSpinner.Tag = "ArithmetickSkill";
-            ctSpinner.Tag = "ChargeCT";
+            ticksSpinner.Tag = "ChargeTicks";
             powerSpinner.Tag = "ChargeBonus";
             horizontalSpinner.Tag = "JumpHorizontal";
             verticalSpinner.Tag = "JumpVertical";

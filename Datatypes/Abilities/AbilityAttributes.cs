@@ -41,7 +41,7 @@ namespace FFTPatcher.Datatypes
         public bool TopDownTarget;
         public bool CounterFlood;
         public bool CounterMagic;
-        public byte CT;
+        
         private AbilityAttributes defaults;
         public bool Direct;
         public byte Effect;
@@ -67,6 +67,7 @@ namespace FFTPatcher.Datatypes
         public bool Silence;
         public bool Targeting;
         public bool TargetSelf;
+        public byte Ticks;
         public bool ThreeDirections;
 
         public byte OldInflictStatus;
@@ -81,7 +82,7 @@ namespace FFTPatcher.Datatypes
             public const string TopDownTarget = "TopDownTarget";
             public const string CounterFlood = "CounterFlood";
             public const string CounterMagic = "CounterMagic";
-            public const string CT = "CT";
+            public const string Ticks = "Ticks";
             public const string Direct = "Direct";
             public const string Effect = "Effect";
             public const string Evadeable = "Evadeable";
@@ -118,7 +119,7 @@ namespace FFTPatcher.Datatypes
         }
         private static readonly string[] valuesToSerialize = new string[] {
             Strings.AnimateMiss,Strings.Arithmetick,Strings.Auto,Strings.ForceSelfTarget,Strings.Blank7,Strings.TopDownTarget,Strings.CounterFlood,Strings.CounterMagic,
-            Strings.CT,Strings.Direct,Strings.Effect,Strings.Evadeable,Strings.FollowTarget,Strings.HitAllies,Strings.HitCaster,Strings.HitEnemies,
+            Strings.Ticks,Strings.Direct,Strings.Effect,Strings.Evadeable,Strings.FollowTarget,Strings.HitAllies,Strings.HitCaster,Strings.HitEnemies,
             Strings.InflictStatus,Strings.LinearAttack,Strings.Mimic,Strings.MPCost,Strings.NormalAttack,Strings.Perservere,Strings.RandomFire,
             Strings.Range,Strings.Reflect,Strings.RequiresMateriaBlade,Strings.RequiresSword,Strings.Shirahadori,Strings.ShowQuote,Strings.Silence,
             Strings.Targeting,Strings.TargetSelf,Strings.ThreeDirections,Strings.Vertical,Strings.VerticalFixed,Strings.VerticalTolerance,
@@ -208,7 +209,7 @@ namespace FFTPatcher.Datatypes
             X = second[9];
             Y = second[10];
             InflictStatus = second[11];
-            CT = second[12];
+            Ticks = second[12];
             MPCost = second[13];
 
             OldInflictStatus = InflictStatus;
@@ -243,7 +244,7 @@ namespace FFTPatcher.Datatypes
             destination.X = source.X;
             destination.Y = source.Y;
             destination.InflictStatus = source.InflictStatus;
-            destination.CT = source.CT;
+            destination.Ticks = source.Ticks;
             destination.MPCost = source.MPCost;
             destination.ForceSelfTarget = source.ForceSelfTarget;
             destination.Blank7 = source.Blank7;
@@ -313,7 +314,7 @@ namespace FFTPatcher.Datatypes
             result[9] = X;
             result[10] = Y;
             result[11] = InflictStatus;
-            result[12] = CT;
+            result[12] = Ticks;
             result[13] = MPCost;
 
             return result;
@@ -329,7 +330,7 @@ namespace FFTPatcher.Datatypes
             Effect = (byte)reader.ReadElementContentAsInt();
             Vertical = (byte)reader.ReadElementContentAsInt();
             InflictStatus = (byte)reader.ReadElementContentAsInt();
-            CT = (byte)reader.ReadElementContentAsInt();
+            Ticks = (byte)reader.ReadElementContentAsInt();
             MPCost = (byte)reader.ReadElementContentAsInt();
 
             Elements = new Elements();
@@ -389,7 +390,7 @@ namespace FFTPatcher.Datatypes
             writer.WriteValueElement( Strings.Effect, Effect );
             writer.WriteValueElement( Strings.Vertical, Vertical );
             writer.WriteValueElement( Strings.InflictStatus, InflictStatus );
-            writer.WriteValueElement( Strings.CT, CT );
+            writer.WriteValueElement( Strings.Ticks, Ticks );
             writer.WriteValueElement( Strings.MPCost, MPCost );
 
             writer.WriteStartElement( Strings.Elements );

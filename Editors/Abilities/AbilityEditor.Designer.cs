@@ -51,7 +51,7 @@ namespace FFTPatcher.Editors
         	System.Windows.Forms.Label hLabel;
         	System.Windows.Forms.Label idLabel;
         	System.Windows.Forms.Label arithmeticksLabel;
-        	System.Windows.Forms.Label ctLabel;
+        	System.Windows.Forms.Label ticksLabel;
         	System.Windows.Forms.Label powerLabel;
         	System.Windows.Forms.Label chargingLabel;
         	System.Windows.Forms.Label horizontalLabel;
@@ -65,7 +65,7 @@ namespace FFTPatcher.Editors
         	this.arithmeticksSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
         	this.chargingPanel = new System.Windows.Forms.Panel();
         	this.powerSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
-        	this.ctSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
+        	this.ticksSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
         	this.jumpingPanel = new System.Windows.Forms.Panel();
         	this.verticalSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
         	this.horizontalSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
@@ -81,7 +81,7 @@ namespace FFTPatcher.Editors
         	hLabel = new System.Windows.Forms.Label();
         	idLabel = new System.Windows.Forms.Label();
         	arithmeticksLabel = new System.Windows.Forms.Label();
-        	ctLabel = new System.Windows.Forms.Label();
+        	ticksLabel = new System.Windows.Forms.Label();
         	powerLabel = new System.Windows.Forms.Label();
         	chargingLabel = new System.Windows.Forms.Label();
         	horizontalLabel = new System.Windows.Forms.Label();
@@ -95,7 +95,7 @@ namespace FFTPatcher.Editors
         	((System.ComponentModel.ISupportInitialize)(this.arithmeticksSpinner)).BeginInit();
         	this.chargingPanel.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.powerSpinner)).BeginInit();
-        	((System.ComponentModel.ISupportInitialize)(this.ctSpinner)).BeginInit();
+        	((System.ComponentModel.ISupportInitialize)(this.ticksSpinner)).BeginInit();
         	this.jumpingPanel.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.verticalSpinner)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.horizontalSpinner)).BeginInit();
@@ -139,14 +139,14 @@ namespace FFTPatcher.Editors
         	arithmeticksLabel.TabIndex = 19;
         	arithmeticksLabel.Text = "Arithmeticks";
         	// 
-        	// ctLabel
+        	// ticksLabel
         	// 
-        	ctLabel.AutoSize = true;
-        	ctLabel.Location = new System.Drawing.Point(14, 19);
-        	ctLabel.Name = "ctLabel";
-        	ctLabel.Size = new System.Drawing.Size(21, 13);
-        	ctLabel.TabIndex = 20;
-        	ctLabel.Text = "CT";
+        	ticksLabel.AutoSize = true;
+        	ticksLabel.Location = new System.Drawing.Point(14, 19);
+        	ticksLabel.Name = "ticksLabel";
+        	ticksLabel.Size = new System.Drawing.Size(21, 13);
+        	ticksLabel.TabIndex = 20;
+        	ticksLabel.Text = "Ticks";
         	// 
         	// powerLabel
         	// 
@@ -263,11 +263,11 @@ namespace FFTPatcher.Editors
         	// 
         	// chargingPanel
         	// 
-        	this.chargingPanel.Controls.Add(ctLabel);
+        	this.chargingPanel.Controls.Add(ticksLabel);
         	this.chargingPanel.Controls.Add(powerLabel);
         	this.chargingPanel.Controls.Add(chargingLabel);
         	this.chargingPanel.Controls.Add(this.powerSpinner);
-        	this.chargingPanel.Controls.Add(this.ctSpinner);
+        	this.chargingPanel.Controls.Add(this.ticksSpinner);
         	this.chargingPanel.Location = new System.Drawing.Point(9, 277);
         	this.chargingPanel.Name = "chargingPanel";
         	this.chargingPanel.Size = new System.Drawing.Size(154, 65);
@@ -287,18 +287,18 @@ namespace FFTPatcher.Editors
         	this.powerSpinner.TabIndex = 17;
         	this.powerSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
         	// 
-        	// ctSpinner
+        	// ticksSpinner
         	// 
-        	this.ctSpinner.Location = new System.Drawing.Point(3, 35);
-        	this.ctSpinner.Maximum = new decimal(new int[] {
+        	this.ticksSpinner.Location = new System.Drawing.Point(3, 35);
+        	this.ticksSpinner.Maximum = new decimal(new int[] {
         	        	        	255,
         	        	        	0,
         	        	        	0,
         	        	        	0});
-        	this.ctSpinner.Name = "ctSpinner";
-        	this.ctSpinner.Size = new System.Drawing.Size(43, 20);
-        	this.ctSpinner.TabIndex = 16;
-        	this.ctSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+        	this.ticksSpinner.Name = "ticksSpinner";
+        	this.ticksSpinner.Size = new System.Drawing.Size(43, 20);
+        	this.ticksSpinner.TabIndex = 16;
+        	this.ticksSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
         	// 
         	// jumpingPanel
         	// 
@@ -448,7 +448,7 @@ namespace FFTPatcher.Editors
         	this.chargingPanel.ResumeLayout(false);
         	this.chargingPanel.PerformLayout();
         	((System.ComponentModel.ISupportInitialize)(this.powerSpinner)).EndInit();
-        	((System.ComponentModel.ISupportInitialize)(this.ctSpinner)).EndInit();
+        	((System.ComponentModel.ISupportInitialize)(this.ticksSpinner)).EndInit();
         	this.jumpingPanel.ResumeLayout(false);
         	this.jumpingPanel.PerformLayout();
         	((System.ComponentModel.ISupportInitialize)(this.verticalSpinner)).EndInit();
@@ -471,7 +471,7 @@ namespace FFTPatcher.Editors
         private FFTPatcher.Controls.NumericUpDownWithDefault arithmeticksSpinner;
         private System.Windows.Forms.Panel chargingPanel;
         private FFTPatcher.Controls.NumericUpDownWithDefault powerSpinner;
-        private FFTPatcher.Controls.NumericUpDownWithDefault ctSpinner;
+        private FFTPatcher.Controls.NumericUpDownWithDefault ticksSpinner;
         private System.Windows.Forms.Panel jumpingPanel;
         private FFTPatcher.Controls.NumericUpDownWithDefault verticalSpinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault horizontalSpinner;

@@ -34,7 +34,7 @@ namespace FFTPatcher.Editors
 
         private AbilityAttributes attributes;
         private static readonly List<string> FieldNames = new List<string>( new string[] {
-            "Range", "Effect", "Vertical", "X", "Y", "InflictStatus", "CT", "MPCost" } );
+            "Range", "Effect", "Vertical", "X", "Y", "InflictStatus", "Ticks", "MPCost" } );
         private static readonly List<string> FlagNames = new List<string>( new string[] {
             "ForceSelfTarget", "Blank7", "WeaponRange", "VerticalFixed", "VerticalTolerance", "WeaponStrike", "Auto", "TargetSelf",
             "HitEnemies", "HitAllies", "TopDownTarget", "FollowTarget", "RandomFire", "LinearAttack", "ThreeDirections", "HitCaster",
@@ -73,7 +73,7 @@ namespace FFTPatcher.Editors
         public AbilityAttributesEditor()
         {
             InitializeComponent();
-            spinners = new List<NumericUpDownWithDefault>( new NumericUpDownWithDefault[] { rangeSpinner, effectSpinner, verticalSpinner, xSpinner, ySpinner, statusSpinner, ctSpinner, mpSpinner } );
+            spinners = new List<NumericUpDownWithDefault>( new NumericUpDownWithDefault[] { rangeSpinner, effectSpinner, verticalSpinner, xSpinner, ySpinner, statusSpinner, ticksSpinner, mpSpinner } );
             foreach( NumericUpDownWithDefault spinner in spinners )
             {
                 spinner.ValueChanged += spinner_ValueChanged;

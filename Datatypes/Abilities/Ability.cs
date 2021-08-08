@@ -176,7 +176,7 @@ namespace FFTPatcher.Datatypes
 
         public byte ChargeBonus { get; set; }
 
-        public byte ChargeCT { get; set; }
+        public byte ChargeTicks { get; set; }
 
         public Ability Default { get; private set; }
 
@@ -236,7 +236,7 @@ namespace FFTPatcher.Datatypes
                     Unknown3 != Default.Unknown3 ||
                     Unknown4 != Default.Unknown4 ||
                     (IsArithmetick && ArithmetickSkill != Default.ArithmetickSkill) ||
-                    (IsCharging && (ChargeBonus != Default.ChargeBonus || ChargeCT != Default.ChargeCT)) ||
+                    (IsCharging && (ChargeBonus != Default.ChargeBonus || ChargeTicks != Default.ChargeTicks)) ||
                     (IsItem && ItemOffset != Default.ItemOffset) ||
                     (IsJumping && (JumpHorizontal != Default.JumpHorizontal || JumpVertical != Default.JumpVertical)) ||
                     (IsNormal && Attributes.HasChanged) ||
@@ -370,7 +370,7 @@ namespace FFTPatcher.Datatypes
             }
             if( IsCharging )
             {
-                ChargeCT = second[0];
+                ChargeTicks = second[0];
                 ChargeBonus = second[1];
             }
             if( IsArithmetick )
@@ -466,7 +466,7 @@ namespace FFTPatcher.Datatypes
             }
             if( destination.IsCharging )
             {
-                destination.ChargeCT = source.ChargeCT;
+                destination.ChargeTicks = source.ChargeTicks;
                 destination.ChargeBonus = source.ChargeBonus;
             }
             if( destination.IsArithmetick )
@@ -543,7 +543,7 @@ namespace FFTPatcher.Datatypes
             if( IsJumping )
                 return new byte[] { JumpHorizontal, JumpVertical };
             if( IsCharging )
-                return new byte[] { ChargeCT, ChargeBonus };
+                return new byte[] { ChargeTicks, ChargeBonus };
             if( IsArithmetick )
                 return new byte[] { ArithmetickSkill };
             if( IsOther )
@@ -605,7 +605,7 @@ namespace FFTPatcher.Datatypes
                 }
                 else if( IsCharging )
                 {
-                    DigestGenerator.WriteDigestEntry( writer, "ChargeCT", Default.ChargeCT, ChargeCT );
+                    DigestGenerator.WriteDigestEntry( writer, "ChargeTicks", Default.ChargeTicks, ChargeTicks );
                     DigestGenerator.WriteDigestEntry( writer, "ChargeBonus", Default.ChargeBonus, ChargeBonus );
                 }
                 else if( IsArithmetick )
@@ -684,7 +684,7 @@ namespace FFTPatcher.Datatypes
             else if ( IsCharging )
             {
                 writer.WriteStartElement( "Charging" );
-                writer.WriteValueElement( "ChargeCT", ChargeCT );
+                writer.WriteValueElement( "ChargeTicks", ChargeTicks );
                 writer.WriteValueElement( "ChargeBonus", ChargeBonus );
             }
             else if ( IsArithmetick )
@@ -783,7 +783,7 @@ namespace FFTPatcher.Datatypes
             else if ( IsCharging )
             {
                 reader.ReadStartElement();
-                ChargeCT = (byte)reader.ReadElementContentAsInt();
+                ChargeTicks = (byte)reader.ReadElementContentAsInt();
                 ChargeBonus = (byte)reader.ReadElementContentAsInt();
                 reader.ReadEndElement();
             }

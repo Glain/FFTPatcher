@@ -66,7 +66,7 @@ namespace FFTPatcher.Editors
         public StatusAttributeEditor()
         {
             InitializeComponent();
-            spinners = new NumericUpDownWithDefault[4] { unknown1Spinner, unknown2Spinner, orderSpinner, ctSpinner };
+            spinners = new NumericUpDownWithDefault[4] { unknown1Spinner, unknown2Spinner, orderSpinner, ticksSpinner };
             foreach( NumericUpDownWithDefault spinner in spinners )
             {
                 spinner.ValueChanged += spinner_ValueChanged;

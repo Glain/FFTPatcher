@@ -50,28 +50,28 @@ namespace FFTPatcher.Editors
         	System.Windows.Forms.Label blank1Label;
         	System.Windows.Forms.Label blank2Label;
         	System.Windows.Forms.Label orderLabel;
-        	System.Windows.Forms.Label ctLabel;
+        	System.Windows.Forms.Label ticksLabel;
         	System.Windows.Forms.Label hLabel1;
         	System.Windows.Forms.Label label1;
         	System.Windows.Forms.Label label2;
         	this.unknown1Spinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
         	this.unknown2Spinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
         	this.orderSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
-        	this.ctSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
+        	this.ticksSpinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
         	this.cancelStatusesEditor = new FFTPatcher.Editors.StatusesEditor();
         	this.cantStackStatusesEditor = new FFTPatcher.Editors.StatusesEditor();
         	this.checkedListBox = new FFTPatcher.Controls.CheckedListBoxNoHighlightWithDefault();
         	blank1Label = new System.Windows.Forms.Label();
         	blank2Label = new System.Windows.Forms.Label();
         	orderLabel = new System.Windows.Forms.Label();
-        	ctLabel = new System.Windows.Forms.Label();
+        	ticksLabel = new System.Windows.Forms.Label();
         	hLabel1 = new System.Windows.Forms.Label();
         	label1 = new System.Windows.Forms.Label();
         	label2 = new System.Windows.Forms.Label();
         	((System.ComponentModel.ISupportInitialize)(this.unknown1Spinner)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.unknown2Spinner)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.orderSpinner)).BeginInit();
-        	((System.ComponentModel.ISupportInitialize)(this.ctSpinner)).BeginInit();
+        	((System.ComponentModel.ISupportInitialize)(this.ticksSpinner)).BeginInit();
         	this.SuspendLayout();
         	// 
         	// blank1Label
@@ -101,14 +101,14 @@ namespace FFTPatcher.Editors
         	orderLabel.TabIndex = 8;
         	orderLabel.Text = "Order:";
         	// 
-        	// ctLabel
+        	// ticksLabel
         	// 
-        	ctLabel.AutoSize = true;
-        	ctLabel.Location = new System.Drawing.Point(16, 89);
-        	ctLabel.Name = "ctLabel";
-        	ctLabel.Size = new System.Drawing.Size(24, 13);
-        	ctLabel.TabIndex = 9;
-        	ctLabel.Text = "CT:";
+        	ticksLabel.AutoSize = true;
+        	ticksLabel.Location = new System.Drawing.Point(16, 89);
+        	ticksLabel.Name = "ticksLabel";
+        	ticksLabel.Size = new System.Drawing.Size(24, 13);
+        	ticksLabel.TabIndex = 9;
+        	ticksLabel.Text = "Ticks:";
         	// 
         	// hLabel1
         	// 
@@ -182,19 +182,19 @@ namespace FFTPatcher.Editors
         	this.orderSpinner.Tag = "Order";
         	this.orderSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
         	// 
-        	// ctSpinner
+        	// ticksSpinner
         	// 
-        	this.ctSpinner.Location = new System.Drawing.Point(78, 87);
-        	this.ctSpinner.Maximum = new decimal(new int[] {
+        	this.ticksSpinner.Location = new System.Drawing.Point(78, 87);
+        	this.ticksSpinner.Maximum = new decimal(new int[] {
         	        	        	255,
         	        	        	0,
         	        	        	0,
         	        	        	0});
-        	this.ctSpinner.Name = "ctSpinner";
-        	this.ctSpinner.Size = new System.Drawing.Size(48, 20);
-        	this.ctSpinner.TabIndex = 3;
-        	this.ctSpinner.Tag = "CT";
-        	this.ctSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+        	this.ticksSpinner.Name = "ticksSpinner";
+        	this.ticksSpinner.Size = new System.Drawing.Size(48, 20);
+        	this.ticksSpinner.TabIndex = 3;
+        	this.ticksSpinner.Tag = "Ticks";
+        	this.ticksSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
         	// 
         	// cancelStatusesEditor
         	// 
@@ -253,13 +253,13 @@ namespace FFTPatcher.Editors
         	this.Controls.Add(label1);
         	this.Controls.Add(hLabel1);
         	this.Controls.Add(this.checkedListBox);
-        	this.Controls.Add(ctLabel);
+        	this.Controls.Add(ticksLabel);
         	this.Controls.Add(orderLabel);
         	this.Controls.Add(blank2Label);
         	this.Controls.Add(blank1Label);
         	this.Controls.Add(this.cantStackStatusesEditor);
         	this.Controls.Add(this.cancelStatusesEditor);
-        	this.Controls.Add(this.ctSpinner);
+        	this.Controls.Add(this.ticksSpinner);
         	this.Controls.Add(this.orderSpinner);
         	this.Controls.Add(this.unknown2Spinner);
         	this.Controls.Add(this.unknown1Spinner);
@@ -268,7 +268,7 @@ namespace FFTPatcher.Editors
         	((System.ComponentModel.ISupportInitialize)(this.unknown1Spinner)).EndInit();
         	((System.ComponentModel.ISupportInitialize)(this.unknown2Spinner)).EndInit();
         	((System.ComponentModel.ISupportInitialize)(this.orderSpinner)).EndInit();
-        	((System.ComponentModel.ISupportInitialize)(this.ctSpinner)).EndInit();
+        	((System.ComponentModel.ISupportInitialize)(this.ticksSpinner)).EndInit();
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
@@ -278,7 +278,7 @@ namespace FFTPatcher.Editors
         private FFTPatcher.Controls.NumericUpDownWithDefault unknown1Spinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault unknown2Spinner;
         private FFTPatcher.Controls.NumericUpDownWithDefault orderSpinner;
-        private FFTPatcher.Controls.NumericUpDownWithDefault ctSpinner;
+        private FFTPatcher.Controls.NumericUpDownWithDefault ticksSpinner;
         private StatusesEditor cancelStatusesEditor;
         private StatusesEditor cantStackStatusesEditor;
         private FFTPatcher.Controls.CheckedListBoxNoHighlightWithDefault checkedListBox;

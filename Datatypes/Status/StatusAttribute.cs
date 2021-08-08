@@ -35,7 +35,7 @@ namespace FFTPatcher.Datatypes
         public bool Blank;
         public bool CanReact;
         private static readonly string[] digestableProperties = new string[] {
-            "Blank1", "Blank2", "Order", "CT", "FreezeCT", "Unknown1", "Unknown2", "Unknown3", "Unknown4",
+            "Blank1", "Blank2", "Order", "Ticks", "FreezeCT", "Unknown1", "Unknown2", "Unknown3", "Unknown4",
             "Unknown5", "Unknown6", "CountsAsKO", "CanReact", "Blank", "IgnoreAttacks", "IgnoredIfMount", "Unknown8",
             "Unknown9", "CancelledByImmortal", "LowerTargetPriority", "Cancels", "CantStackOn" };
         public bool FreezeCT;
@@ -71,7 +71,7 @@ namespace FFTPatcher.Datatypes
 
         public Statuses CantStackOn { get; private set; }
 
-        public byte CT { get; set; }
+        public byte Ticks { get; set; }
 
         public StatusAttribute Default { get; private set; }
 
@@ -89,7 +89,7 @@ namespace FFTPatcher.Datatypes
                     CantStackOn.HasChanged ||
                     Blank1 != Default.Blank1 ||
                     Blank2 != Default.Blank2 ||
-                    CT != Default.CT ||
+                    Ticks != Default.Ticks ||
                     Order != Default.Order ||
                     Blank != Default.Blank ||
                     CanReact != Default.CanReact ||
@@ -135,7 +135,7 @@ namespace FFTPatcher.Datatypes
             Blank1 = bytes[0];
             Blank2 = bytes[1];
             Order = bytes[2];
-            CT = bytes[3];
+            Ticks = bytes[3];
 
             PatcherLib.Utilities.Utilities.CopyByteToBooleans(bytes[4], ref FreezeCT, ref Unknown1, ref Unknown2, ref Unknown3, ref Unknown4, ref Unknown5, ref Unknown6, ref CountsAsKO);
             PatcherLib.Utilities.Utilities.CopyByteToBooleans(bytes[5], ref CanReact, ref Blank, ref IgnoreAttacks, ref IgnoredIfMount, ref Unknown8, ref Unknown9, ref CancelledByImmortal, ref LowerTargetPriority);
@@ -155,7 +155,7 @@ namespace FFTPatcher.Datatypes
             destination.Blank1 = source.Blank1;
             destination.Blank2 = source.Blank2;
             destination.Order = source.Order;
-            destination.CT = source.CT;
+            destination.Ticks = source.Ticks;
             destination.FreezeCT = source.FreezeCT;
             destination.CountsAsKO = source.CountsAsKO;
             destination.CanReact = source.CanReact;
@@ -192,7 +192,7 @@ namespace FFTPatcher.Datatypes
             result.Add( Blank1 );
             result.Add( Blank2 );
             result.Add( Order );
-            result.Add( CT );
+            result.Add( Ticks );
             result.Add(PatcherLib.Utilities.Utilities.ByteFromBooleans(FreezeCT, Unknown1, Unknown2, Unknown3, Unknown4, Unknown5, Unknown6, CountsAsKO));
             result.Add(PatcherLib.Utilities.Utilities.ByteFromBooleans(!CanReact, Blank, IgnoreAttacks, IgnoredIfMount, Unknown8, Unknown9, CancelledByImmortal, LowerTargetPriority));
             result.AddRange( Cancels.ToByteArray() );
