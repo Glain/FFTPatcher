@@ -263,6 +263,13 @@
         andi    t0, t1, 0x20    
         beq     t0, zero, bench_unit_past_monster_check
         addiu   a1, s1, 22
+        
+        #   Skip for Holy Dragon Reis - Holy Dragon base class check
+        lbu     t2, 0(s0)
+        li      t3, 0x48
+        beq     t2, t3, bench_unit_past_monster_check
+        nop
+        
         jal     @copy_bytes
         li      a2, 8
         j       bench_unit_end
@@ -492,6 +499,13 @@
         andi    t0, t1, 0x20    
         beq     t0, zero, unbench_unit_past_monster_check
         addiu   a0, s1, 22
+        
+        #   Skip for Holy Dragon Reis - Holy Dragon base class check
+        lbu     t2, 0(s1)
+        li      t3, 0x48
+        beq     t2, t3, unbench_unit_past_monster_check
+        nop
+        
         jal     @copy_bytes
         li      a2, 8
         j       unbench_unit_end

@@ -2246,103 +2246,225 @@ SKP:  j       0x80180848            #   Skip this ability
         li      a0, -1
     </Location>
   </Patch>
-  <Patch name="Press buttons to win!">
-    <Description>
-        Press a button combination to win.  Default is L1 + Select.
-        Button codes:
-            0x8000  Left
-            0x4000  Down
-            0x2000  Right
-            0x1000  Up
-            0x0800  Start
-            0x0400  R3
-            0x0200  L3
-            0x0100  Select
-            0x0080  Square
-            0x0040  X
-            0x0020  Circle
-            0x0010  Triangle
-            0x0008  R1
-            0x0004  L1
-            0x0002  R2
-            0x0001  L2
-    </Description>
-    <Location file="BATTLE_BIN" offset="1593B0" mode="ASM" offsetMode="RAM">
-        @check_button_win:
-                lw      t0, 0x80045944
-                #lhu     t1, 0x801593ae
-                li      t1, %Buttons
-                la      v1, 0x80049a18
-                and     t0, t0, t1              
-                bne     t0, t1, check_button_win_end
-                li      t5, 0x19
+    <Patch name="Process Battle Button Input Rewrite" hidden="true">
+        <Location file="BATTLE_BIN" offset="93654" mode="ASM" offsetMode="RAM">
+            @process_battle_button_input_rewrite:
+                    addiu   sp, sp, -24
+                    sw      ra, 16(sp)
+
+                    jal     0x8001db58
+                    li      a0, 1
+
+                    sw      v0, 0x80045944
+
+                    jal     0x8013b590
+                    li      a0, 0x1fc
+
+                    beq     v0, zero, past_input_mod
+                    lui     a0, 0x8004
+
+                    jal     0x80142d2c
+                    addiu   a0, a0, 0x5944
+
+                past_input_mod:
+                    lui     t0, 0x8004
+                    lw      v0, 0x594c(t0)
+                    lw      v1, 0x5948(t0)
+                    lw      a0, 0x5944(t0)
+                    sw      v0, 0x5964(t0)
+                    sw      v0, 0x5968(t0)
+                    sw      v0, 0x596c(t0)
+                    sw      v0, 0x5970(t0)
+        
+                    not     v0, v1
+                    and     v0, v0, a0
+                    sw      v0, 0x594c(t0)
+        
+                    sw      v1, 0x5954(t0)
+                    sw      v1, 0x5958(t0)
+                    sw      v1, 0x595c(t0)
+                    sw      v1, 0x5960(t0)
+        
+                    not     v0, a0
+                    and     v0, v0, v1
+                    sw      v0, 0x5950(t0)
+        
+                    lw      v0, 0x5974(t0)
+                    bne     v1, a0, store_zero
+                    addiu   v0, v0, 1
+        
+                    j       past_store
+                    sw      v0, 0x5974(t0)
+        
+                store_zero:
+                    sw      zero, 0x5974(t0)
+        
+                past_store:
+                    lw      v0, 0x594c(t0)
+                    lw      v1, 0x5944(t0)
+                    andi    v0, v0, 0x10
+                    sw      v1, 0x5948(t0)
+                    beq     v0, zero, past_triangle_menu
+                    lui     t1, 0x8009
+                    lw      v1, 0x60e4(t1)
+                    li      v0, 0x34
+                    beq     v1, v0, past_triangle_menu
+                    lui     v1, 0x800e
+                    lw      v1, 0x4e8c(v1)
+                    lw      t2, 0x60f8(t1)
+                    beq     v1, zero, past_triangle_menu
+                    nop
+                    bne     t2, zero, past_triangle_menu
+                    nop
+                    jal     0x8007a218
+                    nop
+                    lbu     v0, 0x13d(v0)
+                    nop
+                    andi    v0, v0, 0x08
+                    bne     v0, zero, past_triangle_menu
+                    nop
+        
+                    jal     0x80043ff8
+                    li      a0, 0x71
+                    li      v0, 1
+                    sw      v0, 0x800960f8
+        
+                past_triangle_menu:
+                    lw      v0, 0x80045948
+                    li      v1, 0x90c
+                    and     v0, v0, v1
+                    bne     v0, v1, normal_end
+                    nop
+                    jal     0x80040974
+                    
+                normal_end:
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="937E8" mode="ASM" offsetMode="RAM">
+                @process_battle_button_input_rewrite_end:
+                    lw      ra, 16(sp)
+                    addiu   sp, sp, 24
+                    jr      ra
+                    li      v0, 1
+        </Location>
+    </Patch>
+    <Patch name="Press buttons to win! (v2)">
+        <Description>
+            Press a button combination to win.  Default is L1 + Select.
+            Button codes:
+                0x8000  Left
+                0x4000  Down
+                0x2000  Right
+                0x1000  Up
+                0x0800  Start
+                0x0400  R3
+                0x0200  L3
+                0x0100  Select
+                0x0080  Square
+                0x0040  X
+                0x0020  Circle
+                0x0010  Triangle
+                0x0008  R1
+                0x0004  L1
+                0x0002  R2
+                0x0001  L2
+        </Description>
+        <Include patch="Process Battle Button Input Rewrite" />
+        <Location file="BATTLE_BIN" offset="1593AF" mode="DATA" offsetMode="RAM" label="address_insta_win_pressed">
+            00
+        </Location>
+        <Location file="BATTLE_BIN" offset="1593B0" mode="ASM" offsetMode="RAM">
+            @check_button_win:
+                    lbu     t0, @address_insta_win_pressed
+                    lui     t7, 0x8005
+                    addiu   v1, t7, %lo(0x80049a18)                 #   Conditionals                
+                    beq     t0, zero, check_button_win_end          #   Skip if insta-win not triggered
+                    li      t5, 0x19
+        
+                    addu    t0, v0, v1                              #   Conditionals + offset (from calling routine)
+                    li      t1, 0                                   #   index (Conditional index)
             
-                addu    t0, v0, v1
-                li      t1, 0
-                
-            check_button_win_loop:
-                lhu     t2, 0(t0)
-                nop
-                beq     t2, t5, check_button_win_past_loop
-                nop
-                lbu     t3, 0x801696bc(t2)
-                nop
-                sll     t3, t3, 1
-                addiu   t3, t3, 2
-                addiu   t1, t1, 1
-                sltiu   t4, t1, 256
-                bne     t4, zero, check_button_win_loop
-                addu    t0, t0, t3
+                check_button_win_loop:
+                    lhu     t2, 0(t0)                               #   Check for Run Scenario conditional
+                    lui     at, %hi(0x801696bc)
+                    beq     t2, t5, check_button_win_past_loop      #   If so, break out of loop
+                    addu    at, at, t2
+                    lbu     t3, %lo(0x801696bc)(at)                 #   Load parameter length value
+                    addiu   t1, t1, 1                               #   index = index + 1
+                    sll     t3, t3, 1                               #   Parameter length = value * 2
+                    addiu   t3, t3, 2                               #   Command length = parameter length + 2
+                    sltiu   t4, t1, 256                             
+                    bne     t4, zero, check_button_win_loop         #   Loop while index is less than 256 (or until break)
+                    addu    t0, t0, t3                              #   (Go to next conditional)
+        
+                check_button_win_past_loop:
+                    lhu     t0, 2(t0)                               #   Scenario ID
+                    bne     t2, t5, check_button_win_end            #   If there was no Run Scenario in this conditional block, return            
+                    sll     t3, t0, 1
             
-            check_button_win_past_loop:
-                bne     t2, t5, check_button_win_end
-                nop
-                lhu     t0, 2(t0)
-                nop
-                sll     t3, t0, 1
-                lhu     t1, 0x8004e5d0(t3)
-                li      t2, 0x80
-                andi    t1, t1, 0xf300
-                sra     t1, t1, 8
-                beq     t1, t2, check_button_win_change
-                li      t2, 0x81
-                beq     t1, t2, check_button_win_change
-                nop
-                j       check_button_win_end
-                nop
-                
-            check_button_win_change:
-                sw      t0, 0x800577b8
-                la      ra, 0x80142674
-                li      v0, 1
+                    addu    at, t7, t3
+                    lhu     t1, %lo(0x8004e5d0)(at)                 #   Scenario after event value
             
-            check_button_win_end:
-                jr      ra
-                nop
-                
-        @check_button_outcome:
-                lw      t0, 0x80045944
-                lhu     t1, 0x801593ae
-                nop
-                and     t0, t0, t1              
-                bne     t0, t1, check_button_outcome_end
-                nop
+                    li      t2, 0x80
+                    andi    t1, t1, 0xf300                          
+                    sra     t1, t1, 8                               #   Scenario after event action
+                    beq     t1, t2, check_button_win_change         #   Change if action = 0x80 (Go to World Map) 
+                    li      t2, 0x81                                
+                    beq     t1, t2, check_button_win_change         #   Change if action = 0x81 (Go to Next Scenario)
+                    nop
+                    j       check_button_win_end                    #   Otherwise, return normally
+                    nop
             
-                li      v0, 0
+                check_button_win_change:
+                    sw      t0, %lo(0x800577b8)(t7)                 #   Current Event ID = Scenario ID
+                    la      ra, 0x80142674                          #   Exit calling routine
+                    li      v0, 1                                   #   Return value = 1
+        
+                check_button_win_end:
+                    jr      ra
+                    nop
             
-            check_button_outcome_end:
-                jr      ra
+            
+            @check_button_win_outcome:
+                    lbu     t0, @address_insta_win_pressed 
+                    nop
+                    beq     t0, zero, check_button_win_outcome_end        
+                    nop
+        
+                    li      v0, 0
+        
+                check_button_win_outcome_end:
+                    jr      ra
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="93774" mode="ASM" offsetMode="RAM">
+                lw      t0, 0x80045944                              #   Button input
+                li      t1, %Buttons                           
+                and     t0, t0, t1                                  #   Was insta-win triggered?
+                bne     t0, t1, check_button_win_input_end          #   Skip if not
+                li      t2, 1
+ 
+                sb      t2, @address_insta_win_pressed
+ 
+            check_button_win_input_end:
+                j       @process_battle_button_input_rewrite_end
                 nop
-    </Location>
-    <Location file="BATTLE_BIN" offset="1425F4" mode="ASM" offsetMode="RAM">
-        jal     @check_button_win
-        nop
-    </Location>
-    <Location file="BATTLE_BIN" offset="1834B4" mode="ASM" offsetMode="RAM">
-        j       @check_button_outcome
-    </Location>
-    <Variable name="Buttons" file="BATTLE_BIN" offset="F23AE" bytes="2" default="104" /> 
-  </Patch>
+        </Location>
+        <Location file="BATTLE_BIN" offset="1425F4" mode="ASM" offsetMode="RAM">
+                jal     @check_button_win
+                nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="142634" mode="ASM" offsetMode="RAM">
+                lui     t0, %hi(@address_insta_win_pressed)
+        </Location>
+        <Location file="BATTLE_BIN" offset="142688" mode="ASM" offsetMode="RAM">
+                sb      zero, %lo(@address_insta_win_pressed)(t0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="1834B4" mode="ASM" offsetMode="RAM">
+                j       @check_button_win_outcome
+        </Location>
+        <Variable name="Buttons" symbol="true" bytes="2" default="104" /> 
+    </Patch>
   <Patch name="Load Formation ignored if unit not in party" hidden="true">
     <Location file="SCUS_942_21" offset="27200" mode="ASM" offsetMode="RAM">
         @load_formation_hook:
@@ -2376,6 +2498,338 @@ SKP:  j       0x80180848            #   Skip this ability
         jal     @load_formation_hook
     </Location>
   </Patch>
+    <Patch name="Rewrite ENTD Data Calculation Routine" hidden="false">
+        <Description>
+            Frees RAM (0x5af4c to 0x5b034), and provides some new options.
+            Ignores Load Formation if unit is not in the party.
+            Unknown Month is treated as Serpentarius for non-Ramza units.
+            
+            Change Party Level Random (0 = default, non-zero = change):  
+                In FFTPatcher ENTD tab by default, Party Level - Random finds highest party level and rolls between Level - (Level / 8) and Level.
+                This option changes it to roll between Level - (Level / 16) and Level + (Level / 16).
+            
+            Change Party Level Addend (0 = default, non-zero = change):
+                Party Level + 51 and beyond is Party Level - (Value - 50).  Party Level + 51 is Party Level - 1, etc.
+            
+            Brave and Faith Minimum and Range: Use rand(0..Range) + Minimum
+        </Description>
+        <Location file="SCUS_942_21" offset="5AC1C" mode="ASM" offsetMode="RAM">      
+                    addiu   sp, sp, -0x30
+                    sw      ra, 0x28(sp)
+                    sw      s5, 0x24(sp)
+                    sw      s4, 0x20(sp)
+                    sw      s3, 0x1c(sp)
+                    sw      s2, 0x18(sp)
+                    sw      s1, 0x14(sp)
+                    sw      s0, 0x10(sp)
+        
+                    move    s2, a1
+                    move    s3, a0
+        
+                    lbu     t0, 0x17(s2)
+                    lbu     t1, 0x18(s2)
+                    sb      t0, 4(s3)
+                    sb      t1, 5(s3)
+                    sb      t1, 0x1ba(s3)
+                        
+                    #   Ignore Load Formation if unit not in party
+                    lbu     a0, 0(s2)
+                    jal     0x80059f94
+                    li      s1, -1
+                    lbu     s0, 1(s2)
+                    bne     v0, s1, check_load_formation
+                    li      t0, 0xf7
+                    and     s0, s0, t0
+                    sb      s0, 1(s2)
+        
+                check_load_formation:
+                    andi    t0, s0, 0x08
+                    beq     t0, zero, check_ramza_init
+                    li      s1, 0
+        
+                    jal     0x8005b038
+                    nop
+                    j       past_ramza_init
+                    move    s4, v0
+        
+                check_ramza_init:
+                    lbu     t0, 0(s2)
+                    lbu     t1, 4(s2)
+                    sltiu   t0, t0, 4
+                    lui     s5, 0x8006
+                    beq     t0, zero, past_ramza_init
+                    ori     s5, s5, 0x10e8
+                    bne     t1, zero, past_ramza_init
+                    nop
+        
+                check_ramza_init_loop:
+                    jal     0x80059af0
+                    move    a0, s1
+                    move    a0, v0
+                    lbu     t1, 1(a0)       #   Party index
+                    li      t0, 0xff
+                    lbu     t2, 0(a0)       #   Base class
+                    lbu     t3, 2(a0)       #   Job
+                    lbu     t4, 0(s2)       #   ENTD base class
+                    lbu     t5, 7(a0)       #   Secondary skillset
+                    beq     t1, t0, check_ramza_init_loop_bottom
+                    sltiu   t2, t2, 4
+                    beq     t2, zero, check_ramza_init_loop_bottom
+                    sltiu   t3, t3, 3
+                    sb      t4, 0(a0)
+                    beq     t3, zero, check_ramza_init_loop_past_job_store
+                    nop
+        
+                    sb      t4, 2(a0)
+        
+                check_ramza_init_loop_past_job_store:
+                    lbu     t0, 0x00(s5)
+                    lbu     t1, 0x30(s5)
+                    lbu     t2, 0x60(s5)
+                    beq     t0, t5, check_ramza_init_store_secondary_skillset
+                    nop
+                    beq     t1, t5, check_ramza_init_store_secondary_skillset
+                    nop
+                    bne     t2, t5, check_ramza_init_routine
+                    nop
+        
+                check_ramza_init_store_secondary_skillset:
+                    sll     t0, t4, 1
+                    addu    t0, t0, t4
+                    sll     t0, t0, 4
+                    addu    t0, s5, t0
+                    lbu     t0, -0x30(t0)
+                    nop
+                    sb      t0, 7(a0)
+        
+                check_ramza_init_routine:
+                    move    a0, s3
+                    jal     0x8005b038
+                    move    a1, s2
+                    move    s4, v0
+                    li      s0, 0x08
+    
+                check_ramza_init_loop_bottom:
+                    addiu   s1, s1, 1
+                    sltiu   t0, s1, 20
+                    bne     t0, zero, check_ramza_init_loop
+                    nop
+        
+                past_ramza_init:
+                    li      a0, 0
+                    lw      t3, 0x80066238
+        
+                ai_data_loop:
+                    addu    t1, s3, a0
+                    addu    t2, t3, a0
+                    lbu     t2, 0x21(t2)
+                    addiu   a0, a0, 1
+                    sb      t2, 0x0165(t1)
+                    sltiu   t2, a0, 7
+                    bne     t2, zero, ai_data_loop
+                    andi    t0, s0, 0x08
+                    bne     t0, zero, end
+                    move    v0, s4
+        
+                    sb      s0, 6(s3)
+                    lbu     t0, 0(s2)
+                    li      t1, 0xff
+                    sb      t1, 2(s3)
+                    sb      t0, 0(s3)
+        
+                    lbu     s0, 3(s2)
+                    lbu     t2, 0x80066308
+                    beq     s0, zero, party_level_random
+                    li      t1, 0xfe
+                    bne     s0, t1, level_addend_check
+                    sltiu   t0, s0, 100
+        
+                party_level_random:
+                    srl     t1, t2, 3
+        
+                    .if     >, %ChangePartyLevelRandom, 0
+                        srl     t3, t2, 4
+                    .else
+                        move    t3, t1
+                    .endif
+        
+                    subu    s1, t2, t3
+                    jal     0x8002230c
+                    addiu   s0, t1, 1
+                    multu   s0, v0
+                    mflo    t0
+                    addiu   t0, t0, 0x7fff
+                    sra     t0, t0, 15
+                    j       min_level_check
+                    addu    s0, s1, t0
+        
+                level_addend_check:
+                    sltiu   t0, s0, 100
+                    bne     t0, zero, min_level_check
+                    addiu   t0, s0, -100
+     
+                    .if     >, %ChangePartyLevelAddend, 0
+                        li      t1, 51
+                        sltu    t1, t0, t1
+                        bne     t1, zero, min_level_check
+                        addu    s0, t2, t0
+        
+                        addiu   t1, t0, -50
+                        sltu    t3, t2, t1
+                        bne     t3, zero, min_level_check
+                        li      s0, 1
+                        subu    s0, t2, t1
+                    .else
+                        addu    s0, t2, t0
+                    .endif
+    
+                min_level_check:
+                    bne     s0, zero, max_level_check
+                    nop
+                    li      s0, 1
+    
+                max_level_check:
+                    sltiu   t0, s0, 100
+                    bne     t0, zero, store_level
+                    nop
+                    li      s0, 99
+        
+                store_level:
+                    sb      s0, 0x22(s3)
+        
+                    lbu     s1, 4(s2)           #   Birth month
+                    lbu     s0, 5(s2)           #   Birth day
+        
+                    beq     s1, zero, birthday_random
+                    sltiu   t1, s1, 13
+                    beq     t1, zero, birthday_random
+                    nop
+                    beq     s0, zero, birthday_random
+                    sltiu   t1, s0, 32
+                    bne     t1, zero, birthday_specific
+                    sll     t1, s1, 1
+
+                birthday_random:
+                    jal     0x8002230c
+                    nop
+                    sll     t0, v0, 3           #   result * 8
+                    addu    t0, t0, v0          #   result * 9
+                    sll     t0, t0, 3           #   result * 72
+                    addu    t0, t0, v0          #   result * 73
+                    sll     t1, t0, 2           #   result * 292
+                    addu    t0, t1, t0          #   result * 365
+                    sra     t0, t0, 15
+                    j       birthday_zodiac
+                    addiu   s0, t0, 1
+        
+                birthday_specific:
+                    lhu     t0, 0x800661ce(t1)
+                    nop
+                    addu    s0, t0, s0
+        
+                birthday_zodiac:
+                    #lbu     t1, 10(s2)          #   ENTD Job ID
+                    #li      t2, 0x97
+                    #lbu     t1, 4(s2)           #   Month = Unknown -> Serpentarius
+                    #li      t2, 0
+                    #beq     t1, t2, birthday_store
+                    #li      v0, 12
+        
+                    lbu     t0, 0(s2)           #   ENTD base class
+                    nop
+                    sltiu   t0, t0, 4
+                    or      t0, t0, s1          #   If not Ramza and birth month = Unknown, use Serpentarius
+                    beq     t0, zero, birthday_store
+                    li      v0, 12
+    
+                calc_zodiac:
+                    jal     0x8005e5d8
+                    move    a0, s0
+        
+                birthday_store:
+                    sll     t0, v0, 12
+                    andi    t1, s0, 0x01ff
+                    or      t0, t0, t1
+                    sh      t0, 8(s3)
+        
+                    #   Brave
+                    lbu     s0, 6(s2)
+                    lbu     s1, 7(s2)
+                    sltiu   t0, s0, 101
+                    bne     t0, zero, brave_store
+                    nop
+        
+                    #jal     0x8002230c
+                    #nop
+                    #sll     t0, v0, 4           #   result * 16
+                    #subu    t0, t0, v0          #   result * 15
+                    #sll     t0, t0, 1           #   result * 30
+                    #sra     t0, t0, 15
+                    #addiu   s0, t0, 45          #   Brave = 45 + rand(0..29)
+        
+                    jal     0x8002230c
+                    li      s5, %BraveRange
+                    multu   v0, s5
+                    mflo    t0
+                    sra     t0, t0, 15
+                    addiu   s0, t0, %BraveMinimum
+        
+                brave_store:
+                    sb      s0, 0x24(s3)
+                    sb      s0, 0x23(s3)
+        
+                    #   Faith
+                    sltiu   t0, s1, 101
+                    bne     t0, zero, faith_store
+                    nop
+        
+                    #jal     0x8002230c
+                    #nop
+                    #sll     t0, v0, 4           #   result * 16
+                    #subu    t0, t0, v0          #   result * 15
+                    #sll     t0, t0, 1           #   result * 30
+                    #sra     t0, t0, 15
+                    #addiu   s1, t0, 45          #   Faith = 45 + rand(0..29)
+        
+                    jal     0x8002230c
+                    li      s5, %FaithRange
+                    multu   v0, s5
+                    mflo    t0
+                    sra     t0, t0, 15
+                    addiu   s1, t0, %FaithMinimum
+        
+                faith_store:
+                    sb      s1, 0x26(s3)
+                    sb      s1, 0x25(s3)
+        
+                    lbu     t0, 2(s2)
+                    sb      zero, 0x21(s3)      #   Experience = 0
+                    sb      t0, 0x16c(s3)       #   Name ID
+        
+                    li      v0, 0
+        
+                end:
+                    j       0x80016d3c
+                    nop
+        
+                    #lw      ra, 0x28(sp)
+                    #lw      s5, 0x24(sp)
+                    #lw      s4, 0x20(sp)
+                    #lw      s3, 0x1c(sp)
+                    #lw      s2, 0x18(sp)
+                    #lw      s1, 0x14(sp)
+                    #lw      s0, 0x10(sp)
+                    #addiu   sp, sp, 0x30
+                    #jr      ra
+                    #nop
+        </Location>
+        <Variable name="Change Party Level Random" bytes="1" default="00" symbol="true" />
+        <Variable name="Change Party Level Addend" bytes="1" default="00" symbol="true" />
+        <Variable name="Brave Range" bytes="1" default="1E" symbol="true" />
+        <Variable name="Brave Minimum" bytes="1" default="2D" symbol="true" />
+        <Variable name="Faith Range" bytes="1" default="1E" symbol="true" />
+        <Variable name="Faith Minimum" bytes="1" default="2D" symbol="true" />
+    </Patch>
     <Patch name="Break out of multi-battle sequences">
         <Description>
             Break out of multi-battle sequences by pressing a button combination directly after exiting the formation screen.  Default is L1 + R1.
@@ -2465,6 +2919,168 @@ SKP:  j       0x80180848            #   Skip this ability
         addiu   sp, sp, 0x18
     </Location>
   </Patch>
+  <Patch name="Historic level down and level fixes">
+    <Description>
+        Level down is based on previous growths, and level up abilities have the same effect as leveling up via experience gain.  (Includes Level down fix patch)
+        
+        Use Midpoint variable:  
+            Set to 1 (default) to use average base stat values (less subtraction on level down).  
+            Set to 0 to use minimum base stat values (more subtraction on level down).
+    </Description>
+    <Include patch="Level down fix" />
+    <Location file="SCUS_942_21" offset="5DA10" mode="ASM" offsetMode="RAM">
+                addiu   sp, sp, -16
+                sw      s0, 4(sp)
+                sw      ra, 8(sp)
+
+                move    s0, a0              #   Unit
+                addiu   t0, s0, 0x72        #   Raw stat pointer
+                addiu   t1, s1, 0x81        #   Growth pointer
+                lbu     t2, 0x22(s0)        #   Level
+                li      t3, 0               #   Raw stat index
+        
+                li      t6, 0x00ffffff
+
+            level_unit_loop:
+                lwl     t5, 3(t0)
+                lwr     t5, 0(t0)           #   Raw stat (with extra byte)
+                lbu     t4, 0(t1)           #   Growth
+                and     t5, t5, t6          #   Raw stat
+        
+                #   If growth == 0, growth = 1
+                sltiu   t7, t4, 1
+                or      t4, t4, t7
+        
+                addu    t4, t4, t2          #   Growth + Level
+                beq     a1, zero, level_unit_loop_level_up
+                li      t7, 2
+        
+                #   Level down
+        
+                #   Load base class and flags, and check for Ramza
+                lbu     t8, 0(s0)
+                lbu     t9, 6(s0)
+                sltiu   t8, t8, 4
+        
+                #   Determine base stat set
+                bne     t8, zero, level_unit_loop_level_down_load_base
+                andi    t8, t9, 0x80
+                bne     t8, zero, level_unit_loop_level_down_load_base
+                li      t7, 0
+                andi    t8, t9, 0x40
+                bne     t8, zero, level_unit_loop_level_down_load_base
+                li      t7, 1
+                li      t7, 3
+        
+            level_unit_loop_level_down_load_base:
+                sll     t8, t7, 1           #   BaseStatSet * 2
+                addu    t8, t8, t7          #   BaseStatSet * 3
+                sll     t8, t8, 2           #   BaseStatSet * 12
+        
+                lui     at, 0x8006
+        
+                addu    t8, t8, t3          #   Add raw stat index
+                addu    t9, at, t8
+                lbu     v0, -0x16f4(t9)     #   Base Stat Base
+        
+                .if     >, %UseMidpoint, 0
+        
+                    sll     t8, t7, 2           #   BaseStatSet * 4
+                    addu    t8, t8, t7          #   BaseStatSet * 5
+            
+                    addu    t8, t8, t3          #   Add raw stat index
+                    addu    t9, at, t8
+                    lbu     v1, -0x16c4(t9)     #   Base Stat Random Mod
+            
+                    sll     v0, v0, 14
+                    sll     v1, v1, 13
+                    addu    v0, v0, v1          #   BaseStat
+        
+                .else
+        
+                    sll     v0, v0, 14
+        
+                .endif
+        
+                subu    t8, t5, v0          #   (BaseStat - RawStat)
+        
+                addiu   t4, t2, -1          #   Level - 1
+                srl     t9, t4, 1
+                addu    t8, t8, t9          #   Add ((Level - 1) / 2) to numerator for rounding purposes
+        
+                divu    t8, t4              
+                mflo    t8                  #   (BaseStat - RawStat) / (Level - 1)
+        
+                j       level_unit_loop_raw_stat_cap
+                subu    t5, t5, t8          #   RawStat = RawStat - ((BaseStat - RawStat) / Level)
+        
+            level_unit_loop_level_up:
+                divu    t5, t4
+                mflo    t7
+                addu    t5, t5, t7          #   RawStat = RawStat + (RawStat / (Growth + Level))
+        
+            level_unit_loop_raw_stat_cap:
+                sltu    t7, t5, t6
+                bne     t7, zero, level_unit_loop_save_raw_stat
+                nop
+                move    t5, t6
+        
+            level_unit_loop_save_raw_stat:
+                srl     t7, t5, 16
+                srl     t8, t5, 8
+                sb      t7, 2(t0)
+                sb      t8, 1(t0)
+                sb      t5, 0(t0)
+        
+                addiu   t3, t3, 1
+                addiu   t0, t0, 3
+                sltiu   t4, t3, 5
+                bne     t4, zero, level_unit_loop
+                addiu   t1, t1, 2
+
+                jal     0x8005d5e0 
+                move    a0, s0
+
+                lhu     t0, 0x28(s0)        #   HP
+                lhu     t1, 0x2a(s0)        #   MaxHP
+                lhu     t2, 0x2c(s0)        #   MP
+                lhu     t3, 0x2e(s0)        #   MaxMP
+        
+                #   Cap HP at MaxHP
+                sltu    t4, t1, t0
+                beq     t4, zero, level_unit_cap_mp
+                sltu    t4, t3, t2
+                sh      t1, 0x28(s0)
+        
+            level_unit_cap_mp:
+                #   Cap MP at MaxMP
+                beq     t4, zero, level_unit_end
+                nop
+                sh      t3, 0x2c(s0)
+
+            level_unit_end:
+                lw      ra, 8(sp)
+                lw      s0, 4(sp)
+                jr      ra
+                addiu   sp, sp, 16
+    </Location>
+    <Variable name="Use Midpoint" bytes="1" default="01" symbol="true" />
+  </Patch>
+    <Patch name="Degenerator traps transformed into other trap type">
+        <Description>
+            Degenerator traps change to a different type of trap.  Default is Steel Needle.
+            
+            Trap Type:
+                0 = Degenerator
+                1 = Deathtrap
+                2 = Sleeping Gas
+                3 = Steel Needle
+        </Description>
+        <Location file="BATTLE_BIN" offset="180440" mode="ASM" offsetMode="RAM">
+                li      s4, %TrapType
+        </Location>
+        <Variable name="Trap Type" bytes="1" default="03" symbol="true" />
+    </Patch>
   <Patch name="Crits always deal bonus damage">
     <Description>
         Crit XA bonus minimum is 1 instead of 0.  Maximum is still XA - 1.
@@ -4198,6 +4814,97 @@ SKP:  j       0x80180848            #   Skip this ability
                     or      v0, t5, t6
         </Location>
     </Patch>
+    <Patch name="Call if battle" hidden="true">
+        <Location file="SCUS_942_21" offset="5E8E8" mode="ASM" offsetMode="RAM">
+            jr      ra
+            
+            # v1 = Function pointer, a0 to a3 = args
+            @call_if_battle:
+                    lui     t0, 0x8006
+                    lw      t1, 0x7000(t0)
+                    ori     t2, t0, 0x8888
+                    bne     t1, t2, call_if_battle_end
+                    move    t0, ra
+                    move    t0, v1
+    
+                call_if_battle_end:
+                    jr      t0
+                    nop
+        </Location>
+    </Patch>
+    <Patch name="Skillset index functions" hidden="true">
+        <Location file="BATTLE_BIN" offset="159BB0" mode="ASM" offsetMode="RAM">
+            #   a0 = Unit, a1 = Skillset ID
+            @find_skillset_index:
+                    lbu     t2, 6(a0)               #   Flags
+                    li      t5, 0x4a                #   Job ID
+                    andi    t2, t2, 0x20
+                    bne     t2, zero, find_skillset_index_end
+                    li      v0, -1
+
+                    la      t4, 0x80061e98
+                find_skillset_index_job_loop:
+                    lbu     t2, 0(t4)               #   Job skillset
+                    addiu   t4, t4, 0x30
+                    beq     t2, a1, find_skillset_index_past_job_loop
+                    li      t3, 1
+                    addiu   t5, t5, 1
+                    sltiu   t2, t5, 0x5d
+                    bne     t2, zero, find_skillset_index_job_loop
+                    li      t3, 0
+
+                find_skillset_index_past_job_loop:
+                    bne     t3, zero, find_skillset_index_end
+                    addiu   v0, t5, -0x4a
+
+                    lbu     t2, 0x0012(a0)          #   Unit primary skillset
+                    lbu     t3, 0x0162(a0)          #   Unit special skillset
+                    beq     t2, v0, find_skillset_index_end
+                    li      v0, 0
+                    beq     t3, v0, find_skillset_index_end
+                    nop
+                    #j       find_skillset_index_end
+                    li      v0, -1
+        
+                find_skillset_index_end:
+                    jr      ra
+                    nop
+        
+
+            #   a0 = Unit, a1 = Skillset index, a2 to a3 = Learned abilities bytes
+            @store_active_learned_abilities:
+                    sll     v0, a1, 1
+                    addu    v0, v0, a1
+                    addu    v0, v0, a0
+                    sb      a2, 0x99(v0)
+                    jr      ra
+                    sb      a3, 0x9a(v0)
+
+
+            #   a0 = Unit, a1 = Skillset ID, a2 to a3 = Learned abilities bytes
+            @store_active_learned_abilities_by_skillset_id:
+                    addiu   sp, sp, -16
+                    sw      ra, 4(sp)
+
+                    #   Does not change a0, a1, a2, a3.
+                    jal     @find_skillset_index
+                    nop
+        
+                    #   Skip if skillset has no learned abilities bytes
+                    slti    t2, v0, 0
+                    bne     t2, zero, store_active_learned_abilities_unit_end
+                    nop
+        
+                    jal     @store_active_learned_abilities
+                    move    a1, v0
+        
+                store_active_learned_abilities_unit_end:
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 16
+                    jr      ra
+                    nop
+        </Location>
+    </Patch>
     <Patch name="Enhanced ENTD">
         <Description>
             ENTD can now specify extra parameters for units.
@@ -4224,11 +4931,17 @@ SKP:  j       0x80180848            #   Skip this ability
             Experience: C-EV Bonus
             Left Unknown: Move Bonus
             Right Unknown: Jump Bonus
+            
+            Faith: CT (if not set to Random)
+            Top-right flags (including team): Primary skillset known abilities (if non-zero)
+            Bottom-right flags: Secondary skillset known abilities (if non-zero)
         </Description>
+        <Include patch="Call if battle" />
+        <Include patch="Skillset index functions" />
         <Location file="BATTLE_BIN" offset="159640" mode="DATA" offsetMode="RAM" label="address_unit_mult">
             00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
         </Location>
-        <Location file="BATTLE_BIN" offset="159658" mode="DATA" offsetMode="RAM" label="address_unit_elem">
+        <Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="address_unit_elem">
             00 00 00 00 00
             00 00 00 00 00
             00 00 00 00 00
@@ -4251,7 +4964,7 @@ SKP:  j       0x80180848            #   Skip this ability
             00 00 00 00 00
             00 00 00 00 00
         </Location>
-        <Location file="BATTLE_BIN" offset="1596C8" mode="DATA" offsetMode="RAM" label="address_unit_extra_stat_addends">
+        <Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="address_unit_extra_stat_addends">
             00 00 00
             00 00 00
             00 00 00
@@ -4274,7 +4987,7 @@ SKP:  j       0x80180848            #   Skip this ability
             00 00 00
             00 00 00
         </Location>
-        <Location file="BATTLE_BIN" offset="159708" mode="DATA" offsetMode="RAM" label="address_unit_extra_inflict_status">
+        <Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="address_unit_extra_inflict_status">
             00 00
             00 00
             00 00
@@ -4297,13 +5010,19 @@ SKP:  j       0x80180848            #   Skip this ability
             00 00
             00 00
         </Location>
-        <Location file="BATTLE_BIN" offset="159738" mode="DATA" offsetMode="RAM" label="address_unit_stat_offset">
+        <Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="address_unit_starting_ct">
+            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        </Location>
+        <Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="address_unit_raw_stat_addends">
+            00 00 00 00 00
+        </Location>
+        <Location file="BATTLE_BIN" mode="DATA" offsetMode="RAM" label="address_unit_stat_offset">
             04 43 02 3A 01 3B 00 00
         </Location>
-        <Location file="BATTLE_BIN" offset="159740" mode="DATA" offsetMode="RAM" label="address_unit_raw_stat_addends">
-            00 00 00 00 00
-        </Location>
-        <Location file="BATTLE_BIN" offset="159750" mode="ASM" offsetMode="RAM">
+        <Location file="BATTLE_BIN" mode="ASM" offsetMode="RAM">
+            .label      @copy_bytes, 0x8005e254
+            .label      @clear_data, 0x8005e644
+            
             #   s0 = Unit, s1 = ENTD Unit
             @stat_hook:
                     #lbu     t0, 0x25(s1)        #   InflictStatusID
@@ -4366,8 +5085,8 @@ SKP:  j       0x80180848            #   Skip this ability
 
                     #   Clear raw stat addends
                     la      a0, @address_unit_raw_stat_addends
-                    #jal     0x8005e644
-                    j       0x8005e644
+                    #jal     @clear_data
+                    j       @clear_data
                     li      a1, 5
 
                     #jr      ra
@@ -4505,7 +5224,7 @@ SKP:  j       0x80180848            #   Skip this ability
                     #sb      t5, 0x71(s1)
         
                     addiu   a1, s1, 0x6d
-                    jal     0x8005e254
+                    jal     @copy_bytes
                     li      a2, 5
        
                 equip_hook_end:
@@ -4550,13 +5269,13 @@ SKP:  j       0x80180848            #   Skip this ability
                     #   Copy innates - does not modify temp registers
                     addiu   a0, t3, 1
                     addiu   a1, t6, 4
-                    jal     0x8005e254
+                    jal     @copy_bytes
                     li      a2, 8
         
                     #   Copy elemental mods - does not modify temp registers
                     #addiu   a0, t3, 0x29
                     #addiu   a1, t6, 12
-                    #jal     0x8005e254
+                    #jal     @copy_bytes
                     #li      a2, 4
         
                     #   Copy primary skillset
@@ -4566,13 +5285,13 @@ SKP:  j       0x80180848            #   Skip this ability
         
                     #   Copy innates - does not modify temp registers
                     addiu   a1, t3, 2
-                    jal     0x8005e254
+                    jal     @copy_bytes
                     li      a2, 7
         
                     #   Copy elemental mods - does not modify temp registers
                     #addiu   a0, t1, 0x12
                     #addiu   a1, t3, 0x29
-                    #jal     0x8005e254
+                    #jal     @copy_bytes
                     #li      a2, 4
         
                     la      a1, @address_unit_elem
@@ -4582,14 +5301,14 @@ SKP:  j       0x80180848            #   Skip this ability
         
                     #   Copy elemental mods - does not modify temp registers
                     addiu   a0, t1, 0x12
-                    jal     0x8005e254
+                    jal     @copy_bytes
                     li      a2, 5
         
                     #   Copy raw stat addends
                     #   0x1f, 0x1e, 0x24, 0x21, 0x22
                     #addiu   a0, t1, 0x1e
                     #la      a1, @address_unit_raw_stat_addends
-                    #jal     0x8005e254
+                    #jal     @copy_bytes
                     #li      a2, 5
                     la      t0, @address_unit_raw_stat_addends
                     lbu     t2, 0x1f(t1)
@@ -4626,6 +5345,17 @@ SKP:  j       0x80180848            #   Skip this ability
                     sb      t2, 0(t0)
                     sb      t3, 1(t0)
         
+                    #   Copy starting CT
+                    lbu     t2, 7(t1)
+                    la      t0, @address_unit_starting_ct
+                    addu    t0, t0, s2
+        
+                    sltiu   t3, t2, 101
+                    sub     t3, zero, t3
+                    and     t2, t2, t3
+        
+                    sb      t2, 0(t0)
+        
                     #   Break
                     j       load_entd_pre_hook_end
                     nop
@@ -4644,7 +5374,7 @@ SKP:  j       0x80180848            #   Skip this ability
                     li      v0, 1
 
 
-            #   s2 = Unit index; s7 = ENTD Unit
+            #   s0 = Unit; s2 = Unit index; s7 = ENTD Unit
             @load_entd_post_hook:
                     move    t6, sp
                     addiu   sp, sp, -8
@@ -4656,14 +5386,79 @@ SKP:  j       0x80180848            #   Skip this ability
                     addiu   a1, t3, 1
         
                     #   Copy innates - does not modify temp registers
-                    jal     0x8005e254
+                    jal     @copy_bytes
                     li      a2, 8
         
                     #   Copy elemental mods - does not modify temp registers
                     #addiu   a0, t6, 12
                     #addiu   a1, t3, 0x29
-                    #jal     0x8005e254
+                    #jal     @copy_bytes
                     #li      a2, 4
+        
+                    lbu     t4, 0x20(s7)        #   Original UnitID
+                    li      t2, 0xff
+                    beq     t4, t2, load_entd_post_hook_end
+                    addiu   t0, s2, 1           #   Unit index
+                    sltiu   t2, t0, 16
+                    beq     t2, zero, load_entd_post_hook_end
+                    addiu   t1, s7, 0x28        #   ENTD Unit
+        
+                load_entd_post_hook_loop:
+                    lbu     t2, 0(t1)           #   BaseClass
+                    lbu     t3, 0x20(t1)        #   UnitID
+                    bne     t2, zero, load_entd_post_hook_loop_bottom
+                    nop
+                    bne     t3, t4, load_entd_post_hook_loop_bottom
+                    nop
+        
+                    #   Faith - CT
+                    #lbu     t2, 7(t1)
+                    #nop
+                    #sltiu   t3, t2, 101
+        
+                    #sub     t3, zero, t3
+                    #and     t2, t2, t3
+        
+                    #beq     t3, zero, load_entd_post_hook_abilities
+                    #nop
+        
+                    #sb      t2, 0x39(s0)
+    
+                load_entd_post_hook_abilities:
+                    #   Learned abilities (primary)
+                    lbu     a2, 0x01(t1)
+                    lbu     a3, 0x18(t1)
+                    move    a0, s0        
+                    or      t2, a2, a3
+                    beq     t2, zero, load_entd_post_hook_abilities_2
+                    nop
+        
+                    lbu     a1, 0x12(s0)    #   Primary skillset
+                    jal     @store_active_learned_abilities_by_skillset_id
+                    nop
+        
+                load_entd_post_hook_abilities_2: 
+                    #   Learned abilities (secondary)
+                    lbu     a2, 0x23(t1)
+                    lbu     a3, 0x26(t1)
+                    move    a0, s0
+                    or      t2, a2, a3
+                    beq     t2, zero, load_entd_post_hook_end
+                    nop
+        
+                    lbu     a1, 0x13(s0)    #   Secondary skillset
+                    jal     @store_active_learned_abilities_by_skillset_id
+                    nop
+        
+                    #   Break
+                    j       load_entd_post_hook_end
+                    nop
+        
+                load_entd_post_hook_loop_bottom:
+                    addiu   t0, t0, 1
+                    sltiu   t2, t0, 16
+                    bne     t2, zero, load_entd_post_hook_loop
+                    addiu   t1, t1, 0x28
         
                 load_entd_post_hook_end:
                     lw      ra, 4(sp)
@@ -4672,35 +5467,53 @@ SKP:  j       0x80180848            #   Skip this ability
                     nop
 
 
+            #   s2 = Unit index
+            @starting_ct_hook:
+                    la      t0, @address_unit_starting_ct
+                    addu    t0, t0, s2
+                    lbu     t0, 0(t0)
+                    jr      ra
+                    sb      t0, 0x39(v1)
+
+
             #   Return s2 = 0
             @clear_unit_extra_data:
-                    addiu   sp, sp, -8
-                    sw      ra, 4(sp)
-               
-                    la      a0, @address_unit_mult
-                    jal     0x8005e644
-                    li      a1, 21
-        
-                    la      a0, @address_unit_elem
-                    jal     0x8005e644
-                    li      a1, 105
-        
-                    la      a0, @address_unit_raw_stat_addends
-                    jal     0x8005e644
-                    li      a1, 5
-        
-                    la      a0, @address_unit_extra_stat_addends
-                    jal     0x8005e644
-                    li      a1, 63
-        
-                    la      a0, @address_unit_extra_inflict_status
-                    jal     0x8005e644
-                    li      a1, 42
-        
-                    lw      ra, 4(sp)
-                    addiu   sp, sp, 8
-                    jr      ra
                     li      s2, 0
+                    la      a0, @address_unit_mult
+                    j       @clear_data
+                    li      a1, 257
+
+                    #addiu   sp, sp, -8
+                    #sw      ra, 4(sp)
+               
+                    #la      a0, @address_unit_mult
+                    #jal     @clear_data
+                    #li      a1, 21
+        
+                    #la      a0, @address_unit_elem
+                    #jal     @clear_data
+                    #li      a1, 105
+        
+                    #la      a0, @address_unit_raw_stat_addends
+                    #jal     @clear_data
+                    #li      a1, 5
+        
+                    #la      a0, @address_unit_extra_stat_addends
+                    #jal     @clear_data
+                    #li      a1, 63
+        
+                    #la      a0, @address_unit_extra_inflict_status
+                    #jal     @clear_data
+                    #li      a1, 42
+        
+                    #la      a0, @address_unit_starting_ct
+                    #jal     @clear_data
+                    #li      a1, 21
+        
+                    #lw      ra, 4(sp)
+                    #addiu   sp, sp, 8
+                    #jr      ra
+                    #li      s2, 0
         </Location>
         <Location file="BATTLE_BIN" offset="17F944" mode="ASM" offsetMode="RAM">
                     jal     @clear_unit_extra_data
@@ -4715,6 +5528,9 @@ SKP:  j       0x80180848            #   Skip this ability
                     nop
                     nop
                     nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="182874" mode="ASM" offsetMode="RAM">
+                    jal     @starting_ct_hook
         </Location>
         <Location file="SCUS_942_21" offset="5A9B4" mode="ASM" offsetMode="RAM">
             @unit_battle_init:
@@ -4824,19 +5640,6 @@ SKP:  j       0x80180848            #   Skip this ability
                     #lw      s0, 0x10(sp)
                     #jr      ra
                     #addiu   sp, sp, 0x20
-
-            # v1 = Function pointer, a0 to a3 = args
-            @call_if_battle:
-                    lui     t0, 0x8006
-                    lw      t1, 0x7000(t0)
-                    ori     t2, t0, 0x8888
-                    bne     t1, t2, call_if_battle_end
-                    move    t0, ra
-                    move    t0, v1
-    
-                call_if_battle_end:
-                    jr      t0
-                    nop
         </Location>
         <Location file="SCUS_942_21" offset="5AFC0" mode="ASM" offsetMode="RAM">
                     li      s0, 0
@@ -4895,338 +5698,6 @@ SKP:  j       0x80180848            #   Skip this ability
                     nop
         </Location>
         <Variable name="Multiplier" bytes="2" default="2AB" symbol="true" />
-    </Patch>
-    <Patch name="Rewrite ENTD Data Calculation Routine" hidden="false">
-        <Description>
-            Frees RAM (0x5af4c to 0x5b034), and provides some new options.
-            Ignores Load Formation if unit is not in the party.
-            Unknown Month is treated as Serpentarius for non-Ramza units.
-            
-            Change Party Level Random (0 = default, non-zero = change):  
-                In FFTPatcher ENTD tab by default, Party Level - Random finds highest party level and rolls between Level - (Level / 8) and Level.
-                This option changes it to roll between Level - (Level / 16) and Level + (Level / 16).
-            
-            Change Party Level Addend (0 = default, non-zero = change):
-                Party Level + 51 and beyond is Party Level - (Value - 50).  Party Level + 51 is Party Level - 1, etc.
-            
-            Brave and Faith Minimum and Range: Use rand(0..Range) + Minimum
-        </Description>
-        <Location file="SCUS_942_21" offset="5AC1C" mode="ASM" offsetMode="RAM">      
-                    addiu   sp, sp, -0x30
-                    sw      ra, 0x28(sp)
-                    sw      s5, 0x24(sp)
-                    sw      s4, 0x20(sp)
-                    sw      s3, 0x1c(sp)
-                    sw      s2, 0x18(sp)
-                    sw      s1, 0x14(sp)
-                    sw      s0, 0x10(sp)
-        
-                    move    s2, a1
-                    move    s3, a0
-        
-                    lbu     t0, 0x17(s2)
-                    lbu     t1, 0x18(s2)
-                    sb      t0, 4(s3)
-                    sb      t1, 5(s3)
-                    sb      t1, 0x1ba(s3)
-                        
-                    #   Ignore Load Formation if unit not in party
-                    lbu     a0, 0(s2)
-                    jal     0x80059f94
-                    li      s1, -1
-                    lbu     s0, 1(s2)
-                    bne     v0, s1, check_load_formation
-                    li      t0, 0xf7
-                    and     s0, s0, t0
-                    sb      s0, 1(s2)
-        
-                check_load_formation:
-                    andi    t0, s0, 0x08
-                    beq     t0, zero, check_ramza_init
-                    li      s1, 0
-        
-                    jal     0x8005b038
-                    nop
-                    j       past_ramza_init
-                    move    s4, v0
-        
-                check_ramza_init:
-                    lbu     t0, 0(s2)
-                    lbu     t1, 4(s2)
-                    sltiu   t0, t0, 4
-                    lui     s5, 0x8006
-                    beq     t0, zero, past_ramza_init
-                    ori     s5, s5, 0x10e8
-                    bne     t1, zero, past_ramza_init
-                    nop
-        
-                check_ramza_init_loop:
-                    jal     0x80059af0
-                    move    a0, s1
-                    move    a0, v0
-                    lbu     t1, 1(a0)       #   Party index
-                    li      t0, 0xff
-                    lbu     t2, 0(a0)       #   Base class
-                    lbu     t3, 2(a0)       #   Job
-                    lbu     t4, 0(s2)       #   ENTD base class
-                    lbu     t5, 7(a0)       #   Secondary skillset
-                    beq     t1, t0, check_ramza_init_loop_bottom
-                    sltiu   t2, t2, 4
-                    beq     t2, zero, check_ramza_init_loop_bottom
-                    sltiu   t3, t3, 3
-                    sb      t4, 0(a0)
-                    beq     t3, zero, check_ramza_init_loop_past_job_store
-                    nop
-        
-                    sb      t4, 2(a0)
-        
-                check_ramza_init_loop_past_job_store:
-                    lbu     t0, 0x00(s5)
-                    lbu     t1, 0x30(s5)
-                    lbu     t2, 0x60(s5)
-                    beq     t0, t5, check_ramza_init_store_secondary_skillset
-                    nop
-                    beq     t1, t5, check_ramza_init_store_secondary_skillset
-                    nop
-                    bne     t2, t5, check_ramza_init_routine
-                    nop
-        
-                check_ramza_init_store_secondary_skillset:
-                    sll     t0, t4, 1
-                    addu    t0, t0, t4
-                    sll     t0, t0, 4
-                    addu    t0, s5, t0
-                    lbu     t0, -0x30(t0)
-                    nop
-                    sb      t0, 7(a0)
-        
-                check_ramza_init_routine:
-                    move    a0, s3
-                    jal     0x8005b038
-                    move    a1, s2
-                    move    s4, v0
-                    li      s0, 0x08
-    
-                check_ramza_init_loop_bottom:
-                    addiu   s1, s1, 1
-                    sltiu   t0, s1, 20
-                    bne     t0, zero, check_ramza_init_loop
-                    nop
-        
-                past_ramza_init:
-                    li      a0, 0
-                    lw      t3, 0x80066238
-        
-                ai_data_loop:
-                    addu    t1, s3, a0
-                    addu    t2, t3, a0
-                    lbu     t2, 0x21(t2)
-                    addiu   a0, a0, 1
-                    sb      t2, 0x0165(t1)
-                    sltiu   t2, a0, 7
-                    bne     t2, zero, ai_data_loop
-                    andi    t0, s0, 0x08
-                    bne     t0, zero, end
-                    move    v0, s4
-        
-                    sb      s0, 6(s3)
-                    lbu     t0, 0(s2)
-                    li      t1, 0xff
-                    sb      t1, 2(s3)
-                    sb      t0, 0(s3)
-        
-                    lbu     s0, 3(s2)
-                    lbu     t2, 0x80066308
-                    beq     s0, zero, party_level_random
-                    li      t1, 0xfe
-                    bne     s0, t1, level_addend_check
-                    sltiu   t0, s0, 100
-        
-                party_level_random:
-                    srl     t1, t2, 3
-        
-                    .if     >, %ChangePartyLevelRandom, 0
-                        srl     t3, t2, 4
-                    .else
-                        move    t3, t1
-                    .endif
-        
-                    subu    s1, t2, t3
-                    jal     0x8002230c
-                    addiu   s0, t1, 1
-                    multu   s0, v0
-                    mflo    t0
-                    addiu   t0, t0, 0x7fff
-                    sra     t0, t0, 15
-                    j       min_level_check
-                    addu    s0, s1, t0
-        
-                level_addend_check:
-                    sltiu   t0, s0, 100
-                    bne     t0, zero, min_level_check
-                    addiu   t0, s0, -100
-     
-                    .if     >, %ChangePartyLevelAddend, 0
-                        li      t1, 51
-                        sltu    t1, t0, t1
-                        bne     t1, zero, min_level_check
-                        addu    s0, t2, t0
-        
-                        addiu   t1, t0, -50
-                        sltu    t3, t2, t1
-                        bne     t3, zero, min_level_check
-                        li      s0, 1
-                        subu    s0, t2, t1
-                    .else
-                        addu    s0, t2, t0
-                    .endif
-    
-                min_level_check:
-                    bne     s0, zero, max_level_check
-                    nop
-                    li      s0, 1
-    
-                max_level_check:
-                    sltiu   t0, s0, 100
-                    bne     t0, zero, store_level
-                    nop
-                    li      s0, 99
-        
-                store_level:
-                    sb      s0, 0x22(s3)
-        
-                    lbu     s1, 4(s2)           #   Birth month
-                    lbu     s0, 5(s2)           #   Birth day
-        
-                    beq     s1, zero, birthday_random
-                    sltiu   t1, s1, 13
-                    beq     t1, zero, birthday_random
-                    nop
-                    beq     s0, zero, birthday_random
-                    sltiu   t1, s0, 32
-                    bne     t1, zero, birthday_specific
-                    sll     t1, s1, 1
-
-                birthday_random:
-                    jal     0x8002230c
-                    nop
-                    sll     t0, v0, 3           #   result * 8
-                    addu    t0, t0, v0          #   result * 9
-                    sll     t0, t0, 3           #   result * 72
-                    addu    t0, t0, v0          #   result * 73
-                    sll     t1, t0, 2           #   result * 292
-                    addu    t0, t1, t0          #   result * 365
-                    sra     t0, t0, 15
-                    j       birthday_zodiac
-                    addiu   s0, t0, 1
-        
-                birthday_specific:
-                    lhu     t0, 0x800661ce(t1)
-                    nop
-                    addu    s0, t0, s0
-        
-                birthday_zodiac:
-                    #lbu     t1, 10(s2)          #   ENTD Job ID
-                    #li      t2, 0x97
-                    #lbu     t1, 4(s2)           #   Month = Unknown -> Serpentarius
-                    #li      t2, 0
-                    #beq     t1, t2, birthday_store
-                    #li      v0, 12
-        
-                    lbu     t0, 0(s2)           #   ENTD base class
-                    nop
-                    sltiu   t0, t0, 4
-                    or      t0, t0, s1          #   If not Ramza and birth month = Unknown, use Serpentarius
-                    beq     t0, zero, birthday_store
-                    li      v0, 12
-    
-                calc_zodiac:
-                    jal     0x8005e5d8
-                    move    a0, s0
-        
-                birthday_store:
-                    sll     t0, v0, 12
-                    andi    t1, s0, 0x01ff
-                    or      t0, t0, t1
-                    sh      t0, 8(s3)
-        
-                    #   Brave
-                    lbu     s0, 6(s2)
-                    lbu     s1, 7(s2)
-                    sltiu   t0, s0, 101
-                    bne     t0, zero, brave_store
-                    nop
-        
-                    #jal     0x8002230c
-                    #nop
-                    #sll     t0, v0, 4           #   result * 16
-                    #subu    t0, t0, v0          #   result * 15
-                    #sll     t0, t0, 1           #   result * 30
-                    #sra     t0, t0, 15
-                    #addiu   s0, t0, 45          #   Brave = 45 + rand(0..29)
-        
-                    jal     0x8002230c
-                    li      s5, %BraveRange
-                    multu   v0, s5
-                    mflo    t0
-                    sra     t0, t0, 15
-                    addiu   s0, t0, %BraveMinimum
-        
-                brave_store:
-                    sb      s0, 0x24(s3)
-                    sb      s0, 0x23(s3)
-        
-                    #   Faith
-                    sltiu   t0, s1, 101
-                    bne     t0, zero, faith_store
-                    nop
-        
-                    #jal     0x8002230c
-                    #nop
-                    #sll     t0, v0, 4           #   result * 16
-                    #subu    t0, t0, v0          #   result * 15
-                    #sll     t0, t0, 1           #   result * 30
-                    #sra     t0, t0, 15
-                    #addiu   s1, t0, 45          #   Faith = 45 + rand(0..29)
-        
-                    jal     0x8002230c
-                    li      s5, %FaithRange
-                    multu   v0, s5
-                    mflo    t0
-                    sra     t0, t0, 15
-                    addiu   s1, t0, %FaithMinimum
-        
-                faith_store:
-                    sb      s1, 0x26(s3)
-                    sb      s1, 0x25(s3)
-        
-                    lbu     t0, 2(s2)
-                    sb      zero, 0x21(s3)      #   Experience = 0
-                    sb      t0, 0x16c(s3)       #   Name ID
-        
-                    li      v0, 0
-        
-                end:
-                    j       0x80016d3c
-                    nop
-        
-                    #lw      ra, 0x28(sp)
-                    #lw      s5, 0x24(sp)
-                    #lw      s4, 0x20(sp)
-                    #lw      s3, 0x1c(sp)
-                    #lw      s2, 0x18(sp)
-                    #lw      s1, 0x14(sp)
-                    #lw      s0, 0x10(sp)
-                    #addiu   sp, sp, 0x30
-                    #jr      ra
-                    #nop
-        </Location>
-        <Variable name="Change Party Level Random" bytes="1" default="00" symbol="true" />
-        <Variable name="Change Party Level Addend" bytes="1" default="00" symbol="true" />
-        <Variable name="Brave Range" bytes="1" default="1E" symbol="true" />
-        <Variable name="Brave Minimum" bytes="1" default="2D" symbol="true" />
-        <Variable name="Faith Range" bytes="1" default="1E" symbol="true" />
-        <Variable name="Faith Minimum" bytes="1" default="2D" symbol="true" />
     </Patch>
     <Patch name="Stat variation">
         <Description>
@@ -5328,6 +5799,232 @@ SKP:  j       0x80180848            #   Skip this ability
         <Variable name="Negative Addend" bytes="2" default="003C" symbol="true" />
         <Variable name="Multiplier" bytes="2" default="0008" symbol="true" />
     </Patch>
+    <Patch name="EXP and JP only at end of battle">
+        <Description>
+            EXP and JP are only awarded at end of battle.
+            EXP amount (per enemy) = MIN((Base Exp Gain variable + Enemy Level - Unit Level), 1)
+            Variables:
+                BaseExpGain: Used in above Experience formula (default 20).
+                UseEnemyExp variable: Set to 01 (or any non-zero value) to use the enemy experience ENTD value instead of 20 in the above calculation.
+        </Description>
+        <Location file="BATTLE_BIN" offset="15D520" mode="ASM" offsetMode="RAM">
+            #   Parameters:
+            #       a0 = Unit
+            #       a1 = IsGuest
+
+            @award_exp_hook:
+                    addiu   sp, sp, -32
+                    sw      s0, 4(sp)
+                    sw      s1, 8(sp)
+                    sw      s2, 12(sp)
+                    sw      s3, 16(sp)
+                    sw      s4, 20(sp)
+                    sw      ra, 24(sp)
+
+                    move    s0, a0
+                    move    s4, a1
+        
+                    lbu     a0, 0x18a(s0)
+                    jal     0x8008ce20
+                    nop
+                    jal     0x8007a6e4
+                    move    a0, v0
+                    move    s3, v0
+        
+                    li      s1, 0
+                    la      s2, 0x801908cc
+                award_exp_hook_loop:
+                    #lbu     t0, 1(s2)           #   Unit index
+                    #li      t1, 0xff
+                    #beq     t0, t1, award_exp_hook_loop_bottom
+                    move    a0, s2
+                    jal     0x8005e1b0
+                    li      a1, 0
+                    lbu     t0, 0x1ba(s2)
+                    beq     v0, zero, award_exp_hook_loop_bottom
+                    andi    t0, t0, 0x30
+                    beq     t0, zero, award_exp_hook_loop_bottom
+                    nop
+        
+                    lbu     t1, 0x22(s2)        #   Enemy Level
+                    lbu     t2, 0x22(s0)        #   Unit Level
+                    #lbu     t3, 0x21(s0)        #   Unit Experience
+        
+                .if >, %UseEnemyExp, 0
+                    lbu     t0, 0x21(s2)        #   Enemy Experience
+                    nop
+                    beq     t0, zero, award_exp_hook_loop_check
+                    nop
+                .endif
+    
+                    li      t0, %BaseExpGain
+        
+                award_exp_hook_loop_check:
+                    addu    t0, t0, t2
+                    subu    t0, t0, t1
+        
+                    sltu    t1, zero, t0
+                    bne     t1, zero, award_exp_hook_loop_gain
+                    li      t1, 1
+                    li      t0, 1
+        
+                award_exp_hook_loop_gain:
+                    #addu    t3, t3, t0
+                    #sb      t3, 0x21(s0)
+        
+                    #   Award EXP / #   Award JP?
+                    #jal     0x8005d880
+                    #move    a0, s0
+        
+                    lui     t2, 0x8019
+                    sb      t1, 0x38e8(t2)
+                    sb      t0, 0x38e7(t2)
+        
+                    #   Award EXP and JP
+                    lbu     a0, 0x18a(s0)
+                    jal     0x8017e7e4
+                    addiu   a1, s3, 0x1b0
+        
+                    lui     t0, 0x8019
+                    sb      zero, 0x38e8(t0)
+        
+                award_exp_hook_loop_bottom:
+                    addiu   s1, s1, 1
+                    sltiu   t0, s1, 21
+                    bne     t0, zero, award_exp_hook_loop
+                    addiu   s2, s2, 0x1c0
+
+                award_exp_hook_past_loop:
+                    move    a0, s0
+                    jal     0x80059bb0
+                    move    a1, s4
+        
+                    lw      ra, 24(sp)
+                    lw      s4, 20(sp)
+                    lw      s3, 16(sp)
+                    lw      s2, 12(sp)
+                    lw      s1, 8(sp)
+                    lw      s0, 4(sp)
+                    addiu   sp, sp, 32
+                    jr      ra
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="17D114" mode="ASM" offsetMode="RAM">
+                    sb      zero, 0x38e8(at)
+        </Location>
+        <Location file="EVENT_REQUIRE_OUT" offset="1C48D0" mode="ASM" offsetMode="RAM">
+                    jal     @award_exp_hook
+        </Location>
+        <Variable name="BaseExpGain" bytes="1" default="14" symbol="true" />
+        <Variable name="UseEnemyExp" bytes="1" default="00" symbol="true" />
+    </Patch>
+    <Patch name="EXP gained on level up rolls over into next level">
+        <Description>
+            Experience gained on level up rolls over into next level.
+        </Description>
+        <Location file="SCUS_942_21" offset="5D888" mode="ASM" offsetMode="RAM">
+            sw      s2, 0x0c(sp)
+        </Location>
+        <Location file="SCUS_942_21" offset="5D894" mode="ASM" offsetMode="RAM">
+            lbu     s2, 0x21(a0)
+            move    s0, a0
+            sltiu   v0, s2, 100
+            bne     v0, zero, 0x8005d8e0
+            addiu   s2, s2, -100
+        </Location>
+        <Location file="SCUS_942_21" offset="5D8CC" mode="ASM" offsetMode="RAM">
+            sb      s2, 0x21(s0)
+            j       0x8005d89c
+        </Location>
+        <Location file="SCUS_942_21" offset="5D8F0" mode="ASM" offsetMode="RAM">
+            lw      s2, 0x0c(sp)
+            jr      ra
+            addiu   sp, sp, 32
+        </Location>
+    </Patch>
+    <Patch name="Random Fire only hits panels with units">
+        <Description>
+            Abilities flagged with Random Fire only hit panels with units.
+            By default, affects Truth and Un-truth.
+            
+            Variables:
+                ExcludeDefeatedUnits: Avoid hitting units that already count as defeated (KO, Petrify, etc.).  Set to 0 to disable.
+        </Description>
+        <Location file="BATTLE_BIN" offset="15D630" mode="ASM" offsetMode="RAM">
+            @random_fire_hook:
+                    addiu   sp, sp, -40
+                    sw      a0, 4(sp)
+                    sw      a1, 8(sp)
+                    sw      a2, 12(sp)
+                    sw      a3, 16(sp)
+                    sw      t0, 20(sp)
+                    sw      t1, 24(sp)
+                    sw      ra, 28(sp)
+        
+                    beq     v0, zero, _random_fire_hook_change      
+                    lui     t3, 0x800e
+        
+                    lbu     t3, 0x4e9c(t3)      #   mapMaxX
+                    andi    t2, a1, 0x00ff      #   (tileIndex AND 0xff)
+                    div     t2, t3                        
+                    sra     a2, a1, 0x08        #   tileZ = tileIndex / 256
+                    mflo    a1                  #   tileY = (tileIndex AND 0xff) / mapMaxX
+                    mfhi    a0                  #   tileX = (tileIndex AND 0xff) % mapMaxX
+                    jal     0x8007a2b8
+                    nop
+
+                    lw      ra, 28(sp)
+                    beq     v0, zero, _random_fire_hook_change
+                    nop
+        
+                    .if     >, %ExcludeDefeatedUnits, 0        
+                        lw      a0, 0x134(v0)
+                        jal     0x8005e1b0
+                        li      a1, 0
+            
+                        lw      ra, 28(sp)
+                        beq     v0, zero, _random_fire_hook_end
+                        nop
+                    .else
+                        j       _random_fire_hook_end
+                        nop
+                    .endif
+        
+                _random_fire_hook_change:
+                    lui     ra, %hi(0x8017d76c)
+                    addiu   ra, ra, %lo(0x8017d76c)
+        
+                _random_fire_hook_end:
+                    lw      t1, 24(sp)
+                    lw      t0, 20(sp)
+                    lw      a3, 16(sp)
+                    lw      a2, 12(sp)
+                    lw      a1, 8(sp)
+                    lw      a0, 4(sp)
+                    
+                    addu    v1, a3, t0
+                    jr      ra
+                    addiu   sp, sp, 40         
+        </Location>
+        <Location file="BATTLE_BIN" offset="17D750" mode="ASM" offsetMode="RAM">
+                    andi    v1, a0, 0x7f
+                    sb      v1, 5(a2)
+                    jal     @random_fire_hook
+                    addu    v1, a3, t0
+                    addiu   a3, a3, 5
+                    addiu   s0, s0, 1
+        </Location>
+        <Location file="BATTLE_BIN" offset="17D77C" mode="ASM" offsetMode="RAM">
+                    beq     s0, zero, 0x8017d830
+                    nop
+                    jal     0x8002230c
+                    nop
+                    multu   v0, s0
+                    mflo    v1
+                    nop
+        </Location>
+        <Variable name="ExcludeDefeatedUnits" bytes="1" default="1" symbol="true" />
+    </Patch>
     <Patch name="Base stat decrease">
         <Description>
             Base speed is 5 for humans and 4 for monsters (instead of 6 and 5, respectively).  Base PA and MA use values of 3.25 and 4 instead of 4 and 5.
@@ -5423,60 +6120,76 @@ SKP:  j       0x80180848            #   Skip this ability
         <Variable file="BATTLE_BIN" offset="153777" offsetMode="RAM" name="Ether Multiplier" />
         <Variable file="BATTLE_BIN" offset="153778" offsetMode="RAM" name="Hi-Ether Multiplier" />
     </Patch>
-  <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v2)">
-    <Description>
-        Changes formula 3B to a mana burn/feedback ability 
-        using MA * Y, physical evade.
-        For magic evade, change '0x80188510' to '0x801885b8'. To overwrite
-        a different formula, change the offset of the second Location tag.
-    </Description>
-    <Location file="BATTLE_BIN" offset="F6430" mode="ASM">
-    @formula_feedback:
+    <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v3)">
+        <Description>
+            Changes formula 3B to a mana burn/feedback ability using MA * Y damage to both MP and HP.
+            To overwrite a different formula, change the offset of the second Location tag in the XML.
+            Variables:
+                UseMPAsDamage: Set to 1 to always use target current MP as damage to both MP and HP.
+                UseMagicEvade: Set to 1 to use magic evade instead of physical evade.
+        </Description>
+        <Location file="BATTLE_BIN" offset="15D430" mode="ASM" offsetMode="RAM">
+            @formula_feedback:
       
-        addiu   sp, sp, -0x18
-        sw      ra, 0x10(sp)
+                addiu   sp, sp, -24
+                sw      ra, 16(sp)
         
-        jal     0x80188510              # Physical Evade Calculation
-        nop                             
-        bne     v0, zero, feedback_end  # If Evaded, Skip           
-        nop
+                .if     >, %UseMagicEvade, 0
+                    jal     0x801885b8                  #   Magic Evade Calculation
+                    nop 
+                .else   
+                    jal     0x80188510                  #   Physical Evade Calculation
+                    nop 
+                .endif
+                                    
+                bne     v0, zero, feedback_end          #   If Evaded, Skip           
+                nop
         
-        jal     0x80185c94              # Get Ability Power
-        nop
-        jal     0x80188964              # Calculate MA * Y Damage
-        nop
+                .if     >, %UseMPAsDamage, 0
+                .else
+                    jal     0x80185c94                  #   Get Ability Power
+                    nop
+                    jal     0x80188964                  #   Calculate MA * Y Damage
+                    nop
+                .endif
         
-        lui     t0, 0x8019 
-        lw      v0, 0x2d98(t0)
-        lw      v1, 0x2d90(t0)
-        nop
+                lui     t0, 0x8019 
+                lw      v0, 0x2d98(t0)
+                lw      v1, 0x2d90(t0)
         
-        lhu     t0, 4(v1)               # Load HP Damage
-        lhu     a0, 0x2c(v0)            # Load target MP
-        li      v0, 0xa0
-        
-        slt     t1, a0, t0
-        beq     t1, zero, feedback_store
-        nop
-        
-        move    t0, a0                  # Cap damage at target MP
+                .if     >, %UseMPAsDamage, 0
+                    lhu     t0, 0x2c(v0)                #   Load target MP
+                    li      v0, 0xa0
+                .else
+                    lhu     a0, 0x2c(v0)                #   Load target MP
+                    lhu     t0, 4(v1)                   #   Load HP Damage
+                    li      v0, 0xa0
+            
+                    sltu    t1, a0, t0
+                    beq     t1, zero, feedback_store
+                    nop
+            
+                    move    t0, a0                      #   Cap damage at target MP
+                .endif
     
-    feedback_store:
-        sb      v0, 0x25(v1)            # Save Action Type = HP Damage + MP Damage
-        sh      t0, 0x08(v1)            # Save MP Damage = Capped damage
-        sh      t0, 0x04(v1)            # Save HP Damage = Capped damage
+            feedback_store:
+                sb      v0, 0x25(v1)                    #   Save Action Type = HP Damage + MP Damage
+                sh      t0, 0x08(v1)                    #   Save MP Damage = Capped damage
+                sh      t0, 0x04(v1)                    #   Save HP Damage = Capped damage
       
-    feedback_end:  
-        lw      ra, 0x10(sp)
-        addiu   sp, sp, 0x18
-        jr      ra
-        nop
-    </Location>
-    <Location file="BATTLE_BIN" offset="11FD58" mode="ASM">
-        j       @formula_feedback
-        nop
-    </Location>
-  </Patch>
+            feedback_end:  
+                lw      ra, 16(sp)
+                addiu   sp, sp, 24
+                jr      ra
+                nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="11FD58" mode="ASM">
+                j       @formula_feedback
+                nop
+        </Location>
+        <Variable name="UseMPAsDamage" bytes="1" default="00" symbol="true" />
+        <Variable name="UseMagicEvade" bytes="1" default="00" symbol="true" />
+    </Patch>
   <Patch name="Formula 11: Magic Damage = MA * (WP+Y)">
     <Description>
     Changes formula 11 to magic damage, MA * (WP+Y), physical evade.

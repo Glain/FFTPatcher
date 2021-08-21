@@ -248,6 +248,13 @@
         andi    t0, t1, 0x20    
         beq     t0, zero, battle_bench_unit_past_monster_check
         addiu   a1, s1, 22
+        
+        #   Skip for Holy Dragon Reis - Holy Dragon base class check
+        lbu     t2, 0(s0)
+        li      t3, 0x48
+        beq     t2, t3, battle_bench_unit_past_monster_check
+        nop
+        
         jal     @copy_bytes
         li      a2, 8
         j       battle_bench_unit_end
