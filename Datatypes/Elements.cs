@@ -67,7 +67,7 @@ namespace FFTPatcher.Datatypes
         private static readonly IList<string> elementNames = Utilities.GetValues<Element>()
                                                                       .Select(el => Strings[el])
                                                                       .ToList();
-        
+
 
         #endregion Instance Variables 
 

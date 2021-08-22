@@ -29,17 +29,17 @@ namespace FFTPatcher.Editors
 {
     public partial class ElementsEditor : BaseEditor
     {
-		#region Instance Variables (4) 
+        #region Instance Variables (4) 
 
         private Elements defaults;
         private static string[] elementNames = new string[] {
                 "Fire", "Lightning", "Ice", "Wind", "Earth", "Water", "Holy", "Dark" };
-        private Elements elements = new Elements( 0 );
+        private Elements elements = new Elements(0);
         private bool ignoreChanges = false;
 
-		#endregion Instance Variables 
+        #endregion Instance Variables 
 
-		#region Public Properties (1) 
+        #region Public Properties (1) 
 
         public string GroupBoxText
         {
@@ -47,9 +47,9 @@ namespace FFTPatcher.Editors
             set { elementsGroupBox.Text = value; }
         }
 
-		#endregion Public Properties 
+        #endregion Public Properties 
 
-		#region Constructors (1) 
+        #region Constructors (1) 
 
         public ElementsEditor()
         {
@@ -57,11 +57,11 @@ namespace FFTPatcher.Editors
             elementsCheckedListBox.ItemCheck += elementsCheckedListBox_ItemCheck;
         }
 
-		#endregion Constructors 
+        #endregion Constructors 
 
-		#region Public Methods (1) 
+        #region Public Methods (1) 
 
-        public void SetValueAndDefaults( Elements value, Elements defaults )
+        public void SetValueAndDefaults(Elements value, Elements defaults)
         {
             elements = value;
             this.defaults = defaults;
@@ -69,18 +69,18 @@ namespace FFTPatcher.Editors
             UpdateView();
         }
 
-		#endregion Public Methods 
+        #endregion Public Methods 
 
-		#region Private Methods (2) 
+        #region Private Methods (2) 
 
-        private void elementsCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
+        private void elementsCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if( !ignoreChanges )
+            if (!ignoreChanges)
             {
                 string s = elementsCheckedListBox.Items[e.Index].ToString();
-                PropertyInfo pi = elements.GetType().GetProperty( s );
-                pi.SetValue( elements, e.NewValue == CheckState.Checked, null );
-                OnDataChanged( this, System.EventArgs.Empty );
+                PropertyInfo pi = elements.GetType().GetProperty(s);
+                pi.SetValue(elements, e.NewValue == CheckState.Checked, null);
+                OnDataChanged(this, System.EventArgs.Empty);
             }
         }
 
@@ -90,14 +90,14 @@ namespace FFTPatcher.Editors
             elementsCheckedListBox.SuspendLayout();
 
             ignoreChanges = true;
-            elementsCheckedListBox.SetValuesAndDefaults( ReflectionHelpers.GetFieldsOrProperties<bool>( elements, elementNames ), ReflectionHelpers.GetFieldsOrProperties<bool>( defaults, elementNames ) );
+            elementsCheckedListBox.SetValuesAndDefaults(ReflectionHelpers.GetFieldsOrProperties<bool>(elements, elementNames), ReflectionHelpers.GetFieldsOrProperties<bool>(defaults, elementNames));
             ignoreChanges = false;
 
             elementsCheckedListBox.ResumeLayout();
             this.ResumeLayout();
         }
 
-		#endregion Private Methods 
+        #endregion Private Methods 
 
 
         private class ElementsCheckedListBox : CheckedListBox
@@ -113,54 +113,54 @@ namespace FFTPatcher.Editors
                 Holy,
                 Dark
             }
-public bool[] Defaults { get; private set; }
+            public bool[] Defaults { get; private set; }
             public ElementsCheckedListBox()
                 : base()
             {
                 CheckOnClick = true;
             }
-            public void SetValuesAndDefaults( bool[] values, bool[] defaults )
+            public void SetValuesAndDefaults(bool[] values, bool[] defaults)
             {
-                if( (values != null) && (defaults != null) && (this.Defaults == null) )
+                if ((values != null) && (defaults != null) && (this.Defaults == null))
                 {
                     this.Defaults = defaults;
-                    for( int i = 0; i < values.Length; i++ )
+                    for (int i = 0; i < values.Length; i++)
                     {
-                        SetItemChecked( i, values[i] );
-                        RefreshItem( i );
+                        SetItemChecked(i, values[i]);
+                        RefreshItem(i);
                     }
                 }
-                else if( (values != null) && (defaults != null) && (this.Defaults != null) )
+                else if ((values != null) && (defaults != null) && (this.Defaults != null))
                 {
-                    List<int> itemsToRefresh = new List<int>( values.Length );
-                    for( int i = 0; i < values.Length; i++ )
+                    List<int> itemsToRefresh = new List<int>(values.Length);
+                    for (int i = 0; i < values.Length; i++)
                     {
-                        if( ((GetItemChecked( i ) ^ this.Defaults[i]) && !(values[i] ^ defaults[i])) ||
-                            (!(GetItemChecked( i ) ^ this.Defaults[i]) && (values[i] ^ defaults[i])) )
+                        if (((GetItemChecked(i) ^ this.Defaults[i]) && !(values[i] ^ defaults[i])) ||
+                            (!(GetItemChecked(i) ^ this.Defaults[i]) && (values[i] ^ defaults[i])))
                         {
-                            itemsToRefresh.Add( i );
+                            itemsToRefresh.Add(i);
                         }
                     }
 
                     this.Defaults = defaults;
-                    for( int i = 0; i < values.Length; i++ )
+                    for (int i = 0; i < values.Length; i++)
                     {
-                        SetItemChecked( i, values[i] );
+                        SetItemChecked(i, values[i]);
                     }
 
-                    foreach( int i in itemsToRefresh )
+                    foreach (int i in itemsToRefresh)
                     {
-                        SetItemChecked( i, !values[i] );
-                        SetItemChecked( i, values[i] );
+                        SetItemChecked(i, !values[i]);
+                        SetItemChecked(i, values[i]);
                     }
                 }
             }
-            protected override void OnDrawItem( DrawItemEventArgs e )
+            protected override void OnDrawItem(DrawItemEventArgs e)
             {
                 Brush backColorBrush = Brushes.White;
                 Brush foreColorBrush = Brushes.Black;
 
-                switch( (Elements)e.Index )
+                switch ((Elements)e.Index)
                 {
                     case Elements.Fire:
                         backColorBrush = Brushes.Red;
@@ -199,33 +199,33 @@ public bool[] Defaults { get; private set; }
                         break;
                 }
 
-                e.Graphics.FillRectangle( backColorBrush, e.Bounds );
-                CheckBoxState state = this.GetItemChecked( e.Index ) ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal;
-                Size checkBoxSize = CheckBoxRenderer.GetGlyphSize( e.Graphics, state );
-                Point loc = new Point( 1, (e.Bounds.Height - (checkBoxSize.Height + 1)) / 2 + 1 );
-                CheckBoxRenderer.DrawCheckBox( e.Graphics, new Point( loc.X + e.Bounds.X, loc.Y + e.Bounds.Y ), state );
-                e.Graphics.DrawString( this.Items[e.Index].ToString(), e.Font, foreColorBrush, new PointF( loc.X + checkBoxSize.Width + 1 + e.Bounds.X, loc.Y + e.Bounds.Y ) );
-                
-                if( (Defaults != null) && (Defaults.Length > e.Index) && (Defaults[e.Index] != GetItemChecked( e.Index )) )
+                e.Graphics.FillRectangle(backColorBrush, e.Bounds);
+                CheckBoxState state = this.GetItemChecked(e.Index) ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal;
+                Size checkBoxSize = CheckBoxRenderer.GetGlyphSize(e.Graphics, state);
+                Point loc = new Point(1, (e.Bounds.Height - (checkBoxSize.Height + 1)) / 2 + 1);
+                CheckBoxRenderer.DrawCheckBox(e.Graphics, new Point(loc.X + e.Bounds.X, loc.Y + e.Bounds.Y), state);
+                e.Graphics.DrawString(this.Items[e.Index].ToString(), e.Font, foreColorBrush, new PointF(loc.X + checkBoxSize.Width + 1 + e.Bounds.X, loc.Y + e.Bounds.Y));
+
+                if ((Defaults != null) && (Defaults.Length > e.Index) && (Defaults[e.Index] != GetItemChecked(e.Index)))
                 {
                     using (Pen p = new Pen(Settings.ModifiedColor.BackgroundColor, 1))
                     {
-                        e.Graphics.DrawRectangle( p, new Rectangle( e.Bounds.X, e.Bounds.Y, e.Bounds.Width - 1, e.Bounds.Height - 1 ) );
+                        e.Graphics.DrawRectangle(p, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width - 1, e.Bounds.Height - 1));
                     }
                 }
 
-                if( !Enabled )
+                if (!Enabled)
                 {
-                    using( SolidBrush disabledRect = new SolidBrush( Color.FromArgb( 100, Color.Gray ) ) )
+                    using (SolidBrush disabledRect = new SolidBrush(Color.FromArgb(100, Color.Gray)))
                     {
-                        e.Graphics.FillRectangle( disabledRect, e.Bounds );
+                        e.Graphics.FillRectangle(disabledRect, e.Bounds);
                     }
                 }
             }
-            protected override void OnKeyDown( KeyEventArgs e )
+            protected override void OnKeyDown(KeyEventArgs e)
             {
-                SetValuesAndDefaults( Defaults, Defaults );
-                base.OnKeyDown( e );
+                SetValuesAndDefaults(Defaults, Defaults);
+                base.OnKeyDown(e);
             }
         }
     }
