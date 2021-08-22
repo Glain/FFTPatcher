@@ -23,6 +23,8 @@ using FFTPatcher.Controls;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib;
+using PatcherLib.Utilities;
+using System.Linq;
 
 namespace FFTPatcher.Editors
 {
@@ -31,14 +33,14 @@ namespace FFTPatcher.Editors
 		#region Instance Variables
 
         private Ability ability;
-        private List<ComboBoxWithDefault> comboBoxes;
+        private IList<ComboBoxWithDefault> comboBoxes;
         private bool ignoreChanges = false;
         private Context ourContext = Context.Default;
-        private List<Item> pspItems = new List<Item>( 256 );
-        private List<ItemSubType> pspItemTypes = new List<ItemSubType>( (ItemSubType[])Enum.GetValues( typeof( ItemSubType ) ) );
-        private List<Item> psxItems = new List<Item>( 256 );
-        private List<ItemSubType> psxItemTypes = new List<ItemSubType>( (ItemSubType[])Enum.GetValues( typeof( ItemSubType ) ) );
-        private List<NumericUpDownWithDefault> spinners;
+        private IList<Item> pspItems = new List<Item>( 256 );
+        private IList<ItemSubType> pspItemTypes = Utilities.GetValues<ItemSubType>().ToList();
+        private IList<Item> psxItems = new List<Item>( 256 );
+        private IList<ItemSubType> psxItemTypes = Utilities.GetValues<ItemSubType>().ToList();
+        private IList<NumericUpDownWithDefault> spinners;
 
 		#endregion Instance Variables 
 

@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -455,6 +456,22 @@ namespace PatcherLib.Utilities
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Shim for Enum.GetValues&lt;T&gt;() (added in .NET 5).
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<TEnum> GetValues<TEnum>()
+        {
+            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+        }
+
+        public static string[] GetEnumNames<T>()
+        {
+            var values = Enum.GetValues(typeof(T)).Cast<T>();
+            return values.Select(el => el.ToString()).ToArray();
         }
 
         public static bool TryParseInt(string str, out int value)

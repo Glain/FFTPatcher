@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using PatcherLib.Utilities;
 using FFTPatcher.SpriteEditor.DataTypes;
+using System.Linq;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -35,7 +36,7 @@ namespace FFTPatcher.SpriteEditor
         public SpriteEditor()
         {
             InitializeComponent();
-            var s = new List<SpriteType>((SpriteType[])Enum.GetValues(typeof(SpriteType)));
+            var s = Utilities.GetValues<SpriteType>().ToList();
             //s.Remove(SpriteType.RUKA);
 
             shpComboBox.DataSource = s.ToArray();

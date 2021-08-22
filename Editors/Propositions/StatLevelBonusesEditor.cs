@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using PatcherLib.Datatypes;
 using FFTPatcher.Datatypes;
 using Lokad;
+using PatcherLib.Utilities;
 
 namespace FFTPatcher.Editors
 {
@@ -49,9 +50,9 @@ namespace FFTPatcher.Editors
 
             UpdateRowHeaders( context );
 
-            foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
+            foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
             {
-                foreach (BraveFaithRange bfr in (BraveFaithRange[])Enum.GetValues( typeof( BraveFaithRange ) ))
+                foreach (BraveFaithRange bfr in Utilities.GetValues<BraveFaithRange>())
                 {
                     var thisTuple = Tuple.From( bfn, bfr );
                     if (braveBonuses.ContainsKey( thisTuple ))
@@ -65,7 +66,7 @@ namespace FFTPatcher.Editors
                     }
                 }
 
-                foreach (LevelRange lr in (LevelRange[])Enum.GetValues( typeof( LevelRange ) ))
+                foreach (LevelRange lr in Utilities.GetValues<LevelRange>())
                 {
                     if (levelBonuses.ContainsKey( Tuple.From( bfn, lr ) ))
                     {
@@ -428,7 +429,7 @@ namespace FFTPatcher.Editors
             LevelRange destRowLR = (LevelRange)destRowIndex;
             int sourceRowIndex = source.Index;
 
-            foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues(typeof(BraveFaithNeutral)))
+            foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
             {
                 //var thisTuple = Tuple.From(bfn, destRowBFR);
 
@@ -453,9 +454,9 @@ namespace FFTPatcher.Editors
 }
 
 /*
-           foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
+           foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
             {
-                foreach (BraveFaithRange bfr in (BraveFaithRange[])Enum.GetValues( typeof( BraveFaithRange ) ))
+                foreach (BraveFaithRange bfr in Utilities.GetValues<BraveFaithRange>())
                 {
                     var thisTuple = Tuple.From( bfn, bfr );
                     if (braveBonuses.ContainsKey( thisTuple ))
@@ -469,7 +470,7 @@ namespace FFTPatcher.Editors
                     }
                 }
 
-                foreach (LevelRange lr in (LevelRange[])Enum.GetValues( typeof( LevelRange ) ))
+                foreach (LevelRange lr in Utilities.GetValues<LevelRange>())
                 {
                     if (levelBonuses.ContainsKey( Tuple.From( bfn, lr ) ))
                     {

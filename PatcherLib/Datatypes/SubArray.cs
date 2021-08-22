@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using PatcherLib.Utilities;
+using System.Linq;
 
 namespace PatcherLib.Datatypes
 {
@@ -151,11 +152,6 @@ internal class CollectionDebugView<T>
     public T[] Items
     {
         get { return collection.ToArray(); }
-    }
-
-    public CollectionDebugView( IList<T> collection )
-        : this( collection as IEnumerable<T> )
-    {
     }
 
     public CollectionDebugView( IEnumerable<T> collection )

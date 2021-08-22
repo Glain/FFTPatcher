@@ -21,31 +21,57 @@ using System;
 using System.Collections.Generic;
 using PatcherLib;
 using PatcherLib.Utilities;
+using System.Linq;
 
 namespace FFTPatcher.Datatypes
 {
+    public enum Element
+    {
+        Fire = 0,
+        Lightning = 1,
+        Ice = 2,
+        Wind = 3,
+        Earth = 4,
+        Water = 5,
+        Holy = 6,
+        Dark = 7,
+    }
+    public enum ElementFlags : byte
+    {
+        Fire = 1,
+        Lightning = 2,
+        Ice = 4,
+        Wind = 8,
+        Earth = 16,
+        Water = 32,
+        Holy = 64,
+        Dark = 128,
+    }
+
     public class Elements : BaseDataType, IEquatable<Elements>, ISupportDigest, ISupportDefault<Elements>
     {
-		#region Instance Variables (1) 
+        #region Instance Variables (1) 
 
-        private static class Strings
+        //TODO: Read this from XML file?
+        private static readonly IDictionary<Element, string> Strings = new Dictionary<Element, string>
         {
-            public const string Fire = "Fire";
-            public const string Lightning = "Lightning";
-            public const string Ice = "Ice";
-            public const string Wind = "Wind";
-            public const string Earth = "Earth";
-            public const string Water = "Water";
-            public const string Holy = "Holy";
-            public const string Dark = "Dark";
-        }
-        private static readonly string[] elementNames = new string[8] {
-            Strings.Fire, Strings.Lightning, Strings.Ice, Strings.Wind,
-            Strings.Earth, Strings.Water, Strings.Holy, Strings.Dark };
+            [Element.Fire] = "Fire",
+            [Element.Lightning] = "Lightning",
+            [Element.Ice] = "Ice",
+            [Element.Wind] = "Wind",
+            [Element.Earth] = "Earth",
+            [Element.Water] = "Water",
+            [Element.Holy] = "Holy",
+            [Element.Dark] = "Dark",
+        };
+        private static readonly IList<string> elementNames = Utilities.GetValues<Element>()
+                                                                      .Select(el => Strings[el])
+                                                                      .ToList();
+        
 
-		#endregion Instance Variables 
+        #endregion Instance Variables 
 
-		#region Public Properties (11) 
+        #region Public Properties (11) 
 
         public bool Dark { get; set; }
 
@@ -62,7 +88,7 @@ namespace FFTPatcher.Datatypes
 
         public bool HasChanged
         {
-            get { return !Equals( Default ); }
+            get { return !Equals(Default); }
         }
 
         public bool Holy { get; set; }
@@ -75,22 +101,22 @@ namespace FFTPatcher.Datatypes
 
         public bool Wind { get; set; }
 
-		#endregion Public Properties 
+        #endregion Public Properties 
 
-		#region Constructors (1) 
+        #region Constructors (1) 
 
-        public Elements( byte b )
+        public Elements(byte b)
         {
-            PopulateFromBools( PatcherLib.Utilities.Utilities.BooleansFromByte( b ) );
+            PopulateFromBools(PatcherLib.Utilities.Utilities.BooleansFromByte(b));
         }
 
         internal Elements()
         {
         }
 
-        private void PopulateFromBools( IList<bool> bools )
+        private void PopulateFromBools(IList<bool> bools)
         {
-            System.Diagnostics.Debug.Assert( bools.Count == 8 );
+            System.Diagnostics.Debug.Assert(bools.Count == 8);
             Fire = bools[7];
             Lightning = bools[6];
             Ice = bools[5];
@@ -101,11 +127,11 @@ namespace FFTPatcher.Datatypes
             Dark = bools[0];
         }
 
-		#endregion Constructors 
+        #endregion Constructors 
 
-		#region Public Methods (8) 
+        #region Public Methods (8) 
 
-        public static void Copy( Elements source, Elements destination )
+        public static void Copy(Elements source, Elements destination)
         {
             destination.Fire = source.Fire;
             destination.Lightning = source.Lightning;
@@ -117,12 +143,12 @@ namespace FFTPatcher.Datatypes
             destination.Dark = source.Dark;
         }
 
-        public void CopyTo( Elements destination )
+        public void CopyTo(Elements destination)
         {
-            Copy( this, destination );
+            Copy(this, destination);
         }
 
-        public bool Equals( Elements other )
+        public bool Equals(Elements other)
         {
             return
                 other != null &&
@@ -136,15 +162,15 @@ namespace FFTPatcher.Datatypes
                 other.Dark == Dark;
         }
 
-        public override bool Equals( object obj )
+        public override bool Equals(object obj)
         {
-            if( obj is Elements )
+            if (obj is Elements)
             {
-                return Equals( obj as Elements );
+                return Equals(obj as Elements);
             }
             else
             {
-                return base.Equals( obj );
+                return base.Equals(obj);
             }
         }
 
@@ -161,31 +187,31 @@ namespace FFTPatcher.Datatypes
 
         public byte ToByte()
         {
-            return PatcherLib.Utilities.Utilities.ByteFromBooleans( Fire, Lightning, Ice, Wind, Earth, Water, Holy, Dark );
+            return PatcherLib.Utilities.Utilities.ByteFromBooleans(Fire, Lightning, Ice, Wind, Earth, Water, Holy, Dark);
         }
 
         public override string ToString()
         {
-            List<string> strings = new List<string>( 8 );
-            foreach( string name in elementNames )
+            List<string> strings = new List<string>(8);
+            foreach (string name in elementNames)
             {
-                if( ReflectionHelpers.GetFieldOrProperty<bool>( this, name ) )
+                if (ReflectionHelpers.GetFieldOrProperty<bool>(this, name))
                 {
-                    strings.Add( name );
+                    strings.Add(name);
                 }
             }
-            return string.Join( " | ", strings.ToArray() );
+            return string.Join(" | ", strings.ToArray());
         }
 
-		#endregion Public Methods 
-    
+        #endregion Public Methods 
+
         protected override void WriteXml(System.Xml.XmlWriter writer)
         {
             bool[] bools = ToBoolArray();
-            System.Diagnostics.Debug.Assert( bools.Length == DigestableProperties.Count );
-            for ( int i = 0; i < bools.Length; i++ )
+            System.Diagnostics.Debug.Assert(bools.Length == DigestableProperties.Count);
+            for (int i = 0; i < bools.Length; i++)
             {
-                writer.WriteValueElement( DigestableProperties[i], bools[i] );
+                writer.WriteValueElement(DigestableProperties[i], bools[i]);
             }
         }
 
@@ -193,11 +219,11 @@ namespace FFTPatcher.Datatypes
         {
             reader.ReadStartElement();
             bool[] bools = new bool[8];
-            for ( int i = 0; i < bools.Length; i++ )
+            for (int i = 0; i < bools.Length; i++)
             {
                 bools[i] = reader.ReadElementContentAsBoolean();
             }
-            PopulateFromBools( bools );
+            PopulateFromBools(bools);
             reader.ReadEndElement();
         }
     }

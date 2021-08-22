@@ -25,6 +25,8 @@ using FFTPatcher.Controls;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib;
+using PatcherLib.Utilities;
+using System.Linq;
 
 namespace FFTPatcher.Editors
 {
@@ -32,23 +34,23 @@ namespace FFTPatcher.Editors
     {
 		#region Instance Variables 
 
-        private List<ComboBoxWithDefault> comboBoxes = new List<ComboBoxWithDefault>();
+        private IList<ComboBoxWithDefault> comboBoxes = new List<ComboBoxWithDefault>();
         private bool ignoreChanges = false;
         private Item item;
         private string[] itemBools = new string[] {
             "Weapon", "Shield", "Head", "Body",
             "Accessory", "Blank1", "Rare", "Blank2" };
-        private List<string> itemFormulaItems;
+        private IList<string> itemFormulaItems;
         private Context ourContext = Context.Default;
-        private List<ItemSubType> pspItemTypes = new List<ItemSubType>( (ItemSubType[])Enum.GetValues( typeof( ItemSubType ) ) );
-        private List<ItemSubType> psxItemTypes = new List<ItemSubType>( (ItemSubType[])Enum.GetValues( typeof( ItemSubType ) ) );
-        private List<LinkLabel> secondTableLinks = new List<LinkLabel>();
-        private List<NumericUpDownWithDefault> spinners = new List<NumericUpDownWithDefault>();
+        private IList<ItemSubType> pspItemTypes = Utilities.GetValues<ItemSubType>().ToList();
+        private IList<ItemSubType> psxItemTypes = Utilities.GetValues<ItemSubType>().ToList();
+        private IList<LinkLabel> secondTableLinks = new List<LinkLabel>();
+        private IList<NumericUpDownWithDefault> spinners = new List<NumericUpDownWithDefault>();
         private string[] weaponBools = new string[] {
             "Striking", "Lunging", "Direct", "Arc",
             "TwoSwords", "TwoHands", "Throwable", "Force2Hands" };
-        private List<string> weaponCastSpellItems;
-        private ShopsFlags[] shops = new ShopsFlags[16] { 
+        private IList<string> weaponCastSpellItems;
+        private IList<ShopsFlags> shops = new ShopsFlags[16] { 
             ShopsFlags.None,
             ShopsFlags.Lesalia, ShopsFlags.Riovanes, ShopsFlags.Igros, ShopsFlags.Lionel,
             ShopsFlags.Limberry, ShopsFlags.Zeltennia, ShopsFlags.Gariland, ShopsFlags.Yardrow,

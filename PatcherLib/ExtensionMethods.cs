@@ -86,18 +86,6 @@ namespace PatcherLib.Utilities
             return -1;
         }
 
-        public static T[] ToArray<T>( this IEnumerable<T> collection )
-        {
-            return collection.ToList().ToArray();
-        }
-
-        public static IList<T> ToList<T>( this IEnumerable<T> collection )
-        {
-            if (collection is IList<T>)
-                return new ReadOnlyCollection<T>( collection as IList<T> );
-
-            return new List<T>( collection ).AsReadOnly();
-        }
         public static IList<T> SetAll<T>(this IList<T> list, T value)
         {
             for (int i = 0; i < list.Count; i++)

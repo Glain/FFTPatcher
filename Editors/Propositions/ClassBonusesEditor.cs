@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using PatcherLib.Datatypes;
 using FFTPatcher.Datatypes;
 using Lokad;
+using PatcherLib.Utilities;
 
 namespace FFTPatcher.Editors
 {
@@ -41,9 +42,9 @@ namespace FFTPatcher.Editors
 
             UpdateRowHeaders(context);
 
-            foreach (PropositionClass clas in (PropositionClass[])Enum.GetValues( typeof( PropositionClass ) ))
+            foreach (PropositionClass clas in Utilities.GetValues<PropositionClass>())
             {
-                foreach (PropositionType type in (PropositionType[])Enum.GetValues( typeof( PropositionType ) ))
+                foreach (PropositionType type in Utilities.GetValues<PropositionType>())
                 {
                     if (propTypeBonuses.ContainsKey( Tuple.From( type, clas ) ))
                     {
@@ -51,7 +52,7 @@ namespace FFTPatcher.Editors
                     }
                 }
 
-                foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
+                foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
                 {
                     if (bfnBonuses.ContainsKey( Tuple.From( bfn, clas ) ))
                     {
@@ -276,7 +277,7 @@ namespace FFTPatcher.Editors
             PropositionClass destRowClass = (PropositionClass)destRowIndex;
             int sourceRowIndex = source.Index;
 
-            foreach (PropositionType type in (PropositionType[])Enum.GetValues(typeof(PropositionType)))
+            foreach (PropositionType type in Utilities.GetValues<PropositionType>())
             {
                 if (propTypeBonuses.ContainsKey(Tuple.From(type, destRowClass)))
                 {
@@ -284,7 +285,7 @@ namespace FFTPatcher.Editors
                 }
             }
                 
-            foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues(typeof(BraveFaithNeutral)))
+            foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
             {
                 if (bfnBonuses.ContainsKey(Tuple.From(bfn, destRowClass)))
                 {

@@ -5,6 +5,7 @@ using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
 using PatcherLib;
 using Lokad;
+using System.Linq;
 
 namespace FFTPatcher.Datatypes
 {
@@ -198,9 +199,9 @@ namespace FFTPatcher.Datatypes
 
             propTypeBonuses = new TupleDictionary<PropositionType, PropositionClass, byte>();
 
-            foreach (PropositionType type in (PropositionType[])Enum.GetValues( typeof( PropositionType ) ))
+            foreach (PropositionType type in Utilities.GetValues<PropositionType>())
             {
-                foreach (PropositionClass _class in (PropositionClass[])Enum.GetValues( typeof( PropositionClass ) ))
+                foreach (PropositionClass _class in Utilities.GetValues<PropositionClass>())
                 {
                     propTypeBonuses[type, _class] = bytes[0x8C0 + ((int)type - 1) * 22 + (int)_class];
                 }
@@ -208,9 +209,9 @@ namespace FFTPatcher.Datatypes
             propTypeBonuses = new TupleDictionary<PropositionType, PropositionClass, byte>( propTypeBonuses, false, true );
 
             bfBonuses = new TupleDictionary<BraveFaithNeutral, PropositionClass, byte>();
-            foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
+            foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
             {
-                foreach (PropositionClass _class in (PropositionClass[])Enum.GetValues( typeof( PropositionClass ) ))
+                foreach (PropositionClass _class in Utilities.GetValues<PropositionClass>())
                 {
                     bfBonuses[bfn, _class] = bytes[0x970 + ((int)bfn - 1) * 22 + (int)_class];
                 }
@@ -224,15 +225,15 @@ namespace FFTPatcher.Datatypes
             //int levelBonusesOffset = brokenLevelBonuses ? 0x9B4 : 0x9D4;
             int levelBonusesOffset = 0x9D4;
             
-            foreach (BraveFaithNeutral bfn in (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) ))
+            foreach (BraveFaithNeutral bfn in Utilities.GetValues<BraveFaithNeutral>())
             {
-                foreach (BraveFaithRange range in (BraveFaithRange[])Enum.GetValues( typeof( BraveFaithRange ) ))
+                foreach (BraveFaithRange range in Utilities.GetValues<BraveFaithRange>())
                 {
                     braveBonuses[bfn, range] = bytes[0x9B4 + ((int)bfn - 1) * 5 + (int)range];
                     faithBonuses[bfn, range] = bytes[0x9C4 + ((int)bfn - 1) * 5 + (int)range];
                 }
 
-                foreach (LevelRange range in (LevelRange[])Enum.GetValues( typeof( LevelRange ) ))
+                foreach (LevelRange range in Utilities.GetValues<LevelRange>())
                 {
                     levelBonuses[bfn, range] = bytes[levelBonusesOffset + ((int)bfn - 1) * 10 + (int)range];
                 }
@@ -248,7 +249,7 @@ namespace FFTPatcher.Datatypes
             bonusCashGilBonuses = new TupleDictionary<PropositionType, BonusPercent, BonusIndex>();
             bonusCashJpBonuses = new TupleDictionary<PropositionType, BonusPercent, BonusIndex>();
 
-            foreach (PropositionType type in (PropositionType[])Enum.GetValues( typeof( PropositionType ) ))
+            foreach (PropositionType type in Utilities.GetValues<PropositionType>())
             {
                 treasureLandGilBonuses[type] = (BonusIndex)bytes[0x9F4 + 2 * ((int)type - 1)];
                 treasureLandJpBonuses[type] = (BonusIndex)bytes[0x9F4 + 2 * ((int)type - 1) + 1];
@@ -325,8 +326,8 @@ namespace FFTPatcher.Datatypes
             Prices.ForEach( p => result.AddRange( p.ToBytes() ) );
             result.AddRange( unknownBytes );
 
-            PropositionClass[] classes = (PropositionClass[])Enum.GetValues( typeof( PropositionClass ) );
-            PropositionType[] propTypes = (PropositionType[])Enum.GetValues( typeof( PropositionType ) );
+            IList<PropositionClass> classes = Utilities.GetValues<PropositionClass>().ToList();
+            IList<PropositionType> propTypes = Utilities.GetValues<PropositionType>().ToList();
             foreach (PropositionType type in propTypes)
             {
                 foreach (PropositionClass _class in classes)
@@ -334,7 +335,7 @@ namespace FFTPatcher.Datatypes
                     result.Add( propTypeBonuses[type, _class] );
                 }
             }
-            BraveFaithNeutral[] bfnVals = (BraveFaithNeutral[])Enum.GetValues( typeof( BraveFaithNeutral ) );
+            IList<BraveFaithNeutral> bfnVals = Utilities.GetValues<BraveFaithNeutral>().ToList();
             foreach (BraveFaithNeutral bfn in bfnVals)
             {
                 foreach (PropositionClass _class in classes)
@@ -345,7 +346,7 @@ namespace FFTPatcher.Datatypes
 
             result.Add( 0x00 );
             result.Add( 0x00 );
-            BraveFaithRange[] bfnRanges = (BraveFaithRange[])Enum.GetValues( typeof( BraveFaithRange ) );
+            IList<BraveFaithRange> bfnRanges = Utilities.GetValues<BraveFaithRange>().ToList();
 
             foreach (BraveFaithNeutral bfn in bfnVals)
             {
@@ -367,7 +368,7 @@ namespace FFTPatcher.Datatypes
 
             result.Add( 0x00 );
 
-            LevelRange[] levelRanges = (LevelRange[])Enum.GetValues( typeof( LevelRange ) );
+            IList<LevelRange> levelRanges = Utilities.GetValues<LevelRange>().ToList();
             foreach (BraveFaithNeutral bfn in bfnVals)
             {
                 foreach (LevelRange range in levelRanges)
