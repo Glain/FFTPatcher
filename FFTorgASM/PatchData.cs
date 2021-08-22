@@ -25,7 +25,7 @@ namespace FFTorgASM
         public List<AsmPatch> AllPatches = new List<AsmPatch>();
         public List<AsmPatch> AllShownPatches = new List<AsmPatch>();
         public HashSet<AsmPatch> SelectedPatches = new HashSet<AsmPatch>();
-        public List<AsmPatch> CurrentSelectedPatches = new List<AsmPatch>();
+        //public List<AsmPatch> CurrentSelectedPatches = new List<AsmPatch>();
         public bool[] LoadedCorrectly;
         public Color[][] BackgroundColors;
 

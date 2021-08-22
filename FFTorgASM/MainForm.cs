@@ -114,7 +114,7 @@ namespace FFTorgASM
             foreach (AsmPatch patch in patchData.FilePatches[index].Patches)
                 patchData.SelectedPatches.Remove(patch);
 
-            patchData.CurrentSelectedPatches.Clear();
+            //patchData.CurrentSelectedPatches.Clear();
             
             patchData.ReloadFile(index, asmUtility);
             patchData.RebuildAllList();
@@ -214,7 +214,8 @@ namespace FFTorgASM
 
         private void SavePatchXML()
         {
-            List<AsmPatch> patches = GetCurrentFileSelectedPatches();
+            //List<AsmPatch> patches = GetCurrentFileSelectedPatches();
+            List<AsmPatch> patches = GetAllSelectedPatches();
             foreach (AsmPatch patch in patches)
             {
                 patch.Update(asmUtility);
@@ -256,9 +257,19 @@ namespace FFTorgASM
 
         private List<AsmPatch> GetCurrentFileSelectedPatches()
         {
-            List<AsmPatch> resultList = new List<AsmPatch>();
             int selectedFileIndex = lsb_FilesList.SelectedIndex;
             List<AsmPatch> asmPatchList = (selectedFileIndex <= 0) ? patchData.AllShownPatches : patchData.FilePatches[selectedFileIndex - 1].Patches;
+            return GetSelectedPatchesFromList(asmPatchList);
+        }
+
+        private List<AsmPatch> GetAllSelectedPatches()
+        {
+            return GetSelectedPatchesFromList(patchData.AllShownPatches);
+        }
+
+        private List<AsmPatch> GetSelectedPatchesFromList(List<AsmPatch> asmPatchList)
+        {
+            List<AsmPatch> resultList = new List<AsmPatch>();
 
             foreach (AsmPatch patch in asmPatchList)
             {
@@ -289,7 +300,7 @@ namespace FFTorgASM
                 clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
             }
 
-            patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
+            //patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
 
             skipCheckEventHandler = true;
             for (int index = 0; index < clb_Patches.Items.Count; index++)
@@ -300,7 +311,8 @@ namespace FFTorgASM
 
             skipCheckEventHandler = false;
 
-            bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            //bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            bool enablePatchButtons = (patchData.SelectedPatches.Count > 0);
             btnPatch.Enabled = enablePatchButtons;
             btnPatchSaveState.Enabled = enablePatchButtons;
         }
@@ -438,8 +450,9 @@ namespace FFTorgASM
                     patchData.SelectedPatches.Remove(asmPatch);
             }
 
-            patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
-            bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            //patchData.CurrentSelectedPatches = GetCurrentFileSelectedPatches();
+            //bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
+            bool enablePatchButtons = (patchData.SelectedPatches.Count > 0);
             btnPatch.Enabled = enablePatchButtons;
             btnPatchSaveState.Enabled = enablePatchButtons;
         }
@@ -452,7 +465,9 @@ namespace FFTorgASM
             {
                 using (Stream file = File.Open(saveFileDialog1.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
-                    foreach ( AsmPatch patch in clb_Patches.CheckedItems )
+                    List<AsmPatch> patches = GetAllSelectedPatches();
+                    //foreach ( AsmPatch patch in clb_Patches.CheckedItems )
+                    foreach (AsmPatch patch in patches)
                     {
                         //ModifyPatch(patch);
                         patch.Update(asmUtility);
@@ -477,7 +492,10 @@ namespace FFTorgASM
                 using (BinaryReader reader = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
                 {
                     List<PatchedByteArray> patches = new List<PatchedByteArray>();
-                    foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
+                    List<AsmPatch> asmPatches = GetAllSelectedPatches();
+
+                    //foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
+                    foreach (AsmPatch asmPatch in asmPatches)
                     {
                         //ModifyPatch(asmPatch);
                         asmPatch.Update(asmUtility);

@@ -556,7 +556,7 @@ namespace FFTorgASM
 
             if (!string.IsNullOrEmpty(Description))
             {
-                sb.AppendFormat("        <Description>{0}</Description>{1}", Description, Environment.NewLine);
+                sb.AppendFormat("        <Description>    {0}    </Description>{1}", Description, Environment.NewLine);
             }
 
             sb.Append(PatcherLib.Utilities.Utilities.CreatePatchXML(innerList));
