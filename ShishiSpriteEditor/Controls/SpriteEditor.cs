@@ -13,6 +13,42 @@ namespace FFTPatcher.SpriteEditor
 {
     public partial class SpriteEditor : UserControl
     {
+        private static readonly string[] PaletteSpriteNames = {             
+            "Sprite #1",
+            "Sprite #2",
+            "Sprite #3",
+            "Sprite #4",
+            "Sprite #5",
+            "Sprite #6",
+            "Sprite #7",
+            "Sprite #8",
+            "Portrait #1",
+            "Portrait #2",
+            "Portrait #3",
+            "Portrait #4",
+            "Portrait #5",
+            "Portrait #6",
+            "Portrait #7",
+            "Portrait #8"};
+
+        private static readonly string[] PaletteGenericNames = {             
+            "Palette #1",
+            "Palette #2",
+            "Palette #3",
+            "Palette #4",
+            "Palette #5",
+            "Palette #6",
+            "Palette #7",
+            "Palette #8",
+            "Palette #9",
+            "Palette #10",
+            "Palette #11",
+            "Palette #12",
+            "Palette #13",
+            "Palette #14",
+            "Palette #15",
+            "Palette #16"};
+
         public Sprite Sprite { get; private set;}
 
         public AbstractSprite AbstractSprite { get; private set; }
@@ -24,6 +60,8 @@ namespace FFTPatcher.SpriteEditor
         {
             get { return paletteIndex; }
         }
+
+        private bool isUsingGenericNames = false;
 
         public bool ImportExport8Bpp 
         {
@@ -79,6 +117,27 @@ namespace FFTPatcher.SpriteEditor
             }
 
             Enabled = true;
+            ignoreChanges = false;
+        }
+
+        public void UpdatePaletteDropdownNames(bool useGenericNames)
+        {
+            if (isUsingGenericNames != useGenericNames)
+            {
+                isUsingGenericNames = useGenericNames;
+                UpdatePaletteDropdownNames(useGenericNames ? PaletteGenericNames : PaletteSpriteNames);
+            }
+        }
+
+        private void UpdatePaletteDropdownNames(string[] names)
+        {
+            int selectedIndex = paletteSelector.SelectedIndex;
+            ignoreChanges = true;
+
+            paletteSelector.Items.Clear();
+            paletteSelector.Items.AddRange(names);
+
+            paletteSelector.SelectedIndex = selectedIndex;
             ignoreChanges = false;
         }
 

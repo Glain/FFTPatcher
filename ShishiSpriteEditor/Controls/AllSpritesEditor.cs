@@ -98,6 +98,9 @@ namespace FFTPatcher.SpriteEditor
             if (sprite != null)
             {
                 spriteEditor1.BindTo(sprite, Sprites.SharedSPRs[sprite], iso);
+                string text = comboBox1.SelectedItem.ToString();
+                bool useGenericNames = ((text == "WEP1") || (text == "WEP2") || (text == "EFF1") || (text == "EFF2") || (text == "TRAP1"));
+                spriteEditor1.UpdatePaletteDropdownNames(useGenericNames);
             }
         }
     }
