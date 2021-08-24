@@ -272,6 +272,7 @@ namespace FFTPatcher.Datatypes
             {
                 bools[i] = reader.ReadElementContentAsBoolean();
             }
+            Array.Reverse(bools);
             PopulateFromBoolsMSB(bools);
             reader.ReadEndElement();
         }
