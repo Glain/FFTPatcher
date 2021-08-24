@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using FFTPatcher.Datatypes;
+using static FFTPatcher.Datatypes.Elements;
 using PatcherLib;
 
 namespace FFTPatcher.Editors
@@ -32,8 +33,6 @@ namespace FFTPatcher.Editors
         #region Instance Variables (4) 
 
         private Elements defaults;
-        private static string[] elementNames = new string[] {
-                "Fire", "Lightning", "Ice", "Wind", "Earth", "Water", "Holy", "Dark" };
         private Elements elements = new Elements(0);
         private bool ignoreChanges = false;
 
@@ -90,7 +89,7 @@ namespace FFTPatcher.Editors
             elementsCheckedListBox.SuspendLayout();
 
             ignoreChanges = true;
-            elementsCheckedListBox.SetValuesAndDefaults(ReflectionHelpers.GetFieldsOrProperties<bool>(elements, elementNames), ReflectionHelpers.GetFieldsOrProperties<bool>(defaults, elementNames));
+            elementsCheckedListBox.SetValuesAndDefaults(elements.ToBoolArray(), defaults.ToBoolArray());
             ignoreChanges = false;
 
             elementsCheckedListBox.ResumeLayout();
@@ -102,17 +101,6 @@ namespace FFTPatcher.Editors
 
         private class ElementsCheckedListBox : CheckedListBox
         {
-            private enum Elements
-            {
-                Fire,
-                Lightning,
-                Ice,
-                Wind,
-                Earth,
-                Water,
-                Holy,
-                Dark
-            }
             public bool[] Defaults { get; private set; }
             public ElementsCheckedListBox()
                 : base()
@@ -160,37 +148,37 @@ namespace FFTPatcher.Editors
                 Brush backColorBrush = Brushes.White;
                 Brush foreColorBrush = Brushes.Black;
 
-                switch ((Elements)e.Index)
+                switch ((Element)e.Index)
                 {
-                    case Elements.Fire:
+                    case Element.Fire:
                         backColorBrush = Brushes.Red;
                         foreColorBrush = Brushes.White;
                         break;
-                    case Elements.Lightning:
+                    case Element.Lightning:
                         backColorBrush = Brushes.Purple; // TODO: find a better color
                         foreColorBrush = Brushes.White;
                         break;
-                    case Elements.Ice:
+                    case Element.Ice:
                         backColorBrush = Brushes.LightCyan;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Wind:
+                    case Element.Wind:
                         backColorBrush = Brushes.Yellow;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Earth:
+                    case Element.Earth:
                         backColorBrush = Brushes.Green;
                         foreColorBrush = Brushes.White;
                         break;
-                    case Elements.Water:
+                    case Element.Water:
                         backColorBrush = Brushes.LightBlue;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Holy:
+                    case Element.Holy:
                         backColorBrush = Brushes.White;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Dark:
+                    case Element.Dark:
                         backColorBrush = Brushes.Black;
                         foreColorBrush = Brushes.White;
                         break;

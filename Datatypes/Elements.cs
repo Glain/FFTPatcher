@@ -36,6 +36,7 @@ namespace FFTPatcher.Datatypes
         Holy = 6,
         Dark = 7,
     }
+    //Try to find a way to combine this with `Elements`.
     public enum ElementFlags : byte
     {
         Fire = 1,
@@ -64,9 +65,11 @@ namespace FFTPatcher.Datatypes
             [Element.Holy] = "Holy",
             [Element.Dark] = "Dark",
         };
-        private static readonly IList<string> elementNames = Utilities.GetValues<Element>()
-                                                                      .Select(el => Strings[el])
-                                                                      .ToList();
+        private static readonly IList<string> elementNames =
+            Utilities.GetValues<Element>()
+                .Select(el => Strings[el])
+                .ToList()
+                .AsReadOnly();
 
 
         #endregion Instance Variables 
