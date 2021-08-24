@@ -324,7 +324,7 @@ namespace PatcherLib.Utilities
         }
 
         /// <summary>
-        /// Builds a byte from the passed booleans.
+        /// Builds a byte from the passed booleans, with most-significant bit first.
         /// </summary>
         public static byte ByteFromBooleans( bool msb, bool six, bool five, bool four, bool three, bool two, bool one, bool lsb )
         {

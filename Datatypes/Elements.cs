@@ -25,6 +25,10 @@ using System.Linq;
 
 namespace FFTPatcher.Datatypes
 {
+    /// <summary>
+    /// 
+    /// Note: This order is reversed from the in-game order.
+    /// </summary>
     public enum Element
     {
         Fire = 0,
@@ -37,6 +41,11 @@ namespace FFTPatcher.Datatypes
         Dark = 7,
     }
     //Try to find a way to combine this with `Elements`.
+    /// <summary>
+    /// 
+    /// Note: Order should be matched with FFTPatcher.Datatypes.Element.
+    /// </summary>
+    [Flags]
     public enum ElementFlags : byte
     {
         Fire = 1,
@@ -54,7 +63,7 @@ namespace FFTPatcher.Datatypes
         #region Instance Variables (1) 
 
         //TODO: Read this from XML file?
-        private static readonly IDictionary<Element, string> Strings = new Dictionary<Element, string>
+        public static IDictionary<Element, string> ElementNames = new Dictionary<Element, string>
         {
             [Element.Fire] = "Fire",
             [Element.Lightning] = "Lightning",
@@ -65,44 +74,96 @@ namespace FFTPatcher.Datatypes
             [Element.Holy] = "Holy",
             [Element.Dark] = "Dark",
         };
-        private static readonly IList<string> elementNames =
-            Utilities.GetValues<Element>()
-                .Select(el => Strings[el])
-                .ToList()
-                .AsReadOnly();
-
+        /// <summary>
+        /// Properties of the class for digest purposes.
+        /// Order matters.
+        /// </summary>
+        private static readonly string[] propertyNames = {
+            "Fire",
+            "Lightning",
+            "Ice",
+            "Wind",
+            "Earth",
+            "Water",
+            "Holy",
+            "Dark",
+        };
 
         #endregion Instance Variables 
 
         #region Public Properties (11) 
 
-        public bool Dark { get; set; }
+        public ElementFlags Flags { get; set; }
+        public bool this[Element e]
+        {
+            get => ((int)Flags & (1 << (int)e)) != 0;
+            set
+            {
+                if (this[e] != value)  //Just toggle if off.
+                    Flags = (ElementFlags)((int)Flags ^ (1 << (int)e));
+            }
+        }
+
+        public bool Fire
+        {
+            get => this[Element.Fire];
+            set => this[Element.Fire] = value;
+        }
+
+        public bool Lightning
+        {
+            get => this[Element.Lightning];
+            set => this[Element.Lightning] = value;
+        }
+
+        public bool Ice
+        {
+            get => this[Element.Ice];
+            set => this[Element.Ice] = value;
+        }
+
+        public bool Wind
+        {
+            get => this[Element.Wind];
+            set => this[Element.Wind] = value;
+        }
+
+        public bool Earth
+        {
+            get => this[Element.Earth];
+            set => this[Element.Earth] = value;
+        }
+
+        public bool Water
+        {
+            get => this[Element.Water];
+            set => this[Element.Water] = value;
+        }
+
+        public bool Holy
+        {
+            get => this[Element.Holy];
+            set => this[Element.Holy] = value;
+        }
+
+        public bool Dark
+        {
+            get => this[Element.Dark];
+            set => this[Element.Dark] = value;
+        }
 
         public Elements Default { get; set; }
 
         public IList<string> DigestableProperties
         {
-            get { return elementNames; }
+            get { return propertyNames; }
         }
 
-        public bool Earth { get; set; }
-
-        public bool Fire { get; set; }
 
         public bool HasChanged
         {
             get { return !Equals(Default); }
         }
-
-        public bool Holy { get; set; }
-
-        public bool Ice { get; set; }
-
-        public bool Lightning { get; set; }
-
-        public bool Water { get; set; }
-
-        public bool Wind { get; set; }
 
         #endregion Public Properties 
 
@@ -110,14 +171,14 @@ namespace FFTPatcher.Datatypes
 
         public Elements(byte b)
         {
-            PopulateFromBools(PatcherLib.Utilities.Utilities.BooleansFromByte(b));
+            PopulateFromBoolsMSB(PatcherLib.Utilities.Utilities.BooleansFromByte(b));
         }
 
         internal Elements()
         {
         }
 
-        private void PopulateFromBools(IList<bool> bools)
+        private void PopulateFromBoolsMSB(IList<bool> bools)
         {
             System.Diagnostics.Debug.Assert(bools.Count == 8);
             Fire = bools[7];
@@ -136,14 +197,8 @@ namespace FFTPatcher.Datatypes
 
         public static void Copy(Elements source, Elements destination)
         {
-            destination.Fire = source.Fire;
-            destination.Lightning = source.Lightning;
-            destination.Ice = source.Ice;
-            destination.Wind = source.Wind;
-            destination.Earth = source.Earth;
-            destination.Water = source.Water;
-            destination.Holy = source.Holy;
-            destination.Dark = source.Dark;
+            destination.Flags = source.Flags;
+            //Doesn't copy Defaults because that'd be recursive?
         }
 
         public void CopyTo(Elements destination)
@@ -153,16 +208,7 @@ namespace FFTPatcher.Datatypes
 
         public bool Equals(Elements other)
         {
-            return
-                other != null &&
-                other.Fire == Fire &&
-                other.Lightning == Lightning &&
-                other.Ice == Ice &&
-                other.Wind == Wind &&
-                other.Earth == Earth &&
-                other.Water == Water &&
-                other.Holy == Holy &&
-                other.Dark == Dark;
+            return other?.Flags == Flags;
         }
 
         public override bool Equals(object obj)
@@ -196,7 +242,7 @@ namespace FFTPatcher.Datatypes
         public override string ToString()
         {
             List<string> strings = new List<string>(8);
-            foreach (string name in elementNames)
+            foreach (string name in propertyNames)
             {
                 if (ReflectionHelpers.GetFieldOrProperty<bool>(this, name))
                 {
@@ -226,7 +272,7 @@ namespace FFTPatcher.Datatypes
             {
                 bools[i] = reader.ReadElementContentAsBoolean();
             }
-            PopulateFromBools(bools);
+            PopulateFromBoolsMSB(bools);
             reader.ReadEndElement();
         }
     }
