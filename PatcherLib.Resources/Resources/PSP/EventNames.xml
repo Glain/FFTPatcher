@@ -397,6 +397,8 @@
 
   <Event value="20E" name="After the Storm - Brigands' Den"/>
 
+  <Event value="211" name="Rendezvous: Introduction" />
+    
   <Event value="226" name="Rendezvous: Chocobo Defense"/>
   <Event value="227" name="Rendezvous: Chicken Race"/>
   <Event value="228" name="Rendezvous: Treasure Hunt"/>
