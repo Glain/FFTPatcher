@@ -66,16 +66,22 @@ namespace FFTPatcher.Datatypes
         /// Properties of the class for digest purposes.
         /// Order matters.
         /// </summary>
-        private static readonly string[] propertyNames = {
-            "Fire",
-            "Lightning",
-            "Ice",
-            "Wind",
-            "Earth",
-            "Water",
-            "Holy",
-            "Dark",
+        private static readonly Element[] elementOrder =
+        {
+            Element.Fire,
+            Element.Lightning,
+            Element.Ice,
+            Element.Wind,
+            Element.Earth,
+            Element.Water,
+            Element.Holy,
+            Element.Dark,
         };
+        private static readonly IList<string> propertyNames =
+            elementOrder
+            .Select(e => e.ToString())
+            .ToList()
+            .AsReadOnly();
 
         #endregion Instance Variables 
 
@@ -141,18 +147,18 @@ namespace FFTPatcher.Datatypes
         }
 
         /// <summary>
+        /// Defaults for this flagset.
+        /// 
         /// This is not really part of the public interface of the class.
         /// It's a cached value, saving details of how this object is used.
         /// It should be annotated as such.
         /// 
-        /// In ideal OOP, it wouldn't be saved in here, but rather saved by its user.
+        /// In ideal OOP, it wouldn't be saved in here, but instead saved by its user.
         /// </summary>
         public Elements Default { get; set; } = null;
 
-        public IList<string> DigestableProperties
-        {
-            get { return propertyNames; }
-        }
+        //Why isn't this static?
+        public IList<string> DigestableProperties { get; } = propertyNames;
 
 
         public bool HasChanged
@@ -236,15 +242,9 @@ namespace FFTPatcher.Datatypes
 
         public override string ToString()
         {
-            List<string> strings = new List<string>(8);
-            foreach (string name in propertyNames)
-            {
-                if (ReflectionHelpers.GetFieldOrProperty<bool>(this, name))
-                {
-                    strings.Add(name);
-                }
-            }
-            return string.Join(" | ", strings.ToArray());
+            bool[] bools = ToBoolArray();
+            var names = propertyNames.Where((name, i) => bools[i]);
+            return string.Join(" | ", names.ToArray());  //Don't need ToArray in newer .NET.
         }
 
         #endregion Public Methods 
@@ -252,10 +252,10 @@ namespace FFTPatcher.Datatypes
         protected override void WriteXml(System.Xml.XmlWriter writer)
         {
             bool[] bools = ToBoolArray();
-            System.Diagnostics.Debug.Assert(bools.Length == DigestableProperties.Count);
+            System.Diagnostics.Debug.Assert(bools.Length == propertyNames.Count);
             for (int i = 0; i < bools.Length; i++)
             {
-                writer.WriteValueElement(DigestableProperties[i], bools[i]);
+                writer.WriteValueElement(propertyNames[i], bools[i]);
             }
         }
 
