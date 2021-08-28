@@ -62,18 +62,6 @@ namespace FFTPatcher.Datatypes
     {
         #region Instance Variables (1) 
 
-        //TODO: Read this from XML file?
-        public static IDictionary<Element, string> ElementNames = new Dictionary<Element, string>
-        {
-            [Element.Fire] = "Fire",
-            [Element.Lightning] = "Lightning",
-            [Element.Ice] = "Ice",
-            [Element.Wind] = "Wind",
-            [Element.Earth] = "Earth",
-            [Element.Water] = "Water",
-            [Element.Holy] = "Holy",
-            [Element.Dark] = "Dark",
-        };
         /// <summary>
         /// Properties of the class for digest purposes.
         /// Order matters.
@@ -152,7 +140,14 @@ namespace FFTPatcher.Datatypes
             set => this[Element.Dark] = value;
         }
 
-        public Elements Default { get; set; }
+        /// <summary>
+        /// This is not really part of the public interface of the class.
+        /// It's a cached value, saving details of how this object is used.
+        /// It should be annotated as such.
+        /// 
+        /// In ideal OOP, it wouldn't be saved in here, but rather saved by its user.
+        /// </summary>
+        public Elements Default { get; set; } = null;
 
         public IList<string> DigestableProperties
         {
@@ -198,7 +193,7 @@ namespace FFTPatcher.Datatypes
         public static void Copy(Elements source, Elements destination)
         {
             destination.Flags = source.Flags;
-            //Doesn't copy Defaults because that'd be recursive?
+            //Note that it doesn't copy Defaults.
         }
 
         public void CopyTo(Elements destination)
