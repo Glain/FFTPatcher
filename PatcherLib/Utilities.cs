@@ -463,9 +463,9 @@ namespace PatcherLib.Utilities
         /// </summary>
         /// <typeparam name="TEnum"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<TEnum> GetValues<TEnum>()
+        public static TEnum[] GetValues<TEnum>()
         {
-            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToArray();
         }
 
         public static string[] GetEnumNames<T>()
