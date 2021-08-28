@@ -69,15 +69,7 @@ namespace FFTPatcher.Editors
             // 
             this.elementsCheckedListBox.CheckOnClick = true;
             this.elementsCheckedListBox.FormattingEnabled = true;
-            this.elementsCheckedListBox.Items.AddRange(new object[] {
-            "Fire",
-            "Lightning",
-            "Ice",
-            "Wind",
-            "Earth",
-            "Water",
-            "Holy",
-            "Dark"});
+            this.elementsCheckedListBox.Items.AddRange(elementNames);
             this.elementsCheckedListBox.Location = new System.Drawing.Point(6, 19);
             this.elementsCheckedListBox.Name = "elementsCheckedListBox";
             this.elementsCheckedListBox.Size = new System.Drawing.Size(82, 124);

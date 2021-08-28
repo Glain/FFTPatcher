@@ -19,11 +19,9 @@
 
 using System.Collections.Generic;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using FFTPatcher.Datatypes;
-using static FFTPatcher.Datatypes.Elements;
 using PatcherLib;
 
 namespace FFTPatcher.Editors
@@ -35,6 +33,19 @@ namespace FFTPatcher.Editors
         private Elements defaults;
         private Elements elements = new Elements(0);
         private bool ignoreChanges = false;
+
+        //Order matters. elementNames[(int)Element.Fire] should be the name of Fire.
+        //However, each name should now be modifiable without causing issues.
+        //  You can change Fire to "Faiya!" and it will use the index instead of the name.
+        private readonly string[] elementNames = new string[] {
+            "Fire",
+            "Lightning",
+            "Ice",
+            "Wind",
+            "Earth",
+            "Water",
+            "Holy",
+            "Dark"};
 
         #endregion Instance Variables 
 
@@ -76,9 +87,8 @@ namespace FFTPatcher.Editors
         {
             if (!ignoreChanges)
             {
-                string s = elementsCheckedListBox.Items[e.Index].ToString();
-                PropertyInfo pi = elements.GetType().GetProperty(s);
-                pi.SetValue(elements, e.NewValue == CheckState.Checked, null);
+                var el = (Element)e.Index;
+                elements[el] = e.NewValue == CheckState.Checked;
                 OnDataChanged(this, System.EventArgs.Empty);
             }
         }
