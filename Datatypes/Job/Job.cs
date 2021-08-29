@@ -36,10 +36,14 @@ namespace FFTPatcher.Datatypes
             {
                 if (_pspJobs == null)
                 {
-                    _pspJobs = new Job[0xAA];
-                    for (int i = 0; i < 0xAA; i++)
+                    _pspJobs = new Job[0x100];
+                    for (int i = 0; i < 0xA9; i++)
                     {
                         _pspJobs[i] = new Job((byte)i, PSPNames[i]);
+                    }
+                    for (int i = 0xA9; i < 0x100; i++)
+                    {
+                        _pspJobs[i] = new Job((byte)i, "");
                     }
                 }
 
@@ -54,10 +58,14 @@ namespace FFTPatcher.Datatypes
             {
                 if (_psxJobs == null)
                 {
-                    _psxJobs = new Job[0xA0];
+                    _psxJobs = new Job[0x100];
                     for (int i = 0; i < 0xA0; i++)
                     {
                         _psxJobs[i] = new Job((byte)i, PSXNames[i]);
+                    }
+                    for (int i = 0xA0; i < 0x100; i++)
+                    {
+                        _psxJobs[i] = new Job((byte)i, "");
                     }
                 }
 
