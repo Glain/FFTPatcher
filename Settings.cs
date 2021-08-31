@@ -46,25 +46,40 @@ namespace FFTPatcher
 
         private static CombinedColor[][] _defaultTeamColors = new CombinedColor[4][] {
             new CombinedColor[3] { 
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White }
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(45, 65, 245), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(75, 125, 245), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(125, 175, 245), ForegroundColor = Color.White }
             },
             new CombinedColor[3] {
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White }
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(205, 35, 30), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(245, 95, 90), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(245, 135, 130), ForegroundColor = Color.White }
             },
             new CombinedColor[3] {
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White }
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(30, 135, 30), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(70, 155, 70), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(110, 175, 110), ForegroundColor = Color.White }
             },
             new CombinedColor[3] {
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White },
-                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(225, 200, 75), ForegroundColor = Color.White }
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(30, 135, 135), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(70, 165, 165), ForegroundColor = Color.White },
+                new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(110, 195, 195), ForegroundColor = Color.White }
             }
+        };
+
+        private static string[] _defaultElementNames = new string[8] {
+            "Fire", "Lightning", "Ice", "Wind", "Earth", "Water", "Holy", "Dark"
+        };
+
+        private static CombinedColor[] _defaultElementColors = new CombinedColor[8] {
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(255, 0, 0), ForegroundColor = Color.White },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(128, 0, 128), ForegroundColor = Color.White },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(224, 255, 255), ForegroundColor = Color.Black },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(255, 255, 0), ForegroundColor = Color.Black },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(0, 128, 0), ForegroundColor = Color.White },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(173, 216, 230), ForegroundColor = Color.Black },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(255, 255, 255), ForegroundColor = Color.Black },
+            new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(0, 0, 0), ForegroundColor = Color.White },
         };
 
         private CombinedColor _modifiedColor;
@@ -109,6 +124,24 @@ namespace FFTPatcher
             return GetSettings()._teamColors[teamIndex][colorIndex];
         }
 
+        private string[] _elementNames;
+        public static string[] ElementNames
+        {
+            get
+            {
+                return GetSettings()._elementNames;
+            }
+        }
+
+        private CombinedColor[] _elementColors;
+        public static CombinedColor[] ElementColors
+        {
+            get
+            {
+                return GetSettings()._elementColors;
+            }
+        }
+
         private static XmlDocument GetSettingsXml(string filename = null)
         {
             filename = filename ?? _settingsFilename;
@@ -146,6 +179,10 @@ namespace FFTPatcher
                 instance._duplicateColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//DuplicateColor"), _defaultDuplicateColor);
                 instance._highlightColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//HighlightColor"), _defaultHighlightColor);
                 instance._teamColors = GetTeamColorsFromNode(settingsXml.SelectSingleNode("//TeamColors"), _defaultTeamColors);
+
+                XmlNode elementsNode = settingsXml.SelectSingleNode("//Elements");
+                instance._elementNames = GetElementNamesFromNode(elementsNode, _defaultElementNames);
+                instance._elementColors = GetElementColorsFromNode(elementsNode, _defaultElementColors);
             }
 
             return instance;
@@ -158,7 +195,9 @@ namespace FFTPatcher
                 _unreferencedColor = _defaultUnreferencedColor,
                 _duplicateColor = _defaultDuplicateColor,
                 _highlightColor = _defaultHighlightColor,
-                _teamColors = _defaultTeamColors
+                _teamColors = _defaultTeamColors,
+                _elementNames = _defaultElementNames,
+                _elementColors = _defaultElementColors
             };
         }
 
@@ -218,6 +257,41 @@ namespace FFTPatcher
             return resultTeamColors;
         }
 
+        private static CombinedColor[] GetElementColorsFromNode(XmlNode xmlNode, CombinedColor[] defaultElementColors)
+        {
+            if (xmlNode == null)
+                return defaultElementColors;
+
+            CombinedColor[] resultElementColors = new CombinedColor[defaultElementColors.Length];
+
+            XmlNodeList innerNodes = xmlNode.ChildNodes;
+            int innerNodeCount = innerNodes.Count;
+            for (int index = 0; index < defaultElementColors.Length; index++)
+            {
+                XmlNode innerNode = (index < innerNodeCount) ? xmlNode.ChildNodes[index] : null;
+                resultElementColors[index] = GetCombinedColorFromNode(innerNode, defaultElementColors[index]);
+            }
+
+            return resultElementColors;
+        }
+
+        private static string[] GetElementNamesFromNode(XmlNode node, string[] defaultElementNames)
+        {
+            if (node == null)
+                return defaultElementNames;
+
+            string[] nodeNames = GetNamesFromNode(node);
+            string[] resultNames = new string[defaultElementNames.Length];
+
+            Array.Copy(nodeNames, resultNames, nodeNames.Length);
+            if (nodeNames.Length < resultNames.Length)
+            {
+                Array.Copy(defaultElementNames, nodeNames.Length, resultNames, nodeNames.Length, resultNames.Length - nodeNames.Length); 
+            }
+
+            return resultNames;
+        }
+
         private static CombinedColor GetCombinedColorFromNode(XmlNode xmlNode, CombinedColor defaultColor)
         {
             bool useColor = true;
@@ -257,6 +331,29 @@ namespace FFTPatcher
             }
 
             return Color.FromArgb(redValue, greenValue, blueValue);
+        }
+
+        private static string[] GetNamesFromNode(XmlNode node)
+        {
+            if (node == null)
+                return null;
+            else
+            {
+                XmlNodeList innerNodes = node.ChildNodes;
+                int innerNodeCount = innerNodes.Count;
+                string[] names = new string[innerNodeCount];
+
+                for (int index = 0; index < innerNodeCount; index++)
+                {
+                    XmlNode innerNode = innerNodes[index];
+                    if (innerNode != null)
+                    {
+                        names[index] = GetValueFromAttribute<string>(innerNodes[index].Attributes["Name"]);
+                    }
+                }
+
+                return names;
+            }
         }
 
         private static T GetValueFromAttribute<T>(XmlAttribute attr)

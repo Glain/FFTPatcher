@@ -83,13 +83,12 @@ namespace FFTPatcher
 
         public MainForm(string[] args)
         {
+            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+            //Settings.LoadSettingsXml();
+
             InitializeComponent();
 
             string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".fftpatch");
-            
-            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
-            Settings.LoadSettingsXml();
-
             Text = string.Format("FFTPatcher (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
 
             openMenuItem.Click += openMenuItem_Click;

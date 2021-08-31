@@ -29,17 +29,19 @@ namespace FFTPatcher.Editors
 {
     public partial class ElementsEditor : BaseEditor
     {
-		#region Instance Variables (4) 
+		#region Instance Variables 
 
         private Elements defaults;
-        private static string[] elementNames = new string[] {
-                "Fire", "Lightning", "Ice", "Wind", "Earth", "Water", "Holy", "Dark" };
+        
+        //private static string[] elementNames = new string[] {
+        //        "Fire", "Lightning", "Ice", "Wind", "Earth", "Water", "Holy", "Dark" };
         private Elements elements = new Elements( 0 );
+
         private bool ignoreChanges = false;
 
 		#endregion Instance Variables 
 
-		#region Public Properties (1) 
+		#region Public Properties 
 
         public string GroupBoxText
         {
@@ -59,7 +61,7 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
         public void SetValueAndDefaults( Elements value, Elements defaults )
         {
@@ -71,15 +73,19 @@ namespace FFTPatcher.Editors
 
 		#endregion Public Methods 
 
-		#region Private Methods (2) 
+		#region Private Methods 
 
         private void elementsCheckedListBox_ItemCheck( object sender, ItemCheckEventArgs e )
         {
             if( !ignoreChanges )
             {
-                string s = elementsCheckedListBox.Items[e.Index].ToString();
-                PropertyInfo pi = elements.GetType().GetProperty( s );
-                pi.SetValue( elements, e.NewValue == CheckState.Checked, null );
+                //string s = elementsCheckedListBox.Items[e.Index].ToString();
+                //PropertyInfo pi = elements.GetType().GetProperty( s );
+                //pi.SetValue( elements, e.NewValue == CheckState.Checked, null );
+
+                //elements[e.Index] 
+                byte flag = (byte)(0x80 >> e.Index);
+                elements.SetElementFlagState((Elements.ElementFlags)flag, (e.NewValue == CheckState.Checked));
                 OnDataChanged( this, System.EventArgs.Empty );
             }
         }
@@ -90,18 +96,20 @@ namespace FFTPatcher.Editors
             elementsCheckedListBox.SuspendLayout();
 
             ignoreChanges = true;
-            elementsCheckedListBox.SetValuesAndDefaults( ReflectionHelpers.GetFieldsOrProperties<bool>( elements, elementNames ), ReflectionHelpers.GetFieldsOrProperties<bool>( defaults, elementNames ) );
+            //elementsCheckedListBox.SetValuesAndDefaults( ReflectionHelpers.GetFieldsOrProperties<bool>( elements, elementNames ), ReflectionHelpers.GetFieldsOrProperties<bool>( defaults, elementNames ) );
+            elementsCheckedListBox.SetValuesAndDefaults(elements.ToBoolArray(), defaults.ToBoolArray());
             ignoreChanges = false;
 
             elementsCheckedListBox.ResumeLayout();
             this.ResumeLayout();
         }
 
-		#endregion Private Methods 
+        #endregion Private Methods
 
 
         private class ElementsCheckedListBox : CheckedListBox
         {
+            /*
             private enum Elements
             {
                 Fire,
@@ -113,12 +121,21 @@ namespace FFTPatcher.Editors
                 Holy,
                 Dark
             }
-public bool[] Defaults { get; private set; }
+            */
+
+            private SolidBrush[] elementFGBrushes = null;
+            private SolidBrush[] elementBGBrushes = null;
+
+            public bool[] Defaults { get; private set; }
+            
             public ElementsCheckedListBox()
                 : base()
             {
                 CheckOnClick = true;
+                GetElements();
+                GetBrushes();
             }
+
             public void SetValuesAndDefaults( bool[] values, bool[] defaults )
             {
                 if( (values != null) && (defaults != null) && (this.Defaults == null) )
@@ -155,42 +172,44 @@ public bool[] Defaults { get; private set; }
                     }
                 }
             }
+
             protected override void OnDrawItem( DrawItemEventArgs e )
             {
+                /*
                 Brush backColorBrush = Brushes.White;
                 Brush foreColorBrush = Brushes.Black;
 
-                switch( (Elements)e.Index )
+                switch( (Element)e.Index )
                 {
-                    case Elements.Fire:
+                    case Element.Fire:
                         backColorBrush = Brushes.Red;
                         foreColorBrush = Brushes.White;
                         break;
-                    case Elements.Lightning:
+                    case Element.Lightning:
                         backColorBrush = Brushes.Purple; // TODO: find a better color
                         foreColorBrush = Brushes.White;
                         break;
-                    case Elements.Ice:
+                    case Element.Ice:
                         backColorBrush = Brushes.LightCyan;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Wind:
+                    case Element.Wind:
                         backColorBrush = Brushes.Yellow;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Earth:
+                    case Element.Earth:
                         backColorBrush = Brushes.Green;
                         foreColorBrush = Brushes.White;
                         break;
-                    case Elements.Water:
+                    case Element.Water:
                         backColorBrush = Brushes.LightBlue;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Holy:
+                    case Element.Holy:
                         backColorBrush = Brushes.White;
                         foreColorBrush = Brushes.Black;
                         break;
-                    case Elements.Dark:
+                    case Element.Dark:
                         backColorBrush = Brushes.Black;
                         foreColorBrush = Brushes.White;
                         break;
@@ -198,6 +217,10 @@ public bool[] Defaults { get; private set; }
                         // empty
                         break;
                 }
+                */
+
+                Brush backColorBrush = (e.Index < elementBGBrushes.Length ? elementBGBrushes[e.Index] : Brushes.White);
+                Brush foreColorBrush = (e.Index < elementFGBrushes.Length ? elementFGBrushes[e.Index] : Brushes.Black);
 
                 e.Graphics.FillRectangle( backColorBrush, e.Bounds );
                 CheckBoxState state = this.GetItemChecked( e.Index ) ? CheckBoxState.CheckedNormal : CheckBoxState.UncheckedNormal;
@@ -222,6 +245,27 @@ public bool[] Defaults { get; private set; }
                     }
                 }
             }
+
+            private void GetElements()
+            {
+                Items.AddRange(Settings.ElementNames);
+            }
+
+            private void GetBrushes()
+            {
+                Settings.CombinedColor[] colors = Settings.ElementColors;
+
+                int colorLength = colors.Length;
+                elementFGBrushes = new SolidBrush[colorLength];
+                elementBGBrushes = new SolidBrush[colorLength];
+
+                for (int index = 0; index < colors.Length; index++)
+                {
+                    elementBGBrushes[index] = new SolidBrush(colors[index].BackgroundColor);
+                    elementFGBrushes[index] = new SolidBrush(colors[index].ForegroundColor);
+                }
+            }
+
             protected override void OnKeyDown( KeyEventArgs e )
             {
                 SetValuesAndDefaults( Defaults, Defaults );

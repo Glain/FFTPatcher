@@ -32,6 +32,41 @@
         <BackgroundColor Red="225" Green="200" Blue="75" />
         <ForegroundColor Red="255" Green="255" Blue="255" />
     </HighlightColor>
+
+    <Elements>
+        <Element Name="Fire">
+            <BackgroundColor Red="255" Green="0" Blue="0" />
+            <ForegroundColor Red="255" Green="255" Blue="255" />
+        </Element>
+        <Element Name="Lightning">
+            <BackgroundColor Red="128" Green="0" Blue="128" />
+            <ForegroundColor Red="255" Green="255" Blue="255" />
+        </Element>
+        <Element Name="Ice">
+            <BackgroundColor Red="224" Green="255" Blue="255" />
+            <ForegroundColor Red="0" Green="0" Blue="0" />
+        </Element>
+        <Element Name="Wind">
+            <BackgroundColor Red="255" Green="255" Blue="0" />
+            <ForegroundColor Red="0" Green="0" Blue="0" />
+        </Element>
+        <Element Name="Earth">
+            <BackgroundColor Red="0" Green="128" Blue="0" />
+            <ForegroundColor Red="255" Green="255" Blue="255" />
+        </Element>
+        <Element Name="Water">
+            <BackgroundColor Red="173" Green="216" Blue="230" />
+            <ForegroundColor Red="0" Green="0" Blue="0" />
+        </Element>
+        <Element Name="Holy">
+            <BackgroundColor Red="255" Green="255" Blue="255" />
+            <ForegroundColor Red="0" Green="0" Blue="0" />
+        </Element>
+        <Element Name="Dark">
+            <BackgroundColor Red="0" Green="0" Blue="0" />
+            <ForegroundColor Red="255" Green="255" Blue="255" />
+        </Element>
+    </Elements>
     
     <!-- Color order for Team Colors is {Selected, Always Present, Not Always Present}. Teams are in the same order as in the ENTD tab: { Blue, Red, Green, LightBlue } -->
     <TeamColors Use="true">
