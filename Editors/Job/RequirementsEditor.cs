@@ -108,13 +108,40 @@ namespace FFTPatcher.Editors
                     (dataGridView1.Rows[e.RowIndex].DataBoundItem is Requirements) )
                 {
                     Requirements reqs = dataGridView1.Rows[e.RowIndex].DataBoundItem as Requirements;
+
                     if( reqs.Default != null )
                     {
-                        int a = ReflectionHelpers.GetFieldOrProperty<int>( reqs.Default, dataGridView1.Columns[e.ColumnIndex].DataPropertyName );
-                        if( (int)e.Value != a )
+                        int defaultValue = ReflectionHelpers.GetFieldOrProperty<int>( reqs.Default, dataGridView1.Columns[e.ColumnIndex].DataPropertyName );
+                        int value = (int)(e.Value);
+
+                        if ((dataGridView1.CurrentCell == dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]) && (Settings.HighlightColor.UseColor))
+                        {
+                            e.CellStyle.BackColor = Settings.HighlightColor.BackgroundColor;
+                            e.CellStyle.ForeColor = Settings.HighlightColor.ForegroundColor;
+                        }
+                        else if (value != defaultValue)
                         {
                             e.CellStyle.BackColor = Settings.ModifiedColor.BackgroundColor;
                             e.CellStyle.ForeColor = Settings.ModifiedColor.ForegroundColor;
+                        }
+                        else if (value == 0)
+                        {
+                            int colorValue = 190;
+                            e.CellStyle.BackColor = Color.FromArgb(colorValue, colorValue, colorValue);
+                        }
+                        else
+                        {
+                            //int colorValue = Math.Min(255 - ((8 - value) * 6), 255);
+                            //int colorValue = Math.Min(223 + (value * 4), 255);
+                            //int addendValue = (value * 6);
+                            //int redValue = Math.Min(200 + addendValue, 255);
+                            //int otherValue = Math.Max(200 - addendValue, 150);
+                            //e.CellStyle.BackColor = Color.White;
+                            int redValue = 255;
+                            int otherValue = redValue - (value * 8);
+                            e.CellStyle.BackColor = Color.FromArgb(redValue, otherValue, otherValue);
+                            //e.CellStyle.BackColor = Color.FromArgb(colorValue, colorValue, colorValue);
+                            e.CellStyle.ForeColor = Color.Black;
                         }
                     }
                 }
