@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -16,6 +17,8 @@ namespace PatcherLib.Controls
             get { return _includePrefix; }
             set { _includePrefix = value; }
         }
+
+        private bool AuthorizeCheck { get; set; }
 
         protected override void OnEnter(EventArgs e)
         {
@@ -63,6 +66,39 @@ namespace PatcherLib.Controls
             }
 
             base.WndProc(ref m);
+        }
+
+        protected override void OnItemCheck(ItemCheckEventArgs e)
+        {
+            if (!AuthorizeCheck)
+            {
+                e.NewValue = e.CurrentValue;
+            }
+            else
+            {
+                base.OnItemCheck(e);
+            }
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            Point loc = PointToClient(Cursor.Position);
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Rectangle rec = GetItemRectangle(i);
+                rec.X = 1;
+                rec.Width = 13;
+
+                if (rec.Contains(loc))
+                {
+                    AuthorizeCheck = true;
+                    SetItemChecked(i, !GetItemChecked(i));
+                    AuthorizeCheck = false;
+                    break;
+                }
+            }
         }
 
         private void SelectFirstItemMatching(string selectionText)
