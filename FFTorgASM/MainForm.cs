@@ -43,68 +43,12 @@ namespace FFTorgASM
             clb_Patches.SelectedIndexChanged += new EventHandler( clb_Patches_SelectedIndexChanged );
             variableSpinner.ValueChanged += new EventHandler( variableSpinner_ValueChanged );
             variableComboBox.SelectedIndexChanged += new EventHandler(variableComboBox_SelectedIndexChanged);
-
-            //lsb_FilesList.Scrollable = true;
-            //lsb_FilesList.View = View.List;
-            //lsb_FilesList.HeaderStyle = ColumnHeaderStyle.None;
-            //lsb_FilesList.Columns.Add("", -2, HorizontalAlignment.Left);
         }
 
         private void UpdateVariable(VariableType variable, UInt32 newValue)
         {
             AsmPatch.UpdateVariable(variable, newValue);
         }
-
-        /*
-        private void UpdateVariable(VariableType variable, UInt32 newValue)
-        {
-            for (int i = 0; i < variable.numBytes; i++)
-            {
-                byte byteValue = (byte)((newValue >> (i * 8)) & 0xff);
-                variable.byteArray[i] = byteValue;
-                foreach (PatchedByteArray patchedByteArray in variable.content)
-                {
-                    patchedByteArray.GetBytes()[i] = byteValue;
-                }
-            }
-        }
-
-        private void UpdateReferenceVariableValues(AsmPatch patch)
-        {
-            foreach (VariableType variable in patch.Variables)
-            {
-                if (variable.isReference)
-                    UpdateReferenceVariableValue(variable, patch);
-            }
-        }
-
-        private void UpdateReferenceVariableValue(VariableType variable, AsmPatch patch)
-        {
-            if (variable.isReference)
-            {
-                byte[] referenceBytes = patch.VariableMap[variable.reference.name].byteArray;
-                uint value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
-
-                switch (variable.reference.operatorSymbol)
-                {
-                    case "+":
-                        value += variable.reference.operand;
-                        break;
-                    case "-":
-                        value -= variable.reference.operand;
-                        break;
-                    case "*":
-                        value *= variable.reference.operand;
-                        break;
-                    case "/":
-                        value /= variable.reference.operand;
-                        break;
-                }
-
-                UpdateVariable(variable, value);
-            }
-        }
-        */
 
         private void LoadFile(int index)
         {
@@ -173,44 +117,6 @@ namespace FFTorgASM
             ignoreChanges = true;
             variableComboBox.Visible = false;
         }
-
-        /*
-        private void ModifyPatch(AsmPatch patch)
-        {
-            UpdateReferenceVariableValues(patch);
-            foreach (PatchedByteArray patchedByteArray in patch)
-            {
-                if (patchedByteArray.IsAsm)
-                {
-                    string encodeContent = patchedByteArray.AsmText;
-                    string strPrefix = "";
-                    IList<VariableType> variables = patch.Variables;
-
-                    foreach (PatchedByteArray currentPatchedByteArray in patch)
-                    {
-                        if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
-                            strPrefix += String.Format(".label @{0}, {1}\r\n", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset);
-                    }
-                    foreach (VariableType variable in variables)
-                    {
-                        strPrefix += String.Format(".eqv %{0}, {1}\r\n", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray));
-                    }
-
-                    encodeContent = strPrefix + patchedByteArray.AsmText;
-                    //patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
-
-                    byte[] bytes = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes;
-
-                    if ((!patchedByteArray.IsMoveSimple) && (patch.blockMoveList.Count > 0))
-                    {
-                        bytes = asmUtility.UpdateBlockReferences(bytes, (uint)patchedByteArray.RamOffset, true, patch.blockMoveList);
-                    }
-                    
-                    patchedByteArray.SetBytes(bytes);
-                }
-            }
-        }
-        */
 
         private void SavePatchXML()
         {
