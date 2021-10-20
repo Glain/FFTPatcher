@@ -93,7 +93,7 @@
             this.variableComboBox.FormattingEnabled = true;
             this.variableComboBox.Location = new System.Drawing.Point(12, 601);
             this.variableComboBox.Name = "variableComboBox";
-            this.variableComboBox.Size = new System.Drawing.Size(161, 21);
+            this.variableComboBox.Size = new System.Drawing.Size(208, 21);
             this.variableComboBox.TabIndex = 6;
             this.variableComboBox.Visible = false;
             // 
@@ -242,7 +242,7 @@
             // 
             this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.variableSpinner.Hexadecimal = true;
-            this.variableSpinner.Location = new System.Drawing.Point(179, 602);
+            this.variableSpinner.Location = new System.Drawing.Point(226, 602);
             this.variableSpinner.Name = "variableSpinner";
             this.variableSpinner.Size = new System.Drawing.Size(102, 20);
             this.variableSpinner.TabIndex = 5;

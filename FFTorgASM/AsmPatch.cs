@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
+using System.Text;
+using System.Globalization;
 
 namespace FFTorgASM
 {
@@ -96,6 +98,12 @@ namespace FFTorgASM
 
     public class AsmPatch : IList<PatchedByteArray>
     {
+        public class GetBytesResult
+        {
+            public byte[] Bytes { get; set; }
+            public string ErrorMessage { get; set; }
+        }
+
         List<PatchedByteArray> innerList;
         List<PatchedByteArray> varInnerList;
 
@@ -175,15 +183,22 @@ namespace FFTorgASM
 
         private void CreateVariableMap()
         {
-            VariableMap = new Dictionary<string, VariableType>();
-            foreach (VariableType variable in Variables)
+            VariableMap = CreateVariableMap(Variables);
+        }
+
+        private static Dictionary<string, VariableType> CreateVariableMap(IEnumerable<VariableType> variables)
+        {
+            Dictionary<string, VariableType> resultMap = new Dictionary<string, VariableType>();
+            foreach (VariableType variable in variables)
             {
                 string name = variable.name;
-                if (!VariableMap.ContainsKey(name))
+                if (!resultMap.ContainsKey(name))
                 {
-                    VariableMap.Add(name, variable);
+                    resultMap.Add(name, variable);
                 }
             }
+
+            return resultMap;
         }
 
         public int CountNonReferenceVariables()
@@ -297,7 +312,7 @@ namespace FFTorgASM
             {
                 if (patchedByteArray.IsAsm)
                 {
-                    string encodeContent = patchedByteArray.AsmText;
+                    string encodeContent = patchedByteArray.Text;
                     //string strPrefix = "";
                     //IList<VariableType> variables = Variables;
 
@@ -310,10 +325,10 @@ namespace FFTorgASM
                     foreach (VariableType variable in Variables)
                     {
                         sbPrefix.AppendFormat(".eqv %{0}, {1}{2}", ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""),
-                            AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine);
+                            Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine);
                     }
 
-                    encodeContent = sbPrefix.ToString() + patchedByteArray.AsmText;
+                    encodeContent = sbPrefix.ToString() + patchedByteArray.Text;
                     //patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
 
                     byte[] bytes = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes;
@@ -324,6 +339,11 @@ namespace FFTorgASM
                     }
 
                     patchedByteArray.SetBytes(bytes);
+                }
+                else
+                {
+                    GetBytesResult result = GetBytes(patchedByteArray.Text, (uint)patchedByteArray.RamOffset);
+                    patchedByteArray.SetBytes(result.Bytes);
                 }
             }
         }
@@ -342,7 +362,7 @@ namespace FFTorgASM
             if (variable.isReference)
             {
                 byte[] referenceBytes = VariableMap[variable.reference.name].byteArray;
-                uint value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
+                uint value = Utilities.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
 
                 switch (variable.reference.operatorSymbol)
                 {
@@ -594,17 +614,186 @@ namespace FFTorgASM
             return sb.ToString();
         }
 
-		// Returns combined value of byte array (little endian)
-		public static UInt32 GetUnsignedByteArrayValue_LittleEndian(Byte[] bytes)
+        public GetBytesResult GetBytes(string byteText, uint pc)
         {
-			UInt32 result = 0;
-			int i = 0;
-			foreach (Byte currentByte in bytes)
-			{
-				result = result | ((uint)(currentByte << (i * 8)));
-				i++;
-			}
-			return result;
+            return GetBytes(byteText, pc, VariableMap);
+        }
+
+        public static GetBytesResult GetBytes(string byteText, uint pc, IEnumerable<VariableType> variables)
+        {
+            return GetBytes(byteText, pc, CreateVariableMap(variables));
+        }
+
+        public static GetBytesResult GetBytes(string byteText, uint pc, Dictionary<string, VariableType> variableMap)
+        {
+            byteText = ReplaceVariables(byteText, variableMap);
+            return TranslateBytes(byteText, pc, variableMap);
+            //return PatcherLib.Utilities.Utilities.GetBytesFromHexString(byteText);
+        }
+
+        private static string ReplaceVariables(string byteText, Dictionary<string, VariableType> variableMap)
+        {
+            List<string> varKeys = new List<string>(variableMap.Keys);
+            varKeys.Sort((a, b) => a.Length.CompareTo(b.Length));
+            varKeys.Reverse();
+
+            foreach (string varKey in varKeys)
+            {
+                string varText = Utilities.GetUnsignedByteArrayValue_LittleEndian(variableMap[varKey].byteArray).ToString("X");
+                byteText = System.Text.RegularExpressions.Regex.Replace(byteText, System.Text.RegularExpressions.Regex.Escape("%" + varKey), varText.Replace("$", "$$"),
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            }
+
+            return byteText;
+        }
+
+        private static GetBytesResult TranslateBytes(string byteText, uint pc, Dictionary<string, VariableType> variableMap, bool reportErrors = true)
+        {
+            StringBuilder resultTextBuilder = new StringBuilder();
+            StringBuilder errorTextBuilder = new StringBuilder();
+
+            GetBytesResult result = new GetBytesResult();
+
+            List<bool> isSkippingLine = new List<bool>() { false };
+            int ifNestLevel = 0;
+
+            string[] lines = byteText.Split('\n');
+            lines = Utilities.RemoveFromLines(lines, "\r");
+            foreach (string line in lines)
+            {
+                if (string.IsNullOrEmpty(line))
+                    continue;
+
+                string processLine = Utilities.RemoveLeadingSpaces(line);
+                string[] parts = Utilities.SplitLine(processLine);
+
+                string firstPart = parts[0].ToLower().Trim();
+
+                if (firstPart == ".endif")
+                {
+                    if (ifNestLevel == 0)
+                    {
+                        if (reportErrors)
+                            errorTextBuilder.AppendLine("WARNING: No matching .if statement for .endif statement at address 0x" + Utilities.UnsignedToHex_WithLength(pc, 8));
+                    }
+                    else
+                    {
+                        isSkippingLine.RemoveAt(isSkippingLine.Count - 1);
+                        ifNestLevel--;
+                    }
+                }
+                else if (firstPart == ".else")
+                {
+                    if (ifNestLevel == 0)
+                    {
+                        if (reportErrors)
+                            errorTextBuilder.AppendLine("WARNING: No matching .if statement for .else statement at address 0x" + Utilities.UnsignedToHex_WithLength(pc, 8));
+                    }
+                    else if (!isSkippingLine[ifNestLevel - 1])
+                    {
+                        isSkippingLine[ifNestLevel] = !isSkippingLine[ifNestLevel];
+                    }
+                }
+                else if (firstPart == ".if")
+                {
+                    try
+                    {
+                        string[] innerParts = parts[1].Split(',');
+
+                        if (!parts[1].Contains(","))
+                        {
+                            if (reportErrors)
+                                errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + Utilities.UnsignedToHex_WithLength(pc, 8)
+                                    + " inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
+
+                            isSkippingLine.Add(true);
+                            ifNestLevel++;
+                        }
+                        else if (innerParts.Length < 2)
+                        {
+                            if (reportErrors)
+                                errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + Utilities.UnsignedToHex_WithLength(pc, 8) +
+                                    " inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
+
+                            isSkippingLine.Add(true);
+                            ifNestLevel++;
+                        }
+                        else if (isSkippingLine[ifNestLevel])
+                        {
+                            isSkippingLine.Add(true);
+                            ifNestLevel++;
+                        }
+                        else
+                        {
+                            string operation = string.Empty;
+                            string eqvKey, eqvValue;
+
+                            if (innerParts.Length >= 3)
+                            {
+                                operation = Utilities.RemoveSpaces(innerParts[0]);
+                                eqvKey = Utilities.RemoveSpaces(innerParts[1]);
+                                eqvValue = Utilities.RemoveSpaces(innerParts[2]);
+                            }
+                            else
+                            {
+                                operation = "=";
+                                eqvKey = Utilities.RemoveSpaces(innerParts[0]);
+                                eqvValue = Utilities.RemoveSpaces(innerParts[1]);
+                            }
+
+                            int intKey = 0;
+                            int intValue = 0;
+                            bool isKeyInt = int.TryParse(eqvKey, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out intKey);
+                            bool isValueInt = int.TryParse(eqvValue, out intValue);
+                            bool isIntCompare = isKeyInt && isValueInt;
+
+                            bool isPass = false;
+                            switch (operation)
+                            {
+                                case "=":
+                                case "==":
+                                    isPass = eqvKey.Equals(eqvValue);
+                                    break;
+                                case "!=":
+                                case "<>":
+                                    isPass = !eqvKey.Equals(eqvValue);
+                                    break;
+                                case "<":
+                                    isPass = isIntCompare && (intKey < intValue);
+                                    break;
+                                case ">":
+                                    isPass = isIntCompare && (intKey > intValue);
+                                    break;
+                                case "<=":
+                                    isPass = isIntCompare && (intKey <= intValue);
+                                    break;
+                                case ">=":
+                                    isPass = isIntCompare && (intKey >= intValue);
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            isSkippingLine.Add(!isPass);
+                            ifNestLevel++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (reportErrors)
+                            errorTextBuilder.AppendLine("Error on .if statement: " + ex.Message + "\r\n");
+                    }
+                }
+                else if (!isSkippingLine[ifNestLevel])
+                {
+                    resultTextBuilder.AppendLine(line);
+                    pc += (uint)(line.Length / 2);
+                }
+            }
+
+            result.Bytes = Utilities.GetBytesFromHexString(resultTextBuilder.ToString());
+            result.ErrorMessage = errorTextBuilder.ToString();
+            return result;
         }
 
         private class AsmPatchEnumerator : IEnumerator<PatchedByteArray>

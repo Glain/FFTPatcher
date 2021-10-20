@@ -246,7 +246,7 @@ namespace FFTorgASM
                 variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.numBytes) - 1;
                 ignoreChanges = false;
 
-                variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+                variableSpinner.Value = Utilities.GetUnsignedByteArrayValue_LittleEndian(byteArray);
             }
         }
 
@@ -318,7 +318,7 @@ namespace FFTorgASM
 
                     byte[] byteArray = firstNonReferenceVariable.byteArray;
                     variableSpinner.Maximum = (decimal)Math.Pow(256, firstNonReferenceVariable.numBytes) - 1;
-                    variableSpinner.Value = AsmPatch.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+                    variableSpinner.Value = Utilities.GetUnsignedByteArrayValue_LittleEndian(byteArray);
 
                     variableSpinner.Visible = true;
                     ignoreChanges = false;

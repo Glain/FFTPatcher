@@ -796,6 +796,96 @@ namespace PatcherLib.Utilities
             return sb.ToString();
         }
 
+        // Returns a string that is a copy of the original string with spaces removed
+        public static string RemoveSpaces(string str)
+        {
+            List<char> charList = new List<char>();
+
+            foreach (char c in str)
+                if ((c != ' ') && (c != '\t') && (c != '\r'))
+                    charList.Add(c);
+
+            return new string(charList.ToArray());
+        }
+
+        // Returns a string that is a copy of the original string with leading spaces removed
+        public static string RemoveLeadingSpaces(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+
+            if ((str[0] != ' ') && (str[0] != '\t'))
+                return str;
+
+            int startIndex = 0;
+            for (; ((startIndex < str.Length) && ((str[startIndex] == ' ') || (str[startIndex] == '\t'))); startIndex++) ;
+
+            if (startIndex == str.Length)
+                return "";
+
+            return str.Substring(startIndex, str.Length - startIndex);
+        }
+
+        public static string[] SplitLine(string processLine)
+        {
+            // Split the line into parts based on the first space
+            int spaceIndex = processLine.IndexOf(' ');
+            int tabIndex = processLine.IndexOf('\t');
+            if (((tabIndex >= 0) && (tabIndex < spaceIndex)) || (spaceIndex < 0))
+                spaceIndex = tabIndex;
+
+            string[] parts = new string[2];
+
+            if (spaceIndex > -1)
+                parts[0] = processLine.Substring(0, spaceIndex);
+            else
+                parts[0] = processLine;
+
+            if ((processLine.Length > spaceIndex) && (spaceIndex > -1))
+                parts[1] = processLine.Substring(spaceIndex + 1, processLine.Length - spaceIndex - 1);
+
+            return parts;
+        }
+
+        public static string[] RemoveFromLines(string[] lines, string str)
+        {
+            List<string> result = new List<string>();
+            foreach (string line in lines)
+            {
+                string newLine = line.Replace("\r", "");
+                result.Add(newLine);
+            }
+            return result.ToArray();
+        }
+
+        public static string AddLeadingZeroes(string str, int reqLength)
+        {
+            return str.PadLeft(reqLength, '0');
+        }
+
+        public static string UnsignedToHex(uint num)
+        {
+            return Convert.ToString(num, 16);
+        }
+
+        public static string UnsignedToHex_WithLength(uint num, int reqLength)
+        {
+            return AddLeadingZeroes(UnsignedToHex(num), reqLength);
+        }
+
+        // Returns combined value of byte array (little endian)
+        public static UInt32 GetUnsignedByteArrayValue_LittleEndian(Byte[] bytes)
+        {
+            UInt32 result = 0;
+            int i = 0;
+            foreach (Byte currentByte in bytes)
+            {
+                result = result | ((uint)(currentByte << (i * 8)));
+                i++;
+            }
+            return result;
+        }
+
         public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
         {
             if (file.FindEntry(entry, false) == -1)

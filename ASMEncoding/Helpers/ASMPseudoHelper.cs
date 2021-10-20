@@ -371,7 +371,7 @@ namespace ASMEncoding.Helpers
                         if (!parts[1].Contains(","))
                         {
                             if (reportErrors)
-                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) 
+                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8)
                                     + " inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
 
                             isSkippingLine.Add(true);
@@ -380,7 +380,7 @@ namespace ASMEncoding.Helpers
                         else if (innerParts.Length < 2)
                         {
                             if (reportErrors)
-                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) + 
+                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) +
                                     " inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
 
                             isSkippingLine.Add(true);
@@ -452,40 +452,42 @@ namespace ASMEncoding.Helpers
                             _errorTextBuilder.AppendLine("Error on .if statement: " + ex.Message + "\r\n");
                     }
                 }
-				
-				// If this is an ASM command, pass off line to translating routine
-                EncodingFormat encodingOrNull = FormatHelper.FindFormatByCommand(parts[0]);
-				if (encodingOrNull != null)
-				{
-					try
-					{
-                        if (!isSkippingLine[ifNestLevel])
+                else
+                {
+                    // If this is an ASM command, pass off line to translating routine
+                    EncodingFormat encodingOrNull = FormatHelper.FindFormatByCommand(parts[0]);
+                    if (encodingOrNull != null)
+                    {
+                        try
                         {
-                            EncodingFormat encoding = encodingOrNull;
-                            EncodeLine[] encodeLines = TranslatePseudoSingle(encoding, parts, index, pc, skipLabelAssertion);
-                            foreach (EncodeLine encodeLine in encodeLines)
+                            if (!isSkippingLine[ifNestLevel])
                             {
-                                resultLines.Add(encodeLine);
-                                pc += 4;
-                            }
+                                EncodingFormat encoding = encodingOrNull;
+                                EncodeLine[] encodeLines = TranslatePseudoSingle(encoding, parts, index, pc, skipLabelAssertion);
+                                foreach (EncodeLine encodeLine in encodeLines)
+                                {
+                                    resultLines.Add(encodeLine);
+                                    pc += 4;
+                                }
 
+                                //index++;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (reportErrors)
+                            {
+                                //result.errorMessage = "Error translating pseudoinstruction: " + line;
+                                _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
+                            }
+                            //result.lines = null;
+                            //return result;
                             //index++;
                         }
-					}
-					catch (Exception ex)
-					{
-                        if (reportErrors)
-                        {
-                            //result.errorMessage = "Error translating pseudoinstruction: " + line;
-                            _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
-                        }
-						//result.lines = null;
-                        //return result;
-                        //index++;
-					}
-					
-					index++;
-				}
+
+                        index++;
+                    }
+                }
 			}
 
             result.lines = resultLines.ToArray();

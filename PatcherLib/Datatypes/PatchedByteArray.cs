@@ -160,7 +160,7 @@ namespace PatcherLib.Datatypes
         public bool IsCheckedAsm { get; set; }
         public bool IsSequentialOffset { get; set; }
         public bool IsMoveSimple { get; set; }
-        public string AsmText { get; set; }
+        public string Text { get; set; }
         public long RamOffset { get; set; }
         public string ErrorText { get; set; }
         public string Label { get; set; }
@@ -296,7 +296,7 @@ namespace PatcherLib.Datatypes
             result.IsCheckedAsm = IsCheckedAsm;
             result.IsSequentialOffset = IsSequentialOffset;
             result.IsMoveSimple = IsMoveSimple;
-            result.AsmText = AsmText;
+            result.Text = Text;
             result.RamOffset = RamOffset;
             result.ErrorText = ErrorText;
             result.Label = Label;

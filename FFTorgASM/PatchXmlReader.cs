@@ -308,7 +308,7 @@ namespace FFTorgASM
                         foreach (VariableType variable in variables)
                         {
                             sbPrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), 
-                                AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
+                                PatcherLib.Utilities.Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
                         }
 
                         encodeContent = sbPrefix.ToString() + content;
@@ -319,7 +319,9 @@ namespace FFTorgASM
                     }
                     else
                     {
-                        bytes = GetBytes(content);
+                        AsmPatch.GetBytesResult result = AsmPatch.GetBytes(content, ramOffset, variables);
+                        bytes = result.Bytes;
+                        errorText = result.ErrorMessage;
                     }
 
                     /*
@@ -354,7 +356,8 @@ namespace FFTorgASM
                     patchedByteArray.IsCheckedAsm = false; // isCheckedAsm;
                     patchedByteArray.IsSequentialOffset = isSequentialOffset;
                     patchedByteArray.IsMoveSimple = isMoveSimple;
-                    patchedByteArray.AsmText = isAsmMode ? content : "";
+                    //patchedByteArray.AsmText = isAsmMode ? content : "";
+                    patchedByteArray.Text = content;
                     patchedByteArray.RamOffset = ramOffset;
                     patchedByteArray.ErrorText = errorText;
                     patchedByteArray.Label = label;
@@ -385,27 +388,32 @@ namespace FFTorgASM
             foreach (VariableType variable in variables)
             {
                 sbEncodePrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""),
-                    AsmPatch.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
+                    PatcherLib.Utilities.Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
             }
             string strEncodePrefix = sbEncodePrefix.ToString();
             asmUtility.EncodeASM(strEncodePrefix, 0);
 
             foreach (PatchedByteArray patchedByteArray in patches)
             {
+                string errorText = string.Empty;
+
                 string replaceLabelsContent;
                 if (replaceLabelsContentMap.TryGetValue(patchedByteArray, out replaceLabelsContent))
                 {
                     if (!string.IsNullOrEmpty(replaceLabelsContent))
-                        patchedByteArray.SetBytes(GetBytes(asmUtility.ReplaceLabelsInHex(replaceLabelsContent, true, false)));
+                    {
+                        AsmPatch.GetBytesResult result = AsmPatch.GetBytes(asmUtility.ReplaceLabelsInHex(replaceLabelsContent, true, false), (uint)patchedByteArray.RamOffset, variables);
+                        patchedByteArray.SetBytes(result.Bytes);
+                        errorText += result.ErrorMessage;
+                    }
                 }
 
-                string errorText = string.Empty;
                 if (patchedByteArray.IsAsm)
                 {
-                    string encodeContent = strEncodePrefix + patchedByteArray.AsmText;
+                    string encodeContent = strEncodePrefix + patchedByteArray.Text;
                     ASMEncoderResult result = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset);
                     patchedByteArray.SetBytes(result.EncodedBytes);
-                    errorText = result.ErrorText;
+                    errorText += result.ErrorText;
                 }
 
                 if (!patchedByteArray.MarkedAsData)
@@ -820,11 +828,6 @@ namespace FFTorgASM
             }
 
             return specifics;
-        }
-
-        private static byte[] GetBytes(string byteText)
-        {
-            return PatcherLib.Utilities.Utilities.GetBytesFromHexString(byteText);
         }
     }
 }
