@@ -268,7 +268,10 @@ namespace FFTPatcher.Editors
 
             protected override void OnKeyDown( KeyEventArgs e )
             {
-                SetValuesAndDefaults( Defaults, Defaults );
+                if (e.KeyData == Keys.F12)
+                {
+                    SetValuesAndDefaults(Defaults, Defaults);
+                }
                 base.OnKeyDown( e );
             }
         }
