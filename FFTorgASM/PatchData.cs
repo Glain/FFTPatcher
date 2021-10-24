@@ -29,6 +29,9 @@ namespace FFTorgASM
         public bool[] LoadedCorrectly;
         public Color[][] BackgroundColors;
 
+        public Dictionary<AsmPatch, int> AllOrdinalMap;
+        public List<Dictionary<AsmPatch, int>> FileOrdinalMaps;
+
         public PatchData(string[] files, ASMEncodingUtility asmUtility)
         {
             FilePatches = new PatchFile[files.Length];
@@ -76,6 +79,8 @@ namespace FFTorgASM
             }
 
             BackgroundColors[0] = allColorList.ToArray();
+
+            BuildOrdinalMaps();
         }
 
         public void ReloadFile(int index, ASMEncodingUtility asmUtility)
@@ -107,6 +112,7 @@ namespace FFTorgASM
             }
 
             BackgroundColors[index + 1] = fileColorList.ToArray();
+            FileOrdinalMaps[index] = GetFileOrdinalMap(index);
         }
 
         public void RebuildAllList()
@@ -136,6 +142,84 @@ namespace FFTorgASM
             }
 
             BackgroundColors[0] = allColorList.ToArray();
+            AllOrdinalMap = GetAllOrdinalMap();
+        }
+
+        public void RecalcBackgroundColors()
+        {
+            Color normalColor = Color.White;
+            Color errorColor = Color.FromArgb(225, 125, 125);
+
+            //List<Color> allColorList = new List<Color>(BackgroundColors[0].Length);
+            //int allPatchIndex = 0;
+            for (int fileIndex = 0; fileIndex < FilePatches.Length; fileIndex++)
+            {
+                //List<Color> fileColorList = new List<Color>(BackgroundColors[index + 1].Length);
+                int filePatchIndex = 0;
+                foreach (AsmPatch patch in FilePatches[fileIndex].Patches)
+                {
+                    if (!patch.IsHidden)
+                    {
+                        //fileColorList.Add(bgColor);
+                        BackgroundColors[fileIndex + 1][filePatchIndex++] = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+                        //if (!patch.HideInDefault)
+                        //{
+                            //allColorList.Add(bgColor);
+                            //BackgroundColors[0][allPatchIndex++] = bgColor;
+                        //}
+                    }
+                }
+
+                //BackgroundColors[index + 1] = fileColorList.ToArray();
+            }
+
+            int allPatchIndex = 0;
+            foreach (AsmPatch patch in AllPatches)
+            {
+                if (!(patch.IsHidden || patch.HideInDefault))
+                    BackgroundColors[0][allPatchIndex++] = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;
+            }
+
+            //BackgroundColors[0] = allColorList.ToArray();
+        }
+
+        public void BuildOrdinalMaps()
+        {
+            AllOrdinalMap = GetAllOrdinalMap();
+            FileOrdinalMaps = GetFileOrdinalMaps();
+        }
+
+        public Dictionary<AsmPatch, int> GetAllOrdinalMap()
+        {
+            Dictionary<AsmPatch, int> resultMap = new Dictionary<AsmPatch, int>();
+            for (int index = 0; index < AllPatches.Count; index++)
+            {
+                resultMap.Add(AllPatches[index], index);
+            }
+
+            return resultMap;
+        }
+
+        public List<Dictionary<AsmPatch, int>> GetFileOrdinalMaps()
+        {
+            List<Dictionary<AsmPatch, int>> fileOrdinalMaps = new List<Dictionary<AsmPatch, int>>();
+            for (int fileIndex = 0; fileIndex < FilePatches.Length; fileIndex++)
+            {
+                fileOrdinalMaps.Add(GetFileOrdinalMap(fileIndex));
+            }
+
+            return fileOrdinalMaps;
+        }
+
+        public Dictionary<AsmPatch, int> GetFileOrdinalMap(int fileIndex)
+        {
+            Dictionary<AsmPatch, int> fileOrdinalMap = new Dictionary<AsmPatch, int>();
+            for (int patchIndex = 0; patchIndex < FilePatches[fileIndex].Patches.Count; patchIndex++)
+            {
+                fileOrdinalMap.Add(FilePatches[fileIndex].Patches[patchIndex], patchIndex);
+            }
+
+            return fileOrdinalMap;
         }
 
         public void PatchAllISO(ASMEncodingUtility asmUtility, string filename)

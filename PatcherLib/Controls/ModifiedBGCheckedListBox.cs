@@ -101,6 +101,13 @@ namespace PatcherLib.Controls
             }
         }
 
+        public void ForceSetItemChecked(int index, bool isChecked)
+        {
+            AuthorizeCheck = true;
+            SetItemChecked(index, isChecked);
+            AuthorizeCheck = false;
+        }
+
         private void SelectFirstItemMatching(string selectionText)
         {
             for (int index = 0; index < Items.Count; index++)

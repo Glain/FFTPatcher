@@ -47,6 +47,7 @@
             this.btn_UncheckAll = new System.Windows.Forms.Button();
             this.btn_SavePatchXML = new System.Windows.Forms.Button();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
+            this.btn_Sort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -249,11 +250,23 @@
             this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.variableSpinner.Visible = false;
             // 
+            // btn_Sort
+            // 
+            this.btn_Sort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_Sort.Location = new System.Drawing.Point(204, 355);
+            this.btn_Sort.Name = "btn_Sort";
+            this.btn_Sort.Size = new System.Drawing.Size(75, 23);
+            this.btn_Sort.TabIndex = 18;
+            this.btn_Sort.Text = "Sort";
+            this.btn_Sort.UseVisualStyleBackColor = true;
+            this.btn_Sort.Click += new System.EventHandler(this.btn_Sort_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.btn_Sort);
             this.Controls.Add(this.btn_SavePatchXML);
             this.Controls.Add(this.btn_UncheckAll);
             this.Controls.Add(this.txt_Messages);
@@ -301,6 +314,7 @@
         private System.Windows.Forms.TextBox txt_Messages;
         private System.Windows.Forms.Button btn_UncheckAll;
         private System.Windows.Forms.Button btn_SavePatchXML;
+        private System.Windows.Forms.Button btn_Sort;
     }
 }
 

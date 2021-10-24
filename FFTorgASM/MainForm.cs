@@ -16,9 +16,16 @@ namespace FFTorgASM
 {
     public partial class MainForm : Form
     {
+        private enum PatchSortType
+        {
+            Ordinal = 0,
+            Name = 1
+        }
+
         private ASMEncodingUtility asmUtility;
         private PatchData patchData;
         private AsmPatch[] patches;
+        private PatchSortType sortType = PatchSortType.Ordinal;
 
         private bool ignoreChanges = true;
         private bool skipCheckEventHandler = false;
@@ -212,7 +219,7 @@ namespace FFTorgASM
             for (int index = 0; index < clb_Patches.Items.Count; index++)
             {
                 AsmPatch asmPatch = (AsmPatch)(clb_Patches.Items[index]);
-                clb_Patches.SetItemChecked(index, patchData.SelectedPatches.Contains(asmPatch));
+                clb_Patches.ForceSetItemChecked(index, patchData.SelectedPatches.Contains(asmPatch));
             }
 
             skipCheckEventHandler = false;
@@ -221,6 +228,56 @@ namespace FFTorgASM
             bool enablePatchButtons = (patchData.SelectedPatches.Count > 0);
             btnPatch.Enabled = enablePatchButtons;
             btnPatchSaveState.Enabled = enablePatchButtons;
+        }
+
+        private void LoadCurrentFilePatches()
+        {
+            if (lsb_FilesList.SelectedItem != null)
+                LoadFilePatches(lsb_FilesList.SelectedIndex);
+        }
+
+        private void ToggleSort()
+        {
+            sortType = 1 - sortType;
+            SortPatches(sortType);
+            patchData.RecalcBackgroundColors();
+            LoadCurrentFilePatches();
+        }
+
+        private void SortPatches(Comparison<AsmPatch> comparer)
+        {
+            patchData.AllPatches.Sort(comparer);
+            patchData.AllShownPatches.Sort(comparer);
+            foreach (PatchData.PatchFile patchFile in patchData.FilePatches)
+            {
+                if ((patchFile != null) && (patchFile.Patches != null))
+                    patchFile.Patches.Sort(comparer);
+            }
+        }
+
+        private void SortPatchesOrdinal()
+        {
+            patchData.AllPatches.Sort((x, y) => patchData.AllOrdinalMap[x].CompareTo(patchData.AllOrdinalMap[y]));
+            patchData.AllShownPatches.Sort((x, y) => patchData.AllOrdinalMap[x].CompareTo(patchData.AllOrdinalMap[y]));
+
+            for (int index = 0; index < patchData.FilePatches.Length; index++)
+            {
+                PatchData.PatchFile patchFile = patchData.FilePatches[index];
+                if ((patchFile != null) && (patchFile.Patches != null))
+                    patchFile.Patches.Sort((x, y) => patchData.FileOrdinalMaps[index][x].CompareTo(patchData.FileOrdinalMaps[index][y]));
+            }
+        }
+
+        private void SortPatches(PatchSortType sortType)
+        {
+            if (sortType == PatchSortType.Ordinal)
+            {
+                SortPatchesOrdinal();
+            }
+            else if (sortType == PatchSortType.Name)
+            {
+                SortPatches((x, y) => x.Name.CompareTo(y.Name));
+            }
         }
 
         private void reloadButton_Click(object sender, EventArgs e)
@@ -263,8 +320,7 @@ namespace FFTorgASM
 
         private void lsb_FilesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lsb_FilesList.SelectedItem != null)
-                LoadFilePatches(lsb_FilesList.SelectedIndex);
+            LoadCurrentFilePatches();
         }
 
         private void clb_Patches_SelectedIndexChanged(object sender, EventArgs e)
@@ -471,7 +527,7 @@ namespace FFTorgASM
             {
                 // never check a FileAsmPatch
                 if ( !( clb_Patches.Items[i] is FileAsmPatch ) )
-                    clb_Patches.SetItemChecked( i, true );
+                    clb_Patches.ForceSetItemChecked( i, true );
             }
         }
 
@@ -481,7 +537,7 @@ namespace FFTorgASM
             {
                 // never check a FileAsmPatch
                 if (!(clb_Patches.Items[i] is FileAsmPatch) || clb_Patches.GetItemChecked(i))
-                    clb_Patches.SetItemChecked(i, false);
+                    clb_Patches.ForceSetItemChecked(i, false);
             }
         }
 
@@ -491,7 +547,7 @@ namespace FFTorgASM
             {
                 // never check a FileAsmPatch
                 if ( !( clb_Patches.Items[i] is FileAsmPatch ) || clb_Patches.GetItemChecked( i ) )
-                    clb_Patches.SetItemChecked( i, !clb_Patches.GetItemChecked( i ) );
+                    clb_Patches.ForceSetItemChecked( i, !clb_Patches.GetItemChecked( i ) );
             }
         }
 
@@ -510,6 +566,11 @@ namespace FFTorgASM
         {
             FreeSpaceForm freeSpaceForm = new FreeSpaceForm(GetCurrentFilePatches(), asmUtility);
             freeSpaceForm.Show();
+        }
+
+        private void btn_Sort_Click(object sender, EventArgs e)
+        {
+            ToggleSort();
         }
     }
 }

@@ -488,6 +488,7 @@ namespace FFTorgASM
 
             XmlNodeList patchNodes = rootNode.SelectNodes( "Patch" );
             List<AsmPatch> result = new List<AsmPatch>( patchNodes.Count );
+            
             foreach ( XmlNode node in patchNodes )
             {
                 XmlAttribute ignoreNode = node.Attributes["ignore"];
