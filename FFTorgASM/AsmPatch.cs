@@ -340,7 +340,7 @@ namespace FFTorgASM
 
                     patchedByteArray.SetBytes(bytes);
                 }
-                else
+                else if (!string.IsNullOrEmpty(patchedByteArray.Text))
                 {
                     GetBytesResult result = GetBytes(patchedByteArray.Text, (uint)patchedByteArray.RamOffset);
                     patchedByteArray.SetBytes(result.Bytes);
