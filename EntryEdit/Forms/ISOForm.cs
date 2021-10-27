@@ -151,6 +151,27 @@ namespace EntryEdit.Forms
             if (!string.IsNullOrEmpty(filepath) && File.Exists(filepath))
             {
                 pnl_Params.Visible = true;
+
+                using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    if (Settings.WorldConditionalsRepoint)
+                    {
+                        int ramOffset = PsxIso.ReadFile(file, Settings.WorldConditionalsPointerSector, Settings.WorldConditionalsPointerOffset, 3).ToIntLE();
+                        int wldcoreRamOffset = PsxIso.GetRamOffset(PsxIso.Sectors.WORLD_WLDCORE_BIN);
+                        int worldRamOffset = PsxIso.GetRamOffset(PsxIso.Sectors.WORLD_WORLD_BIN);
+                        if (ramOffset >= worldRamOffset)
+                        {
+                            spinner_WorldConditionals_Sector.Value = (int)PsxIso.Sectors.WORLD_WORLD_BIN;
+                            spinner_WorldConditionals_Offset.Value = ramOffset - worldRamOffset;
+                        }
+                        else if (ramOffset >= wldcoreRamOffset)
+                        {
+                            spinner_WorldConditionals_Sector.Value = (int)PsxIso.Sectors.WORLD_WLDCORE_BIN;
+                            spinner_WorldConditionals_Offset.Value = ramOffset - wldcoreRamOffset;
+                        }
+                    }
+                }
+
                 EnableActionButton();
             }
         }
