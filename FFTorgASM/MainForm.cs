@@ -239,20 +239,14 @@ namespace FFTorgASM
         private void ToggleSort()
         {
             sortType = 1 - sortType;
-            SortPatches(sortType);
-            patchData.RecalcBackgroundColors();
-            LoadCurrentFilePatches();
+            FormSort();
         }
 
-        private void SortPatches(Comparison<AsmPatch> comparer)
+        private void FormSort()
         {
-            patchData.AllPatches.Sort(comparer);
-            patchData.AllShownPatches.Sort(comparer);
-            foreach (PatchData.PatchFile patchFile in patchData.FilePatches)
-            {
-                if ((patchFile != null) && (patchFile.Patches != null))
-                    patchFile.Patches.Sort(comparer);
-            }
+            SortPatches();
+            patchData.RecalcBackgroundColors();
+            LoadCurrentFilePatches();
         }
 
         private void SortPatchesOrdinal()
@@ -268,6 +262,17 @@ namespace FFTorgASM
             }
         }
 
+        private void SortPatches(Comparison<AsmPatch> comparer)
+        {
+            patchData.AllPatches.Sort(comparer);
+            patchData.AllShownPatches.Sort(comparer);
+            foreach (PatchData.PatchFile patchFile in patchData.FilePatches)
+            {
+                if ((patchFile != null) && (patchFile.Patches != null))
+                    patchFile.Patches.Sort(comparer);
+            }
+        }
+
         private void SortPatches(PatchSortType sortType)
         {
             if (sortType == PatchSortType.Ordinal)
@@ -280,6 +285,11 @@ namespace FFTorgASM
             }
         }
 
+        private void SortPatches()
+        {
+            SortPatches(sortType);
+        }
+
         private void reloadButton_Click(object sender, EventArgs e)
         {
             int selectedIndex = lsb_FilesList.SelectedIndex;
@@ -287,6 +297,8 @@ namespace FFTorgASM
                 LoadFile(selectedIndex - 1);
             else
                 LoadFiles();
+
+            FormSort();
         }
 
         private void variableComboBox_SelectedIndexChanged(object sender, EventArgs e)
