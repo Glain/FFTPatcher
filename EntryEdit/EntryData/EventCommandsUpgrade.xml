@@ -1,5 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Commands bytes="1">
+    <Command hex="00" name="Not" />
+    <Command hex="01" name="If" />
+    <Command hex="02" name="Else If">
+        <Parameter name="Variable" bytes="1" type="Variable" />
+    </Command>
+    <Command hex="03" name="Else" />
+    <Command hex="04" name="End If" />
+    <Command hex="05" name="Switch">
+        <Parameter name="Variable" bytes="1" type="Variable" />
+    </Command>
+    <Command hex="06" name="Case">
+        <Parameter name="Value" bytes="2" mode="hex" />
+    </Command>
+    <Command hex="07" name="Default" />
+    <Command hex="08" name="Break" />
+    <Command hex="09" name="End Switch" />
+    <Command hex="0A" name="Define Sub">
+        <Parameter name="ID" bytes="1" />
+    </Command>
+    <Command hex="0B" name="End Sub" />
+    <Command hex="0C" name="Call Sub">
+        <Parameter name="ID" bytes="1" />
+    </Command>
+    <Command hex="0D" name="Go To">
+        <Parameter name="Target" bytes="1" />
+    </Command>
+    <Command hex="0E" name="Go To Target">
+        <Parameter name="Target" bytes="1" />
+    </Command>
     <Command hex="10" name="Display Message">
         <Parameter name="Unknown" bytes="1" mode="hex" default="16" />
         <Parameter name="Dialog" bytes="1" mode="hex" />
@@ -26,14 +55,10 @@
     <Command hex="14" name="Play Track">
         <Parameter name="Track" bytes="1" mode="hex" />
     </Command>
-    <Command hex="15" name="Reset Action Data" />
+    <Command hex="15" name="Reset Unit Calculations" />
     <Command hex="16" name="Pause" />
-    <Command hex="17" name="Unknown">
-        <Parameter name="Unknown" bytes="1" mode="hex" />
-        <Parameter name="Unknown" bytes="1" mode="hex" />
-        <Parameter name="Unknown" bytes="1" mode="hex" />
-        <Parameter name="Unknown" bytes="1" mode="hex" />
-        <Parameter name="Unknown" bytes="1" mode="hex" />
+    <Command hex="17" name="Graphic Timeout">
+        <Parameter name="Timeout" bytes="1" mode="hex" />
     </Command>
     <Command hex="18" name="Effect">
         <Parameter name="ID" bytes="2" type="AbilityEffect" />
@@ -529,6 +554,11 @@
         <Parameter name="Animation" bytes="2" mode="hex" />
         <Parameter name="Unknown" bytes="1" mode="hex" />
     </Command>
+    <Command hex="8D" name="Inventory">
+        <Parameter name="Parameters" bytes="1" mode="hex" />
+        <Parameter name="Item ID" bytes="1" mode="hex" />
+        <Parameter name="Variable/Amount" bytes="1" mode="hex" />
+    </Command>
     <Command hex="8E" name="Wait Graphic Print" />
     <Command hex="8F" name="Unknown">
         <Parameter name="Unknown" bytes="1" mode="hex" />
@@ -580,6 +610,9 @@
     <Command hex="9E" name="Set Text Variable">
         <Parameter name="Text" bytes="1" mode="hex" />
         <Parameter name="Variable" bytes="1" type="Variable" />
+    </Command>
+    <Command hex="9F" name="Button Press">
+        <Parameter name="Buttons" bytes="2" mode="hex" />
     </Command>
     <Command hex="A0" name="Variable &lt;=" />
     <Command hex="A1" name="Variable &gt;=" />
@@ -660,6 +693,7 @@
     </Command>
     <Command hex="BF" name="Random">
         <Parameter name="Variable" bytes="1" type="Variable" />
+        <Parameter name="Modulus" bytes="2" mode="unsigned" />
     </Command>
     <Command hex="C0" name="Unknown">
         <Parameter name="Unknown" bytes="2" mode="hex" />
@@ -695,11 +729,14 @@
         <Parameter name="Unit" bytes="1" type="Unit" />
         <Parameter name="Type" bytes="1" mode="hex" />
     </Command>
-    <Command hex="C6" name="Constrain Value">
-        <Parameter name="Variable" bytes="1" type="Variable" />
-        <Parameter name="Type" bytes="1" mode="hex" />
-        <Parameter name="Minimum" bytes="2" mode="unsigned" />
-        <Parameter name="Maximum" bytes="2" mode="unsigned" />
+    <Command hex="C6" name="Transform Unit">
+        <Parameter name="Address Variable" bytes="1" type="Variable" />
+        <Parameter name="Flags" bytes="1" mode="hex" />
+        <Parameter name="Target Job ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="C7" name="Roster Has Unit">
+        <Parameter name="Flags" bytes="1" mode="hex" />
+        <Parameter name="Search ID" bytes="2" mode="hex" />
     </Command>
     <Command hex="CC" name="Reset Turn Counter">
         <Parameter name="Unit" bytes="1" type="Unit" />
@@ -758,26 +795,57 @@
     <Command hex="E5" name="Wait For Instruction">
         <Parameter name="Task" bytes="2" type="Task" />
     </Command>
-    <Command hex="F0" name="Wait One Cycle" />
-    <Command hex="F1" name="Wait">
-        <Parameter name="Time" bytes="2" mode="unsigned" />
-    </Command>
-    <Command hex="F2" name="No-op" default="true" />
-    <Command hex="F3" name="Alter Parameter">
+    <Command hex="E6" name="Alter Parameter">
         <Parameter name="Value" bytes="1" mode="hex" />
         <Parameter name="Variable" bytes="1" type="Variable" />
     </Command>
-    <Command hex="FA" name="Load ENTD">
+    <Command hex="E7" name="Get Tile Unit">
+        <Parameter name="X" bytes="1" mode="unsigned" />
+        <Parameter name="Y" bytes="1" mode="unsigned" />
+        <Parameter name="Z" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="E8" name="Load Tile Data">
+        <Parameter name="Variable" bytes="1" type="Variable" />
+        <Parameter name="Offset" bytes="1" mode="hex" />
+        <Parameter name="X" bytes="1" mode="unsigned" />
+        <Parameter name="Y" bytes="1" mode="unsigned" />
+        <Parameter name="Z" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="E9" name="Save Tile Data">
+        <Parameter name="Variable" bytes="1" type="Variable" />
+        <Parameter name="Offset" bytes="1" mode="hex" />
+        <Parameter name="X" bytes="1" mode="unsigned" />
+        <Parameter name="Y" bytes="1" mode="unsigned" />
+        <Parameter name="Z" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="EA" name="Load ENTD">
         <Parameter name="ENTD" bytes="2" mode="hex" />
         <Parameter name="Units" bytes="2" mode="hex" />
     </Command>
-    <Command hex="FB" name="Load ENTD Unit">
+    <Command hex="EB" name="Load ENTD Unit">
         <Parameter name="Unit" bytes="1" type="Unit" />
         <Parameter name="ENTD Index" bytes="1" mode="hex" />
         <Parameter name="Battle Index" bytes="1" mode="hex" />
         <Parameter name="Flags" bytes="1" mode="hex" />
     </Command>
-    <Command hex="FC" name="Conditional Defeat">
+    <Command hex="EC" name="Conditional Defeat">
         <Parameter name="Mode" bytes="1" mode="hex" />
     </Command>
+    <Command hex="ED" name="Load Database">
+        <Parameter name="Offset" bytes="1" mode="unsigned" />
+        <Parameter name="Length" bytes="1" mode="unsigned" />
+    </Command>
+    <Command hex="EE" name="Get Table Size">
+        <Parameter name="Variable" bytes="1" type="Variable" />
+        <Parameter name="Table ID" bytes="1" mode="hex" />
+    </Command>
+    <Command hex="EF" name="Fetch Table Row">
+        <Parameter name="Table ID" bytes="1" mode="hex" />
+        <Parameter name="Variable Row" bytes="1" type="Variable" />
+    </Command>
+    <Command hex="F0" name="Wait One Cycle" />
+    <Command hex="F1" name="Wait">
+        <Parameter name="Time" bytes="2" mode="unsigned" />
+    </Command>
+    <Command hex="F2" name="No-op" default="true" />
 </Commands>
