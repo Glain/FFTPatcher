@@ -23,7 +23,7 @@ using FFTPatcher.Datatypes;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllMoveFindItemsEditor : UserControl
+    public partial class AllMoveFindItemsEditor : UserControl, IHandleSelectedIndex
     {
         #region Instance Variables
 
@@ -139,5 +139,12 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = mapListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < mapListBox.Items.Count))
+                mapListBox.SelectedIndex = newIndex;
+        }
     }
 }

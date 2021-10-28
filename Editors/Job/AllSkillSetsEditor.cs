@@ -24,7 +24,7 @@ using PatcherLib.Datatypes;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllSkillSetsEditor : UserControl
+    public partial class AllSkillSetsEditor : UserControl, IHandleSelectedIndex
     {
 		#region Instance Variables 
 
@@ -140,5 +140,12 @@ namespace FFTPatcher.Editors
 		}
         
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = skillSetListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < skillSetListBox.Items.Count))
+                skillSetListBox.SelectedIndex = newIndex;
+        }
     }
 }

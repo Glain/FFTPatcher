@@ -86,6 +86,7 @@ namespace FFTPatcher.Editors
             propositionsTabPage.Text = FFTPatch.Context == Context.US_PSP ? "Errands" : "Propositions";
 
             fftPatch = FFTPatch;
+            Focus();
         }
 
         private void SetToolTip()
@@ -102,6 +103,40 @@ namespace FFTPatcher.Editors
             allStatusAttributesEditor1.ToolTip = toolTip;
             entdEditor1.ToolTip = toolTip;
             jobLevelsEditor1.ToolTip = toolTip;
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            Control control = GetCurrentEditor();
+            if (control is IHandleSelectedIndex)
+            {
+                IHandleSelectedIndex editor = (IHandleSelectedIndex)control;
+                if (keyData == (Keys.Control | Keys.Up))
+                {
+                    Focus();
+                    editor.HandleSelectedIndexChange(-1);
+                    return true;
+                }
+                else if (keyData == (Keys.Control | Keys.Down))
+                {
+                    Focus();
+                    editor.HandleSelectedIndexChange(1);
+                    return true;
+                }
+                else
+                {
+                    return base.ProcessCmdKey(ref msg, keyData);
+                }
+            }
+            else
+            {
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+        }
+
+        private Control GetCurrentEditor()
+        {
+            return tabControl.SelectedTab.Controls[0];
         }
 
         private void InflictStatusClicked( object sender, LabelClickedEventArgs e )

@@ -130,6 +130,7 @@
     <Compile Include="Datatypes\Items\StoreInventory.cs" />
     <Compile Include="Datatypes\Propositions\AllPropositions.cs" />
     <Compile Include="Datatypes\Propositions\Proposition.cs" />
+    <Compile Include="Editors\IHandleSelectedIndex.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Editors\Abilities\AllAnimationsEditor.cs">
       <SubType>UserControl</SubType>

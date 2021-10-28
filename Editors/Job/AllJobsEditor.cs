@@ -24,7 +24,7 @@ using PatcherLib.Datatypes;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllJobsEditor : UserControl
+    public partial class AllJobsEditor : UserControl, IHandleSelectedIndex
     {
 		#region Instance Variables
 
@@ -157,6 +157,13 @@ namespace FFTPatcher.Editors
 		}
         
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = jobsListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < jobsListBox.Items.Count))
+                jobsListBox.SelectedIndex = newIndex;
+        }
 
         public event EventHandler<ReferenceEventArgs> ViewStatsClicked;
         private void OnViewStatsClicked(object sender, EventArgs e)

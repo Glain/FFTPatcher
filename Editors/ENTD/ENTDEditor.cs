@@ -23,7 +23,7 @@ using PatcherLib.Datatypes;
 
 namespace FFTPatcher.Editors
 {
-    public partial class ENTDEditor : UserControl
+    public partial class ENTDEditor : UserControl, IHandleSelectedIndex
     {
 		#region Instance Variables 
 
@@ -136,5 +136,12 @@ namespace FFTPatcher.Editors
 		}
         
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = eventListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < eventListBox.Items.Count))
+                eventListBox.SelectedIndex = newIndex;
+        }
     }
 }

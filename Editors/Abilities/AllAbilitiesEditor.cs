@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllAbilitiesEditor : UserControl
+    public partial class AllAbilitiesEditor : UserControl, IHandleSelectedIndex
     {
 		#region Instance Variables
 
@@ -278,6 +278,13 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = abilitiesListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < abilitiesListBox.Items.Count))
+                abilitiesListBox.SelectedIndex = newIndex;
+        }
 
         private enum AbType
         {

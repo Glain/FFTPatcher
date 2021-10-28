@@ -23,7 +23,7 @@ using FFTPatcher.Datatypes;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllStatusAttributesEditor : UserControl
+    public partial class AllStatusAttributesEditor : UserControl, IHandleSelectedIndex
     {
         #region Instance Variables
 
@@ -139,5 +139,12 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = listBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < listBox.Items.Count))
+                listBox.SelectedIndex = newIndex;
+        }
     }
 }

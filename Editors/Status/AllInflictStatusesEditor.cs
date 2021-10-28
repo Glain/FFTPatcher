@@ -23,7 +23,7 @@ using FFTPatcher.Datatypes;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllInflictStatusesEditor : UserControl
+    public partial class AllInflictStatusesEditor : UserControl, IHandleSelectedIndex
     {
         #region Instance Variables (3)
 
@@ -153,6 +153,13 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = offsetListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < offsetListBox.Items.Count))
+                offsetListBox.SelectedIndex = newIndex;
+        }
 
         public event System.EventHandler<RepointEventArgs> RepointHandler;
         protected void OnRepoint(object sender, RepointEventArgs e)

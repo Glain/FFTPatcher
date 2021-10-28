@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
-    public partial class AllItemsEditor : UserControl
+    public partial class AllItemsEditor : UserControl, IHandleSelectedIndex
     {
         #region Instance Variables
 
@@ -325,6 +325,13 @@ namespace FFTPatcher.Editors
         }
 
 		#endregion Private Methods 
+
+        public void HandleSelectedIndexChange(int offset)
+        {
+            int newIndex = itemListBox.SelectedIndex + offset;
+            if ((newIndex >= 0) && (newIndex < itemListBox.Items.Count))
+                itemListBox.SelectedIndex = newIndex;
+        }
 
         public event EventHandler<LabelClickedEventArgs> InflictStatusClicked;
         public event EventHandler<LabelClickedEventArgs> ItemAttributesClicked;
