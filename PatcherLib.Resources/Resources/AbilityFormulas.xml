@@ -55,7 +55,7 @@
   <Ability value="22">Hit_(100%) Status NE //MayDisplay"Broken"</Ability>
   <Ability value="23">Heal_(MA*Y) NS NE //MayDisplay"Broken"</Ability>
   <Ability value="24">Dmg_((PA+Y)/2*MA) ME</Ability>
-  <Ability value="25">Equipped:Break Hit_(PA+WP+X)% NS PE ELSE WeaponStrike //1TargetOnly NS PE</Ability>
+  <Ability value="25">Equipped:Break Hit_(PA+WP+Y)% NS PE ELSE WeaponStrike //1TargetOnly NS PE</Ability>
   <Ability value="26">Equipped:Steal Hit_(SP+X)% NS PE ELSE miss</Ability>
   <Ability value="27">StealGil_(CasLVL*SP) Hit_(SP+X)% NS PE</Ability>
   <Ability value="28">StealExp_(Lowest of TarCurExp &amp; SP+Y) Hit_(SP+X)% PE</Ability>
