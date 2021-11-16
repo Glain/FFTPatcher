@@ -8,6 +8,21 @@ using System.Xml;
 
 namespace FFTorgASM
 {
+    public class FreeSpaceMaps
+    {
+        public Dictionary<PatchedByteArray, AsmPatch> InnerPatchMap { get; set; }
+        public Dictionary<PatchRange, List<PatchedByteArray>> PatchRangeMap { get; set; }
+        public Dictionary<PatchRange, HashSet<AsmPatch>> OuterPatchRangeMap { get; set; }
+    }
+
+    public class FreeSpaceAnalyzeResult
+    {
+        public bool HasConflicts { get; set; }
+        public HashSet<int> ConflictIndexes { get; set; }
+        public int LargestGapOffset { get; set; }
+        public int LargestGapSize { get; set; }
+    }
+
     public static class FreeSpace
     {
         private enum PsxFreeSpaceLocation
@@ -92,6 +107,124 @@ namespace FFTorgASM
             }
 
             return false;
+        }
+
+        public static FreeSpaceMaps GetFreeSpaceMaps(IEnumerable<AsmPatch> patches)
+        {
+            Dictionary<PatchedByteArray, AsmPatch> innerPatchMap = new Dictionary<PatchedByteArray, AsmPatch>();
+            Dictionary<PatchRange, List<PatchedByteArray>> patchRangeMap = new Dictionary<PatchRange, List<PatchedByteArray>>();
+            Dictionary<PatchRange, HashSet<AsmPatch>> outerPatchRangeMap = new Dictionary<PatchRange, HashSet<AsmPatch>>();
+
+            foreach (AsmPatch patch in patches)
+            {
+                List<PatchedByteArray> combinedPatchList = patch.GetCombinedPatchList();
+
+                foreach (PatchedByteArray patchedByteArray in combinedPatchList)
+                {
+                    if (patchedByteArray is InputFilePatch)
+                        continue;
+
+                    if (!innerPatchMap.ContainsKey(patchedByteArray))
+                        innerPatchMap.Add(patchedByteArray, patch);
+
+                    //long patchedByteArrayEndOffset = patchedByteArray.Offset + patchedByteArray.GetBytes().Length - 1;
+                    foreach (PatchRange range in FreeSpace.PsxRanges)
+                    {
+                        //long positionEndOffset = position.StartLocation + position.Length - 1;
+                        //if ((((PsxIso.Sectors)patchedByteArray.Sector) == position.Sector) && (patchedByteArrayEndOffset >= position.StartLocation) && (patchedByteArray.Offset <= positionEndOffset))
+                        if (range.HasOverlap(patchedByteArray))
+                        {
+                            if (patchRangeMap.ContainsKey(range))
+                                patchRangeMap[range].Add(patchedByteArray);
+                            else
+                                patchRangeMap.Add(range, new List<PatchedByteArray>() { patchedByteArray });
+
+                            if (outerPatchRangeMap.ContainsKey(range))
+                                outerPatchRangeMap[range].Add(patch);
+                            else
+                                outerPatchRangeMap.Add(range, new HashSet<AsmPatch>() { patch });
+                        }
+                    }
+                }
+
+                foreach (PatchRange range in FreeSpace.PsxRanges)
+                {
+                    if (patchRangeMap.ContainsKey(range))
+                    {
+                        patchRangeMap[range].Sort(
+                            delegate(PatchedByteArray patchedByteArray1, PatchedByteArray patchedByteArray2)
+                            {
+                                return patchedByteArray1.Offset.CompareTo(patchedByteArray2.Offset);
+                            }
+                        );
+                    }
+                }
+            }
+
+            return new FreeSpaceMaps
+            {
+                InnerPatchMap = innerPatchMap,
+                PatchRangeMap = patchRangeMap,
+                OuterPatchRangeMap = outerPatchRangeMap
+            };
+        }
+
+        public static FreeSpaceAnalyzeResult Analyze(List<PatchedByteArray> innerPatches, PatchRange freeSpaceRange, bool isSorted = true)
+        {
+            if (!isSorted)
+            {
+                innerPatches = new List<PatchedByteArray>(innerPatches);
+                innerPatches.Sort(
+                    delegate(PatchedByteArray patchedByteArray1, PatchedByteArray patchedByteArray2)
+                    {
+                        return patchedByteArray1.Offset.CompareTo(patchedByteArray2.Offset);
+                    }
+                );
+            }
+
+            FreeSpaceAnalyzeResult result = new FreeSpaceAnalyzeResult();
+            result.ConflictIndexes = new HashSet<int>();
+
+            if (innerPatches.Count == 0)
+                return result;
+
+            result.LargestGapOffset = (int)freeSpaceRange.StartOffset;
+            result.LargestGapSize = (int)(innerPatches[0].Offset - freeSpaceRange.StartOffset);
+
+            int endIndex = innerPatches.Count - 1;
+            for (int index = 0; index < endIndex; index++)
+            {
+                PatchedByteArray patchedByteArray = innerPatches[index];
+                int length = patchedByteArray.GetBytes().Length;
+                long nextAddress = patchedByteArray.Offset + length;
+                long nextPatchLocation = innerPatches[index + 1].Offset;
+                long spaceToNextPatch = nextPatchLocation - nextAddress;
+
+                if (spaceToNextPatch > result.LargestGapSize)
+                {
+                    result.LargestGapOffset = (int)nextAddress;
+                    result.LargestGapSize = (int)spaceToNextPatch;
+                }
+
+                if ((innerPatches[index + 1].Offset - nextAddress) < 0)
+                {
+                    if (innerPatches[index].HasConflict(innerPatches[index + 1]))
+                    {
+                        result.HasConflicts = true;
+                        result.ConflictIndexes.Add(index);
+                    }
+                }
+            }
+
+            int finalNextAddress = (int)(innerPatches[endIndex].Offset + innerPatches[endIndex].GetBytes().Length);
+            int endGapSize = (int)(freeSpaceRange.EndOffset - finalNextAddress);
+            if (endGapSize > result.LargestGapSize)
+            {
+                result.LargestGapOffset = finalNextAddress;
+                result.LargestGapSize = endGapSize;
+            }
+
+            return result;
         }
     }
 }

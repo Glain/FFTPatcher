@@ -15,161 +15,28 @@ namespace FFTorgASM
 {
     public partial class ConflictCheckerForm : Form
     {
-        private class PatchRangeConflict
-        {
-            public PatchRange Range { get; set; }
-            public AsmPatch ConflictPatch { get; set; }
-            public int ConflictPatchNumber { get; set; }
-            public PatchRange ConflictRange { get; set; }
-            public bool IsInFreeSpace { get; set; }
-
-            public PatchRangeConflict(PatchRange range, AsmPatch conflictPatch, PatchRange conflictRange, bool isInFreeSpace)
-            {
-                this.Range = range;
-                this.ConflictPatch = conflictPatch;
-                this.ConflictRange = conflictRange;
-                this.IsInFreeSpace = isInFreeSpace;
-            }
-        }
-
-        private class ConflictCheckResult
-        {
-            public List<AsmPatch> PatchList { get; set; }
-            public Dictionary<AsmPatch, List<PatchRangeConflict>> ConflictMap { get; set; }
-
-            private Dictionary<AsmPatch, int> patchNumberMap;
-            public Dictionary<AsmPatch, int> PatchNumberMap 
-            {
-                get { return patchNumberMap; } 
-            }
-
-            public ConflictCheckResult() { }
-            public ConflictCheckResult(List<AsmPatch> patchList, Dictionary<AsmPatch, List<PatchRangeConflict>> conflictMap)
-            {
-                this.PatchList = patchList;
-                this.ConflictMap = conflictMap;
-                this.patchNumberMap = BuildPatchNumberMap(patchList);
-                AddConflictPatchNumbers(conflictMap, this.patchNumberMap);
-            }
-
-            private Dictionary<AsmPatch, int> BuildPatchNumberMap(List<AsmPatch> patchList)
-            {
-                Dictionary<AsmPatch, int> resultMap = new Dictionary<AsmPatch, int>();
-
-                for (int index = 0; index < patchList.Count; index++)
-                {
-                    resultMap.Add(patchList[index], index);
-                }
-
-                return resultMap;
-            }
-
-            private void AddConflictPatchNumbers(Dictionary<AsmPatch, List<PatchRangeConflict>> conflictMap, Dictionary<AsmPatch, int> patchNumberMap)
-            {
-                foreach (List<PatchRangeConflict> conflictList in conflictMap.Values)
-                {
-                    AddConflictPatchNumbers(conflictList, patchNumberMap);
-                }
-            }
-
-            private void AddConflictPatchNumbers(List<PatchRangeConflict> conflictList, Dictionary<AsmPatch, int> patchNumberMap)
-            {
-                foreach (PatchRangeConflict conflict in conflictList)
-                {
-                    conflict.ConflictPatchNumber = patchNumberMap[conflict.ConflictPatch];
-                }
-            }
-        }
-
         private Color backColor_Normal = Color.White;
         private Color backColor_Conflict_NonFreeSpace = Color.FromArgb(225, 125, 125);
         private Color backColor_Conflict_FreeSpace = Color.White; // Color.FromArgb(137, 216, 166);
 
-        private List<AsmPatch> origPatchList = null;
+        private IList<AsmPatch> origPatchList = null;
         private ConflictCheckResult conflictPatchData = null;
         private List<Color> patchColors = null;
         private Random rng = new Random();
 
-        public ConflictCheckerForm(List<AsmPatch> patchList)
+        public ConflictCheckerForm(IList<AsmPatch> patchList)
         {
             InitializeComponent();
             this.origPatchList = patchList;
-            this.conflictPatchData = CheckConflicts(patchList);
+            this.conflictPatchData = ConflictHelper.CheckConflicts(patchList);
             FindPatchColors(this.conflictPatchData.PatchList);
             ShowPatches(this.conflictPatchData);
         }
 
-        private ConflictCheckResult CheckConflicts(List<AsmPatch> patchList)
-        {
-            List<AsmPatch> resultPatchList = new List<AsmPatch>();
-            Dictionary<AsmPatch, List<PatchRangeConflict>> conflictMap = new Dictionary<AsmPatch, List<PatchRangeConflict>>();
-            Dictionary<AsmPatch, List<PatchedByteArray>> combinedPatchListMap = new Dictionary<AsmPatch, List<PatchedByteArray>>();
-
-            foreach (AsmPatch patch in patchList)
-            {
-                combinedPatchListMap[patch] = patch.GetCombinedPatchList();
-            }
-
-            for (int patchIndex = 0; patchIndex < patchList.Count; patchIndex++)
-            {
-                AsmPatch patch = patchList[patchIndex];
-
-                List<PatchedByteArray> combinedPatchList = combinedPatchListMap[patch];
-                foreach (PatchedByteArray patchedByteArray in combinedPatchList)
-                {
-                    if (patchedByteArray is InputFilePatch)
-                        continue;
-
-                    PatchRange range = new PatchRange(patchedByteArray);
-                    for (int conflictPatchIndex = patchIndex + 1; conflictPatchIndex < patchList.Count; conflictPatchIndex++)
-                    {
-                        AsmPatch conflictPatch = patchList[conflictPatchIndex];
-
-                        List<PatchedByteArray> conflictCombinedPatchList = combinedPatchListMap[conflictPatch];
-                        foreach (PatchedByteArray conflictPatchedByteArray in conflictCombinedPatchList)
-                        {
-                            if (conflictPatchedByteArray is InputFilePatch)
-                                continue;
-
-                            //if (patchedByteArray.IsPatchEqual(conflictPatchedByteArray))
-                            if (!patchedByteArray.HasConflict(conflictPatchedByteArray))
-                                continue;
-
-                            PatchRange conflictRange = new PatchRange(conflictPatchedByteArray);
-                            if (range.HasOverlap(conflictRange))
-                            {
-                                bool isInFreeSpace = FreeSpace.IsContainedWithinPsxFreeSpace(range);
-
-                                PatchRangeConflict patchConflict = new PatchRangeConflict(range, conflictPatch, conflictRange, isInFreeSpace);
-                                PatchRangeConflict reversePatchConflict = new PatchRangeConflict(conflictRange, patch, range, isInFreeSpace);
-
-                                if (conflictMap.ContainsKey(patch))
-                                    conflictMap[patch].Add(patchConflict);
-                                else
-                                    conflictMap.Add(patch, new List<PatchRangeConflict> { patchConflict });
-
-                                if (conflictMap.ContainsKey(conflictPatch))
-                                    conflictMap[conflictPatch].Add(reversePatchConflict);
-                                else
-                                    conflictMap.Add(conflictPatch, new List<PatchRangeConflict> { reversePatchConflict });
-                            }
-                        }
-                    }
-                }
-
-                if (conflictMap.ContainsKey(patch))
-                {
-                    resultPatchList.Add(patch);
-                }
-            }
-
-            return new ConflictCheckResult(resultPatchList, conflictMap);
-        }
-
-        private void FindPatchColors(List<AsmPatch> patchList)
+        private void FindPatchColors(IEnumerable<AsmPatch> patchList)
         {
             patchColors = new List<Color>();
-            for (int index = 0; index < patchList.Count; index++)
+            foreach (AsmPatch patch in patchList)
             {
                 patchColors.Add(Color.FromArgb(rng.Next(100, 256), rng.Next(100, 256), rng.Next(100, 256)));
             }

@@ -308,11 +308,11 @@ namespace FFTorgASM
                 AsmPatch patch = (clb_Patches.SelectedItem as AsmPatch);
                 VariableType selectedVariable = patch.VariableMap[(string)variableComboBox.SelectedItem];
 
-                byte[] byteArray = selectedVariable.byteArray;
+                byte[] byteArray = selectedVariable.ByteArray;
 
                 // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
                 ignoreChanges = true;
-                variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.numBytes) - 1;
+                variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.NumBytes) - 1;
                 ignoreChanges = false;
 
                 variableSpinner.Value = Utilities.GetUnsignedByteArrayValue_LittleEndian(byteArray);
@@ -372,9 +372,9 @@ namespace FFTorgASM
                     VariableType firstNonReferenceVariable = p.Variables[0];
                     foreach (VariableType variable in p.Variables)
                     {
-                        if (!variable.isReference)
+                        if (!variable.IsReference)
                         {
-                            variableComboBox.Items.Add(variable.name);
+                            variableComboBox.Items.Add(variable.Name);
                             if (!foundFirst)
                             {
                                 firstNonReferenceVariable = variable;
@@ -384,8 +384,8 @@ namespace FFTorgASM
                     }
                     variableComboBox.SelectedIndex = 0;
 
-                    byte[] byteArray = firstNonReferenceVariable.byteArray;
-                    variableSpinner.Maximum = (decimal)Math.Pow(256, firstNonReferenceVariable.numBytes) - 1;
+                    byte[] byteArray = firstNonReferenceVariable.ByteArray;
+                    variableSpinner.Maximum = (decimal)Math.Pow(256, firstNonReferenceVariable.NumBytes) - 1;
                     variableSpinner.Value = Utilities.GetUnsignedByteArrayValue_LittleEndian(byteArray);
 
                     variableSpinner.Visible = true;
@@ -435,11 +435,18 @@ namespace FFTorgASM
         {
             saveFileDialog1.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
             saveFileDialog1.FileName = string.Empty;
+
+            StringBuilder sbResultMessage = new StringBuilder();
+
             if ( saveFileDialog1.ShowDialog( this ) == DialogResult.OK )
             {
+                List<AsmPatch> patches = GetAllSelectedPatches();
+
+                ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(patches, asmUtility);
+                patches = conflictResolveResult.Patches;
+
                 using (Stream file = File.Open(saveFileDialog1.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
-                    List<AsmPatch> patches = GetAllSelectedPatches();
                     //foreach ( AsmPatch patch in clb_Patches.CheckedItems )
                     foreach (AsmPatch patch in patches)
                     {
@@ -449,7 +456,20 @@ namespace FFTorgASM
                     }
                 }
 
-                PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                sbResultMessage.AppendLine("Complete!");
+                sbResultMessage.AppendLine();
+
+                if (!string.IsNullOrEmpty(conflictResolveResult.Message))
+                {
+                    sbResultMessage.AppendLine(conflictResolveResult.Message);
+                    sbResultMessage.AppendLine();
+                }
+
+                // DEBUG
+                //File.WriteAllText("./output.xml", PatchXmlReader.CreatePatchXML(patches), Encoding.UTF8);
+
+                //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                PatcherLib.MyMessageBox.Show(this, sbResultMessage.ToString(), "Complete!", MessageBoxButtons.OK);
             }
         }
 
@@ -463,11 +483,14 @@ namespace FFTorgASM
 
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
+                List<PatchedByteArray> patches = new List<PatchedByteArray>();
+                List<AsmPatch> asmPatches = GetAllSelectedPatches();
+
+                ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
+                asmPatches = conflictResolveResult.Patches;
+
                 using (BinaryReader reader = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
                 {
-                    List<PatchedByteArray> patches = new List<PatchedByteArray>();
-                    List<AsmPatch> asmPatches = GetAllSelectedPatches();
-
                     //foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
                     foreach (AsmPatch asmPatch in asmPatches)
                     {
@@ -483,6 +506,13 @@ namespace FFTorgASM
 
                     sbResultMessage.AppendLine("Complete!");
                     sbResultMessage.AppendLine();
+
+                    if (!string.IsNullOrEmpty(conflictResolveResult.Message))
+                    {
+                        sbResultMessage.AppendLine(conflictResolveResult.Message);
+                        sbResultMessage.AppendLine();
+                    }
+
                     if (patchResult.UnsupportedFiles.Count > 0)
                     {
                         sbResultMessage.AppendLine("Files not supported for savestate patching:");

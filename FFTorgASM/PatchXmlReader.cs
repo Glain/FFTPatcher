@@ -129,6 +129,7 @@ namespace FFTorgASM
                 XmlAttribute attrSpecific = location.Attributes["specific"];
                 XmlAttribute attrMovable = location.Attributes["movable"];
                 XmlAttribute attrAlign = location.Attributes["align"];
+                XmlAttribute attrStatic = location.Attributes["static"];
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -269,6 +270,12 @@ namespace FFTorgASM
                     bool.TryParse(attrMovable.InnerText, out isMoveSimple);
                 }
 
+                bool isStatic = false;
+                if (attrStatic != null)
+                {
+                    bool.TryParse(attrStatic.InnerText, out isStatic);
+                }
+
                 int ftrOffset = PsxIso.GetRamOffset(sector);
 
                 int offsetIndex = 0;
@@ -307,8 +314,8 @@ namespace FFTorgASM
                         }
                         foreach (VariableType variable in variables)
                         {
-                            sbPrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""), 
-                                PatcherLib.Utilities.Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
+                            sbPrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.Name).Replace(",", ""), 
+                                PatcherLib.Utilities.Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.ByteArray), Environment.NewLine));
                         }
 
                         encodeContent = sbPrefix.ToString() + content;
@@ -361,6 +368,7 @@ namespace FFTorgASM
                     patchedByteArray.RamOffset = ramOffset;
                     patchedByteArray.ErrorText = errorText;
                     patchedByteArray.Label = label;
+                    patchedByteArray.IsStatic = isStatic;
 
                     if (replaceLabels)
                         replaceLabelsContentMap.Add(patchedByteArray, content);
@@ -387,8 +395,8 @@ namespace FFTorgASM
             }
             foreach (VariableType variable in variables)
             {
-                sbEncodePrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""),
-                    PatcherLib.Utilities.Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine));
+                sbEncodePrefix.Append(String.Format(".eqv %{0}, {1}{2}", ASMStringHelper.RemoveSpaces(variable.Name).Replace(",", ""),
+                    PatcherLib.Utilities.Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.ByteArray), Environment.NewLine));
             }
             string strEncodePrefix = sbEncodePrefix.ToString();
             asmUtility.EncodeASM(strEncodePrefix, 0);
@@ -596,11 +604,11 @@ namespace FFTorgASM
                             newStrOffsets.Add(specific.OffsetString);
                         strOffsets = newStrOffsets.ToArray();
                     }
-                    else if ((string.IsNullOrEmpty(strOffsetAttr)) && (variables.Count > 0) && (variables[variables.Count - 1].content.Count > 0))
+                    else if ((string.IsNullOrEmpty(strOffsetAttr)) && (variables.Count > 0) && (variables[variables.Count - 1].Content.Count > 0))
                     {
                         // No offset defined -- offset is (last patch offset) + (last patch size)
-                        int lastIndex = variables[variables.Count - 1].content.Count - 1;
-                        PatchedByteArray lastPatchedByteArray = variables[variables.Count - 1].content[lastIndex];
+                        int lastIndex = variables[variables.Count - 1].Content.Count - 1;
+                        PatchedByteArray lastPatchedByteArray = variables[variables.Count - 1].Content[lastIndex];
                         long offset = lastPatchedByteArray.Offset + lastPatchedByteArray.GetBytes().Length;
                         string strOffset = offset.ToString("X");
                         strOffsets = new string[1] { strOffset };
@@ -632,10 +640,10 @@ namespace FFTorgASM
                     {
                         sector = defaultSector;
                     }
-                    else if ((variables.Count > 0) && (variables[variables.Count - 1].content.Count > 0))
+                    else if ((variables.Count > 0) && (variables[variables.Count - 1].Content.Count > 0))
                     {
-                        int lastIndex = variables[variables.Count - 1].content.Count - 1;
-                        sector = (PsxIso.Sectors)(variables[variables.Count - 1].content[lastIndex].Sector);
+                        int lastIndex = variables[variables.Count - 1].Content.Count - 1;
+                        sector = (PsxIso.Sectors)(variables[variables.Count - 1].Content[lastIndex].Sector);
                     }
                     else if (!isSymbol)
                     {
@@ -722,15 +730,15 @@ namespace FFTorgASM
                     }
 
                     VariableType vType = new VariableType();
-                    vType.numBytes = numBytes;
-                    vType.byteArray = byteArray;
-                    vType.name = varName;
-                    vType.content = patchedByteArrayList;
-                    vType.isReference = isReference;
-                    vType.reference = new VariableReference();
-                    vType.reference.name = referenceName;
-                    vType.reference.operatorSymbol = referenceOperatorSymbol;
-                    vType.reference.operand = referenceOperand;
+                    vType.NumBytes = numBytes;
+                    vType.ByteArray = byteArray;
+                    vType.Name = varName;
+                    vType.Content = patchedByteArrayList;
+                    vType.IsReference = isReference;
+                    vType.Reference = new VariableReference();
+                    vType.Reference.Name = referenceName;
+                    vType.Reference.OperatorSymbol = referenceOperatorSymbol;
+                    vType.Reference.Operand = referenceOperand;
 
                     variables.Add( vType );
                 }

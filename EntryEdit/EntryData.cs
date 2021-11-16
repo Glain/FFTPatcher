@@ -1,28 +1,10 @@
-﻿using System;
+﻿using PatcherLib;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EntryEdit
 {
-    public interface ICopyableEntry<T>
-    {
-        T Copy();
-    }
-
-    public static class CopyableEntry
-    {
-        public static List<T> CopyList<T>(List<T> list) where T: ICopyableEntry<T>
-        {
-            List<T> listCopy = new List<T>(list.Capacity);
-            foreach (T entry in list)
-            {
-                listCopy.Add(entry.Copy());
-            }
-
-            return listCopy;
-        }
-    }
-
     public class SelectedIndexResult
     {
         public int BattleConditionalIndex { get; private set; }

@@ -14,12 +14,10 @@ namespace FFTorgASM
 {
     public partial class FreeSpaceForm : Form
     {
-        ASMEncoding.ASMEncodingUtility asmUtility;
-        List<AsmPatch> patchList;
-        Dictionary<PatchedByteArray, AsmPatch> innerPatchMap;
-        Dictionary<PatchRange, List<PatchedByteArray>> patchRangeMap;
-        Dictionary<PatchRange, HashSet<AsmPatch>> outerPatchRangeMap;
-        Dictionary<DataGridViewRow, PatchedByteArray> rowPatchMap;
+        private ASMEncoding.ASMEncodingUtility asmUtility;
+        private List<AsmPatch> patchList;
+        private FreeSpaceMaps freeSpaceMaps;
+        private Dictionary<DataGridViewRow, PatchedByteArray> rowPatchMap;
 
         public FreeSpaceForm(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
         {
@@ -38,56 +36,7 @@ namespace FFTorgASM
         {
             this.patchList = patchList;
             this.asmUtility = asmUtility;
-
-            innerPatchMap = new Dictionary<PatchedByteArray, AsmPatch>();
-            patchRangeMap = new Dictionary<PatchRange, List<PatchedByteArray>>();
-            outerPatchRangeMap = new Dictionary<PatchRange, HashSet<AsmPatch>>();
-
-            foreach (AsmPatch patch in patchList)
-            {
-                List<PatchedByteArray> combinedPatchList = patch.GetCombinedPatchList();
-
-                foreach (PatchedByteArray patchedByteArray in combinedPatchList)
-                {
-                    if (patchedByteArray is InputFilePatch)
-                        continue;
-
-                    if (!innerPatchMap.ContainsKey(patchedByteArray))
-                        innerPatchMap.Add(patchedByteArray, patch);
-
-                    //long patchedByteArrayEndOffset = patchedByteArray.Offset + patchedByteArray.GetBytes().Length - 1;
-                    foreach (PatchRange range in FreeSpace.PsxRanges)
-                    {
-                        //long positionEndOffset = position.StartLocation + position.Length - 1;
-                        //if ((((PsxIso.Sectors)patchedByteArray.Sector) == position.Sector) && (patchedByteArrayEndOffset >= position.StartLocation) && (patchedByteArray.Offset <= positionEndOffset))
-                        if (range.HasOverlap(patchedByteArray))
-                        {
-                            if (patchRangeMap.ContainsKey(range))
-                                patchRangeMap[range].Add(patchedByteArray);
-                            else
-                                patchRangeMap.Add(range, new List<PatchedByteArray>() { patchedByteArray });
-
-                            if (outerPatchRangeMap.ContainsKey(range))
-                                outerPatchRangeMap[range].Add(patch);
-                            else
-                                outerPatchRangeMap.Add(range, new HashSet<AsmPatch>() { patch });
-                        }
-                    }
-                }
-
-                foreach (PatchRange range in FreeSpace.PsxRanges)
-                {
-                    if (patchRangeMap.ContainsKey(range))
-                    {
-                        patchRangeMap[range].Sort(
-                            delegate(PatchedByteArray patchedByteArray1, PatchedByteArray patchedByteArray2)
-                            {
-                                return patchedByteArray1.Offset.CompareTo(patchedByteArray2.Offset);
-                            }
-                        );
-                    }
-                }
-            }
+            this.freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(patchList); 
         }
 
         private void Reload()
@@ -110,17 +59,17 @@ namespace FFTorgASM
             rowPatchMap = new Dictionary<DataGridViewRow, PatchedByteArray>();
 
             PatchRange range = FreeSpace.PsxRanges[freeSpacePositionIndex];
-            if (!patchRangeMap.ContainsKey(range))
+            if (!freeSpaceMaps.PatchRangeMap.ContainsKey(range))
                 return;
 
             //long positionEndOffset = position.StartLocation + position.Length - 1;
-            List<PatchedByteArray> patchedByteArrayList = patchRangeMap[range];
-            HashSet<AsmPatch> asmPatchSet = outerPatchRangeMap[range];
+            List<PatchedByteArray> patchedByteArrayList = freeSpaceMaps.PatchRangeMap[range];
+            HashSet<AsmPatch> asmPatchSet = freeSpaceMaps.OuterPatchRangeMap[range];
 
             for (int index = 0; index < patchedByteArrayList.Count; index++)
             {
                 PatchedByteArray patchedByteArray = patchedByteArrayList[index];
-                AsmPatch asmPatch = innerPatchMap[patchedByteArray];
+                AsmPatch asmPatch = freeSpaceMaps.InnerPatchMap[patchedByteArray];
 
                 // Column order: Number, Address, Length, Next Address, Space to Next Patch, File, Name
                 int length = patchedByteArray.GetBytes().Length;
@@ -190,7 +139,7 @@ namespace FFTorgASM
                     if (offset != newOffset)
                     {
                         PatchedByteArray patchedByteArray = rowPatchMap[row];
-                        AsmPatch asmPatch = innerPatchMap[patchedByteArray];
+                        AsmPatch asmPatch = freeSpaceMaps.InnerPatchMap[patchedByteArray];
                         long moveOffset = newOffset - offset;
 
                         MovePatchRange movePatchRange = new MovePatchRange(new PatchRange(patchedByteArray), moveOffset);

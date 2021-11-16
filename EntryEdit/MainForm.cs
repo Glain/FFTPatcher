@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using EntryEdit.Forms;
+using PatcherLib;
 
 namespace EntryEdit
 {

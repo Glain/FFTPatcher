@@ -106,6 +106,7 @@
     <Compile Include="Controls\ShortGroupBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CopyableEntry.cs" />
     <Compile Include="Datatypes\Context.cs" />
     <Compile Include="Datatypes\PatchRange.cs" />
     <Compile Include="ExtensionMethods.cs" />

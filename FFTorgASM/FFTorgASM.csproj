@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsmPatch.cs" />
+    <Compile Include="ConflictHelper.cs" />
     <Compile Include="ConflictCheckerForm.cs">
       <SubType>Form</SubType>
     </Compile>

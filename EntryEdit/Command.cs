@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using PatcherLib.Datatypes;
+using PatcherLib;
 
 namespace EntryEdit
 {

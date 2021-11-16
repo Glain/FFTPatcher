@@ -150,7 +150,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(215, 13);
             this.label1.TabIndex = 12;
-            this.label1.Text = "Only visible patches in this list will be applied";
+            this.label1.Text = "";
             // 
             // lsb_FilesList
             // 

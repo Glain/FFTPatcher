@@ -134,7 +134,7 @@ namespace PatcherLib.Datatypes
 
     }
 
-    public class PatchedByteArray
+    public class PatchedByteArray: ICopyableEntry<PatchedByteArray>
     {
 		#region Public Properties (4) 
 
@@ -164,6 +164,7 @@ namespace PatcherLib.Datatypes
         public long RamOffset { get; set; }
         public string ErrorText { get; set; }
         public string Label { get; set; }
+        public bool IsStatic { get; set; }
 
 		#endregion Public Properties 
 
@@ -300,6 +301,7 @@ namespace PatcherLib.Datatypes
             result.RamOffset = RamOffset;
             result.ErrorText = ErrorText;
             result.Label = Label;
+            result.IsStatic = IsStatic;
             return result;
         }
     }

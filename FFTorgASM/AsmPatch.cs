@@ -4,6 +4,7 @@ using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
 using System.Text;
 using System.Globalization;
+using PatcherLib;
 
 namespace FFTorgASM
 {
@@ -79,24 +80,51 @@ namespace FFTorgASM
 
     }
 
-    public struct VariableType
+    public class VariableType : ICopyableEntry<VariableType>
     {
-    	public byte numBytes;
-        public byte[] byteArray;
-        public string name;
-        public List<PatchedByteArray> content;
-        public bool isReference;
-        public VariableReference reference;
+        public byte NumBytes { get; set; }
+        public byte[] ByteArray { get; set; }
+        public string Name { get; set; }
+        public List<PatchedByteArray> Content { get; set; }
+        public bool IsReference { get; set; }
+        public VariableReference Reference { get; set; }
+
+        public VariableType Copy()
+        {
+            List<PatchedByteArray> contentCopy = new List<PatchedByteArray>();
+            foreach (PatchedByteArray patchedByteArray in Content)
+            {
+                contentCopy.Add(patchedByteArray.Copy());
+            }
+
+            VariableType variable = new VariableType();
+            variable.NumBytes = NumBytes;
+            variable.ByteArray = (byte[])ByteArray.Clone();
+            variable.Name = Name;
+            variable.Content = contentCopy;
+            variable.IsReference = IsReference;
+            variable.Reference = Reference.Copy();
+            return variable;
+        }
     }
 
-    public struct VariableReference
+    public class VariableReference
     {
-        public string name;
-        public string operatorSymbol;
-        public uint operand;
+        public string Name { get; set; }
+        public string OperatorSymbol { get; set; }
+        public uint Operand { get; set; }
+
+        public VariableReference Copy()
+        {
+            VariableReference result = new VariableReference();
+            result.Name = Name;
+            result.OperatorSymbol = OperatorSymbol;
+            result.Operand = Operand;
+            return result;
+        }
     }
 
-    public class AsmPatch : IList<PatchedByteArray>
+    public class AsmPatch : IList<PatchedByteArray>, ICopyableEntry<AsmPatch>
     {
         public class GetBytesResult
         {
@@ -165,12 +193,19 @@ namespace FFTorgASM
             SetVarInnerList();
         }
 
+        public AsmPatch Copy()
+        {
+            AsmPatch result = new AsmPatch(Name, Filename, Description, CopyableEntry.CopyList<PatchedByteArray>(innerList), HideInDefault, IsHidden, CopyableEntry.CopyArray<VariableType>(Variables));
+            result.ErrorText = ErrorText;
+            return result;
+        }
+
         private void SetVarInnerList()
         {
             varInnerList.Clear();
             foreach (VariableType varType in Variables)
             {
-                List<PatchedByteArray> patchedByteArrayList = varType.content;
+                List<PatchedByteArray> patchedByteArrayList = varType.Content;
                 if (patchedByteArrayList != null)
                 {
                     foreach (PatchedByteArray patchedByteArray in patchedByteArrayList)
@@ -191,7 +226,7 @@ namespace FFTorgASM
             Dictionary<string, VariableType> resultMap = new Dictionary<string, VariableType>();
             foreach (VariableType variable in variables)
             {
-                string name = variable.name;
+                string name = variable.Name;
                 if (!resultMap.ContainsKey(name))
                 {
                     resultMap.Add(name, variable);
@@ -206,7 +241,7 @@ namespace FFTorgASM
             int count = 0;
             foreach (VariableType variable in Variables)
             {
-                if (!variable.isReference)
+                if (!variable.IsReference)
                     count++;
             }
             return count;
@@ -324,8 +359,8 @@ namespace FFTorgASM
                     }
                     foreach (VariableType variable in Variables)
                     {
-                        sbPrefix.AppendFormat(".eqv %{0}, {1}{2}", ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(variable.name).Replace(",", ""),
-                            Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.byteArray), Environment.NewLine);
+                        sbPrefix.AppendFormat(".eqv %{0}, {1}{2}", ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(variable.Name).Replace(",", ""),
+                            Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.ByteArray), Environment.NewLine);
                     }
 
                     encodeContent = sbPrefix.ToString() + patchedByteArray.Text;
@@ -352,31 +387,31 @@ namespace FFTorgASM
         {
             foreach (VariableType variable in Variables)
             {
-                if (variable.isReference)
+                if (variable.IsReference)
                     UpdateReferenceVariableValue(variable);
             }
         }
 
         private void UpdateReferenceVariableValue(VariableType variable)
         {
-            if (variable.isReference)
+            if (variable.IsReference)
             {
-                byte[] referenceBytes = VariableMap[variable.reference.name].byteArray;
+                byte[] referenceBytes = VariableMap[variable.Reference.Name].ByteArray;
                 uint value = Utilities.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
 
-                switch (variable.reference.operatorSymbol)
+                switch (variable.Reference.OperatorSymbol)
                 {
                     case "+":
-                        value += variable.reference.operand;
+                        value += variable.Reference.Operand;
                         break;
                     case "-":
-                        value -= variable.reference.operand;
+                        value -= variable.Reference.Operand;
                         break;
                     case "*":
-                        value *= variable.reference.operand;
+                        value *= variable.Reference.Operand;
                         break;
                     case "/":
-                        value /= variable.reference.operand;
+                        value /= variable.Reference.Operand;
                         break;
                 }
 
@@ -386,11 +421,11 @@ namespace FFTorgASM
 
         public static void UpdateVariable(VariableType variable, UInt32 newValue)
         {
-            for (int i = 0; i < variable.numBytes; i++)
+            for (int i = 0; i < variable.NumBytes; i++)
             {
                 byte byteValue = (byte)((newValue >> (i * 8)) & 0xff);
-                variable.byteArray[i] = byteValue;
-                foreach (PatchedByteArray patchedByteArray in variable.content)
+                variable.ByteArray[i] = byteValue;
+                foreach (PatchedByteArray patchedByteArray in variable.Content)
                 {
                     patchedByteArray.GetBytes()[i] = byteValue;
                 }
@@ -401,16 +436,16 @@ namespace FFTorgASM
         {
             VariableType resultVariable = new VariableType();
 
-            resultVariable.numBytes = variable.numBytes;
-            resultVariable.byteArray = (byte[])(variable.byteArray.Clone());
-            resultVariable.name = variable.name;
-            resultVariable.isReference = variable.isReference;
-            resultVariable.reference = variable.reference;
+            resultVariable.NumBytes = variable.NumBytes;
+            resultVariable.ByteArray = (byte[])(variable.ByteArray.Clone());
+            resultVariable.Name = variable.Name;
+            resultVariable.IsReference = variable.IsReference;
+            resultVariable.Reference = variable.Reference;
 
-            resultVariable.content = new List<PatchedByteArray>();
-            foreach (PatchedByteArray patchedByteArray in variable.content)
+            resultVariable.Content = new List<PatchedByteArray>();
+            foreach (PatchedByteArray patchedByteArray in variable.Content)
             {
-                resultVariable.content.Add(patchedByteArray.Copy());
+                resultVariable.Content.Add(patchedByteArray.Copy());
             }
 
             return resultVariable;
@@ -583,31 +618,31 @@ namespace FFTorgASM
 
             foreach (VariableType variable in Variables)
             {
-                int value = variable.byteArray.ToIntLE();
+                int value = variable.ByteArray.ToIntLE();
                 System.Text.StringBuilder sbSpecific = new System.Text.StringBuilder();
-                int patchCount = variable.content.Count;
+                int patchCount = variable.Content.Count;
 
                 for (int index = 0; index < patchCount; index++)
                 {
-                    PatchedByteArray patchedByteArray = variable.content[index];
+                    PatchedByteArray patchedByteArray = variable.Content[index];
                     //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
                     string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
                     sbSpecific.AppendFormat("{0}:{1}{2}", file, patchedByteArray.Offset.ToString("X"), ((index < (patchCount - 1)) ? "," : ""));
                 }
 
                 string strVariableReference = "";
-                if (variable.isReference)
+                if (variable.IsReference)
                 {
-                    strVariableReference = String.Format(" reference=\"{0}\" operator=\"{1}\" operand=\"{2}\"", variable.reference.name, variable.reference.operand, variable.reference.operatorSymbol);
+                    strVariableReference = String.Format(" reference=\"{0}\" operator=\"{1}\" operand=\"{2}\"", variable.Reference.Name, variable.Reference.Operand, variable.Reference.OperatorSymbol);
                 }
 
-                string strDefault = variable.isReference ? "" : String.Format(" default=\"{0}\"", value.ToString("X"));
+                string strDefault = variable.IsReference ? "" : String.Format(" default=\"{0}\"", value.ToString("X"));
 
                 string strSpecific = sbSpecific.ToString();
                 string strContent = string.IsNullOrEmpty(strSpecific) ? "symbol=\"true\"" : String.Format("specific=\"{0}\"", strSpecific);
 
                 sb.AppendFormat("        <Variable name=\"{0}\" {1} bytes=\"{2}\"{3}{4} />{5}",
-                    variable.name, strContent, variable.numBytes, strDefault, strVariableReference, Environment.NewLine);
+                    variable.Name, strContent, variable.NumBytes, strDefault, strVariableReference, Environment.NewLine);
             }
 
             sb.AppendLine("    </Patch>");
@@ -639,7 +674,7 @@ namespace FFTorgASM
 
             foreach (string varKey in varKeys)
             {
-                string varText = Utilities.GetUnsignedByteArrayValue_LittleEndian(variableMap[varKey].byteArray).ToString("X");
+                string varText = Utilities.GetUnsignedByteArrayValue_LittleEndian(variableMap[varKey].ByteArray).ToString("X");
                 byteText = System.Text.RegularExpressions.Regex.Replace(byteText, System.Text.RegularExpressions.Regex.Escape("%" + varKey), varText.Replace("$", "$$"),
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             }
