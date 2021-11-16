@@ -14,6 +14,8 @@
 #   ROUTINE: Get join status (post-battle)
 #       Parameters:
 #           a0 = Battle unit index
+#           a1 = Force party slot check (even if guest) (1 = true, 0 = false)
+#           a2 = Guest status of unit (1 = true, 0 = false)
 #       Returns:
 #           v0 = 1 if unit can join, 0 otherwise
 
@@ -21,13 +23,17 @@
 
         addiu   sp, sp, -16
         sw      ra, 4(sp)
+        sw      s0, 8(sp)
         
         sb      zero, @address_is_bench_join
         
         jal     @post_battle_get_free_party_slot_status
-        nop
+        move    s0, a2
 
         bne     v0, zero, post_battle_get_join_status_end
+        nop
+        
+        bne     s0, zero, post_battle_get_join_status_end
         nop
         
         jal     @battle_get_first_empty_bench_slot
@@ -37,6 +43,7 @@
         sb      v0, @address_is_bench_join
         
     post_battle_get_join_status_end:
+        lw      s0, 8(sp)
         lw      ra, 4(sp)
         addiu   sp, sp, 16
         jr      ra
@@ -79,6 +86,32 @@
         jr      ra
         addiu   sp, sp, 16
         
+
+#   ROUTINE: Handle post-battle party unit bench
+#       Parameters:
+#           a0 = Party unit index
+
+@handle_post_battle_party_unit_bench:
+
+        addiu   sp, sp, -16
+        sw      ra, 4(sp)
+        sw      s0, 8(sp)
+        
+        jal     @get_party_data_pointer
+        move    s0, a0
+        
+        jal     @battle_bench_party_unit
+        move    a0, v0
+        
+        jal     @remove_unit_from_party
+        move    a0, s0
+        
+        lw      s0, 8(sp)
+        lw      ra, 4(sp)
+        addiu   sp, sp, 16
+        jr      ra
+        nop
+        
         
 #   ROUTINE: Bench new unit
 #       Parameters:
@@ -93,18 +126,48 @@
         jal     @save_battle_unit_as_party_unit
         li      a2, 0
         
-        jal     @battle_get_first_empty_bench_slot
-        nop
-        
-        beq     v0, zero, bench_new_unit_end
+        jal     @battle_bench_party_unit
         addiu   a0, sp, 8
+        
+        #jal     @battle_get_first_empty_bench_slot
+        #nop
+        
+        #beq     v0, zero, bench_new_unit_end
+        #addiu   a0, sp, 8
+        
+        #jal     @battle_bench_unit
+        #move    a1, v0
+       
+    #bench_new_unit_end:
+        lw      ra, 4(sp)
+        addiu   sp, sp, 272
+        jr      ra
+        nop
+
+
+#   ROUTINE: Bench party unit
+#       Parameters:
+#           a0 = Party unit pointer
+
+@battle_bench_party_unit:
+
+        addiu   sp, sp, -16
+        sw      ra, 4(sp)
+        sw      s0, 8(sp)
+        
+        jal     @battle_get_first_empty_bench_slot
+        move    s0, a0     
+        
+        beq     v0, zero, bench_party_unit_end
+        move    a0, s0
         
         jal     @battle_bench_unit
         move    a1, v0
-       
-    bench_new_unit_end:
+        
+    bench_party_unit_end:
+        lw      s0, 8(sp)
         lw      ra, 4(sp)
-        addiu   sp, sp, 272
+        addiu   sp, sp, 16
         jr      ra
         nop
 

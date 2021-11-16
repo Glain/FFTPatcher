@@ -788,7 +788,11 @@
         beq     t0, t3, get_first_empty_active_party_slot_end
         move    v0, t1
         
-        andi    t2, t2, 0x0f
+        #andi    t2, t2, 0x0f
+        sltiu   t0, t2, %RosterSize
+        subu    t0, zero, t0
+        and     t2, t2, t0
+        
         li      v1, -1
         bne     t2, a0, get_first_empty_active_party_slot_loop
         li      v0, 0
@@ -853,9 +857,14 @@
         bne     t0, zero, is_unit_benchable_end
         li      v0, 0
 
-        #   Guest (or doesn't exist)
-        sltiu   t0, t1, 16
+        #   Outside benchable roster size (or doesn't exist)
+        sltiu   t0, t1, %RosterSize
         beq     t0, zero, is_unit_benchable_end
+        li      v0, 0
+        
+        #   Guest
+        andi    t0, t3, 0x01
+        bne     t0, zero, is_unit_benchable_end
         li      v0, 0
         
         #   Is in first party slot  (Should be covered by Ramza check already, but for mods...?)

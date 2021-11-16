@@ -28,8 +28,6 @@
 .eqv    %wait_frame_cap_plus_one, 31
 .eqv    %wait_frame_cap, 30
 
-.org    0x8015bc00
-
 #   ROUTINE: Check event button input
 #       Returns:
 #           a1 = Button input value (*0x80045944) (word)
@@ -128,6 +126,16 @@
     get_event_skip_type_loop:
         lbu     t1, 0(t0)       #   Event instruction ID
         
+        .if     >, %UnskippableEventInstructionID, 0
+            li      t2, %UnskippableEventInstructionID
+            bne     t1, t2, get_event_skip_type_past_unskippable_check
+            nop
+
+            j       get_event_skip_type_end
+            li      v0, 0
+        .endif
+
+    get_event_skip_type_past_unskippable_check:
         li      t2, 0xdb        #   EventEnd
         beq     t1, t2, get_event_skip_type_end
         li      t2, 0xe3        #   EventEnd2
@@ -230,6 +238,12 @@
         addiu   sp, sp, -40
         sw      s0, 4(sp)
         move    s0, ra
+        
+        .if     >, %UsingEventInstructionUpgrade, 0
+            jal     0x80146078         
+            nop
+            move    s3, v0
+        .endif
         
         #   If we're running the next event instruction, dialog text is no longer unskippable.
         #sb      zero, @address_is_dialog_text_unskippable
@@ -614,7 +628,11 @@
         nop
     
     check_event_skip_end:
-        li      v0, 0xc0
+        .if     >, %UsingEventInstructionUpgrade, 0
+            move    v0, s3
+        .else
+            li      v0, 0xc0
+        .endif
         
         move    ra, s0
         lw      s0, 4(sp)
