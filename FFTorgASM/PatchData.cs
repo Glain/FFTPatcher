@@ -174,7 +174,7 @@ namespace FFTorgASM
             }
 
             int allPatchIndex = 0;
-            foreach (AsmPatch patch in AllPatches)
+            foreach (AsmPatch patch in AllShownPatches)
             {
                 if (!(patch.IsHidden || patch.HideInDefault))
                     BackgroundColors[0][allPatchIndex++] = string.IsNullOrEmpty(patch.ErrorText) ? normalColor : errorColor;

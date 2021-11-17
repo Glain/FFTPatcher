@@ -46,8 +46,11 @@
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             this.btn_UncheckAll = new System.Windows.Forms.Button();
             this.btn_SavePatchXML = new System.Windows.Forms.Button();
-            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             this.btn_Sort = new System.Windows.Forms.Button();
+            this.btn_Clear = new System.Windows.Forms.Button();
+            this.txt_Search = new System.Windows.Forms.TextBox();
+            this.lbl_Search = new System.Windows.Forms.Label();
+            this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -148,9 +151,8 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(296, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(215, 13);
+            this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 12;
-            this.label1.Text = "";
             // 
             // lsb_FilesList
             // 
@@ -239,17 +241,6 @@
             this.btn_SavePatchXML.UseVisualStyleBackColor = true;
             this.btn_SavePatchXML.Click += new System.EventHandler(this.btn_SavePatchXML_Click);
             // 
-            // variableSpinner
-            // 
-            this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.variableSpinner.Hexadecimal = true;
-            this.variableSpinner.Location = new System.Drawing.Point(226, 602);
-            this.variableSpinner.Name = "variableSpinner";
-            this.variableSpinner.Size = new System.Drawing.Size(102, 20);
-            this.variableSpinner.TabIndex = 5;
-            this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.variableSpinner.Visible = false;
-            // 
             // btn_Sort
             // 
             this.btn_Sort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -261,11 +252,53 @@
             this.btn_Sort.UseVisualStyleBackColor = true;
             this.btn_Sort.Click += new System.EventHandler(this.btn_Sort_Click);
             // 
+            // btn_Clear
+            // 
+            this.btn_Clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_Clear.Location = new System.Drawing.Point(480, 2);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(75, 23);
+            this.btn_Clear.TabIndex = 19;
+            this.btn_Clear.Text = "Clear";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
+            // 
+            // txt_Search
+            // 
+            this.txt_Search.Location = new System.Drawing.Point(205, 4);
+            this.txt_Search.Name = "txt_Search";
+            this.txt_Search.Size = new System.Drawing.Size(269, 20);
+            this.txt_Search.TabIndex = 20;
+            this.txt_Search.TextChanged += new System.EventHandler(this.txt_Search_TextChanged);
+            // 
+            // lbl_Search
+            // 
+            this.lbl_Search.AutoSize = true;
+            this.lbl_Search.Location = new System.Drawing.Point(155, 7);
+            this.lbl_Search.Name = "lbl_Search";
+            this.lbl_Search.Size = new System.Drawing.Size(44, 13);
+            this.lbl_Search.TabIndex = 21;
+            this.lbl_Search.Text = "Search:";
+            // 
+            // variableSpinner
+            // 
+            this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.variableSpinner.Hexadecimal = true;
+            this.variableSpinner.Location = new System.Drawing.Point(226, 602);
+            this.variableSpinner.Name = "variableSpinner";
+            this.variableSpinner.Size = new System.Drawing.Size(102, 20);
+            this.variableSpinner.TabIndex = 5;
+            this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.variableSpinner.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.lbl_Search);
+            this.Controls.Add(this.txt_Search);
+            this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.btn_Sort);
             this.Controls.Add(this.btn_SavePatchXML);
             this.Controls.Add(this.btn_UncheckAll);
@@ -315,6 +348,9 @@
         private System.Windows.Forms.Button btn_UncheckAll;
         private System.Windows.Forms.Button btn_SavePatchXML;
         private System.Windows.Forms.Button btn_Sort;
+        private System.Windows.Forms.Button btn_Clear;
+        private System.Windows.Forms.TextBox txt_Search;
+        private System.Windows.Forms.Label lbl_Search;
     }
 }
 

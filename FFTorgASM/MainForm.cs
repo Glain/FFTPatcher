@@ -27,6 +27,10 @@ namespace FFTorgASM
         private AsmPatch[] patches;
         private PatchSortType sortType = PatchSortType.Ordinal;
 
+        private List<AsmPatch> OriginalAllPatches { get; set; }
+        private List<AsmPatch> OriginalAllShownPatches { get; set; }
+        private Dictionary<PatchData.PatchFile, List<AsmPatch>> OriginalFilePatches { get; set; }
+
         private bool ignoreChanges = true;
         private bool skipCheckEventHandler = false;
 
@@ -50,6 +54,8 @@ namespace FFTorgASM
             clb_Patches.SelectedIndexChanged += new EventHandler( clb_Patches_SelectedIndexChanged );
             variableSpinner.ValueChanged += new EventHandler( variableSpinner_ValueChanged );
             variableComboBox.SelectedIndexChanged += new EventHandler(variableComboBox_SelectedIndexChanged);
+
+            lsb_FilesList.SelectedIndex = 0;
         }
 
         private void UpdateVariable(VariableType variable, UInt32 newValue)
@@ -73,6 +79,8 @@ namespace FFTorgASM
             LoadFilePatches(index + 1);
 
             lsb_FilesList.SetBackColor(index + 1, patchData.LoadedCorrectly[index] ? Color.White : Color.FromArgb(225, 125, 125));
+
+            OriginalFilePatches[patchData.FilePatches[index]] = patchData.FilePatches[index].Patches;
         }
 
         private void LoadFiles(IList<string> fileList = null)
@@ -103,6 +111,8 @@ namespace FFTorgASM
                     //lsb_FilesList.BackColors[i + 1] = Color.Red;
                     lsb_FilesList.SetBackColor(i + 1, Color.FromArgb(225, 125, 125));
             }
+
+            SetOriginalPatches();
         }
 
         private void LoadPatches(IList<AsmPatch> patches)
@@ -113,6 +123,18 @@ namespace FFTorgASM
                 this.patches = patches.ToArray();
 
                 clb_Patches.Items.AddRange(this.patches);
+            }
+        }
+
+        private void SetOriginalPatches()
+        {
+            OriginalAllPatches = patchData.AllPatches;
+            OriginalAllShownPatches = patchData.AllShownPatches;
+
+            OriginalFilePatches = new Dictionary<PatchData.PatchFile, List<AsmPatch>>();
+            foreach (PatchData.PatchFile patchFile in patchData.FilePatches)
+            {
+                OriginalFilePatches.Add(patchFile, patchFile.Patches);
             }
         }
 
@@ -177,7 +199,7 @@ namespace FFTorgASM
 
         private List<AsmPatch> GetAllSelectedPatches()
         {
-            return GetSelectedPatchesFromList(patchData.AllShownPatches);
+            return GetSelectedPatchesFromList(patchData.AllPatches);
         }
 
         private List<AsmPatch> GetSelectedPatchesFromList(List<AsmPatch> asmPatchList)
@@ -249,16 +271,36 @@ namespace FFTorgASM
             LoadCurrentFilePatches();
         }
 
+        private void FormFilter()
+        {
+            FilterPatches();
+            patchData.RecalcBackgroundColors();
+            LoadCurrentFilePatches();
+        }
+
+        private void FormSortAndFilter()
+        {
+            SortPatches();
+            FilterPatches();
+            patchData.RecalcBackgroundColors();
+            LoadCurrentFilePatches();
+        }
+
         private void SortPatchesOrdinal()
         {
             patchData.AllPatches.Sort((x, y) => patchData.AllOrdinalMap[x].CompareTo(patchData.AllOrdinalMap[y]));
             patchData.AllShownPatches.Sort((x, y) => patchData.AllOrdinalMap[x].CompareTo(patchData.AllOrdinalMap[y]));
+            OriginalAllPatches.Sort((x, y) => patchData.AllOrdinalMap[x].CompareTo(patchData.AllOrdinalMap[y]));
+            OriginalAllShownPatches.Sort((x, y) => patchData.AllOrdinalMap[x].CompareTo(patchData.AllOrdinalMap[y]));
 
             for (int index = 0; index < patchData.FilePatches.Length; index++)
             {
                 PatchData.PatchFile patchFile = patchData.FilePatches[index];
                 if ((patchFile != null) && (patchFile.Patches != null))
+                {
                     patchFile.Patches.Sort((x, y) => patchData.FileOrdinalMaps[index][x].CompareTo(patchData.FileOrdinalMaps[index][y]));
+                    OriginalFilePatches[patchFile].Sort((x, y) => patchData.FileOrdinalMaps[index][x].CompareTo(patchData.FileOrdinalMaps[index][y]));
+                }
             }
         }
 
@@ -266,10 +308,16 @@ namespace FFTorgASM
         {
             patchData.AllPatches.Sort(comparer);
             patchData.AllShownPatches.Sort(comparer);
+            OriginalAllPatches.Sort(comparer);
+            OriginalAllShownPatches.Sort(comparer);
+
             foreach (PatchData.PatchFile patchFile in patchData.FilePatches)
             {
                 if ((patchFile != null) && (patchFile.Patches != null))
+                {
                     patchFile.Patches.Sort(comparer);
+                    OriginalFilePatches[patchFile].Sort(comparer);
+                }
             }
         }
 
@@ -290,6 +338,39 @@ namespace FFTorgASM
             SortPatches(sortType);
         }
 
+        private void FilterPatches(string filter = null)
+        {
+            if (filter == null)
+                filter = txt_Search.Text;
+
+            //patchData.AllPatches = GetFilteredPatches(OriginalAllPatches, filter);
+            patchData.AllShownPatches = GetFilteredPatches(OriginalAllShownPatches, filter);
+            foreach (PatchData.PatchFile patchFile in patchData.FilePatches)
+            {
+                if ((patchFile != null) && (patchFile.Patches != null))
+                    patchFile.Patches = GetFilteredPatches(OriginalFilePatches[patchFile], filter);
+            }
+        }
+
+        private List<AsmPatch> GetFilteredPatches(IList<AsmPatch> patches, string filter)
+        {
+            if (string.IsNullOrEmpty(filter))
+                return new List<AsmPatch>(patches);
+
+            filter = filter.ToUpper().Trim();
+            List<AsmPatch> resultList = new List<AsmPatch>();
+
+            foreach (AsmPatch patch in patches)
+            {
+                if (patch.Name.ToUpper().Trim().Contains(filter))
+                {
+                    resultList.Add(patch);
+                }
+            }
+
+            return resultList;
+        }
+
         private void reloadButton_Click(object sender, EventArgs e)
         {
             int selectedIndex = lsb_FilesList.SelectedIndex;
@@ -298,7 +379,7 @@ namespace FFTorgASM
             else
                 LoadFiles();
 
-            FormSort();
+            FormSortAndFilter();
         }
 
         private void variableComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -613,6 +694,17 @@ namespace FFTorgASM
         private void btn_Sort_Click(object sender, EventArgs e)
         {
             ToggleSort();
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            txt_Search.Text = string.Empty;
+            FormFilter();
+        }
+
+        private void txt_Search_TextChanged(object sender, EventArgs e)
+        {
+            FormFilter();
         }
     }
 }
