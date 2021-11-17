@@ -234,9 +234,24 @@ namespace FFTorgASM
                 string content = location.InnerText;
                 if (inputFileAttribute != null)
                 {
-                    using (StreamReader streamReader = new StreamReader(inputFileAttribute.InnerText, Encoding.UTF8))
+
+                    string readPath = inputFileAttribute.InnerText;
+                    try
                     {
-                        content = streamReader.ReadToEnd();
+                        FileInfo fileInfo = new FileInfo(xmlFileName);
+                        readPath = Path.Combine(fileInfo.DirectoryName, readPath);
+                        using (StreamReader streamReader = new StreamReader(readPath, Encoding.UTF8))
+                        {
+                            content = streamReader.ReadToEnd();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        readPath = inputFileAttribute.InnerText;
+                        using (StreamReader streamReader = new StreamReader(readPath, Encoding.UTF8))
+                        {
+                            content = streamReader.ReadToEnd();
+                        }
                     }
                 }
 
