@@ -249,7 +249,7 @@ namespace FFTorgASM
             //bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
             bool enablePatchButtons = (patchData.SelectedPatches.Count > 0);
             btnPatch.Enabled = enablePatchButtons;
-            btnPatchSaveState.Enabled = enablePatchButtons;
+            //btnPatchSaveState.Enabled = enablePatchButtons;
         }
 
         private void LoadCurrentFilePatches()
@@ -509,7 +509,26 @@ namespace FFTorgASM
             //bool enablePatchButtons = (patchData.CurrentSelectedPatches.Count > 0);
             bool enablePatchButtons = (patchData.SelectedPatches.Count > 0);
             btnPatch.Enabled = enablePatchButtons;
-            btnPatchSaveState.Enabled = enablePatchButtons;
+            //btnPatchSaveState.Enabled = enablePatchButtons;
+        }
+
+        private void btnPatch_Click(object sender, EventArgs e)
+        {
+            PatchForm patchForm = new PatchForm(GetAllSelectedPatches(), asmUtility);
+            patchForm.Show();
+        }
+
+        /*
+        private void btnPatch_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "ISO or PSV files (*.bin, *.iso, *.img, *.psv)|*.bin;*.iso;*.img;*.psv";
+            saveFileDialog1.FileName = string.Empty;
+
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                PatchResult patchResult = PatchHelper.PatchFile(saveFileDialog1.FileName, GetAllSelectedPatches(), asmUtility);
+                PatcherLib.MyMessageBox.Show(this, patchResult.Message, ((patchResult.IsSuccess) ? "Complete!" : "Error"), MessageBoxButtons.OK);
+            }
         }
 
         private void btnPatch_Click(object sender, EventArgs e)
@@ -517,106 +536,26 @@ namespace FFTorgASM
             saveFileDialog1.Filter = "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
             saveFileDialog1.FileName = string.Empty;
 
-            StringBuilder sbResultMessage = new StringBuilder();
-
             if ( saveFileDialog1.ShowDialog( this ) == DialogResult.OK )
             {
-                List<AsmPatch> patches = GetAllSelectedPatches();
-
-                ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(patches, asmUtility);
-                patches = conflictResolveResult.Patches;
-
-                using (Stream file = File.Open(saveFileDialog1.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
-                {
-                    //foreach ( AsmPatch patch in clb_Patches.CheckedItems )
-                    foreach (AsmPatch patch in patches)
-                    {
-                        //ModifyPatch(patch);
-                        patch.Update(asmUtility);
-                        PatcherLib.Iso.PsxIso.PatchPsxIso( file, patch );
-                    }
-                }
-
-                sbResultMessage.AppendLine("Complete!");
-                sbResultMessage.AppendLine();
-
-                if (!string.IsNullOrEmpty(conflictResolveResult.Message))
-                {
-                    sbResultMessage.AppendLine(conflictResolveResult.Message);
-                    sbResultMessage.AppendLine();
-                }
-
-                // DEBUG
-                //File.WriteAllText("./output.xml", PatchXmlReader.CreatePatchXML(patches), Encoding.UTF8);
-
-                //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
-                PatcherLib.MyMessageBox.Show(this, sbResultMessage.ToString(), "Complete!", MessageBoxButtons.OK);
+                PatchResult patchResult = PatchHelper.PatchISO(saveFileDialog1.FileName, GetAllSelectedPatches(), asmUtility);
+                PatcherLib.MyMessageBox.Show(this, patchResult.Message, ((patchResult.IsSuccess) ? "Complete!" : "Error"), MessageBoxButtons.OK);    
             }
         }
 
         private void btnPatchSaveState_Click(object sender, EventArgs e)
         {
-            //Patchbutton copy. Modify to patch byte array right to savestate.
-            saveFileDialog1.Filter = "PSV files (*.psv)|*.psv|All files (*.*)|*.*";
+            //saveFileDialog1.Filter = "PSV files (*.psv)|*.psv|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "PSV files (*.psv)|*.psv";
             saveFileDialog1.FileName = string.Empty;
-
-            StringBuilder sbResultMessage = new StringBuilder();
 
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                List<PatchedByteArray> patches = new List<PatchedByteArray>();
-                List<AsmPatch> asmPatches = GetAllSelectedPatches();
-
-                ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
-                asmPatches = conflictResolveResult.Patches;
-
-                using (BinaryReader reader = new BinaryReader(File.Open(saveFileDialog1.FileName, FileMode.Open)))
-                {
-                    //foreach (AsmPatch asmPatch in clb_Patches.CheckedItems)
-                    foreach (AsmPatch asmPatch in asmPatches)
-                    {
-                        //ModifyPatch(asmPatch);
-                        asmPatch.Update(asmUtility);
-                        foreach (PatchedByteArray innerPatch in asmPatch)
-                        {
-                            patches.Add(innerPatch);
-                        }
-                    }
-
-                    PatchPsxSaveStateResult patchResult = PatcherLib.Iso.PsxIso.PatchPsxSaveState(reader, patches);
-
-                    sbResultMessage.AppendLine("Complete!");
-                    sbResultMessage.AppendLine();
-
-                    if (!string.IsNullOrEmpty(conflictResolveResult.Message))
-                    {
-                        sbResultMessage.AppendLine(conflictResolveResult.Message);
-                        sbResultMessage.AppendLine();
-                    }
-
-                    if (patchResult.UnsupportedFiles.Count > 0)
-                    {
-                        sbResultMessage.AppendLine("Files not supported for savestate patching:");
-                        foreach (PsxIso.Sectors sector in patchResult.UnsupportedFiles)
-                        {
-                            sbResultMessage.AppendFormat("\t{0}{1}", PsxIso.GetSectorName(sector), Environment.NewLine);
-                        }
-                        sbResultMessage.AppendLine();
-                    }
-                    if (patchResult.AbsentFiles.Count > 0)
-                    {
-                        sbResultMessage.AppendLine("Files not present in savestate:");
-                        foreach (PsxIso.Sectors sector in patchResult.AbsentFiles)
-                        {
-                            sbResultMessage.AppendFormat("\t{0}{1}", PsxIso.GetSectorName(sector), Environment.NewLine);
-                        }
-                        sbResultMessage.AppendLine();
-                    }
-                }
-
-                PatcherLib.MyMessageBox.Show(this, sbResultMessage.ToString(), "Complete!", MessageBoxButtons.OK);
+                PatchResult patchResult = PatchHelper.PatchPSV(saveFileDialog1.FileName, GetAllSelectedPatches(), asmUtility);
+                PatcherLib.MyMessageBox.Show(this, patchResult.Message, ((patchResult.IsSuccess) ? "Complete!" : "Error"), MessageBoxButtons.OK);
             }
         }
+        */
 
         private void clb_Patches_DragEnter( object sender, DragEventArgs e )
         {

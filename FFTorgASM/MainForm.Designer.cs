@@ -37,7 +37,6 @@
             this.versionLabel = new System.Windows.Forms.Label();
             this.toggleButton = new System.Windows.Forms.Button();
             this.checkAllButton = new System.Windows.Forms.Button();
-            this.btnPatchSaveState = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lsb_FilesList = new PatcherLib.Controls.ColorListBox();
             this.btn_OpenConflictChecker = new System.Windows.Forms.Button();
@@ -61,7 +60,7 @@
             this.btnPatch.Name = "btnPatch";
             this.btnPatch.Size = new System.Drawing.Size(75, 23);
             this.btnPatch.TabIndex = 1;
-            this.btnPatch.Text = "Patch ISO...";
+            this.btnPatch.Text = "Patch...";
             this.btnPatch.UseVisualStyleBackColor = true;
             // 
             // saveFileDialog1
@@ -132,18 +131,6 @@
             this.checkAllButton.Text = "Check all";
             this.checkAllButton.UseVisualStyleBackColor = true;
             this.checkAllButton.Click += new System.EventHandler(this.checkAllButton_Click);
-            // 
-            // btnPatchSaveState
-            // 
-            this.btnPatchSaveState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPatchSaveState.Enabled = false;
-            this.btnPatchSaveState.Location = new System.Drawing.Point(332, 628);
-            this.btnPatchSaveState.Name = "btnPatchSaveState";
-            this.btnPatchSaveState.Size = new System.Drawing.Size(142, 23);
-            this.btnPatchSaveState.TabIndex = 10;
-            this.btnPatchSaveState.Text = "Patch to pSX Savestate";
-            this.btnPatchSaveState.UseVisualStyleBackColor = true;
-            this.btnPatchSaveState.Click += new System.EventHandler(this.btnPatchSaveState_Click);
             // 
             // label1
             // 
@@ -308,7 +295,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.variableSpinner);
             this.Controls.Add(this.btn_OpenConflictChecker);
-            this.Controls.Add(this.btnPatchSaveState);
             this.Controls.Add(this.checkAllButton);
             this.Controls.Add(this.toggleButton);
             this.Controls.Add(this.versionLabel);
@@ -339,7 +325,6 @@
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.Button toggleButton;
         private System.Windows.Forms.Button checkAllButton;
-        private System.Windows.Forms.Button btnPatchSaveState;
         private System.Windows.Forms.Label label1;
         private PatcherLib.Controls.ColorListBox lsb_FilesList;
         private System.Windows.Forms.Button btn_OpenConflictChecker;
