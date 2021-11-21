@@ -213,7 +213,9 @@ namespace FFTPatcher.TextEditor
             dataGridView.Rows.AddRange( rows );
             dataGridView.ResumeLayout();
 
-            bool showSeparatorChoices = file is ISerializableFile && (file as ISerializableFile).Layout.AllowedTerminators.Count > 1;
+            //bool showSeparatorChoices = file is ISerializableFile && (file as ISerializableFile).Layout.AllowedTerminators.Count > 1;
+            bool showSeparatorChoices = false;
+
             separatorComboBox.Visible = showSeparatorChoices;
             separatorComboBox.Enabled = showSeparatorChoices;
             separatorLabel.Visible = showSeparatorChoices;

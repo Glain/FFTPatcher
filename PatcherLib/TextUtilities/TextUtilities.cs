@@ -837,8 +837,8 @@ namespace PatcherLib.TextUtilities
 
         public static IList<string> ProcessList(IList<byte> bytes, Set<byte> terminators, GenericCharMap charmap)
         {
-            if (terminators.Count == 1)
-                return ProcessList(bytes, terminators[0], charmap);
+            //if (terminators.Count == 1)
+            //    return ProcessList(bytes, terminators[0], charmap);
 
             IList<IList<byte>> words = bytes.Split(terminators);
 
@@ -848,7 +848,8 @@ namespace PatcherLib.TextUtilities
             {
                 StringBuilder sb = new StringBuilder();
                 int pos = 0;
-                while (pos < (word.Count - 1) || (pos == (word.Count - 1) && !terminators.Contains(word[pos])))
+                //while (pos < (word.Count - 1) || (pos == (word.Count - 1) && !terminators.Contains(word[pos])))
+                while (pos < (word.Count - 1) || (pos == (word.Count - 1) && (word[pos] != 0xFE)))
                 {
                     sb.Append(charmap.GetNextChar(word, ref pos));
                 }
@@ -861,6 +862,7 @@ namespace PatcherLib.TextUtilities
             return result;
         }
 
+        /*
         /// <summary>
         /// Processes a list of FFT text bytes into a list of FFTacText strings.
         /// </summary>
@@ -888,6 +890,7 @@ namespace PatcherLib.TextUtilities
 
             return result;
         }
+        */
 
         /// <summary>
         /// Replaces bracketed hex values (e.g. {0xD2E3}) with Unicode characters, if known.

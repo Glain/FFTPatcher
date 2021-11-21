@@ -157,7 +157,8 @@ namespace FFTPatcher.TextEditor
             IList<IList<int>> disallowedEntries;
             IList<IDictionary<int, string>> staticEntries;
             GetDisallowedEntries(node, sectionLengths.Length, out disallowedEntries, out staticEntries);
-            Set<byte> terminators = new Set<byte>(new byte[] { 0xFE });
+            //Set<byte> terminators = new Set<byte>(new byte[] { 0xFE });
+            Set<byte> terminators = new Set<byte>(new byte[] { 0xFE, 0xFF });
             XmlNode terminatorNode = node.SelectSingleNode("Terminators");
             if (terminatorNode != null)
             {
@@ -366,7 +367,9 @@ namespace FFTPatcher.TextEditor
         public static FFTText GetFilesXml(string filename, BackgroundWorker worker)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(filename);
+            doc.PreserveWhitespace = true;
+            //doc.Load(filename);
+            doc.LoadXml(LoadXML(filename));
             return GetFilesXml(doc, worker);
         }
 
@@ -399,10 +402,21 @@ namespace FFTPatcher.TextEditor
             return new Set<Guid>(layoutGuids.GetElements().FindAll(g => !myGuids.Contains(g))).AsReadOnly();
         }
 
+        private static string LoadXML(string filename)
+        {
+            string text = File.ReadAllText(filename);
+            string textCloseEntry = text.Replace("{Close}</Entry>", "{CloseEntry}");
+            if (textCloseEntry.Contains("{Close}"))
+                text = text.Replace("{Close}", "{Close}</Entry><Entry>");
+            return text;
+        }
+
         public static FFTText GetFilesXml(string filename, BackgroundWorker worker, Set<Guid> guidsToLoadFromIso, Stream iso)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(filename);
+            doc.PreserveWhitespace = true;
+            //doc.Load(filename);
+            doc.LoadXml(LoadXML(filename));
             return GetFilesXml(doc, worker, guidsToLoadFromIso, iso);
         }
 

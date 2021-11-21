@@ -30,14 +30,14 @@ namespace PatcherLib.TextUtilities
     /// </summary>
     public abstract class GenericCharMap : PatcherLib.Datatypes.ReadOnlyDictionary<int, string>
     {
-
-        #region Static Fields (1)
+        #region Static Fields
 
         private static Regex regex = new Regex( @"{0x([0-9A-Fa-f]+)}" );
+        private static readonly HashSet<byte> readTerminators = new HashSet<byte>() { 0xFE, 0xFF };
 
         #endregion Static Fields
 
-        #region Fields (1)
+        #region Fields
 
         private Dictionary<string, int> reverse = null;
 
@@ -46,7 +46,7 @@ namespace PatcherLib.TextUtilities
 
         #endregion Fields
 
-        #region Properties (1)
+        #region Properties
 
 
         /// <summary>
@@ -296,13 +296,18 @@ namespace PatcherLib.TextUtilities
                     }
                 }
 
+                // {Close} only encoded at end of entry
+                if ((val == 0xFF) && (i < (s.Length - 1)))
+                    val = -1;
+
                 if ( val >= 0 )
                 {
                     result.AddRange( IntToOneOrTwoOrThreeBytes( val ) );
                 }
             }
 
-            result.Add( terminator );
+            if ((result.Count == 0) || (!readTerminators.Contains(result[result.Count - 1])))
+                result.Add( terminator );
 
             bytes = result.ToArray();
             return true;

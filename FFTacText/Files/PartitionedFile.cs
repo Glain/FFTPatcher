@@ -22,6 +22,8 @@ namespace FFTPatcher.TextEditor
         {
             PartitionSize = layout.Size / NumberOfSections;
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
+            StringBuilder sbMessage = new StringBuilder();
+
             for ( int i = 0; i < NumberOfSections; i++ )
             {
                 GenericCharMap processCharMap = DteAllowed[i] ? map : GetContextCharmap(layout.Context);
@@ -36,9 +38,13 @@ namespace FFTPatcher.TextEditor
                 }
                 else if (sections[i].Count > SectionLengths[i])
                 {
+                    if ((sections[i].Count - SectionLengths[i]) > 1)
+                        sbMessage.AppendLine(string.Format("File {0} (section {1}): Section length decreased from {2} to {3}.", layout.DisplayName, i, sections[i].Count, SectionLengths[i]));
+
                     sections[i] = sections[i].Sub(0, SectionLengths[i] - 1);
                 }
 
+                /*
                 if (layout.AllowedTerminators.Count > 1)
                 {
                     Dictionary<byte, int> counts = new Dictionary<byte, int>();
@@ -49,9 +55,18 @@ namespace FFTPatcher.TextEditor
                     countList.Sort((a, b) => b.Value.CompareTo(a.Value));
                     this.SelectedTerminator = countList[0].Key;
                 }
+                */
 
-                System.Diagnostics.Debug.Assert(sections[i].Count == SectionLengths[i]);
+                this.SelectedTerminator = 0xFE;
+
+                //System.Diagnostics.Debug.Assert(sections[i].Count == SectionLengths[i]);
             }
+
+            // <DEBUG>
+            //string message = sbMessage.ToString();
+            //if (!string.IsNullOrEmpty(message))
+            //    PatcherLib.MyMessageBox.Show(message);
+
             Sections = sections.AsReadOnly();
             PopulateDisallowedSections();
         }

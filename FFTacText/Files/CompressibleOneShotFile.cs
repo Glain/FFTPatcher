@@ -16,6 +16,7 @@ namespace FFTPatcher.TextEditor
         {
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
             System.Diagnostics.Debug.Assert( NumberOfSections == 1 );
+            System.Text.StringBuilder sbMessage = new System.Text.StringBuilder();
             for ( int i = 0; i < NumberOfSections; i++ )
             {
                 GenericCharMap processCharMap = DteAllowed[i] ? map : GetContextCharmap(layout.Context);
@@ -29,9 +30,18 @@ namespace FFTPatcher.TextEditor
                 }
                 else if (sections[i].Count > SectionLengths[i])
                 {
+                    if ((sections[i].Count - SectionLengths[i]) > 1)
+                        sbMessage.AppendLine(string.Format("File {0} (section {1}): Section length decreased from {2} to {3}.", layout.DisplayName, i, sections[i].Count, SectionLengths[i]));
+                    
                     sections[i] = sections[i].Sub(0, SectionLengths[i] - 1);
                 }
             }
+
+            // <DEBUG>
+            //string message = sbMessage.ToString();
+            //if (!string.IsNullOrEmpty(message))
+            //    PatcherLib.MyMessageBox.Show(message);
+            
             Sections = sections.AsReadOnly();
         }
 

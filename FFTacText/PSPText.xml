@@ -697,7 +697,7 @@
         </Section>
         <Section value="8" entries="26" empty="true" dte="false"  compressible="false" name="Blank spaces" hide="true"/>
         <Section value="9" entries="64" empty="true" dte="true" compressible="false" name="Terrain names"/>
-        <Section value="10" entries="20" empty="true" dte="true" compressible="false" name="Battle menus"/>
+        <Section value="10" entries="172" empty="true" dte="true" compressible="false" name="Battle menus"/>
         <Section value="11" entries="26" empty="true" dte="false" compressible="false" name="Blank spaces" hide="true"/>
         <Section value="12" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
         <Section value="13" entries="1" empty="true" dte="true" compressible="true" hide="true"/>
@@ -938,7 +938,7 @@
         </Section>
         <Section value="8" entries="1024" empty="true" dte="false" compressible="false" name="Unit names"/>
         <Section value="9" entries="1024" empty="true" dte="false" compressible="false" name="Unit names"/>
-        <Section value="10" entries="11" empty="true" dte="true" compressible="false" name="Battle menus"/>
+        <Section value="10" entries="188" empty="true" dte="true" compressible="false" name="Battle menus"/>
         <Section value="11" entries="2" empty="true" dte="true" compressible="false" name="Map help"/>
         <Section value="12" entries="96" empty="true" dte="true" compressible="true" name="Errand names"/>
         <Section value="13" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
@@ -953,14 +953,14 @@
         <Section value="17" entries="1" empty="true" dte="true" compressible="false" hide="true"/>
         <Section value="18" entries="44" empty="true" dte="true" compressible="false" name="Location names"/>
         <Section value="19" entries="24" empty="true" dte="true" compressible="false" name="Facts"/>
-        <Section value="20" entries="1" empty="true" dte="true" compressible="false" name="Map menu text"/>
+        <Section value="20" entries="17" empty="true" dte="true" compressible="false" name="Map menu text"/>
         <Section value="21" entries="115" empty="true" dte="true" compressible="true" name="Event names"/>
         <Section value="22" entries="227" empty="false" dte="true" compressible="true" name="Skillset names">
           <includeResource name="PatcherLib.PSPResources+Lists.SkillSets" start="0" end="226" offset="0"/>
         </Section>
         <Section value="23" entries="374" empty="true" dte="false" compressible="false" name="Tavern text"/>
         <Section value="24" entries="32" empty="true" dte="true" compressible="true" name="Tutorial menus"/>
-        <Section value="25" entries="185" empty="true" dte="true" compressible="true" name="Rumors/Multiplayer text"/>
+        <Section value="25" entries="188" empty="true" dte="true" compressible="true" name="Rumors/Multiplayer text"/>
         <Section value="26" entries="96" empty="true" dte="true" compressible="true" name="Feats names"/>
           <Section value="27" entries="16" empty="false" dte="true" compressible="true" name="Wonders names">
               <includeResource name="PatcherLib.PSPResources+Lists.Wonders" start="0" end="15" offset="0"/>
@@ -1212,12 +1212,12 @@
         <FFTPack index="WORLD_SNPLMES_BIN" offset="0"/>
       </Sectors>
       <Sections count="6">
-        <Section value="0" entries="204" empty="true" dte="true" name="Mesa's Musings"/>
-        <Section value="1" entries="170" empty="true" dte="true" name="Nanai's Histories"/>
-        <Section value="2" entries="187" empty="true" dte="true" name="Veil of Wiyu"/>
-        <Section value="3" entries="217" empty="true" dte="true" name="Enavia Chronicles"/>
+        <Section value="0" entries="256" empty="true" dte="true" name="Mesa's Musings"/>
+        <Section value="1" entries="256" empty="true" dte="true" name="Nanai's Histories"/>
+        <Section value="2" entries="255" empty="true" dte="true" name="Veil of Wiyu"/>
+        <Section value="3" entries="255" empty="true" dte="true" name="Enavia Chronicles"/>
         <Section value="4" entries="40" empty="true" dte="true" name="Germonik Scriptures"/>
-        <Section value="5" entries="14" empty="true" dte="true" name="Test book"/>
+        <Section value="5" entries="17" empty="true" dte="true" name="Test book"/>
       </Sections>
     </PartitionedFile>
 

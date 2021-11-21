@@ -1337,7 +1337,7 @@
                 </Section>
                 <Section value="8" entries="26" empty="true" dte="false" hide="true"/>
                 <Section value="9" entries="64" empty="true" name="Unknown Japanese text" dte="true"/>
-                <Section value="10" entries="11" empty="true" name="Battle menus" dte="true"/>
+                <Section value="10" entries="158" empty="true" name="Battle menus" dte="true"/>
                 <Section value="11" entries="26" empty="true" dte="false" hide="true"/>
                 <Section value="12" entries="1" empty="true" dte="true" hide="true"/>
                 <Section value="13" entries="1" empty="true" dte="true" hide="true"/>
@@ -1497,7 +1497,7 @@
                 </Section>
                 <Section value="8" entries="1024" empty="true" name="Unit names" compressible="false" dte="false"/>
                 <Section value="9" entries="1024" empty="true" name="Unit names" compressible="false" dte="false"/>
-                <Section value="10" entries="11" empty="true" name="Battle menus" compressible="false" dte="true"/>
+                <Section value="10" entries="158" empty="true" name="Battle menus" compressible="false" dte="true"/>
                 <Section value="11" entries="2" empty="true" name="Help text" compressible="true" dte="true"/>
                 <Section value="12" entries="96" empty="true" name="Errand outcomes" compressible="true" dte="true"/>
                 <Section value="13" entries="1" empty="true" compressible="false" dte="true" hide="true"/>
@@ -1555,7 +1555,7 @@
                     <entry value="43" name=""/>
                 </Section>
                 <Section value="19" entries="24" empty="true" compressible="false" dte="true" name="Facts"/>
-                <Section value="20" entries="1" empty="true" name="Map menu" compressible="false" dte="true"/>
+                <Section value="20" entries="17" empty="true" name="Map menu" compressible="false" dte="true"/>
                 <Section value="21" entries="115" empty="true" name="Map names" compressible="true" dte="true"/>
                 <Section value="22" entries="189" empty="false" name="Skillset names" compressible="true" dte="true">
                     <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="188" offset="0"/>
@@ -1879,12 +1879,12 @@
                 <Sector filename="WORLD_SNPLMES_BIN" offset="0"/>
             </Sectors>
             <Sections count="6">
-                <Section value="0" entries="204" empty="true" dte="true" name="M-Fiction Novel"/>
-                <Section value="1" entries="170" empty="true" dte="true" name="Diary of Nanai"/>
-                <Section value="2" entries="187" empty="true" dte="true" name="Wyuvle"/>
-                <Section value="3" entries="217" empty="true" dte="true" name="Book of Enavia"/>
+                <Section value="0" entries="256" empty="true" dte="true" name="M-Fiction Novel"/>
+                <Section value="1" entries="256" empty="true" dte="true" name="Diary of Nanai"/>
+                <Section value="2" entries="255" empty="true" dte="true" name="Wyuvle"/>
+                <Section value="3" entries="255" empty="true" dte="true" name="Book of Enavia"/>
                 <Section value="4" entries="39" empty="true" name="Germonik Scriptures" dte="false"/>
-                <Section value="5" entries="14" empty="true" dte="false" name="Test book"/>
+                <Section value="5" entries="17" empty="true" dte="false" name="Test book"/>
             </Sections>
         </PartitionedFile>
 

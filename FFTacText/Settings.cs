@@ -39,7 +39,7 @@ namespace FFTPatcher.TextEditor
         }
 
         private XmlNode _pspTextNode = null;
-        public XmlNode PSPTextString
+        public XmlNode PSPTextNode
         {
             get
             {
@@ -58,7 +58,7 @@ namespace FFTPatcher.TextEditor
         {
             get
             {
-                return GetSettings().PSPTextString;
+                return GetSettings().PSPTextNode;
             }
         }
 
