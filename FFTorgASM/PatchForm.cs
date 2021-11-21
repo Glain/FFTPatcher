@@ -56,6 +56,7 @@ namespace FFTorgASM
 
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
+                btn_Patch.Enabled = false;
                 PatchResult patchResult = PatchHelper.PatchFile(saveFileDialog.FileName, GetAllSelectedPatches(), AsmUtility);
                 PatcherLib.MyMessageBox.Show(this, patchResult.Message, ((patchResult.IsSuccess) ? "Complete!" : "Error"), MessageBoxButtons.OK);
                 Close();
