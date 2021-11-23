@@ -1,4 +1,4 @@
-"C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.com" FFTPatcher.sln /rebuild "Release|x86"
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.com" FFTPatcher.sln /rebuild "Release|x86"
 rmdir /s /q staging
 mkdir staging
 xcopy /s /Y bin\x86\Release staging
