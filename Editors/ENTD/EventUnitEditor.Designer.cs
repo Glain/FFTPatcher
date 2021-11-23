@@ -367,7 +367,7 @@ namespace FFTPatcher.Editors
             "",
             "",
             "",
-            "Save CT",
+            "Conserve CT",
             "",
             ""});
             this.clbAIFlags2.Location = new System.Drawing.Point(252, 23);

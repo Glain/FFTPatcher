@@ -65,7 +65,7 @@
     <string value="17" name="Math Skill"/>
     <string value="18" name="Ignore Silence"/>
     <string value="19" name="Mimicable"/>
-    <string value="20" name="Normal Attack?"/>
+    <string value="20" name="Blocked by Golem"/>
     <string value="21" name="Performing"/>
     <string value="22" name="Quote"/>
     <string value="23" name="Animate on Miss"/>
@@ -76,7 +76,7 @@
     <string value="28" name="Require Sword"/>
     <string value="29" name="Require Materia Blade"/>
     <string value="30" name="Evadeable"/>
-    <string value="31" name="Select Target"/>
+    <string value="31" name="Can Select Unit"/>
   </Attributes>
   <Types>
     <string value="0" name="Blank"/>
