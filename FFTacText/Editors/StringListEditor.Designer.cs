@@ -49,12 +49,13 @@ namespace FFTPatcher.TextEditor
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.separatorComboBox = new System.Windows.Forms.ComboBox();
+            this.separatorLabel = new System.Windows.Forms.Label();
             this.numberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.hexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.widthColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.separatorComboBox = new System.Windows.Forms.ComboBox();
-            this.separatorLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,13 +63,14 @@ namespace FFTPatcher.TextEditor
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.numberColumn,
+            this.hexColumn,
             this.nameColumn,
             this.widthColumn,
             this.textColumn});
@@ -83,44 +85,8 @@ namespace FFTPatcher.TextEditor
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(568, 428);
+            this.dataGridView.Size = new System.Drawing.Size(692, 428);
             this.dataGridView.TabIndex = 0;
-            // 
-            // numberColumn
-            // 
-            this.numberColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.numberColumn.Frozen = true;
-            this.numberColumn.HeaderText = "Entry";
-            this.numberColumn.Name = "numberColumn";
-            this.numberColumn.ReadOnly = true;
-            this.numberColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.numberColumn.Width = 56;
-            // 
-            // nameColumn
-            // 
-            this.nameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.nameColumn.Frozen = true;
-            this.nameColumn.HeaderText = "Name";
-            this.nameColumn.Name = "nameColumn";
-            this.nameColumn.ReadOnly = true;
-            this.nameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.nameColumn.Width = 60;
-            // 
-            // widthColumn
-            // 
-            this.widthColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.widthColumn.Frozen = true;
-            this.widthColumn.HeaderText = "Width";
-            this.widthColumn.Name = "widthColumn";
-            this.widthColumn.ReadOnly = true;
-            this.widthColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.widthColumn.Width = 60;
-            // 
-            // textColumn
-            // 
-            this.textColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.textColumn.HeaderText = "Text";
-            this.textColumn.Name = "textColumn";
             // 
             // separatorComboBox
             // 
@@ -147,6 +113,49 @@ namespace FFTPatcher.TextEditor
             this.separatorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.separatorLabel.Visible = false;
             // 
+            // numberColumn
+            // 
+            this.numberColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.numberColumn.Frozen = true;
+            this.numberColumn.HeaderText = "Entry";
+            this.numberColumn.Name = "numberColumn";
+            this.numberColumn.ReadOnly = true;
+            this.numberColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.numberColumn.Width = 60;
+            // 
+            // hexColumn
+            // 
+            this.hexColumn.Frozen = true;
+            this.hexColumn.HeaderText = "Hex";
+            this.hexColumn.Name = "hexColumn";
+            this.hexColumn.Width = 60;
+            // 
+            // nameColumn
+            // 
+            this.nameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.nameColumn.Frozen = true;
+            this.nameColumn.HeaderText = "Name";
+            this.nameColumn.Name = "nameColumn";
+            this.nameColumn.ReadOnly = true;
+            this.nameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.nameColumn.Width = 120;
+            // 
+            // widthColumn
+            // 
+            this.widthColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.widthColumn.Frozen = true;
+            this.widthColumn.HeaderText = "Width";
+            this.widthColumn.Name = "widthColumn";
+            this.widthColumn.ReadOnly = true;
+            this.widthColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.widthColumn.Width = 60;
+            // 
+            // textColumn
+            // 
+            this.textColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.textColumn.HeaderText = "Text";
+            this.textColumn.Name = "textColumn";
+            // 
             // StringListEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,7 +164,7 @@ namespace FFTPatcher.TextEditor
             this.Controls.Add(this.separatorLabel);
             this.Controls.Add(this.separatorComboBox);
             this.Name = "StringListEditor";
-            this.Size = new System.Drawing.Size(568, 458);
+            this.Size = new System.Drawing.Size(692, 458);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -165,12 +174,12 @@ namespace FFTPatcher.TextEditor
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.Label separatorLabel;
+        private System.Windows.Forms.ComboBox separatorComboBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn numberColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn hexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn widthColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn textColumn;
-        private System.Windows.Forms.Label separatorLabel;
-        private System.Windows.Forms.ComboBox separatorComboBox;
-
     }
 }

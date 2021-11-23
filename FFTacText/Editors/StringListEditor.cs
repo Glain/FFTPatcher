@@ -38,14 +38,12 @@ namespace FFTPatcher.TextEditor
         private int boundSection;
 
         private bool ignoreChanges = false;
-#if MEASURESTRINGS
-        public int TextColumnIndex { get { return textColumn.Index; } }
-#else
-        public const int TextColumnIndex = 2;
-#endif
+        private int TextColumnIndex { get { return textColumn.Index; } }
 
         private System.Drawing.Text.PrivateFontCollection fonts = new System.Drawing.Text.PrivateFontCollection();
         private Font ArialFont = new Font("Arial Unicode MS", 9);
+
+        private PatcherLib.Datatypes.FFTFont font;
 
         private Font fftFont = null;
         private Font FFTFont
@@ -79,11 +77,7 @@ namespace FFTPatcher.TextEditor
             dataGridView.CellValidating += new DataGridViewCellValidatingEventHandler( dataGridView_CellValidating );
             dataGridView.CellValidated += new DataGridViewCellEventHandler( dataGridView_CellValidated );
             textColumn.DefaultCellStyle.Font = ArialFont;
-#if !MEASURESTRINGS
-            dataGridView.Columns.Remove(widthColumn);
-#else
             widthColumn.DefaultCellStyle.Font = ArialFont;
-#endif
         }
 
         private void LoadFFTFont()
@@ -114,13 +108,10 @@ namespace FFTPatcher.TextEditor
             {
                 string s = (string)dataGridView[e.ColumnIndex, e.RowIndex].Value ?? string.Empty;
                 boundFile[boundSection, CurrentRow] = s;
-#if MEASURESTRINGS
                 dataGridView[widthColumn.Index, e.RowIndex].Value = GetWidthColumnString( s );
-#endif
             }
         }
 
-#if MEASURESTRINGS
         private string GetWidthColumnString( string s )
         {
             var widths = MeasureEachLineInFont(boundFile.CharMap, s, font);
@@ -130,7 +121,6 @@ namespace FFTPatcher.TextEditor
             widths.ForEach( w => widthStrings.Add( string.Format( "{0}", w ) ) );
             return string.Join( Environment.NewLine, widthStrings.ToArray() );
         }
-#endif
 
         public event DataGridViewCellValidatingEventHandler CellValidating;
 
@@ -169,10 +159,6 @@ namespace FFTPatcher.TextEditor
             }
         }
 
-#if MEASURESTRINGS
-        PatcherLib.Datatypes.FFTFont font;
-#endif
-        
         /// <summary>
         /// Binds this editor to a list of strings.
         /// </summary>
@@ -191,21 +177,16 @@ namespace FFTPatcher.TextEditor
 
             DataGridViewRow[] rows = new DataGridViewRow[count];
             dataGridView.SuspendLayout();
-#if MEASURESTRINGS
             font = file.Context == PatcherLib.Datatypes.Context.US_PSP ? PSPResources.PSPFont : PSXResources.PSXFont;
-#endif
             boundFile = file;
 
             for( int i = 0; i < count; i++ )
             {
                 DataGridViewRow row = new DataGridViewRow();
-#if MEASURESTRINGS
-                row.CreateCells( dataGridView, i, ourNames[i],
-                    GetWidthColumnString( file[section, i] ?? string.Empty ), file[section, i] );
 
-#else
-                row.CreateCells(dataGridView, i, ourNames[i], file[section, i]);
-#endif
+                string hex = (count < 256) ? i.ToString("X2") : i.ToString("X4");
+                row.CreateCells( dataGridView, i, hex, ourNames[i], GetWidthColumnString( file[section, i] ?? string.Empty ), file[section, i] );
+
                 row.ReadOnly = disallowed != null && disallowed.Count > 0 && disallowed.Contains( i );
                 rows[i] = row;
             }
@@ -243,7 +224,6 @@ namespace FFTPatcher.TextEditor
             }
         }
 
-#if MEASURESTRINGS
         private int GetWidthForEncodedCharacter(UInt32 c, PatcherLib.Datatypes.FFTFont font)
         {
             if (c == 0xFA)
@@ -296,7 +276,5 @@ namespace FFTPatcher.TextEditor
             widths.ForEach(w => width = Math.Max(width, w));
             return width;
         }
-#endif
-
     }
 }

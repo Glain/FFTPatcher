@@ -60,6 +60,7 @@ namespace FFTPatcher.TextEditor
             this.fileMenuItem = new System.Windows.Forms.MenuItem();
             this.openMenuItem = new System.Windows.Forms.MenuItem();
             this.saveMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem_SavePatchXML = new System.Windows.Forms.MenuItem();
             this.generateResourcesZipMenuItem = new System.Windows.Forms.MenuItem();
             this.separatorGenerateResourcesZip = new System.Windows.Forms.MenuItem();
             this.exitMenuItem = new System.Windows.Forms.MenuItem();
@@ -78,7 +79,6 @@ namespace FFTPatcher.TextEditor
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.progressBar = new PatcherLib.Controls.ProgressBarWithText();
             this.fileEditor1 = new FFTPatcher.TextEditor.Editors.FileEditor();
-            this.menuItem_SavePatchXML = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
             separator4 = new System.Windows.Forms.MenuItem();
@@ -137,6 +137,14 @@ namespace FFTPatcher.TextEditor
             this.saveMenuItem.Enabled = false;
             this.saveMenuItem.Index = 1;
             this.saveMenuItem.Text = "&Save .ffttext...";
+            // 
+            // menuItem_SavePatchXML
+            // 
+            this.menuItem_SavePatchXML.Enabled = false;
+            this.menuItem_SavePatchXML.Index = 2;
+            this.menuItem_SavePatchXML.Text = "Save Patch XML...";
+            this.menuItem_SavePatchXML.Visible = false;
+            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
             // 
             // generateResourcesZipMenuItem
             // 
@@ -245,22 +253,14 @@ namespace FFTPatcher.TextEditor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fileEditor1.Location = new System.Drawing.Point(13, 13);
             this.fileEditor1.Name = "fileEditor1";
-            this.fileEditor1.Size = new System.Drawing.Size(753, 377);
+            this.fileEditor1.Size = new System.Drawing.Size(817, 377);
             this.fileEditor1.TabIndex = 4;
-            // 
-            // menuItem_SavePatchXML
-            // 
-            this.menuItem_SavePatchXML.Index = 2;
-            this.menuItem_SavePatchXML.Text = "Save Patch XML...";
-            this.menuItem_SavePatchXML.Enabled = false;
-            this.menuItem_SavePatchXML.Visible = false;
-            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 402);
+            this.ClientSize = new System.Drawing.Size(842, 402);
             this.Controls.Add(this.fileEditor1);
             this.Controls.Add(this.progressBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
