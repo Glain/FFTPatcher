@@ -14,6 +14,7 @@ namespace FFTorgASM
     {
         private IList<AsmPatch> PatchList { get; set; }
         private ASMEncodingUtility AsmUtility { get; set; }
+        private int NumSelectedPatches { get; set; }
 
         public PatchForm(IList<AsmPatch> patchList, ASMEncodingUtility asmUtility)
         {
@@ -61,6 +62,20 @@ namespace FFTorgASM
                 PatcherLib.MyMessageBox.Show(this, patchResult.Message, ((patchResult.IsSuccess) ? "Complete!" : "Error"), MessageBoxButtons.OK);
                 Close();
             }
+        }
+
+        private void clb_Patches_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue == CheckState.Checked)
+            {
+                NumSelectedPatches++;
+            }
+            else if (e.NewValue == CheckState.Unchecked)
+            {
+                NumSelectedPatches--;
+            }
+
+            btn_Patch.Enabled = (NumSelectedPatches > 0);
         }
     }
 }

@@ -51,6 +51,7 @@
             this.clb_Patches.Name = "clb_Patches";
             this.clb_Patches.Size = new System.Drawing.Size(398, 349);
             this.clb_Patches.TabIndex = 1;
+            this.clb_Patches.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clb_Patches_ItemCheck);
             // 
             // btn_Patch
             // 
