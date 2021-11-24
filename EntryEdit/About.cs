@@ -7,7 +7,7 @@ namespace EntryEdit
 {
     internal static class About
     {
-        public const int FFTPatcherSuiteRevision = 493;
+        public const int FFTPatcherSuiteRevision = 494;
 
         public static readonly string Title = "About";
         public static readonly string Message = string.Format(@"EntryEdit is a modding tool created by Glain that makes use of modified FFTPatcher suite project libraries originally created by melonhead.
