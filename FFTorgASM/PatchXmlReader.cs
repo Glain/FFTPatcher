@@ -744,6 +744,48 @@ namespace FFTorgASM
                         }
                     }
 
+                    List<VariableType.VariablePreset> presetValueList = new List<VariableType.VariablePreset>();
+                    XmlNodeList presetNodeList = varNode.SelectNodes("Preset");
+
+                    string presetKey = null;
+                    XmlAttribute attrPreset = varNode.Attributes["preset"];
+                    if (attrPreset != null)
+                    {
+                        presetKey = attrPreset.InnerText;
+                        if (!string.IsNullOrEmpty(presetKey))
+                        {
+                            presetValueList = VariableType.VariablePreset.TypeMap[presetKey];
+                        }
+                    }
+                    else if (presetNodeList != null)
+                    {
+                        foreach (XmlNode presetNode in presetNodeList)
+                        {
+                            XmlAttribute attrName = presetNode.Attributes["name"];
+                            XmlAttribute attrValue = presetNode.Attributes["value"];
+                            XmlAttribute attrModify = presetNode.Attributes["modify"];
+                            UInt32 value = 0;
+
+                            byte[] valueBytes = new Byte[numBytes];
+                            if (attrValue != null)
+                            {
+                                UInt32.TryParse(attrValue.InnerText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.CurrentCulture, out value);
+                                for (int i = 0; i < numBytes; i++)
+                                {
+                                    valueBytes[i] = (byte)((value >> (i * 8)) & 0xff);
+                                }
+                            }
+
+                            bool isModifiable = false;
+                            if (attrModify != null)
+                            {
+                                bool.TryParse(attrModify.InnerText, out isModifiable);
+                            }
+
+                            presetValueList.Add(new VariableType.VariablePreset(attrName.InnerText, value, valueBytes, isModifiable));
+                        }
+                    }
+
                     VariableType vType = new VariableType();
                     vType.NumBytes = numBytes;
                     vType.ByteArray = byteArray;
@@ -754,6 +796,7 @@ namespace FFTorgASM
                     vType.Reference.Name = referenceName;
                     vType.Reference.OperatorSymbol = referenceOperatorSymbol;
                     vType.Reference.Operand = referenceOperand;
+                    vType.PresetValues = presetValueList;
 
                     variables.Add( vType );
                 }

@@ -34,6 +34,23 @@ namespace FFTorgASM
         private bool ignoreChanges = true;
         private bool skipCheckEventHandler = false;
 
+        private Dictionary<VariableType.VariablePreset, int> variablePresetIndexMap = null;
+
+        private int OriginalVariableSpinnerX { get; set; }
+        private int displacedVariableSpinnerX = 0;
+        public int DisplacedVariableSpinnerX
+        {
+            get
+            {
+                if (displacedVariableSpinnerX == 0)
+                {
+                    displacedVariableSpinnerX = OriginalVariableSpinnerX + cmb_Variable_Preset.Width + 6;
+                }
+
+                return displacedVariableSpinnerX;
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -56,6 +73,7 @@ namespace FFTorgASM
             variableComboBox.SelectedIndexChanged += new EventHandler(variableComboBox_SelectedIndexChanged);
 
             lsb_FilesList.SelectedIndex = 0;
+            OriginalVariableSpinnerX = variableSpinner.Location.X;
         }
 
         private void UpdateVariable(VariableType variable, UInt32 newValue)
@@ -145,6 +163,7 @@ namespace FFTorgASM
             variableSpinner.Visible = false;
             ignoreChanges = true;
             variableComboBox.Visible = false;
+            cmb_Variable_Preset.Visible = false;
         }
 
         private void SavePatchXML()
@@ -371,6 +390,68 @@ namespace FFTorgASM
             return resultList;
         }
 
+        private void HandleVariablePresets(VariableType variable)
+        {
+            if (variable.PresetValues.Count > 0)
+            {
+                variableSpinner.Location = new Point(DisplacedVariableSpinnerX, variableSpinner.Location.Y);
+                cmb_Variable_Preset.Visible = true;
+                cmb_Variable_Preset.Items.Clear();
+
+                int selectedIndex = -1;
+                variablePresetIndexMap = new Dictionary<VariableType.VariablePreset, int>();
+                VariableType.VariablePreset selectedPreset = FindSelectedPreset(variable);
+                for (int index = 0; index < variable.PresetValues.Count; index++)
+                {
+                    VariableType.VariablePreset preset = variable.PresetValues[index];
+                    variablePresetIndexMap.Add(preset, index);
+                    cmb_Variable_Preset.Items.Add(preset);
+                    if (variable.PresetValues[index] == selectedPreset)
+                    {
+                        selectedIndex = index;
+                    }
+                }
+
+                if (selectedPreset == null)
+                {
+                    cmb_Variable_Preset.SelectedIndex = -1;
+                    variableSpinner.Visible = true;
+                }
+                else
+                {
+                    cmb_Variable_Preset.SelectedIndex = selectedIndex;
+                    variableSpinner.Visible = selectedPreset.IsModifiable;
+                }
+            }
+            else
+            {
+                variableSpinner.Location = new Point(OriginalVariableSpinnerX, variableSpinner.Location.Y);
+                cmb_Variable_Preset.Visible = false;
+                variableSpinner.Visible = true;
+            }
+        }
+
+        private VariableType.VariablePreset FindSelectedPreset(VariableType variable)
+        {
+            uint value = Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.ByteArray);
+
+            foreach (VariableType.VariablePreset preset in variable.PresetValues)
+            {
+                if (value == preset.Value)
+                {
+                    return preset;
+                }
+            }
+
+            foreach (VariableType.VariablePreset preset in variable.PresetValues)
+            {
+                if (preset.IsModifiable)
+                    return preset;
+            }
+
+            return null;
+        }
+
         private void reloadButton_Click(object sender, EventArgs e)
         {
             int selectedIndex = lsb_FilesList.SelectedIndex;
@@ -391,12 +472,29 @@ namespace FFTorgASM
 
                 byte[] byteArray = selectedVariable.ByteArray;
 
-                // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here, so set ignoreChanges = true before setting Maximum.
+                // Setting Maximum can trigger the variableSpinner_ValueChanged event, but we don't want to change the variable value here,
+                // so set ignoreChanges = true before setting Maximum.
                 ignoreChanges = true;
                 variableSpinner.Maximum = (decimal)Math.Pow(256, selectedVariable.NumBytes) - 1;
                 ignoreChanges = false;
 
                 variableSpinner.Value = Utilities.GetUnsignedByteArrayValue_LittleEndian(byteArray);
+
+                HandleVariablePresets(selectedVariable);
+            }
+        }
+        
+        private void cmb_Variable_Preset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!ignoreChanges)
+            {
+                AsmPatch patch = (clb_Patches.SelectedItem as AsmPatch);
+                VariableType selectedVariable = patch.VariableMap[(string)variableComboBox.SelectedItem];
+                VariableType.VariablePreset preset = (VariableType.VariablePreset)cmb_Variable_Preset.SelectedItem;
+                variableSpinner.Visible = preset.IsModifiable;
+
+                if (!preset.IsModifiable)
+                    variableSpinner.Value = preset.Value;
             }
         }
 
@@ -408,6 +506,21 @@ namespace FFTorgASM
                 UInt32 newValue = (UInt32)variableSpinner.Value;
                 VariableType variable = patch.VariableMap[(string)variableComboBox.SelectedItem];
                 UpdateVariable(variable, newValue);
+
+                /*
+                if (variable.PresetValues.Count > 0)
+                {
+                    VariableType.VariablePreset preset = FindSelectedPreset(variable);
+                    if (preset == null)
+                    {
+                        cmb_Variable_Preset.SelectedIndex = -1;
+                    }
+                    else
+                    {
+                        cmb_Variable_Preset.SelectedIndex = variablePresetIndexMap[preset];
+                    }
+                }
+                */
             }
         }
 
@@ -472,12 +585,15 @@ namespace FFTorgASM
                     variableSpinner.Visible = true;
                     ignoreChanges = false;
                     variableComboBox.Visible = true;
+
+                    HandleVariablePresets(firstNonReferenceVariable);
                 }
                 else
                 {
                     variableSpinner.Visible = false;
                     ignoreChanges = true;
                     variableComboBox.Visible = false;
+                    cmb_Variable_Preset.Visible = false;
                 }
             }
         }

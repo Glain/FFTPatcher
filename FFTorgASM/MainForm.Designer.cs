@@ -49,6 +49,7 @@
             this.btn_Clear = new System.Windows.Forms.Button();
             this.txt_Search = new System.Windows.Forms.TextBox();
             this.lbl_Search = new System.Windows.Forms.Label();
+            this.cmb_Variable_Preset = new System.Windows.Forms.ComboBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
@@ -267,6 +268,18 @@
             this.lbl_Search.TabIndex = 21;
             this.lbl_Search.Text = "Search:";
             // 
+            // cmb_Variable_Preset
+            // 
+            this.cmb_Variable_Preset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmb_Variable_Preset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_Variable_Preset.FormattingEnabled = true;
+            this.cmb_Variable_Preset.Location = new System.Drawing.Point(226, 601);
+            this.cmb_Variable_Preset.Name = "cmb_Variable_Preset";
+            this.cmb_Variable_Preset.Size = new System.Drawing.Size(122, 21);
+            this.cmb_Variable_Preset.TabIndex = 22;
+            this.cmb_Variable_Preset.Visible = false;
+            this.cmb_Variable_Preset.SelectedIndexChanged += new System.EventHandler(this.cmb_Variable_Preset_SelectedIndexChanged);
+            // 
             // variableSpinner
             // 
             this.variableSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -283,6 +296,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.cmb_Variable_Preset);
             this.Controls.Add(this.lbl_Search);
             this.Controls.Add(this.txt_Search);
             this.Controls.Add(this.btn_Clear);
@@ -336,6 +350,7 @@
         private System.Windows.Forms.Button btn_Clear;
         private System.Windows.Forms.TextBox txt_Search;
         private System.Windows.Forms.Label lbl_Search;
+        private System.Windows.Forms.ComboBox cmb_Variable_Preset;
     }
 }
 

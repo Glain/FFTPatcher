@@ -82,28 +82,69 @@ namespace FFTorgASM
 
     public class VariableType : ICopyableEntry<VariableType>
     {
+        public class VariablePreset : ICopyableEntry<VariablePreset>
+        {
+            private static Dictionary<string, List<VariablePreset>> typeMap = null;
+            public static Dictionary<string, List<VariablePreset>> TypeMap
+            {
+                get 
+                {
+                    if (typeMap == null)
+                    {
+                        typeMap = new Dictionary<string, List<VariablePreset>>();
+                        typeMap.Add("boolean", new List<VariablePreset>()
+                        {
+                            new VariablePreset("True", 1, new byte[1] { 0x01 }, false),
+                            new VariablePreset("False", 0, new byte[1] { 0x00 }, false)
+                        });
+                    }
+
+                    return new Dictionary<string, List<VariablePreset>>(typeMap);
+                }
+            }
+
+            public string Name { get; private set; }
+            public uint Value { get; private set; }
+            public byte[] ByteArray { get; private set; }
+            public bool IsModifiable { get; private set; }
+
+            public VariablePreset(string name, uint value, byte[] byteArray, bool isModifiable)
+            {
+                this.Name = name;
+                this.Value = value;
+                this.ByteArray = byteArray;
+                this.IsModifiable = isModifiable;
+            }
+
+            public VariablePreset Copy()
+            {
+                return new VariablePreset(Name, Value, (byte[])ByteArray.Clone(), IsModifiable);
+            }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
         public byte NumBytes { get; set; }
         public byte[] ByteArray { get; set; }
         public string Name { get; set; }
         public List<PatchedByteArray> Content { get; set; }
         public bool IsReference { get; set; }
         public VariableReference Reference { get; set; }
+        public List<VariablePreset> PresetValues { get; set; }
 
         public VariableType Copy()
         {
-            List<PatchedByteArray> contentCopy = new List<PatchedByteArray>();
-            foreach (PatchedByteArray patchedByteArray in Content)
-            {
-                contentCopy.Add(patchedByteArray.Copy());
-            }
-
             VariableType variable = new VariableType();
             variable.NumBytes = NumBytes;
             variable.ByteArray = (byte[])ByteArray.Clone();
             variable.Name = Name;
-            variable.Content = contentCopy;
+            variable.Content = CopyableEntry.CopyList<PatchedByteArray>(Content);
             variable.IsReference = IsReference;
             variable.Reference = Reference.Copy();
+            variable.PresetValues = CopyableEntry.CopyList<VariablePreset>(PresetValues);
             return variable;
         }
     }
