@@ -158,7 +158,7 @@ namespace FFTPatcher
             }
         }
 
-        public static void LoadSettingsXml()
+        private static void LoadSettingsXml()
         {
             settingsXml = GetSettingsXml();
         }
@@ -172,7 +172,7 @@ namespace FFTPatcher
         {
             Settings instance = GetDefaultInstance();
 
-            if (settingsXml != null)
+            if (SettingsXml != null)
             {
                 instance._modifiedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
                 instance._unreferencedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
