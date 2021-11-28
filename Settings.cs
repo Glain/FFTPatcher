@@ -25,18 +25,6 @@ namespace FFTPatcher
 
         private static string _settingsFilename = "Settings.xml";
 
-        private static XmlDocument settingsXml = null;
-        private static XmlDocument SettingsXml
-        {
-            get
-            {
-                if (settingsXml == null)
-                    settingsXml = GetSettingsXml(_settingsFilename);
-
-                return settingsXml;
-            }
-        }
-
         private static Settings _instance = null;
 
         private static CombinedColor _defaultModifiedColor = new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(175, 175, 255), ForegroundColor = Color.White };
@@ -158,11 +146,6 @@ namespace FFTPatcher
             }
         }
 
-        private static void LoadSettingsXml()
-        {
-            settingsXml = GetSettingsXml();
-        }
-
         private static Settings GetSettings()
         {
             return _instance ?? (_instance = GetInstance());
@@ -171,8 +154,9 @@ namespace FFTPatcher
         private static Settings GetInstance()
         {
             Settings instance = GetDefaultInstance();
+            XmlDocument settingsXml = GetSettingsXml();
 
-            if (SettingsXml != null)
+            if (settingsXml != null)
             {
                 instance._modifiedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
                 instance._unreferencedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
