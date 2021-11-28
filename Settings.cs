@@ -154,8 +154,8 @@ namespace FFTPatcher
         private static Settings GetInstance()
         {
             Settings instance = GetDefaultInstance();
-            XmlDocument settingsXml = GetSettingsXml();
 
+            XmlDocument settingsXml = GetSettingsXml(_settingsFilename);
             if (settingsXml != null)
             {
                 instance._modifiedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);

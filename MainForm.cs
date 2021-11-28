@@ -84,7 +84,6 @@ namespace FFTPatcher
         public MainForm(string[] args)
         {
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
-            //Settings.LoadSettingsXml();
 
             InitializeComponent();
 
