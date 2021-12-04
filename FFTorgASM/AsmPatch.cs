@@ -473,25 +473,6 @@ namespace FFTorgASM
             }
         }
 
-        public static VariableType CopyVariable(VariableType variable)
-        {
-            VariableType resultVariable = new VariableType();
-
-            resultVariable.NumBytes = variable.NumBytes;
-            resultVariable.ByteArray = (byte[])(variable.ByteArray.Clone());
-            resultVariable.Name = variable.Name;
-            resultVariable.IsReference = variable.IsReference;
-            resultVariable.Reference = variable.Reference;
-
-            resultVariable.Content = new List<PatchedByteArray>();
-            foreach (PatchedByteArray patchedByteArray in variable.Content)
-            {
-                resultVariable.Content.Add(patchedByteArray.Copy());
-            }
-
-            return resultVariable;
-        }
-
         public List<PatchedByteArray> GetAllPatches()
         {
             List<PatchedByteArray> allPatches = new List<PatchedByteArray>(Count);

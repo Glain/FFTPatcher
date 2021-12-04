@@ -554,7 +554,7 @@ namespace FFTorgASM
                             {
                                 foreach (VariableType variable in currentAsmPatch.Variables)
                                 {
-                                    variables.Add(AsmPatch.CopyVariable(variable));
+                                    variables.Add(variable.Copy());
                                 }
                                 for (int index = 0; index < currentAsmPatch.NonVariableCount; index++)
                                 {
