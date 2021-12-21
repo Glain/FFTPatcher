@@ -132,6 +132,14 @@
         <Length>512</Length>
       </MainFile>
     </AbilityNames>
+      <AbilityQuotes>
+          <MainFile>
+              <Guid>{83DF96ED-3302-4EA2-936F-76D734C5CC92}</Guid>
+              <Section>0</Section>
+              <Offset>0</Offset>
+              <Length>512</Length>
+          </MainFile>
+      </AbilityQuotes>
     <AbilityDescriptions>
       <File>
         <Guid>{B66C9774-1EA0-422C-9148-B5019301EAB4}</Guid>
@@ -1360,6 +1368,23 @@
         <Section value="120" entries="30" empty="true" dte="true"/>
       </Sections>
     </PartitionedFile>
+      <OneShotFile>
+          <DisplayName>SPELL.MES</DisplayName>
+          <Guid>{83DF96ED-3302-4EA2-936F-76D734C5CC92}</Guid>
+          <Size>18432</Size>
+          <Sectors>
+              <FFTPack index="EVENT_SPELL_MES" offset="0"/>
+          </Sectors>
+          <Terminators>
+              <Terminator>FE</Terminator>
+              <Terminator>FF</Terminator>
+          </Terminators>
+          <Sections count="1">
+              <Section value="0" entries="512" empty="false" name="Spell Quotes" dte="false">
+                  <includeResource name="PatcherLib.PSPResources+Lists.AbilityNames" start="0" end="511" offset="0"/>
+              </Section>
+          </Sections>
+      </OneShotFile>
 </Files>
   <Templates>
     <Help1>
