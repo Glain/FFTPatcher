@@ -63,7 +63,13 @@ namespace FFTPatcher.TextEditor.Files
 
                 IList<QuickEditEntry> entries = kvp.Value;
                 QuickEditEntry mainEntry = entries.FindAll( e => e.Main )[0];
-                ISerializableFile mainFile = files[mainEntry.Guid];
+
+                //ISerializableFile mainFile = files[mainEntry.Guid];
+                ISerializableFile mainFile = null;
+                files.TryGetValue(mainEntry.Guid, out mainFile);
+                if (mainFile == null)
+                    continue;
+
                 int entryCount = mainEntry.Length;
                 List<string> names = new List<string>( entryCount );
                 List<string> values = new List<string>( entryCount );
