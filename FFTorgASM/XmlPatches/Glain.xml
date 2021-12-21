@@ -4372,6 +4372,23 @@
                 jr      ra
                 or      v0, v0, v1
         </Location>
+        <Location file="BATTLE_BIN" offset="18B458" mode="ASM" offsetMode="RAM">
+                lui     t0, 0x8019
+                lbu     t1, 0x11(sp)
+                addu    at, t0, v0
+                lbu     v0, -0x0734(at)
+                lbu     v1, 0x38c3(t0)
+                andi    v0, v0, 0x3f
+                sb      v0, 0x38cd(at)
+                lui     t2, 0x8006
+                bne     v1, zero, 0x8018b490
+                addu    t2, t2, t1
+        </Location>
+        <Location file="BATTLE_BIN" offset="18B498" mode="ASM" offsetMode="RAM">
+                lbu     s2, 0x5cb4(t2)
+                li      v0, 7
+                bne     s2, v0, 0x8018b4b4
+        </Location>
     </Patch>
     <Patch name="Defend and Equip Change treated as Default skillset">
         <Description>
