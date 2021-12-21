@@ -228,7 +228,7 @@ namespace FFTPatcher.TextEditor
         {
             if (c == 0xFA)
             {
-                return 4;
+                return (boundFile.Context == PatcherLib.Datatypes.Context.US_PSP) ? 10 : 4;
             }
             else if (c <= 0xCF)
             {
