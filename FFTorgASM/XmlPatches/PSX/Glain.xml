@@ -1399,7 +1399,7 @@
                 00004000
             .endif
         </Location>
-        <Location file="BATTLE_BIN" offset="15BC00" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\skip_events.asm" />
+        <Location file="BATTLE_BIN" offset="15BC00" mode="ASM" offsetMode="RAM" inputFile="skip_events.asm" />
         <Location file="BATTLE_BIN" offset="1316D0" mode="ASM" offsetMode="RAM">
             #   Add Start button to list of buttons that advances text
             andi    v0, v0, 0x0960
@@ -3563,7 +3563,7 @@
         </Location>
     </Patch>
     <Patch name="Now Loading Routine Rewrite">
-        <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
+        <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="build_now_loading_rewrite.asm" />
         <Variable name="Color Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
         <Variable name="Color Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
         <Variable name="Color Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
@@ -3573,7 +3573,7 @@
             Expands load and save data to use all 64 blocks, instead of just 60.  If you load a normal 60 block save, then the last 4 blocks loaded in could be garbage data.
             If you want to prevent loading saves made without this patch, change the Checksum End Block variable to 40 from 3C. (These values are hexadecimal)
         </Description>
-        <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
+        <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="build_now_loading_rewrite.asm" />
         <Location file="SCUS_942_21" offset="40F00" mode="ASM" offsetMode="RAM" label="extra_save_data_location">
             .label  @copy_bytes, 0x8005e254
         </Location>
@@ -3895,7 +3895,7 @@
         <Location file="WORLD_WORLD_BIN" offset="18C0F6" offsetMode="RAM" mode="DATA">
             06
         </Location>
-        <Location file="WORLD_WORLD_BIN" offset="142000" offsetMode="RAM" mode="ASM" inputFile="XmlPatches\Include\unit_bench_world.asm" />
+        <Location file="WORLD_WORLD_BIN" offset="142000" offsetMode="RAM" mode="ASM" inputFile="unit_bench_world.asm" />
         <Location file="WORLD_WORLD_BIN" offset="E4BB8,ECFD0,112520" offsetMode="RAM" mode="ASM">
             jal     @display_menu_text_entry_outer
         </Location>
@@ -3922,7 +3922,7 @@
         <Location file="BATTLE_BIN" offset="15B0FF" offsetMode="RAM" mode="DATA" label="address_is_bench_join">
             00
         </Location>
-        <Location file="BATTLE_BIN" offset="15B100" offsetMode="RAM" mode="ASM" inputFile="XmlPatches\Include\unit_bench_battle.asm" />
+        <Location file="BATTLE_BIN" offset="15B100" offsetMode="RAM" mode="ASM" inputFile="unit_bench_battle.asm" />
         <Location file="EVENT_REQUIRE_OUT" offset="1C6834" mode="ASM" offsetMode="RAM">
             jal     @handle_post_battle_party_unit_bench
         </Location>

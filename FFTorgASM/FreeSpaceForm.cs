@@ -15,6 +15,7 @@ namespace FFTorgASM
     public partial class FreeSpaceForm : Form
     {
         private ASMEncoding.ASMEncodingUtility asmUtility;
+        private FreeSpaceMode mode;
         private List<AsmPatch> patchList;
         private FreeSpaceMaps freeSpaceMaps;
         private Dictionary<DataGridViewRow, PatchedByteArray> rowPatchMap;
@@ -22,26 +23,27 @@ namespace FFTorgASM
         public FreeSpaceForm(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
         {
             InitializeComponent();
-            InitFiles();
-            Init(patchList, asmUtility);
+            FreeSpaceMode mode = (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP) ? FreeSpaceMode.PSP : FreeSpaceMode.PSX;
+            InitFiles(mode);
+            Init(patchList, asmUtility, mode);
         }
 
-        private void InitFiles()
+        private void InitFiles(FreeSpaceMode mode)
         {
             this.Filelistbox.Items.Clear();
-            this.Filelistbox.Items.AddRange(FreeSpace.PsxRangeNames);
+            this.Filelistbox.Items.AddRange(FreeSpace.GetRangeNames(mode));
         }
 
-        private void Init(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility)
+        private void Init(List<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility, FreeSpaceMode mode)
         {
             this.patchList = patchList;
             this.asmUtility = asmUtility;
-            this.freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(patchList); 
+            this.freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(patchList, mode); 
         }
 
         private void Reload()
         {
-            Init(patchList, asmUtility);
+            Init(patchList, asmUtility, mode);
             LoadItems(Filelistbox.SelectedIndex);
         }
 
@@ -58,7 +60,7 @@ namespace FFTorgASM
 
             rowPatchMap = new Dictionary<DataGridViewRow, PatchedByteArray>();
 
-            PatchRange range = FreeSpace.PsxRanges[freeSpacePositionIndex];
+            PatchRange range = FreeSpace.GetRanges(mode)[freeSpacePositionIndex];
             if (!freeSpaceMaps.PatchRangeMap.ContainsKey(range))
                 return;
 

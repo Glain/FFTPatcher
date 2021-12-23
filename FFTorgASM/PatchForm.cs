@@ -50,7 +50,9 @@ namespace FFTorgASM
         private void btn_Patch_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "ISO or PSV files (*.bin, *.iso, *.img, *.psv)|*.bin;*.iso;*.img;*.psv";
+            saveFileDialog.Filter = (AsmUtility.EncodingMode == ASMEncodingMode.PSX) 
+                ? "ISO or PSV files (*.bin, *.iso, *.img, *.psv)|*.bin;*.iso;*.img;*.psv"
+                : "ISO files (*.bin, *.iso, *.img)|*.bin;*.iso;*.img";
             saveFileDialog.FileName = string.Empty;
             saveFileDialog.OverwritePrompt = false;
             saveFileDialog.CheckFileExists = true;

@@ -1835,7 +1835,7 @@ Use the Patcher to determine what Status ID to use under the Inflict Status tab.
 		<Description>Every Status can now have a CT by setting the time in the FFTPatcher and setting the variable x01 to x0F.&#13;&#10;You are still limited to only 16 timers but they can share CTs. I.E. Poison and Regen can share a CT but will need to cancel and/or not allow them to stack on each other.&#13;&#10;If the status does not have a CT, set the variable to FF.
 There's an option to increase or decrease the Status CT	timers through the unit data (ie attaching it to a support) and comes with it assigned to Train and Secret Hunt. Edit the dropdowns to change this. Or set both to 0 if you don't want this at all. Ths ASMs to disable the vanilla effect of Train and Secret Hunt are also in my XML,
 		</Description>
-		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
+		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="build_now_loading_rewrite.asm" />
 		<Location file="SCUS_942_21" offset="41100" offsetMode="RAM" mode="DATA" >
 								FF FF FF FF								<!-- Blank / Crystal / Dead / Undead  -->
 								FF FF FF FF								<!-- Charging / Jumping / Defending / Performing -->
@@ -2030,7 +2030,7 @@ Timer.cannot_remove_status:		lw r31, 0x000C(r29)						#
 	<Patch name="R/S/M: Move +1/2/3 and Jump +1/2/3 edits">
 		<Description>Turns Move +1 into Move +?. Turns Move +2 into Jump +?. Turns Move + 3 into PA +?. Turns Jump +1 into MA +?. Turns Jump +2 into Speed +?. Turns Jump +3 into Class Evade +?</Description>
 		
-		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="XmlPatches\Include\build_now_loading_rewrite.asm" />
+		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="build_now_loading_rewrite.asm" />
 		<Location file="SCUS_942_21" offset="5C904" mode="ASM" offsetMode="RAM">
 							.label @Movement.CE,0x80041064
 							@Movement_Edits:

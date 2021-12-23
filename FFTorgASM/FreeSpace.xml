@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <FreeSpace>
-    <Range name="BATTLE.BIN" sector="BATTLE_BIN" startOffset="E92AC" endOffset="FA2DC" />
-    <Range name="WORLD.BIN" sector="WORLD_WORLD_BIN" startOffset="5D590" endOffset="6E5C0" />
-    <Range name="SCUS 1" sector="SCUS_942_21" startOffset="1785C" endOffset="17B04" />
-    <Range name="SCUS 2" sector="SCUS_942_21" startOffset="17DC0" endOffset="18F3C" />
+    <PSX>
+        <Range name="BATTLE.BIN" sector="BATTLE_BIN" startOffset="E92AC" endOffset="FA2DC" />
+        <Range name="WORLD.BIN" sector="WORLD_WORLD_BIN" startOffset="5D590" endOffset="6E5C0" />
+        <Range name="SCUS 1" sector="SCUS_942_21" startOffset="1785C" endOffset="17B04" />
+        <Range name="SCUS 2" sector="SCUS_942_21" startOffset="17DC0" endOffset="18F3C" />
+    </PSX>
+    <PSP>
+        <Range name="BOOT.BIN Ex." sector="PSP_GAME_SYSDIR_BOOT_BIN" startOffset="789C" endOffset="78D0" />
+    </PSP>
 </FreeSpace>

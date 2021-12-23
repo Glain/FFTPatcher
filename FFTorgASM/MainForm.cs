@@ -56,12 +56,14 @@ namespace FFTorgASM
             InitializeComponent();
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
             string versionText = string.Format("v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString());
             versionLabel.Text = versionText;
             Text = string.Format("FFTorgASM ({0})", versionText);
 
-            LoadFiles();
+            asmUtility = new ASMEncodingUtility(ASMEncodingMode.PSX);
+            SetupModes();
+
+            //LoadFiles();
             FreeSpace.ReadFreeSpaceXML();
 
             btnPatch.Click += new EventHandler( btnPatch_Click );
@@ -104,7 +106,9 @@ namespace FFTorgASM
 
         private void LoadFiles(IList<string> fileList = null)
         {
-            string[] files = (fileList == null) ? Directory.GetFiles(Application.StartupPath + "/XmlPatches", "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
+            string strMode = Enum.GetName(typeof(ASMEncodingMode), asmUtility.EncodingMode);
+            string readPath = Path.Combine(Path.Combine(Application.StartupPath, "XmlPatches"), strMode);
+            string[] files = (fileList == null) ? Directory.GetFiles(readPath, "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
             lsb_FilesList.SelectedIndices.Clear();
 
             clb_Patches.Items.Clear();
@@ -157,6 +161,14 @@ namespace FFTorgASM
             }
         }
 
+        private void SetupModes()
+        {
+            cmb_Mode.Items.Clear();
+            cmb_Mode.Items.Add("PSX");
+            cmb_Mode.Items.Add("PSP");
+            cmb_Mode.SelectedIndex = 0;
+        }
+
         private void ClearCurrentPatch()
         {
             textBox1.Text = "";
@@ -176,7 +188,8 @@ namespace FFTorgASM
                 patch.Update(asmUtility);
             }
 
-            string xml = PatchXmlReader.CreatePatchXML(patches);
+            FreeSpaceMode mode = FreeSpace.GetMode(asmUtility);
+            string xml = PatchXmlReader.CreatePatchXML(patches, mode);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "XML file (*.xml)|*.xml";
@@ -451,6 +464,12 @@ namespace FFTorgASM
             }
 
             return null;
+        }
+
+        private void SetFormButtonStatus()
+        {
+            //bool isPSX = (asmUtility.EncodingMode == ASMEncodingMode.PSX);
+            //btn_ViewFreeSpace.Enabled = isPSX;
         }
 
         private void reloadButton_Click(object sender, EventArgs e)
@@ -737,7 +756,8 @@ namespace FFTorgASM
 
         private void btn_OpenConflictChecker_Click(object sender, EventArgs e)
         {
-            ConflictCheckerForm conflictCheckerForm = new ConflictCheckerForm(GetCurrentFilePatches());
+            FreeSpaceMode mode = FreeSpace.GetMode(asmUtility);
+            ConflictCheckerForm conflictCheckerForm = new ConflictCheckerForm(GetCurrentFilePatches(), mode);
             conflictCheckerForm.Show();
         }
 
@@ -761,6 +781,14 @@ namespace FFTorgASM
         private void txt_Search_TextChanged(object sender, EventArgs e)
         {
             FormFilter();
+        }
+
+        private void cmb_Mode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            asmUtility.EncodingMode = (ASMEncodingMode)(cmb_Mode.SelectedIndex + 1);
+            LoadFiles();
+            FormSortAndFilter();
+            SetFormButtonStatus();
         }
     }
 }

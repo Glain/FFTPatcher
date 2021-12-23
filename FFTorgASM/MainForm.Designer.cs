@@ -51,6 +51,8 @@
             this.lbl_Search = new System.Windows.Forms.Label();
             this.cmb_Variable_Preset = new System.Windows.Forms.ComboBox();
             this.variableSpinner = new FFTorgASM.HexNumericUpDown();
+            this.lbl_Mode = new System.Windows.Forms.Label();
+            this.cmb_Mode = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.variableSpinner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -291,11 +293,31 @@
             this.variableSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.variableSpinner.Visible = false;
             // 
+            // lbl_Mode
+            // 
+            this.lbl_Mode.AutoSize = true;
+            this.lbl_Mode.Location = new System.Drawing.Point(12, 7);
+            this.lbl_Mode.Name = "lbl_Mode";
+            this.lbl_Mode.Size = new System.Drawing.Size(37, 13);
+            this.lbl_Mode.TabIndex = 23;
+            this.lbl_Mode.Text = "Mode:";
+            // 
+            // cmb_Mode
+            // 
+            this.cmb_Mode.FormattingEnabled = true;
+            this.cmb_Mode.Location = new System.Drawing.Point(55, 4);
+            this.cmb_Mode.Name = "cmb_Mode";
+            this.cmb_Mode.Size = new System.Drawing.Size(70, 21);
+            this.cmb_Mode.TabIndex = 24;
+            this.cmb_Mode.SelectedIndexChanged += new System.EventHandler(this.cmb_Mode_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 705);
+            this.Controls.Add(this.cmb_Mode);
+            this.Controls.Add(this.lbl_Mode);
             this.Controls.Add(this.cmb_Variable_Preset);
             this.Controls.Add(this.lbl_Search);
             this.Controls.Add(this.txt_Search);
@@ -351,6 +373,8 @@
         private System.Windows.Forms.TextBox txt_Search;
         private System.Windows.Forms.Label lbl_Search;
         private System.Windows.Forms.ComboBox cmb_Variable_Preset;
+        private System.Windows.Forms.Label lbl_Mode;
+        private System.Windows.Forms.ComboBox cmb_Mode;
     }
 }
 

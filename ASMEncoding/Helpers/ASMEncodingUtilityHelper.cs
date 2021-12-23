@@ -10,13 +10,11 @@ using System.Collections.Generic;
 
 namespace ASMEncoding
 {		
-    public class ASMEncodingMode
+    public enum ASMEncodingMode
     {
-        public const int NumModes = 3;
-
-        public const int Base = 0;
-        public const int PSX = 1;
-        public const int PSP = 2;
+        Base = 0,
+        PSX = 1,
+        PSP = 2
     }
 
 	public class ASMEncodingUtilityHelper
@@ -31,6 +29,8 @@ namespace ASMEncoding
         private ASMValueHelper _valueHelper;
         private ASMFormatHelper _formatHelper;
         private ASMPseudoHelper _pseudoHelper;
+
+        public const int NumEncodingModes = 3;
 		
 		public ASMEncodingUtilityHelper(bool loadDefaults = true)
 		{
@@ -72,7 +72,7 @@ namespace ASMEncoding
             _asmCheckHelper = new ASMCheckHelper(_asmEncoder, _asmDecoder);
         }
 
-        public void LoadEncodingModeFiles(int encodingMode)
+        public void LoadEncodingModeFiles(ASMEncodingMode encodingMode)
         {
             switch (encodingMode)
             {

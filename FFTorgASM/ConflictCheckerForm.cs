@@ -20,15 +20,17 @@ namespace FFTorgASM
         private Color backColor_Conflict_FreeSpace = Color.White; // Color.FromArgb(137, 216, 166);
 
         private IList<AsmPatch> origPatchList = null;
+        private FreeSpaceMode mode;
+
         private ConflictCheckResult conflictPatchData = null;
         private List<Color> patchColors = null;
         private Random rng = new Random();
 
-        public ConflictCheckerForm(IList<AsmPatch> patchList)
+        public ConflictCheckerForm(IList<AsmPatch> patchList, FreeSpaceMode mode)
         {
             InitializeComponent();
             this.origPatchList = patchList;
-            this.conflictPatchData = ConflictHelper.CheckConflicts(patchList);
+            this.conflictPatchData = ConflictHelper.CheckConflicts(patchList, mode);
             FindPatchColors(this.conflictPatchData.PatchList);
             ShowPatches(this.conflictPatchData);
         }
@@ -77,9 +79,13 @@ namespace FFTorgASM
             List<PatchRangeConflict> conflictList = conflictPatchData.ConflictMap[patch];
             foreach (PatchRangeConflict conflict in conflictList)
             {
-                PsxIso.Sectors sector = (PsxIso.Sectors)(conflict.ConflictRange.Sector);
+                //PsxIso.Sectors sector = (PsxIso.Sectors)(conflict.ConflictRange.Sector);
                 //string strSector = Enum.GetName(typeof(PsxIso.Sectors), sector);
-                string strSector = PatcherLib.Iso.PsxIso.GetSectorName(sector);
+                //string strSector = PatcherLib.Iso.PsxIso.GetSectorName(sector);
+
+                Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
+                Enum sector = (Enum)Enum.ToObject(sectorType, conflict.ConflictRange.Sector);
+                string strSector = (mode == FreeSpaceMode.PSP) ? PspIso.GetSectorName((PspIso.Sectors)sector) : PsxIso.GetSectorName((PsxIso.Sectors)sector);
 
                 // Patch #, Sector, Location, Conflict Location
                 ListViewItem item = new ListViewItem();

@@ -181,8 +181,6 @@ namespace PatcherLib.Iso
         }
 
 
-        #region Instance Variables (6)
-
         private static readonly long[] bootBinLocations = { 0x10000, 0x0FED8000 };
         private static byte[] buffer = new byte[1024];
         private const int bufferSize = 1024;
@@ -190,9 +188,80 @@ namespace PatcherLib.Iso
         //public const long FFTPackLocation = 0x02C20000;
         private static byte[] jpSizes = new byte[] { 0xE4, 0xD9, 0x37, 0x00, 0x00, 0x37, 0xD9, 0xE4 };
 
-        #endregion Instance Variables
+        private static readonly Dictionary<PspIso.Sectors, int> FileToRamOffsets = new Dictionary<PspIso.Sectors, int>()
+        {
+            { Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x8803FAC }
+        };
 
-        #region Public Methods (10)
+        public static uint GetRamOffsetUnsigned(int sector)
+        {
+            return GetRamOffsetUnsigned((PspIso.Sectors)sector);
+        }
+
+        public static uint GetRamOffsetUnsigned(PspIso.Sectors sector)
+        {
+            int fileToRamOffset = GetRamOffset(sector);
+            return (fileToRamOffset == -1) ? 0U : (uint)fileToRamOffset;
+        }
+
+        public static int GetRamOffset(int sector)
+        {
+            return GetRamOffset((PspIso.Sectors)sector);
+        }
+
+        public static int GetRamOffset(PspIso.Sectors sector)
+        {
+            int fileToRamOffset = 0;
+            if (!FileToRamOffsets.TryGetValue(sector, out fileToRamOffset))
+                fileToRamOffset = -1;
+
+            return fileToRamOffset;
+        }
+
+        public static string GetSectorName(int sector)
+        {
+            return GetSectorName((PspIso.Sectors)sector);
+        }
+
+        public static string GetSectorName(PspIso.Sectors sector)
+        {
+            string name = Enum.GetName(typeof(PspIso.Sectors), sector);
+            return name ?? ((int)sector).ToString();
+        }
+
+        public static string GetModifiedSectorName(int sector)
+        {
+            return GetModifiedSectorName((PspIso.Sectors)sector);
+        }
+
+        public static string GetModifiedSectorName(PspIso.Sectors sector)
+        {
+            if (sector == Sectors.PSP_GAME_SYSDIR_BOOT_BIN)
+            {
+                return "BOOT.BIN";
+            }
+
+            string name = GetSectorName(sector);
+            int backslashIndex = name.IndexOf('_');
+            int dotIndex = name.LastIndexOf('_');
+
+            if (backslashIndex == dotIndex)
+            {
+                return name.Replace('_', '.');
+            }
+            else
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length);
+                sb.Append(name.Substring(0, backslashIndex));
+                sb.Append(@"\");
+                sb.Append(name.Substring(backslashIndex + 1, dotIndex - backslashIndex - 1));
+                sb.Append(".");
+                sb.Append(name.Substring(dotIndex + 1));
+                return sb.ToString();
+            }
+
+            //return name.Remove(backslashIndex).Insert(backslashIndex, @"\").Remove(dotIndex).Insert(dotIndex, ".");
+        }
 
         /// <summary>
         /// Decrypts the ISO.
@@ -302,10 +371,6 @@ namespace PatcherLib.Iso
             DecryptISO( file, info );
             patches.ForEach( p => ApplyPatch( file, info, p ) );
         }
-
-        #endregion Public Methods
-
-        #region Private Methods (3)
 
         public static void ApplyPatch( Stream stream, PspIsoInfo info, PatcherLib.Datatypes.PatchedByteArray patch )
         {
@@ -576,7 +641,6 @@ namespace PatcherLib.Iso
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x312DB0, 0x94),
                 new KnownPosition(Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, 0x312DB0, 0x94)}.AsReadOnly();
 
-        #endregion Private Methods
 
         public enum Sectors
         {

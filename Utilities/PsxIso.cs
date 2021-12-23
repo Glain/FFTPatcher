@@ -330,7 +330,7 @@ namespace FFTPatcher
 
         public static string CreatePatchXML(FFTPatch fftPatch)
         {
-            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(fftPatch), true, true, "FFTPatcher Edits", null);
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(fftPatch), Context.US_PSX, true, true, "FFTPatcher Edits", null);
         }
     }
 }

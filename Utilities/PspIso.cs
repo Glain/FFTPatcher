@@ -249,7 +249,7 @@ namespace FFTPatcher
 
         public static string CreatePatchXML(FFTPatch FFTPatch)
         {
-            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(FFTPatch), true, true, "FFTPatcher Edits", null);
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(FFTPatch), Context.US_PSP, true, true, "FFTPatcher Edits", null);
         }
 
         public static List<PatchedByteArray> GetPatches(FFTPatch FFTPatch)

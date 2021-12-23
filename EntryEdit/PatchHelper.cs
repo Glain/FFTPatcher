@@ -48,7 +48,7 @@ namespace EntryEdit
 
         public static string CreatePatchXML(EntryData entryData, DataHelper dataHelper = null)
         {
-            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetISOPatches(entryData, dataHelper), true, true, "EntryEdit Edits");
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetISOPatches(entryData, dataHelper), Context.US_PSX, true, true, "EntryEdit Edits");
         }
 
         public static List<PatchedByteArray> GetISOPatches(EntryData entryData, DataHelper dataHelper = null)

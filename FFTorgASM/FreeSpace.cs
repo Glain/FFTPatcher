@@ -23,33 +23,64 @@ namespace FFTorgASM
         public int LargestGapSize { get; set; }
     }
 
+    public enum FreeSpaceMode
+    {
+        PSX = 0,
+        PSP = 1
+    }
+
     public static class FreeSpace
     {
-        private enum PsxFreeSpaceLocation
-        {
-            BATTLE_BIN = 0,
-            WORLD_BIN = 1,
-            SCUS_1 = 2,
-            SCUS_2 = 3
-        }
-
         private const string _xmlFilename = "FreeSpace.xml";
 
-        public static string[] PsxRangeNames = new string[4] {
-            "BATTLE.BIN",
-            "WORLD.BIN",
-            "SCUS 1",
-            "SCUS 2"
+        private static readonly FreeSpaceMode[] freeSpaceModes = new FreeSpaceMode[2]
+        {
+            FreeSpaceMode.PSX,
+            FreeSpaceMode.PSP
         };
 
-        public static PatchRange[] PsxRanges = new PatchRange[4] {
-            //new PatchRange(PsxIso.Sectors.BATTLE_BIN, 0xEA0E4, 0xF8E00),          // 0xEA0E4 to 0xF8E00 (Length 0x0ED1C)
-            new PatchRange(PsxIso.Sectors.BATTLE_BIN, 0xE92AC, 0xFA2DC),            // 0xE92AC to 0xFA2DC (Length 0x11030)
-            //new PatchRange(PsxIso.Sectors.WORLD_WORLD_BIN, 0x5E3C8, 0x6D0E4),     // 0x5E3C8 to 0x6D0E4 (Length 0x0ED1C)
-            new PatchRange(PsxIso.Sectors.WORLD_WORLD_BIN, 0x5D590, 0x6E5C0),       // 0x5D590 to 0x6E5C0 (Length 0x11030)
-            new PatchRange(PsxIso.Sectors.SCUS_942_21, 0x1785C, 0x17B04),           // 0x1785C to 0x17B04 (Length 0x002A8)
-            new PatchRange(PsxIso.Sectors.SCUS_942_21, 0x17DC0, 0x18F3C)            // 0x17DC0 to 0x18F3C (Length 0x0117C) 
+        private static string[][] RangeNames = new string[2][] {
+            new string[4] {
+                "BATTLE.BIN",
+                "WORLD.BIN",
+                "SCUS 1",
+                "SCUS 2"
+            },
+            new string[1]
+            {
+                "BOOT.BIN Ex."
+            }
         };
+
+        private static PatchRange[][] Ranges = new PatchRange[2][] {
+            new PatchRange[4] {
+                //new PatchRange(PsxIso.Sectors.BATTLE_BIN, 0xEA0E4, 0xF8E00),              // 0xEA0E4 to 0xF8E00 (Length 0x0ED1C)
+                new PatchRange(PsxIso.Sectors.BATTLE_BIN, 0xE92AC, 0xFA2DC),                // 0xE92AC to 0xFA2DC (Length 0x11030)
+                //new PatchRange(PsxIso.Sectors.WORLD_WORLD_BIN, 0x5E3C8, 0x6D0E4),         // 0x5E3C8 to 0x6D0E4 (Length 0x0ED1C)
+                new PatchRange(PsxIso.Sectors.WORLD_WORLD_BIN, 0x5D590, 0x6E5C0),           // 0x5D590 to 0x6E5C0 (Length 0x11030)
+                new PatchRange(PsxIso.Sectors.SCUS_942_21, 0x1785C, 0x17B04),               // 0x1785C to 0x17B04 (Length 0x002A8)
+                new PatchRange(PsxIso.Sectors.SCUS_942_21, 0x17DC0, 0x18F3C)                // 0x17DC0 to 0x18F3C (Length 0x0117C) 
+            },
+            new PatchRange[1]
+            {
+                new PatchRange(PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN, 0x789C, 0x78D0)
+            }
+        };
+
+        public static string[] GetRangeNames(FreeSpaceMode mode)
+        {
+            return RangeNames[(int)mode];
+        }
+
+        public static PatchRange[] GetRanges(FreeSpaceMode mode)
+        {
+            return Ranges[(int)mode];
+        }
+
+        public static FreeSpaceMode GetMode(ASMEncoding.ASMEncodingUtility asmUtility)
+        {
+            return (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP) ? FreeSpaceMode.PSP : FreeSpaceMode.PSX;
+        }
 
         public static void ReadFreeSpaceXML(string xmlFilename = _xmlFilename)
         {
@@ -58,38 +89,51 @@ namespace FFTorgASM
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(xmlFilename);
 
-                List<PatchRange> newPsxRanges = new List<PatchRange>();
-                List<string> newPsxRangeNames = new List<string>();
-
                 XmlNode rootNode = xmlDoc.SelectSingleNode("//FreeSpace");
-                foreach (XmlNode node in rootNode.ChildNodes)
+
+                foreach (FreeSpaceMode mode in freeSpaceModes)
                 {
-                    XmlAttribute attrName = node.Attributes["name"];
-                    XmlAttribute attrSector = node.Attributes["sector"];
-                    XmlAttribute attrStartOffset = node.Attributes["startOffset"];
-                    XmlAttribute attrEndOffset = node.Attributes["endOffset"];
+                    List<string> newRangeNames = new List<string>();
+                    List<PatchRange> newRanges = new List<PatchRange>();
 
-                    string name = attrName.InnerText;
+                    string modeName = Enum.GetName(typeof(FreeSpaceMode), mode);
+                    XmlNode parentNode = rootNode[modeName];
+                    if (parentNode != null)
+                    {
+                        foreach (XmlNode node in parentNode.ChildNodes)
+                        {
+                            XmlAttribute attrName = node.Attributes["name"];
+                            XmlAttribute attrSector = node.Attributes["sector"];
+                            XmlAttribute attrStartOffset = node.Attributes["startOffset"];
+                            XmlAttribute attrEndOffset = node.Attributes["endOffset"];
 
-                    int sector = 0;
-                    string sectorText = attrSector.InnerText;
-                    if (!int.TryParse(sectorText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out sector))
-                        sector = (int)(PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), sectorText);
-                    uint startOffset = uint.Parse(attrStartOffset.InnerText, System.Globalization.NumberStyles.HexNumber);
-                    uint endOffset = uint.Parse(attrEndOffset.InnerText, System.Globalization.NumberStyles.HexNumber);
+                            string name = attrName.InnerText;
 
-                    newPsxRangeNames.Add(name);
-                    newPsxRanges.Add(new PatchRange(sector, startOffset, endOffset));
+                            int sector = 0;
+                            string sectorText = attrSector.InnerText;
+
+                            Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
+                            Enum sectorValue = (Enum)Enum.Parse(sectorType, sectorText);
+                            if (!int.TryParse(sectorText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out sector))
+                                sector = (int)Convert.ChangeType(sectorValue, sectorValue.GetTypeCode());
+
+                            uint startOffset = uint.Parse(attrStartOffset.InnerText, System.Globalization.NumberStyles.HexNumber);
+                            uint endOffset = uint.Parse(attrEndOffset.InnerText, System.Globalization.NumberStyles.HexNumber);
+
+                            newRangeNames.Add(name);
+                            newRanges.Add(new PatchRange(sector, startOffset, endOffset));
+                        }
+                    }
+
+                    RangeNames[(int)mode] = newRangeNames.ToArray();
+                    Ranges[(int)mode] = newRanges.ToArray();
                 }
-
-                PsxRangeNames = newPsxRangeNames.ToArray();
-                PsxRanges = newPsxRanges.ToArray();
             }
         }
 
-        public static bool HasPsxFreeSpaceOverlap(PatchRange range)
+        public static bool HasFreeSpaceOverlap(PatchRange range, FreeSpaceMode mode)
         {
-            foreach (PatchRange freeSpaceRange in PsxRanges)
+            foreach (PatchRange freeSpaceRange in GetRanges(mode))
             {
                 if (range.HasOverlap(freeSpaceRange))
                     return true;
@@ -98,9 +142,9 @@ namespace FFTorgASM
             return false;
         }
 
-        public static bool IsContainedWithinPsxFreeSpace(PatchRange range)
+        public static bool IsContainedWithinFreeSpace(PatchRange range, FreeSpaceMode mode)
         {
-            foreach (PatchRange freeSpaceRange in PsxRanges)
+            foreach (PatchRange freeSpaceRange in GetRanges(mode))
             {
                 if (range.IsContainedWithin(freeSpaceRange))
                     return true;
@@ -109,11 +153,12 @@ namespace FFTorgASM
             return false;
         }
 
-        public static FreeSpaceMaps GetFreeSpaceMaps(IEnumerable<AsmPatch> patches)
+        public static FreeSpaceMaps GetFreeSpaceMaps(IEnumerable<AsmPatch> patches, FreeSpaceMode mode)
         {
             Dictionary<PatchedByteArray, AsmPatch> innerPatchMap = new Dictionary<PatchedByteArray, AsmPatch>();
             Dictionary<PatchRange, List<PatchedByteArray>> patchRangeMap = new Dictionary<PatchRange, List<PatchedByteArray>>();
             Dictionary<PatchRange, HashSet<AsmPatch>> outerPatchRangeMap = new Dictionary<PatchRange, HashSet<AsmPatch>>();
+            PatchRange[] ranges = GetRanges(mode);
 
             foreach (AsmPatch patch in patches)
             {
@@ -128,7 +173,7 @@ namespace FFTorgASM
                         innerPatchMap.Add(patchedByteArray, patch);
 
                     //long patchedByteArrayEndOffset = patchedByteArray.Offset + patchedByteArray.GetBytes().Length - 1;
-                    foreach (PatchRange range in FreeSpace.PsxRanges)
+                    foreach (PatchRange range in ranges)
                     {
                         //long positionEndOffset = position.StartLocation + position.Length - 1;
                         //if ((((PsxIso.Sectors)patchedByteArray.Sector) == position.Sector) && (patchedByteArrayEndOffset >= position.StartLocation) && (patchedByteArray.Offset <= positionEndOffset))
@@ -147,7 +192,7 @@ namespace FFTorgASM
                     }
                 }
 
-                foreach (PatchRange range in FreeSpace.PsxRanges)
+                foreach (PatchRange range in ranges)
                 {
                     if (patchRangeMap.ContainsKey(range))
                     {

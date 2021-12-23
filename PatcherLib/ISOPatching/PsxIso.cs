@@ -295,12 +295,12 @@ namespace PatcherLib.Iso
             return result.ToArray();
         }
 
-        public static uint GetRamOffset(int sector, bool useKSeg0 = true)
+        public static uint GetRamOffset(int sector, bool useKSeg0)
         {
             return GetRamOffset((PsxIso.Sectors)sector, useKSeg0);
         }
 
-        public static uint GetRamOffset(PsxIso.Sectors sector, bool useKSeg0 = true)
+        public static uint GetRamOffset(PsxIso.Sectors sector, bool useKSeg0)
         {
             int fileToRamOffset = GetRamOffset(sector);
             return (fileToRamOffset == -1) ? 0U : (uint)fileToRamOffset | (useKSeg0 ? KSeg0Mask : 0U);

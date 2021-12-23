@@ -360,7 +360,7 @@ namespace FFTPatcher.TextEditor
 
         public string CreatePatchXML()
         {
-            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(), true, true, "FFTTacText Edits", null);
+            return PatcherLib.Utilities.Utilities.CreatePatchXML(GetPatches(), Filetype, true, true, "FFTTacText Edits", null);
         }
 
         public void GenerateResourcesZip(string filepath)

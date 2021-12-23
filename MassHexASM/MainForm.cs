@@ -38,7 +38,7 @@ namespace MassHexASM
             cb_Mode.Items.Add("Base");
             cb_Mode.Items.Add("PSX");
             cb_Mode.Items.Add("PSP");
-            cb_Mode.SelectedIndex = ASMEncodingMode.PSX;
+            cb_Mode.SelectedIndex = (int)ASMEncodingMode.PSX;
         }
 		
 		public void InitASMUtility()
@@ -131,7 +131,7 @@ namespace MassHexASM
 
         private void cb_Mode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _asmUtility.EncodingMode = cb_Mode.SelectedIndex;
+            _asmUtility.EncodingMode = (ASMEncodingMode)cb_Mode.SelectedIndex;
         }
 
 		// Gets space padding based on input

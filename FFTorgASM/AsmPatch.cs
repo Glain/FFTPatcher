@@ -552,7 +552,14 @@ namespace FFTorgASM
             foreach (MovePatchRange patchRange in movePatchRanges)
             {
                 //PatchRange patchRange = movePair.Key;
-                uint fileToRamOffset = PatcherLib.Iso.PsxIso.GetRamOffset(patchRange.Sector, true);
+                //uint fileToRamOffset = PatcherLib.Iso.PsxIso.GetRamOffset(patchRange.Sector, true);
+                FreeSpaceMode mode = FreeSpace.GetMode(utility);
+                Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PatcherLib.Iso.PspIso.Sectors) : typeof(PatcherLib.Iso.PsxIso.Sectors);
+                Enum sector = (Enum)Enum.ToObject(sectorType, patchRange.Sector);
+                uint fileToRamOffset = (mode == FreeSpaceMode.PSP) 
+                    ? PatcherLib.Iso.PspIso.GetRamOffsetUnsigned((PatcherLib.Iso.PspIso.Sectors)sector) 
+                    : PatcherLib.Iso.PsxIso.GetRamOffset((PatcherLib.Iso.PsxIso.Sectors)sector, true);
+
                 ASMEncoding.Helpers.BlockMove blockMove = new ASMEncoding.Helpers.BlockMove();
                 blockMove.Location = (uint)patchRange.StartOffset + fileToRamOffset;
                 blockMove.EndLocation = (uint)patchRange.EndOffset + fileToRamOffset;
@@ -626,7 +633,7 @@ namespace FFTorgASM
             }
         }
 
-        public string CreateXML()
+        public string CreateXML(FreeSpaceMode mode)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendFormat("    <Patch name=\"{0}\">{1}", Name, Environment.NewLine);
@@ -636,7 +643,8 @@ namespace FFTorgASM
                 sb.AppendFormat("        <Description>    {0}    </Description>{1}", Description, Environment.NewLine);
             }
 
-            sb.Append(PatcherLib.Utilities.Utilities.CreatePatchXML(innerList));
+            Context context = (mode == FreeSpaceMode.PSP) ? Context.US_PSP : Context.US_PSX;
+            sb.Append(PatcherLib.Utilities.Utilities.CreatePatchXML(innerList, context));
 
             foreach (VariableType variable in Variables)
             {
@@ -648,7 +656,14 @@ namespace FFTorgASM
                 {
                     PatchedByteArray patchedByteArray = variable.Content[index];
                     //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
-                    string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
+                    //string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
+
+                    Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PatcherLib.Iso.PspIso.Sectors) : typeof(PatcherLib.Iso.PsxIso.Sectors);
+                    Enum sector = (Enum)Enum.ToObject(sectorType, patchedByteArray.Sector);
+                    string file = (mode == FreeSpaceMode.PSP)
+                        ? PatcherLib.Iso.PspIso.GetSectorName((PatcherLib.Iso.PspIso.Sectors)sector)
+                        : PatcherLib.Iso.PsxIso.GetSectorName((PatcherLib.Iso.PsxIso.Sectors)sector);
+
                     sbSpecific.AppendFormat("{0}:{1}{2}", file, patchedByteArray.Offset.ToString("X"), ((index < (patchCount - 1)) ? "," : ""));
                 }
 

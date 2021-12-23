@@ -55,7 +55,7 @@ namespace LEDecoder
             cb_Mode.Items.Add("Base");
             cb_Mode.Items.Add("PSX");
             cb_Mode.Items.Add("PSP");
-            cb_Mode.SelectedIndex = ASMEncodingMode.PSX;
+            cb_Mode.SelectedIndex = (int)ASMEncodingMode.PSX;
         }
 
         void timer_Tick(object sender, EventArgs e)
@@ -105,7 +105,7 @@ namespace LEDecoder
 
         private void cb_Mode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _asmUtility.EncodingMode = cb_Mode.SelectedIndex;
+            _asmUtility.EncodingMode = (ASMEncodingMode)cb_Mode.SelectedIndex;
         }
         #endregion
 

@@ -101,7 +101,7 @@ namespace FFTorgASM
     {
         public const int MaxConflictResolveAttempts = 100;
 
-        public static ConflictCheckResult CheckConflicts(IList<AsmPatch> patchList)
+        public static ConflictCheckResult CheckConflicts(IList<AsmPatch> patchList, FreeSpaceMode mode)
         {
             List<AsmPatch> resultPatchList = new List<AsmPatch>();
             Dictionary<AsmPatch, List<PatchRangeConflict>> conflictMap = new Dictionary<AsmPatch, List<PatchRangeConflict>>();
@@ -140,7 +140,7 @@ namespace FFTorgASM
                             PatchRange conflictRange = new PatchRange(conflictPatchedByteArray);
                             if (range.HasOverlap(conflictRange))
                             {
-                                bool isInFreeSpace = FreeSpace.IsContainedWithinPsxFreeSpace(range);
+                                bool isInFreeSpace = FreeSpace.IsContainedWithinFreeSpace(range, mode);
 
                                 PatchRangeConflict patchConflict = new PatchRangeConflict(range, conflictPatch, conflictRange, isInFreeSpace);
                                 PatchRangeConflict reversePatchConflict = new PatchRangeConflict(conflictRange, patch, range, isInFreeSpace);
@@ -181,15 +181,17 @@ namespace FFTorgASM
                 patchIndexMap.Add(patchList[index], index);
             }
 
-            FreeSpaceMaps freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList);
+            FreeSpaceMode mode = (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP) ? FreeSpaceMode.PSP : FreeSpaceMode.PSX;
+            FreeSpaceMaps freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList, mode);
             foreach (PatchRange freeSpaceRange in freeSpaceMaps.PatchRangeMap.Keys)
             {
                 List<PatchedByteArray> innerPatches = freeSpaceMaps.PatchRangeMap[freeSpaceRange];
                 FreeSpaceAnalyzeResult analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceRange, true);
                 int conflictResolveAttempts = 0;
 
-                PsxIso.Sectors sector = (PsxIso.Sectors)(freeSpaceRange.Sector);
-                string strSector = PatcherLib.Iso.PsxIso.GetSectorName(sector);
+                Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
+                Enum sector = (Enum)Enum.ToObject(sectorType, freeSpaceRange.Sector);
+                string strSector = (mode == FreeSpaceMode.PSP) ? PspIso.GetSectorName((PspIso.Sectors)sector) : PsxIso.GetSectorName((PsxIso.Sectors)sector);
 
                 while ((analyzeResult.HasConflicts) && (conflictResolveAttempts < maxConflictResolveAttempts))
                 {
@@ -221,7 +223,7 @@ namespace FFTorgASM
                             sbMessage.AppendLine("Conflict resolved by moving segment of patch \"" + asmPatch.Name + "\" in sector " + strSector + " from offset "
                                 + innerPatch.Offset.ToString("X") + " to " + analyzeResult.LargestGapOffset.ToString("X") + ".");
 
-                            freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList);
+                            freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList, mode);
                             innerPatches = freeSpaceMaps.PatchRangeMap[freeSpaceRange];
                             analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceRange, false);
                             conflictResolveAttempts++;

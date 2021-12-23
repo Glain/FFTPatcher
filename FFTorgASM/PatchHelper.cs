@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ASMEncoding;
 using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 
@@ -42,7 +43,7 @@ namespace FFTorgASM
             {
                 return PatchISO(filename, asmPatches, asmUtility);
             }
-            else if (modFilepath.EndsWith(".psv"))
+            else if ((asmUtility.EncodingMode == ASMEncodingMode.PSX) && (modFilepath.EndsWith(".psv")))
             {
                 return PatchPSV(filename, asmPatches, asmUtility);
             }
@@ -56,6 +57,7 @@ namespace FFTorgASM
         {
             ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
             asmPatches = conflictResolveResult.Patches;
+            string conflictResolveMessage = conflictResolveResult.Message;
 
             List<PatchedByteArray> patches = new List<PatchedByteArray>();
             foreach (AsmPatch asmPatch in asmPatches)
@@ -64,21 +66,27 @@ namespace FFTorgASM
                 foreach (PatchedByteArray innerPatch in asmPatch)
                 {
                     patches.Add(innerPatch);
+
+                    if ((asmUtility.EncodingMode == ASMEncodingMode.PSP) && (innerPatch.Sector == (int)PspIso.Sectors.PSP_GAME_SYSDIR_BOOT_BIN))
+                        patches.Add(innerPatch.GetCopyForSector(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN));
                 }
             }
 
             using (Stream file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
-                PatcherLib.Iso.PsxIso.PatchPsxIso(file, patches);
+                if (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSX)
+                    PsxIso.PatchPsxIso(file, patches);
+                else if (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP)
+                    PspIso.PatchISO(file, patches);
             }
 
             StringBuilder sbResultMessage = new StringBuilder();
             sbResultMessage.AppendLine("Complete!");
             sbResultMessage.AppendLine();
 
-            if (!string.IsNullOrEmpty(conflictResolveResult.Message))
+            if (!string.IsNullOrEmpty(conflictResolveMessage))
             {
-                sbResultMessage.AppendLine(conflictResolveResult.Message);
+                sbResultMessage.AppendLine(conflictResolveMessage);
                 sbResultMessage.AppendLine();
             }
 

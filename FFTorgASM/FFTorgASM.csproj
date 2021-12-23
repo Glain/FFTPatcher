@@ -156,60 +156,63 @@
     <Content Include="FreeSpace.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\AsmFormulas.xml">
+    <Content Include="XmlPatches\PSP\Example.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\DefaultHacks.xml" />
-    <Content Include="XmlPatches\Dokurider.xml">
+    <Content Include="XmlPatches\PSX\AsmFormulas.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\DW.xml">
+    <Content Include="XmlPatches\PSX\DefaultHacks.xml" />
+    <Content Include="XmlPatches\PSX\Dokurider.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Eldiran.xml">
+    <Content Include="XmlPatches\PSX\DW.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Emmy.xml">
+    <Content Include="XmlPatches\PSX\Eldiran.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Example.xml" />
-    <Content Include="XmlPatches\FDC.xml">
+    <Content Include="XmlPatches\PSX\Emmy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\FFMaster.xml">
+    <Content Include="XmlPatches\PSX\Example.xml" />
+    <Content Include="XmlPatches\PSX\FDC.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Include\build_now_loading_rewrite.asm">
+    <Content Include="XmlPatches\PSX\FFMaster.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Include\skip_events.asm">
+    <Content Include="XmlPatches\PSX\Include\build_now_loading_rewrite.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Include\unit_bench_world.asm">
+    <Content Include="XmlPatches\PSX\Include\skip_events.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Include\unit_bench_battle.asm">
+    <Content Include="XmlPatches\PSX\Include\unit_bench_world.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\nates1984.xml">
+    <Content Include="XmlPatches\PSX\Include\unit_bench_battle.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XmlPatches\PSX\nates1984.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Raijinili.xml">
+    <Content Include="XmlPatches\PSX\Raijinili.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Razele.xml">
+    <Content Include="XmlPatches\PSX\Razele.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\Pride.xml">
+    <Content Include="XmlPatches\PSX\Pride.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="XmlPatches\RFH.xml" />
-    <Content Include="XmlPatches\Xifanie.xml">
+    <Content Include="XmlPatches\PSX\RFH.xml" />
+    <Content Include="XmlPatches\PSX\Xifanie.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="XmlPatches\Xjamxx.xml">
+    <Content Include="XmlPatches\PSX\Xjamxx.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -225,19 +228,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="XmlPatches\Assorted.xml">
+    <None Include="XmlPatches\PSX\Assorted.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="XmlPatches\Choto.xml">
+    <None Include="XmlPatches\PSX\Choto.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="XmlPatches\Glain.xml">
+    <None Include="XmlPatches\PSX\Glain.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="XmlPatches\Pokeytax.xml">
+    <None Include="XmlPatches\PSX\Pokeytax.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

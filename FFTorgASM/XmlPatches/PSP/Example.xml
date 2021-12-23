@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+    <Patch name="Units start with 0 MP">
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="88C5856" offsetMode="RAM">
+            80
+        </Location>
+    </Patch>
+</Patches>

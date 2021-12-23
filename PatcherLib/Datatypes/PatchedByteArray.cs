@@ -32,7 +32,7 @@ namespace PatcherLib.Datatypes
             return File.ReadAllBytes( Filename );
         }
 
-        public STRPatchedByteArray(PsxIso.Sectors sector, string filename)
+        public STRPatchedByteArray(Enum sector, string filename)
             : base(sector, 0 )
         {
             this.Filename = filename;
@@ -75,7 +75,7 @@ namespace PatcherLib.Datatypes
             }
         }
 
-        public InputFilePatch( PsxIso.Sectors sector, uint offset, uint expectedLength )
+        public InputFilePatch( Enum sector, uint offset, uint expectedLength )
             : base( sector, offset )
         {
             ExpectedLength = expectedLength;
@@ -292,6 +292,22 @@ namespace PatcherLib.Datatypes
         {
             PatchedByteArray result = new PatchedByteArray(Sector, Offset, bytes);
             result.SectorEnum = SectorEnum;
+            result.IsAsm = IsAsm;
+            result.MarkedAsData = MarkedAsData;
+            result.IsCheckedAsm = IsCheckedAsm;
+            result.IsSequentialOffset = IsSequentialOffset;
+            result.IsMoveSimple = IsMoveSimple;
+            result.Text = Text;
+            result.RamOffset = RamOffset;
+            result.ErrorText = ErrorText;
+            result.Label = Label;
+            result.IsStatic = IsStatic;
+            return result;
+        }
+
+        public PatchedByteArray GetCopyForSector(Enum sectorEnum)
+        {
+            PatchedByteArray result = new PatchedByteArray(sectorEnum, Offset, bytes);
             result.IsAsm = IsAsm;
             result.MarkedAsData = MarkedAsData;
             result.IsCheckedAsm = IsCheckedAsm;
