@@ -47,6 +47,30 @@ namespace FFTorgASM
             return resultList;
         }
 
+        private void SavePatchXML()
+        {
+            List<AsmPatch> patches = GetAllSelectedPatches();
+            foreach (AsmPatch patch in patches)
+            {
+                patch.Update(AsmUtility);
+            }
+
+            FreeSpaceMode mode = FreeSpace.GetMode(AsmUtility);
+            string xml = PatchXmlReader.CreatePatchXML(patches, mode);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.CheckFileExists = false;
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                System.IO.File.WriteAllText(saveFileDialog.FileName, xml, Encoding.UTF8);
+                PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
+                Close();
+            }
+        }
+
         private void btn_Patch_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -78,6 +102,11 @@ namespace FFTorgASM
             }
 
             btn_Patch.Enabled = (NumSelectedPatches > 0);
+        }
+
+        private void btn_SavePatchXML_Click(object sender, EventArgs e)
+        {
+            SavePatchXML();
         }
     }
 }

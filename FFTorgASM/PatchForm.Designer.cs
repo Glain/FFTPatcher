@@ -31,6 +31,7 @@
             this.lbl_Description = new System.Windows.Forms.Label();
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             this.btn_Patch = new System.Windows.Forms.Button();
+            this.btn_SavePatchXML = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbl_Description
@@ -63,11 +64,23 @@
             this.btn_Patch.UseVisualStyleBackColor = true;
             this.btn_Patch.Click += new System.EventHandler(this.btn_Patch_Click);
             // 
+            // btn_SavePatchXML
+            // 
+            this.btn_SavePatchXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_SavePatchXML.Location = new System.Drawing.Point(25, 410);
+            this.btn_SavePatchXML.Name = "btn_SavePatchXML";
+            this.btn_SavePatchXML.Size = new System.Drawing.Size(104, 29);
+            this.btn_SavePatchXML.TabIndex = 18;
+            this.btn_SavePatchXML.Text = "Create .XML...";
+            this.btn_SavePatchXML.UseVisualStyleBackColor = true;
+            this.btn_SavePatchXML.Click += new System.EventHandler(this.btn_SavePatchXML_Click);
+            // 
             // PatchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(450, 452);
+            this.Controls.Add(this.btn_SavePatchXML);
             this.Controls.Add(this.btn_Patch);
             this.Controls.Add(this.clb_Patches);
             this.Controls.Add(this.lbl_Description);
@@ -83,5 +96,6 @@
         private System.Windows.Forms.Label lbl_Description;
         private PatcherLib.Controls.ModifiedBGCheckedListBox clb_Patches;
         private System.Windows.Forms.Button btn_Patch;
+        private System.Windows.Forms.Button btn_SavePatchXML;
     }
 }

@@ -44,7 +44,6 @@
             this.txt_Messages = new System.Windows.Forms.TextBox();
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             this.btn_UncheckAll = new System.Windows.Forms.Button();
-            this.btn_SavePatchXML = new System.Windows.Forms.Button();
             this.btn_Sort = new System.Windows.Forms.Button();
             this.btn_Clear = new System.Windows.Forms.Button();
             this.txt_Search = new System.Windows.Forms.TextBox();
@@ -220,17 +219,6 @@
             this.btn_UncheckAll.UseVisualStyleBackColor = true;
             this.btn_UncheckAll.Click += new System.EventHandler(this.btn_UncheckAll_Click);
             // 
-            // btn_SavePatchXML
-            // 
-            this.btn_SavePatchXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_SavePatchXML.Location = new System.Drawing.Point(144, 657);
-            this.btn_SavePatchXML.Name = "btn_SavePatchXML";
-            this.btn_SavePatchXML.Size = new System.Drawing.Size(104, 23);
-            this.btn_SavePatchXML.TabIndex = 17;
-            this.btn_SavePatchXML.Text = "Save Patch .XML";
-            this.btn_SavePatchXML.UseVisualStyleBackColor = true;
-            this.btn_SavePatchXML.Click += new System.EventHandler(this.btn_SavePatchXML_Click);
-            // 
             // btn_Sort
             // 
             this.btn_Sort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -323,7 +311,6 @@
             this.Controls.Add(this.txt_Search);
             this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.btn_Sort);
-            this.Controls.Add(this.btn_SavePatchXML);
             this.Controls.Add(this.btn_UncheckAll);
             this.Controls.Add(this.txt_Messages);
             this.Controls.Add(this.btn_ViewFreeSpace);
@@ -367,7 +354,6 @@
         private System.Windows.Forms.Button btn_ViewFreeSpace;
         private System.Windows.Forms.TextBox txt_Messages;
         private System.Windows.Forms.Button btn_UncheckAll;
-        private System.Windows.Forms.Button btn_SavePatchXML;
         private System.Windows.Forms.Button btn_Sort;
         private System.Windows.Forms.Button btn_Clear;
         private System.Windows.Forms.TextBox txt_Search;

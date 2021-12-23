@@ -179,30 +179,6 @@ namespace FFTorgASM
             cmb_Variable_Preset.Visible = false;
         }
 
-        private void SavePatchXML()
-        {
-            //List<AsmPatch> patches = GetCurrentFileSelectedPatches();
-            List<AsmPatch> patches = GetAllSelectedPatches();
-            foreach (AsmPatch patch in patches)
-            {
-                patch.Update(asmUtility);
-            }
-
-            FreeSpaceMode mode = FreeSpace.GetMode(asmUtility);
-            string xml = PatchXmlReader.CreatePatchXML(patches, mode);
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "XML file (*.xml)|*.xml";
-            saveFileDialog.FileName = string.Empty;
-            saveFileDialog.CheckFileExists = false;
-
-            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                File.WriteAllText(saveFileDialog.FileName, xml, Encoding.UTF8);
-                PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
-            }
-        }
-
         private List<AsmPatch> GetCurrentFilePatches()
         {
             List<AsmPatch> resultList = new List<AsmPatch>();
@@ -747,11 +723,6 @@ namespace FFTorgASM
                 if ( !( clb_Patches.Items[i] is FileAsmPatch ) || clb_Patches.GetItemChecked( i ) )
                     clb_Patches.ForceSetItemChecked( i, !clb_Patches.GetItemChecked( i ) );
             }
-        }
-
-        private void btn_SavePatchXML_Click(object sender, EventArgs e)
-        {
-            SavePatchXML();
         }
 
         private void btn_OpenConflictChecker_Click(object sender, EventArgs e)
