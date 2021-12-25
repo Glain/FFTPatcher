@@ -122,7 +122,7 @@ namespace FFTPatcher.SpriteEditor
 
             public override PatcherLib.Datatypes.PatchedByteArray GetPatchedByteArray( byte[] bytes )
             {
-                return new PatcherLib.Datatypes.PatchedByteArray( 0, 0, new byte[0] );
+                return new PatcherLib.Datatypes.PatchedByteArray( (PatcherLib.Iso.PsxIso.Sectors)0, 0, new byte[0] );
             }
 
             public override int Length

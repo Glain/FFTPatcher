@@ -10,6 +10,7 @@ using System.Xml;
 using ExtensionMethods;
 using PatcherLib.Iso;
 using PatcherLib.Datatypes;
+using PatcherLib.Helpers;
 
 namespace FFTorgASM
 {
@@ -82,10 +83,13 @@ namespace FFTorgASM
                 //PsxIso.Sectors sector = (PsxIso.Sectors)(conflict.ConflictRange.Sector);
                 //string strSector = Enum.GetName(typeof(PsxIso.Sectors), sector);
                 //string strSector = PatcherLib.Iso.PsxIso.GetSectorName(sector);
-
+                /*
                 Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
                 Enum sector = (Enum)Enum.ToObject(sectorType, conflict.ConflictRange.Sector);
                 string strSector = (mode == FreeSpaceMode.PSP) ? PspIso.GetSectorName((PspIso.Sectors)sector) : PsxIso.GetSectorName((PsxIso.Sectors)sector);
+                */
+
+                string strSector = ISOHelper.GetSectorName(conflict.ConflictRange.Sector, FreeSpace.GetContext(mode));
 
                 // Patch #, Sector, Location, Conflict Location
                 ListViewItem item = new ListViewItem();

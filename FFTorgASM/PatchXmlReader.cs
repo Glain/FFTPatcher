@@ -7,6 +7,7 @@ using ASMEncoding;
 using System.IO;
 using System.Text;
 using ASMEncoding.Helpers;
+using PatcherLib.Helpers;
 
 namespace FFTorgASM
 {
@@ -94,22 +95,25 @@ namespace FFTorgASM
             }
 
             bool hasDefaultSector = false;
-            Type sectorType = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
             //PsxIso.Sectors defaultSector = (PsxIso.Sectors)0;
-            Enum defaultSector = (Enum)Enum.ToObject(sectorType, 0);
+            Context context = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? Context.US_PSP : Context.US_PSX;
+            Type sectorType = ISOHelper.GetSectorType(context);
+
+            Enum defaultSector = ISOHelper.GetSector(0, context); // (Enum)Enum.ToObject(sectorType, 0);
             XmlAttribute attrDefaultFile = node.Attributes["file"];
             XmlAttribute attrDefaultSector = node.Attributes["sector"];
 
             if (attrDefaultFile != null)
             {
                 //defaultSector = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), attrDefaultFile.InnerText);
-                defaultSector = (Enum)Enum.Parse(sectorType, attrDefaultFile.InnerText);
+                //defaultSector = (Enum)Enum.Parse(sectorType, attrDefaultFile.InnerText);
+                defaultSector = ISOHelper.GetSector(attrDefaultFile.InnerText, context);
                 hasDefaultSector = true;
             }
             else if (attrDefaultSector != null)
             {
                 //defaultSector = (PsxIso.Sectors)Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber);
-                defaultSector = (Enum)Enum.ToObject(sectorType, Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber));
+                defaultSector = ISOHelper.GetSectorHex(attrDefaultSector.InnerText, context);
                 hasDefaultSector = true;
             }
 
@@ -203,7 +207,7 @@ namespace FFTorgASM
                 }
 
                 //PsxIso.Sectors sector = (PsxIso.Sectors)0;
-                Enum sector = (Enum)Enum.ToObject(sectorType, 0);
+                Enum sector = ISOHelper.GetSector(0, context); // (Enum)Enum.ToObject(sectorType, 0);
                 if (isSpecific)
                 {
                     sector = specifics[0].Sector;
@@ -211,12 +215,14 @@ namespace FFTorgASM
                 else if (fileAttribute != null)
                 {
                     //sector = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), fileAttribute.InnerText );
-                    sector = (Enum)Enum.Parse( sectorType, fileAttribute.InnerText );
+                    //sector = (Enum)Enum.Parse( sectorType, fileAttribute.InnerText );
+                    sector = ISOHelper.GetSector(fileAttribute.InnerText, context);
                 }
                 else if (sectorAttribute != null)
                 {
                     //sector = (PsxIso.Sectors)Int32.Parse( sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber );
-                    sector = (Enum)Enum.ToObject(sectorType, Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber));
+                    //sector = (Enum)Enum.ToObject(sectorType, Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber));
+                    sector = ISOHelper.GetSectorHex(sectorAttribute.InnerText, context);
                 }
                 else if (hasDefaultSector)
                 {
@@ -225,7 +231,8 @@ namespace FFTorgASM
                 else if (patches.Count > 0)
                 {
                     //sector = (PsxIso.Sectors)(patches[patches.Count - 1].Sector);
-                    sector = (Enum)Enum.ToObject(sectorType, patches[patches.Count - 1].Sector);
+                    //sector = (Enum)Enum.ToObject(sectorType, patches[patches.Count - 1].Sector);
+                    sector = patches[patches.Count - 1].SectorEnum;
                 }
                 else
                 {
@@ -299,7 +306,7 @@ namespace FFTorgASM
                     bool.TryParse(attrStatic.InnerText, out isStatic);
                 }
 
-                int ftrOffset = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? PspIso.GetRamOffset((PspIso.Sectors)sector) : PsxIso.GetRamOffset((PsxIso.Sectors)sector);
+                int ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
 
                 int offsetIndex = 0;
                 foreach (string strOffset in strOffsets)
@@ -321,7 +328,7 @@ namespace FFTorgASM
                         catch (Exception) { }
                     }
 
-                    if (asmUtility.EncodingMode == ASMEncodingMode.PSX)
+                    if (context == Context.US_PSX)
                         ramOffset = ramOffset | PsxIso.KSeg0Mask;
 
                     byte[] bytes;
@@ -405,7 +412,7 @@ namespace FFTorgASM
                         if (isSpecific)
                         {
                             sector = specifics[offsetIndex].Sector;
-                            ftrOffset = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? PspIso.GetRamOffset((PspIso.Sectors)sector) : PsxIso.GetRamOffset((PsxIso.Sectors)sector);
+                            ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
                         }
                     }
                 }
@@ -484,17 +491,19 @@ namespace FFTorgASM
                 XmlAttribute sectorAttribute = location.Attributes["sector"];
 
                 //PsxIso.Sectors sector = (PsxIso.Sectors)0;
-                Enum sector = (Enum)Enum.ToObject(sectorType, 0);
+                Enum sector = ISOHelper.GetSector(0, context); // (Enum)Enum.ToObject(sectorType, 0);
 
                 if (fileAttribute != null)
                 {
                     //sector = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), fileAttribute.InnerText );
-                    sector = (Enum)Enum.Parse(sectorType, fileAttribute.InnerText);
+                    //sector = (Enum)Enum.Parse(sectorType, fileAttribute.InnerText);
+                    sector = ISOHelper.GetSector(fileAttribute.InnerText, context);
                 }
                 else if (sectorAttribute != null)
                 {
                     //sector = (PsxIso.Sectors)Int32.Parse( sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber );
-                    sector = (Enum)Enum.ToObject(sectorType, Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber));
+                    //sector = (Enum)Enum.ToObject(sectorType, Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber));
+                    sector = ISOHelper.GetSectorHex(sectorAttribute.InnerText, context);
                 }
                 else
                 {
@@ -531,7 +540,10 @@ namespace FFTorgASM
             XmlNodeList patchNodes = rootNode.SelectNodes( "Patch" );
             List<AsmPatch> result = new List<AsmPatch>( patchNodes.Count );
 
-            Type sectorType = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
+            Context context = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? Context.US_PSP : Context.US_PSX;
+            Type sectorType = ISOHelper.GetSectorType(context);
+            Enum defaultSector = ISOHelper.GetSector(0, context);
+
             foreach ( XmlNode node in patchNodes )
             {
                 XmlAttribute ignoreNode = node.Attributes["ignore"];
@@ -541,20 +553,22 @@ namespace FFTorgASM
                 bool hasDefaultSector = false;
 
                 //PsxIso.Sectors defaultSector = (PsxIso.Sectors)0;
-                Enum defaultSector = (Enum)Enum.ToObject(sectorType, 0);
+                //Enum defaultSector = (Enum)Enum.ToObject(sectorType, 0);
                 XmlAttribute attrDefaultFile = node.Attributes["file"];
                 XmlAttribute attrDefaultSector = node.Attributes["sector"];
 
                 if (attrDefaultFile != null)
                 {
                     //defaultSector = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), attrDefaultFile.InnerText);
-                    defaultSector = (Enum)Enum.Parse(sectorType, attrDefaultFile.InnerText);
+                    //defaultSector = (Enum)Enum.Parse(sectorType, attrDefaultFile.InnerText);
+                    defaultSector = ISOHelper.GetSector(attrDefaultFile.InnerText, context);
                     hasDefaultSector = true;
                 }
                 else if (attrDefaultSector != null)
                 {
                     //defaultSector = (PsxIso.Sectors)Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber);
-                    defaultSector = (Enum)Enum.ToObject(sectorType, Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber));
+                    //defaultSector = (Enum)Enum.ToObject(sectorType, Int32.Parse(attrDefaultSector.InnerText, System.Globalization.NumberStyles.HexNumber));
+                    defaultSector = ISOHelper.GetSectorHex(attrDefaultSector.InnerText, context);
                     hasDefaultSector = true;
                 }
 
@@ -662,10 +676,8 @@ namespace FFTorgASM
                         }
                     }
 
-                    //Type sectorType = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
-
                     //PsxIso.Sectors sector = (PsxIso.Sectors)0;
-                    Enum sector = (Enum)Enum.ToObject(sectorType, 0);
+                    Enum sector = ISOHelper.GetSector(0, context); // (Enum)Enum.ToObject(sectorType, 0);
                     if (isSpecific)
                     {
                         sector = specifics[0].Sector;
@@ -673,12 +685,14 @@ namespace FFTorgASM
                     else if (fileAttribute != null)
                     {
                         //sector = (PsxIso.Sectors)Enum.Parse(typeof(PsxIso.Sectors), fileAttribute.InnerText);
-                        sector = (Enum)Enum.Parse(sectorType, fileAttribute.InnerText);
+                        //sector = (Enum)Enum.Parse(sectorType, fileAttribute.InnerText);
+                        sector = ISOHelper.GetSector(fileAttribute.InnerText, context);
                     }
                     else if (sectorAttribute != null)
                     {
                         //sector = (PsxIso.Sectors)Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber);
-                        sector = (Enum)Enum.ToObject(sectorType, Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber));
+                        //sector = (Enum)Enum.ToObject(sectorType, Int32.Parse(sectorAttribute.InnerText, System.Globalization.NumberStyles.HexNumber));
+                        sector = ISOHelper.GetSectorHex(sectorAttribute.InnerText, context);
                     }
                     else if (hasDefaultSector)
                     {
@@ -688,7 +702,8 @@ namespace FFTorgASM
                     {
                         int lastIndex = variables[variables.Count - 1].Content.Count - 1;
                         //sector = (PsxIso.Sectors)(variables[variables.Count - 1].Content[lastIndex].Sector);
-                        sector = (Enum)Enum.ToObject(sectorType, variables[variables.Count - 1].Content[lastIndex].Sector);
+                        //sector = (Enum)Enum.ToObject(sectorType, variables[variables.Count - 1].Content[lastIndex].Sector);
+                        sector = variables[variables.Count - 1].Content[lastIndex].SectorEnum;
                     }
                     else if (!isSymbol)
                     {
@@ -703,7 +718,7 @@ namespace FFTorgASM
                             isRamOffset = true;
                     }
 
-                    int ftrOffset = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? PspIso.GetRamOffset((PspIso.Sectors)sector) : PsxIso.GetRamOffset((PsxIso.Sectors)sector);
+                    int ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
 
                     XmlAttribute defaultAttr = varNode.Attributes["default"];
                     Byte[] byteArray = new Byte[numBytes];
@@ -748,7 +763,7 @@ namespace FFTorgASM
                             if (isSpecific)
                             {
                                 sector = specifics[offsetIndex].Sector;
-                                ftrOffset = (asmUtility.EncodingMode == ASMEncodingMode.PSP) ? PspIso.GetRamOffset((PspIso.Sectors)sector) : PsxIso.GetRamOffset((PsxIso.Sectors)sector); ;
+                                ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
                             }
                         }
                     }
@@ -869,7 +884,6 @@ namespace FFTorgASM
             }
 
             return result.AsReadOnly();
-
         }
 
         public static string CreatePatchXML(IEnumerable<AsmPatch> patches, FreeSpaceMode mode)

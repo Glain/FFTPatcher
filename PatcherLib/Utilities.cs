@@ -17,6 +17,7 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using PatcherLib.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -760,12 +761,15 @@ namespace PatcherLib.Utilities
                     List<uint> fourByteSets = new List<uint>(GetUintArrayFromBytes(bytes, false));
 
                     //string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
-
+                    /*
                     Type sectorType = (context == Datatypes.Context.US_PSP) ? typeof(PatcherLib.Iso.PspIso.Sectors) : typeof(PatcherLib.Iso.PsxIso.Sectors);
                     Enum sector = (Enum)Enum.ToObject(sectorType, patchedByteArray.Sector);
                     string file = (context == Datatypes.Context.US_PSP)
                         ? PatcherLib.Iso.PspIso.GetSectorName((PatcherLib.Iso.PspIso.Sectors)sector)
                         : PatcherLib.Iso.PsxIso.GetSectorName((PatcherLib.Iso.PsxIso.Sectors)sector);
+                    */
+
+                    string file = ISOHelper.GetSectorName(patchedByteArray.SectorEnum);
 
                     sb.AppendFormat("        <Location file=\"{0}\"{1}{2}>{3}", file,
                         (patchedByteArray.IsSequentialOffset ? "" : String.Format(" offset=\"{0}\"", patchedByteArray.Offset.ToString("X"))),

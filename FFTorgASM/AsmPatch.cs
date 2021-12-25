@@ -5,6 +5,7 @@ using PatcherLib.Utilities;
 using System.Text;
 using System.Globalization;
 using PatcherLib;
+using PatcherLib.Helpers;
 
 namespace FFTorgASM
 {
@@ -635,6 +636,8 @@ namespace FFTorgASM
 
         public string CreateXML(FreeSpaceMode mode)
         {
+            Context context = (mode == FreeSpaceMode.PSP) ? Context.US_PSP : Context.US_PSX;
+
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendFormat("    <Patch name=\"{0}\">{1}", Name, Environment.NewLine);
 
@@ -643,7 +646,6 @@ namespace FFTorgASM
                 sb.AppendFormat("        <Description>    {0}    </Description>{1}", Description, Environment.NewLine);
             }
 
-            Context context = (mode == FreeSpaceMode.PSP) ? Context.US_PSP : Context.US_PSX;
             sb.Append(PatcherLib.Utilities.Utilities.CreatePatchXML(innerList, context));
 
             foreach (VariableType variable in Variables)
@@ -657,13 +659,15 @@ namespace FFTorgASM
                     PatchedByteArray patchedByteArray = variable.Content[index];
                     //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
                     //string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
-
+                    /*
                     Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PatcherLib.Iso.PspIso.Sectors) : typeof(PatcherLib.Iso.PsxIso.Sectors);
                     Enum sector = (Enum)Enum.ToObject(sectorType, patchedByteArray.Sector);
                     string file = (mode == FreeSpaceMode.PSP)
                         ? PatcherLib.Iso.PspIso.GetSectorName((PatcherLib.Iso.PspIso.Sectors)sector)
                         : PatcherLib.Iso.PsxIso.GetSectorName((PatcherLib.Iso.PsxIso.Sectors)sector);
+                    */
 
+                    string file = ISOHelper.GetSectorName(patchedByteArray.SectorEnum);
                     sbSpecific.AppendFormat("{0}:{1}{2}", file, patchedByteArray.Offset.ToString("X"), ((index < (patchCount - 1)) ? "," : ""));
                 }
 

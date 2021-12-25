@@ -1,4 +1,5 @@
 ﻿using PatcherLib.Datatypes;
+using PatcherLib.Helpers;
 using PatcherLib.Iso;
 using System;
 using System.Collections.Generic;
@@ -181,7 +182,8 @@ namespace FFTorgASM
                 patchIndexMap.Add(patchList[index], index);
             }
 
-            FreeSpaceMode mode = (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP) ? FreeSpaceMode.PSP : FreeSpaceMode.PSX;
+            Context context = (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP) ? Context.US_PSP : Context.US_PSX;
+            FreeSpaceMode mode = FreeSpace.GetMode(context);
             FreeSpaceMaps freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList, mode);
             foreach (PatchRange freeSpaceRange in freeSpaceMaps.PatchRangeMap.Keys)
             {
@@ -189,9 +191,13 @@ namespace FFTorgASM
                 FreeSpaceAnalyzeResult analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceRange, true);
                 int conflictResolveAttempts = 0;
 
-                Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
+                /*
+                Type sectorType = ISOHelper.GetSectorType(context);
                 Enum sector = (Enum)Enum.ToObject(sectorType, freeSpaceRange.Sector);
                 string strSector = (mode == FreeSpaceMode.PSP) ? PspIso.GetSectorName((PspIso.Sectors)sector) : PsxIso.GetSectorName((PsxIso.Sectors)sector);
+                */
+
+                string strSector = ISOHelper.GetSectorName(freeSpaceRange.Sector, context);
 
                 while ((analyzeResult.HasConflicts) && (conflictResolveAttempts < maxConflictResolveAttempts))
                 {

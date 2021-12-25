@@ -211,7 +211,7 @@ namespace PatcherLib.Datatypes
             }
         }
 
-        public PatchedByteArray(int sector, long offset, byte[] bytes)
+        protected PatchedByteArray(int sector, long offset, byte[] bytes)
             : this(sector, offset)
         {
             this.bytes = bytes;
@@ -290,8 +290,9 @@ namespace PatcherLib.Datatypes
 
         public PatchedByteArray Copy()
         {
-            PatchedByteArray result = new PatchedByteArray(Sector, Offset, bytes);
-            result.SectorEnum = SectorEnum;
+            //PatchedByteArray result = new PatchedByteArray(Sector, Offset, bytes);
+            //result.SectorEnum = SectorEnum;
+            PatchedByteArray result = new PatchedByteArray(SectorEnum, Offset, bytes);
             result.IsAsm = IsAsm;
             result.MarkedAsData = MarkedAsData;
             result.IsCheckedAsm = IsCheckedAsm;

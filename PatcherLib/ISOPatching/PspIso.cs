@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using PatcherLib.Datatypes;
+using PatcherLib.Helpers;
 using PatcherLib.Utilities;
 
 namespace PatcherLib.Iso
@@ -229,6 +230,12 @@ namespace PatcherLib.Iso
             return name ?? ((int)sector).ToString();
         }
 
+        public static string GetFileName(FFTPack.Files file)
+        {
+            string name = Enum.GetName(typeof(FFTPack.Files), file);
+            return name ?? "FFTPACK.BIN (" + ((int)file).ToString() + ")";
+        }
+
         public static string GetModifiedSectorName(int sector)
         {
             return GetModifiedSectorName((PspIso.Sectors)sector);
@@ -241,26 +248,12 @@ namespace PatcherLib.Iso
                 return "BOOT.BIN";
             }
 
-            string name = GetSectorName(sector);
-            int backslashIndex = name.IndexOf('_');
-            int dotIndex = name.LastIndexOf('_');
+            return ISOHelper.GetModifiedPathName(GetSectorName(sector));
+        }
 
-            if (backslashIndex == dotIndex)
-            {
-                return name.Replace('_', '.');
-            }
-            else
-            {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length);
-                sb.Append(name.Substring(0, backslashIndex));
-                sb.Append(@"\");
-                sb.Append(name.Substring(backslashIndex + 1, dotIndex - backslashIndex - 1));
-                sb.Append(".");
-                sb.Append(name.Substring(dotIndex + 1));
-                return sb.ToString();
-            }
-
-            //return name.Remove(backslashIndex).Insert(backslashIndex, @"\").Remove(dotIndex).Insert(dotIndex, ".");
+        public static string GetModifiedFileName(FFTPack.Files file)
+        {
+            return ISOHelper.GetModifiedPathName(GetFileName(file));
         }
 
         /// <summary>

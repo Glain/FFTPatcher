@@ -65,6 +65,7 @@ namespace FFTorgASM
 
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
+                btn_SavePatchXML.Enabled = false;
                 System.IO.File.WriteAllText(saveFileDialog.FileName, xml, Encoding.UTF8);
                 PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
                 Close();

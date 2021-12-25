@@ -82,6 +82,16 @@ namespace FFTorgASM
             return (asmUtility.EncodingMode == ASMEncoding.ASMEncodingMode.PSP) ? FreeSpaceMode.PSP : FreeSpaceMode.PSX;
         }
 
+        public static FreeSpaceMode GetMode(Context context)
+        {
+            return (context == Context.US_PSP) ? FreeSpaceMode.PSP : FreeSpaceMode.PSX;
+        }
+
+        public static Context GetContext(FreeSpaceMode mode)
+        {
+            return (mode == FreeSpaceMode.PSP) ? Context.US_PSP : Context.US_PSX;
+        }
+
         public static void ReadFreeSpaceXML(string xmlFilename = _xmlFilename)
         {
             if (File.Exists(xmlFilename))
@@ -167,6 +177,8 @@ namespace FFTorgASM
                 foreach (PatchedByteArray patchedByteArray in combinedPatchList)
                 {
                     if (patchedByteArray is InputFilePatch)
+                        continue;
+                    if (patchedByteArray.SectorEnum.GetType() == typeof(FFTPack.Files))
                         continue;
 
                     if (!innerPatchMap.ContainsKey(patchedByteArray))

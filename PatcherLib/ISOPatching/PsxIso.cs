@@ -23,6 +23,7 @@ using System.Windows.Forms;
 using System;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
+using PatcherLib.Helpers;
 
 namespace PatcherLib.Iso
 {
@@ -327,7 +328,7 @@ namespace PatcherLib.Iso
 
         public static string GetSectorName(PsxIso.Sectors sector)
         {
-            string name = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), sector);
+            string name = Enum.GetName(typeof(PsxIso.Sectors), sector);
             return name ?? ((int)sector).ToString();
         }
 
@@ -343,26 +344,7 @@ namespace PatcherLib.Iso
                 return "SCUS_942.21";
             }
 
-            string name = GetSectorName(sector);
-            int backslashIndex = name.IndexOf('_');
-            int dotIndex = name.LastIndexOf('_');
-
-            if (backslashIndex == dotIndex)
-            {
-                return name.Replace('_', '.');
-            }
-            else
-            {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(name.Length);
-                sb.Append(name.Substring(0, backslashIndex));
-                sb.Append(@"\");
-                sb.Append(name.Substring(backslashIndex + 1, dotIndex - backslashIndex - 1));
-                sb.Append(".");
-                sb.Append(name.Substring(dotIndex + 1));
-                return sb.ToString();
-            }
-            
-            //return name.Remove(backslashIndex).Insert(backslashIndex, @"\").Remove(dotIndex).Insert(dotIndex, ".");
+            return ISOHelper.GetModifiedPathName(GetSectorName(sector));
         }
 
         public static PsxIso.Sectors GetSector(string sectorText)
