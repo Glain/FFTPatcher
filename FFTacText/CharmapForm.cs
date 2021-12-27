@@ -34,6 +34,7 @@ namespace FFTPatcher.TextEditor
 
         private static GenericCharMap currentCharMap = null;
         private static CharmapForm instance = null;
+        private static string text = null;
 
         #endregion Static Fields
 
@@ -44,7 +45,7 @@ namespace FFTPatcher.TextEditor
         {
             get
             {
-                if( instance == null )
+                if ((instance == null) || instance.IsDisposed)
                 {
                     instance = new CharmapForm();
                 }
@@ -76,7 +77,7 @@ namespace FFTPatcher.TextEditor
             keys.Sort();
             keys.RemoveAll( s => s.Contains( @"{Delay " ) || s.Contains( @"{Tab " ) || s.Contains( @"{Color " ) );
 
-            Instance.textBox.Text = string.Join( "\r\n", keys.ToArray() );
+            text = string.Join( "\r\n", keys.ToArray() );
             currentCharMap = map;
         }
 
@@ -92,6 +93,7 @@ namespace FFTPatcher.TextEditor
                 SetCharMap( charmap );
             }
 
+            Instance.textBox.Text = text;
             Instance.Show();
         }
 
