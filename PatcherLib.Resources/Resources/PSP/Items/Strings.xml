@@ -60,7 +60,7 @@
   </ItemSubTypes>
   <ShopAvailabilities>
     <!-- This list is used by the Items page -->
-    <string value="0" name="&lt;Blank&gt;"/>
+    <string value="0" name="Initial"/>
     <string value="1" name="Chapter 1 - Start"/>
     <string value="2" name="Chapter 1 - Enter Eagrose"/>
     <string value="3" name="Chapter 1 - Save Elmdore"/>
@@ -77,9 +77,9 @@
     <string value="14" name="Chapter 4 - Bethla"/>
     <string value="15" name="Chapter 4 - Kill Elmdore"/>
     <string value="16" name="Chapter 4 - Kill Zalbaag"/>
-    <string value="17" name="&lt;Blank&gt;"/>
-    <string value="18" name="&lt;Blank&gt;"/>
-    <string value="19" name="&lt;Blank&gt;"/>
-    <string value="20" name="&lt;Blank&gt;"/>
+    <string value="17" name="&lt;Unused&gt; (17)"/>
+    <string value="18" name="&lt;Unused&gt; (18)"/>
+    <string value="19" name="&lt;Unused&gt; (19)"/>
+    <string value="20" name="&lt;Unused&gt; (20)"/>
   </ShopAvailabilities>
 </ItemStrings>
