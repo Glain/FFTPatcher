@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PatcherLib.Datatypes;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -39,7 +40,9 @@ namespace EntryEdit
 
                 try
                 {
-                    DataHelper dataHelper = new DataHelper();
+                    Context context = Context.US_PSX;
+
+                    DataHelper dataHelper = new DataHelper(context);
                     EntryData patchData = PatchHelper.GetEntryDataFromPatchFile(patchFilepaths.Key, dataHelper);
 
                     if (patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
@@ -48,7 +51,7 @@ namespace EntryEdit
                     }
                     else
                     {
-                        PatchHelper.PatchISO(patchData, patchFilepaths.Value, dataHelper);
+                        PatchHelper.PatchISO(patchData, patchFilepaths.Value, context, dataHelper);
                     }
                 }
                 catch (Exception ex)

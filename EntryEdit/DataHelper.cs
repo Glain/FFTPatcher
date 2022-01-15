@@ -42,11 +42,11 @@ namespace EntryEdit
 
         public static readonly byte[] BlankTextOffsetBytes = new byte[4] { 0xF2, 0xF2, 0xF2, 0xF2 };
 
-        public int BattleConditionalsSize { get { return Settings.BattleConditionalsSize; } }
-        public int WorldConditionalsSize { get { return Settings.WorldConditionalsSize; } }
-        public int EventSize { get { return Settings.EventSize; } }
-        public int BattleConditionalSetMaxBlocks { get { return Settings.BattleConditionalSetMaxBlocks; } }
-        public int BattleConditionalSetMaxCommands { get { return Settings.BattleConditionalSetMaxCommands; } }
+        public int BattleConditionalsSize { get { return settings.BattleConditionalsSize; } }
+        public int WorldConditionalsSize { get { return settings.WorldConditionalsSize; } }
+        public int EventSize { get { return settings.EventSize; } }
+        public int BattleConditionalSetMaxBlocks { get { return settings.BattleConditionalSetMaxBlocks; } }
+        public int BattleConditionalSetMaxCommands { get { return settings.BattleConditionalSetMaxCommands; } }
 
         private const string StrUnknown = "unknown";
         private const string StrBlank = "blank";
@@ -60,8 +60,14 @@ namespace EntryEdit
         private readonly Dictionary<CommandType, Dictionary<int, string>> entryNameMaps;
         private readonly Dictionary<CommandType, HashSet<int>> sentinelCommandIDMap;
 
-        public DataHelper()
+        private Context context;
+        private SettingsData settings;
+
+        public DataHelper(Context context)
         {
+            this.context = context;
+            settings = Settings.GetSettings(context);
+
             parameterTypes = new List<string>();
             defaultCommandByteLengthMaps = new Dictionary<CommandType, int>();
             defaultCommandTemplateMap = new Dictionary<CommandType, CommandTemplate>();
@@ -147,7 +153,7 @@ namespace EntryEdit
 
         public List<ConditionalSet> LoadTrimmedBattleConditionals()
         {
-            return LoadConditionalSetsFromFile(CommandType.BattleConditional, Settings.FilepathTrimmedBattleConditionals);
+            return LoadConditionalSetsFromFile(CommandType.BattleConditional, settings.FilepathTrimmedBattleConditionals);
         }
 
         public ConditionalSet LoadActiveConditionalSet(int setIndex, string name, CommandType type, IList<byte> blockOffsetBytes, IList<byte> commandBytes)
@@ -297,7 +303,7 @@ namespace EntryEdit
             if (commandList != null)
             {
                 ConditionalBlock block = new ConditionalBlock(blockIndex, commandList);
-                block.FindName(parameterValueMaps);
+                block.FindName(parameterValueMaps, settings.IgnoreParameterTypes);
                 return block;
             }
             else
@@ -565,13 +571,16 @@ namespace EntryEdit
                 int length = nextEntryTextIndexes.Key - entryTextIndexes.Value + 1;
                 string strEntry = script.Substring(entryTextIndexes.Value, length);
 
+                if (strEntry.EndsWith("\r"))
+                    strEntry = strEntry.Substring(0, strEntry.Length - 1);
+
                 if (isTextSection)
                 {
-                    customEntryList.Add(new CustomEntry(entryIndex, strEntry));
+                    customEntryList.Add(new CustomEntry(entryIndex, strEntry, context));
                 }
                 else
                 {
-                    customEntryList.Add(new CustomEntry(entryIndex, new List<byte>(PatcherLib.Utilities.Utilities.GetBytesFromHexString(strEntry))));
+                    customEntryList.Add(new CustomEntry(entryIndex, new List<byte>(PatcherLib.Utilities.Utilities.GetBytesFromHexString(strEntry)), context));
                 }
 
                 entryTextIndexes = nextEntryTextIndexes;
@@ -579,7 +588,7 @@ namespace EntryEdit
                 entryIndex++;
             }
 
-            return new CustomSection(customEntryList);
+            return new CustomSection(customEntryList, context);
         }
 
         private KeyValuePair<int, int> FindCustomSectionEntryTextIndex(string script, int textIndex)
@@ -644,9 +653,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return Settings.FilepathDefaultBattleConditionals;
-                case CommandType.WorldConditional: return Settings.FilepathDefaultWorldConditionals;
-                case CommandType.EventCommand: return Settings.FilepathDefaultEvents;
+                case CommandType.BattleConditional: return settings.FilepathDefaultBattleConditionals;
+                case CommandType.WorldConditional: return settings.FilepathDefaultWorldConditionals;
+                case CommandType.EventCommand: return settings.FilepathDefaultEvents;
                 default: return null;
             }
         }
@@ -655,9 +664,9 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return Settings.FilepathCommandBattleConditionals;
-                case CommandType.WorldConditional: return Settings.FilepathCommandWorldConditionals;
-                case CommandType.EventCommand: return Settings.FilepathCommandEvents;
+                case CommandType.BattleConditional: return settings.FilepathCommandBattleConditionals;
+                case CommandType.WorldConditional: return settings.FilepathCommandWorldConditionals;
+                case CommandType.EventCommand: return settings.FilepathCommandEvents;
                 default: return null;
             }
         }
@@ -666,20 +675,26 @@ namespace EntryEdit
         {
             switch (type)
             {
-                case CommandType.BattleConditional: return Settings.FilepathNamesBattleConditionals;
-                case CommandType.WorldConditional: return Settings.FilepathNamesWorldConditionals;
-                case CommandType.EventCommand: return Settings.FilepathNamesEvents;
+                case CommandType.BattleConditional: return settings.FilepathNamesBattleConditionals;
+                case CommandType.WorldConditional: return settings.FilepathNamesWorldConditionals;
+                case CommandType.EventCommand: return settings.FilepathNamesEvents;
                 default: return null;
             }
         }
 
         private string GetParameterValueListFilepath(string type)
         {
+            return settings.GetFilepath(type + "Names.xml");
+        }
+
+        /*
+        private string GetParameterValueListFilepath(string type)
+        {
             string normalFilepath = "EntryData/" + type + "Names.xml";
 
-            if (!string.IsNullOrEmpty(Settings.ModSuffix))
+            if (!string.IsNullOrEmpty(settings.ModSuffix))
             {
-                string typeSuffixFilepath = "EntryData/" + type + "Names" + Settings.ModSuffix + ".xml";
+                string typeSuffixFilepath = "EntryData/" + type + "Names" + settings.ModSuffix + ".xml";
                 return File.Exists(typeSuffixFilepath) ? typeSuffixFilepath : normalFilepath;
             }
             else
@@ -687,8 +702,6 @@ namespace EntryEdit
                 return normalFilepath;
             }
         }
-
-        /*
         private string GetParameterValueListFilepath(CommandParameterType type)
         {
             switch (type)
@@ -715,7 +728,7 @@ namespace EntryEdit
         {
             Dictionary<string, Dictionary<int, string>> result = new Dictionary<string, Dictionary<int, string>>();
 
-            if (!Settings.IgnoreParameterTypes)
+            if (!settings.IgnoreParameterTypes)
             {
                 foreach (string type in parameterTypes)
                 {
@@ -1117,13 +1130,13 @@ namespace EntryEdit
             CustomSection originalTextSection = null;
             if (textOffset == BlankTextOffsetValue)
             {
-                dataSection = new CustomSection();
-                textSection = new CustomSection();
-                originalTextSection = new CustomSection();
+                dataSection = new CustomSection(context);
+                textSection = new CustomSection(context);
+                originalTextSection = new CustomSection(context);
             }
             else
             {
-                dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset))) : new CustomSection();
+                dataSection = (textOffset > naturalTextOffset) ? new CustomSection(bytes.SubLength(naturalTextOffset, ((int)textOffset - naturalTextOffset)), context) : new CustomSection(context);
                 int numTextEntries = Event.FindNumTextEntries(commandList);
                 numTextEntries = (numTextEntries > 0) ? numTextEntries : 1;
                 IList<byte> textBytes = bytes.Sub(textOffset);
@@ -1133,8 +1146,8 @@ namespace EntryEdit
                 //originalTextSection = new CustomSection(textByteLists, textList, textByteLists.Count);
                 //textSection = new CustomSection(textByteLists, numTextEntries);
                 //originalTextSection = new CustomSection(textByteLists, textByteLists.Count);
-                textSection = new CustomSection(textBytes, numTextEntries);
-                originalTextSection = new CustomSection(textBytes, -1);
+                textSection = new CustomSection(textBytes, context, numTextEntries);
+                originalTextSection = new CustomSection(textBytes, context, -1);
             }
 
             return new Event(index, entryNameMaps[CommandType.EventCommand][index], commandList, dataSection, textSection, originalTextSection, new List<byte>(bytes));
@@ -1223,7 +1236,7 @@ namespace EntryEdit
                         }
 
                         ConditionalBlock newBlock = new ConditionalBlock(numBlocks, CommandsFromByteArray(type, bytes.SubLength(startIndex, endIndex - startIndex), sentinelCommands));
-                        newBlock.FindName(parameterValueMaps);
+                        newBlock.FindName(parameterValueMaps, settings.IgnoreParameterTypes);
                         conditionalBlocks.Add(newBlock);
                         numBlocks++;
                     }

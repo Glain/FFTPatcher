@@ -251,21 +251,25 @@ namespace EntryEdit
         public bool IsTextDecoded { get; private set; }
         public int NumDecodeTextEntries { get; private set; }
 
-        public CustomSection(List<CustomEntry> customEntryList, int numTextEntries = 0, bool isTextDecoded = false)
+        public Context Context { get; private set; }
+
+        public CustomSection(List<CustomEntry> customEntryList, Context context, int numTextEntries = 0, bool isTextDecoded = false)
         {
             this.CustomEntryList = customEntryList;
             this.IsTextDecoded = isTextDecoded;
             this.NumDecodeTextEntries = numTextEntries;
+            this.Context = context;
         }
 
-        public CustomSection(CustomEntry customEntry): this(new List<CustomEntry>() { customEntry }) { }
-        public CustomSection() : this(new List<CustomEntry>()) { }
+        public CustomSection(CustomEntry customEntry, Context context): this(new List<CustomEntry>() { customEntry }, context) { }
+        public CustomSection(Context context) : this(new List<CustomEntry>(), context) { }
 
-        public CustomSection(IList<byte> bytes, int numTextEntries = 0)
+        public CustomSection(IList<byte> bytes, Context context, int numTextEntries = 0)
         {
             this.IsTextDecoded = false;
             this.NumDecodeTextEntries = numTextEntries;
-            this.CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, bytes) };
+            this.Context = context;
+            this.CustomEntryList = new List<CustomEntry>() { new CustomEntry(0, bytes, context) };
         }
 
         /*
@@ -316,13 +320,13 @@ namespace EntryEdit
                 if (CustomEntryList.Count > 0)
                 {
                     IList<byte> textBytes = CustomEntryList[0].Bytes;
-                    IList<IList<byte>> textByteLists = textBytes.Split((byte)0xFE);
+                    IList<IList<byte>> textByteLists = textBytes.Split(new Set<byte>() { 0xFE, 0xFF });
                     NumDecodeTextEntries = (NumDecodeTextEntries == -1) ? textByteLists.Count : NumDecodeTextEntries;
 
                     CustomEntryList.Clear();
                     for (int index = 0; index < NumDecodeTextEntries; index++)
                     {
-                        CustomEntryList.Add(new CustomEntry(index, textByteLists[index], TextUtility.Decode(textByteLists[index])));
+                        CustomEntryList.Add(new CustomEntry(index, textByteLists[index], TextUtility.Decode(textByteLists[index], Context), Context));
                     }
                 }
 
@@ -354,7 +358,7 @@ namespace EntryEdit
 
         public CustomSection Copy()
         {
-            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList), NumDecodeTextEntries, IsTextDecoded);
+            return new CustomSection(CopyableEntry.CopyList<CustomEntry>(CustomEntryList), Context, NumDecodeTextEntries, IsTextDecoded);
         }
 
         public string GetCombinedByteString()
@@ -393,27 +397,31 @@ namespace EntryEdit
         public string Text { get; private set; }
         public string ASM { get; private set; }
 
-        public CustomEntry(int index, IList<byte> bytes, string text, string asm)
+        public Context Context { get; private set; }
+
+        public CustomEntry(int index, IList<byte> bytes, string text, string asm, Context context)
         {
             this.Index = index;
             this.Bytes = bytes;
             this.Text = text;
             this.ASM = asm;
+            this.Context = context;
         }
 
-        public CustomEntry(int index, IList<byte> bytes, string text) : this(index, bytes, text, "") { }
-        public CustomEntry(int index, IList<byte> bytes) : this(index, bytes, "", "") { }
-        public CustomEntry(int index) : this(index, new List<byte>(), "", "") { }
+        public CustomEntry(int index, IList<byte> bytes, string text, Context context) : this(index, bytes, text, "", context) { }
+        public CustomEntry(int index, IList<byte> bytes, Context context) : this(index, bytes, "", "", context) { }
+        public CustomEntry(int index, Context context) : this(index, new List<byte>(), "", "", context) { }
 
-        public CustomEntry(int index, string text)
+        public CustomEntry(int index, string text, Context context)
         {
             this.Index = index;
-            SetText(text);
+            this.Context = context;
+            SetText(text, context);
         }
 
         public CustomEntry Copy()
         {
-            return new CustomEntry(Index, new List<byte>(Bytes), Text, ASM);
+            return new CustomEntry(Index, new List<byte>(Bytes), Text, ASM, Context);
         }
 
         public override string ToString()
@@ -421,13 +429,13 @@ namespace EntryEdit
             return (Index + 1).ToString("X2");
         }
 
-        public void SetText(string text, bool encode = true)
+        public void SetText(string text, Context context, bool encode = true)
         {
             Text = text;
 
             if (encode)
             {
-                Bytes = TextUtility.Encode(text);
+                Bytes = TextUtility.Encode(text, context);
             }
         }
 
@@ -441,7 +449,7 @@ namespace EntryEdit
             Bytes = new List<byte>(bytes);
             if (isText)
             {
-                Text = TextUtility.Decode(bytes);
+                Text = TextUtility.Decode(bytes, Context);
             }
         }
 

@@ -27,12 +27,12 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<ConditionalSet> conditionalSets, List<ConditionalSet> defaultConditionalSets, CommandData commandData, int maxBlocks = -1)
+        public void Populate(List<ConditionalSet> conditionalSets, List<ConditionalSet> defaultConditionalSets, CommandData commandData, bool ignoreParameterTypes, int maxBlocks = -1)
         {
             this._conditionalSets = conditionalSets;
             this._defaultConditionalSets = defaultConditionalSets;
 
-            conditionalSetEditor.Init(commandData, maxBlocks);
+            conditionalSetEditor.Init(commandData, ignoreParameterTypes, maxBlocks);
 
             PopulateSets();
         }

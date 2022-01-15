@@ -9,6 +9,7 @@ using System.Xml;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using EntryEdit.Forms;
 using PatcherLib;
+using PatcherLib.Datatypes;
 
 namespace EntryEdit
 {
@@ -26,6 +27,8 @@ namespace EntryEdit
         private ConditionalSet _battleConditionalSetCopy;
         private ConditionalSet _worldConditionalSetCopy;
         private Event _eventCopy;
+
+        private Context _context = Context.US_PSX;
 
         private StateForm _stateForm = null;
         public StateForm StateForm
@@ -55,7 +58,7 @@ namespace EntryEdit
         {
             InitializeComponent();
             Start(args);
-            //WriteLoadedDataToTestFiles();
+            WriteLoadedDataToTestFiles();
             //WriteByteDataToTestFiles();
         }
 
@@ -64,7 +67,7 @@ namespace EntryEdit
             string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".eepatch");
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            _dataHelper = new DataHelper();
+            _dataHelper = new DataHelper(_context);
             _commandDataMap = _dataHelper.GetCommandDataMap();
 
             Text = string.Format("EntryEdit (FFTPS v0.{0})", About.FFTPatcherSuiteRevision);
@@ -168,7 +171,7 @@ namespace EntryEdit
         private void SavePatchXML(string filepath)
         {
             SaveFormData();
-            PatchHelper.SavePatchXML(_entryData, filepath, _dataHelper);
+            PatchHelper.SavePatchXML(_entryData, filepath, _context, _dataHelper);
         }
 
         private void SetDefaults()
@@ -196,17 +199,19 @@ namespace EntryEdit
 
         private void PopulateBattleTab()
         {
-            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, _commandDataMap[CommandType.BattleConditional], _dataHelper.BattleConditionalSetMaxBlocks);
+            SettingsData settings = Settings.GetSettings(_context);
+            battleConditionalSetsEditor.Populate(_entryData.BattleConditionals, _entryDataDefault.BattleConditionals, _commandDataMap[CommandType.BattleConditional], settings.IgnoreParameterTypes, _dataHelper.BattleConditionalSetMaxBlocks);
         }
 
         private void PopulateWorldTab()
         {
-            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, _commandDataMap[CommandType.WorldConditional]);
+            SettingsData settings = Settings.GetSettings(_context);
+            worldConditionalSetsEditor.Populate(_entryData.WorldConditionals, _entryDataDefault.WorldConditionals, _commandDataMap[CommandType.WorldConditional], settings.IgnoreParameterTypes);
         }
 
         private void PopulateEventTab()
         {
-            eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, _commandDataMap[CommandType.EventCommand]);
+            eventsEditor.Populate(_entryData.Events, _entryDataDefault.Events, _commandDataMap[CommandType.EventCommand], _context);
         }
 
         private void SaveFormData()
@@ -715,6 +720,8 @@ namespace EntryEdit
 
         private void menuItem_CheckSize_Click(object sender, EventArgs e)
         {
+            SettingsData settings = Settings.GetSettings(_context);
+
             if (menuItem_View.Enabled)
             {
                 if (tabControl.SelectedTab == tabPage_BattleConditionals)
@@ -724,7 +731,7 @@ namespace EntryEdit
                     ConditionalSet selectedConditionalSet = battleConditionalSetsEditor.CopyConditionalSet();
 
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("All Battle Conditionals Size: {0} / {1} bytes{2}", bytes.Length, Settings.BattleConditionalsSize, Environment.NewLine);
+                    sb.AppendFormat("All Battle Conditionals Size: {0} / {1} bytes{2}", bytes.Length, settings.BattleConditionalsSize, Environment.NewLine);
 
                     if (selectedConditionalSet != null)
                     {
@@ -766,7 +773,7 @@ namespace EntryEdit
                 {
                     worldConditionalSetsEditor.SaveBlock();
                     byte[] bytes = _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals);
-                    PatcherLib.MyMessageBox.Show(this, string.Format("All World Conditionals Size: {0} / {1} bytes", bytes.Length, Settings.WorldConditionalsSize), "Size", MessageBoxButtons.OK);
+                    PatcherLib.MyMessageBox.Show(this, string.Format("All World Conditionals Size: {0} / {1} bytes", bytes.Length, settings.WorldConditionalsSize), "Size", MessageBoxButtons.OK);
                 }
                 else if (tabControl.SelectedTab == tabPage_Events)
                 {
@@ -776,7 +783,7 @@ namespace EntryEdit
                     int maxEventBytes = _dataHelper.EventSize;
 
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("{0} {1}: {2} / {3} bytes{4}", selectedEvent.Index.ToString("X4"), selectedEvent.Name, bytes.Length, Settings.EventSize, Environment.NewLine);
+                    sb.AppendFormat("{0} {1}: {2} / {3} bytes{4}", selectedEvent.Index.ToString("X4"), selectedEvent.Name, bytes.Length, settings.EventSize, Environment.NewLine);
 
                     bool hasInvalidEvents = false;
                     int highestByteTotal = 0;
@@ -848,7 +855,7 @@ namespace EntryEdit
         private void menuItem_PatchISO_Click(object sender, EventArgs e)
         {
             SaveFormData();
-            if (ISOForm.InitDialog(_dataHelper, _entryData, ISOForm.Mode.Patch) == DialogResult.OK)
+            if (ISOForm.InitDialog(_dataHelper, _entryData, ISOForm.Mode.Patch, _context) == DialogResult.OK)
             {
                 //PatcherLib.MyMessageBox.Show(this, "Complete!", "Complete!", MessageBoxButtons.OK);
             }
@@ -857,7 +864,7 @@ namespace EntryEdit
         private void menuItem_LoadISO_Click(object sender, EventArgs e)
         {
             EntryData inputEntryData = _entryData ?? new EntryData(null, null, null);
-            if (ISOForm.InitDialog(_dataHelper, inputEntryData, ISOForm.Mode.Load) == DialogResult.OK)
+            if (ISOForm.InitDialog(_dataHelper, inputEntryData, ISOForm.Mode.Load, _context) == DialogResult.OK)
             {
                 _entryDataDefault = _entryDataDefault ?? _dataHelper.LoadDefaultEntryData();
 

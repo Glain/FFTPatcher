@@ -166,6 +166,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PatchHelper.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SettingsData.cs" />
     <Compile Include="TextUtility.cs" />
     <EmbeddedResource Include="Editors\CommandEditor.resx">
       <DependentUpon>CommandEditor.cs</DependentUpon>
@@ -211,22 +212,22 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="EntryData\BattleConditionals.bin">
+    <None Include="EntryData\PSX\BattleConditionals.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="EntryData\BattleConditionalsTrimmed.bin">
+    <None Include="EntryData\PSX\BattleConditionalsTrimmed.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="EntryData\Events.bin">
+    <None Include="EntryData\PSX\Events.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="EntryData\Scenarios.bin">
+    <None Include="EntryData\PSX\Scenarios.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="EntryData\WorldConditionals.bin">
+    <None Include="EntryData\PSX\WorldConditionals.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="EntryData\WorldConditionalsTrimmed.bin">
+    <None Include="EntryData\PSX\WorldConditionalsTrimmed.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -249,57 +250,60 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EntryData\BattleConditionalCommandsUpgrade.xml">
+    <Content Include="EntryData\PSX\EventInstructionUpgrade\BattleConditionalCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\EventCommandsUpgrade.xml">
+    <Content Include="EntryData\PSX\EventInstructionUpgrade\EventCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\TaskNames.xml">
+    <Content Include="EntryData\PSX\TaskNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\VariableNamesUpgrade.xml">
+    <Content Include="EntryData\PSX\EventInstructionUpgrade\VariableNames.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EntryEditSettings.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ee.ico" />
-    <Content Include="EntryData\AbilityEffectNames.xml">
+    <Content Include="EntryData\PSX\AbilityEffectNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\BattleConditionalCommands.xml">
+    <Content Include="EntryData\PSX\BattleConditionalCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\UnitNames.xml">
+    <Content Include="EntryData\PSX\UnitNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\ConditionalSets.xml">
+    <Content Include="EntryData\PSX\ConditionalSets.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\EventCommands.xml">
+    <Content Include="EntryData\PSX\EventCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="EntryData\LocationNames.xml">
+    <Content Include="EntryData\PSX\LocationNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\ScenarioNames.xml">
+    <Content Include="EntryData\PSX\ScenarioNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\ItemNames.xml">
+    <Content Include="EntryData\PSX\ItemNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\MapNames.xml">
+    <Content Include="EntryData\PSX\MapNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\MusicChoices.xml">
+    <Content Include="EntryData\PSX\MusicChoices.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\SpritesheetNames.xml">
+    <Content Include="EntryData\PSX\SpritesheetNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\VariableNames.xml">
+    <Content Include="EntryData\PSX\VariableNames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EntryData\WorldConditionalCommands.xml">
+    <Content Include="EntryData\PSX\WorldConditionalCommands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

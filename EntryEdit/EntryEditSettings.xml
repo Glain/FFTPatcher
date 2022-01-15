@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+    <PSX>
+        <add key="Mod" value="" />
+        <add key="IgnoreParameterTypes" value="false" />
+
+        <add key="EventSize" value="8192" />
+        <add key="BattleConditionalsSize" value="8636" />
+        <add key="WorldConditionalsSize" value="4096" />
+
+        <add key="NumEvents" value="500" />
+
+        <add key="BattleConditionalSetMaxBlocks" value="16" />
+        <add key="BattleConditionalSetMaxCommands" value="256" />
+
+        <add key="BattleConditionalsSector" value="EVENT_ATTACK_OUT" />
+        <add key="BattleConditionalsOffset" value="0x14938" />
+        <add key="WorldConditionalsSector" value="WORLD_WLDCORE_BIN" />
+        <add key="WorldConditionalsOffset" value="0x30234" />
+        <add key="EventsSector" value="EVENT_TEST_EVT" />
+        <add key="EventsOffset" value="0" />
+
+        <add key="WorldConditionalsRepoint" value="true" />
+        <add key="WorldConditionalsPointerSector" value="WORLD_WLDCORE_BIN" />
+        <add key="WorldConditionalsPointerOffset" value="0x2FA54" />
+        <add key="WorldConditionalsWorkingPointerRAMLocation" value="0xD4674" />
+
+        <add key="BattleConditionalBlockOffsetsRAMLocation" value="0x475E0" />
+        <add key="BattleConditionalsRAMLocation" value="0x49A18" />
+        <add key="BattleConditionalBlockOffsetsRAMLength" value="32" />
+        <add key="BattleConditionalsRAMLength" value="512" />
+
+        <add key="EventRAMLocation" value="0x4A6BC" />
+        <add key="EventIDRAMLocation" value="0x577B8" />
+
+        <add key="BattleConditionalsApplyLimitPatch" value="true" />
+        <add key="BattleConditionalsLimitPatchSector" value="BATTLE_BIN" />
+        <add key="BattleConditionalsLimitPatchOffset" value="0xDB664" />
+        <add key="BattleConditionalsLimitPatchBytes" value="0x10" />
+
+        <add key="ScenariosSector" value="EVENT_ATTACK_OUT" />
+        <add key="ScenariosOffset" value="0x10938" />
+
+        <add key="TextOffsetRAMLocation" value="0x173F8C" />
+
+        <add key="MaxSectors" value="358400" />
+
+        <add key="FilepathDefaultBattleConditionals" value="BattleConditionals.bin" />
+        <add key="FilepathTrimmedBattleConditionals" value="BattleConditionalsTrimmed.bin" />
+        <add key="FilepathDefaultWorldConditionals" value="WorldConditionals.bin" />
+        <add key="FilepathDefaultEvents" value="Events.bin" />
+        <add key="FilepathCommandBattleConditionals" value="BattleConditionalCommands.xml" />
+        <add key="FilepathCommandWorldConditionals" value="WorldConditionalCommands.xml" />
+        <add key="FilepathCommandEvents" value="EventCommands.xml" />
+        <add key="FilepathNamesBattleConditionals" value="ConditionalSets.xml" />
+        <add key="FilepathNamesWorldConditionals" value="LocationNames.xml" />
+        <add key="FilepathNamesEvents" value="ScenarioNames.xml" />
+    </PSX>
+</Settings>

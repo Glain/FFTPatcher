@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using PatcherLib.Datatypes;
 
 namespace EntryEdit.Editors
 {
@@ -57,13 +58,13 @@ namespace EntryEdit.Editors
             txt_Entry.Enabled = false;
         }
 
-        public void SaveEntry()
+        public void SaveEntry(Context context)
         {
             if (_customEntry != null)
             {
                 if (_editorMode == CustomEntryEditor.EditorMode.Text)
                 {
-                    _customEntry.SetText(txt_Entry.Text);
+                    _customEntry.SetText(txt_Entry.Text, context);
                 }
                 else if (_editorMode == CustomEntryEditor.EditorMode.Data)
                 {

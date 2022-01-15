@@ -1,4 +1,5 @@
 ﻿using PatcherLib.Datatypes;
+using PatcherLib.Helpers;
 using PatcherLib.Iso;
 using System;
 using System.Collections.Generic;
@@ -125,7 +126,7 @@ namespace FFTorgASM
                             Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
                             Enum sectorValue = (Enum)Enum.Parse(sectorType, sectorText);
                             if (!int.TryParse(sectorText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out sector))
-                                sector = (int)Convert.ChangeType(sectorValue, sectorValue.GetTypeCode());
+                                sector = ISOHelper.GetSectorValue(sectorValue);
 
                             uint startOffset = uint.Parse(attrStartOffset.InnerText, System.Globalization.NumberStyles.HexNumber);
                             uint endOffset = uint.Parse(attrEndOffset.InnerText, System.Globalization.NumberStyles.HexNumber);

@@ -6,6 +6,12 @@ namespace PatcherLib.Helpers
 {
     public static class ISOHelper
     {
+        public static class TypeStrings
+        {
+            public const string PSX = "PSX";
+            public const string PSP = "PSP";
+        }
+
         public static string GetSectorName(Enum sector)
         {
             Type type = sector.GetType();
@@ -23,6 +29,11 @@ namespace PatcherLib.Helpers
         public static string GetSectorName(int sector, Context context)
         {
             return GetSectorName(GetSector(sector, context));
+        }
+
+        public static int GetSectorValue(Enum sector)
+        {
+            return (int)Convert.ChangeType(sector, sector.GetTypeCode());
         }
 
         public static Enum GetSector(string sectorName, Context context)
@@ -66,6 +77,30 @@ namespace PatcherLib.Helpers
             return (context == Context.US_PSP) ? typeof(PspIso.Sectors) : typeof(PsxIso.Sectors);
         }
 
+        public static int GetRamOffset(Enum sector, Context context)
+        {
+            Type type = sector.GetType();
+
+            if (type == typeof(PsxIso.Sectors))
+                return PsxIso.GetRamOffset((PsxIso.Sectors)sector);
+            else if (type == typeof(PspIso.Sectors))
+                return PspIso.GetRamOffset((PspIso.Sectors)sector);
+            else
+                return 0;
+        }
+
+        public static uint GetRamOffsetUnsigned(Enum sector, Context context, bool useKSeg0 = true)
+        {
+            Type type = sector.GetType();
+
+            if (type == typeof(PsxIso.Sectors))
+                return PsxIso.GetRamOffset((PsxIso.Sectors)sector, useKSeg0);
+            else if (type == typeof(PspIso.Sectors))
+                return PspIso.GetRamOffsetUnsigned((PspIso.Sectors)sector);
+            else
+                return 0;
+        }
+
         public static int GetFileToRamOffset(Enum sector, Context context)
         {
             Type type = sector.GetType();
@@ -76,6 +111,16 @@ namespace PatcherLib.Helpers
                 return PspIso.GetRamOffset((PspIso.Sectors)sector);
             else
                 return -1;
+        }
+
+        public static string GetTypeString(Context context)
+        {
+            switch (context)
+            {
+                case Context.US_PSX: return TypeStrings.PSX;
+                case Context.US_PSP: return TypeStrings.PSP;
+                default: return string.Empty;
+            }
         }
 
         public static string GetModifiedPathName(string name)

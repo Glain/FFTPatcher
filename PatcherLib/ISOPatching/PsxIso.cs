@@ -39,23 +39,6 @@ namespace PatcherLib.Iso
         }
     }
 
-    public class PsxSectorPair
-    {
-        public PsxIso.Sectors Sector { get; private set; }
-        public string SectorName { get; private set; }
-
-        public PsxSectorPair(PsxIso.Sectors sector, string sectorName)
-        {
-            this.Sector = sector;
-            this.SectorName = sectorName;
-        }
-
-        public override string ToString()
-        {
-            return SectorName;
-        }
-    }
-
     public static class PsxIso
     {
         public const uint KSeg0Mask = 0x80000000U;
@@ -278,19 +261,19 @@ namespace PatcherLib.Iso
             return result;
         }
 
-        public static PsxSectorPair[] GetSectorPairs()
+        public static SectorPair[] GetSectorPairs()
         {
             PsxIso.Sectors[] sectors = (PsxIso.Sectors[])Enum.GetValues(typeof(PsxIso.Sectors));
 
             int numSectorPairs = sectors.Length;
-            List<PsxSectorPair> result = new List<PsxSectorPair>();
+            List<SectorPair> result = new List<SectorPair>();
 
             for (int index = 0; index < numSectorPairs; index++)
             {
                 PsxIso.Sectors sector = sectors[index];
                 string sectorName = GetModifiedSectorName(sector);
                 if ((!sectorName.StartsWith("EFFECT")) && (!sectorName.StartsWith("MAP")) && (sectorName.EndsWith("21") || sectorName.EndsWith("OUT") || sectorName.EndsWith("BIN") || sectorName.EndsWith("EVT")))
-                    result.Add(new PsxSectorPair(sector, sectorName));
+                    result.Add(new SectorPair(sector, sectorName));
             }
 
             return result.ToArray();

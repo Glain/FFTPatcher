@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PatcherLib;
+using PatcherLib.Datatypes;
 
 namespace EntryEdit.Editors
 {
@@ -22,12 +23,15 @@ namespace EntryEdit.Editors
         private bool _isPopulate = false;
         private bool _isPopulateSection = false;
 
+        private Context _context;
+
         public CustomSectionEditor()
         {
             InitializeComponent();
         }
 
-        public void Populate(IList<CustomSection> customSections, CustomSection originalTextSection, IList<CustomSection> defaultCustomSections, CustomSection defaultOriginalTextSection)
+        public void Populate(IList<CustomSection> customSections, CustomSection originalTextSection, IList<CustomSection> defaultCustomSections, 
+            CustomSection defaultOriginalTextSection, Context context)
         {
             _isPopulate = true;
 
@@ -35,6 +39,7 @@ namespace EntryEdit.Editors
             this._originalTextSection = originalTextSection;
             this._defaultCustomSections = defaultCustomSections;
             this._defaultOriginalTextSection = defaultOriginalTextSection;
+            this._context = context;
 
             customSections[(int)CustomEntryEditor.EditorMode.Text].DecodeText();
             defaultCustomSections[(int)CustomEntryEditor.EditorMode.Text].DecodeText();
@@ -55,7 +60,7 @@ namespace EntryEdit.Editors
 
         public void SaveEntry()
         {
-            entryEditor.SaveEntry();
+            entryEditor.SaveEntry(_context);
         }
 
         private void PopulateSection(int index = 0)
@@ -123,7 +128,7 @@ namespace EntryEdit.Editors
 
         private void AddSection(bool useDefaultEntry)
         {
-            entryEditor.SaveEntry();
+            entryEditor.SaveEntry(_context);
 
             List<CustomEntry> entryList = _customSections[_customSectionIndex].CustomEntryList;
             int newIndex = _customEntryIndex + 1;
@@ -131,11 +136,11 @@ namespace EntryEdit.Editors
             if ((useDefaultEntry) && (newIndex == entryList.Count) && (_editorMode == CustomEntryEditor.EditorMode.Text) && (newIndex < _originalTextSection.CustomEntryList.Count))
             {
                 CustomEntry originalTextEntry = _originalTextSection.CustomEntryList[newIndex];
-                entryList.Insert(newIndex, new CustomEntry(newIndex, originalTextEntry.Bytes, originalTextEntry.Text));
+                entryList.Insert(newIndex, new CustomEntry(newIndex, originalTextEntry.Bytes, originalTextEntry.Text, _context));
             }
             else
             {
-                entryList.Insert(newIndex, new CustomEntry(newIndex));
+                entryList.Insert(newIndex, new CustomEntry(newIndex, _context));
             }
 
             for (int index = newIndex + 1; index < entryList.Count; index++)
@@ -189,7 +194,7 @@ namespace EntryEdit.Editors
         {
             if (!_isPopulate)
             {
-                entryEditor.SaveEntry();
+                entryEditor.SaveEntry(_context);
                 SetSectionIndex(cmb_Section.SelectedIndex);
             }
         }
@@ -198,7 +203,7 @@ namespace EntryEdit.Editors
         {
             if (!_isPopulateSection)
             {
-                entryEditor.SaveEntry();
+                entryEditor.SaveEntry(_context);
                 SetEntryIndex(cmb_Entry.SelectedIndex);
             }
         }

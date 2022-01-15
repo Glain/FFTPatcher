@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PatcherLib.Datatypes;
+using PatcherLib.Helpers;
 using PatcherLib.Iso;
 using PatcherLib.Utilities;
 
@@ -25,8 +26,11 @@ namespace EntryEdit.Forms
         private EntryData _entryData;
         private Mode _mode;
 
-        private PsxSectorPair[] _psxSectorPairs = null;
-        private Dictionary<PsxIso.Sectors, int> _psxSectorIndexMap = null;
+        private SectorPair[] _sectorPairs = null;
+        private Dictionary<Enum, int> _sectorIndexMap = null;
+
+        private Context context;
+        private SettingsData settings = null;
 
         public ISOForm()
         {
@@ -36,20 +40,25 @@ namespace EntryEdit.Forms
 
         public void Init()
         {
-            GetPsxSectorPairs();
+            
         }
 
-        public DialogResult InitDialog(DataHelper dataHelper, EntryData entryData, Mode mode)
+        public DialogResult InitDialog(DataHelper dataHelper, EntryData entryData, Mode mode, Context context)
         {
+            GetSectorPairs(context);
+
             this._dataHelper = dataHelper;
             this._entryData = entryData;
             this._mode = mode;
 
+            this.context = context;
+            settings = Settings.GetSettings(context);
+
             pnl_Params.Visible = false;
 
-            spinner_BattleConditionals_Sector.Maximum = Settings.MaxSectors;
-            spinner_WorldConditionals_Sector.Maximum = Settings.MaxSectors;
-            spinner_Events_Sector.Maximum = Settings.MaxSectors;
+            spinner_BattleConditionals_Sector.Maximum = settings.MaxSectors;
+            spinner_WorldConditionals_Sector.Maximum = settings.MaxSectors;
+            spinner_Events_Sector.Maximum = settings.MaxSectors;
 
             txt_ISO.Text = string.Empty;
 
@@ -81,9 +90,9 @@ namespace EntryEdit.Forms
             spinner_WorldConditionals_Size.Visible = isLoad;
             spinner_Events_Size.Visible = isLoad;
 
-            spinner_BattleConditionals_Size.Value = Settings.BattleConditionalsSize;
-            spinner_WorldConditionals_Size.Value = Settings.WorldConditionalsSize;
-            spinner_Events_Size.Value = Settings.TotalEventSize;
+            spinner_BattleConditionals_Size.Value = settings.BattleConditionalsSize;
+            spinner_WorldConditionals_Size.Value = settings.WorldConditionalsSize;
+            spinner_Events_Size.Value = settings.TotalEventSize;
 
             btn_ISO.Focus();
 
@@ -93,14 +102,14 @@ namespace EntryEdit.Forms
             return ShowDialog();
         }
 
-        private void GetPsxSectorPairs()
+        private void GetSectorPairs(Context context)
         {
-            _psxSectorPairs = PsxIso.GetSectorPairs();
+            _sectorPairs = PsxIso.GetSectorPairs();
 
-            _psxSectorIndexMap = new Dictionary<PsxIso.Sectors, int>();
-            for (int index = 0; index < _psxSectorPairs.Length; index++)
+            _sectorIndexMap = new Dictionary<Enum, int>();
+            for (int index = 0; index < _sectorPairs.Length; index++)
             {
-                _psxSectorIndexMap.Add(_psxSectorPairs[index].Sector, index);
+                _sectorIndexMap.Add(_sectorPairs[index].Sector, index);
             }
         }
 
@@ -110,32 +119,32 @@ namespace EntryEdit.Forms
             cmb_WorldConditionals_Sector.Items.Clear();
             cmb_Events_Sector.Items.Clear();
 
-            cmb_BattleConditionals_Sector.Items.AddRange(_psxSectorPairs);
-            cmb_WorldConditionals_Sector.Items.AddRange(_psxSectorPairs);
-            cmb_Events_Sector.Items.AddRange(_psxSectorPairs);
+            cmb_BattleConditionals_Sector.Items.AddRange(_sectorPairs);
+            cmb_WorldConditionals_Sector.Items.AddRange(_sectorPairs);
+            cmb_Events_Sector.Items.AddRange(_sectorPairs);
         }
 
         private void SetSectorOffsetDefaults()
         {
-            SetSectorDefault(Settings.BattleConditionalsSector, spinner_BattleConditionals_Sector, cmb_BattleConditionals_Sector);
-            SetSectorDefault(Settings.WorldConditionalsSector, spinner_WorldConditionals_Sector, cmb_WorldConditionals_Sector);
-            SetSectorDefault(Settings.EventsSector, spinner_Events_Sector, cmb_Events_Sector);
+            SetSectorDefault(settings.BattleConditionalsSector, spinner_BattleConditionals_Sector, cmb_BattleConditionals_Sector);
+            SetSectorDefault(settings.WorldConditionalsSector, spinner_WorldConditionals_Sector, cmb_WorldConditionals_Sector);
+            SetSectorDefault(settings.EventsSector, spinner_Events_Sector, cmb_Events_Sector);
 
-            spinner_BattleConditionals_Offset.Value = Settings.BattleConditionalsOffset;
-            spinner_WorldConditionals_Offset.Value = Settings.WorldConditionalsOffset;
-            spinner_Events_Offset.Value = Settings.EventsOffset;
+            spinner_BattleConditionals_Offset.Value = settings.BattleConditionalsOffset;
+            spinner_WorldConditionals_Offset.Value = settings.WorldConditionalsOffset;
+            spinner_Events_Offset.Value = settings.EventsOffset;
         }
 
-        private void SetSectorDefault(PsxIso.Sectors sector, NumericUpDown spinner, ComboBox comboBox)
+        private void SetSectorDefault(Enum sector, NumericUpDown spinner, ComboBox comboBox)
         {
-            spinner.Value = (int)sector;
+            spinner.Value = ISOHelper.GetSectorValue(sector);
             SetSectorComboBoxValue(sector, comboBox);
         }
 
-        private void SetSectorComboBoxValue(PsxIso.Sectors sector, ComboBox comboBox)
+        private void SetSectorComboBoxValue(Enum sector, ComboBox comboBox)
         {
             int index = 0;
-            bool isSectorPresent = _psxSectorIndexMap.TryGetValue(sector, out index);
+            bool isSectorPresent = _sectorIndexMap.TryGetValue(sector, out index);
             comboBox.SelectedIndex = isSectorPresent ? index : -1;
         }
 
@@ -154,20 +163,23 @@ namespace EntryEdit.Forms
 
                 using (Stream file = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    if (Settings.WorldConditionalsRepoint)
+                    if (settings.WorldConditionalsRepoint)
                     {
-                        int ramOffset = PsxIso.ReadFile(file, Settings.WorldConditionalsPointerSector, Settings.WorldConditionalsPointerOffset, 3).ToIntLE();
-                        int wldcoreRamOffset = PsxIso.GetRamOffset(PsxIso.Sectors.WORLD_WLDCORE_BIN);
-                        int worldRamOffset = PsxIso.GetRamOffset(PsxIso.Sectors.WORLD_WORLD_BIN);
-                        if (ramOffset >= worldRamOffset)
+                        if (context == Context.US_PSX)
                         {
-                            spinner_WorldConditionals_Sector.Value = (int)PsxIso.Sectors.WORLD_WORLD_BIN;
-                            spinner_WorldConditionals_Offset.Value = ramOffset - worldRamOffset;
-                        }
-                        else if (ramOffset >= wldcoreRamOffset)
-                        {
-                            spinner_WorldConditionals_Sector.Value = (int)PsxIso.Sectors.WORLD_WLDCORE_BIN;
-                            spinner_WorldConditionals_Offset.Value = ramOffset - wldcoreRamOffset;
+                            int ramOffset = PsxIso.ReadFile(file, (PsxIso.Sectors)settings.WorldConditionalsPointerSector, settings.WorldConditionalsPointerOffset, 3).ToIntLE();
+                            int wldcoreRamOffset = PsxIso.GetRamOffset(PsxIso.Sectors.WORLD_WLDCORE_BIN);
+                            int worldRamOffset = PsxIso.GetRamOffset(PsxIso.Sectors.WORLD_WORLD_BIN);
+                            if (ramOffset >= worldRamOffset)
+                            {
+                                spinner_WorldConditionals_Sector.Value = (int)PsxIso.Sectors.WORLD_WORLD_BIN;
+                                spinner_WorldConditionals_Offset.Value = ramOffset - worldRamOffset;
+                            }
+                            else if (ramOffset >= wldcoreRamOffset)
+                            {
+                                spinner_WorldConditionals_Sector.Value = (int)PsxIso.Sectors.WORLD_WLDCORE_BIN;
+                                spinner_WorldConditionals_Offset.Value = ramOffset - wldcoreRamOffset;
+                            }
                         }
                     }
                 }
@@ -239,7 +251,7 @@ namespace EntryEdit.Forms
         {
             if (cmb_BattleConditionals_Sector.SelectedIndex >= 0)
             {
-                spinner_BattleConditionals_Sector.Value = (int)((PsxSectorPair)cmb_BattleConditionals_Sector.SelectedItem).Sector;
+                spinner_BattleConditionals_Sector.Value = ISOHelper.GetSectorValue(((SectorPair)cmb_BattleConditionals_Sector.SelectedItem).Sector);
             }
         }
 
@@ -247,7 +259,7 @@ namespace EntryEdit.Forms
         {
             if (cmb_WorldConditionals_Sector.SelectedIndex >= 0)
             {
-                spinner_WorldConditionals_Sector.Value = (int)((PsxSectorPair)cmb_WorldConditionals_Sector.SelectedItem).Sector;
+                spinner_WorldConditionals_Sector.Value = ISOHelper.GetSectorValue(((SectorPair)cmb_WorldConditionals_Sector.SelectedItem).Sector);
             }
         }
 
@@ -255,7 +267,7 @@ namespace EntryEdit.Forms
         {
             if (cmb_Events_Sector.SelectedIndex >= 0)
             {
-                spinner_Events_Sector.Value = (int)((PsxSectorPair)cmb_Events_Sector.SelectedItem).Sector;
+                spinner_Events_Sector.Value = ISOHelper.GetSectorValue(((SectorPair)cmb_Events_Sector.SelectedItem).Sector);
             }
         }
 
@@ -339,9 +351,9 @@ namespace EntryEdit.Forms
                     byte[] battleBytes =_dataHelper.ConditionalSetsToByteArray(CommandType.BattleConditional, _entryData.BattleConditionals);
                     patches.Add(new PatchedByteArray(battleSector, battleOffset, battleBytes));
 
-                    if ((Settings.BattleConditionalsApplyLimitPatch) && (DataHelper.GetMaxBlocks(_entryData.BattleConditionals) > 10))
+                    if ((settings.BattleConditionalsApplyLimitPatch) && (DataHelper.GetMaxBlocks(_entryData.BattleConditionals) > 10))
                     {
-                        patches.Add(new PatchedByteArray(Settings.BattleConditionalsLimitPatchSector, Settings.BattleConditionalsLimitPatchOffset, Settings.BattleConditionalsLimitPatchBytes));
+                        patches.Add(new PatchedByteArray(settings.BattleConditionalsLimitPatchSector, settings.BattleConditionalsLimitPatchOffset, settings.BattleConditionalsLimitPatchBytes));
                     }
                 }
 
@@ -352,10 +364,10 @@ namespace EntryEdit.Forms
                     byte[] worldBytes = _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals);
                     patches.Add(new PatchedByteArray(worldSector, worldOffset, worldBytes));
 
-                    if (Settings.WorldConditionalsRepoint)
+                    if (settings.WorldConditionalsRepoint)
                     {
                         byte[] patchBytes = (((uint)(PsxIso.GetRamOffset(worldSector) + worldOffset)) | PsxIso.KSeg0Mask).ToBytes();
-                        patches.Add(new PatchedByteArray(Settings.WorldConditionalsPointerSector, Settings.WorldConditionalsPointerOffset, patchBytes));
+                        patches.Add(new PatchedByteArray(settings.WorldConditionalsPointerSector, settings.WorldConditionalsPointerOffset, patchBytes));
                     }
                 }
 

@@ -26,6 +26,8 @@ namespace EntryEdit.Forms
         private SelectedIndexResult _selectedIndexResult;
         private Mode _mode;
 
+        private SettingsData settings;
+
         private byte[] worldConditionalsBytes;
 
         public StateForm()
@@ -39,6 +41,8 @@ namespace EntryEdit.Forms
             this._entryData = entryData;
             this._selectedIndexResult = selectedIndexResult;
             this._mode = mode;
+
+            settings = Settings.GetSettings(Context.US_PSX);
 
             pnl_Battle.Visible = false;
             pnl_World.Visible = false;
@@ -94,19 +98,19 @@ namespace EntryEdit.Forms
                         pnl_Battle.Visible = true;
                         EnableActionButton();
 
-                        spinner_BattleConditionals_RamLocation_Blocks.Value = Settings.BattleConditionalBlockOffsetsRAMLocation;
-                        spinner_BattleConditionals_RamLocation_Commands.Value = Settings.BattleConditionalsRAMLocation;
-                        spinner_Event_RamLocation.Value = Settings.EventRAMLocation;
+                        spinner_BattleConditionals_RamLocation_Blocks.Value = settings.BattleConditionalBlockOffsetsRAMLocation;
+                        spinner_BattleConditionals_RamLocation_Commands.Value = settings.BattleConditionalsRAMLocation;
+                        spinner_Event_RamLocation.Value = settings.EventRAMLocation;
 
-                        chk_BattleConditionals.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.BattleConditionalBlockOffsetsRAMLocation, 4).ToIntLE() != 0);
-                        chk_Event.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.EventRAMLocation, 1).ToIntLE() != 0);
+                        chk_BattleConditionals.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)settings.BattleConditionalBlockOffsetsRAMLocation, 4).ToIntLE() != 0);
+                        chk_Event.Checked = (PsxIso.LoadFromPsxSaveState(reader, (uint)settings.EventRAMLocation, 1).ToIntLE() != 0);
 
-                        int loadedEventID = PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.EventIDRAMLocation, 2).ToIntLE();
+                        int loadedEventID = PsxIso.LoadFromPsxSaveState(reader, (uint)settings.EventIDRAMLocation, 2).ToIntLE();
                         cmb_Event.SelectedIndex = ((loadedEventID >= 0) && (loadedEventID < _entryData.Events.Count)) ? loadedEventID : ((_selectedIndexResult.EventIndex >= 0) ? _selectedIndexResult.EventIndex : 0);
 
                         int battleConditionalsIndex = 0;
-                        if (PsxIso.IsSectorInPsxSaveState(stream, Settings.ScenariosSector))
-                            battleConditionalsIndex = PsxIso.LoadFromPsxSaveState(reader, (uint)(Settings.ScenariosRAMLocation + (loadedEventID * 24) + 22), 2).ToIntLE();
+                        if (PsxIso.IsSectorInPsxSaveState(stream, (PsxIso.Sectors)settings.ScenariosSector))
+                            battleConditionalsIndex = PsxIso.LoadFromPsxSaveState(reader, (uint)(settings.ScenariosRAMLocation + (loadedEventID * 24) + 22), 2).ToIntLE();
                         else
                             battleConditionalsIndex = (_selectedIndexResult.BattleConditionalIndex >= 0) ? _selectedIndexResult.BattleConditionalIndex : 0;
 
@@ -121,15 +125,15 @@ namespace EntryEdit.Forms
                         lbl_WorldConditionals_Size.Visible = isLoad;
                         spinner_WorldConditionals_Size.Visible = isLoad;
 
-                        spinner_WorldConditionals_Size.Value = Settings.WorldConditionalsSize;
-                        spinner_WorldConditionals_RamLocation.Value = Settings.WorldConditionalsRepoint
-                            ? PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsWorkingPointerRAMLocation, 3).ToIntLE()
-                            : Settings.WorldConditionalsCalcRAMLocation;
+                        spinner_WorldConditionals_Size.Value = settings.WorldConditionalsSize;
+                        spinner_WorldConditionals_RamLocation.Value = settings.WorldConditionalsRepoint
+                            ? PsxIso.LoadFromPsxSaveState(reader, (uint)settings.WorldConditionalsWorkingPointerRAMLocation, 3).ToIntLE()
+                            : settings.WorldConditionalsCalcRAMLocation;
 
                         if (_mode == Mode.Patch)
                         {
                             worldConditionalsBytes = _dataHelper.ConditionalSetsToByteArray(CommandType.WorldConditional, _entryData.WorldConditionals);
-                            if (worldConditionalsBytes.Length > Settings.WorldConditionalsSize)
+                            if (worldConditionalsBytes.Length > settings.WorldConditionalsSize)
                             {
                                 chk_WorldConditionals.Checked = false;
                             }
@@ -220,8 +224,8 @@ namespace EntryEdit.Forms
                             {
                                 List<byte[]> byteArrays = PsxIso.LoadFromPsxSaveState(reader, new List<KeyValuePair<uint, int>>() 
                             { 
-                                new KeyValuePair<uint, int>((uint)spinner_BattleConditionals_RamLocation_Blocks.Value, Settings.BattleConditionalBlockOffsetsRAMLength),
-                                new KeyValuePair<uint, int>((uint)spinner_BattleConditionals_RamLocation_Commands.Value, Settings.BattleConditionalsRAMLength)
+                                new KeyValuePair<uint, int>((uint)spinner_BattleConditionals_RamLocation_Blocks.Value, settings.BattleConditionalBlockOffsetsRAMLength),
+                                new KeyValuePair<uint, int>((uint)spinner_BattleConditionals_RamLocation_Commands.Value, settings.BattleConditionalsRAMLength)
                             });
 
                                 int setIndex = cmb_BattleConditionals_ConditionalSet.SelectedIndex;
@@ -238,14 +242,14 @@ namespace EntryEdit.Forms
                                 if (eventIndex >= 0)
                                 {
                                     int eventRamLocation = (int)spinner_Event_RamLocation.Value;
-                                    byte[] eventBytes = PsxIso.LoadFromPsxSaveState(reader, (uint)eventRamLocation, Settings.EventSize);
+                                    byte[] eventBytes = PsxIso.LoadFromPsxSaveState(reader, (uint)eventRamLocation, settings.EventSize);
 
                                     if (eventBytes.SubLength(0, 4).ToUInt32() == DataHelper.BlankTextOffsetValue)
                                     {
-                                        int textRamLocation = PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.TextOffsetRAMLocation, 3).ToIntLE();
+                                        int textRamLocation = PsxIso.LoadFromPsxSaveState(reader, (uint)settings.TextOffsetRAMLocation, 3).ToIntLE();
                                         int textOffset = textRamLocation - eventRamLocation;
 
-                                        if (textOffset < Settings.EventSize)
+                                        if (textOffset < settings.EventSize)
                                         {
                                             byte[] textOffsetBytes = ((uint)textOffset).ToBytes();
                                             Array.Copy(textOffsetBytes, 0, eventBytes, 0, 4);
@@ -303,12 +307,12 @@ namespace EntryEdit.Forms
                                     ramPatches.Add(blockRamOffset, byteArrays[0]);
                                     ramPatches.Add(commandRamOffset, byteArrays[1]);
 
-                                    if (Settings.BattleConditionalsApplyLimitPatch)
+                                    if (settings.BattleConditionalsApplyLimitPatch)
                                     {
                                         int numBlocks = _entryData.BattleConditionals[setIndex].ConditionalBlocks.Count;
                                         if (numBlocks > 10)
                                         {
-                                            ramPatches.Add((uint)Settings.BattleConditionalsLimitPatchRAMLocation, Settings.BattleConditionalsLimitPatchBytes);
+                                            ramPatches.Add((uint)settings.BattleConditionalsLimitPatchRAMLocation, settings.BattleConditionalsLimitPatchBytes);
                                         }
                                     }
                                 }
@@ -328,7 +332,7 @@ namespace EntryEdit.Forms
                                     uint textOffset = eventBytes.SubLength(0, 4).ToUInt32();
                                     if (textOffset != DataHelper.BlankTextOffsetValue)
                                     {
-                                        ramPatches.Add((uint)Settings.TextOffsetRAMLocation, (eventRamOffsetKSeg0 + textOffset).ToBytes().ToArray());
+                                        ramPatches.Add((uint)settings.TextOffsetRAMLocation, (eventRamOffsetKSeg0 + textOffset).ToBytes().ToArray());
                                     }
                                 }
                             }
@@ -340,10 +344,10 @@ namespace EntryEdit.Forms
                                 uint ramOffset = (uint)spinner_WorldConditionals_RamLocation.Value;
                                 ramPatches.Add(ramOffset, worldConditionalsBytes);
                                 uint ramOffsetKSeg0 = ramOffset | PsxIso.KSeg0Mask;
-                                if ((Settings.WorldConditionalsRepoint) && (ramOffsetKSeg0 != PsxIso.LoadFromPsxSaveState(reader, (uint)Settings.WorldConditionalsPointerRAMLocation, 4).ToUInt32()))
+                                if ((settings.WorldConditionalsRepoint) && (ramOffsetKSeg0 != PsxIso.LoadFromPsxSaveState(reader, (uint)settings.WorldConditionalsPointerRAMLocation, 4).ToUInt32()))
                                 {
-                                    ramPatches.Add((uint)Settings.WorldConditionalsPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
-                                    ramPatches.Add((uint)Settings.WorldConditionalsWorkingPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
+                                    ramPatches.Add((uint)settings.WorldConditionalsPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
+                                    ramPatches.Add((uint)settings.WorldConditionalsWorkingPointerRAMLocation, ramOffsetKSeg0.ToBytes().ToArray());
                                 }
                             }
                         }

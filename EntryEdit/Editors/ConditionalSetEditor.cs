@@ -21,6 +21,7 @@ namespace EntryEdit.Editors
             get { return _blockIndex; } 
         }
 
+        private bool _ignoreParameterTypes = false;
         private int _maxBlocks = -1;
 
         private bool _isPopulate = false;
@@ -30,9 +31,10 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Init(CommandData commandData, int maxBlocks = -1)
+        public void Init(CommandData commandData, bool ignoreParameterTypes, int maxBlocks = -1)
         {
             this._commandData = commandData;
+            this._ignoreParameterTypes = ignoreParameterTypes;
             this._maxBlocks = maxBlocks;
 
             commandListEditor.Init(commandData);
@@ -101,7 +103,7 @@ namespace EntryEdit.Editors
             if ((_conditionalSet != null) && (_blockIndex >= 0))
             {
                 ConditionalBlock newBlock = new ConditionalBlock(_blockIndex, commandList);
-                newBlock.FindName(_commandData.ParameterValueMaps);
+                newBlock.FindName(_commandData.ParameterValueMaps, _ignoreParameterTypes);
                 LoadBlock(newBlock);
             }
         }
@@ -150,7 +152,7 @@ namespace EntryEdit.Editors
             if ((_conditionalSet != null) && (_blockIndex >= 0))
             {
                 bool isBlockSelected = (cmb_Block.SelectedIndex == _blockIndex);
-                _conditionalSet.ConditionalBlocks[_blockIndex].FindName(_commandData.ParameterValueMaps);
+                _conditionalSet.ConditionalBlocks[_blockIndex].FindName(_commandData.ParameterValueMaps, _ignoreParameterTypes);
                 cmb_Block.Items.Remove(_conditionalSet.ConditionalBlocks[_blockIndex]);
                 cmb_Block.Items.Insert(_blockIndex, _conditionalSet.ConditionalBlocks[_blockIndex]);
 

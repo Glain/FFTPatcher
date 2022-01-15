@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using PatcherLib;
+using PatcherLib.Datatypes;
 
 namespace EntryEdit.Editors
 {
@@ -13,8 +14,10 @@ namespace EntryEdit.Editors
     {
         private List<Event> _events;
         private List<Event> _defaultEvents;
+        private Context _context;
 
         private int _eventIndex = 0;
+
         public int GetEventIndex()
         {
             return _eventIndex;
@@ -27,10 +30,11 @@ namespace EntryEdit.Editors
             InitializeComponent();
         }
 
-        public void Populate(List<Event> events, List<Event> defaultEvents, CommandData commandData)
+        public void Populate(List<Event> events, List<Event> defaultEvents, CommandData commandData, Context context)
         {
             this._events = events;
             this._defaultEvents = defaultEvents;
+            this._context = context;
 
             eventEditor.Init(commandData);
             PopulateEvents();
@@ -107,7 +111,7 @@ namespace EntryEdit.Editors
             _eventIndex = index;
 
             if (reloadEvent)
-                eventEditor.Populate(_events[index], EntryData.GetEntry<Event>(_defaultEvents, index));
+                eventEditor.Populate(_events[index], EntryData.GetEntry<Event>(_defaultEvents, index), _context);
         }
 
         private void SwapEventByOffset(int offset)

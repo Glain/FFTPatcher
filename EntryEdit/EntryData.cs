@@ -271,7 +271,7 @@ namespace EntryEdit
             AddOffsetToIndex(-1);
         }
 
-        public string FindName(Dictionary<string, Dictionary<int, string>> parameterValueMaps)
+        public string FindName(Dictionary<string, Dictionary<int, string>> parameterValueMaps, bool ignoreParameterTypes)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -300,7 +300,7 @@ namespace EntryEdit
 
                                     sb.AppendFormat(" ({0})", parameterName);
                                 }
-                                else if (Settings.IgnoreParameterTypes)
+                                else if (ignoreParameterTypes)
                                 {
                                     sb.AppendFormat(" ({0})", parameterName);
                                 }

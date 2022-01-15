@@ -6,6 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using PatcherLib;
+using PatcherLib.Datatypes;
 
 namespace EntryEdit.Editors
 {
@@ -24,14 +25,14 @@ namespace EntryEdit.Editors
             commandListEditor.Init(commandData);
         }
 
-        public void Populate(Event inputEvent, Event defaultEvent)
+        public void Populate(Event inputEvent, Event defaultEvent, Context context)
         {
             this._event = inputEvent;
             this._defaultEvent = defaultEvent;
 
             commandListEditor.Populate(_event.CommandList, _defaultEvent.CommandList);
             textSectionEditor.Populate(new CustomSection[2] { _event.TextSection, _event.DataSection }, _event.OriginalTextSection,
-                new CustomSection[2] { _defaultEvent.TextSection, _defaultEvent.DataSection }, _defaultEvent.OriginalTextSection);
+                new CustomSection[2] { _defaultEvent.TextSection, _defaultEvent.DataSection }, _defaultEvent.OriginalTextSection, context);
         }
 
         public List<Command> CopyCommandList()
