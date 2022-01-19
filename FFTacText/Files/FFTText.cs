@@ -409,7 +409,11 @@ namespace FFTPatcher.TextEditor
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["BOOT.BIN 2"].Sections[0], "Jobs", "Job", "name", "offset", true);
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSP.MapNamesXML:
-                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[21], "MapNames", "Map", null, "value", false);
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("MapNames", new string[3] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "Map", "value", false, 0, 0),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.LZW"].Sections[21], "Map", null, "value", false, null, 1, 0, 115),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "Map", "value", false, 116, 127)
+                        });
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSP.PropositionsXML:
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[26], "Errands", "entry", "name", "value", false);
@@ -482,7 +486,11 @@ namespace FFTPatcher.TextEditor
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.BIN 02"].Sections[0], "Jobs", "Job", "name", "offset", true);
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSX.MapNamesXML:
-                        result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[21], "MapNames", "Map", null, "value", false);
+                        result = PatcherLib.ResourcesClass.GenerateXMLSectionBytes("MapNames", new string[3] {
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "Map", "value", false, 0, 0),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(files["WORLD.LZW"].Sections[21], "Map", null, "value", false, null, 1, 0, 115),
+                            PatcherLib.ResourcesClass.GenerateXMLSectionEntries(defaultBytes, "Map", "value", false, 116, 127)
+                        });
                         break;
                     case PatcherLib.ResourcesClass.Paths.PSX.PropositionsXML:
                         result = PatcherLib.ResourcesClass.GenerateXMLBytes(files["WORLD.LZW"].Sections[26], "Propositions", "entry", "name", "value", false);
