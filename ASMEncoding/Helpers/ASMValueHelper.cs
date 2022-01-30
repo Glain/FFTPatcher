@@ -29,27 +29,13 @@ namespace ASMEncoding.Helpers
             LabelHelper = new ASMLabelHelper(valueHelper.LabelHelper);
         }
 
-		public uint FindUnsignedValue(string val)
+		public uint FindUnsignedValue(string val, bool skipLabelAssertion = false)
 		{
-            /*
-			if (val.StartsWith("0x"))
-			{
-				if (val.Length >= 10)
-					return HexToUnsigned(val.Substring(3,val.Length-3));
-				else
-					return HexToUnsigned(val.Substring(2,val.Length-2));
-			}
-			else if (ASMStringHelper.StringIsNumeric(val))
-			{
-				return Convert.ToUInt32(val);
-			}
-            */
-
             Nullable<uint> value = FindUnsignedValueGeneric(val);
 
             if (value == null)
             {
-                return LabelHelper.LabelToUnsigned(val);
+                return LabelHelper.LabelToUnsigned(val, skipLabelAssertion);
             }
             else
             {

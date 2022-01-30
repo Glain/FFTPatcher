@@ -226,7 +226,7 @@ namespace ASMEncoding.Helpers
                         encodingOrNull = FormatHelper.FindFormatByCommand(eLine.LineParts[0]);
                         EncodingFormat encoding = encodingOrNull;
 
-                        ASMSingleEncodeResult singleEncodeResult = TryEncodeSingle(eLine.LineParts, encoding, pc, modLine, littleEndian);
+                        ASMSingleEncodeResult singleEncodeResult = TryEncodeSingle(eLine.LineParts, encoding, pc, modLine, littleEndian, skipLabelAssertion);
                         encodedASMBuilder.Append(spacePadding);
                         encodedASMBuilder.Append(singleEncodeResult.ASMText);
                         encodedASMBuilder.AppendLine();
@@ -267,11 +267,11 @@ namespace ASMEncoding.Helpers
 			return new ASMEncoderResult(encodedASMBuilder.ToString(), byteList.ToArray(), newTextASM, _errorTextBuilder.ToString());
 		}
 		
-		private ASMSingleEncodeResult TryEncodeSingle(string[] parts, EncodingFormat encoding, uint pc, string processLine, bool littleEndian)
+		private ASMSingleEncodeResult TryEncodeSingle(string[] parts, EncodingFormat encoding, uint pc, string processLine, bool littleEndian, bool skipLabelAssertion = false)
 		{	
 			try
 			{
-				return EncodeASMSingle(parts, encoding, pc, littleEndian);
+				return EncodeASMSingle(parts, encoding, pc, littleEndian, skipLabelAssertion);
 			}
 			catch (Exception ex)
 			{
@@ -285,7 +285,7 @@ namespace ASMEncoding.Helpers
 			}
 		}
 		
-		private ASMSingleEncodeResult EncodeASMSingle(string[] parts, EncodingFormat encoding, uint pc, bool littleEndian)
+		private ASMSingleEncodeResult EncodeASMSingle(string[] parts, EncodingFormat encoding, uint pc, bool littleEndian, bool skipLabelAssertion = false)
 		{			
 			// Initialize variables
 			//string binary = "";
@@ -394,19 +394,19 @@ namespace ASMEncoding.Helpers
                         immedIndex++;
                         break;
                     case ASMElementTypeCharacter.BranchImmediate:
-                        immedValue[immedIndex] = EncodeBranchImmediate(args[argsIndex], pc, (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
+                        immedValue[immedIndex] = EncodeBranchImmediate(args[argsIndex], pc, (uint)encodingFormat.ImmediateIncludeMasks[immedIndex], skipLabelAssertion);
                         immedIndex++;
                         break;
                     case ASMElementTypeCharacter.JumpImmediate:
-                        immedValue[immedIndex] = EncodeJumpImmediate(args[argsIndex], 26, pc);
+                        immedValue[immedIndex] = EncodeJumpImmediate(args[argsIndex], skipLabelAssertion);
                         immedIndex++;
                         break;
                     case ASMElementTypeCharacter.DecrementedImmediate:
-                        immedValue[immedIndex] = EncodeDecrementedImmediate(args[argsIndex], encodingFormat.ImmediateLengths[immedIndex], (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
+                        immedValue[immedIndex] = EncodeDecrementedImmediate(args[argsIndex], encodingFormat.ImmediateLengths[immedIndex], (uint)encodingFormat.ImmediateIncludeMasks[immedIndex], skipLabelAssertion);
                         immedIndex++;
                         break;
                     case ASMElementTypeCharacter.ModifiedImmediate:
-                        immedValue[immedIndex] = EncodeModifiedImmediate(args[argsIndex], args[argsIndex - 1], encodingFormat.ImmediateLengths[immedIndex], (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
+                        immedValue[immedIndex] = EncodeModifiedImmediate(args[argsIndex], args[argsIndex - 1], encodingFormat.ImmediateLengths[immedIndex], (uint)encodingFormat.ImmediateIncludeMasks[immedIndex], skipLabelAssertion);
                         immedIndex++;
                         break;
                     case ASMElementTypeCharacter.ShiftedImmediate:
@@ -597,72 +597,30 @@ namespace ASMEncoding.Helpers
         }
 
         // Chops off first four and last two bits of 32-bit immediate, as specified by MIPS J-type format
-        private uint EncodeJumpImmediate(string input, int reqLength, uint pc)
+        private uint EncodeJumpImmediate(string input, bool skipLabelAssertion = false)
 		{
-            /*
-			// If a number or label, convert to hex
-			string hex = "";
-			if (!string.IsNullOrEmpty(input))
-			{
-				if (!input.StartsWith("0x"))
-				{
-					if (ASMStringHelper.StringIsNumeric(input))
-						hex = "0x" + ASMValueHelper.UnsignedToHex_WithLength(Convert.ToUInt32(input),8);
-					else
-						hex = "0x" + ValueHelper.LabelHelper.LabelToHex(input,8);
-				}
-				else
-				{	
-					hex = input.Substring(0,input.Length);
-				}	
-			}
-            */
-
-
-            //uint uValue = ValueHelper.FindUnsignedValue(input);
-
-            //string hexNum = hex.Substring(2);
-            //hexNum = ASMValueHelper.AddLeadingZeroes(hexNum, reqLength);
-            //hex = "0x" + hexNum;
-
-			//return EncodeJumpImmediate(hex);
-
-            //return ((ValueHelper.FindUnsignedValue(input) >> 2) & ASMValueHelper.JumpImmediateMask) | (pc & 0xF0000000);
-            //return ((ValueHelper.FindUnsignedValue(input) & ASMValueHelper.JumpImmediateMask) >> 2) | (pc & 0xF0000000);
-            return ((ValueHelper.FindUnsignedValue(input) & ASMValueHelper.JumpImmediateMask) >> 2);
+            return ((ValueHelper.FindUnsignedValue(input, skipLabelAssertion) & ASMValueHelper.JumpImmediateMask) >> 2);
 		}
-		
-        /*
-		// Chops off first four and last two bits of 32-bit immediate, as specified by MIPS J-type format
-        private uint EncodeJumpImmediate(string hex)
-		{			
-			string newHex = hex.Substring(2,hex.Length-2);
-			string binary = ASMValueHelper.HexToBinary(newHex);
-			return binary.Substring(4,binary.Length-6);
-		}
-        */
 
         private uint EncodeBranchImmediate(uint val, uint pc, uint mask)
 		{
 			int difference = unchecked((int)((val - pc - 4) / 4));
-			//string hexImmed = ASMValueHelper.SignedToHex_WithLength(difference, 4);
-            //return ASMValueHelper.HexToBinary_WithLength(hexImmed, 16);
             return ASMValueHelper.SignedToUnsigned(difference) & mask;
 		}
 
-        private uint EncodeBranchImmediate(string val, uint pc, uint mask)
+        private uint EncodeBranchImmediate(string val, uint pc, uint mask, bool skipLabelAssertion = false)
 		{
-			return EncodeBranchImmediate(ValueHelper.FindUnsignedValue(val), pc, mask);
+			return EncodeBranchImmediate(ValueHelper.FindUnsignedValue(val, skipLabelAssertion), pc, mask);
 		}
 
-        private uint EncodeDecrementedImmediate(string val, int length, uint mask)
+        private uint EncodeDecrementedImmediate(string val, int length, uint mask, bool skipLabelAssertion = false)
         {
-            return EncodeImmediate(((int)ValueHelper.FindUnsignedValue(val) - 1), length, mask);
+            return EncodeImmediate(((int)ValueHelper.FindUnsignedValue(val, skipLabelAssertion) - 1), length, mask);
         }
 
-        private uint EncodeModifiedImmediate(string val, string addend, int length, uint mask)
+        private uint EncodeModifiedImmediate(string val, string addend, int length, uint mask, bool skipLabelAssertion = false)
         {
-            return EncodeImmediate(((int)ValueHelper.FindUnsignedValue(val) + (int)ValueHelper.FindUnsignedValue(addend) - 1), length, mask);
+            return EncodeImmediate(((int)ValueHelper.FindUnsignedValue(val, skipLabelAssertion) + (int)ValueHelper.FindUnsignedValue(addend, skipLabelAssertion) - 1), length, mask);
         }
 
         private uint EncodeShiftedImmediate(string val, int length, int shiftAmount, uint mask)
