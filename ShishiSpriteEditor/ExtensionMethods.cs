@@ -91,6 +91,10 @@ namespace FFTPatcher.SpriteEditor
         /// <param name="flip">if set to <c>true</c> [flip].</param>
         public static void CopyRectangleToPoint( this Bitmap source, Rectangle sourceRectangle, Bitmap destination, Point destinationPoint, Palette palette, bool reverseX, bool reverseY )
         {
+            // Check if rectangle is out of bounds
+            if ((source.Width < (sourceRectangle.Width + sourceRectangle.X)) || (source.Height < (sourceRectangle.Height + sourceRectangle.Y)))
+                return;
+
             BitmapData bmdSource = source.LockBits( new Rectangle( 0, 0, source.Width, source.Height ), ImageLockMode.ReadOnly, source.PixelFormat );
             BitmapData bmdDest = destination.LockBits( new Rectangle( 0, 0, destination.Width, destination.Height ), ImageLockMode.WriteOnly, destination.PixelFormat );
 
