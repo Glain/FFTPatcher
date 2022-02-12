@@ -101,6 +101,7 @@ namespace FFTorgASM
     public static class ConflictHelper
     {
         public const int MaxConflictResolveAttempts = 100;
+        public const int MaxConflictResolveIterations = 1000;
 
         public static ConflictCheckResult CheckConflicts(IList<AsmPatch> patchList, FreeSpaceMode mode)
         {
@@ -169,7 +170,8 @@ namespace FFTorgASM
             return new ConflictCheckResult(resultPatchList, conflictMap);
         }
 
-        public static ConflictResolveResult ResolveConflicts(IList<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility, int maxConflictResolveAttempts = MaxConflictResolveAttempts)
+        public static ConflictResolveResult ResolveConflicts(IList<AsmPatch> patchList, ASMEncoding.ASMEncodingUtility asmUtility, 
+            int maxConflictResolveAttempts = MaxConflictResolveAttempts, int maxIterations = MaxConflictResolveIterations)
         {
             List<AsmPatch> resultPatchList = new List<AsmPatch>();
             Dictionary<AsmPatch, int> patchIndexMap = new Dictionary<AsmPatch, int>();
@@ -188,8 +190,9 @@ namespace FFTorgASM
             foreach (PatchRange freeSpaceRange in freeSpaceMaps.PatchRangeMap.Keys)
             {
                 List<PatchedByteArray> innerPatches = freeSpaceMaps.PatchRangeMap[freeSpaceRange];
-                FreeSpaceAnalyzeResult analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceRange, true);
+                FreeSpaceAnalyzeResult analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceMaps.InnerPatchMap, freeSpaceRange, true);
                 int conflictResolveAttempts = 0;
+                int conflictResolveIterations = 0;
 
                 /*
                 Type sectorType = ISOHelper.GetSectorType(context);
@@ -199,43 +202,57 @@ namespace FFTorgASM
 
                 string strSector = ISOHelper.GetSectorName(freeSpaceRange.Sector, context);
 
-                while ((analyzeResult.HasConflicts) && (conflictResolveAttempts < maxConflictResolveAttempts))
+                while ((analyzeResult.HasConflicts) && (conflictResolveAttempts < maxConflictResolveAttempts) && (conflictResolveIterations < maxIterations))
                 {
+                    bool wasStatic = false;
                     bool isStatic = false;
                     bool stayStatic = false;
+                    bool wasConflictIndex = false;
+                    bool isConflictIndex = false;
 
-                    int endIndex = innerPatches.Count - 1;
+                    int endIndex = innerPatches.Count;  // innerPatches.Count - 1;
                     for (int index = 0; index < endIndex; index++)
                     {
                         PatchedByteArray innerPatch = innerPatches[index];
+
+                        wasStatic = isStatic;
                         isStatic = innerPatch.IsStatic || stayStatic;
                         stayStatic = (innerPatch.IsStatic) && (innerPatch.IsPatchEqual(innerPatches[index + 1]));
+                        wasConflictIndex = isConflictIndex;
+                        isConflictIndex = analyzeResult.ConflictIndexes.Contains(index);
 
-                        if ((analyzeResult.ConflictIndexes.Contains(index)) && (!isStatic))
+                        if ((!isStatic) && (isConflictIndex || (wasConflictIndex && wasStatic)))
                         {
-                            long moveOffset = analyzeResult.LargestGapOffset - innerPatch.Offset;
-                            MovePatchRange movePatchRange = new MovePatchRange(new PatchRange(innerPatch), moveOffset);
+                            // Enforce 4-byte alignment
+                            int largestGapOffset = analyzeResult.LargestGapOffset + (4 - (analyzeResult.LargestGapOffset % 4)) % 4;
+                            long moveOffset = largestGapOffset - innerPatch.Offset;
+                            if (analyzeResult.LargestGapSize >= 4)
+                            {
+                                MovePatchRange movePatchRange = new MovePatchRange(new PatchRange(innerPatch), moveOffset);
 
-                            AsmPatch asmPatch = freeSpaceMaps.InnerPatchMap[innerPatch];
-                            int resultPatchIndex = patchIndexMap[asmPatch];
-                            patchIndexMap.Remove(asmPatch);
+                                AsmPatch asmPatch = freeSpaceMaps.InnerPatchMap[innerPatch];
+                                int resultPatchIndex = patchIndexMap[asmPatch];
+                                patchIndexMap.Remove(asmPatch);
 
-                            asmPatch = asmPatch.Copy();
-                            resultPatchList[resultPatchIndex] = asmPatch;
-                            patchIndexMap.Add(asmPatch, resultPatchIndex);
-                            asmPatch.MoveBlock(asmUtility, movePatchRange);
-                            asmPatch.Update(asmUtility);
+                                asmPatch = asmPatch.Copy();
+                                resultPatchList[resultPatchIndex] = asmPatch;
+                                patchIndexMap.Add(asmPatch, resultPatchIndex);
+                                asmPatch.MoveBlock(asmUtility, movePatchRange);
+                                asmPatch.Update(asmUtility);
 
-                            sbMessage.AppendLine("Conflict resolved by moving segment of patch \"" + asmPatch.Name + "\" in sector " + strSector + " from offset "
-                                + innerPatch.Offset.ToString("X") + " to " + analyzeResult.LargestGapOffset.ToString("X") + ".");
+                                sbMessage.AppendLine("Conflict resolved by moving segment of patch \"" + asmPatch.Name + "\" in sector " + strSector + " from offset "
+                                    + innerPatch.Offset.ToString("X") + " to " + largestGapOffset.ToString("X") + ".");
 
-                            freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList, mode);
-                            innerPatches = freeSpaceMaps.PatchRangeMap[freeSpaceRange];
-                            analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceRange, false);
-                            conflictResolveAttempts++;
-                            break;
+                                freeSpaceMaps = FreeSpace.GetFreeSpaceMaps(resultPatchList, mode);
+                                innerPatches = freeSpaceMaps.PatchRangeMap[freeSpaceRange];
+                                analyzeResult = FreeSpace.Analyze(innerPatches, freeSpaceMaps.InnerPatchMap, freeSpaceRange, false);
+                                conflictResolveAttempts++;
+                                break;
+                            }
                         }
                     }
+
+                    conflictResolveIterations++;
                 }
 
                 if (analyzeResult.HasConflicts)

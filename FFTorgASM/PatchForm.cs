@@ -22,6 +22,7 @@ namespace FFTorgASM
             this.PatchList = patchList;
             this.AsmUtility = asmUtility;
             InitPatchesListBox(patchList);
+            CheckConflicts(patchList, asmUtility);
         }
 
         private void InitPatchesListBox(IList<AsmPatch> patchList)
@@ -31,6 +32,18 @@ namespace FFTorgASM
             {
                 clb_Patches.Items.Add(patchList[index]);
                 clb_Patches.ForceSetItemChecked(index, true);
+            }
+        }
+
+        private void CheckConflicts(IList<AsmPatch> patchList, ASMEncodingUtility asmUtility)
+        {
+            FreeSpaceMode mode = FreeSpace.GetMode(asmUtility);
+            ConflictCheckResult conflictCheckResult = ConflictHelper.CheckConflicts(patchList, mode);
+            if (conflictCheckResult.PatchList.Count == 0)
+            {
+                chk_ResolveConflicts.Checked = false;
+                chk_ResolveConflicts.Visible = false;
+                Height -= 32;
             }
         }
 
@@ -85,7 +98,7 @@ namespace FFTorgASM
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 btn_Patch.Enabled = false;
-                PatchResult patchResult = PatchHelper.PatchFile(saveFileDialog.FileName, GetAllSelectedPatches(), AsmUtility);
+                PatchResult patchResult = PatchHelper.PatchFile(saveFileDialog.FileName, GetAllSelectedPatches(), AsmUtility, chk_ResolveConflicts.Checked);
                 PatcherLib.MyMessageBox.Show(this, patchResult.Message, ((patchResult.IsSuccess) ? "Complete!" : "Error"), MessageBoxButtons.OK);
                 Close();
             }

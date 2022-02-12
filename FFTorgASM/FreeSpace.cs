@@ -227,7 +227,7 @@ namespace FFTorgASM
             };
         }
 
-        public static FreeSpaceAnalyzeResult Analyze(List<PatchedByteArray> innerPatches, PatchRange freeSpaceRange, bool isSorted = true)
+        public static FreeSpaceAnalyzeResult Analyze(List<PatchedByteArray> innerPatches, Dictionary<PatchedByteArray, AsmPatch> innerPatchMap, PatchRange freeSpaceRange, bool isSorted = true)
         {
             if (!isSorted)
             {
@@ -266,10 +266,13 @@ namespace FFTorgASM
 
                 if ((innerPatches[index + 1].Offset - nextAddress) < 0)
                 {
-                    if (innerPatches[index].HasConflict(innerPatches[index + 1]))
+                    if (innerPatchMap[innerPatches[index]] != innerPatchMap[innerPatches[index + 1]])
                     {
-                        result.HasConflicts = true;
-                        result.ConflictIndexes.Add(index);
+                        if (innerPatches[index].HasConflict(innerPatches[index + 1]))
+                        {
+                            result.HasConflicts = true;
+                            result.ConflictIndexes.Add(index);
+                        }
                     }
                 }
             }

@@ -32,6 +32,7 @@
             this.clb_Patches = new PatcherLib.Controls.ModifiedBGCheckedListBox();
             this.btn_Patch = new System.Windows.Forms.Button();
             this.btn_SavePatchXML = new System.Windows.Forms.Button();
+            this.chk_ResolveConflicts = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lbl_Description
@@ -66,7 +67,6 @@
             // 
             // btn_SavePatchXML
             // 
-            this.btn_SavePatchXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_SavePatchXML.Location = new System.Drawing.Point(25, 410);
             this.btn_SavePatchXML.Name = "btn_SavePatchXML";
             this.btn_SavePatchXML.Size = new System.Drawing.Size(104, 29);
@@ -75,11 +75,22 @@
             this.btn_SavePatchXML.UseVisualStyleBackColor = true;
             this.btn_SavePatchXML.Click += new System.EventHandler(this.btn_SavePatchXML_Click);
             // 
+            // chk_ResolveConflicts
+            // 
+            this.chk_ResolveConflicts.AutoSize = true;
+            this.chk_ResolveConflicts.Location = new System.Drawing.Point(25, 462);
+            this.chk_ResolveConflicts.Name = "chk_ResolveConflicts";
+            this.chk_ResolveConflicts.Size = new System.Drawing.Size(217, 17);
+            this.chk_ResolveConflicts.TabIndex = 19;
+            this.chk_ResolveConflicts.Text = "Attempt to automatically resolve conflicts";
+            this.chk_ResolveConflicts.UseVisualStyleBackColor = true;
+            // 
             // PatchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 452);
+            this.ClientSize = new System.Drawing.Size(450, 491);
+            this.Controls.Add(this.chk_ResolveConflicts);
             this.Controls.Add(this.btn_SavePatchXML);
             this.Controls.Add(this.btn_Patch);
             this.Controls.Add(this.clb_Patches);
@@ -97,5 +108,6 @@
         private PatcherLib.Controls.ModifiedBGCheckedListBox clb_Patches;
         private System.Windows.Forms.Button btn_Patch;
         private System.Windows.Forms.Button btn_SavePatchXML;
+        private System.Windows.Forms.CheckBox chk_ResolveConflicts;
     }
 }

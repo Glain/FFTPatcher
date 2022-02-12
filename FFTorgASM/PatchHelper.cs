@@ -24,7 +24,7 @@ namespace FFTorgASM
 
     public static class PatchHelper
     {
-        public static PatchResult PatchFile(string filename, List<AsmPatch> asmPatches, ASMEncoding.ASMEncodingUtility asmUtility)
+        public static PatchResult PatchFile(string filename, List<AsmPatch> asmPatches, ASMEncoding.ASMEncodingUtility asmUtility, bool tryResolveConflicts)
         {
             string modFilepath = filename.ToLower().Trim();
 
@@ -41,11 +41,11 @@ namespace FFTorgASM
 
             if (isISO)
             {
-                return PatchISO(filename, asmPatches, asmUtility);
+                return PatchISO(filename, asmPatches, asmUtility, tryResolveConflicts);
             }
             else if ((asmUtility.EncodingMode == ASMEncodingMode.PSX) && (modFilepath.EndsWith(".psv")))
             {
-                return PatchPSV(filename, asmPatches, asmUtility);
+                return PatchPSV(filename, asmPatches, asmUtility, tryResolveConflicts);
             }
             else
             {
@@ -53,11 +53,15 @@ namespace FFTorgASM
             }
         }
 
-        public static PatchResult PatchISO(string filename, List<AsmPatch> asmPatches, ASMEncoding.ASMEncodingUtility asmUtility)
+        public static PatchResult PatchISO(string filename, List<AsmPatch> asmPatches, ASMEncoding.ASMEncodingUtility asmUtility, bool tryResolveConflicts)
         {
-            ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
-            asmPatches = conflictResolveResult.Patches;
-            string conflictResolveMessage = conflictResolveResult.Message;
+            string conflictResolveMessage = string.Empty;
+            if (tryResolveConflicts)
+            {
+                ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
+                asmPatches = conflictResolveResult.Patches;
+                conflictResolveMessage = conflictResolveResult.Message;
+            }
 
             List<PatchedByteArray> patches = new List<PatchedByteArray>();
             foreach (AsmPatch asmPatch in asmPatches)
@@ -96,10 +100,15 @@ namespace FFTorgASM
             return new PatchResult(true, sbResultMessage.ToString());
         }
 
-        public static PatchResult PatchPSV(string filename, List<AsmPatch> asmPatches, ASMEncoding.ASMEncodingUtility asmUtility)
+        public static PatchResult PatchPSV(string filename, List<AsmPatch> asmPatches, ASMEncoding.ASMEncodingUtility asmUtility, bool tryResolveConflicts)
         {
-            ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
-            asmPatches = conflictResolveResult.Patches;
+            string conflictResolveMessage = string.Empty;
+            if (tryResolveConflicts)
+            {
+                ConflictResolveResult conflictResolveResult = ConflictHelper.ResolveConflicts(asmPatches, asmUtility);
+                asmPatches = conflictResolveResult.Patches;
+                conflictResolveMessage = conflictResolveResult.Message;
+            }
 
             List<PatchedByteArray> patches = new List<PatchedByteArray>();
             foreach (AsmPatch asmPatch in asmPatches)
@@ -121,9 +130,9 @@ namespace FFTorgASM
             sbResultMessage.AppendLine("Complete!");
             sbResultMessage.AppendLine();
 
-            if (!string.IsNullOrEmpty(conflictResolveResult.Message))
+            if (!string.IsNullOrEmpty(conflictResolveMessage))
             {
-                sbResultMessage.AppendLine(conflictResolveResult.Message);
+                sbResultMessage.AppendLine(conflictResolveMessage);
                 sbResultMessage.AppendLine();
             }
 
