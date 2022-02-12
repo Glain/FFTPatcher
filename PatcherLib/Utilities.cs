@@ -898,6 +898,32 @@ namespace PatcherLib.Utilities
             return result;
         }
 
+        public static string XmlEncode(string str)
+        {
+            if (!string.IsNullOrEmpty(str))
+            {
+                str = str.Replace("&", "&amp;");
+                str = str.Replace("'", "&apos;");
+                str = str.Replace("\"", "&quot;");
+                str = str.Replace(">", "&gt;");
+                str = str.Replace("<", "&lt;");
+            }
+            return str;
+        }
+
+        public static string XmlDecode(string str)
+        {
+            if (!string.IsNullOrEmpty(str))
+            {
+                str = str.Replace("&amp;", "&");
+                str = str.Replace("&apos;", "'");
+                str = str.Replace("&quot;", "\"");
+                str = str.Replace("&gt;", ">");
+                str = str.Replace("&lt;", "<");
+            }
+            return str;
+        }
+
         public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
         {
             if (file.FindEntry(entry, false) == -1)

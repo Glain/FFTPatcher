@@ -639,14 +639,14 @@ namespace FFTorgASM
             Context context = (mode == FreeSpaceMode.PSP) ? Context.US_PSP : Context.US_PSX;
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("    <Patch name=\"{0}\">{1}", Name, Environment.NewLine);
+            sb.AppendFormat("    <Patch name=\"{0}\">{1}", Utilities.XmlEncode(Name), Environment.NewLine);
 
             if (!string.IsNullOrEmpty(Description))
             {
-                sb.AppendFormat("        <Description>    {0}    </Description>{1}", Description, Environment.NewLine);
+                sb.AppendFormat("        <Description>    {0}    </Description>{1}", Utilities.XmlEncode(Description), Environment.NewLine);
             }
 
-            sb.Append(PatcherLib.Utilities.Utilities.CreatePatchXML(innerList, context));
+            sb.Append(Utilities.CreatePatchXML(innerList, context));
 
             foreach (VariableType variable in Variables)
             {
@@ -657,16 +657,6 @@ namespace FFTorgASM
                 for (int index = 0; index < patchCount; index++)
                 {
                     PatchedByteArray patchedByteArray = variable.Content[index];
-                    //string file = Enum.GetName(typeof(PatcherLib.Iso.PsxIso.Sectors), patchedByteArray.Sector);
-                    //string file = PatcherLib.Iso.PsxIso.GetSectorName(patchedByteArray.Sector);
-                    /*
-                    Type sectorType = (mode == FreeSpaceMode.PSP) ? typeof(PatcherLib.Iso.PspIso.Sectors) : typeof(PatcherLib.Iso.PsxIso.Sectors);
-                    Enum sector = (Enum)Enum.ToObject(sectorType, patchedByteArray.Sector);
-                    string file = (mode == FreeSpaceMode.PSP)
-                        ? PatcherLib.Iso.PspIso.GetSectorName((PatcherLib.Iso.PspIso.Sectors)sector)
-                        : PatcherLib.Iso.PsxIso.GetSectorName((PatcherLib.Iso.PsxIso.Sectors)sector);
-                    */
-
                     string file = ISOHelper.GetSectorName(patchedByteArray.SectorEnum);
                     sbSpecific.AppendFormat("{0}:{1}{2}", file, patchedByteArray.Offset.ToString("X"), ((index < (patchCount - 1)) ? "," : ""));
                 }
@@ -674,7 +664,7 @@ namespace FFTorgASM
                 string strVariableReference = "";
                 if (variable.IsReference)
                 {
-                    strVariableReference = String.Format(" reference=\"{0}\" operator=\"{1}\" operand=\"{2}\"", variable.Reference.Name, variable.Reference.Operand, variable.Reference.OperatorSymbol);
+                    strVariableReference = String.Format(" reference=\"{0}\" operator=\"{1}\" operand=\"{2}\"", Utilities.XmlEncode(variable.Reference.Name), variable.Reference.Operand, variable.Reference.OperatorSymbol);
                 }
 
                 string strDefault = variable.IsReference ? "" : String.Format(" default=\"{0}\"", value.ToString("X"));
@@ -683,7 +673,7 @@ namespace FFTorgASM
                 string strContent = string.IsNullOrEmpty(strSpecific) ? "symbol=\"true\"" : String.Format("specific=\"{0}\"", strSpecific);
 
                 sb.AppendFormat("        <Variable name=\"{0}\" {1} bytes=\"{2}\"{3}{4} />{5}",
-                    variable.Name, strContent, variable.NumBytes, strDefault, strVariableReference, Environment.NewLine);
+                    Utilities.XmlEncode(variable.Name), strContent, variable.NumBytes, strDefault, strVariableReference, Environment.NewLine);
             }
 
             sb.AppendLine("    </Patch>");
