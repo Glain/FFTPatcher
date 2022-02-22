@@ -97,90 +97,40 @@
     <Content Include="Resources\PSP\Abilities\Abilities.xml" />
     <Content Include="Resources\PSP\Abilities\Effects.xml" />
     <Content Include="Resources\PSP\Abilities\Strings.xml" />
-    <Content Include="Resources\PSP\Chronicle.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\EventNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Resources\PSP\Chronicle.xml" />
+    <Content Include="Resources\PSP\EventNames.xml" />
     <Content Include="Resources\PSP\Items\ItemAttributes.xml" />
     <Content Include="Resources\PSP\Items\Items.xml" />
     <Content Include="Resources\PSP\Items\Strings.xml" />
-    <Content Include="Resources\PSP\Jobs.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\MapNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\Errands.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\ShopNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\SkillSets.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\SpecialNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\SpriteFiles.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\SpriteSets.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\StatusNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSP\UnitNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Resources\PSP\Jobs.xml" />
+    <Content Include="Resources\PSP\MapNames.xml" />
+    <Content Include="Resources\PSP\Errands.xml" />
+    <Content Include="Resources\PSP\ShopNames.xml" />
+    <Content Include="Resources\PSP\SkillSets.xml" />
+    <Content Include="Resources\PSP\SpecialNames.xml" />
+    <Content Include="Resources\PSP\SpriteFiles.xml" />
+    <Content Include="Resources\PSP\SpriteSets.xml" />
+    <Content Include="Resources\PSP\StatusNames.xml" />
+    <Content Include="Resources\PSP\UnitNames.xml" />
     <Content Include="Resources\PSX-US\Abilities\Abilities.xml" />
     <Content Include="Resources\PSX-US\Abilities\Effects.xml" />
     <Content Include="Resources\PSX-US\Abilities\Strings.xml" />
-    <Content Include="Resources\PSX-US\BraveStory.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\EventNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\FileList.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Resources\PSX-US\BraveStory.xml" />
+    <Content Include="Resources\PSX-US\EventNames.xml" />
+    <Content Include="Resources\PSX-US\FileList.txt" />
     <Content Include="Resources\PSX-US\Items\ItemAttributes.xml" />
     <Content Include="Resources\PSX-US\Items\Items.xml" />
     <Content Include="Resources\PSX-US\Items\Strings.xml" />
-    <Content Include="Resources\PSX-US\Jobs.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\MapNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\Propositions.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\ShopNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\SkillSets.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\SpecialNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\SpriteFiles.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\SpriteSets.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\StatusNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\PSX-US\UnitNames.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Resources\PSX-US\Jobs.xml" />
+    <Content Include="Resources\PSX-US\MapNames.xml" />
+    <Content Include="Resources\PSX-US\Propositions.xml" />
+    <Content Include="Resources\PSX-US\ShopNames.xml" />
+    <Content Include="Resources\PSX-US\SkillSets.xml" />
+    <Content Include="Resources\PSX-US\SpecialNames.xml" />
+    <Content Include="Resources\PSX-US\SpriteFiles.xml" />
+    <Content Include="Resources\PSX-US\SpriteSets.xml" />
+    <Content Include="Resources\PSX-US\StatusNames.xml" />
+    <Content Include="Resources\PSX-US\UnitNames.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ENTD1.ENT" />
