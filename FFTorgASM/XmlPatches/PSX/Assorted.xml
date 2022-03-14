@@ -196,5 +196,14 @@
 			00000000
 		</Location>
 	</Patch>
-  
+
+    <Patch name="Weapon Guard check removed (WG 'innate' all)">
+        <Location file="BATTLE_BIN" offset="11e0d0">
+            00000000
+        </Location>
+        <Location file="BATTLE_BIN" offset="11e178">
+            00000000
+        </Location>
+    </Patch>
+
 </Patches>

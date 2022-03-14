@@ -2660,31 +2660,6 @@ Examples:
     </Location>
   </Patch>
 
-
-  <Patch name="Weapon Guard Innate All">
-    <Location file="BATTLE_BIN" offset="11e0c8">
-      00000000
-      00000000
-      00000000
-    </Location>
-  </Patch>
-
-
-  <Patch name="Weapon Guard Innate All V2">
-    <Description>
-       Choto's untested fix
-    </Description>
-    <Location file="BATTLE_BIN" offset="11e0c8">
-      10400008
-      00000000
-      00000000
-    </Location>
-    <Location file="BATTLE_BIN" offset="11e178">
-      00000000
-    </Location>
-  </Patch>
-
-
     <Patch name="Weapon Strike Fix (Version 1)">
         <Description>In FFTP, If the Blank Box under Hit Allies are checked for that ability as well as 'Weapon Strike' The ability will ignore the weapon's elemental and only take elemental damage from the ability. Else, it will stack the elemental damage from bothe the weapon and the ability.
         </Description>
