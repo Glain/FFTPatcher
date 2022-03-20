@@ -89,7 +89,11 @@ namespace FFTPatcher.TextEditor
 
             result.AddRange( currentPairs );
 
-            TextUtilities.DoDTEEncoding( secs[index], Utilities.DictionaryFromKVPs( currentPairs ) );
+            if (DteAllowed[index])
+            {
+                TextUtilities.DoDTEEncoding(secs[index], Utilities.DictionaryFromKVPs(currentPairs));
+            }
+
             bytes = GetSectionByteArrays( secs, SelectedTerminator, CharMap, CompressionAllowed, DteAllowed );
             ourBytes = bytes[index];
             bytesNeeded = ourBytes.Count - this.PartitionSize;
@@ -200,7 +204,8 @@ namespace FFTPatcher.TextEditor
                 section.ForEach(s => currentPart.AddRange(CharMap.StringToByteArray(s, SelectedTerminator)));
                 if (currentPart.Count > PartitionSize)
                 {
-                    return null;
+                    throw new DTE.DteException(this);
+                    //return null;
                 }
                 currentPart.AddRange(new byte[Math.Max(PartitionSize - currentPart.Count, 0)]);
                 result.AddRange(currentPart);
@@ -208,7 +213,8 @@ namespace FFTPatcher.TextEditor
 
             if (result.Count > Layout.Size)
             {
-                return null;
+                throw new DTE.DteException(this);
+                //return null;
             }
 
             return result.AsReadOnly();
