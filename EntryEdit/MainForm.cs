@@ -58,7 +58,7 @@ namespace EntryEdit
         {
             InitializeComponent();
             Start(args);
-            WriteLoadedDataToTestFiles();
+            //WriteLoadedDataToTestFiles();
             //WriteByteDataToTestFiles();
         }
 
