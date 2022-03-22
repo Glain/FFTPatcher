@@ -282,6 +282,8 @@ namespace EntryEdit
         {
             try
             {
+                Directory.CreateDirectory(path);
+
                 for (int index = 0; index < events.Count; index++)
                 {
                     Event ev = events[index];
