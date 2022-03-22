@@ -7,7 +7,7 @@ namespace MassHexASM
 {
     internal static class About
     {
-        public const int FFTPatcherSuiteRevision = 494;
+        public const int FFTPatcherSuiteRevision = 495;
 
         public static readonly string Title = "About";
         public static readonly string Message = string.Format(@"MassHexASM, LEDecoder, and the underlying ASMEncoding library are MIPS assembly/disassembly tools created by Glain.
