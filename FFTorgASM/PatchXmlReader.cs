@@ -165,7 +165,7 @@ namespace FFTorgASM
                 int align = 0;
                 if (attrAlign != null)
                 {
-                    Int32.TryParse(sectorAttribute.InnerText, out align);
+                    Int32.TryParse(attrAlign.InnerText, out align);
 
                     if (align < 0)
                         align = 0;
