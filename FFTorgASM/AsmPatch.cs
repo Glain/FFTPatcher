@@ -385,27 +385,33 @@ namespace FFTorgASM
             UpdateReferenceVariableValues();
 
             List<PatchedByteArray> allPatches = GetAllPatches();
+            StringBuilder sbPrefix = new StringBuilder();
+            foreach (PatchedByteArray currentPatchedByteArray in allPatches)
+            {
+                if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
+                    sbPrefix.AppendFormat(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine);
+            }
+            foreach (VariableType variable in Variables)
+            {
+                sbPrefix.AppendFormat(".eqv %{0}, {1}{2}", ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(variable.Name).Replace(",", ""),
+                    Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.ByteArray), Environment.NewLine);
+            }
+            string encodePrefix = sbPrefix.ToString();
+
             foreach (PatchedByteArray patchedByteArray in allPatches)
             {
                 if (patchedByteArray.IsAsm)
                 {
-                    string encodeContent = patchedByteArray.Text;
-                    //string strPrefix = "";
-                    //IList<VariableType> variables = Variables;
+                    string encodeContent = encodePrefix + patchedByteArray.Text;
+                    asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset, true);
+                }
+            }
 
-                    System.Text.StringBuilder sbPrefix = new System.Text.StringBuilder();
-                    foreach (PatchedByteArray currentPatchedByteArray in allPatches)
-                    {
-                        if (!string.IsNullOrEmpty(currentPatchedByteArray.Label))
-                            sbPrefix.AppendFormat(".label @{0}, {1}{2}", currentPatchedByteArray.Label, currentPatchedByteArray.RamOffset, Environment.NewLine);
-                    }
-                    foreach (VariableType variable in Variables)
-                    {
-                        sbPrefix.AppendFormat(".eqv %{0}, {1}{2}", ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(variable.Name).Replace(",", ""),
-                            Utilities.GetUnsignedByteArrayValue_LittleEndian(variable.ByteArray), Environment.NewLine);
-                    }
-
-                    encodeContent = sbPrefix.ToString() + patchedByteArray.Text;
+            foreach (PatchedByteArray patchedByteArray in allPatches)
+            {
+                if (patchedByteArray.IsAsm)
+                {
+                    string encodeContent = encodePrefix + patchedByteArray.Text;
                     //patchedByteArray.SetBytes(asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes);
 
                     byte[] bytes = asmUtility.EncodeASM(encodeContent, (uint)patchedByteArray.RamOffset).EncodedBytes;
