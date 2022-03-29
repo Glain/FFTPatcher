@@ -426,7 +426,14 @@ namespace FFTorgASM
                 else if (!string.IsNullOrEmpty(patchedByteArray.Text))
                 {
                     GetBytesResult result = GetBytes(patchedByteArray.Text, (uint)patchedByteArray.RamOffset);
-                    patchedByteArray.SetBytes(result.Bytes);
+                    byte[] bytes = result.Bytes;
+
+                    if ((patchedByteArray.IsCheckedAsm) && (!patchedByteArray.IsMoveSimple) && (blockMoveList.Count > 0))
+                    {
+                        bytes = asmUtility.UpdateBlockReferences(result.Bytes, (uint)patchedByteArray.RamOffset, true, blockMoveList);
+                    }
+
+                    patchedByteArray.SetBytes(bytes);
                 }
             }
         }
