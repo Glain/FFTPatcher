@@ -12,8 +12,11 @@ namespace FFTorgASM
     {
         public class PatchFile
         {
-            public string Filename { get; set; }
             public List<AsmPatch> Patches = new List<AsmPatch>();
+
+            public string Filename { get; set; }
+            public bool LoadedCorrectly { get; set; }
+            public string ErrorText { get; set; }
 
             public PatchFile(string filename)
             {
@@ -26,7 +29,6 @@ namespace FFTorgASM
         public List<AsmPatch> AllShownPatches = new List<AsmPatch>();
         public HashSet<AsmPatch> SelectedPatches = new HashSet<AsmPatch>();
         //public List<AsmPatch> CurrentSelectedPatches = new List<AsmPatch>();
-        public bool[] LoadedCorrectly;
         public Color[][] BackgroundColors;
 
         public Dictionary<AsmPatch, int> AllOrdinalMap;
@@ -35,7 +37,6 @@ namespace FFTorgASM
         public PatchData(string[] files, ASMEncodingUtility asmUtility)
         {
             FilePatches = new PatchFile[files.Length];
-            LoadedCorrectly = new bool[files.Length];
             IList<AsmPatch> tryPatches;
 
             List<Color> allColorList = new List<Color>();
@@ -49,7 +50,11 @@ namespace FFTorgASM
                 List<Color> fileColorList = new List<Color>();
                 FilePatches[index] = new PatchFile(file);
 
-                if (PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches))
+                TryGetPatchesResult result = PatchXmlReader.TryGetPatches(File.ReadAllText(file, Encoding.UTF8), file, asmUtility, out tryPatches);
+                FilePatches[index].LoadedCorrectly = result.IsSuccess;
+                FilePatches[index].ErrorText = result.ErrorText;
+
+                if (result.IsSuccess)
                 {
                     foreach (AsmPatch patch in tryPatches)
                     {
@@ -67,12 +72,6 @@ namespace FFTorgASM
                             }
                         }
                     }
-
-                    LoadedCorrectly[index] = true;
-                }
-                else
-                {
-                    LoadedCorrectly[index] = false;
                 }
 
                 BackgroundColors[index + 1] = fileColorList.ToArray();
@@ -92,7 +91,11 @@ namespace FFTorgASM
             Color errorColor = Color.FromArgb(225, 125, 125);
             patchFile.Patches.Clear();
 
-            if (PatchXmlReader.TryGetPatches(File.ReadAllText(patchFile.Filename, Encoding.UTF8), patchFile.Filename, asmUtility, out tryPatches))
+            TryGetPatchesResult result = PatchXmlReader.TryGetPatches(File.ReadAllText(patchFile.Filename, Encoding.UTF8), patchFile.Filename, asmUtility, out tryPatches);
+            patchFile.LoadedCorrectly = result.IsSuccess;
+            patchFile.ErrorText = result.ErrorText;
+
+            if (result.IsSuccess)
             {
                 foreach (AsmPatch patch in tryPatches)
                 {
@@ -103,12 +106,6 @@ namespace FFTorgASM
                         fileColorList.Add(bgColor);
                     }
                 }
-
-                LoadedCorrectly[index] = true;
-            }
-            else
-            {
-                LoadedCorrectly[index] = false;
             }
 
             BackgroundColors[index + 1] = fileColorList.ToArray();

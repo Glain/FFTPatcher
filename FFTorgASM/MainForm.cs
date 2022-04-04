@@ -98,7 +98,7 @@ namespace FFTorgASM
             
             LoadFilePatches(index + 1);
 
-            lsb_FilesList.SetBackColor(index + 1, patchData.LoadedCorrectly[index] ? Color.White : Color.FromArgb(225, 125, 125));
+            lsb_FilesList.SetBackColor(index + 1, patchData.FilePatches[index].LoadedCorrectly ? Color.White : Color.FromArgb(225, 125, 125));
 
             SetOriginalPatches();
             //OriginalFilePatches[patchData.FilePatches[index]] = patchData.FilePatches[index].Patches;
@@ -129,7 +129,7 @@ namespace FFTorgASM
 
                 //lsb_FilesList.BackColors[i + 1] = Color.White;
                 //lsb_FilesList.SetBackColor(i + 1, Color.White);
-                if (!patchData.LoadedCorrectly[i])
+                if (!patchData.FilePatches[i].LoadedCorrectly)
                     //lsb_FilesList.Items[i + 1].BackColor = Color.Red;
                     //lsb_FilesList.BackColors[i + 1] = Color.Red;
                     lsb_FilesList.SetBackColor(i + 1, Color.FromArgb(225, 125, 125));
@@ -233,10 +233,23 @@ namespace FFTorgASM
                 LoadPatches(patchData.AllShownPatches);
                 clb_Patches.BackColors = patchData.BackgroundColors[selectedIndex];
             }
-            else if (!patchData.LoadedCorrectly[selectedIndex - 1])
+            else if (!patchData.FilePatches[selectedIndex - 1].LoadedCorrectly)
             {
                 clb_Patches.Items.Clear();
-                PatcherLib.MyMessageBox.Show(this, lsb_FilesList.SelectedItem + " did not load correctly!", "Error", MessageBoxButtons.OK);
+
+                StringBuilder sbErrorMessage = new StringBuilder();
+                sbErrorMessage.Append(lsb_FilesList.SelectedItem + " did not load correctly!");
+                string fileErrorText = patchData.FilePatches[selectedIndex - 1].ErrorText;
+                if (!string.IsNullOrEmpty(fileErrorText))
+                {
+                    sbErrorMessage.AppendLine();
+                    sbErrorMessage.AppendLine();
+                    sbErrorMessage.Append(fileErrorText);
+                }
+                string errorMessage = sbErrorMessage.ToString();
+
+                //PatcherLib.MyMessageBox.Show(this, errorMessage, "Error", MessageBoxButtons.OK);
+                txt_Messages.Text = errorMessage;
             }
             else
             {

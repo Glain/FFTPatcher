@@ -42,22 +42,38 @@ namespace FFTorgASM
             this.ErrorText = ErrorText;
         }
     }
+
+    internal class TryGetPatchesResult
+    { 
+        public bool IsSuccess { get; set; }
+        public string ErrorText { get; set; }
+
+        public TryGetPatchesResult(bool isSuccess, string errorText)
+        {
+            this.IsSuccess = isSuccess;
+            this.ErrorText = errorText;
+        }
+    }
     
     static class PatchXmlReader
     {
-        public static bool TryGetPatches( string xmlString, string xmlFilename, ASMEncodingUtility asmUtility, out IList<AsmPatch> patches )
+        public static TryGetPatchesResult TryGetPatches( string xmlString, string xmlFilename, ASMEncodingUtility asmUtility, out IList<AsmPatch> patches )
         {
             try
             {
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml( xmlString );
                 patches = GetPatches( doc.SelectSingleNode( "/Patches" ), xmlFilename, asmUtility );
-                return true;
+                return new TryGetPatchesResult(true, string.Empty);
             }
             catch ( Exception ex )
             {
                 patches = null;
-                return false;
+
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+
+                return new TryGetPatchesResult(false, ex.Message);
             }
         }
 
