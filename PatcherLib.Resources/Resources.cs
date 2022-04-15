@@ -326,11 +326,12 @@ namespace PatcherLib
             {
                 string valueString = isValueHex ? value.ToString("X2") : value.ToString();
                 string prefix = (prefixCount > 0) ? prefixes[prefixIndex] : "";
+                string textValue = Utilities.Utilities.XmlEncode(section[index]);
 
                 if (string.IsNullOrEmpty(attributeTitle))
-                    sb.AppendFormat("    <{0} {3}=\"{1}\">{4}{2}</{0}>{5}", entryTitle, valueString, section[index], valueTitle, prefix, Environment.NewLine);
+                    sb.AppendFormat("    <{0} {3}=\"{1}\">{4}{2}</{0}>{5}", entryTitle, valueString, textValue, valueTitle, prefix, Environment.NewLine);
                 else
-                    sb.AppendFormat("    <{0} {4}=\"{1}\" {2}=\"{5}{3}\"/>{6}", entryTitle, valueString, attributeTitle, section[index], valueTitle, prefix, Environment.NewLine);
+                    sb.AppendFormat("    <{0} {4}=\"{1}\" {2}=\"{5}{3}\"/>{6}", entryTitle, valueString, attributeTitle, textValue, valueTitle, prefix, Environment.NewLine);
 
                 if (prefixCount > 0)
                 {
