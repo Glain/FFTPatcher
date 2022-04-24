@@ -27,14 +27,7 @@ namespace FFTPatcher.SpriteEditor
         public SpriteType SHP { get; private set;}
         public SpriteType SEQ { get; private set; }
         public bool Flying { get; private set; }
-        public bool Flag1 { get { return flags[0]; } private set { flags[0] = value; } }
-        public bool Flag2 { get { return flags[1]; } private set { flags[1] = value; } }
-        public bool Flag3 { get { return flags[2]; } private set { flags[2] = value; } }
-        public bool Flag4 { get { return flags[3]; } private set { flags[3] = value; } }
-        public bool Flag5 { get { return flags[4]; } private set { flags[4] = value; } }
-        public bool Flag6 { get { return flags[5]; } private set { flags[5] = value; } }
-        public bool Flag7 { get { return flags[6]; } private set { flags[6] = value; } }
-        public bool Flag8 { get { return flags[7]; } private set { flags[7] = value; } }
+        public byte Height { get; private set; }
 
         private bool[] flags = new bool[8];
         internal void SetSHP(Stream iso, SpriteType shp)
@@ -55,9 +48,9 @@ namespace FFTPatcher.SpriteEditor
             UpdateIso(iso);
         }
 
-        internal void SetFlag(Stream iso, int index, bool flag)
+        internal void SetHeight(Stream iso, byte height)
         {
-            flags[index] = flag;
+            Height = height;
             UpdateIso(iso);
         }
 
@@ -79,15 +72,7 @@ namespace FFTPatcher.SpriteEditor
             SHP = (SpriteType)bytes[0];
             SEQ = (SpriteType)bytes[1];
             Flying = bytes[2] != 0;
-            bool[] bools = PatcherLib.Utilities.Utilities.BooleansFromByte(bytes[3]);
-            Flag1 = bools[0];
-            Flag2 = bools[1];
-            Flag3 = bools[2];
-            Flag4 = bools[3];
-            Flag5 = bools[4];
-            Flag6 = bools[5];
-            Flag7 = bools[6];
-            Flag8 = bools[7];
+            Height = bytes[3];
         }
 
         private SpriteAttributes(PsxIso.KnownPosition pos, IList<byte> bytes):this(bytes)
@@ -122,7 +107,7 @@ namespace FFTPatcher.SpriteEditor
             result[0] = (byte)SHP;
             result[1] = (byte)SEQ;
             result[2] = Flying ? (byte)1 : (byte)0;
-            result[3] = PatcherLib.Utilities.Utilities.ByteFromBooleans(Flag8, Flag7, Flag6, Flag5, Flag4, Flag3, Flag2, Flag1);
+            result[3] = Height;
             return result;
         }
 

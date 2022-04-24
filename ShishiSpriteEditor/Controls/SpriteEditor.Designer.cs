@@ -37,7 +37,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.flyingCheckbox = new System.Windows.Forms.CheckBox();
-            this.flagsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -47,10 +46,12 @@
             this.animationTabPage = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
             this.maxSizeLabel = new System.Windows.Forms.Label();
             this.sharedLabel = new System.Windows.Forms.Label();
             this.cmbZoom = new System.Windows.Forms.ComboBox();
-            this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
+            this.lbl_Height = new System.Windows.Forms.Label();
+            this.cmb_Height = new System.Windows.Forms.ComboBox();
             this.spriteViewer1 = new FFTPatcher.SpriteEditor.SpriteViewer();
             paletteGroupBox = new System.Windows.Forms.GroupBox();
             paletteGroupBox.SuspendLayout();
@@ -65,7 +66,7 @@
             // 
             // paletteGroupBox
             // 
-            paletteGroupBox.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right);
+            paletteGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             paletteGroupBox.AutoSize = true;
             paletteGroupBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             paletteGroupBox.Controls.Add(this.chkImportExport8bpp);
@@ -80,7 +81,6 @@
             // 
             // chkImportExport8bpp
             // 
-            this.chkImportExport8bpp.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
             this.chkImportExport8bpp.Checked = true;
             this.chkImportExport8bpp.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkImportExport8bpp.Location = new System.Drawing.Point(6, 69);
@@ -92,7 +92,6 @@
             // 
             // portraitCheckbox
             // 
-            this.portraitCheckbox.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
             this.portraitCheckbox.Checked = true;
             this.portraitCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.portraitCheckbox.Location = new System.Drawing.Point(6, 46);
@@ -105,7 +104,6 @@
             // 
             // paletteSelector
             // 
-            this.paletteSelector.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
             this.paletteSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.paletteSelector.FormattingEnabled = true;
             this.paletteSelector.Items.AddRange(new object[] {
@@ -133,10 +131,9 @@
             // 
             // shpComboBox
             // 
-            this.shpComboBox.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            this.shpComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.shpComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.shpComboBox.FormattingEnabled = true;
-            //this.shpComboBox.Location = new System.Drawing.Point(361, 503);
             this.shpComboBox.Location = new System.Drawing.Point(361, 478);
             this.shpComboBox.Name = "shpComboBox";
             this.shpComboBox.Size = new System.Drawing.Size(121, 21);
@@ -145,10 +142,9 @@
             // 
             // seqComboBox
             // 
-            this.seqComboBox.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            this.seqComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.seqComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.seqComboBox.FormattingEnabled = true;
-            //this.seqComboBox.Location = new System.Drawing.Point(361, 530);
             this.seqComboBox.Location = new System.Drawing.Point(361, 505);
             this.seqComboBox.Name = "seqComboBox";
             this.seqComboBox.Size = new System.Drawing.Size(121, 21);
@@ -157,9 +153,8 @@
             // 
             // label1
             // 
-            this.label1.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            //this.label1.Location = new System.Drawing.Point(323, 506);
             this.label1.Location = new System.Drawing.Point(323, 481);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(32, 13);
@@ -168,9 +163,8 @@
             // 
             // label2
             // 
-            this.label2.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            //this.label2.Location = new System.Drawing.Point(323, 533);
             this.label2.Location = new System.Drawing.Point(323, 508);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
@@ -179,9 +173,8 @@
             // 
             // flyingCheckbox
             // 
-            this.flyingCheckbox.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            this.flyingCheckbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.flyingCheckbox.AutoSize = true;
-            //this.flyingCheckbox.Location = new System.Drawing.Point(323, 557);
             this.flyingCheckbox.Location = new System.Drawing.Point(323, 532);
             this.flyingCheckbox.Name = "flyingCheckbox";
             this.flyingCheckbox.Size = new System.Drawing.Size(59, 17);
@@ -190,29 +183,8 @@
             this.flyingCheckbox.UseVisualStyleBackColor = true;
             this.flyingCheckbox.CheckedChanged += new System.EventHandler(this.flyingCheckbox_CheckedChanged);
             // 
-            // flagsCheckedListBox
-            // 
-            this.flagsCheckedListBox.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
-            this.flagsCheckedListBox.FormattingEnabled = true;
-            this.flagsCheckedListBox.Items.AddRange(new object[] {
-            "Flag 1",
-            "Flag 2",
-            "Flag 3",
-            "Flag 4",
-            "Flag 5",
-            "Flag 6",
-            "Flag 7",
-            "Flag 8"});
-            //this.flagsCheckedListBox.Location = new System.Drawing.Point(488, 503);
-            this.flagsCheckedListBox.Location = new System.Drawing.Point(488, 478);
-            this.flagsCheckedListBox.Name = "flagsCheckedListBox";
-            this.flagsCheckedListBox.Size = new System.Drawing.Size(100, 124);
-            this.flagsCheckedListBox.TabIndex = 11;
-            this.flagsCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.flagsCheckedListBox_ItemCheck);
-            // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
             this.numericUpDown1.Hexadecimal = true;
             this.numericUpDown1.Location = new System.Drawing.Point(6, 6);
             this.numericUpDown1.Name = "numericUpDown1";
@@ -223,10 +195,8 @@
             // 
             // pictureBox1
             // 
-            //this.pictureBox1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            //this.pictureBox1.Size = new System.Drawing.Size(191, 256);
             this.pictureBox1.Size = new System.Drawing.Size(236, 256);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 13;
@@ -234,19 +204,21 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.framesTabPage);
             this.tabControl1.Controls.Add(this.animationTabPage);
             this.tabControl1.Location = new System.Drawing.Point(323, 115);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            //this.tabControl1.Size = new System.Drawing.Size(285, 382);
             this.tabControl1.Size = new System.Drawing.Size(285, 357);
             this.tabControl1.TabIndex = 15;
             // 
             // framesTabPage
             // 
-            this.framesTabPage.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
+            this.framesTabPage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.framesTabPage.Controls.Add(this.lblFramesH);
             this.framesTabPage.Controls.Add(this.numericUpDown1);
             this.framesTabPage.Controls.Add(this.zoomPanel);
@@ -260,8 +232,6 @@
             // 
             // lblFramesH
             // 
-            this.lblFramesH.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
-            //this.lblFramesH.AutoSize = true;
             this.lblFramesH.Location = new System.Drawing.Point(181, 13);
             this.lblFramesH.Name = "lblFramesH";
             this.lblFramesH.Size = new System.Drawing.Size(13, 13);
@@ -270,19 +240,22 @@
             // 
             // zoomPanel
             // 
-            this.zoomPanel.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
+            this.zoomPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomPanel.AutoScroll = true;
             this.zoomPanel.BackColor = System.Drawing.Color.Black;
             this.zoomPanel.Controls.Add(this.pictureBox1);
             this.zoomPanel.Location = new System.Drawing.Point(5, 32);
             this.zoomPanel.Name = "zoomPanel";
-            //this.zoomPanel.Size = new System.Drawing.Size(191, 256);
             this.zoomPanel.Size = new System.Drawing.Size(236, 256);
             this.zoomPanel.TabIndex = 15;
             // 
             // animationTabPage
-            //
-            this.animationTabPage.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
+            // 
+            this.animationTabPage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.animationTabPage.Controls.Add(this.label3);
             this.animationTabPage.Controls.Add(this.numericUpDown2);
             this.animationTabPage.Controls.Add(this.animationViewer1);
@@ -296,7 +269,6 @@
             // 
             // label3
             // 
-            this.label3.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(252, 14);
             this.label3.Name = "label3";
@@ -306,7 +278,6 @@
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
             this.numericUpDown2.Hexadecimal = true;
             this.numericUpDown2.Location = new System.Drawing.Point(6, 7);
             this.numericUpDown2.Name = "numericUpDown2";
@@ -314,9 +285,19 @@
             this.numericUpDown2.TabIndex = 2;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // animationViewer1
+            // 
+            this.animationViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.animationViewer1.Location = new System.Drawing.Point(6, 33);
+            this.animationViewer1.Name = "animationViewer1";
+            this.animationViewer1.Size = new System.Drawing.Size(268, 305);
+            this.animationViewer1.TabIndex = 1;
+            // 
             // maxSizeLabel
             // 
-            this.maxSizeLabel.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right);
+            this.maxSizeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.maxSizeLabel.AutoSize = true;
             this.maxSizeLabel.Location = new System.Drawing.Point(514, 12);
             this.maxSizeLabel.Name = "maxSizeLabel";
@@ -339,36 +320,42 @@
             // 
             // cmbZoom
             // 
-            this.cmbZoom.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right);
+            this.cmbZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbZoom.FormattingEnabled = true;
             this.cmbZoom.Location = new System.Drawing.Point(522, 114);
             this.cmbZoom.Name = "cmbZoom";
             this.cmbZoom.Size = new System.Drawing.Size(81, 21);
             this.cmbZoom.TabIndex = 18;
-            this.cmbZoom.SelectedIndexChanged += new System.EventHandler(cmbZoom_SelectedIndexChanged);
+            this.cmbZoom.SelectedIndexChanged += new System.EventHandler(this.cmbZoom_SelectedIndexChanged);
             // 
-            // animationViewer1
+            // lbl_Height
             // 
-            this.animationViewer1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
-            this.animationViewer1.Location = new System.Drawing.Point(6, 33);
-            this.animationViewer1.Name = "animationViewer1";
-            //this.animationViewer1.Size = new System.Drawing.Size(268, 317);
-            //this.animationViewer1.Size = new System.Drawing.Size(268, 325);
-            this.animationViewer1.Size = new System.Drawing.Size(268, 305);
-            this.animationViewer1.TabIndex = 1;
+            this.lbl_Height.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_Height.AutoSize = true;
+            this.lbl_Height.Location = new System.Drawing.Point(320, 561);
+            this.lbl_Height.Name = "lbl_Height";
+            this.lbl_Height.Size = new System.Drawing.Size(41, 13);
+            this.lbl_Height.TabIndex = 19;
+            this.lbl_Height.Text = "Height:";
+            // 
+            // cmb_Height
+            // 
+            this.cmb_Height.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmb_Height.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_Height.Location = new System.Drawing.Point(361, 558);
+            this.cmb_Height.Name = "cmb_Height";
+            this.cmb_Height.Size = new System.Drawing.Size(53, 20);
+            this.cmb_Height.TabIndex = 20;
+            this.cmb_Height.SelectedIndexChanged += new System.EventHandler(this.cmb_Height_SelectedIndexChanged);
             // 
             // spriteViewer1
             // 
-            //this.spriteViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            //| System.Windows.Forms.AnchorStyles.Left)));
-            this.spriteViewer1.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom;
+            this.spriteViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.spriteViewer1.AutoScroll = true;
-            //this.spriteViewer1.AutoSize = true;
-            //this.spriteViewer1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
-            //this.spriteViewer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.spriteViewer1.Location = new System.Drawing.Point(3, 3);
             this.spriteViewer1.Name = "spriteViewer1";
-            //this.spriteViewer1.Size = new System.Drawing.Size(300, 600);
             this.spriteViewer1.Size = new System.Drawing.Size(314, 600);
             this.spriteViewer1.Sprite = null;
             this.spriteViewer1.TabIndex = 0;
@@ -377,14 +364,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            //this.AutoSize = true;
-            //this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
-            //this.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Controls.Add(this.cmb_Height);
+            this.Controls.Add(this.lbl_Height);
             this.Controls.Add(this.cmbZoom);
             this.Controls.Add(this.sharedLabel);
             this.Controls.Add(this.maxSizeLabel);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.flagsCheckedListBox);
             this.Controls.Add(this.flyingCheckbox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -399,7 +384,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.framesTabPage.ResumeLayout(false);
-            this.framesTabPage.PerformLayout();
             this.zoomPanel.ResumeLayout(false);
             this.zoomPanel.PerformLayout();
             this.animationTabPage.ResumeLayout(false);
@@ -420,7 +404,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox flyingCheckbox;
-        private System.Windows.Forms.CheckedListBox flagsCheckedListBox;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabControl tabControl1;
@@ -435,5 +418,7 @@
         private System.Windows.Forms.CheckBox chkImportExport8bpp;
         private System.Windows.Forms.ComboBox cmbZoom;
         private System.Windows.Forms.Panel zoomPanel;
+        private System.Windows.Forms.Label lbl_Height;
+        private System.Windows.Forms.ComboBox cmb_Height;
     }
 }

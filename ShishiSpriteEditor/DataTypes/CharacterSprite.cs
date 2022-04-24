@@ -13,15 +13,9 @@ namespace FFTPatcher.SpriteEditor
 
         public SpriteType SHP { get { return attributes.SHP; } }
         public SpriteType SEQ { get { return attributes.SEQ; } }
-        public bool Flag1 { get { return attributes.Flag1; } }
-        public bool Flag2 { get { return attributes.Flag2; } }
-        public bool Flag3 { get { return attributes.Flag3; } }
-        public bool Flag4 { get { return attributes.Flag4; } }
-        public bool Flag5 { get { return attributes.Flag5; } }
-        public bool Flag6 { get { return attributes.Flag6; } }
-        public bool Flag7 { get { return attributes.Flag7; } }
-        public bool Flag8 { get { return attributes.Flag8; } }
         public bool Flying { get { return attributes.Flying; } }
+        public byte Height {  get { return attributes.Height;  } }
+
         private const int sp2MaxLength = 256 * 256 / 2;
         public int NumChildren { get { return location.SubSpriteLocations.Count; } }
         internal void SetSHP(Stream iso, SpriteType shp)
@@ -47,9 +41,9 @@ namespace FFTPatcher.SpriteEditor
             attributes.SetFlying(iso, flying);
         }
 
-        internal void SetFlag(Stream iso, int index, bool flag)
+        internal void SetHeight(Stream iso, byte height)
         {
-            attributes.SetFlag(iso, index, flag);
+            attributes.SetHeight(iso, height);
         }
 
         private enum SpriteAlignment

@@ -78,6 +78,14 @@ namespace FFTPatcher.SpriteEditor
 
             shpComboBox.DataSource = s.ToArray();
             seqComboBox.DataSource = Enum.GetValues(typeof(SpriteType));
+
+            byte[] bytesArray = new byte[256];
+            for (int index = 0; index < 256; index++)
+            {
+                bytesArray[index] = (byte)index;
+            }
+            cmb_Height.DataSource = bytesArray;
+
             paletteSelector.SelectedIndex = 0;
             //pictureBox1.MinimumSize = Frame.DefaultFrameSize + pictureBox1.Padding.Size;
             //animationViewer1.MinimumSize = Frame.DefaultFrameSize + animationViewer1.Padding.Size + new Size( 0, 40 );
@@ -151,13 +159,8 @@ namespace FFTPatcher.SpriteEditor
                 seqComboBox.SelectedItem = null;
                 flyingCheckbox.Enabled = false;
                 flyingCheckbox.Checked = false;
-                flagsCheckedListBox.Enabled = false;
-                flagsCheckedListBox.BeginUpdate();
-                for (int i = 0; i < flagsCheckedListBox.Items.Count; i++)
-                {
-                    flagsCheckedListBox.SetItemChecked(i, false);
-                }
-                flagsCheckedListBox.EndUpdate();
+                cmb_Height.Enabled = false;
+                cmb_Height.SelectedItem = null;
             }
             else
             {
@@ -167,16 +170,8 @@ namespace FFTPatcher.SpriteEditor
                 seqComboBox.SelectedItem = charSprite.SEQ;
                 flyingCheckbox.Enabled = true;
                 flyingCheckbox.Checked = charSprite.Flying;
-                flagsCheckedListBox.Enabled = true;
-                var flags = new bool[] { 
-                    charSprite.Flag1, charSprite.Flag2, charSprite.Flag3, charSprite.Flag4,
-                    charSprite.Flag5, charSprite.Flag6, charSprite.Flag7, charSprite.Flag8 };
-                flagsCheckedListBox.BeginUpdate();
-                for (int i = 0; i < flagsCheckedListBox.Items.Count; i++)
-                {
-                    flagsCheckedListBox.SetItemChecked(i, flags[i]);
-                }
-                flagsCheckedListBox.EndUpdate();
+                cmb_Height.Enabled = true;
+                cmb_Height.SelectedItem = charSprite.Height;
             }
         }
 
@@ -359,10 +354,12 @@ namespace FFTPatcher.SpriteEditor
                 (Sprite as CharacterSprite).SetFlying(iso, flyingCheckbox.Checked);
         }
 
-        private void flagsCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void cmb_Height_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!ignoreChanges)
-                (Sprite as CharacterSprite).SetFlag(iso, e.Index, e.NewValue == CheckState.Checked);
+            {
+                (Sprite as CharacterSprite).SetHeight(iso, (byte)cmb_Height.SelectedItem);
+            }
         }
 
         private void UpdatePictureBox()
