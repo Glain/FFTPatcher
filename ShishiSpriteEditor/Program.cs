@@ -35,17 +35,20 @@ namespace FFTPatcher.SpriteEditor
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                Application.SetUnhandledExceptionMode( UnhandledExceptionMode.CatchException );
-                Application.ThreadException += Application_ThreadException;
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault( false );
-                mainForm = new MainForm();
-                Application.Run( mainForm );
-                Application.ThreadException -= Application_ThreadException;
+                if (!HandleCommandLinePatch(args))
+                {
+                    Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                    Application.ThreadException += Application_ThreadException;
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    mainForm = new MainForm();
+                    Application.Run(mainForm);
+                    Application.ThreadException -= Application_ThreadException;
+                }
             }
             catch (Exception e)
             {
@@ -76,7 +79,70 @@ namespace FFTPatcher.SpriteEditor
             PatcherLib.MyMessageBox.Show( e.ToString(), "Error" );
         }
 
-        #endregion Methods
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+        private const int ATTACH_PARENT_PROCESS = -1;
 
+        private static bool HandleCommandLinePatch(string[] args)
+        {
+            //while (!System.Diagnostics.Debugger.IsAttached) System.Threading.Thread.Sleep(100);
+            System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepathAndDirectory(args);
+
+            if ((string.IsNullOrEmpty(patchFilepaths.Key)) || (string.IsNullOrEmpty(patchFilepaths.Value)))
+            {
+                return false;
+            }
+            else
+            {
+                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+                //Environment.CurrentDirectory = System.IO.Path.GetDirectoryName(patchFilepaths.Key);
+
+                try
+                {
+                    string inputDirectory = patchFilepaths.Key;
+                    string spritesDirectory = Path.Combine(inputDirectory, "sprites");
+                    string imagesDirectory = Path.Combine(inputDirectory, "images");
+                    string isoPath = patchFilepaths.Value;
+                    System.Text.StringBuilder sbOutput = new System.Text.StringBuilder();
+
+                    using (Stream iso = File.Open(isoPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+                    {
+                        if (iso == null)
+                        {
+                            throw new Exception("Could not open ISO file!");
+                        }
+
+                        //PatcherLib.Datatypes.Context context = PatcherLib.Utilities.Utilities.GetContextFromIso(iso);
+
+                        if (Directory.Exists(spritesDirectory))
+                        {
+                            AllSprites sprites = AllSprites.FromIso(iso, false);
+                            AllSprites.AllSpritesDoWorkResult result = sprites.LoadAllSprites(iso, spritesDirectory);
+                            bool isSuccess = (result.DoWorkResult == AllSprites.AllSpritesDoWorkResult.Result.Success);
+                            sbOutput.AppendLine(isSuccess ? (result.ImagesProcessed.ToString() + " sprites imported.") : "Failed to import sprites!");
+                        }
+                        if (Directory.Exists(imagesDirectory))
+                        {
+                            AllOtherImages images = AllOtherImages.FromIso(iso);
+                            AllOtherImages.AllImagesDoWorkResult result = images.LoadAllImages(iso, imagesDirectory);
+                            bool isSuccess = (result.DoWorkResult == AllOtherImages.AllImagesDoWorkResult.Result.Success);
+                            sbOutput.AppendLine(isSuccess ? (result.ImagesProcessed.ToString() + " images imported.") : "Failed to import images!");
+                        }
+                    }
+
+                    AttachConsole(ATTACH_PARENT_PROCESS);
+                    Console.WriteLine(sbOutput.ToString());
+                }
+                catch (Exception ex)
+                {
+                    AttachConsole(ATTACH_PARENT_PROCESS);
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
+                return true;
+            }
+        }
+
+        #endregion Methods
     }
 }

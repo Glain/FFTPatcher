@@ -637,6 +637,70 @@ namespace PatcherLib.Utilities
             return new KeyValuePair<string, string>(null, null);
         }
 
+        public static KeyValuePair<string, string> GetPatchFilepathAndDirectory(string[] args, IEnumerable<string> destExtensions = null)
+        {
+            int modLength = args.Length - 2;
+            destExtensions = destExtensions ?? new string[4] { ".bin", ".iso", ".img", ".psv" };
+
+            for (int index = 0; index < modLength; index++)
+            {
+                if (args[index].ToLower().Trim().Equals("-patch"))
+                {
+                    string patchPath = GetInputDirectory(args[index + 1]);
+                    string isoPath = GetInputFilepath(args[index + 2], destExtensions);
+
+                    return new KeyValuePair<string, string>(patchPath, isoPath);
+                }
+            }
+
+            return new KeyValuePair<string, string>(null, null);
+        }
+
+        public static Datatypes.Context GetContextFromCommandLine(string[] args)
+        {
+            Datatypes.Context context = Datatypes.Context.US_PSX;
+            int modLength = args.Length - 1;
+
+            for (int index = 0; index < modLength; index++)
+            {
+                if (args[index].ToLower().Trim().Equals("-type"))
+                {
+                    string strType = args[index + 1];
+                    if (!string.IsNullOrEmpty(strType))
+                    {
+                        if (strType.ToLower().Trim().Equals("psp"))
+                        {
+                            context = Datatypes.Context.US_PSP;
+                        }
+                        else
+                        {
+                            context = Datatypes.Context.US_PSX;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            return context;
+        }
+
+        public static Datatypes.Context GetContextFromIso(System.IO.Stream iso)
+        {
+            if (iso.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode2Form1] == 0)
+            {
+                return Datatypes.Context.US_PSX;
+            }
+            else if (iso.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode1] == 0)
+            {
+                return Datatypes.Context.US_PSP;
+            }
+            else
+            {
+                throw new ArgumentException("Disc image not recognized!");
+            }
+        }
+
         public static string GetInputFilepath(string[] args, string extension)
         {
             string filepath = (args.Length > 0) ? args[0] : "";
@@ -692,6 +756,28 @@ namespace PatcherLib.Utilities
             }
 
             return filepath;
+        }
+
+        public static string GetInputDirectory(string path)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                try
+                {
+                    path = System.IO.Path.GetFullPath(path);
+
+                    if (!System.IO.Directory.Exists(path))
+                    {
+                        path = string.Empty;
+                    }
+                }
+                catch (Exception)
+                {
+                    path = string.Empty;
+                }
+            }
+
+            return path;
         }
 
         public static void WriteChangesToFile(IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches, string filepath)

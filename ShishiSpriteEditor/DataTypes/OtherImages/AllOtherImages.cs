@@ -149,9 +149,9 @@ namespace FFTPatcher.SpriteEditor
             return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed );
         }
 
-        public void LoadAllImages( Stream iso, string path )
+        public AllImagesDoWorkResult LoadAllImages( Stream iso, string path )
         {
-            LoadAllImages( iso, path, null );
+            return LoadAllImages( iso, path, null );
         }
 
         internal void LoadAllImages( object sender, System.ComponentModel.DoWorkEventArgs e )

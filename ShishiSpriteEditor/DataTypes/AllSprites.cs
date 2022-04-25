@@ -329,6 +329,11 @@ namespace FFTPatcher.SpriteEditor
             e.Result = DumpAllSprites(data.ISO, data.Path, data.ImportExport8bpp, data.PaletteIndex, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null);
         }
 
+        public AllSpritesDoWorkResult LoadAllSprites(Stream iso, string path)
+        {
+            return LoadAllSprites(iso, path, true, 0, null);
+        }
+
         private AllSpritesDoWorkResult LoadAllSprites(Stream iso, string path, bool importExport8bpp, int paletteIndex, Action<int> progressReporter)
         {
             bool progress = progressReporter != null;
