@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace FFTorgASM
@@ -39,44 +40,36 @@ namespace FFTorgASM
 
                 try
                 {
-                    ASMEncoding.ASMEncodingUtility asmUtility = new ASMEncoding.ASMEncodingUtility(ASMEncoding.ASMEncodingMode.PSX);
-                    PatchData patchData = new PatchData(new string[1] { patchFilepaths.Key }, asmUtility);
-
                     if (patchFilepaths.Value.ToLower().Trim().EndsWith(".psv"))
                     {
-                        PatcherLib.Iso.PatchPsxSaveStateResult patchResult = patchData.PatchAllSaveState(asmUtility, patchFilepaths.Value);
-                        System.Text.StringBuilder sbResultMessage = new System.Text.StringBuilder();
-
-                        bool hasUnsupportedFiles = (patchResult.UnsupportedFiles.Count > 0);
-                        bool hasAbsentFiles = (patchResult.AbsentFiles.Count > 0);
-
-                        if (hasUnsupportedFiles)
-                        {
-                            sbResultMessage.AppendLine("Files not supported for savestate patching:");
-                            foreach (PatcherLib.Iso.PsxIso.Sectors sector in patchResult.UnsupportedFiles)
-                            {
-                                sbResultMessage.AppendFormat("\t{0}{1}", PatcherLib.Iso.PsxIso.GetSectorName(sector), Environment.NewLine);
-                            }
-                            sbResultMessage.AppendLine();
-                        }
-                        if (hasAbsentFiles)
-                        {
-                            sbResultMessage.AppendLine("Files not present in savestate:");
-                            foreach (PatcherLib.Iso.PsxIso.Sectors sector in patchResult.AbsentFiles)
-                            {
-                                sbResultMessage.AppendFormat("\t{0}{1}", PatcherLib.Iso.PsxIso.GetSectorName(sector), Environment.NewLine);
-                            }
-                            sbResultMessage.AppendLine();
-                        }
-
-                        if (hasUnsupportedFiles || hasAbsentFiles)
-                        {
-                            Console.WriteLine(sbResultMessage.ToString());
-                        }
+                        ASMEncoding.ASMEncodingUtility asmUtility = new ASMEncoding.ASMEncodingUtility(ASMEncoding.ASMEncodingMode.PSX);
+                        PatchData patchData = new PatchData(new string[1] { patchFilepaths.Key }, asmUtility);
+                        PatchResult result = PatchHelper.PatchPSV(patchFilepaths.Value, patchData.AllPatches, asmUtility, false);
+                        Console.WriteLine((result.IsSuccess ? "(Success) " : "(ERROR) ") + result.Message);
                     }
                     else
                     {
-                        patchData.PatchAllISO(asmUtility, patchFilepaths.Value);
+                        string isoPath = patchFilepaths.Value;
+                        PatcherLib.Datatypes.Context context = PatcherLib.Datatypes.Context.US_PSX;
+
+                        using (Stream iso = File.Open(isoPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+                        {
+                            if (iso == null)
+                            {
+                                throw new Exception("Could not open ISO file!");
+                            }
+
+                            context = PatcherLib.Utilities.Utilities.GetContextFromIso(iso);
+                        }
+
+                        ASMEncoding.ASMEncodingMode asmEncodingMode = ASMEncoding.ASMEncodingMode.PSX;
+                        if (context == PatcherLib.Datatypes.Context.US_PSP)
+                            asmEncodingMode = ASMEncoding.ASMEncodingMode.PSP;
+
+                        ASMEncoding.ASMEncodingUtility asmUtility = new ASMEncoding.ASMEncodingUtility(asmEncodingMode);
+                        PatchData patchData = new PatchData(new string[1] { patchFilepaths.Key }, asmUtility);
+                        PatchResult result = PatchHelper.PatchISO(isoPath, patchData.AllPatches, asmUtility, false);
+                        Console.WriteLine((result.IsSuccess ? "(Success) " : "(ERROR) ") + result.Message);
                     }
                 }
                 catch (Exception ex)
