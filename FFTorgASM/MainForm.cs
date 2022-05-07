@@ -107,7 +107,8 @@ namespace FFTorgASM
         private void LoadFiles(IList<string> fileList = null)
         {
             string strMode = Enum.GetName(typeof(ASMEncodingMode), asmUtility.EncodingMode);
-            string readPath = Path.Combine(Path.Combine(Application.StartupPath, "XmlPatches"), strMode);
+            string xmlPatchesPath = Settings.XmlPatchesPath.Replace('/', '\\');
+            string readPath = Path.Combine(Path.Combine(Application.StartupPath, xmlPatchesPath), strMode);
             string[] files = (fileList == null) ? Directory.GetFiles(readPath, "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
             lsb_FilesList.SelectedIndices.Clear();
 
