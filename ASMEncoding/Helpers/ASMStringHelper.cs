@@ -179,18 +179,12 @@ namespace ASMEncoding.Helpers
 		public static string[] RemoveLabel(string[] parts)
 		{
 			// Remove label portion, if it exists
-			if (!string.IsNullOrEmpty(parts[0]))
-			{
-				if (parts[0].EndsWith(":"))
-				{						
-					if (!string.IsNullOrEmpty(parts[1]))
-					{
-						string curLine = ASMStringHelper.RemoveLeadingSpaces(parts[1]);
-						curLine = ASMStringHelper.RemoveComment(curLine);
-						parts = ASMStringHelper.SplitLine(curLine);
-					}
-				}
-			}
+		    while ((!string.IsNullOrEmpty(parts[0])) && (parts[0].EndsWith(":")) && (!string.IsNullOrEmpty(parts[1])))
+		    {						
+			    string curLine = ASMStringHelper.RemoveLeadingSpaces(parts[1]);
+			    curLine = ASMStringHelper.RemoveComment(curLine);
+			    parts = ASMStringHelper.SplitLine(curLine);
+		    }
 			
 			return parts;
 		}
