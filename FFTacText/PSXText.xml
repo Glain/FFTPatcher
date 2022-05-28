@@ -2519,18 +2519,17 @@
             </Sections>
         </OneShotFile>
 
-        <!--
-  <OneShotFile>
-    <DisplayName>WORLD.BIN 07</DisplayName>
-    <Guid>{F639B72F-3656-43D3-B348-EC466EED889E}</Guid>
-    <Size>274</Size>
-    <Sectors>
-      <Sector filename="WORLD_WORLD_BIN" offset="733072"/>
-    </Sectors>
-    <Sections count="1">
-      <Section value="0" entries="9" empty="true" name="Name entry" dte="false" compressible="false"/>
-    </Sections>
-  </OneShotFile> -->
+        <OneShotFile>
+            <DisplayName>WORLD.BIN 07</DisplayName>
+            <Guid>{F639B72F-3656-43D3-B348-EC466EED889E}</Guid>
+            <Size>274</Size>
+            <Sectors>
+                <Sector filename="WORLD_WORLD_BIN" offset="733072"/>
+            </Sectors>
+            <Sections count="1">
+                <Section value="0" entries="9" empty="true" name="Name entry" dte="false" compressible="false"/>
+            </Sections>
+        </OneShotFile>
 
         <!--TODO-->
         <CompressibleOneShotFile>
@@ -2567,6 +2566,18 @@
             </Sectors>
             <Sections count="1">
                 <Section value="0" entries="31" empty="true" name="" dte="true" compressible="false"/>
+            </Sections>
+        </OneShotFile>
+        
+        <OneShotFile>
+            <DisplayName>WORLD.BIN 11</DisplayName>
+            <Guid>{32CBDB6D-57A2-4D39-AC43-932B9A26A1D1}</Guid>
+            <Size>246</Size>
+            <Sectors>
+                <Sector filename="WORLD_WORLD_BIN" offset="741344"/>
+            </Sectors>
+            <Sections count="1">
+                <Section value="0" entries="11" empty="true" name="Menu text" dte="true" compressible="false"/>
             </Sections>
         </OneShotFile>
 
