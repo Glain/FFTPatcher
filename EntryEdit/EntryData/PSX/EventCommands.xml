@@ -568,7 +568,7 @@
     <Command hex="A5" name="Variable &gt;" />
     <Command hex="B0" name="Add">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="unsigned" />
     </Command>
     <Command hex="B1" name="Add Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />
@@ -576,7 +576,7 @@
     </Command>
     <Command hex="B2" name="Subtract">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="unsigned" />
     </Command>
     <Command hex="B3" name="Subtract Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />
@@ -584,7 +584,7 @@
     </Command>
     <Command hex="B4" name="Multiply">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="unsigned" />
     </Command>
     <Command hex="B5" name="Multiply Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />
@@ -592,7 +592,7 @@
     </Command>
     <Command hex="B6" name="Divide">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="unsigned" />
     </Command>
     <Command hex="B7" name="Divide Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />
@@ -600,7 +600,7 @@
     </Command>
     <Command hex="B8" name="Modulo">
         <Parameter name="Variable" bytes="2" type="Variable" />
-        <Parameter name="Value" bytes="2" />
+        <Parameter name="Value" bytes="2" mode="unsigned" />
     </Command>
     <Command hex="B9" name="Modulo Variable">
         <Parameter name="Variable" bytes="2" type="Variable" />
