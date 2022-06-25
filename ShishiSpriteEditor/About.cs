@@ -43,7 +43,7 @@ FFTPatcher is free software: you can redistribute it and/or modify it under the 
 FFTPatcher is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.";
-            versionLabel.Text = string.Format( "v0.{0}", Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString() );
+            versionLabel.Text = string.Format( "v{0}", PatcherLib.Helpers.VersionHelper.VersionString);
         }
 
         #endregion Constructors

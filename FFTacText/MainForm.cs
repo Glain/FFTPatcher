@@ -40,7 +40,7 @@ namespace FFTPatcher.TextEditor
 
             string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".ffttext");
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
-            Text = string.Format("FFTactext (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
+            Text = string.Format("FFTactext (v{0})", PatcherLib.Helpers.VersionHelper.VersionString);
 
             exitMenuItem.Click += exitMenuItem_Click;
             aboutMenuItem.Click += aboutMenuItem_Click;

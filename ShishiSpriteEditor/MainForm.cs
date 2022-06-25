@@ -31,10 +31,10 @@ namespace FFTPatcher.SpriteEditor
 {
     public partial class MainForm : Form
     {
-        const string titleFormatString = "Shishi Sprite Manager (v0.{0}) - {1}";
+        const string titleFormatString = "Shishi Sprite Manager (v{0}) - {1}";
 
-        private static readonly int Revision = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision;
-        private static readonly string shortFormTitle = String.Format("Shishi Sprite Manager (v0.{0})", Revision);
+        private static readonly string versionString = PatcherLib.Helpers.VersionHelper.VersionString;
+        private static readonly string shortFormTitle = String.Format("Shishi Sprite Manager (v{0})", versionString);
 		string _fileName = null; // R999
 
         public MainForm()
@@ -166,7 +166,7 @@ namespace FFTPatcher.SpriteEditor
                         AllOtherImages otherImages = AllOtherImages.FromIso(currentStream);
                         allOtherImagesEditor1.BindTo( otherImages, currentStream );
 
-                        Text = string.Format(titleFormatString, Revision, Path.GetFileName(openFileDialog.FileName));
+                        Text = string.Format(titleFormatString, versionString, Path.GetFileName(openFileDialog.FileName));
                     }
                 }
             }

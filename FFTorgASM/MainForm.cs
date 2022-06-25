@@ -56,7 +56,7 @@ namespace FFTorgASM
             InitializeComponent();
             System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
 
-            string versionText = string.Format("v0.{0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision.ToString());
+            string versionText = string.Format("v{0}", PatcherLib.Helpers.VersionHelper.VersionString);
             versionLabel.Text = versionText;
             Text = string.Format("FFTorgASM ({0})", versionText);
 

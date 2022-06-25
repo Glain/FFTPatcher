@@ -88,7 +88,7 @@ namespace FFTPatcher
             InitializeComponent();
 
             string inputFilepath = PatcherLib.Utilities.Utilities.GetInputFilepath(args, ".fftpatch");
-            Text = string.Format("FFTPatcher (v0.{0})", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Revision);
+            Text = string.Format("FFTPatcher (v{0})", PatcherLib.Helpers.VersionHelper.VersionString);
 
             openMenuItem.Click += openMenuItem_Click;
             saveMenuItem.Click += saveMenuItem_Click;

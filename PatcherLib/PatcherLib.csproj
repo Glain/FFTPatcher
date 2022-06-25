@@ -111,6 +111,7 @@
     <Compile Include="Datatypes\PatchRange.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helpers\ISOHelper.cs" />
+    <Compile Include="Helpers\VersionHelper.cs" />
     <Compile Include="ISOPatching\FFTPack.cs" />
     <Compile Include="Datatypes\IGeneratePatchList.cs" />
     <Compile Include="ISOPatching\IsoPatch.cs" />
