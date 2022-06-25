@@ -1,12 +1,6 @@
-﻿using FFTPatcher.Controls;
-using FFTPatcher.Datatypes;
+﻿using FFTPatcher.Datatypes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using Spinner = FFTPatcher.Controls.NumericUpDownWithDefault;
@@ -24,14 +18,16 @@ namespace FFTPatcher
             public T MA { get; set; }
         }
 
-        private class StatValueSet : StatValueSet<int> { };
+        private class StatValueSet : StatValueSet<uint> { };
 
-        private StatValueSet[] baseStatSets = new StatValueSet[4] {
+        private readonly StatValueSet[] baseStatSets = new StatValueSet[4] {
             new StatValueSet { HP = 507904, MP = 237568, SP = 98304, PA = 81920, MA = 65536 },
             new StatValueSet { HP = 475136, MP = 253952, SP = 98304, PA = 65536, MA = 81920 },
             new StatValueSet { HP = 507904, MP = 253952, SP = 98304, PA = 81920, MA = 81920 },
             new StatValueSet { HP = 598016, MP = 139264, SP = 81920, PA = 90112, MA = 90112 }
         };
+
+        private const uint maxRawStat = 0xFFFFFF;
 
         private Dictionary<Spinner, Label> baseStatControlMap; 
 
@@ -120,29 +116,29 @@ namespace FFTPatcher
 
             StatValueSet stats = new StatValueSet()
             {
-                HP = (int)(spinner_BaseHP.Value),
-                MP = (int)(spinner_BaseMP.Value),
-                SP = (int)(spinner_BaseSP.Value),
-                PA = (int)(spinner_BasePA.Value),
-                MA = (int)(spinner_BaseMA.Value)
+                HP = (uint)(spinner_BaseHP.Value),
+                MP = (uint)(spinner_BaseMP.Value),
+                SP = (uint)(spinner_BaseSP.Value),
+                PA = (uint)(spinner_BasePA.Value),
+                MA = (uint)(spinner_BaseMA.Value)
             };
 
             StatValueSet growths = new StatValueSet()
             {
-                HP = (int)(spinner_GrowthHP.Value),
-                MP = (int)(spinner_GrowthMP.Value),
-                SP = (int)(spinner_GrowthSP.Value),
-                PA = (int)(spinner_GrowthPA.Value),
-                MA = (int)(spinner_GrowthMA.Value)
+                HP = (uint)(spinner_GrowthHP.Value),
+                MP = (uint)(spinner_GrowthMP.Value),
+                SP = (uint)(spinner_GrowthSP.Value),
+                PA = (uint)(spinner_GrowthPA.Value),
+                MA = (uint)(spinner_GrowthMA.Value)
             };
 
             StatValueSet multipliers = new StatValueSet()
             {
-                HP = (int)(spinner_MultHP.Value),
-                MP = (int)(spinner_MultMP.Value),
-                SP = (int)(spinner_MultSP.Value),
-                PA = (int)(spinner_MultPA.Value),
-                MA = (int)(spinner_MultMA.Value)
+                HP = (uint)(spinner_MultHP.Value),
+                MP = (uint)(spinner_MultMP.Value),
+                SP = (uint)(spinner_MultSP.Value),
+                PA = (uint)(spinner_MultPA.Value),
+                MA = (uint)(spinner_MultMA.Value)
             };
 
             for (int level = 1; level <= 99; level++)
@@ -176,11 +172,11 @@ namespace FFTPatcher
 
                 dgv_Stats.Rows.Add(level, displayStats.HP, displayStats.MP, displayStats.SP, displayStats.PA, displayStats.MA);
 
-                stats.HP += (stats.HP / (growths.HP + level));
-                stats.MP += (stats.MP / (growths.MP + level));
-                stats.SP += (stats.SP / (growths.SP + level));
-                stats.PA += (stats.PA / (growths.PA + level));
-                stats.MA += (stats.MA / (growths.MA + level));
+                stats.HP = Math.Min(stats.HP + (uint)(stats.HP / (growths.HP + level)), maxRawStat);
+                stats.MP = Math.Min(stats.MP + (uint)(stats.MP / (growths.MP + level)), maxRawStat);
+                stats.SP = Math.Min(stats.SP + (uint)(stats.SP / (growths.SP + level)), maxRawStat);
+                stats.PA = Math.Min(stats.PA + (uint)(stats.PA / (growths.PA + level)), maxRawStat);
+                stats.MA = Math.Min(stats.MA + (uint)(stats.MA / (growths.MA + level)), maxRawStat);
             }
         }
 
