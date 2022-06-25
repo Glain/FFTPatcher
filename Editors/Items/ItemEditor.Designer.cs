@@ -564,7 +564,7 @@ namespace FFTPatcher.Editors
         	this.weaponSpellStatusLabel.Size = new System.Drawing.Size(117, 13);
         	this.weaponSpellStatusLabel.TabIndex = 23;
         	this.weaponSpellStatusLabel.TabStop = true;
-        	this.weaponSpellStatusLabel.Text = "Inflict Status/Cast Spell";
+        	this.weaponSpellStatusLabel.Text = "Inflict Status";
         	// 
         	// weaponAttributesCheckedListBox
         	// 
