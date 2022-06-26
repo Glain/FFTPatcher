@@ -1629,9 +1629,20 @@
             </Sections>
         </CompressedFile>
 
+        <CompressibleOneShotFile>
+            <DisplayName>EQUIP.OUT 01</DisplayName>
+            <Guid>{34A0F834-5D52-4290-AA0E-AAA8F811340B}</Guid>
+            <Size>146</Size>
+            <Sectors>
+                <Sector filename="EVENT_EQUIP_OUT" offset="61664" />
+            </Sectors>
+            <Sections count="1">
+                <Section value="0" entries="10" empty="true" compressible="true" name="Menu text" dte="true" />
+            </Sections>
+        </CompressibleOneShotFile>
 
         <CompressedFile>
-            <DisplayName>EQUIP.OUT</DisplayName>
+            <DisplayName>EQUIP.OUT 02</DisplayName>
             <Guid>{E2BC5BE9-EBF9-4B1D-B533-1FEF6EC8C50C}</Guid>
             <Size>35511</Size>
             <Sectors>
