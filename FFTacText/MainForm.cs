@@ -175,21 +175,31 @@ namespace FFTPatcher.TextEditor
             MethodInvoker missingPrompt = null;
             missingPrompt = delegate()
                 {
-                    var res = MyMessageBox.Show( this, "Some files are missing." + Environment.NewLine + "Load missing files from ISO?", "Files missing", MessageBoxButtons.YesNoCancel );
-                    if (res == DialogResult.Yes)
+                    bool hasValidResult = false;
+                    DialogResult result = DialogResult.No;
+
+                    while (!hasValidResult)
                     {
-                        openFileDialog.Filter = "ISO files (*.iso, *.bin, *.img)|*.iso;*.bin;*.img";
-                        openFileDialog.FileName = string.Empty;
-                        if (openFileDialog.ShowDialog( this ) == DialogResult.OK)
+                        result = MyMessageBox.Show(this, "Some files are missing." + Environment.NewLine + "Load missing files from ISO?",
+                            "Files missing", MessageBoxButtons.YesNoCancel);
+
+                        hasValidResult = true;
+                        if (result == DialogResult.Yes)
                         {
-                            missingFilesIsoFilename = openFileDialog.FileName;
-                        }
-                        else
-                        {
-                            missingPrompt();
+                            openFileDialog.Filter = "ISO files (*.iso, *.bin, *.img)|*.iso;*.bin;*.img";
+                            openFileDialog.FileName = string.Empty;
+                            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+                            {
+                                missingFilesIsoFilename = openFileDialog.FileName;
+                            }
+                            else
+                            {
+                                hasValidResult = false;
+                            }
                         }
                     }
-                    missingFilesResult = res;
+
+                    missingFilesResult = result;
                 };
             worker.DoWork +=
                 delegate( object sender, DoWorkEventArgs args )
