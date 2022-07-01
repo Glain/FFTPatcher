@@ -2591,6 +2591,18 @@
                 <Section value="0" entries="11" empty="true" name="Menu text" dte="true" compressible="false"/>
             </Sections>
         </OneShotFile>
+        
+        <OneShotFile>
+            <DisplayName>WORLD.BIN 12</DisplayName>
+            <Guid>{89A0263C-8FB8-437F-8B7C-25C7979DBAF7}</Guid>
+            <Size>248</Size>
+            <Sectors>
+                <Sector filename="WORLD_WORLD_BIN" offset="736496"/>
+            </Sectors>
+            <Sections count="1">
+                <Section value="0" entries="26" empty="true" name="Memory card screen text" dte="true" compressible="false"/>
+            </Sections>
+        </OneShotFile>
 
         <OneShotFile>
             <DisplayName>CARD.OUT 1</DisplayName>
