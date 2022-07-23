@@ -2603,6 +2603,18 @@
                 <Section value="0" entries="26" empty="true" name="Memory card screen text" dte="true" compressible="false"/>
             </Sections>
         </OneShotFile>
+        
+        <OneShotFile>
+            <DisplayName>WORLD.BIN 13</DisplayName>
+            <Guid>{B7A49D51-1838-46C5-A12A-1338B3B21F56}</Guid>
+            <Size>90</Size>
+            <Sectors>
+                <Sector filename="WORLD_WORLD_BIN" offset="744144"/>
+            </Sectors>
+            <Sections count="1">
+                <Section value="0" entries="10" empty="true" name="Name entry text" dte="true" compressible="false"/>
+            </Sections>
+        </OneShotFile>
 
         <OneShotFile>
             <DisplayName>CARD.OUT 1</DisplayName>
