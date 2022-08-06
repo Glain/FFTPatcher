@@ -1495,4 +1495,31 @@
         addiu   sp, sp, 32
         jr      ra
         nop
+
+
+#   ROUTINE: CLEAR BENCH
+#       Clears the unit bench.
+
+@clear_bench:
+        addiu   sp, sp, -16
+        sw      s0, 4(sp)
+        sw      ra, 8(sp)
+        
+        li      s0, 0
+    clear_bench_loop:
+        jal     @get_bench_slot_pointer
+        move    a0, s0
+        
+        sb      zero, 0(v0)
+        addiu   s0, s0, 1
+        
+        sltiu   t0, s0, 10
+        bne     t0, zero, clear_bench_loop
+        nop
+        
+    clear_bench_end:
+        lw      ra, 8(sp)
+        lw      s0, 4(sp)
+        jr      ra
+        addiu   sp, sp, 16
         

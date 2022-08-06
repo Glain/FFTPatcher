@@ -3772,6 +3772,9 @@
         <Location file="SCUS_942_21" offset="40F00,40F54,40FA8,40FFC,41050,410A4" offsetMode="RAM" mode="DATA">
             00
         </Location>
+        <Location file="SCUS_942_21" offset="42B14" offsetMode="RAM" mode="ASM">
+            j       @clear_bench
+        </Location>
         <Location file="WORLD_WORLD_BIN" offset="141D00" offsetMode="RAM" mode="DATA" label="address_bench_menu_text">
             E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
             E3 04 8D 0E 30 33 37 3C 8E E3 00 FE
