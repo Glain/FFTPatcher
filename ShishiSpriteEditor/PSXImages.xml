@@ -1447,18 +1447,18 @@
             </Position>
         </Raw16BitImage>
     </Section>
-    <Section Name="OPENBK.BIN" Filename="OPENBK.BIN" Filesize="825344">
+    <Section Name="OPNBK.BIN" Filename="OPNBK.BIN" Filesize="825344">
         <Names>
-            <Name>OPENBK1</Name>
-            <Name>OPENBK2</Name>
-            <Name>OPENBK3</Name>
-            <Name>OPENBK4</Name>
-            <Name>OPENBK5</Name>
-            <Name>OPENBK6</Name>
-            <Name>OPENBK7</Name>
+            <Name>OPNBK1</Name>
+            <Name>OPNBK2</Name>
+            <Name>OPNBK3</Name>
+            <Name>OPNBK4</Name>
+            <Name>OPNBK5</Name>
+            <Name>OPNBK6</Name>
+            <Name>OPNBK7</Name>
         </Names>
         <Raw16BitImage>
-            <Name>OPENBK1</Name>
+            <Name>OPNBK1</Name>
             <Width>320</Width>
             <Height>240</Height>
             <Sector>OPEN_OPNBK_BIN</Sector>
@@ -1468,7 +1468,7 @@
             </Position>
         </Raw16BitImage>
         <Raw16BitImage>
-            <Name>OPENBK2</Name>
+            <Name>OPNBK2</Name>
             <Width>256</Width>
             <Height>240</Height>
             <Sector>OPEN_OPNBK_BIN</Sector>
@@ -1489,7 +1489,7 @@
             </Raw16BitImage>
         </Repeat>
         <Raw16BitImage>
-            <Name>OPENBK7</Name>
+            <Name>OPNBK7</Name>
             <Width>512</Width>
             <Height>240</Height>
             <Sector>OPEN_OPNBK_BIN</Sector>

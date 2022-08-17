@@ -2038,9 +2038,9 @@
             </Position>
         </PalettedImage8bpp>
     </Section>
-    <Section Name="OPENBK">
+    <Section Name="OPNBK">
         <Raw16BitImage>
-            <Name>OPENBK1 (unused)</Name>
+            <Name>OPNBK1 (unused)</Name>
             <Width>320</Width>
             <Height>240</Height>
             <FFTPack>OPEN_OPNBK_BIN</FFTPack>
@@ -2050,7 +2050,7 @@
             </Position>
         </Raw16BitImage>
         <PalettedImage8bpp>
-            <Name>OPENBK2</Name>
+            <Name>OPNBK2</Name>
             <Width>512</Width>
             <Height>256</Height>
             <ColorDepth>_32bit</ColorDepth>
@@ -2065,7 +2065,7 @@
             </Position>
         </PalettedImage8bpp>
         <PalettedImage8bpp>
-            <Name>OPENBK3</Name>
+            <Name>OPNBK3</Name>
             <Width>512</Width>
             <Height>256</Height>
             <ColorDepth>_32bit</ColorDepth>
@@ -2080,7 +2080,7 @@
             </Position>
         </PalettedImage8bpp>
         <PalettedImage8bpp>
-            <Name>OPENBK4</Name>
+            <Name>OPNBK4</Name>
             <Width>512</Width>
             <Height>256</Height>
             <ColorDepth>_32bit</ColorDepth>
@@ -2095,7 +2095,7 @@
             </Position>
         </PalettedImage8bpp>
         <PalettedImage8bpp>
-            <Name>OPENBK5</Name>
+            <Name>OPNBK5</Name>
             <Width>512</Width>
             <Height>256</Height>
             <ColorDepth>_32bit</ColorDepth>
@@ -2110,7 +2110,7 @@
             </Position>
         </PalettedImage8bpp>
         <PalettedImage8bpp>
-            <Name>OPENBK6</Name>
+            <Name>OPNBK6</Name>
             <Width>512</Width>
             <Height>256</Height>
             <ColorDepth>_32bit</ColorDepth>
@@ -2125,7 +2125,7 @@
             </Position>
         </PalettedImage8bpp>
         <PalettedImage8bpp>
-            <Name>OPENBK7</Name>
+            <Name>OPNBK7</Name>
             <Width>512</Width>
             <Height>256</Height>
             <ColorDepth>_32bit</ColorDepth>
