@@ -1573,7 +1573,7 @@
         </CompressedFile>
 
         <CompressedFile>
-            <DisplayName>BUNIT.OUT</DisplayName>
+            <DisplayName>BUNIT.OUT 01</DisplayName>
             <Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
             <Size>79459</Size>
             <Sectors>
@@ -1629,6 +1629,18 @@
             </Sections>
         </CompressedFile>
 
+        <OneShotFile>
+            <DisplayName>BUNIT.OUT 02</DisplayName>
+            <Guid>{BF5CCBA0-4841-4038-8C4B-B941F32A38EF}</Guid>
+            <Size>79</Size>
+            <Sectors>
+                <Sector filename="EVENT_BUNIT_OUT" offset="66648"/>
+            </Sectors>
+            <Sections count="1">
+                <Section value="0" entries="13" empty="true" name="Menu selection text" dte="true" compressible="false"/>
+            </Sections>
+        </OneShotFile>
+            
         <CompressibleOneShotFile>
             <DisplayName>EQUIP.OUT 01</DisplayName>
             <Guid>{34A0F834-5D52-4290-AA0E-AAA8F811340B}</Guid>
