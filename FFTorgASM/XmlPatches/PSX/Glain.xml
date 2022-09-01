@@ -1755,9 +1755,9 @@
     </Patch>
     <Patch name="Geomancy single ability">
         <Description>
-            Creates a single ability for Geomancy that changes its properties based on the tile the caster is standing on.
-            Should be used inside a Default skillset.  Ability ID can be specified; default is 0x7E (Pitfall)
-            To use the target tile's properties instead of the attacker's, change "Use Target Tile" to True.
+            Creates a single ability for Geomancy that changes its properties based on the tile the caster or target is standing on.
+            Should be used inside a Default skillset.  Ability ID can be specified; default is 0x7E (Pitfall).
+            To use the target tile's properties instead of the attacker's, use a different ability with the same formula.
         </Description>
         <!-- Ability properties corresponding to vanilla elemental ability order (Pitfall to Lava Ball) -->
         <!-- Each entry has format [Inflict Status ID, Element, Effect ID] -->
@@ -1785,36 +1785,45 @@
             .label  @address_ability_inflict_status_data, 0x80193906
             .label  @address_ability_effect_array, 0x801b63f0
 
+            .eqv    %common_address_high_halfword, 0x8019
+
             #   a0 = Pointer to unit whose tile data is to be loaded
             @geomancy_replace:
                     addiu   sp, sp, -16
                     sw      ra, 4(sp)
-
-                    .if     >, %UseTargetTile, 0
-                        lw      a0, 0(a0)
-                        jal     0x8007a218
-                        nop
-                        jal     0x80068418
-                        move    a0, v0
-                        lui     t0, 0x8009
-                        lbu     a0, 0x61b4(t0)           #   Selected X Coordinate
-                        lbu     a1, 0x61bc(t0)           #   Selected Y Coordinate
-                        lbu     a2, 0x61b8(t0)           #   Selected [Higher Elevation] flag
-                        jal     0x80183fb4
-                        nop
-                        lbu     t0, 0(v0)
-                        lui     t6, %hi(@address_ability_id)
-                    .else
-                        #   Get unit tile ID    
-                        lw      a0, 0(a0)
-                        jal     0x801810a0
-                        nop
-                        lui     t6, %hi(@address_ability_id)
-                        sll     v0, v0, 3
-                        addu    at, t6, v0
-                        lbu     t0, %lo(@address_tile_array) (at)
-                    .endif
-
+                    
+                    #   Use target tile if ability ID is not geomancy ability ID
+                    lbu     t0, @address_ability_id
+                    li      t1, %GeomancyAbilityID
+                    beq     t0, t1, geomancy_replace_use_source_tile
+                    nop
+                    
+                    lw      a0, 0(a0)
+                    jal     0x8007a218
+                    nop
+                    jal     0x80068418
+                    move    a0, v0
+                    lui     t0, 0x8009
+                    lbu     a0, 0x61b4(t0)           #   Selected X Coordinate
+                    lbu     a1, 0x61bc(t0)           #   Selected Y Coordinate
+                    lbu     a2, 0x61b8(t0)           #   Selected [Higher Elevation] flag
+                    jal     0x80183fb4
+                    nop
+                    lbu     t0, 0(v0)
+                    j       geomancy_replace_get_properties
+                    lui     t6, %common_address_high_halfword
+                
+                geomancy_replace_use_source_tile:
+                    #   Get unit tile ID    
+                    lw      a0, 0(a0)
+                    jal     0x801810a0
+                    nop
+                    lui     t6, %common_address_high_halfword
+                    sll     v0, v0, 3
+                    addu    at, t6, v0
+                    lbu     t0, %lo(@address_tile_array) (at)
+                        
+                geomancy_replace_get_properties:
                     la      t3, @address_geomancy_properties_array
                     andi    t0, t0, 0x3f
         
@@ -1867,7 +1876,6 @@
             li      v0, %GeomancyAbilityID
         </Location>
         <Variable name="Geomancy Ability ID" file="BATTLE_BIN" offset="17E348" offsetMode="RAM" bytes="2" default="007E" />
-        <Variable name="Use Target Tile" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="JP scroll glitch actual fix (Disable paging on confirm menu)">
         <Description>
@@ -6357,7 +6365,7 @@
                 UseMPAsDamage: Set to 1 to always use target current MP as damage to both MP and HP.
                 UseMagicEvade: Set to 1 to use magic evade instead of physical evade.
         </Description>
-        <Location file="BATTLE_BIN" offset="15D438" mode="ASM" offsetMode="RAM">
+        <Location file="BATTLE_BIN" offset="15D100" mode="ASM" offsetMode="RAM">
             @formula_feedback:
       
                 addiu   sp, sp, -24
