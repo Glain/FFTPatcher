@@ -30,6 +30,20 @@ namespace PatcherLib.TextUtilities
     /// </summary>
     public abstract class GenericCharMap : PatcherLib.Datatypes.ReadOnlyDictionary<int, string>
     {
+        public class EncodeStringResult
+        {
+            public bool IsValid { get; private set; }
+            public byte[] Bytes { get; private set; }
+            public string LastErrorChar { get; private set; }
+
+            public EncodeStringResult(bool isValid, byte[] bytes, string lastErrorChar)
+            {
+                IsValid = isValid;
+                Bytes = bytes;
+                LastErrorChar = lastErrorChar;
+            }
+        }
+
         #region Static Fields
 
         private static Regex regex = new Regex( @"{0x([0-9A-Fa-f]+)}" );
@@ -69,7 +83,6 @@ namespace PatcherLib.TextUtilities
         #endregion Properties
 
         #region Methods (6)
-
 
         private Dictionary<string, int> BuildValueToKeyMapping()
         {
@@ -160,7 +173,7 @@ namespace PatcherLib.TextUtilities
             return result.ToArray();
         }
 
-        public string LastError { get; private set; }
+        //public string LastError { get; private set; }
 
         public IList<UInt32> GetEachEncodedCharacter( string s )
         {
@@ -238,7 +251,7 @@ namespace PatcherLib.TextUtilities
             }
         }
 
-        public bool TryStringToByteArray( string s, byte terminator, out byte[] bytes )
+        public EncodeStringResult TryStringToByteArray(string s, byte terminator)
         {
             List<byte> result = new List<byte>( s.Length );
             for ( int i = 0; i < s.Length; i++ )
@@ -249,9 +262,7 @@ namespace PatcherLib.TextUtilities
                     int j = s.IndexOf( '}', i );
                     if( j == -1 )
                     {
-                        LastError = s.Substring( i );
-                        bytes = null;
-                        return false;
+                        return new EncodeStringResult(false, null, s.Substring(i));
                     }
 
                     string key = s.Substring( i, j - i + 1 );
@@ -269,9 +280,7 @@ namespace PatcherLib.TextUtilities
                         }
                         else
                         {
-                            LastError = key;
-                            bytes = null;
-                            return false;
+                            return new EncodeStringResult(false, null, key);
                         }
                     }
                     i = j;
@@ -290,9 +299,7 @@ namespace PatcherLib.TextUtilities
                     }
                     else
                     {
-                        LastError = t;
-                        bytes = null;
-                        return false;
+                        return new EncodeStringResult(false, null, t);
                     }
                 }
 
@@ -309,8 +316,7 @@ namespace PatcherLib.TextUtilities
             if ((result.Count == 0) || (!readTerminators.Contains(result[result.Count - 1])))
                 result.Add( terminator );
 
-            bytes = result.ToArray();
-            return true;
+            return new EncodeStringResult(true, result.ToArray(), null);
         }
 
         /// <summary>
@@ -318,10 +324,11 @@ namespace PatcherLib.TextUtilities
         /// </summary>
         public byte[] StringToByteArray( string s, byte terminator )
         {
-            byte[] result;
-            if ( TryStringToByteArray( s ?? string.Empty, terminator, out result ) )
+            EncodeStringResult result = TryStringToByteArray(s ?? string.Empty, terminator);
+
+            if ( result.IsValid )
             {
-                return result;
+                return result.Bytes;
             }
             else
             {
@@ -332,10 +339,9 @@ namespace PatcherLib.TextUtilities
         /// <summary>
         /// Validates the string with this charmap;
         /// </summary>
-        public bool ValidateString( string s, byte terminator )
+        public EncodeStringResult ValidateString( string s, byte terminator )
         {
-            byte[] dummy;
-            return TryStringToByteArray( s, terminator, out dummy );
+            return TryStringToByteArray( s, terminator );
         }
 
 

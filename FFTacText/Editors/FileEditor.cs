@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using PatcherLib.Utilities;
+using static PatcherLib.TextUtilities.GenericCharMap;
 
 namespace FFTPatcher.TextEditor.Editors
 {
@@ -59,10 +60,12 @@ namespace FFTPatcher.TextEditor.Editors
 
         private void stringListEditor1_CellValidating( object sender, DataGridViewCellValidatingEventArgs e )
         {
-            e.Cancel = !boundFile.CharMap.ValidateString( e.FormattedValue.ToString(), boundFile.SelectedTerminator );
+            EncodeStringResult result = boundFile.CharMap.ValidateString(e.FormattedValue.ToString(), boundFile.SelectedTerminator);
+
+            e.Cancel = !result.IsValid;
             if ( e.Cancel )
             {
-                errorLabel.Text = boundFile.CharMap.LastError;
+                errorLabel.Text = result.LastErrorChar;
                 errorLabel.Visible = true;
             }
             else

@@ -5,6 +5,7 @@ using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 using PatcherLib.Utilities;
 using PatcherLib.TextUtilities;
+using static PatcherLib.TextUtilities.GenericCharMap;
 
 namespace FFTPatcher.TextEditor
 {
@@ -15,7 +16,8 @@ namespace FFTPatcher.TextEditor
 
         public IList<bool> HiddenEntries { get; private set; }
 
-        protected AbstractFile( GenericCharMap charmap, FFTTextFactory.FileInfo layout, IList<IList<string>> strings, string fileComments, IList<string> sectionComments, bool compressible )
+        protected AbstractFile( GenericCharMap charmap, FFTTextFactory.FileInfo layout, IList<IList<string>> strings, string fileComments, IList<string> sectionComments, 
+            bool compressible )
             : this( charmap, layout, fileComments, sectionComments, compressible )
         {
             List<IList<string>> sections = new List<IList<string>>( NumberOfSections );
@@ -32,9 +34,11 @@ namespace FFTPatcher.TextEditor
 
                 for (int j = 0; j < thisSection.Length; j++)
                 {
-                    if (!CharMap.ValidateString( thisSection[j], layout.AllowedTerminators[0] ))
+                    EncodeStringResult result = CharMap.ValidateString(thisSection[j], layout.AllowedTerminators[0]);
+
+                    if (!result.IsValid)
                     {
-                        throw new InvalidStringException( layout.Guid.ToString(), i, j, thisSection[j] );
+                        throw new InvalidStringException(result.LastErrorChar, layout.DisplayName, thisSection[j], i, j);
                     }
                 }
                 sections.Add( thisSection );
