@@ -407,7 +407,10 @@ namespace FFTPatcher.TextEditor
             string text = File.ReadAllText(filename);
             string textCloseEntry = text.Replace("{Close}</Entry>", "{CloseEntry}");
             if (textCloseEntry.Contains("{Close}"))
-                text = text.Replace("{Close}", "{Close}</Entry><Entry>");
+            {
+                text = textCloseEntry.Replace("{Close}", "{Close}</Entry><Entry>");
+                text = text.Replace("{CloseEntry}", "{Close}</Entry>");
+            }
             return text;
         }
 
@@ -668,18 +671,26 @@ namespace FFTPatcher.TextEditor
                 writer.WriteElementString("Comment", file.FileComments);
 
             writer.WriteStartElement("Sections");
-            int numSections = file.NumberOfSections;
-            for (int i = 0; i < numSections; i++)
+
+            IList<IList<string>> sections = file.GetSections();
+            int sectionCount = (sections == null) ? 0 : sections.Count;
+            int numSections = Math.Max(file.NumberOfSections, sectionCount);
+            
+            for (int sectionIndex = 0; sectionIndex < numSections; sectionIndex++)
             {
+                int i = Math.Min(sectionIndex, file.NumberOfSections);
+
                 writer.WriteStartElement("Section");
                 if (!string.IsNullOrEmpty(file.SectionNames[i])) writer.WriteComment(file.SectionNames[i]);
                 if (file.SectionComments != null && file.SectionComments.Count > i && !string.IsNullOrEmpty(file.SectionComments[i]))
                     writer.WriteElementString("Comment", file.SectionComments[i]);
 
-                int length = file.SectionLengths[i];
+                int stringCount = sections[sectionIndex].Count;
+                int length = Math.Max(file.SectionLengths[i], stringCount);
+
                 for (int j = 0; j < length; j++)
                 {
-                    writer.WriteElementString("Entry", file[i, j]);
+                    writer.WriteElementString("Entry", file[sectionIndex, j]);
                 }
 
                 writer.WriteEndElement(); // Section

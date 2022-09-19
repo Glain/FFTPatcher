@@ -15,5 +15,7 @@ namespace FFTPatcher.TextEditor
 
         IList<PatchedByteArray> GetNonDtePatches();
         IList<PatchedByteArray> GetDtePatches( IDictionary<string, byte> dteBytes );
+
+        IList<IList<string>> GetSections();
     }
 }

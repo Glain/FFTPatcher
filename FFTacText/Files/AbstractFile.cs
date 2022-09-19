@@ -236,6 +236,11 @@ namespace FFTPatcher.TextEditor
             return result;
         }
 
+        public IList<IList<string>> GetSections()
+        {
+            return Sections;
+        }
+
         public GenericCharMap GetSectionCharmap(int sectionIndex, GenericCharMap charMap = null, Nullable<Context> context = null)
         {
             return DteAllowed[sectionIndex] ? (charMap ?? CharMap) : GetContextCharmap(context);
