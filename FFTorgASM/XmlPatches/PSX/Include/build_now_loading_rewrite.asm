@@ -22,9 +22,9 @@ build_now_loading_message:
         li      v0, 0x2c
         sb      v0, -0x28d9(s3)
         
-        li      t0, 0x80
-        li      t1, 0x80
-        li      t2, 0x80
+        li      t0, %NowLoadingRedValue
+        li      t1, %NowLoadingGreenValue
+        li      t2, %NowLoadingBlueValue
         sw      zero, -0x1a48(s3)
         sb      t0, -0x28dc(s3)
         sb      t1, -0x28db(s3)

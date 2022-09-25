@@ -3572,9 +3572,9 @@
     </Patch>
     <Patch name="Now Loading Routine Rewrite">
         <Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="build_now_loading_rewrite.asm" />
-        <Variable name="Color Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
-        <Variable name="Color Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
-        <Variable name="Color Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
+        <Variable name="Now Loading Red Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
+        <Variable name="Now Loading Green Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
+        <Variable name="Now Loading Blue Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
     </Patch>
     <Patch name="Expand load and save data">
         <Description>
@@ -3765,9 +3765,9 @@
             ori     v0, v0, 0xf000
         </Location>
         <Variable name="Checksum End Block" specific="WORLD_WORLD_BIN:130308,1303FC,EVENT_CARD_OUT:1C08D8" offsetMode="RAM" bytes="1" default="3C" />
-        <Variable name="Now Loading Red Value" file="SCUS_942_21" offset="40C24" offsetMode="RAM" bytes="1" default="80" />
-        <Variable name="Now Loading Green Value" file="SCUS_942_21" offset="40C28" offsetMode="RAM" bytes="1" default="80" />
-        <Variable name="Now Loading Blue Value" file="SCUS_942_21" offset="40C2C" offsetMode="RAM" bytes="1" default="80" />
+        <Variable name="Now Loading Red Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
+        <Variable name="Now Loading Green Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
+        <Variable name="Now Loading Blue Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
     </Patch>
     <Patch name="Unit bench (10 extra unit slots)">
         <Description>
@@ -4018,7 +4018,10 @@
                     nop
         </Location>
         <Location file="BATTLE_BIN" offset="174328" mode="DATA" offsetMode="RAM">
-            28
+            .if     >, %UsingTLW, 0
+            .else
+                28
+            .endif
         </Location>
         <Location file="BATTLE_BIN" offset="179E38" mode="ASM" offsetMode="RAM">
             sw      a0, 0x0c(sp)
@@ -4071,6 +4074,11 @@
             jal     @set_jump_ability_data
             addiu   v0, a0, -0x0196
         </Location>
+        <Location file="BATTLE_BIN" offset="18B32C" mode="ASM" offsetMode="RAM">
+            .if     >, %UsingTLW, 0
+                sb      a1, 0x38d8(at)
+            .endif
+        </Location>
         <Location file="BATTLE_BIN" offset="18B610" mode="ASM" offsetMode="RAM">
             lui     t1, 0x8018
         </Location>
@@ -4099,6 +4107,7 @@
         </Location>
         <Variable name="Jump Ability ID" bytes="2" default="018A" symbol="true" />
         <Variable name="Jump Formula" bytes="1" default="64" file="BATTLE_BIN" offset="18B7E0" offsetMode="RAM" />
+        <Variable name="Using TLW" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="Skillset learned ability fix">
         <Description>When determining usable abilities in a skillset, finds the learned abilities based on the job instead of skillset ID.  
@@ -4108,6 +4117,11 @@
 
                 lbu     t2, 6(s0)               #   Flags
                 lbu     t1, 0xb8(sp)            #   Skillset
+                
+                .if     >, %UsingTLW, 0
+                    jal     0x80152750
+                .endif
+                
                 andi    t2, t2, 0x20
                 bne     t2, zero, skillsetIndexTest
                 li      a1, -1
@@ -4178,6 +4192,28 @@
                 addiu   v0, v0, 0x99
                 sra     a0, a2, 3
         </Location>
+        <Location file="BATTLE_BIN" offset="152754" mode="ASM" offsetMode="RAM">
+            .if     >, %UsingTLW, 0
+                addiu   v0, t1, -5
+            .endif
+        </Location>
+        <Location file="BATTLE_BIN" offset="152770" mode="ASM" offsetMode="RAM">
+            .if     >, %UsingTLW, 0
+                jr      ra
+            .endif
+        </Location>
+        <Location file="BATTLE_BIN" offset="152798,1527D4" mode="ASM" offsetMode="RAM">
+            .if     >, %UsingTLW, 0
+                lui     t3, 0x8018
+            .endif
+        </Location>
+        <Location file="BATTLE_BIN" offset="1527AC,1527E8" mode="ASM" offsetMode="RAM">
+            .if     >, %UsingTLW, 0
+                j       0x80152770
+                ori     ra, t3, 0x1954
+            .endif
+        </Location>
+        <Variable name="Using TLW" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="Skillset menu hardcoding fix">
         <Description>Skillset menu actions based on action menu instead of being hardcoded to skillset ID.  Fixes some issues resulting from changing action menus on generic skillsets.  Similar to (and mutually exclusive with) Generic Skillset Fix / Skillset Behaviors hack, but based on action menu.</Description>
@@ -4392,7 +4428,13 @@
                 andi    v0, v0, 0x3f
                 sb      v0, 0x38cd(at)
                 lui     t2, 0x8006
-                bne     v1, zero, 0x8018b490
+                
+                .if     >, %UsingTLW, 0
+                    jal     0x80152cc0
+                .else
+                    bne     v1, zero, 0x8018b490
+                .endif
+                
                 addu    t2, t2, t1
         </Location>
         <Location file="BATTLE_BIN" offset="18B498" mode="ASM" offsetMode="RAM">
@@ -4400,6 +4442,7 @@
                 li      v0, 7
                 bne     s2, v0, 0x8018b4b4
         </Location>
+        <Variable name="Using TLW" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="Defend and Equip Change treated as Default skillset">
         <Description>
