@@ -719,7 +719,8 @@ namespace FFTorgASM
             foreach (string varKey in varKeys)
             {
                 string varText = Utilities.GetUnsignedByteArrayValue_LittleEndian(variableMap[varKey].ByteArray).ToString("X");
-                byteText = System.Text.RegularExpressions.Regex.Replace(byteText, System.Text.RegularExpressions.Regex.Escape("%" + varKey), varText.Replace("$", "$$"),
+                string varReplaceKey = ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(varKey);
+                byteText = System.Text.RegularExpressions.Regex.Replace(byteText, System.Text.RegularExpressions.Regex.Escape("%" + varReplaceKey), varText.Replace("$", "$$"),
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             }
 
