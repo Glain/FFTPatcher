@@ -408,8 +408,9 @@ namespace FFTPatcher.TextEditor
             string textCloseEntry = text.Replace("{Close}</Entry>", "{CloseEntry}");
             if (textCloseEntry.Contains("{Close}"))
             {
-                text = textCloseEntry.Replace("{Close}", "{Close}</Entry><Entry>");
-                text = text.Replace("{CloseEntry}", "{Close}</Entry>");
+                // If we found {Close} in the middle of an entry, then this file isn't handling {Close} characters as sentinels, so...
+                // ...ALL instances of {Close} need to be a new entry, even ones at the end of an entry.
+                text = text.Replace("{Close}", "{Close}</Entry><Entry>");
             }
             return text;
         }
@@ -673,20 +674,27 @@ namespace FFTPatcher.TextEditor
             writer.WriteStartElement("Sections");
 
             IList<IList<string>> sections = file.GetSections();
-            int sectionCount = (sections == null) ? 0 : sections.Count;
-            int numSections = Math.Max(file.NumberOfSections, sectionCount);
-            
+            //int sectionCount = (sections == null) ? 0 : sections.Count;
+            //int numSections = Math.Max(file.NumberOfSections, sectionCount);
+            int numSections = (sections == null) ? 0 : sections.Count;
+
             for (int sectionIndex = 0; sectionIndex < numSections; sectionIndex++)
             {
-                int i = Math.Min(sectionIndex, file.NumberOfSections);
+                //int i = Math.Min(sectionIndex, file.NumberOfSections);
 
                 writer.WriteStartElement("Section");
-                if (!string.IsNullOrEmpty(file.SectionNames[i])) writer.WriteComment(file.SectionNames[i]);
-                if (file.SectionComments != null && file.SectionComments.Count > i && !string.IsNullOrEmpty(file.SectionComments[i]))
-                    writer.WriteElementString("Comment", file.SectionComments[i]);
 
-                int stringCount = sections[sectionIndex].Count;
-                int length = Math.Max(file.SectionLengths[i], stringCount);
+                if (sectionIndex < file.NumberOfSections)
+                {
+                    int i = sectionIndex;
+                    if (!string.IsNullOrEmpty(file.SectionNames[i])) writer.WriteComment(file.SectionNames[i]);
+                    if (file.SectionComments != null && file.SectionComments.Count > i && !string.IsNullOrEmpty(file.SectionComments[i]))
+                        writer.WriteElementString("Comment", file.SectionComments[i]);
+                }
+
+                //int stringCount = sections[sectionIndex].Count;
+                //int length = Math.Max(file.SectionLengths[i], stringCount);
+                int length = sections[sectionIndex].Count;
 
                 for (int j = 0; j < length; j++)
                 {
