@@ -576,7 +576,7 @@
                 <Guid>{F714E509-2838-4623-9280-67D8DAC30450}</Guid>
                 <Section>19</Section>
                 <Offset>0</Offset>
-                <Length>188</Length>
+                <Length>189</Length>
             </MainFile>
         </SkillsetDescriptions>
         <SkillsetNames>
@@ -833,8 +833,8 @@
                 <Section value="16" entries="1" empty="true" dte="true" hide="true"/>
                 <Section value="17" entries="1" empty="true" dte="true" hide="true"/>
                 <Section value="18" entries="1" empty="true" dte="true" hide="true"/>
-                <Section value="19" entries="188" empty="false" name="Skillset descriptions" dte="true">
-                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="187" offset="0"/>
+                <Section value="19" entries="189" empty="false" name="Skillset descriptions" dte="true">
+                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="188" offset="0"/>
                 </Section>
                 <Section value="20" entries="1" empty="true" dte="true" hide="true"/>
             </Sections>
@@ -1622,8 +1622,8 @@
                 <Section value="16" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
                 <Section value="17" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
                 <Section value="18" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
-                <Section value="19" entries="188" empty="false" name="Skillset descriptions" compressible="true" dte="true">
-                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="187" offset="0"/>
+                <Section value="19" entries="189" empty="false" name="Skillset descriptions" compressible="true" dte="true">
+                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="188" offset="0"/>
                 </Section>
                 <Section value="20" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
             </Sections>
@@ -1726,8 +1726,8 @@
                 <Section value="16" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
                 <Section value="17" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
                 <Section value="18" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
-                <Section value="19" entries="188" empty="false" name="Skillset descriptions" compressible="true" dte="true">
-                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="187" offset="0"/>
+                <Section value="19" entries="189" empty="false" name="Skillset descriptions" compressible="true" dte="true">
+                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="188" offset="0"/>
                 </Section>
                 <Section value="20" entries="40" empty="false" name="Status descriptions" compressible="true" dte="true">
                     <includeResource name="PatcherLib.PSXResources+Lists.StatusNames" start="0" end="39" offset="0"/>
@@ -1884,8 +1884,8 @@
                 </Section>
                 <Section value="17" entries="116" empty="true" name="Map descriptions" compressible="true" dte="true"/>
                 <Section value="18" entries="1" empty="true" compressible="true" dte="true" hide="true"/>
-                <Section value="19" entries="188" empty="false" name="Skillset descriptions" compressible="true" dte="true">
-                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="187" offset="0"/>
+                <Section value="19" entries="189" empty="false" name="Skillset descriptions" compressible="true" dte="true">
+                    <includeResource name="PatcherLib.PSXResources+Lists.SkillSets" start="0" end="188" offset="0"/>
                 </Section>
                 <Section value="20" entries="768" empty="false" name="Unit quotes" compressible="true" dte="true">
                     <includeResource name="PatcherLib.PSXResources+Lists.UnitNames" start="0" end="767" offset="0"/>
