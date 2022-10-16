@@ -25,7 +25,11 @@ namespace FFTPatcher.TextEditor
                 {
                     string[] newSection = new string[SectionLengths[i]];
                     sections[i].CopyTo( newSection, 0 );
-                    new string[SectionLengths[i] - sections[i].Count].CopyTo( newSection, sections[i].Count );
+
+                    //new string[SectionLengths[i] - sections[i].Count].CopyTo( newSection, sections[i].Count );
+                    for (int stringIndex = sections[i].Count; stringIndex < SectionLengths[i]; stringIndex++)
+                        newSection[stringIndex] = string.Empty;
+
                     sections[i] = newSection;
                 }
                 else if (sections[i].Count > SectionLengths[i])
