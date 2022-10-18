@@ -352,10 +352,10 @@
                 <Length>896</Length>
             </Position>
         </StupidTM2Image>
-        <PalettedImage4bpp>
+        <StupidTM2Image4bpp>
             <Name>World Map Ramza</Name>
             <Width>256</Width>
-            <Height>32</Height>
+            <Height>52</Height>
             <Sector>WORLD_WLDTEX_TM2</Sector>
             <PaletteCount>4</PaletteCount>
             <PalettePosition>
@@ -364,9 +364,57 @@
             </PalettePosition>
             <Position>
                 <Offset>227476</Offset>
-                <Length>4096</Length>
+                <Length>1792</Length>
             </Position>
-        </PalettedImage4bpp>
+            <Position>
+                <Offset>229276</Offset>
+                <Length>100</Length>
+            </Position>
+            <Position>
+                <Offset>229388</Offset>
+                <Length>28</Length>
+            </Position>
+            <Position>
+                <Offset>229424</Offset>
+                <Length>128</Length>
+            </Position>
+            <Position>
+                <Offset>231324</Offset>
+                <Length>100</Length>
+            </Position>
+            <Position>
+                <Offset>231436</Offset>
+                <Length>512</Length>
+            </Position>
+            <Position>
+                <Offset>231956</Offset>
+                <Length>1408</Length>
+            </Position>
+            <Position>
+                <Offset>233372</Offset>
+                <Length>100</Length>
+            </Position>
+            <Position>
+                <Offset>233484</Offset>
+                <Length>28</Length>
+            </Position>
+            <Position>
+                <Offset>233520</Offset>
+                <Length>1920</Length>
+            </Position>
+            <Position>
+                <Offset>235448</Offset>
+                <Length>72</Length>
+            </Position>
+            <Position>
+                <Offset>235532</Offset>
+                <Length>56</Length>
+            </Position>
+            <Position>
+                <Offset>235596</Offset>
+                <Length>412</Length>
+            </Position>
+        </StupidTM2Image4bpp>
         <StupidTM2Image4bpp>
             <Name>WLDTEX (2)</Name>
             <Width>256</Width>
