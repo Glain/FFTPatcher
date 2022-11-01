@@ -68,7 +68,7 @@
   <Ability value="2F">AbsorbMP_(PA*WP) NS PE</Ability>
   <Ability value="30">AbsorbHP_(PA*WP) NS PE</Ability>
   <Ability value="31">Dmg_((PA+Y)/2*PA) PE</Ability>
-  <Ability value="32">Dmg_(Rdm(1..X)*(PA*3+Y)) NS PE</Ability>
+  <Ability value="32">Dmg_(Rdm(1..X)*(PA*3+Y)/2) NS PE</Ability>
   <Ability value="33">Hit_(PA+X)% Status NE</Ability>
   <Ability value="34">Heal_(PA*Y) HealMP_(PA*Y/2) NS NE</Ability>
   <Ability value="35">Heal_(Y)% Hit_(PA+X)% Status NE</Ability>
