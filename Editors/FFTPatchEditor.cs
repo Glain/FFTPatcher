@@ -105,6 +105,11 @@ namespace FFTPatcher.Editors
             jobLevelsEditor1.ToolTip = toolTip;
         }
 
+        public void TakeFocus()
+        {
+            tabControl.Focus();
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             Control control = GetCurrentEditor();

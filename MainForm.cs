@@ -128,7 +128,7 @@ namespace FFTPatcher
 
         #endregion Constructors
 
-        #region Public Methods (1)
+        #region Public Methods
 
         public void HandleException( Exception e )
         {
@@ -176,8 +176,14 @@ namespace FFTPatcher
 
         #region Private Methods
 
+        private void TakeFocus()
+        {
+            fftPatchEditor1.TakeFocus(); 
+        }
+
         private void aboutMenuItem_Click( object sender, EventArgs e )
         {
+            TakeFocus();
             About a = new About();
             a.ShowDialog( this );
         }
@@ -281,6 +287,7 @@ namespace FFTPatcher
 
         void fileMenuItem_Popup( object sender, EventArgs e )
         {
+            TakeFocus();
             openMenuItem.Enabled = true;
             saveAsPspMenuItem.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
             saveMenuItem.Enabled = fftPatchEditor1.Enabled;
@@ -289,6 +296,7 @@ namespace FFTPatcher
 
         private void editMenuItem_Popup(object sender, EventArgs e)
         {
+            TakeFocus();
             bool isEnabled = fftPatchEditor1.Enabled;
             menuItem_SetCurrentDataAsDefaults.Enabled = isEnabled;
             menuItem_RestoreDefaults.Enabled = isEnabled;
@@ -445,12 +453,14 @@ namespace FFTPatcher
 
         void pspMenu_Popup( object sender, EventArgs e )
         {
+            TakeFocus();
             patchPspIsoMenuItem.Enabled = fftPatchEditor1.Enabled && FFTPatch.Context == Context.US_PSP;
             cheatdbMenuItem.Enabled = fftPatchEditor1.Enabled && FFTPatch.Context == Context.US_PSP;
         }
 
         void psxMenu_Popup( object sender, EventArgs e )
         {
+            TakeFocus();
             openPatchedPsxIso.Enabled = true;
             patchPsxIsoMenuItem.Enabled = fftPatchEditor1.Enabled && FFTPatch.Context == Context.US_PSX;
             menuItem_PatchPSXSavestate.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
