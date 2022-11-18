@@ -780,20 +780,11 @@ namespace FFTorgASM
                     {
                         string[] innerParts = parts[1].Split(',');
 
-                        if (!parts[1].Contains(","))
-                        {
-                            if (reportErrors)
-                                errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + Utilities.UnsignedToHex_WithLength(pc, 8)
-                                    + " inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
-
-                            isSkippingLine.Add(true);
-                            ifNestLevel++;
-                        }
-                        else if (innerParts.Length < 2)
+                        if (innerParts.Length < 1)
                         {
                             if (reportErrors)
                                 errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + Utilities.UnsignedToHex_WithLength(pc, 8) +
-                                    " inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
+                                    " inside .if statement with no argument(s): \"" + parts[1] + "\"");
 
                             isSkippingLine.Add(true);
                             ifNestLevel++;
@@ -814,11 +805,17 @@ namespace FFTorgASM
                                 eqvKey = Utilities.RemoveSpaces(innerParts[1]);
                                 eqvValue = Utilities.RemoveSpaces(innerParts[2]);
                             }
-                            else
+                            else if (innerParts.Length == 2)
                             {
                                 operation = "=";
                                 eqvKey = Utilities.RemoveSpaces(innerParts[0]);
                                 eqvValue = Utilities.RemoveSpaces(innerParts[1]);
+                            }
+                            else
+                            {
+                                operation = "!=";
+                                eqvKey = Utilities.RemoveSpaces(innerParts[0]);
+                                eqvValue = "0";
                             }
 
                             int intKey = 0;

@@ -368,20 +368,11 @@ namespace ASMEncoding.Helpers
                     {
                         string[] innerParts = parts[1].Split(',');
 
-                        if (!parts[1].Contains(","))
-                        {
-                            if (reportErrors)
-                                _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8)
-                                    + " inside .if statement with bad argument list (no commas): \"" + parts[1] + "\"");
-
-                            isSkippingLine.Add(true);
-                            ifNestLevel++;
-                        }
-                        else if (innerParts.Length < 2)
+                        if (innerParts.Length < 1)
                         {
                             if (reportErrors)
                                 _errorTextBuilder.AppendLine("WARNING: Unreachable code at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8) +
-                                    " inside .if statement with bad argument list (less than 2 arguments): \"" + parts[1] + "\"");
+                                    " inside .if statement with no argument(s): \"" + parts[1] + "\"");
 
                             isSkippingLine.Add(true);
                             ifNestLevel++;
@@ -402,11 +393,17 @@ namespace ASMEncoding.Helpers
                                 eqvKey = ASMStringHelper.RemoveSpaces(innerParts[1]);
                                 eqvValue = ASMStringHelper.RemoveSpaces(innerParts[2]);
                             }
-                            else
+                            else if (innerParts.Length == 2)
                             {
                                 operation = "=";
                                 eqvKey = ASMStringHelper.RemoveSpaces(innerParts[0]);
                                 eqvValue = ASMStringHelper.RemoveSpaces(innerParts[1]);
+                            }
+                            else
+                            {
+                                operation = "!=";
+                                eqvKey = ASMStringHelper.RemoveSpaces(innerParts[0]);
+                                eqvValue = "0";
                             }
 
                             int intKey = 0;
