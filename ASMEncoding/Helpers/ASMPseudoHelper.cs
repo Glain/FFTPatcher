@@ -386,6 +386,7 @@ namespace ASMEncoding.Helpers
                         {
                             string operation = string.Empty;
                             string eqvKey, eqvValue;
+                            bool forceIntCompare = false;
 
                             if (innerParts.Length >= 3)
                             {
@@ -404,24 +405,25 @@ namespace ASMEncoding.Helpers
                                 operation = "!=";
                                 eqvKey = ASMStringHelper.RemoveSpaces(innerParts[0]);
                                 eqvValue = "0";
+                                forceIntCompare = true;
                             }
 
                             int intKey = 0;
                             int intValue = 0;
                             bool isKeyInt = int.TryParse(eqvKey, out intKey);
                             bool isValueInt = int.TryParse(eqvValue, out intValue);
-                            bool isIntCompare = isKeyInt && isValueInt;
+                            bool isIntCompare = forceIntCompare || (isKeyInt && isValueInt);
 
                             bool isPass = false;
                             switch (operation)
                             {
                                 case "=":
                                 case "==":
-                                    isPass = eqvKey.Equals(eqvValue);
+                                    isPass = isIntCompare ? (intKey == intValue) : eqvKey.Equals(eqvValue);
                                     break;
                                 case "!=":
                                 case "<>":
-                                    isPass = !eqvKey.Equals(eqvValue);
+                                    isPass = isIntCompare ? (intKey != intValue) : !eqvKey.Equals(eqvValue);
                                     break;
                                 case "<":
                                     isPass = isIntCompare && (intKey < intValue);

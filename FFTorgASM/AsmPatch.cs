@@ -718,7 +718,7 @@ namespace FFTorgASM
 
             foreach (string varKey in varKeys)
             {
-                string varText = Utilities.GetUnsignedByteArrayValue_LittleEndian(variableMap[varKey].ByteArray).ToString("X");
+                string varText = Utilities.GetUnsignedByteArrayValue_LittleEndian(variableMap[varKey].ByteArray).ToString("");
                 string varReplaceKey = ASMEncoding.Helpers.ASMStringHelper.RemoveSpaces(varKey);
                 byteText = System.Text.RegularExpressions.Regex.Replace(byteText, System.Text.RegularExpressions.Regex.Escape("%" + varReplaceKey), varText.Replace("$", "$$"),
                     System.Text.RegularExpressions.RegexOptions.IgnoreCase);
@@ -798,6 +798,7 @@ namespace FFTorgASM
                         {
                             string operation = string.Empty;
                             string eqvKey, eqvValue;
+                            bool forceIntCompare = false;
 
                             if (innerParts.Length >= 3)
                             {
@@ -816,24 +817,25 @@ namespace FFTorgASM
                                 operation = "!=";
                                 eqvKey = Utilities.RemoveSpaces(innerParts[0]);
                                 eqvValue = "0";
+                                forceIntCompare = true;
                             }
 
                             int intKey = 0;
                             int intValue = 0;
-                            bool isKeyInt = int.TryParse(eqvKey, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out intKey);
+                            bool isKeyInt = int.TryParse(eqvKey, out intKey);
                             bool isValueInt = int.TryParse(eqvValue, out intValue);
-                            bool isIntCompare = isKeyInt && isValueInt;
+                            bool isIntCompare = forceIntCompare || (isKeyInt && isValueInt);
 
                             bool isPass = false;
                             switch (operation)
                             {
                                 case "=":
                                 case "==":
-                                    isPass = eqvKey.Equals(eqvValue);
+                                    isPass = isIntCompare ? (intKey == intValue) : eqvKey.Equals(eqvValue);
                                     break;
                                 case "!=":
                                 case "<>":
-                                    isPass = !eqvKey.Equals(eqvValue);
+                                    isPass = isIntCompare ? (intKey != intValue) : !eqvKey.Equals(eqvValue);
                                     break;
                                 case "<":
                                     isPass = isIntCompare && (intKey < intValue);
