@@ -6,7 +6,8 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
- 
+
+using PatcherLib.Helpers;
 using System;
 using System.Text;
 using System.Windows.Forms;
@@ -19,7 +20,8 @@ namespace PatcherLib.Controls
 	public class ModifiedListBox : System.Windows.Forms.ListBox
 	{
 		private StringBuilder selectionCache = new StringBuilder();
-		
+		private DateTime selectionLastUpdated = DateTime.Now;
+
 		private bool _includePrefix = false;
 		public bool IncludePrefix
 		{
@@ -29,9 +31,15 @@ namespace PatcherLib.Controls
 
 		protected override void OnEnter(EventArgs e)
 		{
-			// Reset selection cache when control receives focus
-			selectionCache.Length = 0;
+			// When control receives focus
+			ResetSelectionCache();
 			base.OnEnter(e);
+		}
+
+		protected override void OnMouseDown(MouseEventArgs e)
+		{
+			ResetSelectionCache();
+			base.OnClick(e);
 		}
 
 		protected override void WndProc(ref Message m)
@@ -42,21 +50,24 @@ namespace PatcherLib.Controls
 				
 				if (key == 27) // Escape
 				{
-					// Reset cache if ESC pressed
-					selectionCache.Length = 0;
+					ResetSelectionCache();
 				}
 				else if (key == 8) // Backspace
 				{
 					// Allow backspace to delete from the cache
+					HandleSelectionCacheExpiry();
 					if (selectionCache.Length > 0)
 					{
 						selectionCache.Length--;
+						selectionLastUpdated = DateTime.Now;
 						SelectFirstItemMatching(selectionCache.ToString());
 					}
 				}
 				else if ((Char.IsLetterOrDigit(key)) || (key == ' '))
 				{
+					HandleSelectionCacheExpiry();
 					selectionCache.Append(Char.ToLower(key));
+					selectionLastUpdated = DateTime.Now;
 					SelectFirstItemMatching(selectionCache.ToString());
 				}
 				
@@ -64,7 +75,16 @@ namespace PatcherLib.Controls
 				// so that the control does not respond to it.
 				return;
 			}
-			
+			else if (m.Msg == 0x0100)    // WM_KEYDOWN
+			{
+				char key = (char)m.WParam;
+
+				if ((key == 0x26) || (key == 0x28))     // VK_UP or VK_DOWN
+				{
+					ResetSelectionCache();
+				}
+			}
+
 			base.WndProc(ref m);
 		}
 		
@@ -91,6 +111,23 @@ namespace PatcherLib.Controls
 					
 					break;
 				}
+			}
+		}
+
+		private void ResetSelectionCache()
+		{
+			selectionCache.Length = 0;
+			selectionLastUpdated = DateTime.Now;
+		}
+
+		private void HandleSelectionCacheExpiry()
+		{
+			DateTime currentDateTime = DateTime.Now;
+			double elapsedSeconds = (currentDateTime - selectionLastUpdated).TotalSeconds;
+
+			if (elapsedSeconds > ControlHelper.TypeAheadTimeoutSeconds)
+			{
+				ResetSelectionCache();
 			}
 		}
 	}

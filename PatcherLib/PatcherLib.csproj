@@ -110,6 +110,7 @@
     <Compile Include="Datatypes\Context.cs" />
     <Compile Include="Datatypes\PatchRange.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\ISOHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
     <Compile Include="ISOPatching\FFTPack.cs" />
