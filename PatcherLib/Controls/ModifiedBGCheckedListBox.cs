@@ -19,6 +19,7 @@ namespace PatcherLib.Controls
         }
 
         private bool AuthorizeCheck { get; set; }
+        private bool AuthorizeSingleCheck { get; set; }
 
         protected override void OnEnter(EventArgs e)
         {
@@ -56,6 +57,10 @@ namespace PatcherLib.Controls
                     SelectFirstItemMatching(selectionCache.ToString());
                     isHandled = true;
                 }
+                else if (key == ' ')
+                {
+                    AuthorizeSingleCheck = true;
+                }
 
                 if (isHandled)
                 {
@@ -70,13 +75,18 @@ namespace PatcherLib.Controls
 
         protected override void OnItemCheck(ItemCheckEventArgs e)
         {
-            if (!AuthorizeCheck)
+            if (AuthorizeCheck)
             {
-                e.NewValue = e.CurrentValue;
+                base.OnItemCheck(e);
+            }
+            else if (AuthorizeSingleCheck)
+            {
+                AuthorizeSingleCheck = false;
+                base.OnItemCheck(e);
             }
             else
             {
-                base.OnItemCheck(e);
+                e.NewValue = e.CurrentValue;
             }
         }
 
