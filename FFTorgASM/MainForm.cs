@@ -73,6 +73,8 @@ namespace FFTorgASM
             clb_Patches.SelectedIndexChanged += new EventHandler( clb_Patches_SelectedIndexChanged );
             variableSpinner.ValueChanged += new EventHandler( variableSpinner_ValueChanged );
             variableComboBox.SelectedIndexChanged += new EventHandler(variableComboBox_SelectedIndexChanged);
+            clb_Patches.KeyDown += new KeyEventHandler(clb_Patches_KeyDown);
+            lsb_FilesList.KeyDown += new KeyEventHandler(lsb_FilesList_KeyDown);
 
             lsb_FilesList.SelectedIndex = 0;
             OriginalVariableSpinnerX = variableSpinner.Location.X;
@@ -774,6 +776,26 @@ namespace FFTorgASM
             LoadFiles();
             FormSortAndFilter();
             SetFormButtonStatus();
+        }
+
+        private void clb_Patches_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Left)
+            {
+                e.Handled = true;
+                lsb_FilesList.Focus();
+            }
+        }
+
+        private void lsb_FilesList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Right)
+            {
+                e.Handled = true;
+                clb_Patches.Focus();
+                if ((clb_Patches.Items.Count > 0) && (clb_Patches.SelectedIndex < 0))
+                    clb_Patches.SelectedIndex = 0;
+            }
         }
     }
 }
