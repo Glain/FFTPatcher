@@ -232,7 +232,7 @@
             // 
             // btn_Clear
             // 
-            this.btn_Clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_Clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_Clear.Location = new System.Drawing.Point(480, 3);
             this.btn_Clear.Name = "btn_Clear";
             this.btn_Clear.Size = new System.Drawing.Size(75, 23);
@@ -242,7 +242,9 @@
             this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
             // 
             // txt_Search
-            // 
+            //
+            this.txt_Search.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left 
+                | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_Search.Location = new System.Drawing.Point(205, 4);
             this.txt_Search.Name = "txt_Search";
             this.txt_Search.Size = new System.Drawing.Size(269, 20);
