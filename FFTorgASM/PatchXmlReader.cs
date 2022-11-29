@@ -154,6 +154,7 @@ namespace FFTorgASM
                 XmlAttribute attrMovable = location.Attributes["movable"];
                 XmlAttribute attrAlign = location.Attributes["align"];
                 XmlAttribute attrStatic = location.Attributes["static"];
+                XmlAttribute attrBinaryFile = location.Attributes["binaryFile"];
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -286,6 +287,28 @@ namespace FFTorgASM
                     }
                 }
 
+                bool isBinaryContent = false;
+                byte[] binaryContent = null;
+                if (attrBinaryFile != null)
+                {
+                    isBinaryContent = true;
+                    content = "";
+
+                    try
+                    {
+                        string strMode = Enum.GetName(typeof(ASMEncodingMode), asmUtility.EncodingMode);
+                        string readPath = Path.Combine("Include", attrBinaryFile.InnerText);
+                        FileInfo fileInfo = new FileInfo(xmlFileName);
+                        readPath = Path.Combine(fileInfo.DirectoryName, readPath);
+                        binaryContent = File.ReadAllBytes(readPath);
+                    }
+                    catch (Exception)
+                    {
+                        string readPath = attrBinaryFile.InnerText;
+                        binaryContent = File.ReadAllBytes(readPath);
+                    }
+                }
+
                 bool replaceLabels = false;
                 if (replaceLabelsAttribute != null)
                 {
@@ -350,7 +373,11 @@ namespace FFTorgASM
 
                     byte[] bytes;
                     string errorText = "";
-                    if (isAsmMode)
+                    if (isBinaryContent)
+                    {
+                        bytes = binaryContent;
+                    }
+                    else if (isAsmMode)
                     {
                         string encodeContent = content;
 
