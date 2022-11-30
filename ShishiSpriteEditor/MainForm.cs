@@ -162,6 +162,8 @@ namespace FFTPatcher.SpriteEditor
                         spriteMenuItem.Enabled = true;
                         sp2Menu.Enabled = true;
                         menuItem_ExpandIso.Enabled = psx && !expanded;
+                        menuItem_SavePatch.Enabled = true;
+                        menuItem_ApplyPatch.Enabled = true;
 
                         AllOtherImages otherImages = AllOtherImages.FromIso(currentStream);
                         allOtherImagesEditor1.BindTo( otherImages, currentStream );
@@ -704,6 +706,35 @@ namespace FFTPatcher.SpriteEditor
 
                     menuItem_ExpandIso.Enabled = false;
                 }
+            }
+        }
+
+        private void menuItem_SavePatch_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Patch file (*.shishipatch)|*.shishipatch";
+            saveFileDialog.FileName = string.Empty;
+            saveFileDialog.CheckFileExists = false;
+
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                byte[] bytes = allSpritesEditor1.Sprites.GetShishiPatchBytes();
+                File.WriteAllBytes(saveFileDialog.FileName, bytes);
+            }
+        }
+
+        private void menuItem_ApplyPatch_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Patch file (*.shishipatch)|*.shishipatch";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.CheckFileExists = true;
+
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                byte[] bytes = File.ReadAllBytes(openFileDialog.FileName);
+                allSpritesEditor1.Sprites.ApplyShishiPatchBytes(currentStream, bytes);
+                allSpritesEditor1.ReloadCurrentSprite();
             }
         }
 

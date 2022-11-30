@@ -45,7 +45,7 @@ namespace FFTPatcher.SpriteEditor
 
         private IList<Sprite> sprites;
         private AllSpriteAttributes attrs;
-        private SpriteFileLocations locs;
+        //private SpriteFileLocations locs;
 
         //private HashSet<int> shortSpriteIndexes = new HashSet<int>() { 0x1C, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53 };
 
@@ -467,6 +467,16 @@ namespace FFTPatcher.SpriteEditor
             return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed);
         }
 
+        public byte[] GetShishiPatchBytes()
+        {
+            return attrs.GetShishiPatchBytes();
+        }
+
+        public void ApplyShishiPatchBytes(Stream iso, byte[] bytes)
+        {
+            attrs.ApplyShishiPatchBytes(iso, bytes);
+        }
+
         public static void ExpandPsxIso(Stream iso)
         {
             //byte[] expandedBytes = expandedSectorCount.ToBytes();
@@ -704,7 +714,7 @@ namespace FFTPatcher.SpriteEditor
             otherSprites.CopyTo( sprites, attrs.Count );
 
             this.attrs = attrs;
-            this.locs = locs;
+            //this.locs = locs;
 
             Dictionary<Sprite, IList<int>> sharedSPRs = new Dictionary<Sprite, IList<int>>();
             for (int i = 0; i < sprites.Count; i++)

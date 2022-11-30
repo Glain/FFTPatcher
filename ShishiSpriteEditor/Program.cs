@@ -88,6 +88,16 @@ namespace FFTPatcher.SpriteEditor
             //while (!System.Diagnostics.Debugger.IsAttached) System.Threading.Thread.Sleep(100);
             System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepathAndDirectory(args);
 
+            bool isExpand = false;
+            for (int index = 0; index < args.Length; index++)
+            {
+                if (args[index].ToLower().Trim().Equals("-expand"))
+                {
+                    isExpand = true;
+                    break;
+                }
+            }
+
             if ((string.IsNullOrEmpty(patchFilepaths.Key)) || (string.IsNullOrEmpty(patchFilepaths.Value)))
             {
                 return false;
@@ -112,11 +122,32 @@ namespace FFTPatcher.SpriteEditor
                             throw new Exception("Could not open ISO file!");
                         }
 
-                        //PatcherLib.Datatypes.Context context = PatcherLib.Utilities.Utilities.GetContextFromIso(iso);
+                        bool hasSpritesDirectory = Directory.Exists(spritesDirectory);
+                        bool hasImagesDirectory = Directory.Exists(imagesDirectory);
+                        bool hasPatchFilepath = false;
+                        string patchFilepath = null;
 
+                        //PatcherLib.Datatypes.Context context = PatcherLib.Utilities.Utilities.GetContextFromIso(iso);
+                        string[] files = Directory.GetFiles(inputDirectory, "*.shishipatch");
+                        if ((files != null) && (files.Length > 0))
+                        {
+                            hasPatchFilepath = true;
+                            patchFilepath = files[0];
+                        }
+
+                        AllSprites sprites = null;
+                        if (hasPatchFilepath || hasSpritesDirectory || isExpand)
+                        {
+                            sprites = AllSprites.FromIso(iso, isExpand);
+                        }
+
+                        if (hasPatchFilepath)
+                        {
+                            sprites.ApplyShishiPatchBytes(iso, File.ReadAllBytes(patchFilepath));
+                            sbOutput.AppendLine("Applied patch file: " + patchFilepath);
+                        }
                         if (Directory.Exists(spritesDirectory))
                         {
-                            AllSprites sprites = AllSprites.FromIso(iso, false);
                             AllSprites.AllSpritesDoWorkResult result = sprites.LoadAllSprites(iso, spritesDirectory);
                             bool isSuccess = (result.DoWorkResult == AllSprites.AllSpritesDoWorkResult.Result.Success);
                             sbOutput.AppendLine(isSuccess ? (result.ImagesProcessed.ToString() + " sprites imported.") : "Failed to import sprites!");

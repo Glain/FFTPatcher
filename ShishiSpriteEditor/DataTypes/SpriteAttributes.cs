@@ -29,7 +29,6 @@ namespace FFTPatcher.SpriteEditor
         public bool Flying { get; private set; }
         public byte Height { get; private set; }
 
-        private bool[] flags = new bool[8];
         internal void SetSHP(Stream iso, SpriteType shp)
         {
             SHP = shp;
@@ -66,7 +65,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        private SpriteAttributes(IList<byte> bytes)
+        internal void SetAttributes(IList<byte> bytes)
         {
             System.Diagnostics.Debug.Assert(bytes.Count == 4);
             SHP = (SpriteType)bytes[0];
@@ -75,14 +74,15 @@ namespace FFTPatcher.SpriteEditor
             Height = bytes[3];
         }
 
-        private SpriteAttributes(PsxIso.KnownPosition pos, IList<byte> bytes):this(bytes)
+        private SpriteAttributes(PsxIso.KnownPosition pos, IList<byte> bytes)
         {
+            SetAttributes(bytes);
             psxPos = pos;
         }
 
         private SpriteAttributes(PspIso.KnownPosition pos, PspIso.PspIsoInfo info, IList<byte> bytes)
-            : this(bytes)
         {
+            SetAttributes(bytes);
             pspPos = pos;
             pspInfo = info;
         }
@@ -101,7 +101,7 @@ namespace FFTPatcher.SpriteEditor
             return new SpriteAttributes(pos, info, bytes);
         }
 
-        private byte[] ToByteArray()
+        internal byte[] ToByteArray()
         {
             byte[] result = new byte[4];
             result[0] = (byte)SHP;

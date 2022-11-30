@@ -64,6 +64,9 @@ namespace FFTPatcher.SpriteEditor
             System.Windows.Forms.MenuItem separator5;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuItem_ExpandIso = new System.Windows.Forms.MenuItem();
+            this.menuItem_SavePatch = new System.Windows.Forms.MenuItem();
+            this.menuItem_ApplyPatch = new System.Windows.Forms.MenuItem();
+            this.separator_Exit = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.imageMenuItem = new System.Windows.Forms.MenuItem();
             this.importImageMenuItem = new System.Windows.Forms.MenuItem();
@@ -132,6 +135,9 @@ namespace FFTPatcher.SpriteEditor
             separator1,
             this.menuItem_ExpandIso,
             this.menuItem3,
+            this.menuItem_SavePatch,
+            this.menuItem_ApplyPatch,
+            this.separator_Exit,
             exitMenuItem});
             fileMenu.Text = "&File";
             // 
@@ -158,9 +164,28 @@ namespace FFTPatcher.SpriteEditor
             this.menuItem3.Index = 3;
             this.menuItem3.Text = "-";
             // 
+            // menuItem_SavePatch
+            // 
+            this.menuItem_SavePatch.Enabled = false;
+            this.menuItem_SavePatch.Index = 4;
+            this.menuItem_SavePatch.Text = "Save Patch...";
+            this.menuItem_SavePatch.Click += new System.EventHandler(this.menuItem_SavePatch_Click);
+            // 
+            // menuItem_ApplyPatch
+            // 
+            this.menuItem_ApplyPatch.Enabled = false;
+            this.menuItem_ApplyPatch.Index = 5;
+            this.menuItem_ApplyPatch.Text = "Apply Patch...";
+            this.menuItem_ApplyPatch.Click += new System.EventHandler(this.menuItem_ApplyPatch_Click);
+            // 
+            // separator_Exit
+            // 
+            this.separator_Exit.Index = 6;
+            this.separator_Exit.Text = "-";
+            // 
             // exitMenuItem
             // 
-            exitMenuItem.Index = 4;
+            exitMenuItem.Index = 7;
             exitMenuItem.Text = "E&xit";
             exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
             // 
@@ -538,6 +563,9 @@ namespace FFTPatcher.SpriteEditor
         private System.Windows.Forms.MenuItem menuItem_ExportEntireFile;
         private System.Windows.Forms.MenuItem menuItem_ExpandIso;
         private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem_SavePatch;
+        private System.Windows.Forms.MenuItem menuItem_ApplyPatch;
+        private System.Windows.Forms.MenuItem separator_Exit;
 
         private System.Windows.Forms.MenuItem menuItem_ImportAllSprites;
         private System.Windows.Forms.MenuItem menuItem_DumpAllSprites;
