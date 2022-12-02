@@ -163,17 +163,17 @@ namespace FFTPatcher.SpriteEditor
             e.Result = LoadAllImages( data.ISO, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
         }
 
-        internal void DumpAllImages( object sender, System.ComponentModel.DoWorkEventArgs e )
+        internal void ExportAllImages( object sender, System.ComponentModel.DoWorkEventArgs e )
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
             AllImagesDoWorkData data = e.Argument as AllImagesDoWorkData;
             if (data == null)
                 return;
-            var result = DumpAllImages( data.ISO, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
+            var result = ExportAllImages( data.ISO, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
             e.Result = result;
         }
 
-        private AllImagesDoWorkResult DumpAllImages( Stream iso, string path, Action<int> progressReporter )
+        private AllImagesDoWorkResult ExportAllImages( Stream iso, string path, Action<int> progressReporter )
         {
             bool progress = progressReporter != null;
             int total = 0;
@@ -257,9 +257,9 @@ namespace FFTPatcher.SpriteEditor
             return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed );
         }
 
-        public void DumpAllImages( Stream iso, string path )
+        public void ExportAllImages( Stream iso, string path )
         {
-            DumpAllImages( iso, path, null );
+            ExportAllImages( iso, path, null );
         }
 
         // 0, 135
