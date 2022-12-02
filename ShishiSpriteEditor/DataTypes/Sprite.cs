@@ -4,6 +4,8 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 using PatcherLib.Utilities;
+using System.Drawing.Imaging;
+using FFTPatcher.SpriteEditor.Helpers;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -76,6 +78,26 @@ namespace FFTPatcher.SpriteEditor
             const int totalPaletteBytes = 512;
             byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
             sprite.ImportBitmap8bpp(importBytes, originalPaletteBytes);
+            byte[] sprBytes = sprite.ToByteArray(0);
+
+            byte[] newPaletteBytes = sprite.GetPaletteBytes(sprite.Palettes, originalPaletteBytes, Palette.ColorDepth._16bit).ToArray();
+            Array.Copy(newPaletteBytes, sprBytes, totalPaletteBytes);
+
+            if (sprBytes.Length > Size)
+            {
+                throw new SpriteTooLargeException(sprBytes.Length, (int)Size);
+            }
+
+            ImportSprite(iso, sprBytes);
+        }
+
+        internal virtual void ImportPNG(Stream iso, string filename, bool is4bpp = false, int paletteIndex = 0)
+        {
+            AbstractSprite sprite = GetAbstractSpriteFromIso(iso);
+            byte[] importBytes = System.IO.File.ReadAllBytes(filename);
+            int totalPaletteBytes = 32 * 16;
+            byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
+            sprite.ImportPNG(importBytes, originalPaletteBytes, is4bpp, paletteIndex);
             byte[] sprBytes = sprite.ToByteArray(0);
 
             byte[] newPaletteBytes = sprite.GetPaletteBytes(sprite.Palettes, originalPaletteBytes, Palette.ColorDepth._16bit).ToArray();
@@ -196,17 +218,22 @@ namespace FFTPatcher.SpriteEditor
             return name;
         }
 
-        public string GetSaveFileName()
+        public string GetSaveFileName(ImageFormat format = null)
         {
+            if (format == null)
+                format = ImageFormat.Bmp;
+
+            string extension = ImageFormatHelper.GetExtension(format);
+
             if (Position is PatcherLib.Iso.PsxIso.KnownPosition)
             {
                 PatcherLib.Iso.PsxIso.KnownPosition pos = Position as PatcherLib.Iso.PsxIso.KnownPosition;
-                return string.Format("{0}_{1}_{2}.bmp", pos.Sector, pos.StartLocation, pos.Length);
+                return string.Format("{0}_{1}_{2}.{3}", pos.Sector, pos.StartLocation, pos.Length, extension);
             }
             else if (Position is PatcherLib.Iso.PspIso.KnownPosition)
             {
                 PatcherLib.Iso.PspIso.KnownPosition pos = Position as PatcherLib.Iso.PspIso.KnownPosition;
-                return string.Format("{0}_{1}_{2}.bmp", pos.SectorEnum, pos.StartLocation, pos.Length);
+                return string.Format("{0}_{1}_{2}.{3}", pos.SectorEnum, pos.StartLocation, pos.Length, extension);
             }
             else
             {

@@ -126,6 +126,27 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        internal override void ImportPNG(Stream iso, string filename, bool is4bpp = false, int paletteIndex = 0)
+        {
+            AbstractSprite sprite = GetAbstractSpriteFromIso(iso);
+            byte[] importBytes = System.IO.File.ReadAllBytes(filename);
+            const int totalPaletteBytes = 32 * 16;
+            byte[] originalPaletteBytes = Position.AddOffset(0, totalPaletteBytes - Position.Length).ReadIso(iso);
+            sprite.ImportPNG(importBytes, originalPaletteBytes, is4bpp, paletteIndex);
+
+            byte[] sprBytes = sprite.ToByteArray(0);
+            if (sprBytes.Length > Size)
+            {
+                throw new SpriteTooLargeException(sprBytes.Length, (int)Size);
+            }
+
+            ImportSprite(iso, sprBytes);
+            for (int i = 0; i < NumChildren; i++)
+            {
+                ImportSp2(iso, sprite.ToByteArray(i + 1), i);
+            }
+        }
+
         internal void ImportSp2(Stream iso, string filename, int index)
         {
             ImportSp2(iso, File.ReadAllBytes(filename), index);

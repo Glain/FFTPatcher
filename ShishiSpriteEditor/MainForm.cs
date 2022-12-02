@@ -26,16 +26,22 @@ using PatcherLib.Datatypes;
 using System.IO;
 using PatcherLib;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
     public partial class MainForm : Form
     {
         const string titleFormatString = "Shishi Sprite Manager (v{0}) - {1}";
+        const string str8bppFileFilterImport = "8bpp paletted BMP/PNG (*.BMP, *.PNG)|*.bmp;*.png";
+        const string str4bppFileFilterImport = "4bpp paletted BMP/PNG (*.BMP, *.PNG)|*.bmp;*.png";
+        const string str8bppFileFilterExport = "8bpp paletted bitmap (*.bmp)|*.bmp|8bpp paletted PNG (*.png)|*.png";
+        const string str4bppFileFilterExport = "4bpp paletted bitmap (*.bmp)|*.bmp|4bpp paletted PNG (*.png)|*.png";
 
         private static readonly string versionString = PatcherLib.Helpers.VersionHelper.VersionString;
         private static readonly string shortFormTitle = String.Format("Shishi Sprite Manager (v{0})", versionString);
-		string _fileName = null; // R999
+
+		private string _importFilepath = null;  // R999
 
         public MainForm()
         {
@@ -47,61 +53,119 @@ namespace FFTPatcher.SpriteEditor
 
         private Stream currentStream = null;
 
-        private void ImportBitmap()
+        private void ImportSpriteImage()
         {
-            Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-            int paletteIndex = allSpritesEditor1.PaletteIndex;
-            bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
-
-            openFileDialog.Filter = importExport8Bpp ? "8bpp paletted bitmap (*.BMP)|*.bmp" : "4bpp paletted bitmap (*.BMP)|*.bmp";
+            openFileDialog.Filter = allSpritesEditor1.ImportExport8Bpp ? str8bppFileFilterImport : str4bppFileFilterImport;
             openFileDialog.FileName = string.Empty;
             openFileDialog.CheckFileExists = true;
-            if (currentSprite != null && openFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                _fileName = openFileDialog.FileName; // R999
 
-                if (importExport8Bpp)
-                    currentSprite.ImportBitmap8bpp(currentStream, _fileName);
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                ImportSpriteImage(openFileDialog.FileName);
+            }
+        }
+
+        private void ReimportSpriteImage()
+        {
+            ImportSpriteImage(_importFilepath);
+        }
+
+        private void ImportSpriteImage(string filepath)
+        {
+            Sprite currentSprite = allSpritesEditor1.CurrentSprite;
+
+            if ((currentSprite != null) && (filepath != null) && (File.Exists(filepath)))
+            {
+                int paletteIndex = allSpritesEditor1.PaletteIndex;
+                bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
+
+                _importFilepath = filepath;
+
+                if (filepath.ToLower().EndsWith(".png"))
+                    currentSprite.ImportPNG(currentStream, filepath, !importExport8Bpp, paletteIndex);
+                else if (importExport8Bpp)
+                    currentSprite.ImportBitmap8bpp(currentStream, filepath);
                 else
-                    currentSprite.ImportBitmap4bpp(currentStream, _fileName, paletteIndex);
+                    currentSprite.ImportBitmap4bpp(currentStream, filepath, paletteIndex);
 
                 allSpritesEditor1.ReloadCurrentSprite();
             }
         }
 
-        private void ImportBitmap(string filename)
+        private void ExportSpriteImage()
         {
             Sprite currentSprite = allSpritesEditor1.CurrentSprite;
             int paletteIndex = allSpritesEditor1.PaletteIndex;
             bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
 
-            if ((currentSprite != null) && (File.Exists(filename)))
+            saveFileDialog.Filter = importExport8Bpp ? str8bppFileFilterExport : str4bppFileFilterExport;
+            saveFileDialog.OverwritePrompt = true;
+            saveFileDialog.CreatePrompt = false;
+            saveFileDialog.FileName = string.Empty;
+
+            if (currentSprite != null && saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                _fileName = filename; // R999
-
-                if (importExport8Bpp)
-                    currentSprite.ImportBitmap8bpp(currentStream, filename);
-                else
-                    currentSprite.ImportBitmap4bpp(currentStream, filename, paletteIndex);
-
-                allSpritesEditor1.ReloadCurrentSprite();
+                AbstractSprite sprite = currentSprite.GetAbstractSpriteFromIso(currentStream, true);
+                Bitmap bitmap = importExport8Bpp ? sprite.ToBitmap() : sprite.To4bppBitmapUncached(paletteIndex);
+                bool isPNG = saveFileDialog.FileName.ToLower().EndsWith(".png");
+                System.Drawing.Imaging.ImageFormat imageFormat = isPNG ? System.Drawing.Imaging.ImageFormat.Png : System.Drawing.Imaging.ImageFormat.Bmp;
+                bitmap.Save(saveFileDialog.FileName, imageFormat);
             }
         }
 
-        private void ReimportBitmap()
+        private void ExportAllSprites(ImageFormat format)
         {
-            Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-            int paletteIndex = allSpritesEditor1.PaletteIndex;
-            bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = ".";
+            dialog.IsFolderPicker = true;
 
-            if (_fileName != null && currentSprite != null)
+            Cursor oldCursor = Cursor;
+
+            ProgressChangedEventHandler progressHandler = delegate (object sender2, ProgressChangedEventArgs args2)
             {
-                if (importExport8Bpp)
-                    currentSprite.ImportBitmap8bpp(currentStream, _fileName);
-                else
-                    currentSprite.ImportBitmap4bpp(currentStream, _fileName, paletteIndex);
+                MethodInvoker mi = (() => progressBar1.Value = args2.ProgressPercentage);
+                if (progressBar1.InvokeRequired)
+                    progressBar1.Invoke(mi);
+                else mi();
+            };
 
-                allSpritesEditor1.ReloadCurrentSprite();
+            RunWorkerCompletedEventHandler completeHandler = null;
+
+            completeHandler = delegate (object sender1, RunWorkerCompletedEventArgs args1)
+            {
+                MethodInvoker mi = delegate ()
+                {
+                    var result = args1.Result as AllSprites.AllSpritesDoWorkResult;
+                    tabControl1.Enabled = true;
+                    progressBar1.Visible = false;
+                    if (oldCursor != null) Cursor = oldCursor;
+                    backgroundWorker1.RunWorkerCompleted -= completeHandler;
+                    backgroundWorker1.ProgressChanged -= progressHandler;
+                    backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.ExportAllSprites;
+                    MyMessageBox.Show(this, string.Format("{0} sprites exported", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
+                };
+                if (InvokeRequired) Invoke(mi);
+                else mi();
+            };
+
+            //if (fbd.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
+                backgroundWorker1.DoWork += allSpritesEditor1.Sprites.ExportAllSprites;
+                backgroundWorker1.ProgressChanged += progressHandler;
+                backgroundWorker1.RunWorkerCompleted += completeHandler;
+                backgroundWorker1.WorkerReportsProgress = true;
+                tabControl1.Enabled = false;
+                Cursor = Cursors.WaitCursor;
+                progressBar1.BringToFront();
+
+                bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
+                int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
+                //backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, format, dialog.FileName, importExport8bpp, paletteIndex));
             }
         }
 
@@ -128,7 +192,7 @@ namespace FFTPatcher.SpriteEditor
                 string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (paths.Length == 1 && System.IO.File.Exists(paths[0]))
                 {
-                    ImportBitmap(paths[0]);
+                    ImportSpriteImage(paths[0]);
                 }
             }
         }
@@ -191,28 +255,18 @@ namespace FFTPatcher.SpriteEditor
 		{
 			if (e.KeyChar.Equals('r')) 
 			{
-                ReimportBitmap();
+                ReimportSpriteImage();
 			}	
 		}
 		
 		// R999
 		private void reimportMenuItem_Click(object sender, EventArgs e)
 		{
-            ReimportBitmap();
+            ReimportSpriteImage();
 		}
 
         private void importSprMenuItem_Click( object sender, EventArgs e )
         {
-			// R999 instant reimport function. Overrides Import SPR function.  
-			// the win form menu item should now have a ShortcutKeys property set to Key.R
-			/*
-			Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-			if (_fileName != null && currentSprite != null )
-			{
-				currentSprite.ImportBitmap( currentStream, _fileName );
-            	allSpritesEditor1.ReloadCurrentSprite();
-			}
-			*/
             Sprite currentSprite = allSpritesEditor1.CurrentSprite;
             openFileDialog.Filter = "FFT Sprite (*.SPR)|*.spr";
             openFileDialog.FileName = string.Empty;
@@ -229,7 +283,6 @@ namespace FFTPatcher.SpriteEditor
                     MyMessageBox.Show( this, ex.Message, "Error" );
                 }
             }
-
         }
 
         private void exportSprMenuItem_Click( object sender, EventArgs e )
@@ -245,28 +298,14 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        private void importBmpMenuItem_Click( object sender, EventArgs e )
+        private void menuItem_ImportSpriteImage_Click( object sender, EventArgs e )
         {
-            ImportBitmap();
+            ImportSpriteImage();
         }
 
-        private void exportBmpMenuItem_Click( object sender, EventArgs e )
+        private void menuItem_ExportSpriteImage_Click( object sender, EventArgs e )
         {
-            Sprite currentSprite = allSpritesEditor1.CurrentSprite;
-            int paletteIndex = allSpritesEditor1.PaletteIndex;
-            bool importExport8Bpp = allSpritesEditor1.ImportExport8Bpp;
-
-            saveFileDialog.Filter = importExport8Bpp ? "8bpp paletted bitmap (*.BMP)|*.bmp" : "4bpp paletted bitmap (*.BMP)|*.bmp";
-            saveFileDialog.OverwritePrompt = true;
-            saveFileDialog.CreatePrompt = false;
-            saveFileDialog.FileName = string.Empty;
-
-            if (currentSprite != null && saveFileDialog.ShowDialog( this ) == DialogResult.OK)
-            {
-                AbstractSprite sprite = currentSprite.GetAbstractSpriteFromIso(currentStream, true);
-                Bitmap bitmap = importExport8Bpp ? sprite.ToBitmap() : sprite.To4bppBitmapUncached(paletteIndex);
-                bitmap.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-            }
+            ExportSpriteImage();
         }
 
         private void exitMenuItem_Click( object sender, EventArgs e )
@@ -524,7 +563,7 @@ namespace FFTPatcher.SpriteEditor
                         if (oldCursor != null) Cursor = oldCursor;
                         backgroundWorker1.RunWorkerCompleted -= completeHandler;
                         backgroundWorker1.ProgressChanged -= progressHandler;
-                        backgroundWorker1.DoWork -= allOtherImagesEditor1.AllOtherImages.DumpAllImages;
+                        backgroundWorker1.DoWork -= allOtherImagesEditor1.AllOtherImages.ExportAllImages;
                         MyMessageBox.Show(this, string.Format( "{0} images saved", result.ImagesProcessed ), result.DoWorkResult.ToString(), MessageBoxButtons.OK );
                     };
                     if (InvokeRequired) Invoke( mi );
@@ -537,7 +576,7 @@ namespace FFTPatcher.SpriteEditor
                     progressBar1.Bounds = new Rectangle( ClientRectangle.Left+10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width-20, progressBar1.Height );
                     progressBar1.Value = 0;
                     progressBar1.Visible = true;
-                    backgroundWorker1.DoWork += allOtherImagesEditor1.AllOtherImages.DumpAllImages;
+                    backgroundWorker1.DoWork += allOtherImagesEditor1.AllOtherImages.ExportAllImages;
                     backgroundWorker1.ProgressChanged += progressHandler;
                     backgroundWorker1.RunWorkerCompleted += completeHandler;
                     backgroundWorker1.WorkerReportsProgress = true;
@@ -558,128 +597,64 @@ namespace FFTPatcher.SpriteEditor
             dialog.InitialDirectory = ".";
             dialog.IsFolderPicker = true;
 
-            //using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
-            //{
-                //fbd.ShowNewFolderButton = true;
-                //fbd.ShowFullPathInEditBox = true;
-                //fbd.ShowEditBox = true;
-                //fbd.ShowBothFilesAndFolders = false;
-                //fbd.RootFolder = Environment.SpecialFolder.Desktop;
-                //fbd.NewStyle = true;
-                Cursor oldCursor = Cursor;
+            Cursor oldCursor = Cursor;
 
-                ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
+            ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
+            {
+                MethodInvoker mi = (() => progressBar1.Value = args2.ProgressPercentage);
+                if (progressBar1.InvokeRequired)
+                    progressBar1.Invoke(mi);
+                else mi();
+            };
+
+            RunWorkerCompletedEventHandler completeHandler = null;
+
+            completeHandler = delegate(object sender1, RunWorkerCompletedEventArgs args1)
+            {
+                MethodInvoker mi = delegate()
                 {
-                    MethodInvoker mi = (() => progressBar1.Value = args2.ProgressPercentage);
-                    if (progressBar1.InvokeRequired)
-                        progressBar1.Invoke(mi);
-                    else mi();
+                    var result = args1.Result as AllSprites.AllSpritesDoWorkResult;
+                    tabControl1.Enabled = true;
+                    progressBar1.Visible = false;
+                    if (oldCursor != null) Cursor = oldCursor;
+                    backgroundWorker1.RunWorkerCompleted -= completeHandler;
+                    backgroundWorker1.ProgressChanged -= progressHandler;
+                    backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.LoadAllSprites;
+                    MyMessageBox.Show(this, string.Format("{0} sprites imported", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
                 };
+                if (InvokeRequired) Invoke(mi);
+                else mi();
+            };
 
-                RunWorkerCompletedEventHandler completeHandler = null;
+            //if (fbd.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
+                backgroundWorker1.DoWork += allSpritesEditor1.Sprites.LoadAllSprites;
+                backgroundWorker1.ProgressChanged += progressHandler;
+                backgroundWorker1.RunWorkerCompleted += completeHandler;
+                backgroundWorker1.WorkerReportsProgress = true;
+                tabControl1.Enabled = false;
+                Cursor = Cursors.WaitCursor;
+                progressBar1.BringToFront();
 
-                completeHandler = delegate(object sender1, RunWorkerCompletedEventArgs args1)
-                {
-                    MethodInvoker mi = delegate()
-                    {
-                        var result = args1.Result as AllSprites.AllSpritesDoWorkResult;
-                        tabControl1.Enabled = true;
-                        progressBar1.Visible = false;
-                        if (oldCursor != null) Cursor = oldCursor;
-                        backgroundWorker1.RunWorkerCompleted -= completeHandler;
-                        backgroundWorker1.ProgressChanged -= progressHandler;
-                        backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.LoadAllSprites;
-                        MyMessageBox.Show(this, string.Format("{0} images imported", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
-                    };
-                    if (InvokeRequired) Invoke(mi);
-                    else mi();
-                };
-
-                //if (fbd.ShowDialog(this) == DialogResult.OK)
-                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-                {
-                    progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
-                    progressBar1.Value = 0;
-                    progressBar1.Visible = true;
-                    backgroundWorker1.DoWork += allSpritesEditor1.Sprites.LoadAllSprites;
-                    backgroundWorker1.ProgressChanged += progressHandler;
-                    backgroundWorker1.RunWorkerCompleted += completeHandler;
-                    backgroundWorker1.WorkerReportsProgress = true;
-                    tabControl1.Enabled = false;
-                    Cursor = Cursors.WaitCursor;
-                    progressBar1.BringToFront();
-
-                    bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
-                    int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
-                    //backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
-                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, dialog.FileName, importExport8bpp, paletteIndex));
-                }
-            //}
+                bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
+                int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
+                //backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
+                backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, ImageFormat.Bmp, dialog.FileName, importExport8bpp, paletteIndex));
+            }
         }
 
-        private void dumpAllSpritesMenuItem_Click(object sender, EventArgs e)
+        private void menuItem_ExportAllSprites_BMP_Click(object sender, EventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.InitialDirectory = ".";
-            dialog.IsFolderPicker = true;
+            ExportAllSprites(ImageFormat.Bmp);
+        }
 
-            //using (Ionic.Utils.FolderBrowserDialogEx fbd = new Ionic.Utils.FolderBrowserDialogEx())
-            //{
-                //fbd.ShowNewFolderButton = true;
-                //fbd.ShowFullPathInEditBox = true;
-                //fbd.ShowEditBox = true;
-                //fbd.ShowBothFilesAndFolders = false;
-                //fbd.RootFolder = Environment.SpecialFolder.Desktop;
-                //fbd.NewStyle = true;
-                Cursor oldCursor = Cursor;
-
-                ProgressChangedEventHandler progressHandler = delegate(object sender2, ProgressChangedEventArgs args2)
-                {
-                    MethodInvoker mi = (() => progressBar1.Value = args2.ProgressPercentage);
-                    if (progressBar1.InvokeRequired)
-                        progressBar1.Invoke(mi);
-                    else mi();
-                };
-
-                RunWorkerCompletedEventHandler completeHandler = null;
-
-                completeHandler = delegate(object sender1, RunWorkerCompletedEventArgs args1)
-                {
-                    MethodInvoker mi = delegate()
-                    {
-                        var result = args1.Result as AllSprites.AllSpritesDoWorkResult;
-                        tabControl1.Enabled = true;
-                        progressBar1.Visible = false;
-                        if (oldCursor != null) Cursor = oldCursor;
-                        backgroundWorker1.RunWorkerCompleted -= completeHandler;
-                        backgroundWorker1.ProgressChanged -= progressHandler;
-                        backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.DumpAllSprites;
-                        MyMessageBox.Show(this, string.Format("{0} images saved", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
-                    };
-                    if (InvokeRequired) Invoke(mi);
-                    else mi();
-                };
-
-                //if (fbd.ShowDialog(this) == DialogResult.OK)
-                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-                {
-                    progressBar1.Bounds = new Rectangle(ClientRectangle.Left + 10, (ClientRectangle.Height - progressBar1.Height) / 2, ClientRectangle.Width - 20, progressBar1.Height);
-                    progressBar1.Value = 0;
-                    progressBar1.Visible = true;
-                    backgroundWorker1.DoWork += allSpritesEditor1.Sprites.DumpAllSprites;
-                    backgroundWorker1.ProgressChanged += progressHandler;
-                    backgroundWorker1.RunWorkerCompleted += completeHandler;
-                    backgroundWorker1.WorkerReportsProgress = true;
-                    tabControl1.Enabled = false;
-                    Cursor = Cursors.WaitCursor;
-                    progressBar1.BringToFront();
-
-                    bool importExport8bpp = allSpritesEditor1.ImportExport8Bpp;
-                    int paletteIndex = importExport8bpp ? 0 : allSpritesEditor1.PaletteIndex;
-                    //backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, fbd.SelectedPath, importExport8bpp, paletteIndex));
-                    backgroundWorker1.RunWorkerAsync(new AllSprites.AllSpritesDoWorkData(currentStream, dialog.FileName, importExport8bpp, paletteIndex));
-                }
-            //}
+        private void menuItem_ExportAllSprites_PNG_Click(object sender, EventArgs e)
+        {
+            ExportAllSprites(ImageFormat.Png);
         }
 
         private void menuItem_ExpandIso_Click(object sender, EventArgs e)

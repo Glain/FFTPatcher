@@ -13,38 +13,30 @@ namespace FFTPatcher.SpriteEditor
         public override void ImportBitmap( Bitmap bmp, out bool foundBadPixels )
         {
             base.ImportBitmap( bmp, out foundBadPixels );
-            byte[] portraitArea = Pixels.Sub( Width * ( topHeight + compressedHeight ), Width * ( topHeight + compressedHeight + portraitHeight ) - 1 ).ToArray();
-            byte[] compressedArea = Pixels.Sub( Width * topHeight, Width * ( topHeight + compressedHeight ) - 1 ).ToArray();
-            portraitArea.CopyTo( Pixels, Width * topHeight );
-            compressedArea.CopyTo( Pixels, Width * ( topHeight + portraitHeight ) );
-            BitmapDirty = true;
-
+            MovePortraitAndCompressedAreas();
             FirePixelsChanged();
         }
 
         public override void ImportBitmap4bpp(int paletteIndex, IList<byte> importBytes, IList<byte> originalPaletteBytes)
         {
             base.ImportBitmap4bpp(paletteIndex, importBytes, originalPaletteBytes);
-            byte[] portraitArea = Pixels.Sub(Width * (topHeight + compressedHeight), Width * (topHeight + compressedHeight + portraitHeight) - 1).ToArray();
-            byte[] compressedArea = Pixels.Sub(Width * topHeight, Width * (topHeight + compressedHeight) - 1).ToArray();
-            portraitArea.CopyTo(Pixels, Width * topHeight);
-            compressedArea.CopyTo(Pixels, Width * (topHeight + portraitHeight));
-            BitmapDirty = true;
-
+            MovePortraitAndCompressedAreas();
             FirePixelsChanged();
         }
 
         public override void ImportBitmap8bpp(IList<byte> importBytes, IList<byte> originalPaletteBytes)
         {
             base.ImportBitmap8bpp(importBytes, originalPaletteBytes);
-            //return;     // DEBUG
-            byte[] portraitArea = Pixels.Sub(Width * (topHeight + compressedHeight), Width * (topHeight + compressedHeight + portraitHeight) - 1).ToArray();
-            byte[] compressedArea = Pixels.Sub(Width * topHeight, Width * (topHeight + compressedHeight) - 1).ToArray();
-            portraitArea.CopyTo(Pixels, Width * topHeight);
-            compressedArea.CopyTo(Pixels, Width * (topHeight + portraitHeight));
-            BitmapDirty = true;
-
+            MovePortraitAndCompressedAreas();
             FirePixelsChanged();
+        }
+
+        public override bool ImportPNG(IList<byte> importBytes, IList<byte> originalPaletteBytes, bool is4bpp = false, int paletteIndex = 0)
+        {
+            bool result = base.ImportPNG(importBytes, originalPaletteBytes, is4bpp, paletteIndex);
+            MovePortraitAndCompressedAreas();
+            FirePixelsChanged();
+            return result;
         }
 
         public override int Height
@@ -65,6 +57,15 @@ namespace FFTPatcher.SpriteEditor
         protected override Rectangle PortraitRectangle
         {
             get { return new Rectangle( 80, 456, 48, 32 ); }
+        }
+
+        private void MovePortraitAndCompressedAreas()
+        {
+            byte[] portraitArea = Pixels.Sub(Width * (topHeight + compressedHeight), Width * (topHeight + compressedHeight + portraitHeight) - 1).ToArray();
+            byte[] compressedArea = Pixels.Sub(Width * topHeight, Width * (topHeight + compressedHeight) - 1).ToArray();
+            portraitArea.CopyTo(Pixels, Width * topHeight);
+            compressedArea.CopyTo(Pixels, Width * (topHeight + portraitHeight));
+            BitmapDirty = true;
         }
 
         protected override IList<byte> BuildPixels(IList<byte> bytes, params IList<byte>[] extraBytes)

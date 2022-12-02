@@ -25,6 +25,7 @@ using PatcherLib.Datatypes;
 using PatcherLib.Iso;
 using PatcherLib.Utilities;
 using System.Text;
+using FFTPatcher.SpriteEditor.Helpers;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -200,6 +201,101 @@ namespace FFTPatcher.SpriteEditor
             FirePixelsChanged();
         }
         
+        protected virtual bool ImportBitmapObject(Bitmap image, IList<byte> originalPaletteBytes, bool is4bpp, int paletteIndex = 0)
+        {
+            bool foundBadPixels = false;
+
+            if ((is4bpp) && (image.PixelFormat != PixelFormat.Format4bppIndexed))
+            {
+                throw new BadImageFormatException("Image is not 4bpp paletted!");
+            }
+            else if ((!is4bpp) && (image.PixelFormat != PixelFormat.Format8bppIndexed))
+            {
+                throw new BadImageFormatException("Image is not 8bpp paletted!");
+            }
+
+            if (image.Width != 256)
+            {
+                throw new BadImageFormatException("Image is not 256 pixels wide!");
+            }
+
+            Palettes = new Palette[16];
+
+            const int singlePaletteBytes = 32;
+            Palettes = new Palette[16];
+
+            for (int i = 0; i < 16; i++)
+            {
+                int startIndex = singlePaletteBytes * i;
+                int endIndex = startIndex + singlePaletteBytes - 1;
+                IList<byte> bytes = originalPaletteBytes.Sub(startIndex, endIndex);
+                Palettes[i] = new Palette(bytes, Palette.ColorDepth._16bit, false, true);
+            }
+            for (int i = 0; i < image.Palette.Entries.Length; i++)
+            {
+                if (!is4bpp)
+                {
+                    paletteIndex = i / 16;
+                }
+                int colorIndex = i % 16;
+
+                Color c = image.Palette.Entries[i];
+                bool wasTransparent = Palettes[paletteIndex][colorIndex] == Color.Transparent;
+                Palettes[paletteIndex][colorIndex] = Color.FromArgb(Palettes[paletteIndex][colorIndex].A, c.R & 0xF8, c.G & 0xF8, c.B & 0xF8);
+                if (
+                    (colorIndex == 0) &&
+                    (c.ToArgb() == Color.Black.ToArgb()) &&
+                    ((Palettes[paletteIndex][colorIndex].A > 0) || (wasTransparent))
+                )
+                {
+                    Palettes[paletteIndex][colorIndex] = Color.Transparent;
+                }
+            }
+
+            Pixels.InitializeElements();
+
+            BitmapData bmd = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, image.PixelFormat);
+            int row = 0;
+            int col = 0;
+            for (int i = 0; (i < Pixels.Count) && (row < image.Height); i++)
+            {
+                if (is4bpp)
+                {
+                    Pixels[i] = (byte)bmd.GetPixel4bpp(col, row);
+                }
+                else
+                {
+                    Pixels[i] = (byte)bmd.GetPixel(col, row);
+                }
+
+                if (Pixels[i] >= 16)
+                {
+                    foundBadPixels = true;
+                }
+
+                col++;
+                if (col == image.Width)
+                {
+                    col = 0;
+                    row++;
+                }
+            }
+
+            image.UnlockBits(bmd);
+
+            BitmapDirty = true;
+
+            FirePixelsChanged();
+            return foundBadPixels;
+        }
+
+        public virtual bool ImportPNG(IList<byte> importBytes, IList<byte> originalPaletteBytes, bool is4bpp = false, int paletteIndex = 0)
+        {
+            System.IO.MemoryStream stream = new System.IO.MemoryStream(importBytes.ToArray());
+            Bitmap pngImage = new Bitmap(stream);
+            return ImportBitmapObject(pngImage, originalPaletteBytes, is4bpp, paletteIndex);
+        }
+
         public virtual void ImportBitmap4bpp(int paletteIndex, IList<byte> importBytes, IList<byte> originalPaletteBytes)
         {
             using (System.IO.Stream stream = new System.IO.MemoryStream(importBytes.ToArray()))
@@ -208,7 +304,7 @@ namespace FFTPatcher.SpriteEditor
                 {
                     if (image.PixelFormat != PixelFormat.Format4bppIndexed)
                     {
-                        throw new BadImageFormatException("Image is not an 4bpp paletted bitmap!");
+                        throw new BadImageFormatException("Image is not a 4bpp paletted bitmap!");
                     }
                     if (image.Width != 256)
                     {

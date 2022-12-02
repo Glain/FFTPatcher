@@ -57,8 +57,8 @@ namespace FFTPatcher.SpriteEditor
             System.Windows.Forms.MenuItem importSprMenuItem;
             System.Windows.Forms.MenuItem exportSprMenuItem;
             System.Windows.Forms.MenuItem separator2;
-            System.Windows.Forms.MenuItem importBmpMenuItem;
-            System.Windows.Forms.MenuItem exportBmpMenuItem;
+            System.Windows.Forms.MenuItem menuItem_ImportSpriteImage;
+            System.Windows.Forms.MenuItem menuItem_ExportSpriteImage;
             System.Windows.Forms.MenuItem separator3;
             System.Windows.Forms.MenuItem separator4;
             System.Windows.Forms.MenuItem separator5;
@@ -80,7 +80,8 @@ namespace FFTPatcher.SpriteEditor
             this.reimportMenuItem = new System.Windows.Forms.MenuItem();
             this.separatorImportExportAllSprites = new System.Windows.Forms.MenuItem();
             this.menuItem_ImportAllSprites = new System.Windows.Forms.MenuItem();
-            this.menuItem_DumpAllSprites = new System.Windows.Forms.MenuItem();
+            this.menuItem_ExportAllSprites_BMP = new System.Windows.Forms.MenuItem();
+            this.menuItem_ExportAllSprites_PNG = new System.Windows.Forms.MenuItem();
             this.sp2Menu = new System.Windows.Forms.MenuItem();
             this.importFirstMenuItem = new System.Windows.Forms.MenuItem();
             this.exportFirstMenuItem = new System.Windows.Forms.MenuItem();
@@ -109,8 +110,8 @@ namespace FFTPatcher.SpriteEditor
             importSprMenuItem = new System.Windows.Forms.MenuItem();
             exportSprMenuItem = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
-            importBmpMenuItem = new System.Windows.Forms.MenuItem();
-            exportBmpMenuItem = new System.Windows.Forms.MenuItem();
+            menuItem_ImportSpriteImage = new System.Windows.Forms.MenuItem();
+            menuItem_ExportSpriteImage = new System.Windows.Forms.MenuItem();
             separator3 = new System.Windows.Forms.MenuItem();
             separator4 = new System.Windows.Forms.MenuItem();
             separator5 = new System.Windows.Forms.MenuItem();
@@ -258,12 +259,13 @@ namespace FFTPatcher.SpriteEditor
             importSprMenuItem,
             exportSprMenuItem,
             separator2,
-            importBmpMenuItem,
-            exportBmpMenuItem,
+            menuItem_ImportSpriteImage,
+            menuItem_ExportSpriteImage,
             this.reimportMenuItem,
             this.separatorImportExportAllSprites,
             this.menuItem_ImportAllSprites,
-            this.menuItem_DumpAllSprites});
+            this.menuItem_ExportAllSprites_BMP,
+            this.menuItem_ExportAllSprites_PNG});
             this.spriteMenuItem.Text = "Sprite";
             this.spriteMenuItem.Popup += new System.EventHandler(this.spriteMenuItem_Popup);
             // 
@@ -284,23 +286,23 @@ namespace FFTPatcher.SpriteEditor
             separator2.Index = 2;
             separator2.Text = "-";
             // 
-            // importBmpMenuItem
+            // menuItem_ImportImage
             // 
-            importBmpMenuItem.Index = 3;
-            importBmpMenuItem.Text = "Import BMP...";
-            importBmpMenuItem.Click += new System.EventHandler(this.importBmpMenuItem_Click);
+            menuItem_ImportSpriteImage.Index = 3;
+            menuItem_ImportSpriteImage.Text = "Import BMP/PNG...";
+            menuItem_ImportSpriteImage.Click += new System.EventHandler(this.menuItem_ImportSpriteImage_Click);
             // 
-            // exportBmpMenuItem
+            // menuItem_ExportImage
             // 
-            exportBmpMenuItem.Index = 4;
-            exportBmpMenuItem.Text = "Export BMP...";
-            exportBmpMenuItem.Click += new System.EventHandler(this.exportBmpMenuItem_Click);
+            menuItem_ExportSpriteImage.Index = 4;
+            menuItem_ExportSpriteImage.Text = "Export BMP/PNG...";
+            menuItem_ExportSpriteImage.Click += new System.EventHandler(this.menuItem_ExportSpriteImage_Click);
             // 
             // reimportMenuItem
             // 
             this.reimportMenuItem.Index = 5;
             this.reimportMenuItem.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
-            this.reimportMenuItem.Text = "Reimport BMP";
+            this.reimportMenuItem.Text = "Reimport BMP/PNG";
             this.reimportMenuItem.Click += new System.EventHandler(this.reimportMenuItem_Click);
             // 
             // separatorImportExportAllSprites
@@ -314,11 +316,17 @@ namespace FFTPatcher.SpriteEditor
             this.menuItem_ImportAllSprites.Text = "Import all sprites...";
             this.menuItem_ImportAllSprites.Click += new System.EventHandler(this.importAllSpritesMenuItem_Click);
             // 
-            // menuItem_DumpAllSprites
+            // menuItem_ExportAllSprites_BMP
             // 
-            this.menuItem_DumpAllSprites.Index = 8;
-            this.menuItem_DumpAllSprites.Text = "Dump all sprites...";
-            this.menuItem_DumpAllSprites.Click += new System.EventHandler(this.dumpAllSpritesMenuItem_Click);
+            this.menuItem_ExportAllSprites_BMP.Index = 8;
+            this.menuItem_ExportAllSprites_BMP.Text = "Export all sprites (BMP)...";
+            this.menuItem_ExportAllSprites_BMP.Click += new System.EventHandler(this.menuItem_ExportAllSprites_BMP_Click);
+            // 
+            // menuItem_ExportAllSprites_PNG
+            // 
+            this.menuItem_ExportAllSprites_PNG.Index = 9;
+            this.menuItem_ExportAllSprites_PNG.Text = "Export all sprites (PNG)...";
+            this.menuItem_ExportAllSprites_PNG.Click += new System.EventHandler(this.menuItem_ExportAllSprites_PNG_Click);
             // 
             // sp2Menu
             // 
@@ -568,7 +576,8 @@ namespace FFTPatcher.SpriteEditor
         private System.Windows.Forms.MenuItem separator_Exit;
 
         private System.Windows.Forms.MenuItem menuItem_ImportAllSprites;
-        private System.Windows.Forms.MenuItem menuItem_DumpAllSprites;
+        private System.Windows.Forms.MenuItem menuItem_ExportAllSprites_BMP;
+        private System.Windows.Forms.MenuItem menuItem_ExportAllSprites_PNG;
         private System.Windows.Forms.MenuItem separatorImportExportAllSprites;
     }
 }

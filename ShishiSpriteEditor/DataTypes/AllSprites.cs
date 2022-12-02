@@ -5,6 +5,7 @@ using System.IO;
 using PatcherLib.Datatypes;
 using PatcherLib;
 using PatcherLib.Utilities;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -13,12 +14,14 @@ namespace FFTPatcher.SpriteEditor
         public class AllSpritesDoWorkData
         {
             public Stream ISO { get; private set; }
+            public ImageFormat Format { get; private set; }
             public string Path { get; private set; }
             public bool ImportExport8bpp { get; private set; }
             public int PaletteIndex { get; private set; }
-            public AllSpritesDoWorkData(Stream iso, string path, bool importExport8bpp, int paletteIndex)
+            public AllSpritesDoWorkData(Stream iso, ImageFormat format, string path, bool importExport8bpp, int paletteIndex)
             {
                 ISO = iso;
+                Format = format;
                 Path = path;
                 ImportExport8bpp = importExport8bpp;
                 PaletteIndex = paletteIndex;
@@ -320,13 +323,14 @@ namespace FFTPatcher.SpriteEditor
             e.Result = LoadAllSprites(data.ISO, data.Path, data.ImportExport8bpp, data.PaletteIndex, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null);
         }
 
-        internal void DumpAllSprites(object sender, System.ComponentModel.DoWorkEventArgs e)
+        internal void ExportAllSprites(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
             AllSpritesDoWorkData data = e.Argument as AllSpritesDoWorkData;
             if (data == null)
                 return;
-            e.Result = DumpAllSprites(data.ISO, data.Path, data.ImportExport8bpp, data.PaletteIndex, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null);
+            e.Result = ExportAllSprites(data.ISO, data.Format, data.Path, data.ImportExport8bpp, data.PaletteIndex, 
+                worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null);
         }
 
         public AllSpritesDoWorkResult LoadAllSprites(Stream iso, string path)
@@ -369,17 +373,26 @@ namespace FFTPatcher.SpriteEditor
                 //name = sprite.GetSaveFileName();
                 //name = Path.Combine(path, name);
 
-                string name = Path.Combine(path, singleFileMap.Key);
-                if (File.Exists(name))
+                string filename = singleFileMap.Key;
+                string filepath = Path.Combine(path, filename);
+                if (!File.Exists(filepath) && filepath.ToLower().EndsWith(".bmp"))
+                {
+                    filepath = filepath.Substring(0, filepath.Length - 4) + ".png";
+                }
+
+                if (File.Exists(filepath))
                 {
                     Sprite sprite = singleFileMap.Value;
+                    bool isPNG = filepath.ToLower().EndsWith(".png");
 
                     try
                     {
-                        if (importExport8bpp)
-                            sprite.ImportBitmap8bpp(iso, name);
+                        if (isPNG)
+                            sprite.ImportPNG(iso, filepath, !importExport8bpp, paletteIndex);
+                        else if (importExport8bpp)
+                            sprite.ImportBitmap8bpp(iso, filepath);
                         else
-                            sprite.ImportBitmap4bpp(iso, name, paletteIndex);
+                            sprite.ImportBitmap4bpp(iso, filepath, paletteIndex);
 
                         imagesProcessed++;
                     }
@@ -397,7 +410,7 @@ namespace FFTPatcher.SpriteEditor
             return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed);
         }
 
-        private AllSpritesDoWorkResult DumpAllSprites(Stream iso, string path, bool importExport8bpp, int paletteIndex, Action<int> progressReporter)
+        private AllSpritesDoWorkResult ExportAllSprites(Stream iso, ImageFormat format, string path, bool importExport8bpp, int paletteIndex, Action<int> progressReporter)
         {
             bool progress = progressReporter != null;
             int total = 0;
@@ -419,7 +432,7 @@ namespace FFTPatcher.SpriteEditor
             {
                 if ((sprite != null) && (sprite.Size > 0))
                 {
-                    string name = sprite.GetSaveFileName();
+                    string name = sprite.GetSaveFileName(format);
                     if (!fileMap.ContainsKey(name))
                     {
                         fileMap.Add(name, sprite);
@@ -446,8 +459,7 @@ namespace FFTPatcher.SpriteEditor
                     if (abstractSprite != null)
                     {
                         System.Drawing.Bitmap bitmap = importExport8bpp ? abstractSprite.ToBitmap() : abstractSprite.To4bppBitmapUncached(paletteIndex);
-                        bitmap.Save(fullPath, System.Drawing.Imaging.ImageFormat.Bmp);
-
+                        bitmap.Save(fullPath, format);
                         imagesProcessed++;
                     }
                     /*

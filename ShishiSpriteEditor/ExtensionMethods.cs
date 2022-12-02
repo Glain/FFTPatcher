@@ -237,10 +237,12 @@ namespace FFTPatcher.SpriteEditor
         }
 
         /*
-         * Glain: Doesn't work because the standard Windows Image objects can't load in 4bpp paleted bitmaps correctly.  Bleh.
+         * Glain: Doesn't work with bitmaps because the standard Windows Image objects can't load in 4bpp paleted bitmaps correctly.
          * I'm now handling this directly in the PalettedImage4bpp.GetImageBytes method, by loading in the bitmap as a binary file 
-         * and following the BMP format specifications to set the indexes correctly.
+         * and following the BMP format specifications to set the indexes correctly
          * 
+         * Glain: Using for PNG loading...
+        */
         public static unsafe int GetPixel4bpp(this BitmapData bmd, int x, int y)
         {
             byte* p = (byte*)bmd.Scan0.ToPointer();
@@ -251,7 +253,6 @@ namespace FFTPatcher.SpriteEditor
 
             return rawValue;
         }
-        */
 
         public static unsafe Color GetPixel32bpp( this BitmapData bmd, int x, int y )
         {
