@@ -228,12 +228,12 @@ namespace FFTPatcher.SpriteEditor
             if (Position is PatcherLib.Iso.PsxIso.KnownPosition)
             {
                 PatcherLib.Iso.PsxIso.KnownPosition pos = Position as PatcherLib.Iso.PsxIso.KnownPosition;
-                return string.Format("{0}_{1}_{2}.{3}", pos.Sector, pos.StartLocation, pos.Length, extension);
+                return string.Format("{0}_{1}_{2}{3}", pos.Sector, pos.StartLocation, pos.Length, extension);
             }
             else if (Position is PatcherLib.Iso.PspIso.KnownPosition)
             {
                 PatcherLib.Iso.PspIso.KnownPosition pos = Position as PatcherLib.Iso.PspIso.KnownPosition;
-                return string.Format("{0}_{1}_{2}.{3}", pos.SectorEnum, pos.StartLocation, pos.Length, extension);
+                return string.Format("{0}_{1}_{2}{3}", pos.SectorEnum, pos.StartLocation, pos.Length, extension);
             }
             else
             {

@@ -3,6 +3,8 @@ using PatcherLib.Datatypes;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -404,7 +406,7 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output)
+        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output, ImageFormat format)
         {
             List<List<byte>> quadrantBytes = new List<List<byte>>();
             for (int i = 0; i < 4; i++)
@@ -437,9 +439,9 @@ namespace FFTPatcher.SpriteEditor
             Palette p = new Palette(palettePositions[0].ReadIso(iso), FFTPatcher.SpriteEditor.Palette.ColorDepth._16bit, true);
 
             // Convert colors to indices
-            System.Drawing.Bitmap originalImage = GetImageFromIso(iso);
+            //System.Drawing.Bitmap originalImage = GetImageFromIso(iso);
 
-            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed))
+            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(Width, Height, PixelFormat.Format8bppIndexed))
             {
                 System.Drawing.Imaging.ColorPalette pal = bmp.Palette;
                 for (int i = 0; i < p.Colors.Length; i++)
@@ -448,7 +450,7 @@ namespace FFTPatcher.SpriteEditor
                 }
                 bmp.Palette = pal;
 
-                var bmd = bmp.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                var bmd = bmp.LockBits(new System.Drawing.Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
                 for (int y = 0; y < Height; y++)
                 {
                     for (int x = 0; x < Width; x++)
@@ -460,26 +462,28 @@ namespace FFTPatcher.SpriteEditor
 
                 // Write that shit
                 //bmp.Save( output, System.Drawing.Imaging.ImageFormat.Gif );
-                bmp.Save(output, System.Drawing.Imaging.ImageFormat.Bmp);
+                bmp.Save(output, format);
             }
         }
 
-        protected override void WriteImageToIsoInner( System.IO.Stream iso, System.Drawing.Image image )
+        protected override void WriteImageToIsoInner( System.IO.Stream iso, Bitmap image, ImageFormat format )
         {
-            using ( System.Drawing.Bitmap sourceBitmap = new System.Drawing.Bitmap( image ) )
-            {
+            Bitmap sourceBitmap = image;
+
+            //using ( System.Drawing.Bitmap sourceBitmap = new System.Drawing.Bitmap( image ) )
+            //{
                 Set<System.Drawing.Color> colors = GetColors( sourceBitmap );
                 if ( colors.Count > 256 )
                 {
                     ImageQuantization.OctreeQuantizer q = new ImageQuantization.OctreeQuantizer( 255, 8 );
                     using ( var newBmp = q.Quantize( sourceBitmap ) )
                     {
-                        WriteImageToIsoInner( iso, newBmp );
+                        WriteImageToIsoInner( iso, newBmp, format );
                     }
                 }
                 else
                 {
-                    byte[] totalBytes = GetImageBytes(sourceBitmap);
+                    byte[] totalBytes = GetImageBytesByFormat(sourceBitmap, format, false, false);
                     List<List<byte>> quadrantBytes = new List<List<byte>>();
                     for (int i = 0; i < 4; i++)
                         quadrantBytes.Add(new List<byte>());
@@ -517,9 +521,10 @@ namespace FFTPatcher.SpriteEditor
                         }
                     }
                 }
-            }
+            //}
         }
 
+        /*
         protected byte[] GetImageBytes(System.Drawing.Bitmap image)
         {
             List<byte> result = new List<byte>(Width * Height);
@@ -543,6 +548,7 @@ namespace FFTPatcher.SpriteEditor
 
             return resultData;
         }
+        */
 
         protected List<byte> GetPaletteBytes(IEnumerable<System.Drawing.Color> colors, IList<byte> originalPaletteBytes)
         {
@@ -559,19 +565,19 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        public override string FilenameFilter
-        {
-            get
-            {
-                return "8bpp paletted bitmap (*.bmp)|*.bmp";
-            }
-        }
-
         public override string InputFilenameFilter
         {
             get
             {
-                return FilenameFilter;
+                return "8bpp paletted BMP/PNG (*.bmp, *.png)|*.bmp;*.png";
+            }
+        }
+
+        public override string FilenameFilter
+        {
+            get
+            {
+                return "8bpp paletted BMP (*.bmp)|*.bmp|8bpp paletted PNG (*.png)|*.png";
             }
         }
 

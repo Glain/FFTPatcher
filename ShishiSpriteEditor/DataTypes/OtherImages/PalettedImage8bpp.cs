@@ -125,7 +125,7 @@ namespace FFTPatcher.SpriteEditor
         {
             get
             {
-                return FilenameFilter;
+                return "8bpp paletted BMP/PNG (*.bmp, *.png)|*.bmp;*.png";
             }
         }
 
@@ -134,17 +134,17 @@ namespace FFTPatcher.SpriteEditor
             get
             {
                 //return "GIF file (*.gif)|*.gif";
-                return "8bpp paletted bitmap (*.bmp)|*.bmp";
+                return "8bpp paletted BMP (*.bmp)|*.bmp|8bpp paletted PNG (*.png)|*.png";
             }
         }
 
-        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output)
+        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output, ImageFormat format)
         {
-            SaveImageSpecific(iso, output, false);
+            SaveImageSpecific(iso, output, format, false);
         }
 
         //public void SaveImageSpecific( System.IO.Stream iso, System.IO.Stream output, Bitmap originalImage = null, bool isSource4bpp = false )
-        public void SaveImageSpecific(System.IO.Stream iso, System.IO.Stream output, bool isSource4bpp = false, IList<byte> imageBytes = null)
+        public void SaveImageSpecific(System.IO.Stream iso, System.IO.Stream output, ImageFormat format, bool isSource4bpp = false, IList<byte> imageBytes = null)
         {
             //imageBytes = imageBytes ?? position.ReadIso(iso);
             imageBytes = imageBytes ?? GetIsoBytes(iso);
@@ -169,7 +169,7 @@ namespace FFTPatcher.SpriteEditor
             //if (originalImage == null)
             //    originalImage = GetImageFromIso(iso);
 
-            using ( Bitmap bmp = new Bitmap( Width, Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed ) )
+            using ( Bitmap bmp = new Bitmap( Width, Height, PixelFormat.Format8bppIndexed ) )
             {
                 ColorPalette pal = bmp.Palette;
                 for (int i = 0; i < p.Colors.Length; i++)
@@ -182,7 +182,7 @@ namespace FFTPatcher.SpriteEditor
                 }
                 bmp.Palette = pal;
 
-                var bmd = bmp.LockBits( new Rectangle( 0, 0, Width, Height ), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed );
+                var bmd = bmp.LockBits( new Rectangle( 0, 0, Width, Height ), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed );
                 for (int y = 0; y < Height; y++)
                 {
                     for (int x = 0; x < Width; x++)
@@ -194,41 +194,43 @@ namespace FFTPatcher.SpriteEditor
 
                 // Write that shit
                 //bmp.Save( output, System.Drawing.Imaging.ImageFormat.Gif );
-                bmp.Save(output, System.Drawing.Imaging.ImageFormat.Bmp);
+                bmp.Save(output, format);
             }
         }
 
-        protected override void WriteImageToIsoInner(System.IO.Stream iso, System.Drawing.Image image)
+        protected override void WriteImageToIsoInner(System.IO.Stream iso, Bitmap image, ImageFormat format)
         {
-            WriteImageToIsoInnerSpecific(iso, image, false);
+            WriteImageToIsoInnerSpecific(iso, image, format, false);
         }
 
-        public void WriteImageToIsoInnerSpecific(System.IO.Stream iso, System.Drawing.Image image, bool isDest4bpp = false)
+        public void WriteImageToIsoInnerSpecific(System.IO.Stream iso, Bitmap image, ImageFormat format, bool isDest4bpp = false)
         {
-            using ( Bitmap bmp = new Bitmap( image ) )
-            {
+            Bitmap bmp = image;
+
+            //using ( Bitmap bmp = new Bitmap( image ) )
+            //{
                 Set<Color> colors = GetColors( bmp );
                 if ( colors.Count > 256 )
                 {
                     ImageQuantization.OctreeQuantizer q = new ImageQuantization.OctreeQuantizer( 256,  8 );
                     using ( var newBmp = q.Quantize( bmp ) )
                     {
-                        WriteImageToIsoInner( iso, newBmp );
+                        WriteImageToIsoInner( iso, newBmp, format );
                     }
                 }
                 else
                 {
                     PatcherLib.Iso.KnownPosition newPalettePosition = palettePosition.AddOffset(CurrentPalette * palettePosition.Length, 0);
                     byte[] originalPaletteBytes = newPalettePosition.ReadIso(iso);
-                    byte[] imageBytes = GetImageBytes(bmp, isDest4bpp);
-                    List<Byte> paletteBytes = GetPaletteBytes(image.Palette.Entries, originalPaletteBytes);
+                    byte[] imageBytes = GetImageBytesByFormat(bmp, format, false, isDest4bpp);
+                    List<byte> paletteBytes = GetPaletteBytes(image.Palette.Entries, originalPaletteBytes);
 
                     newPalettePosition.PatchIso(iso, paletteBytes);
                     //position.PatchIso(iso, imageBytes);
                     PatchIsoBytes(iso, imageBytes, isDest4bpp);
                 }
             }
-        }
+        //}
 
         protected List<byte> GetPaletteBytes(IEnumerable<Color> colors, IList<byte> originalPaletteBytes)
         {
@@ -248,57 +250,6 @@ namespace FFTPatcher.SpriteEditor
             }
 
             return result;
-        }
-
-        protected byte[] GetImageBytes(Bitmap image, bool is4bpp = false)
-        {
-            List<byte> result = new List<byte>(Width * Height);
-            
-            /*
-             * This gets back wrong color values - don't know why - just load the data directly from the bitmap file instead
-             * 
-            System.Drawing.Imaging.BitmapData bmd = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, 
-                System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-            
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    int index = bmd.GetPixel(x, y);
-                    result.Add((byte)index);
-                }
-            }
-            
-            image.UnlockBits(bmd);
-            */
-
-            byte[] fileBytes = System.IO.File.ReadAllBytes(ImportFilename);
-            int stride = CalculateStride(8);
-            //int resultStride = CalculateStride(is4bpp ? 4 : 8);
-            int resultStride = is4bpp ? (image.Width / 2) : image.Width;
-            byte[] resultData = new byte[image.Height * resultStride];
-            int imageDataOffset = fileBytes[10] | (fileBytes[11] << 8) | (fileBytes[12] << 16) | (fileBytes[13] << 24);
-
-            for (int rowIndex = 0; rowIndex < image.Height; rowIndex++)
-            {
-                for (int colIndex = 0; colIndex < image.Width; colIndex++)
-                {
-                    int currentByteIndex = imageDataOffset + (rowIndex * stride) + colIndex;
-                    int resultByteIndex = ((image.Height - rowIndex - 1) * resultStride) + (is4bpp ? (colIndex / 2) : colIndex);
-                    byte currentByte = fileBytes[currentByteIndex];
-
-                    if (is4bpp)
-                    {
-                        resultData[resultByteIndex] |= (((colIndex & 0x01) == 0) ? ((byte)(currentByte & 0x0F)) : ((byte)((currentByte & 0x0F) << 4)));
-                    }
-                    else
-                    {
-                        resultData[resultByteIndex] = currentByte;
-                    }
-                }
-            }
-
-            return resultData;
         }
 
         protected virtual byte[] GetIsoBytes(System.IO.Stream iso)

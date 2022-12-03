@@ -8,6 +8,7 @@ using PatcherLib.Utilities;
 using System.Xml;
 using FFTPatcher.SpriteEditor.Properties;
 using FFTPatcher.SpriteEditor.DataTypes.OtherImages;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -16,10 +17,12 @@ namespace FFTPatcher.SpriteEditor
         public class AllImagesDoWorkData
         {
             public Stream ISO { get; private set; }
+            public System.Drawing.Imaging.ImageFormat Format { get; private set; }
             public string Path { get; private set; }
-            public AllImagesDoWorkData(Stream iso, string path)
+            public AllImagesDoWorkData(Stream iso, System.Drawing.Imaging.ImageFormat format, string path)
             {
                 ISO = iso;
+                Format = format;
                 Path = path;
             }
         }
@@ -83,7 +86,7 @@ namespace FFTPatcher.SpriteEditor
 
 
 
-        private AllImagesDoWorkResult LoadAllImages( Stream iso, string path, Action<int> progressReporter )
+        private AllImagesDoWorkResult ImportAllImages( Stream iso, string path, Action<int> progressReporter )
         {
             bool progress = progressReporter != null;
             int total = 0;
@@ -115,6 +118,13 @@ namespace FFTPatcher.SpriteEditor
                     }
 
                     string filePath = Path.Combine(path, name);
+                    ImageFormat format = ImageFormat.Bmp;
+                    if (!File.Exists(filePath) && filePath.ToLower().EndsWith(".bmp"))
+                    {
+                        filePath = filePath.Substring(0, filePath.Length - 4) + ".png";
+                        format = ImageFormat.Png;
+                    }
+
                     if (File.Exists(filePath))
                     {
                         if (img.CanSelectPalette() && (img.PaletteCount > 1))
@@ -126,14 +136,14 @@ namespace FFTPatcher.SpriteEditor
                             img4bpp.ImportExport8bpp = true;
                             img4bpp.CurrentPalette = Math.Max(0, img4bpp.CurrentPalette - 15);
 
-                            img.WriteImageToIso(iso, filePath);
+                            img.WriteImageToIso(iso, filePath, format);
 
                             img4bpp.ImportExport8bpp = importExport8bpp;
                             img4bpp.CurrentPalette = currentPalette;
                         }
                         else
                         {
-                            img.WriteImageToIso(iso, filePath);
+                            img.WriteImageToIso(iso, filePath, format);
                         }
 
                         usedFilenameSet.Add(name);
@@ -149,18 +159,18 @@ namespace FFTPatcher.SpriteEditor
             return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed );
         }
 
-        public AllImagesDoWorkResult LoadAllImages( Stream iso, string path )
+        public AllImagesDoWorkResult ImportAllImages( Stream iso, string path )
         {
-            return LoadAllImages( iso, path, null );
+            return ImportAllImages( iso, path, null );
         }
 
-        internal void LoadAllImages( object sender, System.ComponentModel.DoWorkEventArgs e )
+        internal void ImportAllImages( object sender, System.ComponentModel.DoWorkEventArgs e )
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
             AllImagesDoWorkData data = e.Argument as AllImagesDoWorkData;
             if (data == null)
                 return;
-            e.Result = LoadAllImages( data.ISO, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
+            e.Result = ImportAllImages( data.ISO, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
         }
 
         internal void ExportAllImages( object sender, System.ComponentModel.DoWorkEventArgs e )
@@ -169,11 +179,11 @@ namespace FFTPatcher.SpriteEditor
             AllImagesDoWorkData data = e.Argument as AllImagesDoWorkData;
             if (data == null)
                 return;
-            var result = ExportAllImages( data.ISO, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
+            var result = ExportAllImages( data.ISO, data.Format, data.Path, worker.WorkerReportsProgress ? (Action<int>)worker.ReportProgress : null );
             e.Result = result;
         }
 
-        private AllImagesDoWorkResult ExportAllImages( Stream iso, string path, Action<int> progressReporter )
+        private AllImagesDoWorkResult ExportAllImages( Stream iso, System.Drawing.Imaging.ImageFormat format, string path, Action<int> progressReporter )
         {
             bool progress = progressReporter != null;
             int total = 0;
@@ -194,7 +204,7 @@ namespace FFTPatcher.SpriteEditor
                 foreach (AbstractImage img in imgList)
                 {
                     string name = string.Empty;
-                    name = img.GetSaveFileName();
+                    name = img.GetSaveFileName(format);
                     //if (img.Context == Context.US_PSX )
                     //{
                     //    var pos = img.Position as PatcherLib.Iso.PsxIso.KnownPosition;
@@ -232,14 +242,14 @@ namespace FFTPatcher.SpriteEditor
                                 img4bpp.ImportExport8bpp = true;
                                 img4bpp.CurrentPalette = Math.Max(0, img4bpp.CurrentPalette - 15);
   
-                                img.SaveImage(iso, s);
+                                img.SaveImage(iso, s, format);
 
                                 img4bpp.ImportExport8bpp = importExport8bpp;
                                 img4bpp.CurrentPalette = currentPalette;
                             }
                             else
                             {
-                                img.SaveImage(iso, s);
+                                img.SaveImage(iso, s, format);
                             }
                         }
 
@@ -257,9 +267,9 @@ namespace FFTPatcher.SpriteEditor
             return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed );
         }
 
-        public void ExportAllImages( Stream iso, string path )
+        public void ExportAllImages( Stream iso, System.Drawing.Imaging.ImageFormat format, string path )
         {
-            ExportAllImages( iso, path, null );
+            ExportAllImages( iso, format, path, null );
         }
 
         // 0, 135

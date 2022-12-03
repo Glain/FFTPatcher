@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using FFTPatcher.SpriteEditor.DataTypes.OtherImages;
 using FFTPatcher.SpriteEditor.DataTypes;
+using System.Drawing.Imaging;
+using FFTPatcher.SpriteEditor.Helpers;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -84,23 +86,29 @@ namespace FFTPatcher.SpriteEditor
             return GetImageFromComboBoxItem().OriginalFilename;
         }
 
-        public void SaveCurrentImage( string path )
+        public void SaveCurrentImage( string path, ImageFormat format )
         {
             AbstractImage im = GetImageFromComboBoxItem();
             using ( System.IO.Stream s = System.IO.File.Open( path, System.IO.FileMode.Create ) )
             {
-                im.SaveImage( iso, s );
+                im.SaveImage( iso, s, format );
             }
         }
 
         public void LoadToCurrentImage( string path )
         {
-            using (Image im = Image.FromFile( path ))
-            {
+            string extension = System.IO.Path.GetExtension(path);
+            ImageFormat format = ImageFormatHelper.GetFormat(extension);
+            Bitmap image = ImageFormatHelper.GetImageFileBitmap(path);
+
+            //System.IO.MemoryStream stream = new System.IO.MemoryStream(importBytes);
+            //using (Image im = Image.FromFile( path ))
+            //using (Bitmap image = new Bitmap(stream);
+            //{
                 AbstractImage abIm = GetImageFromComboBoxItem();
                 abIm.ImportFilename = path;
-                abIm.WriteImageToIso( iso, im );
-            }
+                abIm.WriteImageToIso( iso, image, format );
+            //}
             RefreshPictureBox();
         }
 

@@ -155,7 +155,7 @@ namespace FFTPatcher.SpriteEditor
                         if (Directory.Exists(imagesDirectory))
                         {
                             AllOtherImages images = AllOtherImages.FromIso(iso);
-                            AllOtherImages.AllImagesDoWorkResult result = images.LoadAllImages(iso, imagesDirectory);
+                            AllOtherImages.AllImagesDoWorkResult result = images.ImportAllImages(iso, imagesDirectory);
                             bool isSuccess = (result.DoWorkResult == AllOtherImages.AllImagesDoWorkResult.Result.Success);
                             sbOutput.AppendLine(isSuccess ? (result.ImagesProcessed.ToString() + " images imported.") : "Failed to import images!");
                         }

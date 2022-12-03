@@ -17,7 +17,7 @@ namespace FFTPatcher.SpriteEditor
         {
         }
 
-        public static PalettedImage8bpp ConstructFromXml(XmlNode node)
+        public static new PalettedImage8bpp ConstructFromXml(XmlNode node)
         {
             ImageInfo info = GetImageInfo(node);
 

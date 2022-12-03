@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using PatcherLib.Utilities;
 using System.Drawing;
+using System.Drawing.Imaging;
+
 namespace FFTPatcher.SpriteEditor
 {
     class RawNybbleImage : AbstractImage
@@ -63,11 +65,19 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
+        public override string InputFilenameFilter
+        {
+            get
+            {
+                return "BMP/PNG image (*.bmp, *.png)|*.bmp;*.png";
+            }
+        }
+
         public override string FilenameFilter
         {
             get
             {
-                return "Bitmap file (*.bmp)|*.bmp";
+                return "Bitmap image (*.bmp)|*.bmp|PNG image (*.png)|*.png";
             }
         }
 
@@ -98,9 +108,9 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        public override void SaveImage( System.IO.Stream iso, System.IO.Stream output )
+        public override void SaveImage( System.IO.Stream iso, System.IO.Stream output, System.Drawing.Imaging.ImageFormat format )
         {
-            base.SaveImage( iso, output );
+            base.SaveImage( iso, output, format );
         }
 
         private static IList<System.Drawing.Color> greyscalePalette = new Color[16] {
@@ -122,11 +132,11 @@ namespace FFTPatcher.SpriteEditor
             Color.FromArgb(0xF0,0xF0,0xF0)
         }.AsReadOnly();
 
-        protected override void WriteImageToIsoInner( System.IO.Stream iso, System.Drawing.Image image )
+        protected override void WriteImageToIsoInner( System.IO.Stream iso, Bitmap image, ImageFormat format )
         {
             ImageQuantization.PaletteQuantizer q = new ImageQuantization.PaletteQuantizer( greyscalePalette );
             
-            using (System.Drawing.Bitmap b = q.Quantize( image ))
+            using (Bitmap b = q.Quantize( image ))
             {
                 List<byte> pixels = new List<byte>();
                 for (int y = 0; y < Height; y++)

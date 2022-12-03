@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Xml;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -10,11 +11,11 @@ namespace FFTPatcher.SpriteEditor
     {
         private PatcherLib.Iso.KnownPosition position;
 
-        public static Raw16BitImage ConstructFromXml( XmlNode node )
+        public static Raw16BitImage ConstructFromXml(XmlNode node)
         {
-            ImageInfo info = GetImageInfo( node );
-            var pos = GetPositionFromImageNode( info.Sector, node );
-            Raw16BitImage image = new Raw16BitImage( info.Name, info.Width, info.Height, pos );
+            ImageInfo info = GetImageInfo(node);
+            var pos = GetPositionFromImageNode(info.Sector, node);
+            Raw16BitImage image = new Raw16BitImage(info.Name, info.Width, info.Height, pos);
             image.OriginalFilename = info.OriginalFilename;
             image.Filesize = info.Filesize;
             image.Sector = info.Sector;
@@ -47,19 +48,19 @@ namespace FFTPatcher.SpriteEditor
 </{0}>", this.GetType().Name, this.Name, this.Width, this.Height, sectorType, sectorValue, offset, position.Length);
         }
 
-        public Raw16BitImage( string name, int width, int height, PatcherLib.Iso.KnownPosition position )
-            : base( name, width, height )
+        public Raw16BitImage(string name, int width, int height, PatcherLib.Iso.KnownPosition position)
+            : base(name, width, height)
         {
             this.position = position;
-            if ( position is PatcherLib.Iso.PsxIso.KnownPosition )
+            if (position is PatcherLib.Iso.PsxIso.KnownPosition)
             {
                 var pos = position as PatcherLib.Iso.PsxIso.KnownPosition;
-                saveFileName = string.Format( "{0}_{1}_{2}.bmp", pos.Sector, pos.StartLocation, pos.Length );
+                saveFileName = string.Format("{0}_{1}_{2}.bmp", pos.Sector, pos.StartLocation, pos.Length);
             }
-            else if ( position is PatcherLib.Iso.PspIso.KnownPosition )
+            else if (position is PatcherLib.Iso.PspIso.KnownPosition)
             {
                 var pos = position as PatcherLib.Iso.PspIso.KnownPosition;
-                saveFileName = string.Format( "{0}_{1}_{2}.bmp", pos.SectorEnum, pos.StartLocation, pos.Length );
+                saveFileName = string.Format("{0}_{1}_{2}.bmp", pos.SectorEnum, pos.StartLocation, pos.Length);
             }
         }
 
@@ -69,16 +70,24 @@ namespace FFTPatcher.SpriteEditor
             get { return saveFileName; }
         }
 
+        public override string InputFilenameFilter
+        {
+            get
+            {
+                return "BMP/PNG image (*.bmp, *.png)|*.bmp;*.png";
+            }
+        }
+
         public override string FilenameFilter
         {
             get
             {
-                return "Bitmap file (*.bmp)|*.bmp";
+                return "Bitmap image (*.bmp)|*.bmp|PNG image (*.png)|*.png";
                 //return "PNG file (*.png)|*.png";
             }
         }
 
-        protected override System.Drawing.Bitmap GetImageFromIsoInner( System.IO.Stream iso )
+        protected override Bitmap GetImageFromIsoInner( System.IO.Stream iso )
         {
             IList<byte> bytes = position.ReadIso( iso );
             IList<Color> pixels = new Color[bytes.Count / 2];
@@ -87,7 +96,7 @@ namespace FFTPatcher.SpriteEditor
                 pixels[i] = Palette.BytesToColor(bytes[i * 2], bytes[i * 2 + 1]);
             }
 
-            Bitmap result = new Bitmap( Width, Height, System.Drawing.Imaging.PixelFormat.Format16bppArgb1555 );
+            Bitmap result = new Bitmap( Width, Height, PixelFormat.Format16bppArgb1555 );
             for ( int x = 0; x < Width; x++ )
             {
                 for ( int y = 0; y < Height; y++ )
@@ -98,21 +107,23 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        // This seems to save as a 24 bpp bitmap, even though the format was set differently above.  That cuts off the alpha value, so we have to preserve the alpha when re-importing.
+        // This seems to save as a 24 bpp bitmap, even though the format was set differently above.
+        // That cuts off the alpha value, so we have to preserve the alpha when re-importing.
         // As long as we do that, the 24 bpp save actually seems to work just fine.
-        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output)
+        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output, System.Drawing.Imaging.ImageFormat format)
         {
             System.Drawing.Bitmap bmp = GetImageFromIso(iso);
-            bmp.Save(output, System.Drawing.Imaging.ImageFormat.Bmp);
+            bmp.Save(output, format);
         }
 
-        protected override void WriteImageToIsoInner( System.IO.Stream iso, System.Drawing.Image image )
+        protected override void WriteImageToIsoInner( System.IO.Stream iso, Bitmap image, ImageFormat format )
         {
             byte[] originalBytes = position.ReadIso(iso);
 
             IList<Color> pixels = new Color[Width * Height];
-            using ( Bitmap bmp = new Bitmap( image ) )
-            {
+            Bitmap bmp = image;
+            //using ( Bitmap bmp = new Bitmap( image ) )
+            //{
                 for ( int x = 0; x < Width; x++ )
                 {
                     for ( int y = 0; y < Height; y++ )
@@ -120,7 +131,7 @@ namespace FFTPatcher.SpriteEditor
                         pixels[y * Width + x] = bmp.GetPixel( x, y );
                     }
                 }
-            }
+            //}
 
             byte[] result = new byte[pixels.Count * 2];
             for ( int i = 0; i < pixels.Count; i++ )

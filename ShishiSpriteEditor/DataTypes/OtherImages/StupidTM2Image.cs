@@ -4,6 +4,8 @@ using System.Text;
 using System.Drawing;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
+using System.Drawing.Imaging;
+
 namespace FFTPatcher.SpriteEditor
 {
     public class StupidTM2Image : AbstractImage
@@ -129,7 +131,7 @@ namespace FFTPatcher.SpriteEditor
         {
             get
             {
-                return FilenameFilter;
+                return "8bpp paletted BMP/PNG (*.bmp, *.png)|*.bmp;*.png";
             }
         }
 
@@ -137,7 +139,7 @@ namespace FFTPatcher.SpriteEditor
         {
             get
             {
-                return "8bpp paletted bitmap (*.bmp)|*.bmp";
+                return "8bpp paletted BMP (*.bmp)|*.bmp|8bpp paletted PNG (*.png)|*.png";
             }
         }
 
@@ -201,12 +203,12 @@ namespace FFTPatcher.SpriteEditor
             return pixels;
         }
 
-        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output)
+        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output, System.Drawing.Imaging.ImageFormat format)
         {
-            SaveImageSpecific(iso, output, false);
+            SaveImageSpecific(iso, output, format, false);
         }
 
-        public void SaveImageSpecific(System.IO.Stream iso, System.IO.Stream output, bool isSource4bpp = false)
+        public void SaveImageSpecific(System.IO.Stream iso, System.IO.Stream output, System.Drawing.Imaging.ImageFormat format, bool isSource4bpp = false)
         {
             IList<byte> imageBytes = GetAllPixelBytes(iso);
             if (isSource4bpp)
@@ -224,7 +226,7 @@ namespace FFTPatcher.SpriteEditor
             Palette p = new Palette(PalettePosition.ReadIso(iso), FFTPatcher.SpriteEditor.Palette.ColorDepth._16bit, true);
 
             // Convert colors to indices
-            using (Bitmap bmp = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed))
+            using (Bitmap bmp = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed))
             {
                 System.Drawing.Imaging.ColorPalette pal = bmp.Palette;
                 for (int i = 0; i < p.Colors.Length; i++)
@@ -233,7 +235,7 @@ namespace FFTPatcher.SpriteEditor
                 }
                 bmp.Palette = pal;
 
-                var bmd = bmp.LockBits(new Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                var bmd = bmp.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
                 for (int y = 0; y < Height; y++)
                 {
                     for (int x = 0; x < Width; x++)
@@ -244,31 +246,32 @@ namespace FFTPatcher.SpriteEditor
                 bmp.UnlockBits(bmd);
 
                 // Write that shit
-                bmp.Save(output, System.Drawing.Imaging.ImageFormat.Bmp);
+                bmp.Save(output, format);
             }
         }
 
-        protected override void WriteImageToIsoInner( System.IO.Stream iso, System.Drawing.Image image )
+        protected override void WriteImageToIsoInner( System.IO.Stream iso, Bitmap image, ImageFormat format )
         {
-            WriteImageToIsoInnerSpecific(iso, image, false);
+            WriteImageToIsoInnerSpecific(iso, image, format, false);
         }
 
-        public void WriteImageToIsoInnerSpecific(System.IO.Stream iso, System.Drawing.Image image, bool isDest4bpp = false)
+        public void WriteImageToIsoInnerSpecific(System.IO.Stream iso, Bitmap image, ImageFormat format, bool isDest4bpp = false)
         {
-            using ( System.Drawing.Bitmap sourceBitmap = new System.Drawing.Bitmap( image ) )
-            {
+            Bitmap sourceBitmap = image;
+            //using ( System.Drawing.Bitmap sourceBitmap = new System.Drawing.Bitmap( image ) )
+            //{
                 Set<System.Drawing.Color> colors = GetColors( sourceBitmap );
                 if ( colors.Count > NumColors )
                 {
                     ImageQuantization.OctreeQuantizer q = new ImageQuantization.OctreeQuantizer( NumColors, 8 );
                     using ( var newBmp = q.Quantize( sourceBitmap ) )
                     {
-                        WriteImageToIsoInner( iso, newBmp );
+                        WriteImageToIsoInner( iso, newBmp, format );
                     }
                 }
                 else
                 {
-                    byte[] imageBytes = GetImageBytes(sourceBitmap, isDest4bpp);
+                    byte[] imageBytes = GetImageBytesByFormat(sourceBitmap, format, false, isDest4bpp);
                     IList<byte> bytes = PixelsToBytes(imageBytes);
 
                     byte[] originalPaletteBytes = PalettePosition.ReadIso(iso);
@@ -282,9 +285,10 @@ namespace FFTPatcher.SpriteEditor
                         currentIndex += kp.Length;
                     }
                 }
-            }
+            //}
         }
 
+        /*
         protected byte[] GetImageBytes(Bitmap image, bool is4bpp = false)
         {
             List<byte> result = new List<byte>(Width * Height);
@@ -317,6 +321,7 @@ namespace FFTPatcher.SpriteEditor
 
             return resultData;
         }
+        */
 
         protected List<byte> GetPaletteBytes(IEnumerable<Color> colors, IList<byte> originalPaletteBytes)
         {

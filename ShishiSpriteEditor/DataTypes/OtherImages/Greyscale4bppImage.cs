@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using PatcherLib.Datatypes;
 using System.Xml;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -56,7 +57,7 @@ namespace FFTPatcher.SpriteEditor
             }
         }
 
-        public static Greyscale4bppImage ConstructFromXml( XmlNode node )
+        public static new Greyscale4bppImage ConstructFromXml( XmlNode node )
         {
             ImageInfo info = GetImageInfo( node );
             var pos = GetPositionFromImageNode( info.Sector, node );
@@ -100,13 +101,14 @@ namespace FFTPatcher.SpriteEditor
         }
         */
 
-        protected override void WriteImageToIsoInner(System.IO.Stream iso, Image image)
+        protected override void WriteImageToIsoInner(System.IO.Stream iso, Bitmap image, ImageFormat format)
         {
-            using (Bitmap bmp = new Bitmap(image))
-            {
-                byte[] imageBytes = GetImageBytes(bmp);
+            Bitmap bmp = image;
+            //using (Bitmap bmp = new Bitmap(image))
+            //{
+                byte[] imageBytes = GetImageBytesByFormat(bmp, format, true, true);
                 position.PatchIso(iso, imageBytes);
-            }
+            //}
         }
 
         private class FakeGreyscalePalettePosition : PatcherLib.Iso.KnownPosition

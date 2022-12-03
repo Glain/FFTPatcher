@@ -75,7 +75,8 @@ namespace FFTPatcher.SpriteEditor
             this.menuItem_ImportEntireFile = new System.Windows.Forms.MenuItem();
             this.menuItem_ExportEntireFile = new System.Windows.Forms.MenuItem();
             this.importAllImagesMenuItem = new System.Windows.Forms.MenuItem();
-            this.dumpAllImagesMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem_ExportAllImages_BMP = new System.Windows.Forms.MenuItem();
+            this.menuItem_ExportAllImages_PNG = new System.Windows.Forms.MenuItem();
             this.spriteMenuItem = new System.Windows.Forms.MenuItem();
             this.reimportMenuItem = new System.Windows.Forms.MenuItem();
             this.separatorImportExportAllSprites = new System.Windows.Forms.MenuItem();
@@ -201,7 +202,8 @@ namespace FFTPatcher.SpriteEditor
             this.menuItem_ExportEntireFile,
             separator6,
             this.importAllImagesMenuItem,
-            this.dumpAllImagesMenuItem});
+            this.menuItem_ExportAllImages_BMP,
+            this.menuItem_ExportAllImages_PNG});
             this.imageMenuItem.Text = "Image";
             this.imageMenuItem.Visible = false;
             // 
@@ -245,11 +247,17 @@ namespace FFTPatcher.SpriteEditor
             this.importAllImagesMenuItem.Text = "Import all images...";
             this.importAllImagesMenuItem.Click += new System.EventHandler(this.importAllImagesMenuItem_Click);
             // 
-            // dumpAllImagesMenuItem
+            // menuItem_ExportAllImages_BMP
             // 
-            this.dumpAllImagesMenuItem.Index = 7;
-            this.dumpAllImagesMenuItem.Text = "Dump all images...";
-            this.dumpAllImagesMenuItem.Click += new System.EventHandler(this.dumpAllImagesMenuItem_Click);
+            this.menuItem_ExportAllImages_BMP.Index = 7;
+            this.menuItem_ExportAllImages_BMP.Text = "Export all images (BMP)...";
+            this.menuItem_ExportAllImages_BMP.Click += new System.EventHandler(this.menuItem_ExportAllImages_BMP_Click);
+            // 
+            // menuItem_ExportAllImages_PNG
+            // 
+            this.menuItem_ExportAllImages_PNG.Index = 8;
+            this.menuItem_ExportAllImages_PNG.Text = "Export all images (PNG)...";
+            this.menuItem_ExportAllImages_PNG.Click += new System.EventHandler(this.menuItem_ExportAllImages_PNG_Click);
             // 
             // spriteMenuItem
             // 
@@ -560,7 +568,8 @@ namespace FFTPatcher.SpriteEditor
         private System.Windows.Forms.MenuItem importImageMenuItem;
         private System.Windows.Forms.MenuItem exportImageMenuItem;
         private System.Windows.Forms.MenuItem importAllImagesMenuItem;
-        private System.Windows.Forms.MenuItem dumpAllImagesMenuItem;
+        private System.Windows.Forms.MenuItem menuItem_ExportAllImages_BMP;
+        private System.Windows.Forms.MenuItem menuItem_ExportAllImages_PNG;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.MenuItem imageMenuItem;
 

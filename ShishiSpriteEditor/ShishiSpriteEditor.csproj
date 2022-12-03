@@ -203,6 +203,7 @@
     <Compile Include="DataTypes\Zoom.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helpers\ImageFormatHelper.cs" />
+    <Compile Include="Helpers\PNGHelper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

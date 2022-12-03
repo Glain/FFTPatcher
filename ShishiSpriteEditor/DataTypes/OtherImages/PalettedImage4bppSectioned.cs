@@ -17,7 +17,7 @@ namespace FFTPatcher.SpriteEditor
         {
         }
 
-        public static PalettedImage4bppSectioned ConstructFromXml(XmlNode node)
+        public static new PalettedImage4bppSectioned ConstructFromXml(XmlNode node)
         {
             ImageInfo info = GetImageInfo(node);
             PatcherLib.Iso.KnownPosition palPos = GetPalettePositionFromImageNode(info.Sector, node);

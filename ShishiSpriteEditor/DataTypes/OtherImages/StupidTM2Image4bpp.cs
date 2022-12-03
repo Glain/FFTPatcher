@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
+using System.Drawing.Imaging;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -23,7 +24,7 @@ namespace FFTPatcher.SpriteEditor
         {
             get
             {
-                return FilenameFilter;
+                return (ImportExport8bpp ? "8bpp" : "4bpp") + " paletted BMP/PNG (*.bmp, *.png)|*.bmp;*.png";
             }
         }
 
@@ -31,7 +32,8 @@ namespace FFTPatcher.SpriteEditor
         {
             get
             {
-                return (ImportExport8bpp ? "8bpp" : "4bpp") + " paletted bitmap (*.bmp)|*.bmp";
+                string strBpp = (ImportExport8bpp ? "8bpp" : "4bpp");
+                return strBpp + " paletted BMP (*.bmp)|*.bmp|" + strBpp + " paletted PNG (*.png)|*.png";
             }
         }
 
@@ -43,7 +45,7 @@ namespace FFTPatcher.SpriteEditor
         {
         }
 
-        public static StupidTM2Image4bpp ConstructFromXml(System.Xml.XmlNode node)
+        public static new StupidTM2Image4bpp ConstructFromXml(System.Xml.XmlNode node)
         {
             ImageInfo info = GetImageInfo(node);
             var palPos = GetPalettePositionFromImageNode(info.Sector, node);
@@ -105,11 +107,11 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
-        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output)
+        public override void SaveImage(System.IO.Stream iso, System.IO.Stream output, ImageFormat format)
         {
             if (ImportExport8bpp)
             {
-                SaveImage8bpp(iso, output);
+                SaveImage8bpp(iso, output, format);
                 return;
             }
 
@@ -120,7 +122,7 @@ namespace FFTPatcher.SpriteEditor
             PatcherLib.Iso.KnownPosition newPalettePosition = PalettePosition.AddOffset(CurrentPalette * PalettePosition.Length, 0);
             Palette p = new Palette(newPalettePosition.ReadIso(iso), FFTPatcher.SpriteEditor.Palette.ColorDepth._16bit, true);
 
-            using (Bitmap bmp = new Bitmap(Width, Height, System.Drawing.Imaging.PixelFormat.Format4bppIndexed))
+            using (Bitmap bmp = new Bitmap(Width, Height, PixelFormat.Format4bppIndexed))
             {
                 System.Drawing.Imaging.ColorPalette pal = bmp.Palette;
                 for (int i = 0; i < p.Colors.Length; i++)
@@ -129,7 +131,7 @@ namespace FFTPatcher.SpriteEditor
                 }
                 bmp.Palette = pal;
 
-                System.Drawing.Imaging.BitmapData bmd = bmp.LockBits(new Rectangle(0, 0, Width, Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
+                BitmapData bmd = bmp.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format4bppIndexed);
                 for (int y = 0; y < Height; y++)
                 {
                     for (int x = 0; x < Width; x++)
@@ -146,20 +148,21 @@ namespace FFTPatcher.SpriteEditor
                 bmp.UnlockBits(bmd);
 
                 // Write that shit
-                bmp.Save(output, System.Drawing.Imaging.ImageFormat.Bmp);
+                bmp.Save(output, format);
             }
         }
 
-        protected override void WriteImageToIsoInner(System.IO.Stream iso, System.Drawing.Image image)
+        protected override void WriteImageToIsoInner(System.IO.Stream iso, Bitmap image, ImageFormat format)
         {
             if (ImportExport8bpp)
             {
-                WriteImageToIsoInner8bpp(iso, image);
+                WriteImageToIsoInner8bpp(iso, image, format);
                 return;
             }
 
-            using (Bitmap bmp = new Bitmap(image))
-            {
+            Bitmap bmp = image;
+            //using (Bitmap bmp = new Bitmap(image))
+            //{
                 Set<Color> colors = GetColors(bmp);
                 IList<Color> myColors = new List<Color>(colors);
                 if (myColors.Count > 16)
@@ -167,14 +170,14 @@ namespace FFTPatcher.SpriteEditor
                     ImageQuantization.OctreeQuantizer q = new ImageQuantization.OctreeQuantizer(16, 8);
                     using (var newBmp = q.Quantize(bmp))
                     {
-                        WriteImageToIsoInner(iso, newBmp);
+                        WriteImageToIsoInner(iso, newBmp, format);
                     }
                 }
                 else
                 {
                     PatcherLib.Iso.KnownPosition newPalettePosition = PalettePosition.AddOffset(CurrentPalette * PalettePosition.Length, 0);
                     IList<Byte> originalPaletteBytes = newPalettePosition.ReadIso(iso);
-                    byte[] imageBytes = GetImageBytes(bmp);
+                    byte[] imageBytes = GetImageBytesByFormat(bmp, format, true, true);
                     List<Byte> paletteBytes = GetPaletteBytes(image.Palette.Entries, originalPaletteBytes);
 
                     newPalettePosition.PatchIso(iso, paletteBytes);
@@ -189,7 +192,7 @@ namespace FFTPatcher.SpriteEditor
 
                     //PatchIsoBytes(iso, imageBytes);
                 }
-            }
+            //}
         }
 
         protected new List<byte> GetPaletteBytes(IEnumerable<Color> colors, IList<Byte> originalPaletteBytes)
@@ -207,9 +210,10 @@ namespace FFTPatcher.SpriteEditor
             return result;
         }
 
+        /*
         // The standard Windows Image method doesn't work to load in the indeces from a 4bpp paletted bitmap, 
         // so just load in the data directly by opening the bitmap as a binary file.
-        protected new byte[] GetImageBytes(Bitmap image)
+        protected byte[] GetImageBytes(Bitmap image)
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(ImportFilename);
             int combinedWidth = (image.Width + 1) / 2;
@@ -232,6 +236,7 @@ namespace FFTPatcher.SpriteEditor
 
             return resultData;
         }
+        */
 
         protected StupidTM2Image Get8BitPalettedBitmap()
         {
@@ -241,20 +246,20 @@ namespace FFTPatcher.SpriteEditor
             return image;
         }
 
-        protected void SaveImage8bpp(System.IO.Stream iso, System.IO.Stream output, StupidTM2Image image8bpp = null)
+        protected void SaveImage8bpp(System.IO.Stream iso, System.IO.Stream output, System.Drawing.Imaging.ImageFormat format, StupidTM2Image image8bpp = null)
         {
             if (image8bpp == null)
                 image8bpp = Get8BitPalettedBitmap();
 
-            image8bpp.SaveImageSpecific(iso, output, true);
+            image8bpp.SaveImageSpecific(iso, output, format, true);
         }
 
-        protected void WriteImageToIsoInner8bpp(System.IO.Stream iso, System.Drawing.Image image, StupidTM2Image image8bpp = null)
+        protected void WriteImageToIsoInner8bpp(System.IO.Stream iso, Bitmap image, ImageFormat format, StupidTM2Image image8bpp = null)
         {
             if (image8bpp == null)
                 image8bpp = Get8BitPalettedBitmap();
 
-            image8bpp.WriteImageToIsoInnerSpecific(iso, image, true);
+            image8bpp.WriteImageToIsoInnerSpecific(iso, image, format, true);
         }
     }
 }
