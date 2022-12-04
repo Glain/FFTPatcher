@@ -291,8 +291,9 @@ namespace FFTPatcher.SpriteEditor
 
         public virtual bool ImportPNG(IList<byte> importBytes, IList<byte> originalPaletteBytes, bool is4bpp = false, int paletteIndex = 0)
         {
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(importBytes.ToArray());
-            Bitmap pngImage = new Bitmap(stream);
+            //System.IO.MemoryStream stream = new System.IO.MemoryStream(importBytes.ToArray());
+            //Bitmap pngImage = new Bitmap(stream);
+            Bitmap pngImage = PNGHelper.LoadBitmap(importBytes.ToArray());
             return ImportBitmapObject(pngImage, originalPaletteBytes, is4bpp, paletteIndex);
         }
 
