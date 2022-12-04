@@ -550,6 +550,7 @@ namespace FFTPatcher.SpriteEditor
                     backgroundWorker1.RunWorkerCompleted -= completeHandler;
                     backgroundWorker1.ProgressChanged -= progressHandler;
                     backgroundWorker1.DoWork -= allOtherImagesEditor1.AllOtherImages.ImportAllImages;
+                    allOtherImagesEditor1.RefreshPictureBox(true);
                     MyMessageBox.Show( this, string.Format( "{0} images imported", result.ImagesProcessed ), result.DoWorkResult.ToString(), MessageBoxButtons.OK );
                 };
                 if (InvokeRequired) Invoke( mi );
@@ -613,6 +614,7 @@ namespace FFTPatcher.SpriteEditor
                     backgroundWorker1.RunWorkerCompleted -= completeHandler;
                     backgroundWorker1.ProgressChanged -= progressHandler;
                     backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.LoadAllSprites;
+                    allSpritesEditor1.ReloadCurrentSprite();
                     MyMessageBox.Show(this, string.Format("{0} sprites imported", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
                 };
                 if (InvokeRequired) Invoke(mi);
