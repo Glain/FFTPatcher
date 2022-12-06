@@ -66,6 +66,8 @@ namespace FFTPatcher.TextEditor
             get { return dataGridView.CurrentRow != null ? (int)dataGridView.CurrentRow.Cells[numberColumn.Name].Value : -1; }
         }
 
+        private string Filter { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StringListEditor"/> class.
         /// </summary>
@@ -89,6 +91,61 @@ namespace FFTPatcher.TextEditor
         public void UpdateTextFont(bool useFFTFont)
         {
             textColumn.DefaultCellStyle.Font = useFFTFont ? FFTFont : ArialFont;
+        }
+
+        public void ApplyFilter(string filter)
+        {
+            numberColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            hexColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            nameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            widthColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            for (int rowIndex = 0; rowIndex < dataGridView.Rows.Count; rowIndex++)
+            {
+                DataGridViewRow row = dataGridView.Rows[rowIndex];
+                row.Visible = IsRowVisibleThroughFilter(rowIndex, filter);
+            }
+
+            numberColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            hexColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet;
+            nameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            widthColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            textColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        }
+
+        public void ApplyCurrentFilter()
+        {
+            ApplyFilter(Filter);
+        }
+
+        public void SetFilter(string filter)
+        {
+            Filter = filter;
+            ApplyFilter(filter);
+        }
+
+        public void ClearFilter()
+        {
+            SetFilter(string.Empty);
+        }
+
+        private bool IsRowVisibleThroughFilter(int rowIndex, string filter = null)
+        {
+            filter = filter ?? Filter;
+
+            if (string.IsNullOrEmpty(filter))
+                return true;
+
+            object nameValue = dataGridView[nameColumn.Index, rowIndex].Value;
+            object textValue = dataGridView[textColumn.Index, rowIndex].Value;
+
+            string name = (nameValue == null) ? "" : nameValue.ToString().ToLower().Trim();
+            string text = (textValue == null) ? "" : textValue.ToString().ToLower().Trim();
+
+            filter = filter.ToLower().Trim();
+
+            return name.Contains(filter) || text.Contains(filter);
         }
 
         private void dataGridView_CellValidating( object sender, DataGridViewCellValidatingEventArgs e )
@@ -177,6 +234,7 @@ namespace FFTPatcher.TextEditor
 
             DataGridViewRow[] rows = new DataGridViewRow[count];
             dataGridView.SuspendLayout();
+            //dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             font = file.Context == PatcherLib.Datatypes.Context.US_PSP ? PSPResources.PSPFont : PSXResources.PSXFont;
             boundFile = file;
 
@@ -188,10 +246,12 @@ namespace FFTPatcher.TextEditor
                 row.CreateCells( dataGridView, i, hex, ourNames[i], GetWidthColumnString( file[section, i] ?? string.Empty ), file[section, i] );
 
                 row.ReadOnly = disallowed != null && disallowed.Count > 0 && disallowed.Contains( i );
+                //row.Visible = IsRowVisibleThroughFilter(i);
                 rows[i] = row;
             }
             dataGridView.Rows.Clear();
             dataGridView.Rows.AddRange( rows );
+            //dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.ResumeLayout();
 
             //bool showSeparatorChoices = file is ISerializableFile && (file as ISerializableFile).Layout.AllowedTerminators.Count > 1;
@@ -214,6 +274,8 @@ namespace FFTPatcher.TextEditor
             boundSection = section;
             ignoreChanges = false;
             ResumeLayout();
+
+            ApplyCurrentFilter();
         }
 
         private void separatorComboBox_SelectedIndexChanged(object sender, EventArgs e)

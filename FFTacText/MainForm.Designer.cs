@@ -253,14 +253,14 @@ namespace FFTPatcher.TextEditor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fileEditor1.Location = new System.Drawing.Point(13, 13);
             this.fileEditor1.Name = "fileEditor1";
-            this.fileEditor1.Size = new System.Drawing.Size(817, 377);
+            this.fileEditor1.Size = new System.Drawing.Size(817, 407);
             this.fileEditor1.TabIndex = 4;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 402);
+            this.ClientSize = new System.Drawing.Size(842, 432);
             this.Controls.Add(this.fileEditor1);
             this.Controls.Add(this.progressBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

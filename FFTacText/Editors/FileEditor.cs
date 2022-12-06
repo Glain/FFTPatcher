@@ -36,8 +36,19 @@ namespace FFTPatcher.TextEditor.Editors
 
             stringListEditor1.BindTo( file.EntryNames[localToFileIndexMapping[0]], file, localToFileIndexMapping[0] );
             boundFile = file;
-            restoreButton.Visible = boundFile is ISerializableFile;
-            commentsTable.Enabled = boundFile is ISerializableFile;
+
+            bool isSerializableFile = boundFile is ISerializableFile;
+            restoreButton.Visible = isSerializableFile;
+            restoreButton.Enabled = isSerializableFile;
+            commentsTable.Enabled = isSerializableFile;
+
+            btn_Clear.Enabled = true;
+            lbl_Search.Enabled = true;
+            txt_Search.Enabled = true;
+            btn_Search.Enabled = true;
+            chk_UseFFTFont.Enabled = true;
+            restoreButton.Enabled = true;
+
             ignoreChanges = false;
         }
 
@@ -56,6 +67,16 @@ namespace FFTPatcher.TextEditor.Editors
         public void UpdateTextFont(bool useFFTFont)
         {
             stringListEditor1.UpdateTextFont(useFFTFont);
+        }
+
+        public void SetFilter(string filter)
+        {
+            stringListEditor1.SetFilter(filter);
+        }
+
+        public void ClearFilter()
+        {
+            stringListEditor1.ClearFilter();
         }
 
         private void stringListEditor1_CellValidating( object sender, DataGridViewCellValidatingEventArgs e )
@@ -121,6 +142,17 @@ namespace FFTPatcher.TextEditor.Editors
                 boundFile.SectionComments[localToFileIndexMapping[sectionComboBox.SelectedIndex]] = 
                     sectionNotesTextbox.Text;
             }
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            txt_Search.Text = string.Empty;
+            ClearFilter();
+        }
+
+        private void btn_Search_Click(object sender, EventArgs e)
+        {
+            SetFilter(txt_Search.Text);
         }
     }
 }
