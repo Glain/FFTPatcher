@@ -256,7 +256,7 @@ namespace FFTPatcher.SpriteEditor
             openFileDialog.FileName = string.Empty;
             if (openFileDialog.ShowDialog( this ) == DialogResult.OK)
             {
-                Stream openedStream = File.Open( openFileDialog.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read );
+                FileStream openedStream = File.Open( openFileDialog.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read );
                 if (openedStream != null)
                 {
                     bool psx = openedStream.Length % PatcherLib.Iso.IsoPatch.SectorSizes[PatcherLib.Iso.IsoPatch.IsoType.Mode2Form1] == 0;
@@ -286,6 +286,12 @@ namespace FFTPatcher.SpriteEditor
                         allOtherImagesEditor1.BindTo( otherImages, currentStream );
 
                         Text = string.Format(titleFormatString, versionString, Path.GetFileName(openFileDialog.FileName));
+                    }
+                    else
+                    {
+                        openedStream.Close();
+                        openedStream.Dispose();
+                        MyMessageBox.Show(this, "File not recognized as valid FFT disc image.", "Error", MessageBoxButtons.OK);
                     }
                 }
             }
