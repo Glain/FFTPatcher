@@ -110,7 +110,11 @@ namespace EntryEdit.Forms
 
                         int battleConditionalsIndex = 0;
                         if (PsxIso.IsSectorInPsxSaveState(stream, (PsxIso.Sectors)settings.ScenariosSector))
+                        {
                             battleConditionalsIndex = PsxIso.LoadFromPsxSaveState(reader, (uint)(settings.ScenariosRAMLocation + (loadedEventID * 24) + 22), 2).ToIntLE();
+                            if (battleConditionalsIndex >= _entryData.BattleConditionals.Count)
+                                battleConditionalsIndex = 0;
+                        }
                         else
                             battleConditionalsIndex = (_selectedIndexResult.BattleConditionalIndex >= 0) ? _selectedIndexResult.BattleConditionalIndex : 0;
 

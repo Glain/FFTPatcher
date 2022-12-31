@@ -120,7 +120,14 @@ namespace EntryEdit
                             saveEvent = false;
 
                         if (PsxIso.IsSectorInPsxSaveState(stream, (PsxIso.Sectors)settings.ScenariosSector))
+                        {
                             battleConditionalsIndex = PsxIso.LoadFromPsxSaveState(reader, (uint)(settings.ScenariosRAMLocation + (eventID * 24) + 22), 2).ToIntLE();
+                            if (battleConditionalsIndex >= entryData.BattleConditionals.Count)
+                            {
+                                battleConditionalsIndex = 0;
+                                saveBattleConditionals = false;
+                            }
+                        }
                         else
                             saveBattleConditionals = false;
                     }
