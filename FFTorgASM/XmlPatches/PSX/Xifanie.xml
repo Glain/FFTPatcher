@@ -2684,4 +2684,18 @@ Examples:
         </Location>
     </Patch>
 
+    <Patch name="Fur Shop doesn't require Secret Hunt">
+        <Author>Xifanie</Author>
+        <Location file="WORLD_WORLD_BIN" offset="1228EC" offsetMode="RAM" mode="ASM">
+            ori r2, r0, 0x0001
+        </Location>
+    </Patch>
+
+    <Patch name="Fur Shop is always unlocked">
+        <Author>Xifanie</Author>
+        <Location file="WORLD_WLDCORE_BIN" offset="8D36C" offsetMode="RAM" mode="ASM">
+            nop
+        </Location>
+    </Patch>
+
 </Patches>

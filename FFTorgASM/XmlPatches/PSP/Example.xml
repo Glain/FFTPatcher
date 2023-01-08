@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patches>
+    <Patch name="Slowdown fix">
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="20AFD4">
+            02
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="20AFE4">
+            03
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="20AFF0">
+            02
+        </Location>
+    </Patch>
     <Patch name="Units start with 0 MP">
         <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="88C5856" offsetMode="RAM">
             80

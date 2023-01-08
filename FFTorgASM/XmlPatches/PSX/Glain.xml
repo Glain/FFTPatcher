@@ -920,7 +920,7 @@
                     or      a0, t0, t1
         </Location>
         <Location file="BATTLE_BIN" offset="1249F0" mode="ASM">
-                .if     >, %Apply, 0
+                .if     %Apply
                     j       @defense
                 .endIf
         </Location>
@@ -1358,7 +1358,7 @@
             00
         </Location>
         <Location mode="DATA" label="address_can_skip_instruction_array">
-            .if     >, %UsingEventInstructionUpgrade, 0
+            .if     %UsingEventInstructionUpgrade
                 00002286
                 DE008FE1
                 C180A00E
@@ -1379,7 +1379,7 @@
             .endif
         </Location>
         <Location mode="DATA" label="address_can_total_skip_instruction_array">
-            .if     >, %UsingEventInstructionUpgrade, 0
+            .if     %UsingEventInstructionUpgrade
                 0000FFFF
                 FFFFFFFD
                 CFFFBFFF
@@ -1536,12 +1536,12 @@
             nop 
         </Location>
         <Location file="BATTLE_BIN" offset="143D34" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingEventInstructionUpgrade, 0
+            .if     %UsingEventInstructionUpgrade
                 jal     @check_event_skip
             .endif
         </Location>
         <Location file="BATTLE_BIN" offset="143D3C" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingEventInstructionUpgrade, 0
+            .if     %UsingEventInstructionUpgrade
             .else
                 jal     @check_event_skip
                 move    s3, v0
@@ -2137,7 +2137,7 @@
                 party_level_random:
                     srl     t1, t2, 3
         
-                    .if     >, %ChangePartyLevelRandom, 0
+                    .if     %ChangePartyLevelRandom
                         srl     t3, t2, 4
                     .else
                         move    t3, t1
@@ -2158,7 +2158,7 @@
                     bne     t0, zero, min_level_check
                     addiu   t0, s0, -100
      
-                    .if     >, %ChangePartyLevelAddend, 0
+                    .if     %ChangePartyLevelAddend
                         li      t1, 51
                         sltu    t1, t0, t1
                         bne     t1, zero, min_level_check
@@ -2641,7 +2641,7 @@
         </Location>
         <Location file="WORLD_WORLD_BIN" offset="148200" mode="ASM" offsetMode="RAM">
             @swap_formation_unit_hook:
-                    .if     >, %OnlyOnCT, 0
+                    .if     %OnlyOnCT
                             lbu     t2, 0x8018c197
                             li      t3, 2
                             beq     t2, t3, swap_formation_unit_hook_onlyct_end
@@ -3275,7 +3275,7 @@
                 addu    t9, at, t8
                 lbu     v0, -0x16f4(t9)     #   Base Stat Base
         
-                .if     >, %UseMidpoint, 0
+                .if     %UseMidpoint
         
                     sll     t8, t7, 2           #   BaseStatSet * 4
                     addu    t8, t8, t7          #   BaseStatSet * 5
@@ -4018,7 +4018,7 @@
                     nop
         </Location>
         <Location file="BATTLE_BIN" offset="174328" mode="DATA" offsetMode="RAM">
-            .if     >, %UsingTLW, 0
+            .if     %UsingTLW
             .else
                 28
             .endif
@@ -4075,7 +4075,7 @@
             addiu   v0, a0, -0x0196
         </Location>
         <Location file="BATTLE_BIN" offset="18B32C" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingTLW, 0
+            .if     %UsingTLW
                 sb      a1, 0x38d8(at)
             .endif
         </Location>
@@ -4118,7 +4118,7 @@
                 lbu     t2, 6(s0)               #   Flags
                 lbu     t1, 0xb8(sp)            #   Skillset
                 
-                .if     >, %UsingTLW, 0
+                .if     %UsingTLW
                     jal     0x80152750
                 .endif
                 
@@ -4193,22 +4193,22 @@
                 sra     a0, a2, 3
         </Location>
         <Location file="BATTLE_BIN" offset="152754" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingTLW, 0
+            .if     %UsingTLW
                 addiu   v0, t1, -5
             .endif
         </Location>
         <Location file="BATTLE_BIN" offset="152770" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingTLW, 0
+            .if     %UsingTLW
                 jr      ra
             .endif
         </Location>
         <Location file="BATTLE_BIN" offset="152798,1527D4" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingTLW, 0
+            .if     %UsingTLW
                 lui     t3, 0x8018
             .endif
         </Location>
         <Location file="BATTLE_BIN" offset="1527AC,1527E8" mode="ASM" offsetMode="RAM">
-            .if     >, %UsingTLW, 0
+            .if     %UsingTLW
                 j       0x80152770
                 ori     ra, t3, 0x1954
             .endif
@@ -4429,7 +4429,7 @@
                 sb      v0, 0x38cd(at)
                 lui     t2, 0x8006
                 
-                .if     >, %UsingTLW, 0
+                .if     %UsingTLW
                     jal     0x80152cc0
                 .else
                     bne     v1, zero, 0x8018b490
@@ -6130,7 +6130,7 @@
                     lbu     t2, 0x22(s0)        #   Unit Level
                     #lbu     t3, 0x21(s0)        #   Unit Experience
         
-                .if >, %UseEnemyExp, 0
+                .if %UseEnemyExp
                     lbu     t0, 0x21(s2)        #   Enemy Experience
                     nop
                     beq     t0, zero, award_exp_hook_loop_check
@@ -6257,7 +6257,7 @@
                     beq     v0, zero, _random_fire_hook_change
                     nop
         
-                    .if     >, %ExcludeDefeatedUnits, 0        
+                    .if     %ExcludeDefeatedUnits        
                         lw      a0, 0x134(v0)
                         jal     0x8005e1b0
                         li      a1, 0
@@ -6333,6 +6333,32 @@
             sll     s0, s0, 1
         </Location>
     </Patch>
+    <Patch name="Axes/Flails/Bags have XA = (3/4)*PA to (5/4)*PA">
+        <Location file="BATTLE_BIN" offset="185A9C" mode="ASM" offsetMode="RAM">
+            lui     t0, 0x8019
+            lbu     v0, 0x38d8(t0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="185AC8" mode="ASM" offsetMode="RAM">
+            sw      s1, 0x0c(sp)
+            lw      v0, 0x2d94(t0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="185C34" mode="ASM" offsetMode="RAM">
+            sll     s1, s0, 1
+            addu    s1, s1, s0
+            srl     s1, s1, 2
+            srl     t0, s0, 1
+            multu   t0, v0
+            mflo    v0
+            srl     v0, v0, 15
+            j       0x80185c78
+            addu    v0, v0, s1
+        </Location>
+        <Location file="BATTLE_BIN" offset="185C88" mode="ASM" offsetMode="RAM">
+            lw      s1, 0x0c(sp)
+            jr      ra
+            addiu   sp, sp, 0x18
+        </Location>
+    </Patch>
     <Patch name="Swords use XA = (PA + SP) / 2">
         <Location file="BATTLE_BIN" offset="185B48" mode="ASM" offsetMode="RAM">
             beq     v1, v0, 0x80185b94
@@ -6343,7 +6369,14 @@
             Formula = Max(Z * 10, (MaxHP or MaxMP) * (Multiplier) / 128)
             Examples: 100% is 0x80, 75% is 0x60, 50% is 0x40
         </Description>
-        <Location file="BATTLE_BIN" offset="15377C" offsetMode="RAM" mode="ASM">
+        <Location file="BATTLE_BIN" offset="15AE04" offsetMode="RAM" mode="DATA" label="item_healing_multipliers">
+            %PotionMultiplier
+            %Hi-PotionMultiplier
+            %X-PotionMultiplier
+            %EtherMultiplier
+            %Hi-EtherMultiplier
+        </Location>
+        <Location file="BATTLE_BIN" offset="15AE0C" offsetMode="RAM" mode="ASM">
             @calc_heal_amount:
                 #   (a0 = Amount, a1 = Unit offset for Max value (0x2a = MaxHP, 0x2e = MaxMP), a2 = Store offset for Action (0x04 = HP Damage, 0x0a = MP Healing)
                     lui     t0, 0x8019
@@ -6355,10 +6388,10 @@
                     beq     t3, zero, calc_heal_amount_end
                     addu    t5, t2, a1
                     lhu     t5, 0(t5)                       #       MaxValue (Target.MaxHP or Target.MaxMP)
-                    lui     t4, 0x8015
+                    lui     t4, %hi(@item_healing_multipliers)
                     addu    t4, t4, t1
-                    lbu     t4, 0x3774(t4)                  #       Multiplier = *(0x80153774 + ItemID)
-                    nop
+                    lbu     t4, %lo(@item_healing_multipliers) (t4)  
+                    nop                                     #       Multiplier = *(Base pointer + ItemID)
                     multu   t4, t5
                     mflo    t4                      
                     srl     t4, t4, 7                       #       FractionAmount = (Multiplier * MaxValue) / 128
@@ -6394,11 +6427,1150 @@
                     sll     a0, v0, 1
                     j       @item_mp_heal_hook
         </Location>
-        <Variable file="BATTLE_BIN" offset="153774" offsetMode="RAM" name="Potion Multiplier" />
-        <Variable file="BATTLE_BIN" offset="153775" offsetMode="RAM" name="Hi-Potion Multiplier" />
-        <Variable file="BATTLE_BIN" offset="153776" offsetMode="RAM" name="X-Potion Multiplier" />
-        <Variable file="BATTLE_BIN" offset="153777" offsetMode="RAM" name="Ether Multiplier" />
-        <Variable file="BATTLE_BIN" offset="153778" offsetMode="RAM" name="Hi-Ether Multiplier" />
+        <Variable symbol="true" bytes="1" default="14" name="Potion Multiplier" />
+        <Variable symbol="true" bytes="1" default="28" name="Hi-Potion Multiplier" />
+        <Variable symbol="true" bytes="1" default="3C" name="X-Potion Multiplier" />
+        <Variable symbol="true" bytes="1" default="1E" name="Ether Multiplier" />
+        <Variable symbol="true" bytes="1" default="3C" name="Hi-Ether Multiplier" />
+    </Patch>
+    <Patch name="Units survive KO countdown">
+        <Description>
+            KO units don't become crystal or treasure when the counter expires.  
+            Instead, they are KO for the rest of the battle.  
+            These units use differently colored KO stars.
+            Applies to all units, player or enemy.
+        </Description>
+        <Location file="BATTLE_BIN" offset="18311C" mode="ASM" offsetMode="RAM">
+            lbu     a0, 7(s0)
+            bne     v0, zero, 0x80183204
+            xori    a1, a0, 0xfe
+            lbu     v0, 5(s0)
+            lbu     a2, 6(s0)
+            sltiu   a1, a1, 1
+            andi    v0, v0, 0x04
+            or      v0, v0, a1
+            bne     v0, zero, 0x801832b4
+            li      v0, 0
+            andi    v0, a2, 0x09
+        </Location>
+        <Location file="BATTLE_BIN" offset="1831C0" mode="ASM" offsetMode="RAM">
+            lbu     t0, 0x4e(s0)
+            li      t1, -2
+            ori     t0, t0, 0x20
+            sb      t0, 0x4e(s0)
+            
+            lbu     a0, 0x18a(s0)
+            jal     0x8007a724
+            sb      t1, 7(s0)
+            
+            #sh      zero, 0x1d8(v0)
+            
+            jal     @misc_unit_order_change
+            move    a0, v0
+            
+            j       0x801832b4
+            li      v0, 1
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="7EF40" mode="ASM" offsetMode="RAM">
+            lw      t5, 0x0134(s1)
+            lui     t6, 0x8009
+            lb      a0, 7(t5)
+        </Location>
+        <Location file="BATTLE_BIN" offset="7EF98" mode="ASM" offsetMode="RAM">
+            bltz    a0, 0x8007efc8
+        </Location>
+        <Location file="BATTLE_BIN" offset="7EFC8" mode="ASM" offsetMode="RAM">
+            lbu     t0, 5(t5)
+            lbu     t1, 0x49dc(t6)
+            lbu     v1, 0x49f4(t6)
+            lhu     v0, 0x02e2(s1)
+            sb      t1, 0x12(s0)
+            sb      v1, 0x13(s0)
+            andi    t0, t0, 0x04
+            sll     t0, t0, 5
+            sb      t0, 0x410(s1)
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="174E28" mode="ASM" offsetMode="RAM">
+            lbu     t0, 7(s0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="174E48" mode="ASM" offsetMode="RAM">
+            li      t1, 0xfe
+        </Location>
+        <Location file="BATTLE_BIN" offset="174E54" mode="ASM" offsetMode="RAM">
+            beq     t0, t1, 0x80174e60
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="7A318" mode="ASM" offsetMode="RAM">
+            lbu     t2, 1(v0)
+            lbu     t3, 7(v0)
+            beq     t2, t1, 0x8007a348
+            li      t4, 0xfe
+            lw      v0, 0x144(v1)
+            beq     t3, t4, 0x8007a348
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="17C21C" mode="ASM" offsetMode="RAM">
+            lbu     t3, 7(a2)
+            beq     v0, t2, 0x8017c270
+            li      t4, 0xfe
+        </Location>
+        <Location file="BATTLE_BIN" offset="17C24C" mode="ASM" offsetMode="RAM">
+            beq     t3, t4, 0x8017c270
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="19D2A8" mode="ASM" offsetMode="RAM">
+            lbu     t0, 7(a1)
+            lbu     v1, 0x47(a1)
+            lbu     t2, 0(a0)
+            beq     v0, a3, 0x8019d2f0
+            li      t1, 0xfe
+            bne     v1, t2, 0x8019d2f0
+            nop
+            lbu     v1, 0x48(a1)
+            lbu     v0, 2(a0)
+            beq     t0, t1, 0x8019d2f0
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="17BE14" mode="ASM" offsetMode="RAM">
+            li      t0, 1
+        </Location>
+        <Location file="BATTLE_BIN" offset="17BE1C" mode="ASM" offsetMode="RAM">
+            lbu     t1, 7(s1)
+        </Location>
+        <Location file="BATTLE_BIN" offset="17BE28" mode="ASM" offsetMode="RAM">
+            li      t2, 0xfe
+        </Location>
+        <Location file="BATTLE_BIN" offset="17BE30" mode="ASM" offsetMode="RAM">
+            beq     t1, t2, 0x8017be50
+        </Location>
+        <Location file="BATTLE_BIN" offset="17BE4C" mode="ASM" offsetMode="RAM">
+            sltu    t0, zero, v0
+        </Location>
+        <Location file="BATTLE_BIN" offset="17BE64" mode="ASM" offsetMode="RAM">
+            move    v0, t0
+        </Location>
+        
+        <Location file="BATTLE_BIN" offset="865B0" mode="ASM" offsetMode="RAM">
+            lw      t0, 0x134(a0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="865DC" mode="ASM" offsetMode="RAM">
+            li      t2, 0xfe
+        </Location>
+        <Location file="BATTLE_BIN" offset="865E4" mode="ASM" offsetMode="RAM">
+            lbu     t1, 7(t0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="8660C" mode="ASM" offsetMode="RAM">
+            lbu     t3, 0x2dc(a0)
+        </Location>
+        <Location file="BATTLE_BIN" offset="86618" mode="ASM" offsetMode="RAM">
+            beq     t1, t2, 0x80086630
+        </Location>
+        <Location file="BATTLE_BIN" offset="86620" mode="ASM" offsetMode="RAM">
+            beq     t3, zero, 0x80086630
+        </Location>
+    
+        <Location file="BATTLE_BIN" offset="15AEA0" mode="ASM" offsetMode="RAM">
+            @misc_unit_order_change:
+            #   a0 = miscUnit
+
+                    lui     t0, %hi(0x80098a54)
+                    addiu   t0, t0, %lo(0x80098a54)
+                    li      t6, 0
+
+                loop:   
+                    lw      t1, 0(t0)
+                    move    t7, t0
+
+                    bne     t1, a0, loop_unit_check
+                    nop
+        
+                    lw      t2, 0(t1)
+                    b       loop_bottom
+                    sw      t2, 0(t0)
+        
+                loop_unit_check:
+                    beq     t1, zero, past
+                    nop
+        
+                    lw      t3, 0x134(t1)
+                    nop
+
+                    lbu     t4, 7(t3)
+                    li      t5, 0xfe
+                    bne     t4, t5, loop_bottom
+                    nop
+        
+                    sw      a0, 0(t0)
+                    sw      t1, 0(a0)
+        
+                    b       past
+                    li      t6, 1
+        
+                loop_bottom:
+                    bne     t1, zero, loop
+                    move    t0, t1
+            
+                past:
+                    bne     t6, zero, end
+                    nop
+        
+                    sw      a0, 0(t7)
+                    sw      zero, 0(a0)
+        
+                end:
+                    jr      ra
+                    nop
+        </Location>
+    </Patch>
+    <Patch name="Learn on Hit applies for any unlocked job">
+        <Description>
+            Units can learn abilities on hit so long as they have the appropriate job(s) unlocked.
+            Units do not have to actively be in the job with the ability to learn it.
+        </Description>
+        <Location file="BATTLE_BIN" offset="18E6B8" mode="ASM" offsetMode="RAM">
+            .label  @load_ability_from_skillset, 0x8005a568
+            .label  @pass_fail_roll, 0x8005e0cc
+            .label  @does_unit_have_status_in_set, 0x8005e1b0
+            
+            .label  @ability_array, 0x8005ebf0
+            .label  @job_array, 0x800610b8
+            .label  @used_ability_id, 0x80193d44
+
+            @process_learn_on_hit:
+
+                    addiu   sp, sp, -0x40
+                    sw      s0, 0x18(sp)
+                    sw      s1, 0x1c(sp)
+                    #sw      s2, 0x20(sp)
+                    sw      s3, 0x24(sp)
+                    sw      s4, 0x28(sp)
+                    sw      s5, 0x2c(sp)
+                    sw      s6, 0x30(sp)
+                    sw      s7, 0x34(sp)
+                    sw      ra, 0x38(sp)
+
+                    move    s6, a0          #   actingUnitIndex
+                    move    s7, a1          #   learnedAbilityStorePtr
+                    
+                    .if     %RequireDifferentTeams
+                        #   Find acting unit flags
+                        jal     0x80180afc
+                        nop
+                        lbu     s3, 5(v0)
+                    .endif
+
+                    lui     t0, 0x8019
+                    lw      t1, 0x38bc(t0)
+                    lh      t2, %lo(@used_ability_id) (t0)
+
+                    beq     t1, zero, process_learn_on_hit_end
+                    li      v0, -1
+                    
+                    la      t0, @ability_array
+                    sll     t2, t1, 3
+                    addu    s5, t2, t0
+                    lbu     t0, 3(s5)
+                    li      s1, 0
+                    
+                    andi    t0, t0, 0x20
+                    beq     t0, zero, process_learn_on_hit_end
+                    li      v0, -1
+                    
+                    li      s4, 0
+                    
+                process_learn_on_hit_unit_loop:
+                
+                    beq     s6, s1, process_learn_on_hit_unit_loop_end
+                    lui     t0, 0x8019
+                    addiu   t0, t0, 0x08cc
+                    addu    s0, s4, t0
+                    lbu     t0, 0x189(s0)
+                    lbu     t1, 6(s0)
+                    andi    t0, t0, 0x02
+                    beq     t0, zero, process_learn_on_hit_unit_loop_end
+                    li      t0, 4
+                    andi    t1, t1, 0x20
+                    bne     t1, zero, process_learn_on_hit_unit_loop_end
+                    sb      t0, 0x189(s0)
+                    
+                    move    a0, s0
+                    jal     @does_unit_have_status_in_set
+                    li      a1, 4
+                    bne     v0, zero, process_learn_on_hit_unit_loop_end
+                    move    a0, s0
+                    
+                    .if     %RequireDifferentTeams
+                        lbu     t0, 5(s0)
+                        andi    t1, s3, 0x30
+                        andi    t0, t0, 0x30
+                        beq     t0, t1, process_learn_on_hit_unit_loop_end
+                        nop
+                    .endif
+                    
+                    jal     @process_unit_learn_on_hit
+                    li      a1, 0
+                    
+                    bltz    v0, process_learn_on_hit_unit_loop_end
+                    lui     t0, %hi(@used_ability_id)
+                    
+                    lh      t2, %lo(@used_ability_id) (t0)
+                    move    v0, s1
+                    b       process_learn_on_hit_end
+                    sh      t2, 0(s7)
+                    
+                process_learn_on_hit_unit_loop_end:
+                
+                    addiu   s1, s1, 1
+                    sltiu   t0, s1, 21
+                    bne     t0, zero, process_learn_on_hit_unit_loop
+                    addiu   s4, s4, 0x1c0
+                    
+                    #   Default case - ability not learned
+                    li      v0, -1
+                    
+                process_learn_on_hit_end:
+                
+                    lw      ra, 0x38(sp)
+                    lw      s7, 0x34(sp)
+                    lw      s6, 0x30(sp)
+                    lw      s5, 0x2c(sp)
+                    lw      s4, 0x28(sp)
+                    lw      s3, 0x24(sp)
+                    #lw      s2, 0x20(sp)
+                    lw      s1, 0x1c(sp)
+                    lw      s0, 0x18(sp)
+                    jr      ra
+                    addiu   sp, sp, 0x40
+
+
+            #   a0 = unit, a1 = should learn ability (0 or 1)
+            @process_unit_learn_on_hit:    
+                    addiu   sp, sp, -16
+                    sw      ra, 4(sp)
+                    
+                    move    t4, a0          #   unit
+                    move    t5, a1          #   should learn ability
+                    
+                    lbu     t8, 0(t4)       #   job = unit.baseClass
+                    li      t6, 0           #   jobWheelIndex = 0
+                    sltiu   t0, t8, 0x4a    
+                    bne     t0, zero, process_unit_learn_on_hit_job_loop
+                    nop
+                    
+                    li      t8, 0x4a
+                    
+                process_unit_learn_on_hit_job_loop:
+                    # t6 = jobWheelIndex
+
+                    srl     t0, t6, 3       #   jobWheelIndex / 8
+                    andi    t1, t6, 0x07    #   jobWheelIndex % 8
+                    addu    t0, t4, t0      
+                    lbu     t0, 0x96(t0)    #   unit job unlocked byte
+                    li      t2, 0x80
+                    srlv    t1, t2, t1      #   flag to check
+                    and     t0, t0, t1
+                    beq     t0, zero, process_unit_learn_on_hit_job_loop_end
+                    li      v0, -1
+                    
+                    sll     t2, t8, 1       #   jobID * 2
+                    addu    t2, t2, t8      #   jobID * 3
+                    sll     t2, t2, 4       #   jobID * 48
+                    lui     t1, %hi(@job_array)
+                    addu    t1, t1, t2
+                    lbu     t9, %lo(@job_array) (t1)    #  skillsetID
+                    li      t7, 0           #   abilityIndex
+                    
+                process_unit_learn_on_hit_ability_loop:
+                    srl     t0, t7, 3       #   abilityIndex / 8
+                    andi    t1, t7, 0x07    #   abilityIndex % 8
+                    addu    t0, t4, t0      
+                    lbu     t3, 0x99(t0)    #   unit ability learned byte
+                    li      t2, 0x80
+                    srlv    t2, t2, t1      #   flag to check
+                    and     t0, t3, t2
+                    beq     t0, zero, process_unit_learn_on_hit_ability_loop_end
+                    move    a0, t9
+                    
+                    #   This routine does not change registers $t0 to $t9
+                    jal     @load_ability_from_skillset
+                    move    a1, t7
+                    
+                    lui     t0, %hi(@used_ability_id)
+                    lh      t0, %lo(@used_ability_id) (t0)     
+                    srl     t1, t7, 3
+                    bne     t0, v0, process_unit_learn_on_hit_ability_loop_end
+                    addu    t1, t4, t1
+                    
+                    #   Check if should learn ability
+                    beq     t5, zero, process_unit_learn_on_hit_end
+                    move    v0, t0
+
+                    or      t0, t3, t2
+                    #b       process_unit_learn_on_hit_end
+                    sb      t0, 0x99(t1)
+                    
+                process_unit_learn_on_hit_ability_loop_end:
+                    sltiu   t0, t7, 25
+                    bne     t0, zero, process_unit_learn_on_hit_ability_loop
+                    addiu   t7, t7, 1
+
+                process_unit_learn_on_hit_job_loop_end:
+                    sltiu   t0, t6, 20
+                    addiu   t6, t6, 1
+                    bne     t0, zero, process_unit_learn_on_hit_job_loop
+                    addiu   t8, t6, 0x4a
+                    
+                    #   Default case - ability not learned
+                    li      v0, -1
+                    
+                process_unit_learn_on_hit_end:
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 16
+                    jr      ra
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="77A48" mode="ASM" offsetMode="RAM">
+                    jal     @process_unit_learn_on_hit
+                    li      a1, 1
+        </Location>
+        <Variable name="Require Different Teams" bytes="1" default="01" symbol="true" preset="boolean" />
+    </Patch>
+    <Patch name="Story battles have fixed unit generation">
+        <Description>
+            Story battles use fixed unit generation (per playthrough) by using a static RNG seed per battle.
+            This will apply to ENTD entries from "Starting ENTD" variable and upward.
+        </Description>
+        <Location file="BATTLE_BIN" offset="15D180" mode="ASM" offsetMode="RAM">
+            .label  @address_entd_entry_id, 0x80047600
+            .label  @address_entd_rng_seed, 0x80057964
+            .label  @address_rng_seed, 0xA0009010
+
+            @handle_entd_rng_seed:
+                    lw      t3, @address_entd_entry_id
+                    lui     t4, %hi(@address_rng_seed)
+                    li      t5, 0
+                    sltiu   t0, t3, %StartingENTD
+                    bne     t0, zero, handle_entd_rng_seed_end
+                    lui     t2, %hi(@address_entd_rng_seed)
+                    
+                    lhu     t0, %lo(@address_entd_rng_seed) (t2)
+                    lw      t5, %lo(@address_rng_seed) (t4)
+                    bne     t0, zero, handle_entd_rng_seed_store
+                    andi    t1, t5, 0xffff
+                    
+                    sh      t1, %lo(@address_entd_rng_seed) (t2)
+                    move    t0, t1
+                    
+                handle_entd_rng_seed_store:
+                    multu   t0, t3
+                    mflo    t0
+                    sw      t0, %lo(@address_rng_seed) (t4)
+                    
+                handle_entd_rng_seed_end:
+                    jr      ra
+                    sw      t5, 0x0c(sp)
+        </Location>
+        <Location file="BATTLE_BIN" offset="17F8DC" mode="ASM" offsetMode="RAM">
+                    lui     t0, 0x8019
+                    sb      zero, 0x3898(t0)
+                    sh      zero, 0x3844(t0)
+                    sb      zero, 0x3920(t0)
+                    jal     @handle_entd_rng_seed
+                    nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="17FBB8" mode="ASM" offsetMode="RAM">
+                    lw      t0, 0x0c(sp)
+                    nop
+                    beq     t0, zero, load_entd_units_end
+                    lui     t1, %hi(@address_rng_seed)
+                    
+                    sw      t0, %lo(@address_rng_seed) (t1)
+                    
+                load_entd_units_end:
+                    j       0x8007e974
+                    nop
+        </Location>
+        <Variable name="Starting ENTD" bytes="2" default="0180" symbol="true" />
+    </Patch>
+    <Patch name="Soldier office keeps same soldiers until one is hired">
+        <Description>
+            Soldier office retains the same soldiers (with the same stats) until one of them is hired, and then new soldiers are available for hire. 
+        </Description>
+        <Location file="WORLD_WORLD_BIN" offset="138448" mode="ASM" offsetMode="RAM">
+            jal     @soldier_office_generate_unit_hook
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="13898C" mode="ASM" offsetMode="RAM">
+            jal     @soldier_office_war_funds_hook
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="148500" mode="ASM" offsetMode="RAM">
+            .label  @address_soldier_office_rng_seed, 0x80057960
+            .label  @address_rng_seed, 0xA0009010
+            
+            .label  @generate_party_unit_in_formation, 0x801209c4
+            .label  @obtain_gil, 0x801207bc
+        
+        
+            @soldier_office_generate_unit_hook:
+                    addiu   sp, sp, -24
+                    sw      s0, 4(sp)
+                    sw      s1, 8(sp)
+                    sw      ra, 12(sp)
+                    
+                    lw      s1, @address_rng_seed
+                    
+                    jal     @soldier_office_restore_rng_seed
+                    move    s0, a0
+                    jal     @generate_party_unit_in_formation
+                    move    a0, s0
+                    
+                    sw      s1, @address_rng_seed
+                    
+                    lw      ra, 12(sp)
+                    lw      s1, 8(sp)
+                    lw      s0, 4(sp)
+                    jr      ra
+                    addiu   sp, sp, 24
+        
+        
+            @soldier_office_war_funds_hook:
+                    addiu   sp, sp, -16
+                    sw      s0, 4(sp)
+                    sw      ra, 8(sp)
+                
+                    jal     @soldier_office_store_rng_seed
+                    move    s0, a0
+                    jal     @obtain_gil
+                    move    a0, s0
+                    
+                    lw      ra, 8(sp)
+                    lw      s0, 4(sp)
+                    jr      ra
+                    addiu   sp, sp, 16
+        
+        
+            @soldier_office_store_rng_seed:
+                    lui     a0, %hi(@address_soldier_office_rng_seed)
+                    j       @store_rng_seed
+                    addiu   a0, a0, %lo(@address_soldier_office_rng_seed)
+                
+                
+            @soldier_office_restore_rng_seed:
+                    addiu   sp, sp, -24
+                    sw      s0, 4(sp)
+                    sw      s1, 8(sp)
+                    sw      ra, 12(sp)
+            
+                    lw      s1, @address_soldier_office_rng_seed
+                    move    s0, a0
+                    bne     s1, zero, soldier_office_restore_rng_seed_type
+                    nop
+                    
+                soldier_office_restore_rng_seed_store:
+                    jal     @soldier_office_store_rng_seed
+                    nop
+                    move    s1, v0
+                 
+                soldier_office_restore_rng_seed_type:
+                    bne     s0, zero, soldier_office_restore_rng_seed_call
+                    srl     a0, s1, 16
+                    
+                    andi    a0, s1, 0xffff
+                    
+                soldier_office_restore_rng_seed_call:
+                    jal     @restore_rng_seed
+                    nop
+                    
+                soldier_office_restore_rng_seed_end:
+                    lw      ra, 12(sp)
+                    lw      s1, 8(sp)
+                    lw      s0, 4(sp)
+                    jr      ra
+                    addiu   sp, sp, 24
+
+
+            @store_rng_seed:
+                    lw      v0, @address_rng_seed
+                    jr      ra
+                    sw      v0, 0(a0)
+
+
+            @restore_rng_seed:
+                lui     at, %hi(@address_rng_seed)
+                jr      ra
+                sw      a0, %lo(@address_rng_seed) (at)
+        </Location>
+    </Patch>
+    <Patch name="Soldier office calculates display price">
+        <Description>
+            Soldier office display price is calculated based on equipment cost: (Base hire price) + (Base unit equipment cost).
+            Base hire price default is 1000 gil (same as normal).
+        </Description>
+        <Location file="WORLD_WORLD_BIN" offset="138458" mode="ASM" offsetMode="RAM">
+                    li      v0, %BaseHirePrice
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="138E74" mode="ASM" offsetMode="RAM">
+                    lh      t0, 0x8019520c
+                    nop
+
+                    sltiu   t1, t0, 2
+                    beq     t1, zero, find_soldier_office_price_end
+                    li      v0, 0
+
+                    j       @find_overall_soldier_office_hire_price
+                    move    a0, t0
+
+                find_soldier_office_price_end:
+                    jr      ra
+                    nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="148600" mode="ASM" offsetMode="RAM">
+            .label  @get_item_price, 0x80123708
+            .label  @address_base_unit_equip_data, 0x8005e911
+
+            #   a0 = Menu option index (0 = Male, 1 = Female)
+            @find_overall_soldier_office_hire_price:
+                    addiu   sp, sp, -16
+                    sw      ra, 4(sp)
+            
+                    sll     t1, a0, 1
+                    addu    t1, t1, a0
+                    sll     t1, t1, 2
+                    
+                    lui     t0, %hi(@address_base_unit_equip_data)
+                    addu    t0, t0, t1
+                    
+                    li      t2, %BaseHirePrice
+                    addiu   t1, t0, 7
+                find_overall_soldier_office_hire_price_loop:
+                    lbu     a0, %lo(@address_base_unit_equip_data) (t0)
+                    jal     @get_item_price
+                    nop
+                    
+                    addiu   t0, t0, 1
+                    bne     t0, t1, find_overall_soldier_office_hire_price_loop
+                    addu    t2, t2, v0
+                    
+                find_overall_soldier_office_hire_price_end:
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 16
+                    jr      ra
+                    move    v0, t2
+        </Location>
+        <Location file="WORLD_WORLD_BIN" mode="DATA" offset="195A79" offsetMode="RAM">
+            78
+        </Location>
+        <Location file="WORLD_WORLD_BIN" mode="DATA" offset="195A83" offsetMode="RAM">
+            06
+        </Location>
+        <Location file="WORLD_WORLD_BIN" mode="DATA" offset="195A86" offsetMode="RAM">
+            7C
+        </Location>
+        <Variable name="Base Hire Price" bytes="2" default="03E8" symbol="true" />
+    </Patch>
+    <Patch name="Soldier office doesn't rename units">
+        <Description>
+            Soldier office doesn't rename units.
+            
+            The third menu option in the Soldier office should only contain three options, and the third option exits.
+            
+            Set the Patch Menu Text variable to True to also patch the soldier office menu text. This should only be set 
+            if there are no Tactext changes in the WORLD.BIN 11 section.  
+            Otherwise, the menu text should be changed via Tactext in WORLD.BIN 11 (Entries 6 and 8).
+        </Description>
+        <Location file="WORLD_WORLD_BIN" offset="1383DC" mode="ASM" offsetMode="RAM">
+            b       0x801383a0
+            li      a1, 0x19
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="138464" mode="ASM" offsetMode="RAM">
+            addiu   v1, at, -0x2a14
+            sll     v0, s1, 2
+            jal     0x80108920
+            addu    s2, v0, v1
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1387F0" mode="ASM" offsetMode="RAM">
+            j   0x8013889c
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1388BC" mode="ASM" offsetMode="RAM">
+            nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1388E4" mode="ASM" offsetMode="RAM">
+            j   0x8013880c
+            nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1389A4" mode="ASM" offsetMode="RAM">
+            nop
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="18A408" mode="DATA" offsetMode="RAM">
+            7A
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1951DA,1951EA" mode="DATA" offsetMode="RAM">
+            40
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="195069" mode="DATA" offsetMode="RAM">
+            .if %PatchMenuText
+                16 24 2F 28 FA 36 32 2F 27 2C 28 35 F8 0F 28 30 24 2F 28 FA 36 32 2F 27 2C 28 35 F8 15 28 24 39 28 FA 32 29 29 2C 26 28 FA DA 73 DA 73 DA 73 DA 73 DA 73 FE
+            .endif
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1951F2" mode="DATA" offsetMode="RAM">
+            02
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="195A2A,195A3A" mode="DATA" offsetMode="RAM">
+            30
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="1950B4" mode="DATA" offsetMode="RAM">
+            .if %PatchMenuText
+                22 28 36 F8 17 32 FA DA 73 DA 73 DA 73 DA 73 DA 73 DA 73 DA 73 FE
+            .endif
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="195A42" mode="DATA" offsetMode="RAM">
+            01
+        </Location>
+        <Variable name="Patch Menu Text" bytes="1" default="01" preset="boolean" symbol="true" />
+    </Patch>
+    <Patch name="Disable permanent brave and faith alteration">
+        <Description>
+            Also disables units leaving due to brave and faith and associated warnings.
+        </Description>
+        <Location file="EVENT_REQUIRE_OUT" offset="1C43E8,1C3FA4" mode="ASM" offsetMode="RAM">
+            jr      ra
+            li      v0, 0
+        </Location>
+    </Patch>
+    <Patch name="Lower Brave and Faith grant more evasion">
+        <Description>
+            Lower brave grants more physical evasion and lower faith grants more magical evasion.
+            Evasion modifier is subtracted by (Base - (Brave or Faith)) * (Multiplier / power(2, Shift)).
+            Evasion effectiveness is 100 / (Evasion modifier)
+        </Description>
+        <Location file="BATTLE_BIN" offset="1853F4" mode="ASM" offsetMode="RAM">
+            lui     t2, 0x8019
+            lw      t3, 0x2d98(t2)
+        </Location>
+        <Location file="BATTLE_BIN" offset="185404" mode="ASM" offsetMode="RAM">
+            lbu     v0, 0x5c(t3)
+            lbu     v1, 0x5b(t3)
+        </Location>
+        <Location file="BATTLE_BIN" offset="185424" mode="ASM" offsetMode="RAM">
+            lbu     v0, 0x59(t3)
+            addu    t0, t3, a2
+        </Location>
+        <Location file="BATTLE_BIN" offset="185434" mode="ASM" offsetMode="RAM">
+            li      t1, %Base
+            li      a0, 1
+            lbu     v0, 0x58(t3)
+            lbu     t0, 0(t0)
+            andi    v0, v0, 0x09
+            beq     v0, zero, 0x80185454
+            subu    t0, t1, t0
+        </Location>
+        <Location file="BATTLE_BIN" offset="185458" mode="ASM" offsetMode="RAM">
+            lbu     t1, 0x38dc(t2)
+            li      t4, %Multiplier
+            beq     v0, zero, 0x80185470
+            addiu   a0, t2, 0x38de
+        </Location>
+        <Location file="BATTLE_BIN" offset="185470" mode="ASM" offsetMode="RAM">
+            multu   t0, t4
+            mflo    t0
+            lbu     v0, 0x0058(t3)
+            srl     t0, t0, %Shift
+            subu    t0, t1, t0
+        </Location>
+        <Location file="BATTLE_BIN" offset="18548C" mode="ASM" offsetMode="RAM">
+            sb      t0, 0x38dc(t2)
+        </Location>
+        <Location file="BATTLE_BIN" offset="18853C,188594" mode="ASM" offsetMode="RAM">
+            li      a2, 0x24
+        </Location>
+        <Location file="BATTLE_BIN" offset="1885DC" mode="ASM" offsetMode="RAM">
+            li      a2, 0x26
+        </Location>
+        <Variable name="Base" bytes="1" default="46" symbol="true" />
+        <Variable name="Multiplier" bytes="1" default="20" symbol="true" />
+        <Variable name="Shift" bytes="1" default="7" symbol="true" />
+    </Patch>
+    <Patch name="Brave and Faith values grant extra C-EV">
+        <Description>
+            Low Brave grants more physical C-EV and low Faith grants more magical C-EV.
+            C-EV granted is: (Base - (Brave or Faith)) * (Multiplier / power(2, Shift)) (If above zero)
+            Use Invert to grant C-EV for higher Brave and Faith instead.
+        </Description>
+        <Location file="BATTLE_BIN" offset="184F9C" mode="ASM" offsetMode="RAM">
+                lui     t4, 0x8019
+                lw      t3, 0x2d98(t4)
+                addiu   sp, sp, -0x18
+                sw      ra, 0x10(sp)
+                lbu     v0, 0x8e(t3)
+                lbu     t1, 0x24(t3)
+                andi    v0, v0, 0x40
+                beq     v0, zero, past_weapon_guard_check
+                li      a3, 0
+                jal     0x8018130c
+                move    a0, t3
+                sltiu   a3, v0, 1
+                
+            past_weapon_guard_check:
+                li      v0, 100
+                sb      v0, 0x38dc(t4)
+                sb      zero, 0x38de(t4)
+                sb      zero, 0x38df(t4)
+                sb      zero, 0x38e0(t4)
+                
+                lbu     t2, 0x43(t3)
+                li      t0, %PhysicalBase
+                
+                .if %PhysicalInvert
+                    subu    t0, t1, t0
+                .else
+                    subu    t0, t0, t1
+                .endif
+                
+                bltz    t0, past_p_cev
+                li      t1, %PhysicalMultiplier
+                multu   t0, t1
+                mflo    t0
+                srl     t0, t0, %PhysicalShift
+                addu    t2, t2, t0
+                
+            past_p_cev:
+                lbu     v0, 6(t3)
+                sb      t2, 0x38e1(t4)
+                andi    v0, v0, 0x20
+                bne     v0, zero, 0x801851b4
+                move    a0, t3
+        </Location>
+        <Location file="BATTLE_BIN" offset="1851C4" mode="ASM" offsetMode="RAM">
+                lui     t4, 0x8019
+                lw      a0, 0x2d98(t4)
+                li      v0, 100
+                sb      v0, 0x38dc(t4)
+                lbu     v0, 6(a0)
+                sb      zero, 0x38de(t4)
+                sb      zero, 0x38df(t4)
+                sb      zero, 0x38e0(t4)
+                andi    t2, v0, 0x20
+                
+                lbu     t1, 0x26(a0)
+                li      t0, %MagicalBase
+                
+                .if %MagicalInvert
+                    subu    t0, t1, t0
+                .else
+                    subu    t0, t0, t1
+                .endif
+                
+                bltz    t0, past_m_cev
+                li      t3, 0
+                li      t1, %MagicalMultiplier
+                multu   t0, t1
+                mflo    t0
+                srl     t3, t0, %MagicalShift
+            
+            past_m_cev: 
+                sb      t3, 0x38e1(t4)
+                bne     t2, zero, 0x801852dc
+                lui     a1, 0x8006
+                lbu     v0, 0x1c(a0)
+                addiu   a1, a1, 0x2eb8
+                sll     v1, v0, 1
+                addu    v1, v1, v0
+                sll     v1, v1, 2
+                addu    v1, v1, a1
+                lbu     v0, 3(v1)
+                lbu     t0, 4(v1)
+                andi    v0, v0, 0x08
+                beq     v0, zero, 0x8018525c
+                sll     v0, t0, 1
+                nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="1337D0" mode="ASM" offsetMode="RAM">
+                lui     t4, 0x8015
+                sh      v0, -0x2f7e(t4)
+                lbu     t2, 0x24(s4)
+                lbu     t3, 0x26(s4)
+                sh      t2, -0x2f7c(t4)
+                sh      t3, -0x2f7a(t4)
+
+                lhu     t0, 8(s4)
+                lbu     t1, 0x3a(s4)
+                srl     t0, t0, 12
+                sh      t0, -0x2f78(t4)
+                sh      t1, 0(s1)
+
+                lbu     t0, 0x38(s4)
+                lbu     t1, 0x3b(s4)
+                sh      t0, -0x2f5e(t4)
+                sh      t1, -0x2f5c(t4)
+
+                lbu     t0, 0x3e(s4)
+                lbu     t1, 0x3f(s4)
+                sh      t0, -0x2f56(t4)
+                sh      t1, -0x2f54(t4)
+
+                lbu     t0, 0x3c(s4)
+                lbu     t1, 0x3d(s4)
+                sh      t0, -0x2f5a(t4)
+                sh      t1, -0x2f58(t4)
+
+                lbu     t0, 0x36(s4)
+                lbu     t5, 0x43(s4)
+                sh      t0, -0x2f4e(t4)
+
+                lbu     t0, 0x41(s4)
+                lbu     t1, 0x42(s4)
+                sh      t0, -0x2f4a(t4)
+                sltu    t6, t1, t0
+                bne     t6, zero, past_shield_evade
+                li      t6, %PhysicalBase
+                sh      t1, -0x2f4a(t4)
+                
+            past_shield_evade:
+                lbu     t0, 0x37(s4)
+                li      t7, %PhysicalMultiplier
+                sh      t0, -0x2f44(t4)
+                
+                .if %PhysicalInvert
+                    subu    t0, t2, t6
+                .else
+                    subu    t0, t6, t2
+                .endif
+                
+                bltz    t0, past_p_cev
+                multu   t0, t7
+                mflo    t0
+                srl     t0, t0, %PhysicalShift
+                addu    t5, t5, t0
+
+            past_p_cev:
+                sh      t5, -0x2f4c(t4)
+
+                li      t0, %MagicalBase
+                
+                .if %MagicalInvert
+                    subu    t0, t3, t0
+                .else
+                    subu    t0, t0, t3
+                .endif
+                
+                bltz    t0, past_m_cev
+                li      t2, 0
+                li      t1, %MagicalMultiplier
+                multu   t0, t1
+                mflo    t0
+                srl     t2, t0, %MagicalShift
+
+            past_m_cev: 
+                b       0x801338c0
+                sh      t2, -0x2f42(t4)
+        </Location>
+        <Location file="WORLD_WORLD_BIN" offset="120C1C" mode="ASM" offsetMode="RAM">
+                lbu     t0, 0x15(s2)
+                lbu     t4, 2(s1)
+                sltiu   t2, t0, 100
+                bne     t2, zero, past_exp_cap
+                sh      t4, 0x0a(s0)
+                li      t0, 99
+                
+            past_exp_cap:
+                sh      t0, 8(s0)
+                
+                lhu     t0, 0x2a(s1)
+                lhu     t1, 0x2e(s1)
+                sltiu   t2, t0, 1000
+                bne     t2, zero, past_hp_cap
+                sltiu   t3, t1, 1000
+                li      t0, 999
+                
+            past_hp_cap:
+                sh      t0, 0x0c(s0)
+                bne     t3, zero, past_mp_cap
+                sh      t0, 0x10(s0)
+                li      t1, 999
+                
+            past_mp_cap:
+                sh      t1, 0x12(s0)
+                sh      t1, 0x16(s0)
+                
+                lbu     t0, 0x39(s1)
+                sh      t4, 0x22(s0)
+                sltiu   t2, t0, 101
+                bne     t2, zero, past_ct_cap
+                li      t1, 100
+                li      t0, 100
+             
+            past_ct_cap:
+                sh      t0, 0x18(s0)
+                sh      t1, 0x1c(s0)
+                
+                lbu     t0, 2(s2)
+                lbu     t2, 0x24(s1)
+                lbu     t3, 0x26(s1)
+                sh      t0, 0x24(s0)
+                sh      t2, 0x26(s0)
+                sh      t3, 0x28(s0)
+                
+                lbu     t5, 0x43(s1)
+                li      t6, %PhysicalBase
+                li      t7, %PhysicalMultiplier
+
+                .if %PhysicalInvert
+                    subu    t0, t2, t6
+                .else
+                    subu    t0, t6, t2
+                .endif
+                
+                bltz    t0, past_p_cev
+                multu   t0, t7
+                mflo    t0
+                srl     t0, t0, %PhysicalShift
+                addu    t5, t5, t0
+
+            past_p_cev:
+                li      t0, %MagicalBase
+                
+                .if %MagicalInvert
+                    subu    t0, t3, t0
+                .else
+                    subu    t0, t0, t3
+                .endif
+                
+                bltz    t0, past_m_cev
+                li      t6, 0
+                li      t1, %MagicalMultiplier
+                multu   t0, t1
+                mflo    t0
+                srl     t6, t0, %MagicalShift
+        
+            past_m_cev:
+                b       0x80120d1c
+                nop
+        </Location>                
+        <Location file="WORLD_WORLD_BIN" offset="120DB8" mode="ASM" offsetMode="RAM">
+                sh      t5, 0x44(s0)
+        </Location>    
+        <Location file="WORLD_WORLD_BIN" offset="120DEC" mode="ASM" offsetMode="RAM">
+                sh      t6, 0x4e(s0)
+        </Location>
+        <Location file="EVENT_BUNIT_OUT" offset="1C6910" mode="ASM" offsetMode="RAM">
+                lbu     t0, 0x21(s1)
+                lbu     t4, 1(s1)
+                sltiu   t2, t0, 100
+                bne     t2, zero, past_exp_cap
+                sh      t4, 0x0a(s2)
+                li      t0, 99
+                
+            past_exp_cap:
+                sh      t0, 8(s0)
+                
+                lhu     t0, 0x2a(s1)
+                lhu     t1, 0x2e(s1)
+                sltiu   t2, t0, 1000
+                bne     t2, zero, past_max_hp_cap
+                sltiu   t3, t1, 1000
+                li      t0, 999
+                
+            past_max_hp_cap:
+                bne     t3, zero, past_max_mp_cap
+                sh      t0, 0x10(s2)
+                li      t1, 999
+                
+            past_max_mp_cap:
+                sh      t1, 0x16(s2)
+                
+                lhu     t0, 0x28(s1)
+                lhu     t1, 0x2c(s1)
+                sltiu   t2, t0, 1000
+                bne     t2, zero, past_hp_cap
+                sltiu   t3, t1, 1000
+                li      t0, 999
+                
+            past_hp_cap:
+                bne     t3, zero, past_mp_cap
+                sh      t0, 0x0c(s2)
+                li      t1, 999
+                
+            past_mp_cap:
+                sh      t1, 0x12(s2)
+                
+                lbu     t0, 0x186(s1)
+                li      t1, 1
+                li      t2, 100
+                beq     t0, t1, past_active_turn
+                li      t3, 100
+                
+                lbu     t2, 0x39(s1)
+                
+            past_active_turn:
+                lbu     t1, 2(s1)
+                sltiu   t0, t2, 101
+                bne     t0, zero, past_ct_cap
+                sh      t1, 0x1e(s2)
+                li      t2, 100
+                
+            past_ct_cap:
+                sh      t2, 0x18(s2)
+                sh      t3, 0x1c(s2)
+                sh      t4, 0x22(s2)
+            
+                lbu     t0, 3(s1)
+                lbu     t2, 0x24(s1)
+                lbu     t3, 0x26(s1)
+                sh      t0, 0x24(s2)
+                sh      t2, 0x26(s2)
+                sh      t3, 0x28(s2)
+                                
+                lbu     t5, 0x43(s1)
+                li      t6, %PhysicalBase
+                li      t7, %PhysicalMultiplier
+
+                .if %PhysicalInvert
+                    subu    t0, t2, t6
+                .else
+                    subu    t0, t6, t2
+                .endif
+                
+                bltz    t0, past_p_cev
+                multu   t0, t7
+                mflo    t0
+                srl     t0, t0, %PhysicalShift
+                addu    t5, t5, t0
+
+            past_p_cev:
+                li      t0, %MagicalBase
+                
+                .if %MagicalInvert
+                    subu    t0, t3, t0
+                .else
+                    subu    t0, t0, t3
+                .endif
+                
+                bltz    t0, past_m_cev
+                li      t6, 0
+                li      t1, %MagicalMultiplier
+                multu   t0, t1
+                mflo    t0
+                srl     t6, t0, %MagicalShift
+        
+            past_m_cev:
+                b       0x801c6a2c
+                nop
+        </Location>
+        <Location file="EVENT_BUNIT_OUT" offset="1C6AC8" mode="ASM" offsetMode="RAM">
+                sh      t5, 0x44(s2)
+        </Location>
+        <Location file="EVENT_BUNIT_OUT" offset="1C6AFC" mode="ASM" offsetMode="RAM">
+                sh      t6, 0x4e(s2)
+        </Location>
+        <Variable name="Physical Base" bytes="1" default="46" symbol="true" />
+        <Variable name="Physical Multiplier" bytes="1" default="20" symbol="true" />
+        <Variable name="Physical Shift" bytes="1" default="7" symbol="true" />
+        <Variable name="Physical Invert" bytes="1" default="00" preset="boolean" symbol="true" />
+        <Variable name="Magical Base" bytes="1" default="46" symbol="true" />
+        <Variable name="Magical Multiplier" bytes="1" default="20" symbol="true" />
+        <Variable name="Magical Shift" bytes="1" default="7" symbol="true" />
+        <Variable name="Magical Invert" bytes="1" default="00" preset="boolean" symbol="true" />
     </Patch>
     <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v3)">
         <Description>
@@ -6414,7 +7586,7 @@
                 addiu   sp, sp, -24
                 sw      ra, 16(sp)
         
-                .if     >, %UseMagicEvade, 0
+                .if     %UseMagicEvade
                     jal     0x801885b8                  #   Magic Evade Calculation
                     nop 
                 .else   
@@ -6425,7 +7597,7 @@
                 bne     v0, zero, feedback_end          #   If Evaded, Skip           
                 nop
         
-                .if     >, %UseMPAsDamage, 0
+                .if     %UseMPAsDamage
                 .else
                     jal     0x80185c94                  #   Get Ability Power
                     nop
@@ -6437,7 +7609,7 @@
                 lw      v0, 0x2d98(t0)
                 lw      v1, 0x2d90(t0)
         
-                .if     >, %UseMPAsDamage, 0
+                .if     %UseMPAsDamage
                     lhu     t0, 0x2c(v0)                #   Load target MP
                     li      v0, 0xa0
                 .else
