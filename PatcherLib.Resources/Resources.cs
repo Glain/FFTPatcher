@@ -196,7 +196,7 @@ namespace PatcherLib
                 var tempContents = new Dictionary<string, IList<byte>>();
                 try
                 {
-                    using (FileStream file = File.Open(defaultsFile, FileMode.Open, FileAccess.Read))
+                    using (FileStream file = File.Open(defaultsFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                     using (ZipInputStream zipStream = new ZipInputStream(file))
                     {
                         ZipEntry entry = zipStream.GetNextEntry();
@@ -222,7 +222,7 @@ namespace PatcherLib
 
                     ZipFileContents = new PatcherLib.Datatypes.ReadOnlyDictionary<string, IList<byte>>(tempContents);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     ZipFileContents = DefaultZipFileContents;
                 }

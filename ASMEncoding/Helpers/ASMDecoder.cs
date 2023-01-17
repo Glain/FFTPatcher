@@ -169,7 +169,7 @@ namespace ASMEncoding.Helpers
 			
 			try
 			{
-				reader = new BinaryReader(File.Open(inputFilename, FileMode.Open));
+				reader = new BinaryReader(File.Open(inputFilename, FileMode.Open, FileAccess.Read, FileShare.Read));
 				writer = new StreamWriter(outputFilename, false, Encoding.ASCII);
 			}
 			catch (Exception)
