@@ -12,7 +12,7 @@ namespace FFTPatcher.SpriteEditor
         TYPE2 = 1,
         CYOKO = 2,
         MON = 3,
-        FOUR = 4,
+        OTHER = 4,
         RUKA = 5,
         ARUTE = 6,
         KANZEN = 7,

@@ -251,7 +251,7 @@ namespace FFTPatcher.SpriteEditor
                     //case SpriteType.WEP3:
                     //    cachedSprite = new WEP3Sprite(bytes);
                     //    break;
-                    case SpriteType.FOUR:
+                    case SpriteType.OTHER:
                         CachedSprite = new TYPE1Sprite(bytes);
                         break;
                     default:
@@ -317,7 +317,7 @@ namespace FFTPatcher.SpriteEditor
                     case SpriteType.EFF1:
                         CachedSprite = new WEP3Sprite(bytes);
                         break;
-                    case SpriteType.FOUR:
+                    case SpriteType.OTHER:
                         CachedSprite = new TYPE1Sprite(bytes);
                         break;
                     default:
