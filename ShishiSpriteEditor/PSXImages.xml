@@ -2575,6 +2575,24 @@
             </Position>
         </PalettedImage8bpp>
     </Section>
+    <Section Name="OTHER.SPR" Filename="OTHER.SPR" Filesize="33792">
+        <PalettedImage4bpp>
+            <Name>OTHER.SPR</Name>
+            <Width>256</Width>
+            <Height>256</Height>
+            <Sector>BATTLE_OTHER_SPR</Sector>
+            <PaletteCount>32</PaletteCount>
+            <DefaultPalette>0</DefaultPalette>
+            <PalettePosition>
+                <Offset>0</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>1024</Offset>
+                <Length>32768</Length>
+            </Position>
+        </PalettedImage4bpp>
+    </Section>
     <Section Name="Pre-Battle Location Text Images" Filename="MAPTITLE.BIN" Filesize="307200">
         <Names>
             <Name>At main gate of Igros Castle</Name>
