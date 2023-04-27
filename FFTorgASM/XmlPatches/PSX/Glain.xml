@@ -2132,7 +2132,7 @@
                     beq     s0, zero, party_level_random
                     li      t1, 0xfe
                     bne     s0, t1, level_addend_check
-                    sltiu   t0, s0, 100
+                    sltu    t4, t2, s0
         
                 party_level_random:
                     srl     t1, t2, 3
@@ -2155,7 +2155,19 @@
         
                 level_addend_check:
                     sltiu   t0, s0, 100
-                    bne     t0, zero, min_level_check
+                    
+                    .if     %DisableHighFixedLevel
+                        and     t5, t4, t0
+                        bne     t5, zero, party_level_random
+                        nop
+                    .endif
+                    
+                    .if     %DisableFixedLevel
+                        bne     t0, zero, party_level_random
+                    .else
+                        bne     t0, zero, min_level_check
+                    .endif
+                    
                     addiu   t0, s0, -100
      
                     .if     %ChangePartyLevelAddend
@@ -2175,11 +2187,10 @@
     
                 min_level_check:
                     bne     s0, zero, max_level_check
-                    nop
+                    sltiu   t0, s0, 100
                     li      s0, 1
     
                 max_level_check:
-                    sltiu   t0, s0, 100
                     bne     t0, zero, store_level
                     nop
                     li      s0, 99
@@ -2202,12 +2213,18 @@
                 birthday_random:
                     jal     0x8002230c
                     nop
-                    sll     t0, v0, 3           #   result * 8
-                    addu    t0, t0, v0          #   result * 9
-                    sll     t0, t0, 3           #   result * 72
-                    addu    t0, t0, v0          #   result * 73
-                    sll     t1, t0, 2           #   result * 292
-                    addu    t0, t1, t0          #   result * 365
+                    
+                    li      t1, 365
+                    multu   t0, t1
+                    mflo    t0                   #   result * 365
+                    
+                    #sll     t0, v0, 3           #   result * 8
+                    #addu    t0, t0, v0          #   result * 9
+                    #sll     t0, t0, 3           #   result * 72
+                    #addu    t0, t0, v0          #   result * 73
+                    #sll     t1, t0, 2           #   result * 292
+                    #addu    t0, t1, t0          #   result * 365
+                    
                     sra     t0, t0, 15
                     j       birthday_zodiac
                     addiu   s0, t0, 1
@@ -2315,6 +2332,8 @@
         </Location>
         <Variable name="Change Party Level Random" bytes="1" default="00" symbol="true" preset="boolean" />
         <Variable name="Change Party Level Addend" bytes="1" default="00" symbol="true" preset="boolean" />
+        <Variable name="Disable Fixed Level" bytes="1" default="00" symbol="true" preset="boolean" />
+        <Variable name="Disable High Fixed Level" bytes="1" default="00" symbol="true" preset="boolean" />
         <Variable name="Brave Range" bytes="1" default="1E" symbol="true" />
         <Variable name="Brave Minimum" bytes="1" default="2D" symbol="true" />
         <Variable name="Faith Range" bytes="1" default="1E" symbol="true" />

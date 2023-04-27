@@ -16,4 +16,10 @@
             80
         </Location>
     </Patch>
+    <Patch name="Double JP">
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="88D570C" mode="ASM" offsetMode="RAM">
+            b       0x088d572c
+            sll     r18,r18,0x01
+        </Location>
+    </Patch>
 </Patches>
