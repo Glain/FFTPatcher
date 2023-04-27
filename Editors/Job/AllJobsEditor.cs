@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
@@ -30,6 +31,8 @@ namespace FFTPatcher.Editors
 
         private Job cbJob = null;
         private Context ourContext = Context.Default;
+
+        private AllSkillSets _skillSets;
 
 		#endregion Instance Variables 
 
@@ -65,13 +68,16 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods
 
-        public void UpdateView( AllJobs jobs, Context context )
+        public void UpdateView( AllJobs jobs, AllSkillSets skillSets, Context context )
         {
             if( context != ourContext )
             {
                 ourContext = context;
                 cbJob = null;
             }
+
+            _skillSets = skillSets;
+
             jobsListBox.SelectedIndexChanged -= jobsListBox_SelectedIndexChanged;
             jobsListBox.DataSource = jobs.Jobs;
             jobsListBox.SelectedIndexChanged += jobsListBox_SelectedIndexChanged;
@@ -91,9 +97,19 @@ namespace FFTPatcher.Editors
             jobsListBox.SetChangedColors();
         }
 
-		#endregion Public Methods 
+        public void SetListBoxHighlightedIndexes(IEnumerable<int> highlightedIndexes)
+        {
+            jobsListBox.SetHighlightedIndexes(highlightedIndexes);
+        }
 
-		#region Private Methods (7) 
+        #endregion Public Methods 
+
+        #region Private Methods
+
+        public void ClearListBoxHighlightedIndexes()
+        {
+            jobsListBox.ClearHighlightedIndexes();
+        }
 
         private void CloneClick( object sender, EventArgs args )
         {
@@ -114,6 +130,8 @@ namespace FFTPatcher.Editors
             jobsListBox.TopIndex = top;
             jobsListBox.EndUpdate();
             jobsListBox.SetChangedColor();
+
+            UpdateSkillSet(jobsListBox.SelectedIndex);
         }
 
         private void jobEditor_SkillSetClicked( object sender, LabelClickedEventArgs e )
@@ -150,13 +168,37 @@ namespace FFTPatcher.Editors
 
        	private void jobsListBox_KeyDown( object sender, KeyEventArgs args )
 		{
-			if (args.KeyCode == Keys.C && args.Control)
+            if (args.KeyCode == Keys.Escape)
+            {
+                ClearListBoxHighlightedIndexes();
+                jobsListBox.SetChangedColors();
+                jobsListBox.Invalidate();
+            }
+            else if (args.KeyCode == Keys.C && args.Control)
 				CloneClick( sender, args );
 			else if (args.KeyCode == Keys.V && args.Control)
 				PasteClick( sender, args );
 		}
-        
-		#endregion Private Methods 
+
+        #endregion Private Methods 
+
+        private void UpdateSkillSet(int jobIndex)
+        {
+            if (jobIndex < 0)
+                return;
+
+            Job job = ((Job[])jobsListBox.DataSource)[jobIndex];
+
+            if (job.OldSkillSet != job.SkillSet)
+            {
+                if (job.OldSkillSet.Value < 0xB0)
+                    _skillSets.SkillSets[job.OldSkillSet.Value].ReferencingJobIDs.Remove(jobIndex);
+                if (job.SkillSet.Value < 0xB0)
+                    _skillSets.SkillSets[job.SkillSet.Value].ReferencingJobIDs.Add(jobIndex);
+            }
+
+            job.OldSkillSet = job.SkillSet;
+        }
 
         public void HandleSelectedIndexChange(int offset)
         {

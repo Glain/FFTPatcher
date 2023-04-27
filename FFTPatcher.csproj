@@ -99,6 +99,9 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="AsmPatch.cs" />
+    <Compile Include="Controls\BGDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\CheckedListBoxNoHighlightWithDefault.cs">
       <SubType>Component</SubType>
     </Compile>

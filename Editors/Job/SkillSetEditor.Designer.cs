@@ -71,8 +71,14 @@ namespace FFTPatcher.Editors
             this.theRestComboBox3 = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.theRestComboBox2 = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.theRestComboBox1 = new FFTPatcher.Controls.ComboBoxWithDefault();
+            this.pnl_JobUsage = new System.Windows.Forms.Panel();
+            this.lbl_JobUsage_4 = new System.Windows.Forms.LinkLabel();
+            this.lbl_JobUsage_3 = new System.Windows.Forms.Label();
+            this.lbl_JobUsage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_JobUsage_1 = new System.Windows.Forms.Label();
             this.actionGroupBox.SuspendLayout();
             this.theRestGroupBox.SuspendLayout();
+            this.pnl_JobUsage.SuspendLayout();
             this.SuspendLayout();
             // 
             // actionComboBox1
@@ -294,18 +300,71 @@ namespace FFTPatcher.Editors
             this.theRestComboBox1.Size = new System.Drawing.Size(156, 21);
             this.theRestComboBox1.TabIndex = 1;
             // 
+            // pnl_JobUsage
+            // 
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_4);
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_3);
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_2);
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_1);
+            this.pnl_JobUsage.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pnl_JobUsage.Location = new System.Drawing.Point(177, 173);
+            this.pnl_JobUsage.Name = "pnl_JobUsage";
+            this.pnl_JobUsage.Size = new System.Drawing.Size(289, 26);
+            this.pnl_JobUsage.TabIndex = 30;
+            // 
+            // lbl_JobUsage_4
+            // 
+            this.lbl_JobUsage_4.AutoSize = true;
+            this.lbl_JobUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_JobUsage_4.Location = new System.Drawing.Point(140, 6);
+            this.lbl_JobUsage_4.Name = "lbl_JobUsage_4";
+            this.lbl_JobUsage_4.Size = new System.Drawing.Size(0, 13);
+            this.lbl_JobUsage_4.TabIndex = 3;
+            // 
+            // lbl_JobUsage_3
+            // 
+            this.lbl_JobUsage_3.AutoSize = true;
+            this.lbl_JobUsage_3.Location = new System.Drawing.Point(81, 6);
+            this.lbl_JobUsage_3.Name = "lbl_JobUsage_3";
+            this.lbl_JobUsage_3.Size = new System.Drawing.Size(53, 13);
+            this.lbl_JobUsage_3.TabIndex = 2;
+            this.lbl_JobUsage_3.Text = "jobs, e.g. ";
+            // 
+            // lbl_JobUsage_2
+            // 
+            this.lbl_JobUsage_2.AutoSize = true;
+            this.lbl_JobUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_JobUsage_2.Location = new System.Drawing.Point(57, 6);
+            this.lbl_JobUsage_2.Name = "lbl_JobUsage_2";
+            this.lbl_JobUsage_2.Size = new System.Drawing.Size(13, 13);
+            this.lbl_JobUsage_2.TabIndex = 1;
+            this.lbl_JobUsage_2.TabStop = true;
+            this.lbl_JobUsage_2.Text = "0";
+            // 
+            // lbl_JobUsage_1
+            // 
+            this.lbl_JobUsage_1.AutoSize = true;
+            this.lbl_JobUsage_1.Location = new System.Drawing.Point(6, 6);
+            this.lbl_JobUsage_1.Name = "lbl_JobUsage_1";
+            this.lbl_JobUsage_1.Size = new System.Drawing.Size(50, 13);
+            this.lbl_JobUsage_1.TabIndex = 0;
+            this.lbl_JobUsage_1.Text = "In use by";
+            // 
             // SkillSetEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.pnl_JobUsage);
             this.Controls.Add(this.theRestGroupBox);
             this.Controls.Add(this.actionGroupBox);
             this.Name = "SkillSetEditor";
-            this.Size = new System.Drawing.Size(348, 380);
+            this.Size = new System.Drawing.Size(469, 380);
             this.actionGroupBox.ResumeLayout(false);
             this.theRestGroupBox.ResumeLayout(false);
+            this.pnl_JobUsage.ResumeLayout(false);
+            this.pnl_JobUsage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -337,5 +396,10 @@ namespace FFTPatcher.Editors
         private FFTPatcher.Controls.ComboBoxWithDefault theRestComboBox3;
         private FFTPatcher.Controls.ComboBoxWithDefault theRestComboBox2;
         private FFTPatcher.Controls.ComboBoxWithDefault theRestComboBox1;
+        private System.Windows.Forms.Panel pnl_JobUsage;
+        private System.Windows.Forms.LinkLabel lbl_JobUsage_4;
+        private System.Windows.Forms.Label lbl_JobUsage_3;
+        private System.Windows.Forms.LinkLabel lbl_JobUsage_2;
+        private System.Windows.Forms.Label lbl_JobUsage_1;
     }
 }

@@ -91,6 +91,9 @@
     <Compile Include="Controls\BGCheckedListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\BGDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\ColorListBox.cs">
       <SubType>Component</SubType>
     </Compile>

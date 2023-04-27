@@ -72,6 +72,9 @@ namespace FFTPatcher.Editors
             theRestComboBoxes = new List<ComboBoxWithDefault>( new ComboBoxWithDefault[] {
                 theRestComboBox1, theRestComboBox2, theRestComboBox3,
                 theRestComboBox4, theRestComboBox5, theRestComboBox6 } );
+
+            lbl_JobUsage_2.Click += lbl_JobUsage_2_Click;
+            lbl_JobUsage_4.Click += lbl_JobUsage_4_Click;
         }
 
 		#endregion Constructors 
@@ -126,15 +129,39 @@ namespace FFTPatcher.Editors
                 theRestComboBoxes[i].SetValueAndDefault( skillSet.TheRest[i], skillSet.Default.TheRest[i], toolTip );
             }
 
+            int jobReferenceCount = skillSet.ReferencingJobIDs.Count;
+            bool isJobUsagePanelVisible = (jobReferenceCount > 0);
+            pnl_JobUsage.Visible = isJobUsagePanelVisible;
+            if (isJobUsagePanelVisible)
+            {
+                lbl_JobUsage_2.Text = jobReferenceCount.ToString();
+                lbl_JobUsage_3.Text = (jobReferenceCount == 0) ? "jobs" : ((jobReferenceCount == 1) ? "job: " : "jobs, e.g. ");
+
+                int jobIndex = GetFirstReferencingJobIndex();
+                lbl_JobUsage_4.Text = String.Format("{0:X2} {1}", jobIndex, AllJobs.GetNames(context)[jobIndex]);
+            }
+
             theRestGroupBox.ResumeLayout();
             actionGroupBox.ResumeLayout();
             this.ResumeLayout();
             this.ignoreChanges = false;
         }
 
-		#endregion Public Methods 
+        #endregion Public Methods 
 
-		#region Private Methods (2) 
+        #region Private Methods 
+
+        private int GetFirstReferencingIndex(HashSet<int> referenceSet)
+        {
+            List<int> referencingIndexList = new List<int>(referenceSet);
+            referencingIndexList.Sort();
+            return referencingIndexList[0];
+        }
+
+        private int GetFirstReferencingJobIndex()
+        {
+            return GetFirstReferencingIndex(skillSet.ReferencingJobIDs);
+        }
 
         private void actionComboBox_SelectedIndexChanged( object sender, EventArgs e )
         {
@@ -158,6 +185,22 @@ namespace FFTPatcher.Editors
             }
         }
 
-		#endregion Private Methods 
+        #endregion Private Methods 
+
+        public event EventHandler<ReferenceEventArgs> JobClicked;
+        private void lbl_JobUsage_2_Click(object sender, EventArgs e)
+        {
+            if (JobClicked != null)
+            {
+                JobClicked(this, new ReferenceEventArgs(GetFirstReferencingJobIndex(), skillSet.ReferencingJobIDs));
+            }
+        }
+        private void lbl_JobUsage_4_Click(object sender, EventArgs e)
+        {
+            if (JobClicked != null)
+            {
+                JobClicked(this, new ReferenceEventArgs(GetFirstReferencingJobIndex()));
+            }
+        }
     }
 }

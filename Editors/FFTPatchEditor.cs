@@ -44,6 +44,10 @@ namespace FFTPatcher.Editors
             allInflictStatusesEditor1.AbilityClicked += AbilityClicked;
             allInflictStatusesEditor1.ItemClicked += ItemClicked;
 
+            allAbilitiesEditor1.SkillSetClicked += SkillSetClicked;
+            allAbilitiesEditor1.MonsterSkillClicked += MonsterSkillClicked;
+            allSkillSetsEditor1.JobClicked += JobClicked;
+
             allJobsEditor1.ViewStatsClicked += ViewStatsClicked;
 
             tabControl.Selected += tabControl_Selected;
@@ -62,17 +66,18 @@ namespace FFTPatcher.Editors
         {
             this.Enabled = true;
 
-            PatchUtility.BuildReferenceList(FFTPatch.ItemAttributes, FFTPatch.InflictStatuses, FFTPatch.Abilities, FFTPatch.Items);
+            PatchUtility.BuildReferenceList(FFTPatch.ItemAttributes, FFTPatch.InflictStatuses, FFTPatch.Abilities, FFTPatch.Items, 
+                FFTPatch.SkillSets, FFTPatch.MonsterSkills, FFTPatch.Jobs);
 
             allAbilitiesEditor1.UpdateView( FFTPatch.Abilities, FFTPatch.InflictStatuses, FFTPatch.Context );
             allActionMenusEditor1.UpdateView( FFTPatch.ActionMenus );
             allInflictStatusesEditor1.UpdateView(FFTPatch.InflictStatuses, FFTPatch.Context);
             allItemAttributesEditor1.UpdateView( FFTPatch.ItemAttributes, FFTPatch.Context );
             allItemsEditor1.UpdateView( FFTPatch.Items, FFTPatch.StoreInventories, FFTPatch.InflictStatuses, FFTPatch.ItemAttributes, FFTPatch.Context );
-            allJobsEditor1.UpdateView( FFTPatch.Jobs, FFTPatch.Context );
-            allMonsterSkillsEditor1.UpdateView( FFTPatch.MonsterSkills, FFTPatch.Context );
+            allJobsEditor1.UpdateView( FFTPatch.Jobs, FFTPatch.SkillSets, FFTPatch.Context );
+            allMonsterSkillsEditor1.UpdateView( FFTPatch.MonsterSkills, FFTPatch.Abilities, FFTPatch.Context );
             allPoachProbabilitiesEditor1.UpdateView( FFTPatch.PoachProbabilities, FFTPatch.Context );
-            allSkillSetsEditor1.UpdateView( FFTPatch.SkillSets, FFTPatch.Context );
+            allSkillSetsEditor1.UpdateView( FFTPatch.SkillSets, FFTPatch.Abilities, FFTPatch.Context );
             allStatusAttributesEditor1.UpdateView(FFTPatch.StatusAttributes, FFTPatch.Context);
             jobLevelsEditor1.UpdateView( FFTPatch.JobLevels, FFTPatch.Context );
             entdEditor1.UpdateView( FFTPatch.ENTDs, FFTPatch.Context );
@@ -199,6 +204,42 @@ namespace FFTPatcher.Editors
             tabControl.SelectedTab = itemsTabPage;
         }
 
+        private void SkillSetClicked(object sender, ReferenceEventArgs e)
+        {
+            if (e.ReferencingIndexes != null)
+            {
+                allSkillSetsEditor1.SetListBoxHighlightedIndexes(e.ReferencingIndexes);
+            }
+
+            allSkillSetsEditor1.SelectedIndex = e.Index;
+            allSkillSetsEditor1.UpdateListBox();
+            tabControl.SelectedTab = skillSetsPage;
+        }
+
+        private void MonsterSkillClicked(object sender, ReferenceEventArgs e)
+        {
+            if (e.ReferencingIndexes != null)
+            {
+                allMonsterSkillsEditor1.SetHighlightedIndexes(e.ReferencingIndexes);
+            }
+
+            allMonsterSkillsEditor1.SelectedIndex = e.Index;
+            allMonsterSkillsEditor1.RefreshDataGridView();
+            tabControl.SelectedTab = monsterSkillsTab;
+        }
+
+        private void JobClicked(object sender, ReferenceEventArgs e)
+        {
+            if (e.ReferencingIndexes != null)
+            {
+                allJobsEditor1.SetListBoxHighlightedIndexes(e.ReferencingIndexes);
+            }
+
+            allJobsEditor1.SelectedIndex = e.Index;
+            allJobsEditor1.UpdateListBox();
+            tabControl.SelectedTab = jobsPage;
+        }
+
         private void ViewStatsClicked(object sender, ReferenceEventArgs e)
         {
             int jobID = e.Index;
@@ -253,6 +294,16 @@ namespace FFTPatcher.Editors
             {
                 allItemAttributesEditor1.UpdateSelectedEntry();
                 allItemAttributesEditor1.UpdateListBox();
+            }
+            else if (e.TabPage == abilitiesPage)
+            {
+                allAbilitiesEditor1.UpdateSelectedEntry();
+                allAbilitiesEditor1.UpdateListBox();
+            }
+            else if (e.TabPage == skillSetsPage)
+            {
+                allSkillSetsEditor1.UpdateSelectedEntry();
+                allSkillSetsEditor1.UpdateListBox();
             }
         }
 

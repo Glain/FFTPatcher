@@ -84,6 +84,18 @@ namespace FFTPatcher.Datatypes
             get { return digestableProperties; }
         }
 
+        private HashSet<int> referencingJobIDs;
+        public HashSet<int> ReferencingJobIDs
+        {
+            get
+            {
+                if (referencingJobIDs == null)
+                    referencingJobIDs = new HashSet<int>();
+
+                return referencingJobIDs;
+            }
+        }
+
         /*
         public static SkillSet[] DummySkillSets
         {
@@ -219,6 +231,11 @@ namespace FFTPatcher.Datatypes
             }
         }
 
+        public static IList<string> GetNames(Context context)
+        {
+            return (context == Context.US_PSP) ? PSPNames : PSXNames;
+        }
+
         public Ability[] TheRest { get; private set; }
 
         public Ability TheRest1 { get { return TheRest[0]; } }
@@ -234,6 +251,10 @@ namespace FFTPatcher.Datatypes
         public Ability TheRest6 { get { return TheRest[5]; } }
 
         public byte Value { get; private set; }
+
+        public Ability[] OldActions { get; set; }
+
+        public Ability[] OldTheRest { get; set; }
 
 		#endregion Public Properties 
 
@@ -258,6 +279,9 @@ namespace FFTPatcher.Datatypes
             {
                 TheRest[i] = AllAbilities.GetDummyAbilities(context)[(theRest[i] ? (bytes[19 + i] + 0x100) : (bytes[19 + i]))];
             }
+
+            OldActions = (Ability[])Actions.Clone();
+            OldTheRest = (Ability[])TheRest.Clone();
         }
 
         private SkillSet( string name, byte value )
@@ -281,10 +305,12 @@ namespace FFTPatcher.Datatypes
             for( int i = 0; i < 16; i++ )
             {
                 destination.Actions[i] = source.Actions[i];
+                destination.OldActions[i] = source.OldActions[i];
             }
             for( int i = 0; i < 6; i++ )
             {
                 destination.TheRest[i] = source.TheRest[i];
+                destination.OldTheRest[i] = source.OldTheRest[i];
             }
         }
 

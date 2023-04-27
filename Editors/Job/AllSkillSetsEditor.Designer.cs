@@ -48,53 +48,55 @@ namespace FFTPatcher.Editors
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel panel;
-            this.skillSetListBox = new FFTPatcher.Controls.EnhancedListBox();
             this.skillSetEditor = new FFTPatcher.Editors.SkillSetEditor();
+            this.skillSetListBox = new FFTPatcher.Controls.EnhancedListBox();
             panel = new System.Windows.Forms.Panel();
             panel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // skillSetListBox
+            // panel
             // 
-            this.skillSetListBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.skillSetListBox.FormattingEnabled = true;
-            this.skillSetListBox.Location = new System.Drawing.Point( 0, 0 );
-            this.skillSetListBox.Name = "skillSetListBox";
-            this.skillSetListBox.Size = new System.Drawing.Size( 192, 420 );
-            this.skillSetListBox.TabIndex = 0;
-            this.skillSetListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.skillSetListBox_KeyDown);
+            panel.AutoScroll = true;
+            panel.Controls.Add(this.skillSetEditor);
+            panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            panel.Location = new System.Drawing.Point(192, 0);
+            panel.Name = "panel";
+            panel.Size = new System.Drawing.Size(422, 426);
+            panel.TabIndex = 2;
             // 
             // skillSetEditor
             // 
             this.skillSetEditor.AutoSize = true;
             this.skillSetEditor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.skillSetEditor.Location = new System.Drawing.Point( 0, 0 );
+            this.skillSetEditor.Location = new System.Drawing.Point(0, 0);
             this.skillSetEditor.Name = "skillSetEditor";
-            this.skillSetEditor.Size = new System.Drawing.Size( 348, 380 );
+            this.skillSetEditor.Size = new System.Drawing.Size(348, 380);
             this.skillSetEditor.SkillSet = null;
             this.skillSetEditor.TabIndex = 1;
             // 
-            // panel
+            // skillSetListBox
             // 
-            panel.AutoScroll = true;
-            panel.Controls.Add( this.skillSetEditor );
-            panel.Dock = System.Windows.Forms.DockStyle.Fill;
-            panel.Location = new System.Drawing.Point( 192, 0 );
-            panel.Name = "panel";
-            panel.Size = new System.Drawing.Size( 422, 426 );
-            panel.TabIndex = 2;
+            this.skillSetListBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.skillSetListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.skillSetListBox.FormattingEnabled = true;
+            this.skillSetListBox.IncludePrefix = false;
+            this.skillSetListBox.Location = new System.Drawing.Point(0, 0);
+            this.skillSetListBox.Name = "skillSetListBox";
+            this.skillSetListBox.Size = new System.Drawing.Size(192, 426);
+            this.skillSetListBox.TabIndex = 0;
+            this.skillSetListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.skillSetListBox_KeyDown);
             // 
             // AllSkillSetsEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 13F );
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add( panel );
-            this.Controls.Add( this.skillSetListBox );
+            this.Controls.Add(panel);
+            this.Controls.Add(this.skillSetListBox);
             this.Name = "AllSkillSetsEditor";
-            this.Size = new System.Drawing.Size( 614, 426 );
-            panel.ResumeLayout( false );
+            this.Size = new System.Drawing.Size(614, 426);
+            panel.ResumeLayout(false);
             panel.PerformLayout();
-            this.ResumeLayout( false );
+            this.ResumeLayout(false);
 
         }
 

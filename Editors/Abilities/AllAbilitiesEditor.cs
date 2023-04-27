@@ -64,6 +64,9 @@ namespace FFTPatcher.Editors
                 new MenuItem("Paste XXX", pasteSpecific),
                 new MenuItem("Paste All", pasteAll) } );
             abilitiesListBox.ContextMenu.Popup += new EventHandler( ContextMenu_Popup );
+
+            abilityEditor.SkillSetClicked += OnSkillSetClicked;
+            abilityEditor.MonsterSkillClicked += OnMonsterSkillClicked;
         }
 
 		#endregion Constructors 
@@ -299,5 +302,23 @@ namespace FFTPatcher.Editors
         }
         
 		public event EventHandler<LabelClickedEventArgs> InflictStatusClicked;
+
+        public event EventHandler<ReferenceEventArgs> SkillSetClicked;
+        private void OnSkillSetClicked(object sender, ReferenceEventArgs e)
+        {
+            if (SkillSetClicked != null)
+            {
+                SkillSetClicked(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> MonsterSkillClicked;
+        private void OnMonsterSkillClicked(object sender, ReferenceEventArgs e)
+        {
+            if (MonsterSkillClicked != null)
+            {
+                MonsterSkillClicked(this, e);
+            }
+        }
     }
 }

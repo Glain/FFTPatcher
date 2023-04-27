@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
@@ -30,6 +31,8 @@ namespace FFTPatcher.Editors
 
         private SkillSet cbSkillSet = null;
         private Context ourContext = Context.Default;
+
+        private AllAbilities _abilities;
 
 		#endregion Instance Variables 
 
@@ -60,19 +63,24 @@ namespace FFTPatcher.Editors
                 new MenuItem("Paste", PasteClick) } );
             skillSetListBox.ContextMenu.Popup += new EventHandler( ContextMenu_Popup );
             skillSetListBox.MouseDown += new MouseEventHandler( skillSetListBox_MouseDown );
+
+            skillSetEditor.JobClicked += OnJobClicked;
         }
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods 
 
-        public void UpdateView( AllSkillSets skills, Context context )
+        public void UpdateView( AllSkillSets skills, AllAbilities abilities, Context context )
         {
             if( ourContext != context )
             {
                 ourContext = context;
                 cbSkillSet = null;
             }
+
+            _abilities = abilities;
+
             skillSetListBox.SelectedIndexChanged -= skillSetListBox_SelectedIndexChanged;
             skillSetListBox.DataSource = skills.SkillSets;
             skillSetListBox.SelectedIndexChanged += skillSetListBox_SelectedIndexChanged;
@@ -82,9 +90,19 @@ namespace FFTPatcher.Editors
             skillSetListBox.SetChangedColors();
         }
 
-		#endregion Public Methods 
+        public void SetListBoxHighlightedIndexes(IEnumerable<int> highlightedIndexes)
+        {
+            skillSetListBox.SetHighlightedIndexes(highlightedIndexes);
+        }
 
-		#region Private Methods (6) 
+        #endregion Public Methods 
+
+        #region Private Methods
+
+        private void ClearListBoxHighlightedIndexes()
+        {
+            skillSetListBox.ClearHighlightedIndexes();
+        }
 
         private void CloneClick( object sender, EventArgs args )
         {
@@ -115,6 +133,8 @@ namespace FFTPatcher.Editors
             skillSetListBox.TopIndex = top;
             skillSetListBox.EndUpdate();
             skillSetListBox.SetChangedColor();
+
+            UpdateAbilities(skillSetListBox.SelectedIndex);
         }
 
         void skillSetListBox_MouseDown( object sender, MouseEventArgs e )
@@ -133,7 +153,13 @@ namespace FFTPatcher.Editors
 
        	private void skillSetListBox_KeyDown( object sender, KeyEventArgs args )
 		{
-			if (args.KeyCode == Keys.C && args.Control)
+            if (args.KeyCode == Keys.Escape)
+            {
+                ClearListBoxHighlightedIndexes();
+                skillSetListBox.SetChangedColors();
+                skillSetListBox.Invalidate();
+            }
+            else if (args.KeyCode == Keys.C && args.Control)
 				CloneClick( sender, args );
 			else if (args.KeyCode == Keys.V && args.Control)
 				PasteClick( sender, args );
@@ -146,6 +172,90 @@ namespace FFTPatcher.Editors
             int newIndex = skillSetListBox.SelectedIndex + offset;
             if ((newIndex >= 0) && (newIndex < skillSetListBox.Items.Count))
                 skillSetListBox.SelectedIndex = newIndex;
+        }
+
+        public void UpdateSelectedEntry()
+        {
+            skillSetEditor.UpdateView(ourContext);
+        }
+
+        public void UpdateListBox()
+        {
+            skillSetListBox.SetChangedColors();
+        }
+
+        private void UpdateAbilities(int skillSetIndex)
+        {
+            if (skillSetIndex < 0)
+                return;
+
+            SkillSet skillSet = ((SkillSet[])skillSetListBox.DataSource)[skillSetIndex];
+
+            HashSet<Ability> newActionSet = new HashSet<Ability>(skillSet.Actions);
+            HashSet<Ability> oldActionSet = new HashSet<Ability>(skillSet.OldActions);
+
+            for (int index = 0; index < skillSet.OldActions.Length; index++)
+            {
+                Ability ability = skillSet.OldActions[index];
+                if (!newActionSet.Contains(ability))
+                {
+                    if (_abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Contains(skillSetIndex))
+                    {
+                        _abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Remove(skillSetIndex);
+                    }
+                }
+            }
+
+            for (int index = 0; index < skillSet.Actions.Length; index++)
+            {
+                Ability ability = skillSet.Actions[index];
+                if (!oldActionSet.Contains(ability))
+                {
+                    if (!_abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Contains(skillSetIndex))
+                    {
+                        _abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Add(skillSetIndex);
+                    }
+                }
+            }
+
+            HashSet<Ability> newRSMSet = new HashSet<Ability>(skillSet.TheRest);
+            HashSet<Ability> oldRSMSet = new HashSet<Ability>(skillSet.OldTheRest);
+
+            for (int index = 0; index < skillSet.OldTheRest.Length; index++)
+            {
+                Ability ability = skillSet.OldTheRest[index];
+                if (!newRSMSet.Contains(ability))
+                {
+                    if (_abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Contains(index))
+                    {
+                        _abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Remove(index);
+                    }
+                }
+            }
+
+            for (int index = 0; index < skillSet.TheRest.Length; index++)
+            {
+                Ability ability = skillSet.TheRest[index];
+                if (!oldRSMSet.Contains(ability))
+                {
+                    if (!_abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Contains(index))
+                    {
+                        _abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Add(index);
+                    }
+                }
+            }
+
+            skillSet.OldActions = (Ability[])skillSet.Actions.Clone();
+            skillSet.OldTheRest = (Ability[])skillSet.TheRest.Clone();
+        }
+
+        public event EventHandler<ReferenceEventArgs> JobClicked;
+        private void OnJobClicked(object sender, ReferenceEventArgs e)
+        {
+            if (JobClicked != null)
+            {
+                JobClicked(this, e);
+            }
         }
     }
 }

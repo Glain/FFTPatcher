@@ -183,7 +183,8 @@ namespace FFTPatcher
             allItemAttributes.ItemAttributes[oldID].ReferencingItemIndexes.Clear();
         }
 
-        public static void BuildReferenceList(AllItemAttributes itemAttributes, AllInflictStatuses inflictStatuses, AllAbilities abilities, AllItems items)
+        public static void BuildReferenceList(AllItemAttributes itemAttributes, AllInflictStatuses inflictStatuses, AllAbilities abilities, AllItems items,
+            AllSkillSets skillSets, AllMonsterSkills monsterSkills, AllJobs jobs)
         {
             foreach (ItemAttributes itemAttr in itemAttributes.ItemAttributes)
             {
@@ -194,6 +195,17 @@ namespace FFTPatcher
             {
                 inflictStatus.ReferencingAbilityIDs.Clear();
                 inflictStatus.ReferencingItemIndexes.Clear();
+            }
+
+            foreach (Ability ability in abilities.Abilities)
+            {
+                ability.ReferencingSkillSetIDs.Clear();
+                ability.ReferencingMonsterSkillIDs.Clear();
+            }
+
+            foreach (SkillSet skillSet in skillSets.SkillSets)
+            {
+                skillSet.ReferencingJobIDs.Clear();
             }
 
             for (int index = 0; index < items.Items.Count; index++)
@@ -231,6 +243,38 @@ namespace FFTPatcher
                     if ((ability.Attributes.Formula.Value != 2) && (ability.Attributes.InflictStatus < inflictStatuses.InflictStatuses.Length))
                         inflictStatuses.InflictStatuses[ability.Attributes.InflictStatus].ReferencingAbilityIDs.Add(index);
                 }
+            }
+
+            for (int index = 0; index < skillSets.SkillSets.Length; index++)
+            {
+                SkillSet skillSet = skillSets.SkillSets[index];
+
+                foreach (Ability ability in skillSet.Actions)
+                {
+                    abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Add(index);
+                }
+
+                foreach (Ability ability in skillSet.TheRest)
+                {
+                    abilities.Abilities[ability.Offset].ReferencingSkillSetIDs.Add(index);
+                }
+            }
+
+            for (int index = 0; index < monsterSkills.MonsterSkills.Length; index++)
+            {
+                MonsterSkill monsterSkill = monsterSkills.MonsterSkills[index];
+                abilities.Abilities[monsterSkill.Ability1.Offset].ReferencingMonsterSkillIDs.Add(index);
+                abilities.Abilities[monsterSkill.Ability2.Offset].ReferencingMonsterSkillIDs.Add(index);
+                abilities.Abilities[monsterSkill.Ability3.Offset].ReferencingMonsterSkillIDs.Add(index);
+                abilities.Abilities[monsterSkill.Beastmaster.Offset].ReferencingMonsterSkillIDs.Add(index);
+            }
+
+            for (int index = 0; index < jobs.Jobs.Length; index++)
+            {
+                Job job = jobs.Jobs[index];
+
+                if (job.SkillSet.Value < 0xB0)
+                    skillSets.SkillSets[job.SkillSet.Value].ReferencingJobIDs.Add(index);
             }
         }
 

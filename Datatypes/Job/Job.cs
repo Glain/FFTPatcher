@@ -470,6 +470,8 @@ namespace FFTPatcher.Datatypes
 
         public Elements WeakElement { get; private set; }
 
+        public SkillSet OldSkillSet { get; set; }
+
 		#endregion Public Properties 
 
 		#region Constructors (5) 
@@ -543,6 +545,8 @@ namespace FFTPatcher.Datatypes
                 HalfElement.Default = defaults.HalfElement;
                 WeakElement.Default = defaults.WeakElement;
             }
+
+            OldSkillSet = SkillSet;
         }
 
 		#endregion Constructors 
@@ -582,6 +586,8 @@ namespace FFTPatcher.Datatypes
             destination.MGraphic = source.MGraphic;
             destination.FormationSprites1 = source.FormationSprites1;
             destination.FormationSprites2 = source.FormationSprites2;
+
+            destination.OldSkillSet = source.OldSkillSet;
         }
 
         public void CopyTo( Job destination )

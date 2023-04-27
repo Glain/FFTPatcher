@@ -98,9 +98,33 @@ namespace FFTPatcher.Datatypes
         private bool unknown3;
         private bool unknown4;
 
-		#endregion Instance Variables 
+        private HashSet<int> referencingSkillSetIDs;
+        public HashSet<int> ReferencingSkillSetIDs
+        {
+            get
+            {
+                if (referencingSkillSetIDs == null)
+                    referencingSkillSetIDs = new HashSet<int>();
 
-		#region Public Properties (63) 
+                return referencingSkillSetIDs;
+            }
+        }
+
+        private HashSet<int> referencingMonsterSkillIDs;
+        public HashSet<int> ReferencingMonsterSkillIDs
+        {
+            get
+            {
+                if (referencingMonsterSkillIDs == null)
+                    referencingMonsterSkillIDs = new HashSet<int>();
+
+                return referencingMonsterSkillIDs;
+            }
+        }
+
+        #endregion Instance Variables 
+
+        #region Public Properties (63) 
 
         public AbilityType AbilityType { get; set; }
 

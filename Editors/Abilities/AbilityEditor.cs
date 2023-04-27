@@ -113,6 +113,11 @@ namespace FFTPatcher.Editors
             abilityAttributesEditor.LinkClicked += abilityAttributesEditor_LinkClicked;
             commonAbilitiesEditor.DataChanged += OnDataChanged;
             abilityAttributesEditor.DataChanged += OnDataChanged;
+
+            lbl_SkillSetUsage_2.Click += lbl_SkillSetUsage_2_Click;
+            lbl_SkillSetUsage_4.Click += lbl_SkillSetUsage_4_Click;
+            lbl_MonsterSkillUsage_2.Click += lbl_MonsterSkillUsage_2_Click;
+            lbl_MonsterSkillUsage_4.Click += lbl_MonsterSkillUsage_4_Click;
         }
 
 		#endregion Constructors 
@@ -198,6 +203,30 @@ namespace FFTPatcher.Editors
                 throwingComboBox.SetValueAndDefault( ability.Throwing, ability.Default.Throwing, toolTip );
             }
 
+            int skillSetReferenceCount = ability.ReferencingSkillSetIDs.Count;
+            bool isSkillSetUsagePanelVisible = (skillSetReferenceCount > 0);
+            pnl_SkillSetUsage.Visible = isSkillSetUsagePanelVisible;
+            if (isSkillSetUsagePanelVisible)
+            {
+                lbl_SkillSetUsage_2.Text = skillSetReferenceCount.ToString();
+                lbl_SkillSetUsage_3.Text = (skillSetReferenceCount == 0) ? "skill sets" : ((skillSetReferenceCount == 1) ? "skill set: " : "skill sets, e.g. ");
+
+                int skillSetIndex = GetFirstReferencingSkillSetIndex();
+                lbl_SkillSetUsage_4.Text = String.Format("{0:X2} {1}", skillSetIndex, SkillSet.GetNames(context)[skillSetIndex]);
+            }
+
+            int monsterSkillReferenceCount = ability.ReferencingMonsterSkillIDs.Count;
+            bool isMonsterSkillUsagePanelVisible = (monsterSkillReferenceCount > 0);
+            pnl_MonsterSkillUsage.Visible = isMonsterSkillUsagePanelVisible;
+            if (isMonsterSkillUsagePanelVisible)
+            {
+                lbl_MonsterSkillUsage_2.Text = monsterSkillReferenceCount.ToString();
+                lbl_MonsterSkillUsage_3.Text = (monsterSkillReferenceCount == 0) ? "monster skills" : ((monsterSkillReferenceCount == 1) ? "monster skill: " : "monster skills, e.g. ");
+
+                int monsterSkillIndex = GetFirstReferencingMonsterSkillIndex();
+                lbl_MonsterSkillUsage_4.Text = String.Format("{0:X2} {1}", (monsterSkillIndex + 0xB0),  AllMonsterSkills.GetNames(context)[monsterSkillIndex]);
+            }
+
             ignoreChanges = false;
         }
 
@@ -206,9 +235,26 @@ namespace FFTPatcher.Editors
             abilityAttributesEditor.UpdateView(context);
         }
 
-		#endregion Public Methods 
+        #endregion Public Methods 
 
-		#region Private Methods (3) 
+        #region Private Methods
+
+        private int GetFirstReferencingIndex(HashSet<int> referenceSet)
+        {
+            List<int> referencingIndexList = new List<int>(referenceSet);
+            referencingIndexList.Sort();
+            return referencingIndexList[0];
+        }
+
+        private int GetFirstReferencingSkillSetIndex()
+        {
+            return GetFirstReferencingIndex(ability.ReferencingSkillSetIDs);
+        }
+
+        private int GetFirstReferencingMonsterSkillIndex()
+        {
+            return GetFirstReferencingIndex(ability.ReferencingMonsterSkillIDs);
+        }
 
         private void abilityAttributesEditor_LinkClicked( object sender, LabelClickedEventArgs e )
         {
@@ -247,6 +293,38 @@ namespace FFTPatcher.Editors
             if (!ignoreChanges)
             {
                 ability.Effect = effectComboBox.SelectedItem as Effect;
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> SkillSetClicked;
+        private void lbl_SkillSetUsage_2_Click(object sender, EventArgs e)
+        {
+            if (SkillSetClicked != null)
+            {
+                SkillSetClicked(this, new ReferenceEventArgs(GetFirstReferencingSkillSetIndex(), ability.ReferencingSkillSetIDs));
+            }
+        }
+        private void lbl_SkillSetUsage_4_Click(object sender, EventArgs e)
+        {
+            if (SkillSetClicked != null)
+            {
+                SkillSetClicked(this, new ReferenceEventArgs(GetFirstReferencingSkillSetIndex()));
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> MonsterSkillClicked;
+        private void lbl_MonsterSkillUsage_2_Click(object sender, EventArgs e)
+        {
+            if (MonsterSkillClicked != null)
+            {
+                MonsterSkillClicked(this, new ReferenceEventArgs(GetFirstReferencingMonsterSkillIndex(), ability.ReferencingMonsterSkillIDs));
+            }
+        }
+        private void lbl_MonsterSkillUsage_4_Click(object sender, EventArgs e)
+        {
+            if (MonsterSkillClicked != null)
+            {
+                MonsterSkillClicked(this, new ReferenceEventArgs(GetFirstReferencingMonsterSkillIndex()));
             }
         }
     }

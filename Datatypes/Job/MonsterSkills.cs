@@ -46,6 +46,14 @@ namespace FFTPatcher.Datatypes
 
         public Ability Beastmaster { get; set; }
 
+        public Ability OldAbility1 { get; set; }
+
+        public Ability OldAbility2 { get; set; }
+
+        public Ability OldAbility3 { get; set; }
+
+        public Ability OldBeastmaster { get; set; }
+
         public MonsterSkill Default { get; private set; }
 
         public IList<string> DigestableProperties
@@ -99,6 +107,11 @@ namespace FFTPatcher.Datatypes
             Ability2 = dummyAbilities[flags[1] ? ( bytes[2] + 0x100 ) : bytes[2]];
             Ability3 = dummyAbilities[flags[2] ? ( bytes[3] + 0x100 ) : bytes[3]];
             Beastmaster = dummyAbilities[flags[3] ? ( bytes[4] + 0x100 ) : bytes[4]];
+
+            OldAbility1 = Ability1;
+            OldAbility2 = Ability2;
+            OldAbility3 = Ability3;
+            OldBeastmaster = Beastmaster;
         }
 
 		#endregion Constructors 
@@ -133,6 +146,11 @@ namespace FFTPatcher.Datatypes
             destination.Ability2 = source.Ability2;
             destination.Ability3 = source.Ability3;
             destination.Beastmaster = source.Beastmaster;
+
+            destination.OldAbility1 = source.OldAbility1;
+            destination.OldAbility2 = source.OldAbility2;
+            destination.OldAbility3 = source.OldAbility3;
+            destination.OldBeastmaster = source.OldBeastmaster;
         }
 
         public void CopyAllTo(MonsterSkill destination)

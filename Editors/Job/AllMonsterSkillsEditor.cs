@@ -22,20 +22,24 @@ using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib;
 using System;
+using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
     public partial class AllMonsterSkillsEditor : UserControl
     {
-        #region Instance Variables (3)
+        #region Instance Variables
 
         private MonsterSkill copiedMonsterSkill;
         const int cloneIndex = 0;
         const int pasteIndex = 1;
-        
+
+        private AllAbilities _abilities;
+
+        private HashSet<int> highlightedIndexes = new HashSet<int>();
         #endregion
 
-        #region Public Properties (1)
+        #region Public Properties
 
         public int SelectedIndex
         {
@@ -71,14 +75,18 @@ namespace FFTPatcher.Editors
             dataGridView.ContextMenu.Popup += new EventHandler(ContextMenu_Popup);
 
             dataGridView.KeyDown += new KeyEventHandler(dataGridView_KeyDown);
+
+            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
         }
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods 
 
-        public void UpdateView( AllMonsterSkills skills, PatcherLib.Datatypes.Context context )
+        public void UpdateView( AllMonsterSkills skills, AllAbilities abilities, PatcherLib.Datatypes.Context context )
         {
+            _abilities = abilities;
+
             dataGridView.DataSource = null;
             foreach( DataGridViewComboBoxColumn col in new DataGridViewComboBoxColumn[] { Ability1, Ability2, Ability3, Beastmaster } )
             {
@@ -89,9 +97,66 @@ namespace FFTPatcher.Editors
             dataGridView.DataSource = skills.MonsterSkills;
         }
 
-		#endregion Public Methods 
+        public void SetHighlightedIndexes(IEnumerable<int> highlightedIndexes)
+        {
+            dataGridView.SetHighlightedIndexes(highlightedIndexes);
+        }
 
-		#region Private Methods (10) 
+        #endregion Public Methods 
+
+        #region Private Methods () 
+
+        public void ClearHighlightedIndexes()
+        {
+            dataGridView.ClearHighlightedIndexes();
+        }
+
+        public void RefreshDataGridView()
+        {
+            dataGridView.Invalidate();
+        }
+
+        private void UpdateAbilities(int monsterSkillIndex)
+        {
+            if (monsterSkillIndex < 0)
+                return;
+
+            MonsterSkill monsterSkill = ((MonsterSkill[])dataGridView.DataSource)[monsterSkillIndex];
+
+            Ability[] abilities = new Ability[4] { monsterSkill.Ability1, monsterSkill.Ability2, monsterSkill.Ability3, monsterSkill.Beastmaster };
+            Ability[] oldAbilities = new Ability[4] { monsterSkill.OldAbility1, monsterSkill.OldAbility2, monsterSkill.OldAbility3, monsterSkill.OldBeastmaster };
+            HashSet<Ability> newAbilitySet = new HashSet<Ability>(abilities);
+            HashSet<Ability> oldAbilitySet = new HashSet<Ability>(oldAbilities);
+            
+            for (int index = 0; index < oldAbilities.Length; index++)
+            {
+                Ability ability = oldAbilities[index];
+                if (!newAbilitySet.Contains(ability))
+                {
+                    if (_abilities.Abilities[ability.Offset].ReferencingMonsterSkillIDs.Contains(monsterSkillIndex))
+                    {
+                        _abilities.Abilities[ability.Offset].ReferencingMonsterSkillIDs.Remove(monsterSkillIndex);
+                    }
+                }
+            }
+
+            for (int index = 0; index < abilities.Length; index++)
+            {
+                Ability ability = abilities[index];
+                if (!oldAbilitySet.Contains(ability))
+                {
+                    if (!_abilities.Abilities[ability.Offset].ReferencingMonsterSkillIDs.Contains(monsterSkillIndex))
+                    {
+                        _abilities.Abilities[ability.Offset].ReferencingMonsterSkillIDs.Add(monsterSkillIndex);
+                    }
+                }
+            }
+
+            monsterSkill.OldAbility1 = monsterSkill.Ability1;
+            monsterSkill.OldAbility2 = monsterSkill.Ability2;
+            monsterSkill.OldAbility3 = monsterSkill.Ability3;
+            monsterSkill.OldBeastmaster = monsterSkill.Beastmaster;
+        }
 
         private void Control_KeyDown( object sender, KeyEventArgs e )
         {
@@ -192,7 +257,12 @@ namespace FFTPatcher.Editors
 
         private void dataGridView_KeyDown(object sender, KeyEventArgs args)
         {
-            if (args.KeyCode == Keys.C && args.Control)
+            if (args.KeyCode == Keys.Escape)
+            {
+                ClearHighlightedIndexes();
+                dataGridView.Invalidate();
+            }
+            else if (args.KeyCode == Keys.C && args.Control)
                 copyAll(sender, args);
             else if (args.KeyCode == Keys.V && args.Control)
                 pasteAll(sender, args);
@@ -210,9 +280,15 @@ namespace FFTPatcher.Editors
                 MonsterSkill destMonsterSkill = dataGridView.CurrentRow.DataBoundItem as MonsterSkill;
                 copiedMonsterSkill.CopyAllTo(destMonsterSkill);
                 dataGridView.Invalidate();
+                UpdateAbilities(dataGridView.CurrentRow.Index);
             }
         }
 
-		#endregion Private Methods 
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            UpdateAbilities(e.RowIndex);
+        }
+
+        #endregion Private Methods 
     }
 }

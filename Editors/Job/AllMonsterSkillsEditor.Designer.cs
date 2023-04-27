@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-        	this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridView = new FFTPatcher.Controls.BGDataGridView();
         	this.Offset = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.Ability1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -145,7 +145,7 @@ namespace FFTPatcher.Editors
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView;
+        private FFTPatcher.Controls.BGDataGridView dataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn Offset;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn Ability1;
