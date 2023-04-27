@@ -33,7 +33,7 @@
             this.btn_Delete = new System.Windows.Forms.Button();
             this.btn_Page_Prev = new System.Windows.Forms.Button();
             this.btn_Page_Next = new System.Windows.Forms.Button();
-            this.spinner_Page = new System.Windows.Forms.NumericUpDown();
+            this.spinner_Page = new PatcherLib.Controls.NumericUpDownBase();
             this.btn_Page_First = new System.Windows.Forms.Button();
             this.btn_Page_Last = new System.Windows.Forms.Button();
             this.btn_CheckAll = new System.Windows.Forms.Button();
@@ -240,7 +240,7 @@
         private System.Windows.Forms.Button btn_Delete;
         private System.Windows.Forms.Button btn_Page_Prev;
         private System.Windows.Forms.Button btn_Page_Next;
-        private System.Windows.Forms.NumericUpDown spinner_Page;
+        private PatcherLib.Controls.NumericUpDownBase spinner_Page;
         private System.Windows.Forms.Button btn_Page_First;
         private System.Windows.Forms.Button btn_Page_Last;
         private System.Windows.Forms.Button btn_CheckAll;

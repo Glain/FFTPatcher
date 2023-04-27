@@ -14,7 +14,7 @@ namespace FFTorgASM
 	using System.ComponentModel;
 	using System.Windows.Forms;
 	
-	public class HexNumericUpDown : NumericUpDown 
+	public class HexNumericUpDown : PatcherLib.Controls.NumericUpDownBase 
 	{
 		public HexNumericUpDown()
 		{

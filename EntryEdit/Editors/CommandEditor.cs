@@ -16,10 +16,10 @@ namespace EntryEdit.Editors
         {
             public bool IsSpinner { get; set; }
             public ShortGroupBox GroupBox { get; set; }
-            public NumericUpDown Spinner { get; set; }
+            public NumericUpDownBase Spinner { get; set; }
             public ComboBox ComboBox { get; set; }
 
-            public ParameterData(bool isSpinner, ShortGroupBox groupBox, NumericUpDown spinner, ComboBox comboBox)
+            public ParameterData(bool isSpinner, ShortGroupBox groupBox, NumericUpDownBase spinner, ComboBox comboBox)
             {
                 this.IsSpinner = isSpinner;
                 this.GroupBox = groupBox;
@@ -119,7 +119,7 @@ namespace EntryEdit.Editors
 
                     //GroupBox groupBox = new GroupBox();
                     ShortGroupBox groupBox = parameterData.GroupBox;
-                    NumericUpDown spinner = parameterData.Spinner;
+                    NumericUpDownBase spinner = parameterData.Spinner;
                     ComboBox comboBox = parameterData.ComboBox;
                     //if (parameter.Template.Type == CommandParameterType.Number)
                     Dictionary<int, string> parameterValueMap = null;
@@ -131,7 +131,7 @@ namespace EntryEdit.Editors
                     if ((!hasParameterValueMap) || (parameter.Value >= entryNames.Count))
                     {
                         parameterData.IsSpinner = true;
-                        //NumericUpDown spinner = new NumericUpDown();
+                        //NumericUpDownBase spinner = new NumericUpDownBase();
                         spinner.Width = (parameter.GetByteLength() * 10) + 35;
                         spinner.Minimum = isSigned ? (-(range / 2)) : 0;
                         spinner.Maximum = isSigned ? ((range / 2) - 1) : (range - 1);
@@ -207,7 +207,7 @@ namespace EntryEdit.Editors
                 groupBox.Visible = false;
                 //flp_Parameters.Controls.Add(groupBox);
 
-                NumericUpDown spinner = new NumericUpDown();
+                NumericUpDownBase spinner = new NumericUpDownBase();
                 spinner.Visible = false;
 
                 ComboBox comboBox = new ComboBox();

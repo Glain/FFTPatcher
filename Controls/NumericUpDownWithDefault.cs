@@ -28,7 +28,7 @@ namespace FFTPatcher.Controls
     /// <summary>
     /// Represents a <see cref="NumericUpDown"/> that allows a default value to be set.
     /// </summary>
-    public class NumericUpDownWithDefault : NumericUpDown
+    public class NumericUpDownWithDefault : PatcherLib.Controls.NumericUpDownBase
     {
         private ToolTip toolTip;
 

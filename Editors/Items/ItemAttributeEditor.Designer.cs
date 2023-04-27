@@ -67,7 +67,7 @@ namespace FFTPatcher.Editors
             this.permanentStatusesEditor = new FFTPatcher.Editors.StatusesEditor();
             this.btnRepoint = new System.Windows.Forms.Button();
             this.lblRepoint = new System.Windows.Forms.Label();
-            this.spinner_Repoint = new System.Windows.Forms.NumericUpDown();
+            this.spinner_Repoint = new PatcherLib.Controls.NumericUpDownBase();
             this.pnl_Usage = new System.Windows.Forms.Panel();
             this.lbl_Usage_1 = new System.Windows.Forms.Label();
             this.lbl_Usage_2 = new System.Windows.Forms.LinkLabel();
@@ -429,7 +429,7 @@ namespace FFTPatcher.Editors
         private FFTPatcher.Controls.NumericUpDownWithDefault jumpSpinner;
         private System.Windows.Forms.Button btnRepoint;
         private System.Windows.Forms.Label lblRepoint;
-        private System.Windows.Forms.NumericUpDown spinner_Repoint;
+        private PatcherLib.Controls.NumericUpDownBase spinner_Repoint;
         private System.Windows.Forms.Panel pnl_Usage;
         private System.Windows.Forms.LinkLabel lbl_Usage_4;
         private System.Windows.Forms.Label lbl_Usage_3;

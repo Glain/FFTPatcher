@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using PatcherLib.Controls;
 using PatcherLib.Datatypes;
 using PatcherLib.Helpers;
 using PatcherLib.Iso;
@@ -135,7 +136,7 @@ namespace EntryEdit.Forms
             spinner_Events_Offset.Value = settings.EventsOffset;
         }
 
-        private void SetSectorDefault(Enum sector, NumericUpDown spinner, ComboBox comboBox)
+        private void SetSectorDefault(Enum sector, NumericUpDownBase spinner, ComboBox comboBox)
         {
             spinner.Value = ISOHelper.GetSectorValue(sector);
             SetSectorComboBoxValue(sector, comboBox);

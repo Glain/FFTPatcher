@@ -47,7 +47,7 @@ namespace FFTPatcher.Editors
         /// </summary>
         private void InitializeComponent()
         {
-            this.spinner_Repoint = new System.Windows.Forms.NumericUpDown();
+            this.spinner_Repoint = new PatcherLib.Controls.NumericUpDownBase();
             this.lblRepoint = new System.Windows.Forms.Label();
             this.btnRepoint = new System.Windows.Forms.Button();
             this.flagsCheckedListBox = new FFTPatcher.Controls.CheckedListBoxNoHighlightWithDefault();
@@ -257,7 +257,7 @@ namespace FFTPatcher.Editors
         private FFTPatcher.Controls.CheckedListBoxNoHighlightWithDefault flagsCheckedListBox;
         private System.Windows.Forms.Button btnRepoint;
         private System.Windows.Forms.Label lblRepoint;
-        private System.Windows.Forms.NumericUpDown spinner_Repoint;
+        private PatcherLib.Controls.NumericUpDownBase spinner_Repoint;
         private System.Windows.Forms.Panel pnl_ItemUsage;
         private System.Windows.Forms.LinkLabel lbl_ItemUsage_4;
         private System.Windows.Forms.Label lbl_ItemUsage_3;

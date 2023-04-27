@@ -29,24 +29,24 @@
         private void InitializeComponent()
         {
             this.pnl_Params = new System.Windows.Forms.Panel();
-            this.spinner_BattleConditionals_Offset = new System.Windows.Forms.NumericUpDown();
+            this.spinner_BattleConditionals_Offset = new PatcherLib.Controls.NumericUpDownBase();
             this.lbl_BattleConditionals_Offset = new System.Windows.Forms.Label();
-            this.spinner_Events_Sector = new System.Windows.Forms.NumericUpDown();
+            this.spinner_Events_Sector = new PatcherLib.Controls.NumericUpDownBase();
             this.lbl_Events_Sector = new System.Windows.Forms.Label();
             this.chk_Events = new System.Windows.Forms.CheckBox();
-            this.spinner_BattleConditionals_Sector = new System.Windows.Forms.NumericUpDown();
+            this.spinner_BattleConditionals_Sector = new PatcherLib.Controls.NumericUpDownBase();
             this.lbl_BattleConditionals_Sector = new System.Windows.Forms.Label();
             this.chk_BattleConditionals = new System.Windows.Forms.CheckBox();
             this.lbl_Events_Offset = new System.Windows.Forms.Label();
-            this.spinner_Events_Offset = new System.Windows.Forms.NumericUpDown();
+            this.spinner_Events_Offset = new PatcherLib.Controls.NumericUpDownBase();
             this.cmb_BattleConditionals_Sector = new System.Windows.Forms.ComboBox();
             this.cmb_Events_Sector = new System.Windows.Forms.ComboBox();
             this.chk_WorldConditionals = new System.Windows.Forms.CheckBox();
             this.lbl_WorldConditionals_Sector = new System.Windows.Forms.Label();
-            this.spinner_WorldConditionals_Sector = new System.Windows.Forms.NumericUpDown();
+            this.spinner_WorldConditionals_Sector = new PatcherLib.Controls.NumericUpDownBase();
             this.cmb_WorldConditionals_Sector = new System.Windows.Forms.ComboBox();
             this.lbl_WorldConditionals_Offset = new System.Windows.Forms.Label();
-            this.spinner_WorldConditionals_Offset = new System.Windows.Forms.NumericUpDown();
+            this.spinner_WorldConditionals_Offset = new PatcherLib.Controls.NumericUpDownBase();
             this.lbl_ISO = new System.Windows.Forms.Label();
             this.btn_ISO = new System.Windows.Forms.Button();
             this.txt_ISO = new System.Windows.Forms.TextBox();
@@ -55,9 +55,9 @@
             this.lbl_BattleConditionals_Size = new System.Windows.Forms.Label();
             this.lbl_WorldConditionals_Size = new System.Windows.Forms.Label();
             this.lbl_Events_Size = new System.Windows.Forms.Label();
-            this.spinner_BattleConditionals_Size = new System.Windows.Forms.NumericUpDown();
-            this.spinner_WorldConditionals_Size = new System.Windows.Forms.NumericUpDown();
-            this.spinner_Events_Size = new System.Windows.Forms.NumericUpDown();
+            this.spinner_BattleConditionals_Size = new PatcherLib.Controls.NumericUpDownBase();
+            this.spinner_WorldConditionals_Size = new PatcherLib.Controls.NumericUpDownBase();
+            this.spinner_Events_Size = new PatcherLib.Controls.NumericUpDownBase();
             this.pnl_Params.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_BattleConditionals_Offset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Events_Sector)).BeginInit();
@@ -452,20 +452,20 @@
         #endregion
 
         private System.Windows.Forms.Panel pnl_Params;
-        private System.Windows.Forms.NumericUpDown spinner_BattleConditionals_Offset;
+        private PatcherLib.Controls.NumericUpDownBase spinner_BattleConditionals_Offset;
         private System.Windows.Forms.Label lbl_BattleConditionals_Offset;
-        private System.Windows.Forms.NumericUpDown spinner_Events_Sector;
+        private PatcherLib.Controls.NumericUpDownBase spinner_Events_Sector;
         private System.Windows.Forms.Label lbl_Events_Sector;
         private System.Windows.Forms.CheckBox chk_Events;
-        private System.Windows.Forms.NumericUpDown spinner_BattleConditionals_Sector;
+        private PatcherLib.Controls.NumericUpDownBase spinner_BattleConditionals_Sector;
         private System.Windows.Forms.Label lbl_BattleConditionals_Sector;
         private System.Windows.Forms.CheckBox chk_BattleConditionals;
-        private System.Windows.Forms.NumericUpDown spinner_Events_Offset;
+        private PatcherLib.Controls.NumericUpDownBase spinner_Events_Offset;
         private System.Windows.Forms.Label lbl_Events_Offset;
-        private System.Windows.Forms.NumericUpDown spinner_WorldConditionals_Offset;
+        private PatcherLib.Controls.NumericUpDownBase spinner_WorldConditionals_Offset;
         private System.Windows.Forms.Label lbl_WorldConditionals_Offset;
         private System.Windows.Forms.ComboBox cmb_WorldConditionals_Sector;
-        private System.Windows.Forms.NumericUpDown spinner_WorldConditionals_Sector;
+        private PatcherLib.Controls.NumericUpDownBase spinner_WorldConditionals_Sector;
         private System.Windows.Forms.Label lbl_WorldConditionals_Sector;
         private System.Windows.Forms.CheckBox chk_WorldConditionals;
         private System.Windows.Forms.ComboBox cmb_Events_Sector;
@@ -475,11 +475,11 @@
         private System.Windows.Forms.TextBox txt_ISO;
         private System.Windows.Forms.Button btn_Load;
         private System.Windows.Forms.Button btn_Patch;
-        private System.Windows.Forms.NumericUpDown spinner_BattleConditionals_Size;
+        private PatcherLib.Controls.NumericUpDownBase spinner_BattleConditionals_Size;
         private System.Windows.Forms.Label lbl_Events_Size;
         private System.Windows.Forms.Label lbl_WorldConditionals_Size;
         private System.Windows.Forms.Label lbl_BattleConditionals_Size;
-        private System.Windows.Forms.NumericUpDown spinner_Events_Size;
-        private System.Windows.Forms.NumericUpDown spinner_WorldConditionals_Size;
+        private PatcherLib.Controls.NumericUpDownBase spinner_Events_Size;
+        private PatcherLib.Controls.NumericUpDownBase spinner_WorldConditionals_Size;
     }
 }

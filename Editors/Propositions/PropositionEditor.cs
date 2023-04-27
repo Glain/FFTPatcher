@@ -9,6 +9,7 @@ using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib.Utilities;
 using PatcherLib;
+using PatcherLib.Controls;
 
 namespace FFTPatcher.Editors
 {
@@ -284,7 +285,7 @@ namespace FFTPatcher.Editors
         {
             if (!ignoreChanges)
             {
-                NumericUpDown spinner = sender as NumericUpDown;
+                NumericUpDownBase spinner = sender as NumericUpDownBase;
                 PatcherLib.ReflectionHelpers.SetFieldOrProperty( proposition, (string)spinner.Tag, (byte)spinner.Value );
                 FireDataChanged();
             }

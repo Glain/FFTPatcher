@@ -37,7 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.flyingCheckbox = new System.Windows.Forms.CheckBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown1 = new PatcherLib.Controls.NumericUpDownBase();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.framesTabPage = new System.Windows.Forms.TabPage();
@@ -45,7 +45,7 @@
             this.zoomPanel = new System.Windows.Forms.Panel();
             this.animationTabPage = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new PatcherLib.Controls.NumericUpDownBase();
             this.animationViewer1 = new FFTPatcher.SpriteEditor.AnimationViewer();
             this.maxSizeLabel = new System.Windows.Forms.Label();
             this.sharedLabel = new System.Windows.Forms.Label();
@@ -404,7 +404,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox flyingCheckbox;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private PatcherLib.Controls.NumericUpDownBase numericUpDown1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage framesTabPage;
@@ -412,7 +412,7 @@
         private AnimationViewer animationViewer1;
         private System.Windows.Forms.Label maxSizeLabel;
         private System.Windows.Forms.Label sharedLabel;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private PatcherLib.Controls.NumericUpDownBase numericUpDown2;
         private System.Windows.Forms.Label lblFramesH;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chkImportExport8bpp;
