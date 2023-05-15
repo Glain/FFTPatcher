@@ -17,6 +17,7 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Collections.Generic;
 using System.Windows.Forms;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
@@ -29,7 +30,11 @@ namespace FFTPatcher.Editors
 
         private Context ourContext = Context.Default;
 
-		#endregion Instance Variables 
+        private AllJobs _jobs;
+        private AllSkillSets _skillSets;
+        private AllAbilities _abilities;
+
+        #endregion Instance Variables 
 
         private ToolTip toolTip;
         public ToolTip ToolTip
@@ -45,9 +50,11 @@ namespace FFTPatcher.Editors
 
         public Event ClipBoardEvent { get; private set; }
 
-		#endregion Public Properties 
+        public int SelectedIndex { get { return eventListBox.SelectedIndex; } set { eventListBox.SelectedIndex = value; } }
 
-		#region Constructors (1) 
+        #endregion Public Properties 
+
+        #region Constructors (1) 
 
         public ENTDEditor()
         {
@@ -61,9 +68,9 @@ namespace FFTPatcher.Editors
 
 		#endregion Constructors 
 
-		#region Public Methods (1) 
+		#region Public Methods
 
-        public void UpdateView( AllENTDs entds, Context context )
+        public void UpdateView( AllENTDs entds, AllJobs jobs, AllSkillSets skillSets, AllAbilities abilities, Context context )
         {
             if( ourContext != context )
             {
@@ -71,6 +78,10 @@ namespace FFTPatcher.Editors
                 ClipBoardEvent = null;
                 eventListBox.ContextMenu.MenuItems[1].Enabled = false;
             }
+
+            _jobs = jobs;
+            _skillSets = skillSets;
+            _abilities = abilities;
 
             eventListBox.SelectedIndexChanged -= eventListBox_SelectedIndexChanged;
             eventListBox.DataSource = entds.Events;
@@ -82,9 +93,28 @@ namespace FFTPatcher.Editors
             eventListBox.SetChangedColors();
         }
 
-		#endregion Public Methods 
+        public void UpdateSelectedEntry()
+        {
+            eventEditor1.UpdateView(ourContext);
+        }
+        public void UpdateListBox()
+        {
+            eventListBox.SetChangedColors();
+        }
 
-		#region Private Methods (5) 
+        public void SetListBoxHighlightedIndexes(IEnumerable<int> highlightedIndexes)
+        {
+            eventListBox.SetHighlightedIndexes(highlightedIndexes);
+        }
+
+        public void ClearListBoxHighlightedIndexes()
+        {
+            eventListBox.ClearHighlightedIndexes();
+        }
+
+        #endregion Public Methods 
+
+        #region Private Methods
 
         private void CopyClickEventHandler( object sender, System.EventArgs args )
         {
@@ -101,6 +131,8 @@ namespace FFTPatcher.Editors
             eventListBox.TopIndex = top;
             eventListBox.EndUpdate();
             eventListBox.SetChangedColor();
+
+            UpdateReferences(eventListBox.SelectedIndex);
         }
 
         private void eventListBox_MouseDown( object sender, MouseEventArgs e )
@@ -129,13 +161,181 @@ namespace FFTPatcher.Editors
 
         private void eventListBox_KeyDown( object sender, KeyEventArgs args )
 		{
-			if (args.KeyCode == Keys.C && args.Control)
+            if (args.KeyCode == Keys.Escape)
+            {
+                ClearListBoxHighlightedIndexes();
+                eventListBox.SetChangedColors();
+                eventListBox.Invalidate();
+            }
+            else if (args.KeyCode == Keys.C && args.Control)
 				CopyClickEventHandler( sender, args );
 			else if (args.KeyCode == Keys.V && args.Control)
 				PasteClickEventHandler( sender, args );
 		}
-        
-		#endregion Private Methods 
+
+        #endregion Private Methods 
+
+        private void UpdateReferences(int eventIndex)
+        {
+            if (eventIndex < 0)
+                return;
+
+            Event entdEvent = ((IList<Event>)eventListBox.DataSource)[eventIndex];
+
+            List<int> jobIDsToCheck = new List<int>();
+            List<int> skillSetsToCheck = new List<int>();
+            List<int> abilityIDsToCheck = new List<int>();
+
+            foreach (EventUnit eventUnit in entdEvent.Units)
+            {
+                if (eventUnit.SpriteSet.Value != 0)
+                {
+                    if (eventUnit.OldJob != eventUnit.Job)
+                    {
+                        _jobs.Jobs[eventUnit.Job.Value].ReferencingENTDs.Add(eventIndex);
+                        jobIDsToCheck.Add(eventUnit.OldJob.Value);
+                    }
+
+                    if (eventUnit.OldSkillSet != eventUnit.SkillSet)
+                    {
+                        if ((eventUnit.SkillSet.Value != 0) && (eventUnit.SkillSet.Value < 0xB0))
+                            _skillSets.SkillSets[eventUnit.SkillSet.Value].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.OldSkillSet.Value != 0) && (eventUnit.OldSkillSet.Value < 0xB0))
+                            skillSetsToCheck.Add(eventUnit.OldSkillSet.Value);
+                    }
+                    if (eventUnit.OldSecondaryAction != eventUnit.SecondaryAction)
+                    {
+                        if ((eventUnit.SecondaryAction.Value != 0) && (eventUnit.SecondaryAction.Value < 0xB0))
+                            _skillSets.SkillSets[eventUnit.SecondaryAction.Value].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.OldSecondaryAction.Value != 0) && (eventUnit.OldSecondaryAction.Value < 0xB0))
+                            skillSetsToCheck.Add(eventUnit.OldSecondaryAction.Value);
+                    }
+
+                    if (eventUnit.OldReaction != eventUnit.Reaction)
+                    {
+                        if ((eventUnit.Reaction.Offset != 0) && (eventUnit.Reaction.Offset < 0x1FE))
+                            _abilities.Abilities[eventUnit.Reaction.Offset].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.OldReaction.Offset != 0) && (eventUnit.OldReaction.Offset < 0x1FE))
+                            abilityIDsToCheck.Add(eventUnit.OldReaction.Offset);
+                    }
+                    if (eventUnit.OldSupport != eventUnit.Support)
+                    {
+                        if ((eventUnit.Support.Offset != 0) && (eventUnit.Support.Offset < 0x1FE))
+                            _abilities.Abilities[eventUnit.Support.Offset].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.OldSupport.Offset != 0) && (eventUnit.OldSupport.Offset < 0x1FE))
+                            abilityIDsToCheck.Add(eventUnit.OldSupport.Offset);
+                    }
+                    if (eventUnit.OldMovement != eventUnit.Movement)
+                    {
+                        if ((eventUnit.Movement.Offset != 0) && (eventUnit.Movement.Offset < 0x1FE))
+                            _abilities.Abilities[eventUnit.Movement.Offset].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.OldMovement.Offset != 0) && (eventUnit.OldMovement.Offset < 0x1FE))
+                            abilityIDsToCheck.Add(eventUnit.OldMovement.Offset);
+                    }
+                }
+
+                if (eventUnit.OldSpriteSet != eventUnit.SpriteSet)
+                {
+                    if (eventUnit.SpriteSet.Value != 0)
+                    {
+                        _jobs.Jobs[eventUnit.Job.Value].ReferencingENTDs.Add(eventIndex);
+
+                        byte primary = eventUnit.SkillSet.Value;
+                        if ((primary != 0) && (primary < 0xB0))
+                            _skillSets.SkillSets[primary].ReferencingENTDs.Add(eventIndex);
+
+                        byte secondary = eventUnit.SecondaryAction.Value;
+                        if ((secondary != 0) && (secondary < 0xB0))
+                            _skillSets.SkillSets[secondary].ReferencingENTDs.Add(eventIndex);
+
+                        if ((eventUnit.Reaction.Offset != 0) && (eventUnit.Reaction.Offset < 0x1FE))
+                            _abilities.Abilities[eventUnit.Reaction.Offset].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.Support.Offset != 0) && (eventUnit.Support.Offset < 0x1FE))
+                            _abilities.Abilities[eventUnit.Support.Offset].ReferencingENTDs.Add(eventIndex);
+                        if ((eventUnit.Movement.Offset != 0) && (eventUnit.Movement.Offset < 0x1FE))
+                            _abilities.Abilities[eventUnit.Movement.Offset].ReferencingENTDs.Add(eventIndex);
+                    }
+                    else
+                    {
+                        jobIDsToCheck.Add(eventUnit.Job.Value);
+
+                        if ((eventUnit.SkillSet.Value != 0) && (eventUnit.SkillSet.Value < 0xB0))
+                            skillSetsToCheck.Add(eventUnit.SkillSet.Value);
+                        if ((eventUnit.SecondaryAction.Value != 0) && (eventUnit.SecondaryAction.Value < 0xB0))
+                            skillSetsToCheck.Add(eventUnit.SecondaryAction.Value);
+
+                        if ((eventUnit.Reaction.Offset != 0) && (eventUnit.Reaction.Offset < 0x1FE))
+                            abilityIDsToCheck.Add(eventUnit.Reaction.Offset);
+                        if ((eventUnit.Support.Offset != 0)  && (eventUnit.Support.Offset < 0x1FE))
+                            abilityIDsToCheck.Add(eventUnit.Support.Offset);
+                        if ((eventUnit.Movement.Offset != 0)  && (eventUnit.Movement.Offset < 0x1FE))
+                            abilityIDsToCheck.Add(eventUnit.Movement.Offset);
+                    }
+                }
+
+                foreach (int jobID in jobIDsToCheck)
+                {
+                    bool foundReference = false;
+                    foreach (EventUnit eventUnitInner in entdEvent.Units)
+                    {
+                        if ((eventUnitInner.Job.Value == jobID) && (eventUnitInner.SpriteSet.Value != 0))
+                        {
+                            foundReference = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundReference)
+                        _jobs.Jobs[jobID].ReferencingENTDs.Remove(eventIndex);
+                }
+
+                foreach (int skillSetID in skillSetsToCheck)
+                {
+                    bool foundReference = false;
+                    foreach (EventUnit eventUnitInner in entdEvent.Units)
+                    {
+                        if (eventUnitInner.SpriteSet.Value != 0)
+                        {
+                            if ((eventUnitInner.SkillSet.Value == skillSetID) || (eventUnitInner.SecondaryAction.Value == skillSetID))
+                            {
+                                foundReference = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!foundReference)
+                        _skillSets.SkillSets[skillSetID].ReferencingENTDs.Remove(eventIndex);
+                }
+
+                foreach (int abilityID in abilityIDsToCheck)
+                {
+                    bool foundReference = false;
+                    foreach (EventUnit eventUnitInner in entdEvent.Units)
+                    {
+                        if (eventUnitInner.SpriteSet.Value != 0)
+                        {
+                            if ((eventUnitInner.Reaction.Offset == abilityID) || (eventUnitInner.Support.Offset == abilityID) || (eventUnitInner.Movement.Offset == abilityID))
+                            {
+                                foundReference = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!foundReference)
+                        _abilities.Abilities[abilityID].ReferencingENTDs.Remove(eventIndex);
+                }
+
+                eventUnit.OldJob = eventUnit.Job;
+                eventUnit.OldSkillSet = eventUnit.SkillSet;
+                eventUnit.OldSecondaryAction = eventUnit.SecondaryAction;
+
+                eventUnit.OldReaction = eventUnit.Reaction;
+                eventUnit.OldSupport = eventUnit.Support;
+                eventUnit.OldMovement = eventUnit.Movement;
+            }
+        }
 
         public void HandleSelectedIndexChange(int offset)
         {

@@ -165,25 +165,32 @@ namespace FFTPatcher.Editors
                 formulaComboBox.DataSource = new List<AbilityFormula>((ourContext == Context.US_PSP) ? AbilityFormula.PSPAbilityFormulas : AbilityFormula.PSXAbilityFormulas);
             }
 
-            bool[] defaults = null;
-            if( attributes.Default != null )
+            if (attributes != null)
             {
-                defaults = attributes.Default.ToBoolArray();
+                bool[] defaults = null;
+                if (attributes.Default != null)
+                {
+                    defaults = attributes.Default.ToBoolArray();
+                }
+
+                flagsCheckedListBox.SetValuesAndDefaults(ReflectionHelpers.GetFieldsOrProperties<bool>(attributes, FlagNames.ToArray()), defaults);
+
+                if (attributes.Default != null)
+                {
+                    foreach (NumericUpDownWithDefault spinner in spinners)
+                    {
+                        spinner.SetValueAndDefault(
+                            ReflectionHelpers.GetFieldOrProperty<byte>(attributes, spinner.Tag.ToString()),
+                            ReflectionHelpers.GetFieldOrProperty<byte>(attributes.Default, spinner.Tag.ToString()),
+                            toolTip);
+                    }
+
+                    formulaComboBox.SetValueAndDefault(attributes.Formula, attributes.Default.Formula, toolTip);
+
+                    elementsEditor.SetValueAndDefaults(attributes.Elements, attributes.Default.Elements);
+                }
             }
-
-            flagsCheckedListBox.SetValuesAndDefaults( ReflectionHelpers.GetFieldsOrProperties<bool>( attributes, FlagNames.ToArray() ), defaults );
-
-            foreach( NumericUpDownWithDefault spinner in spinners )
-            {
-                spinner.SetValueAndDefault(
-                    ReflectionHelpers.GetFieldOrProperty<byte>( attributes, spinner.Tag.ToString() ),
-                    ReflectionHelpers.GetFieldOrProperty<byte>( attributes.Default, spinner.Tag.ToString() ),
-                    toolTip);
-            }
-
-            formulaComboBox.SetValueAndDefault( attributes.Formula, attributes.Default.Formula, toolTip );
-
-            elementsEditor.SetValueAndDefaults( attributes.Elements, attributes.Default.Elements );
+            
             ignoreChanges = false;
 
             elementsEditor.ResumeLayout();

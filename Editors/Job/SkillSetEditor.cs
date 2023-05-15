@@ -75,6 +75,9 @@ namespace FFTPatcher.Editors
 
             lbl_JobUsage_2.Click += lbl_JobUsage_2_Click;
             lbl_JobUsage_4.Click += lbl_JobUsage_4_Click;
+
+            lbl_ENTDUsage_2.Click += lbl_ENTDUsage_2_Click;
+            lbl_ENTDUsage_4.Click += lbl_ENTDUsage_4_Click;
         }
 
 		#endregion Constructors 
@@ -141,6 +144,18 @@ namespace FFTPatcher.Editors
                 lbl_JobUsage_4.Text = String.Format("{0:X2} {1}", jobIndex, AllJobs.GetNames(context)[jobIndex]);
             }
 
+            int ENTDReferenceCount = skillSet.ReferencingENTDs.Count;
+            bool isENTDUsagePanelVisible = (ENTDReferenceCount > 0);
+            pnl_ENTDUsage.Visible = isENTDUsagePanelVisible;
+            if (isENTDUsagePanelVisible)
+            {
+                lbl_ENTDUsage_2.Text = ENTDReferenceCount.ToString();
+                lbl_ENTDUsage_3.Text = (ENTDReferenceCount == 0) ? "ENTDs" : ((ENTDReferenceCount == 1) ? "ENTD: " : "ENTDs, e.g. ");
+
+                int entdIndex = GetFirstReferencingENTDIndex();
+                lbl_ENTDUsage_4.Text = String.Format("{0:X3} {1}", entdIndex, Event.GetEventNames(context)[entdIndex]);
+            }
+
             theRestGroupBox.ResumeLayout();
             actionGroupBox.ResumeLayout();
             this.ResumeLayout();
@@ -161,6 +176,11 @@ namespace FFTPatcher.Editors
         private int GetFirstReferencingJobIndex()
         {
             return GetFirstReferencingIndex(skillSet.ReferencingJobIDs);
+        }
+
+        private int GetFirstReferencingENTDIndex()
+        {
+            return GetFirstReferencingIndex(skillSet.ReferencingENTDs);
         }
 
         private void actionComboBox_SelectedIndexChanged( object sender, EventArgs e )
@@ -200,6 +220,22 @@ namespace FFTPatcher.Editors
             if (JobClicked != null)
             {
                 JobClicked(this, new ReferenceEventArgs(GetFirstReferencingJobIndex()));
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ENTDClicked;
+        private void lbl_ENTDUsage_2_Click(object sender, EventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex(), skillSet.ReferencingENTDs));
+            }
+        }
+        private void lbl_ENTDUsage_4_Click(object sender, EventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex()));
             }
         }
     }

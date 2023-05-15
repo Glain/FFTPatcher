@@ -33,6 +33,7 @@ namespace FFTPatcher.Editors
         private Context ourContext = Context.Default;
 
         private AllSkillSets _skillSets;
+        private AllAbilities _abilities;
 
 		#endregion Instance Variables 
 
@@ -60,6 +61,8 @@ namespace FFTPatcher.Editors
             jobsListBox.MouseDown += new MouseEventHandler( jobsListBox_MouseDown );
 
             jobEditor.ViewStatsClicked += OnViewStatsClicked;
+
+            jobEditor.ENTDClicked += OnENTDClicked;
         }
 
 		#endregion Constructors 
@@ -68,7 +71,7 @@ namespace FFTPatcher.Editors
 
 		#region Public Methods
 
-        public void UpdateView( AllJobs jobs, AllSkillSets skillSets, Context context )
+        public void UpdateView( AllJobs jobs, AllSkillSets skillSets, AllAbilities abilities, Context context )
         {
             if( context != ourContext )
             {
@@ -77,6 +80,7 @@ namespace FFTPatcher.Editors
             }
 
             _skillSets = skillSets;
+            _abilities = abilities;
 
             jobsListBox.SelectedIndexChanged -= jobsListBox_SelectedIndexChanged;
             jobsListBox.DataSource = jobs.Jobs;
@@ -131,7 +135,7 @@ namespace FFTPatcher.Editors
             jobsListBox.EndUpdate();
             jobsListBox.SetChangedColor();
 
-            UpdateSkillSet(jobsListBox.SelectedIndex);
+            UpdateReferences(jobsListBox.SelectedIndex);
         }
 
         private void jobEditor_SkillSetClicked( object sender, LabelClickedEventArgs e )
@@ -182,7 +186,7 @@ namespace FFTPatcher.Editors
 
         #endregion Private Methods 
 
-        private void UpdateSkillSet(int jobIndex)
+        private void UpdateReferences(int jobIndex)
         {
             if (jobIndex < 0)
                 return;
@@ -197,7 +201,53 @@ namespace FFTPatcher.Editors
                     _skillSets.SkillSets[job.SkillSet.Value].ReferencingJobIDs.Add(jobIndex);
             }
 
+            if (job.OldInnateA != job.InnateA)
+            {
+                if (job.InnateA.Offset != 0)
+                    _abilities.Abilities[job.InnateA.Offset].ReferencingJobIDs.Add(jobIndex);
+
+                if ((job.OldInnateA.Offset != 0) && (job.InnateB != job.OldInnateA) && (job.InnateC != job.OldInnateA) && (job.InnateD != job.OldInnateA))
+                {
+                    _abilities.Abilities[job.OldInnateA.Offset].ReferencingJobIDs.Remove(jobIndex);
+                }
+            }
+            if (job.OldInnateB != job.InnateB)
+            {
+                if (job.InnateB.Offset != 0)
+                    _abilities.Abilities[job.InnateB.Offset].ReferencingJobIDs.Add(jobIndex);
+
+                if ((job.OldInnateB.Offset != 0) && (job.InnateA != job.OldInnateB) && (job.InnateC != job.OldInnateB) && (job.InnateD != job.OldInnateB))
+                {
+                    _abilities.Abilities[job.OldInnateB.Offset].ReferencingJobIDs.Remove(jobIndex);
+                }
+            }
+            if (job.OldInnateC != job.InnateC)
+            {
+                if (job.InnateC.Offset != 0)
+                    _abilities.Abilities[job.InnateC.Offset].ReferencingJobIDs.Add(jobIndex);
+
+                if ((job.OldInnateC.Offset != 0) && (job.InnateA != job.OldInnateC) && (job.InnateB != job.OldInnateC) && (job.InnateD != job.OldInnateC))
+                {
+                    _abilities.Abilities[job.OldInnateC.Offset].ReferencingJobIDs.Remove(jobIndex);
+                }
+            }
+            if (job.OldInnateD != job.InnateD)
+            {
+                if (job.InnateD.Offset != 0)
+                    _abilities.Abilities[job.InnateD.Offset].ReferencingJobIDs.Add(jobIndex);
+
+                if ((job.OldInnateD.Offset != 0) && (job.InnateA != job.OldInnateD) && (job.InnateB != job.OldInnateD) && (job.InnateC != job.OldInnateD))
+                {
+                    _abilities.Abilities[job.OldInnateD.Offset].ReferencingJobIDs.Remove(jobIndex);
+                }
+            }
+
             job.OldSkillSet = job.SkillSet;
+
+            job.OldInnateA = job.InnateA;
+            job.OldInnateB = job.InnateB;
+            job.OldInnateC = job.InnateC;
+            job.OldInnateD = job.InnateD;
         }
 
         public void HandleSelectedIndexChange(int offset)
@@ -217,5 +267,14 @@ namespace FFTPatcher.Editors
         }
 
         public event EventHandler<LabelClickedEventArgs> SkillSetClicked;
+
+        public event EventHandler<ReferenceEventArgs> ENTDClicked;
+        private void OnENTDClicked(object sender, ReferenceEventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, e);
+            }
+        }
     }
 }

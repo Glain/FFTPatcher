@@ -104,7 +104,7 @@ namespace FFTPatcher.Datatypes
     /// </summary>
     public class EventUnit : IEquatable<EventUnit>, PatcherLib.Datatypes.IChangeable, ISupportDigest, ISupportDefault<EventUnit>
     {
-		#region Instance Variables (33) 
+		#region Instance Variables
 
         public bool AlwaysPresent;
         public bool Blank2;
@@ -161,7 +161,7 @@ namespace FFTPatcher.Datatypes
 
 		#endregion Instance Variables 
 
-		#region Public Properties (41) 
+		#region Public Properties
 
         public Item Accessory { get; set; }
 
@@ -267,6 +267,20 @@ namespace FFTPatcher.Datatypes
 
         public byte Y { get; set; }
 
+        public Job OldJob { get; set; }
+
+        public SpriteSet OldSpriteSet { get; set; }
+
+        public SkillSet OldSkillSet { get; set; }
+
+        public SkillSet OldSecondaryAction { get; set; }
+
+        public Ability OldReaction { get; set; }
+
+        public Ability OldSupport { get; set; }
+
+        public Ability OldMovement { get; set; }
+
 		#endregion Public Properties 
 
 		#region Constructors (2) 
@@ -328,6 +342,15 @@ namespace FFTPatcher.Datatypes
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( bytes[38], ref Blank12, ref Blank13, ref Blank14, ref Blank15, ref Blank16, ref SaveCT, ref Blank17, ref Blank18 );
             
             Unknown12 = bytes[39];
+
+            OldSpriteSet = SpriteSet;
+            OldJob = Job;
+            OldSkillSet = SkillSet;
+            OldSecondaryAction = SecondaryAction;
+
+            OldReaction = Reaction;
+            OldSupport = Support;
+            OldMovement = Movement;
         }
 
 		#endregion Constructors 
@@ -405,6 +428,15 @@ namespace FFTPatcher.Datatypes
             destination.SaveCT = source.SaveCT;
             destination.Blank17 = source.Blank17;
             destination.Blank18 = source.Blank18;
+
+            destination.OldSpriteSet = source.OldSpriteSet;
+            destination.OldJob = source.OldJob;
+            destination.OldSkillSet = source.OldSkillSet;
+            destination.OldSecondaryAction = source.OldSecondaryAction;
+
+            destination.OldReaction = source.OldReaction;
+            destination.OldSupport = source.OldSupport;
+            destination.OldMovement = source.OldMovement;
         }
 
         public void CopyTo( EventUnit destination )

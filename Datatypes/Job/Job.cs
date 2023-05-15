@@ -346,9 +346,21 @@ namespace FFTPatcher.Datatypes
             "HalfElement", "WeakElement", "Equipment", "PermanentStatus", "StartingStatus", "StatusImmunity", 
             "FormationSprites1", "FormationSprites2" };
 
-		#endregion Instance Variables 
+        #endregion Instance Variables 
 
-		#region Public Properties (34) 
+        private HashSet<int> referencingENTDs;
+        public HashSet<int> ReferencingENTDs
+        {
+            get
+            {
+                if (referencingENTDs == null)
+                    referencingENTDs = new HashSet<int>();
+
+                return referencingENTDs;
+            }
+        }
+
+        #region Public Properties
 
         public Elements AbsorbElement { get; private set; }
 
@@ -472,6 +484,14 @@ namespace FFTPatcher.Datatypes
 
         public SkillSet OldSkillSet { get; set; }
 
+        public Ability OldInnateA { get; set; }
+
+        public Ability OldInnateB { get; set; }
+
+        public Ability OldInnateC { get; set; }
+
+        public Ability OldInnateD { get; set; }
+
 		#endregion Public Properties 
 
 		#region Constructors (5) 
@@ -547,6 +567,11 @@ namespace FFTPatcher.Datatypes
             }
 
             OldSkillSet = SkillSet;
+
+            OldInnateA = InnateA;
+            OldInnateB = InnateB;
+            OldInnateC = InnateC;
+            OldInnateD = InnateD;
         }
 
 		#endregion Constructors 
@@ -588,6 +613,11 @@ namespace FFTPatcher.Datatypes
             destination.FormationSprites2 = source.FormationSprites2;
 
             destination.OldSkillSet = source.OldSkillSet;
+
+            destination.OldInnateA = source.OldInnateA;
+            destination.OldInnateB = source.OldInnateB;
+            destination.OldInnateC = source.OldInnateC;
+            destination.OldInnateD = source.OldInnateD;
         }
 
         public void CopyTo( Job destination )

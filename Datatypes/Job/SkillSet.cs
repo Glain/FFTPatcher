@@ -96,6 +96,18 @@ namespace FFTPatcher.Datatypes
             }
         }
 
+        private HashSet<int> referencingENTDs;
+        public HashSet<int> ReferencingENTDs
+        {
+            get
+            {
+                if (referencingENTDs == null)
+                    referencingENTDs = new HashSet<int>();
+
+                return referencingENTDs;
+            }
+        }
+
         /*
         public static SkillSet[] DummySkillSets
         {

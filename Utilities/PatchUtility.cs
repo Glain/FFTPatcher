@@ -3,6 +3,7 @@ using PatcherLib.Datatypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FFTPatcher
@@ -184,7 +185,7 @@ namespace FFTPatcher
         }
 
         public static void BuildReferenceList(AllItemAttributes itemAttributes, AllInflictStatuses inflictStatuses, AllAbilities abilities, AllItems items,
-            AllSkillSets skillSets, AllMonsterSkills monsterSkills, AllJobs jobs)
+            AllSkillSets skillSets, AllMonsterSkills monsterSkills, AllJobs jobs, AllENTDs ENTDs)
         {
             foreach (ItemAttributes itemAttr in itemAttributes.ItemAttributes)
             {
@@ -201,11 +202,19 @@ namespace FFTPatcher
             {
                 ability.ReferencingSkillSetIDs.Clear();
                 ability.ReferencingMonsterSkillIDs.Clear();
+                ability.ReferencingENTDs.Clear();
+                ability.ReferencingJobIDs.Clear();
             }
 
             foreach (SkillSet skillSet in skillSets.SkillSets)
             {
                 skillSet.ReferencingJobIDs.Clear();
+                skillSet.ReferencingENTDs.Clear();
+            }
+
+            foreach (Job job in jobs.Jobs)
+            {
+                job.ReferencingENTDs.Clear();
             }
 
             for (int index = 0; index < items.Items.Count; index++)
@@ -275,6 +284,44 @@ namespace FFTPatcher
 
                 if (job.SkillSet.Value < 0xB0)
                     skillSets.SkillSets[job.SkillSet.Value].ReferencingJobIDs.Add(index);
+
+                if (job.InnateA.Offset != 0)
+                    abilities.Abilities[job.InnateA.Offset].ReferencingJobIDs.Add(index);
+                if (job.InnateB.Offset != 0)
+                    abilities.Abilities[job.InnateB.Offset].ReferencingJobIDs.Add(index);
+                if (job.InnateC.Offset != 0)
+                    abilities.Abilities[job.InnateC.Offset].ReferencingJobIDs.Add(index);
+                if (job.InnateD.Offset != 0)
+                    abilities.Abilities[job.InnateD.Offset].ReferencingJobIDs.Add(index);
+            }
+
+            for (int index = 0; index < ENTDs.Events.Count; index++)
+            {
+                Event entdEvent = ENTDs.Events[index];
+
+                foreach (EventUnit eventUnit in entdEvent.Units)
+                {
+                    if (eventUnit.SpriteSet.Value != 0)
+                    {
+                        if (eventUnit.Job.Value < jobs.Jobs.Length)
+                            jobs.Jobs[eventUnit.Job.Value].ReferencingENTDs.Add(index);
+
+                        byte primary = eventUnit.SkillSet.Value;
+                        if ((primary != 0) && (primary < 0xB0))
+                            skillSets.SkillSets[primary].ReferencingENTDs.Add(index);
+
+                        byte secondary = eventUnit.SecondaryAction.Value;
+                        if ((secondary != 0) && (secondary < 0xB0))
+                            skillSets.SkillSets[secondary].ReferencingENTDs.Add(index);
+
+                        if ((eventUnit.Reaction.Offset != 0) && (eventUnit.Reaction.Offset < 0x1FE))
+                            abilities.Abilities[eventUnit.Reaction.Offset].ReferencingENTDs.Add(index);
+                        if ((eventUnit.Support.Offset != 0) && (eventUnit.Support.Offset < 0x1FE))
+                            abilities.Abilities[eventUnit.Support.Offset].ReferencingENTDs.Add(index);
+                        if ((eventUnit.Movement.Offset != 0) && (eventUnit.Movement.Offset < 0x1FE))
+                            abilities.Abilities[eventUnit.Movement.Offset].ReferencingENTDs.Add(index);
+                    }
+                }
             }
         }
 

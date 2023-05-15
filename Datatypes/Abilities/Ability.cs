@@ -122,9 +122,33 @@ namespace FFTPatcher.Datatypes
             }
         }
 
+        private HashSet<int> referencingENTDs;
+        public HashSet<int> ReferencingENTDs
+        {
+            get
+            {
+                if (referencingENTDs == null)
+                    referencingENTDs = new HashSet<int>();
+
+                return referencingENTDs;
+            }
+        }
+
+        private HashSet<int> referencingJobIDs;
+        public HashSet<int> ReferencingJobIDs
+        {
+            get
+            {
+                if (referencingJobIDs == null)
+                    referencingJobIDs = new HashSet<int>();
+
+                return referencingJobIDs;
+            }
+        }
+
         #endregion Instance Variables 
 
-        #region Public Properties (63) 
+        #region Public Properties
 
         public AbilityType AbilityType { get; set; }
 

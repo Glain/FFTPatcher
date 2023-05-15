@@ -105,6 +105,11 @@ namespace FFTPatcher.Editors
             this.cmb_MType = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.cmb_MPortrait = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.btn_ViewStats = new System.Windows.Forms.Button();
+            this.pnl_ENTDUsage = new System.Windows.Forms.Panel();
+            this.lbl_ENTDUsage_4 = new System.Windows.Forms.LinkLabel();
+            this.lbl_ENTDUsage_3 = new System.Windows.Forms.Label();
+            this.lbl_ENTDUsage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_ENTDUsage_1 = new System.Windows.Forms.Label();
             hpGrowthLabel = new System.Windows.Forms.Label();
             hpMultiplierLabel = new System.Windows.Forms.Label();
             mpGrowthLabel = new System.Windows.Forms.Label();
@@ -145,6 +150,7 @@ namespace FFTPatcher.Editors
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites2)).BeginInit();
             this.pnl_FormationSprites.SuspendLayout();
+            this.pnl_ENTDUsage.SuspendLayout();
             this.SuspendLayout();
             // 
             // hpGrowthLabel
@@ -629,9 +635,9 @@ namespace FFTPatcher.Editors
             // equipmentEditor
             // 
             this.equipmentEditor.Equipment = null;
-            this.equipmentEditor.Location = new System.Drawing.Point(234, 171);
+            this.equipmentEditor.Location = new System.Drawing.Point(234, 201);
             this.equipmentEditor.Name = "equipmentEditor";
-            this.equipmentEditor.Size = new System.Drawing.Size(394, 250);
+            this.equipmentEditor.Size = new System.Drawing.Size(394, 220);
             this.equipmentEditor.TabIndex = 25;
             this.equipmentEditor.TabStop = false;
             // 
@@ -773,6 +779,55 @@ namespace FFTPatcher.Editors
             this.btn_ViewStats.UseVisualStyleBackColor = true;
             this.btn_ViewStats.Click += new System.EventHandler(this.btn_ViewStats_Click);
             // 
+            // pnl_ENTDUsage
+            // 
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_4);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_3);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_2);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_1);
+            this.pnl_ENTDUsage.Location = new System.Drawing.Point(237, 169);
+            this.pnl_ENTDUsage.Name = "pnl_ENTDUsage";
+            this.pnl_ENTDUsage.Size = new System.Drawing.Size(390, 26);
+            this.pnl_ENTDUsage.TabIndex = 60;
+            // 
+            // lbl_ENTDUsage_4
+            // 
+            this.lbl_ENTDUsage_4.AutoSize = true;
+            this.lbl_ENTDUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_ENTDUsage_4.Location = new System.Drawing.Point(154, 6);
+            this.lbl_ENTDUsage_4.Name = "lbl_ENTDUsage_4";
+            this.lbl_ENTDUsage_4.Size = new System.Drawing.Size(0, 13);
+            this.lbl_ENTDUsage_4.TabIndex = 3;
+            // 
+            // lbl_ENTDUsage_3
+            // 
+            this.lbl_ENTDUsage_3.AutoSize = true;
+            this.lbl_ENTDUsage_3.Location = new System.Drawing.Point(81, 6);
+            this.lbl_ENTDUsage_3.Name = "lbl_ENTDUsage_3";
+            this.lbl_ENTDUsage_3.Size = new System.Drawing.Size(69, 13);
+            this.lbl_ENTDUsage_3.TabIndex = 2;
+            this.lbl_ENTDUsage_3.Text = "ENTDs, e.g. ";
+            // 
+            // lbl_ENTDUsage_2
+            // 
+            this.lbl_ENTDUsage_2.AutoSize = true;
+            this.lbl_ENTDUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_ENTDUsage_2.Location = new System.Drawing.Point(57, 6);
+            this.lbl_ENTDUsage_2.Name = "lbl_ENTDUsage_2";
+            this.lbl_ENTDUsage_2.Size = new System.Drawing.Size(13, 13);
+            this.lbl_ENTDUsage_2.TabIndex = 1;
+            this.lbl_ENTDUsage_2.TabStop = true;
+            this.lbl_ENTDUsage_2.Text = "0";
+            // 
+            // lbl_ENTDUsage_1
+            // 
+            this.lbl_ENTDUsage_1.AutoSize = true;
+            this.lbl_ENTDUsage_1.Location = new System.Drawing.Point(6, 6);
+            this.lbl_ENTDUsage_1.Name = "lbl_ENTDUsage_1";
+            this.lbl_ENTDUsage_1.Size = new System.Drawing.Size(50, 13);
+            this.lbl_ENTDUsage_1.TabIndex = 0;
+            this.lbl_ENTDUsage_1.Text = "In use by";
+            // 
             // JobEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -780,6 +835,7 @@ namespace FFTPatcher.Editors
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.pnl_ENTDUsage);
             this.Controls.Add(this.btn_ViewStats);
             this.Controls.Add(this.cmb_MPortrait);
             this.Controls.Add(this.cmb_MType);
@@ -853,6 +909,8 @@ namespace FFTPatcher.Editors
             ((System.ComponentModel.ISupportInitialize)(this.spinner_FormationSprites2)).EndInit();
             this.pnl_FormationSprites.ResumeLayout(false);
             this.pnl_FormationSprites.PerformLayout();
+            this.pnl_ENTDUsage.ResumeLayout(false);
+            this.pnl_ENTDUsage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -895,5 +953,10 @@ namespace FFTPatcher.Editors
         private Controls.ComboBoxWithDefault cmb_MType;
         private Controls.ComboBoxWithDefault cmb_MPortrait;
         private System.Windows.Forms.Button btn_ViewStats;
+        private System.Windows.Forms.Panel pnl_ENTDUsage;
+        private System.Windows.Forms.LinkLabel lbl_ENTDUsage_4;
+        private System.Windows.Forms.Label lbl_ENTDUsage_3;
+        private System.Windows.Forms.LinkLabel lbl_ENTDUsage_2;
+        private System.Windows.Forms.Label lbl_ENTDUsage_1;
     }
 }

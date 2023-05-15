@@ -76,9 +76,15 @@ namespace FFTPatcher.Editors
             this.lbl_JobUsage_3 = new System.Windows.Forms.Label();
             this.lbl_JobUsage_2 = new System.Windows.Forms.LinkLabel();
             this.lbl_JobUsage_1 = new System.Windows.Forms.Label();
+            this.pnl_ENTDUsage = new System.Windows.Forms.Panel();
+            this.lbl_ENTDUsage_4 = new System.Windows.Forms.LinkLabel();
+            this.lbl_ENTDUsage_3 = new System.Windows.Forms.Label();
+            this.lbl_ENTDUsage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_ENTDUsage_1 = new System.Windows.Forms.Label();
             this.actionGroupBox.SuspendLayout();
             this.theRestGroupBox.SuspendLayout();
             this.pnl_JobUsage.SuspendLayout();
+            this.pnl_ENTDUsage.SuspendLayout();
             this.SuspendLayout();
             // 
             // actionComboBox1
@@ -316,7 +322,7 @@ namespace FFTPatcher.Editors
             // 
             this.lbl_JobUsage_4.AutoSize = true;
             this.lbl_JobUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.lbl_JobUsage_4.Location = new System.Drawing.Point(140, 6);
+            this.lbl_JobUsage_4.Location = new System.Drawing.Point(150, 5);
             this.lbl_JobUsage_4.Name = "lbl_JobUsage_4";
             this.lbl_JobUsage_4.Size = new System.Drawing.Size(0, 13);
             this.lbl_JobUsage_4.TabIndex = 3;
@@ -350,21 +356,74 @@ namespace FFTPatcher.Editors
             this.lbl_JobUsage_1.TabIndex = 0;
             this.lbl_JobUsage_1.Text = "In use by";
             // 
+            // pnl_ENTDUsage
+            // 
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_4);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_3);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_2);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_1);
+            this.pnl_ENTDUsage.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pnl_ENTDUsage.Location = new System.Drawing.Point(177, 206);
+            this.pnl_ENTDUsage.Name = "pnl_ENTDUsage";
+            this.pnl_ENTDUsage.Size = new System.Drawing.Size(439, 26);
+            this.pnl_ENTDUsage.TabIndex = 31;
+            // 
+            // lbl_ENTDUsage_4
+            // 
+            this.lbl_ENTDUsage_4.AutoSize = true;
+            this.lbl_ENTDUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_ENTDUsage_4.Location = new System.Drawing.Point(150, 5);
+            this.lbl_ENTDUsage_4.Name = "lbl_ENTDUsage_4";
+            this.lbl_ENTDUsage_4.Size = new System.Drawing.Size(0, 13);
+            this.lbl_ENTDUsage_4.TabIndex = 3;
+            // 
+            // lbl_ENTDUsage_3
+            // 
+            this.lbl_ENTDUsage_3.AutoSize = true;
+            this.lbl_ENTDUsage_3.Location = new System.Drawing.Point(81, 6);
+            this.lbl_ENTDUsage_3.Name = "lbl_ENTDUsage_3";
+            this.lbl_ENTDUsage_3.Size = new System.Drawing.Size(69, 13);
+            this.lbl_ENTDUsage_3.TabIndex = 2;
+            this.lbl_ENTDUsage_3.Text = "ENTDs, e.g. ";
+            // 
+            // lbl_ENTDUsage_2
+            // 
+            this.lbl_ENTDUsage_2.AutoSize = true;
+            this.lbl_ENTDUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_ENTDUsage_2.Location = new System.Drawing.Point(57, 6);
+            this.lbl_ENTDUsage_2.Name = "lbl_ENTDUsage_2";
+            this.lbl_ENTDUsage_2.Size = new System.Drawing.Size(13, 13);
+            this.lbl_ENTDUsage_2.TabIndex = 1;
+            this.lbl_ENTDUsage_2.TabStop = true;
+            this.lbl_ENTDUsage_2.Text = "0";
+            // 
+            // lbl_ENTDUsage_1
+            // 
+            this.lbl_ENTDUsage_1.AutoSize = true;
+            this.lbl_ENTDUsage_1.Location = new System.Drawing.Point(6, 6);
+            this.lbl_ENTDUsage_1.Name = "lbl_ENTDUsage_1";
+            this.lbl_ENTDUsage_1.Size = new System.Drawing.Size(50, 13);
+            this.lbl_ENTDUsage_1.TabIndex = 0;
+            this.lbl_ENTDUsage_1.Text = "In use by";
+            // 
             // SkillSetEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.pnl_ENTDUsage);
             this.Controls.Add(this.pnl_JobUsage);
             this.Controls.Add(this.theRestGroupBox);
             this.Controls.Add(this.actionGroupBox);
             this.Name = "SkillSetEditor";
-            this.Size = new System.Drawing.Size(469, 380);
+            this.Size = new System.Drawing.Size(619, 380);
             this.actionGroupBox.ResumeLayout(false);
             this.theRestGroupBox.ResumeLayout(false);
             this.pnl_JobUsage.ResumeLayout(false);
             this.pnl_JobUsage.PerformLayout();
+            this.pnl_ENTDUsage.ResumeLayout(false);
+            this.pnl_ENTDUsage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -401,5 +460,10 @@ namespace FFTPatcher.Editors
         private System.Windows.Forms.Label lbl_JobUsage_3;
         private System.Windows.Forms.LinkLabel lbl_JobUsage_2;
         private System.Windows.Forms.Label lbl_JobUsage_1;
+        private System.Windows.Forms.Panel pnl_ENTDUsage;
+        private System.Windows.Forms.LinkLabel lbl_ENTDUsage_4;
+        private System.Windows.Forms.Label lbl_ENTDUsage_3;
+        private System.Windows.Forms.LinkLabel lbl_ENTDUsage_2;
+        private System.Windows.Forms.Label lbl_ENTDUsage_1;
     }
 }

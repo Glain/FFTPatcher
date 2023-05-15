@@ -22,6 +22,7 @@ using FFTPatcher.Controls;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib;
+using System.Collections.Generic;
 
 namespace FFTPatcher.Editors
 {
@@ -102,6 +103,9 @@ namespace FFTPatcher.Editors
 
             skillSetLabel.TabStop = false;
             skillSetLabel.Click += skillSetLabel_Click;
+
+            lbl_ENTDUsage_2.Click += lbl_ENTDUsage_2_Click;
+            lbl_ENTDUsage_4.Click += lbl_ENTDUsage_4_Click;
         }
 
 		#endregion Constructors 
@@ -211,6 +215,18 @@ namespace FFTPatcher.Editors
 
             pnl_FormationSprites.Visible = (job.Value < 0x4A);
 
+            int ENTDReferenceCount = job.ReferencingENTDs.Count;
+            bool isENTDUsagePanelVisible = (ENTDReferenceCount > 0);
+            pnl_ENTDUsage.Visible = isENTDUsagePanelVisible;
+            if (isENTDUsagePanelVisible)
+            {
+                lbl_ENTDUsage_2.Text = ENTDReferenceCount.ToString();
+                lbl_ENTDUsage_3.Text = (ENTDReferenceCount == 0) ? "ENTDs" : ((ENTDReferenceCount == 1) ? "ENTD: " : "ENTDs, e.g. ");
+
+                int ENTDIndex = GetFirstReferencingENTDIndex();
+                lbl_ENTDUsage_4.Text = String.Format("{0:X3} {1}", ENTDIndex, Event.GetEventNames(context)[ENTDIndex]);
+            }
+
             ignoreChanges = false;
             absorbElementsEditor.ResumeLayout();
             cancelElementsEditor.ResumeLayout();
@@ -223,9 +239,21 @@ namespace FFTPatcher.Editors
             this.ResumeLayout();
         }
 
-		#endregion Public Methods 
+        #endregion Public Methods 
 
-		#region Private Methods
+        #region Private Methods
+
+        private int GetFirstReferencingIndex(HashSet<int> referenceSet)
+        {
+            List<int> referencingIndexList = new List<int>(referenceSet);
+            referencingIndexList.Sort();
+            return referencingIndexList[0];
+        }
+
+        private int GetFirstReferencingENTDIndex()
+        {
+            return GetFirstReferencingIndex(job.ReferencingENTDs);
+        }
 
         private void ChangeValueFromComboBox(ComboBoxWithDefault control, bool useIndex)
         {
@@ -276,7 +304,23 @@ namespace FFTPatcher.Editors
             }
         }
 
-		#endregion Private Methods 
+        #endregion Private Methods
+
+        public event EventHandler<ReferenceEventArgs> ENTDClicked;
+        private void lbl_ENTDUsage_2_Click(object sender, EventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex(), job.ReferencingENTDs));
+            }
+        }
+        private void lbl_ENTDUsage_4_Click(object sender, EventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex()));
+            }
+        } 
 
         public event EventHandler ViewStatsClicked;
         private void btn_ViewStats_Click(object sender, EventArgs e)

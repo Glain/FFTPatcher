@@ -67,6 +67,8 @@ namespace FFTPatcher.Editors
 
             abilityEditor.SkillSetClicked += OnSkillSetClicked;
             abilityEditor.MonsterSkillClicked += OnMonsterSkillClicked;
+            abilityEditor.ENTDClicked += OnENTDClicked;
+            abilityEditor.JobClicked += OnJobClicked;
         }
 
 		#endregion Constructors 
@@ -318,6 +320,24 @@ namespace FFTPatcher.Editors
             if (MonsterSkillClicked != null)
             {
                 MonsterSkillClicked(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ENTDClicked;
+        private void OnENTDClicked(object sender, ReferenceEventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> JobClicked;
+        private void OnJobClicked(object sender, ReferenceEventArgs e)
+        {
+            if (JobClicked != null)
+            {
+                JobClicked(this, e);
             }
         }
     }

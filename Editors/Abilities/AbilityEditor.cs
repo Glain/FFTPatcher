@@ -118,6 +118,10 @@ namespace FFTPatcher.Editors
             lbl_SkillSetUsage_4.Click += lbl_SkillSetUsage_4_Click;
             lbl_MonsterSkillUsage_2.Click += lbl_MonsterSkillUsage_2_Click;
             lbl_MonsterSkillUsage_4.Click += lbl_MonsterSkillUsage_4_Click;
+            lbl_ENTDUsage_2.Click += lbl_ENTDUsage_2_Click;
+            lbl_ENTDUsage_4.Click += lbl_ENTDUsage_4_Click;
+            lbl_JobUsage_2.Click += lbl_JobUsage_2_Click;
+            lbl_JobUsage_4.Click += lbl_JobUsage_4_Click;
         }
 
 		#endregion Constructors 
@@ -227,6 +231,30 @@ namespace FFTPatcher.Editors
                 lbl_MonsterSkillUsage_4.Text = String.Format("{0:X2} {1}", (monsterSkillIndex + 0xB0),  AllMonsterSkills.GetNames(context)[monsterSkillIndex]);
             }
 
+            int ENTDReferenceCount = ability.ReferencingENTDs.Count;
+            bool isENTDUsagePanelVisible = (ENTDReferenceCount > 0);
+            pnl_ENTDUsage.Visible = isENTDUsagePanelVisible;
+            if (isENTDUsagePanelVisible)
+            {
+                lbl_ENTDUsage_2.Text = ENTDReferenceCount.ToString();
+                lbl_ENTDUsage_3.Text = (ENTDReferenceCount == 0) ? "ENTDs" : ((ENTDReferenceCount == 1) ? "ENTD: " : "ENTDs, e.g. ");
+
+                int entdIndex = GetFirstReferencingENTDIndex();
+                lbl_ENTDUsage_4.Text = String.Format("{0:X3} {1}", entdIndex, Event.GetEventNames(context)[entdIndex]);
+            }
+
+            int jobReferenceCount = ability.ReferencingJobIDs.Count;
+            bool isJobUsagePanelVisible = (jobReferenceCount > 0);
+            pnl_JobUsage.Visible = isJobUsagePanelVisible;
+            if (isJobUsagePanelVisible)
+            {
+                lbl_JobUsage_2.Text = jobReferenceCount.ToString();
+                lbl_JobUsage_3.Text = (jobReferenceCount == 0) ? "jobs (innate)" : ((jobReferenceCount == 1) ? "job (innate): " : "jobs (innate), e.g. ");
+
+                int jobIndex = GetFirstReferencingJobIndex();
+                lbl_JobUsage_4.Text = String.Format("{0:X2} {1}", jobIndex, AllJobs.GetNames(context)[jobIndex]);
+            }
+
             ignoreChanges = false;
         }
 
@@ -254,6 +282,16 @@ namespace FFTPatcher.Editors
         private int GetFirstReferencingMonsterSkillIndex()
         {
             return GetFirstReferencingIndex(ability.ReferencingMonsterSkillIDs);
+        }
+
+        private int GetFirstReferencingENTDIndex()
+        {
+            return GetFirstReferencingIndex(ability.ReferencingENTDs);
+        }
+
+        private int GetFirstReferencingJobIndex()
+        {
+            return GetFirstReferencingIndex(ability.ReferencingJobIDs);
         }
 
         private void abilityAttributesEditor_LinkClicked( object sender, LabelClickedEventArgs e )
@@ -325,6 +363,38 @@ namespace FFTPatcher.Editors
             if (MonsterSkillClicked != null)
             {
                 MonsterSkillClicked(this, new ReferenceEventArgs(GetFirstReferencingMonsterSkillIndex()));
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ENTDClicked;
+        private void lbl_ENTDUsage_2_Click(object sender, EventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex(), ability.ReferencingENTDs));
+            }
+        }
+        private void lbl_ENTDUsage_4_Click(object sender, EventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex()));
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> JobClicked;
+        private void lbl_JobUsage_2_Click(object sender, EventArgs e)
+        {
+            if (JobClicked != null)
+            {
+                JobClicked(this, new ReferenceEventArgs(GetFirstReferencingJobIndex(), ability.ReferencingJobIDs));
+            }
+        }
+        private void lbl_JobUsage_4_Click(object sender, EventArgs e)
+        {
+            if (JobClicked != null)
+            {
+                JobClicked(this, new ReferenceEventArgs(GetFirstReferencingJobIndex()));
             }
         }
     }

@@ -65,6 +65,7 @@ namespace FFTPatcher.Editors
             skillSetListBox.MouseDown += new MouseEventHandler( skillSetListBox_MouseDown );
 
             skillSetEditor.JobClicked += OnJobClicked;
+            skillSetEditor.ENTDClicked += OnENTDClicked;
         }
 
 		#endregion Constructors 
@@ -255,6 +256,15 @@ namespace FFTPatcher.Editors
             if (JobClicked != null)
             {
                 JobClicked(this, e);
+            }
+        }
+
+        public event EventHandler<ReferenceEventArgs> ENTDClicked;
+        private void OnENTDClicked(object sender, ReferenceEventArgs e)
+        {
+            if (ENTDClicked != null)
+            {
+                ENTDClicked(this, e);
             }
         }
     }

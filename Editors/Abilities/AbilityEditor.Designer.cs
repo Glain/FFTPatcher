@@ -79,14 +79,24 @@ namespace FFTPatcher.Editors
             this.abilityAttributesEditor = new FFTPatcher.Editors.AbilityAttributesEditor();
             this.pnl_SkillSetUsage = new System.Windows.Forms.Panel();
             this.lbl_SkillSetUsage_4 = new System.Windows.Forms.LinkLabel();
-            this.lbl_SkillSetUsage_3 = new System.Windows.Forms.Label();
-            this.lbl_SkillSetUsage_2 = new System.Windows.Forms.LinkLabel();
-            this.lbl_SkillSetUsage_1 = new System.Windows.Forms.Label();
             this.pnl_MonsterSkillUsage = new System.Windows.Forms.Panel();
             this.lbl_MonsterSkillUsage_4 = new System.Windows.Forms.LinkLabel();
+            this.pnl_ENTDUsage = new System.Windows.Forms.Panel();
+            this.lbl_ENTDUsage_4 = new System.Windows.Forms.LinkLabel();
+            this.lbl_ENTDUsage_3 = new System.Windows.Forms.Label();
+            this.lbl_ENTDUsage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_ENTDUsage_1 = new System.Windows.Forms.Label();
             this.lbl_MonsterSkillUsage_3 = new System.Windows.Forms.Label();
             this.lbl_MonsterSkillUsage_2 = new System.Windows.Forms.LinkLabel();
             this.lbl_MonsterSkillUsage_1 = new System.Windows.Forms.Label();
+            this.lbl_SkillSetUsage_3 = new System.Windows.Forms.Label();
+            this.lbl_SkillSetUsage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_SkillSetUsage_1 = new System.Windows.Forms.Label();
+            this.pnl_JobUsage = new System.Windows.Forms.Panel();
+            this.lbl_JobUsage_4 = new System.Windows.Forms.LinkLabel();
+            this.lbl_JobUsage_3 = new System.Windows.Forms.Label();
+            this.lbl_JobUsage_2 = new System.Windows.Forms.LinkLabel();
+            this.lbl_JobUsage_1 = new System.Windows.Forms.Label();
             hLabel2 = new System.Windows.Forms.Label();
             hLabel = new System.Windows.Forms.Label();
             idLabel = new System.Windows.Forms.Label();
@@ -113,6 +123,8 @@ namespace FFTPatcher.Editors
             this.itemUsePanel.SuspendLayout();
             this.pnl_SkillSetUsage.SuspendLayout();
             this.pnl_MonsterSkillUsage.SuspendLayout();
+            this.pnl_ENTDUsage.SuspendLayout();
+            this.pnl_JobUsage.SuspendLayout();
             this.SuspendLayout();
             // 
             // hLabel2
@@ -394,7 +406,7 @@ namespace FFTPatcher.Editors
             // effectLabel
             // 
             this.effectLabel.AutoSize = true;
-            this.effectLabel.Location = new System.Drawing.Point(172, 189);
+            this.effectLabel.Location = new System.Drawing.Point(172, 175);
             this.effectLabel.Name = "effectLabel";
             this.effectLabel.Size = new System.Drawing.Size(38, 13);
             this.effectLabel.TabIndex = 28;
@@ -405,7 +417,7 @@ namespace FFTPatcher.Editors
             this.effectComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.effectComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.effectComboBox.FormattingEnabled = true;
-            this.effectComboBox.Location = new System.Drawing.Point(216, 186);
+            this.effectComboBox.Location = new System.Drawing.Point(216, 172);
             this.effectComboBox.Name = "effectComboBox";
             this.effectComboBox.Size = new System.Drawing.Size(333, 21);
             this.effectComboBox.TabIndex = 27;
@@ -438,48 +450,19 @@ namespace FFTPatcher.Editors
             this.pnl_SkillSetUsage.Controls.Add(this.lbl_SkillSetUsage_3);
             this.pnl_SkillSetUsage.Controls.Add(this.lbl_SkillSetUsage_2);
             this.pnl_SkillSetUsage.Controls.Add(this.lbl_SkillSetUsage_1);
-            this.pnl_SkillSetUsage.Location = new System.Drawing.Point(175, 213);
+            this.pnl_SkillSetUsage.Location = new System.Drawing.Point(175, 199);
             this.pnl_SkillSetUsage.Name = "pnl_SkillSetUsage";
-            this.pnl_SkillSetUsage.Size = new System.Drawing.Size(289, 26);
+            this.pnl_SkillSetUsage.Size = new System.Drawing.Size(400, 16);
             this.pnl_SkillSetUsage.TabIndex = 29;
             // 
             // lbl_SkillSetUsage_4
             // 
             this.lbl_SkillSetUsage_4.AutoSize = true;
             this.lbl_SkillSetUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.lbl_SkillSetUsage_4.Location = new System.Drawing.Point(154, 6);
+            this.lbl_SkillSetUsage_4.Location = new System.Drawing.Point(154, 1);
             this.lbl_SkillSetUsage_4.Name = "lbl_SkillSetUsage_4";
             this.lbl_SkillSetUsage_4.Size = new System.Drawing.Size(0, 13);
             this.lbl_SkillSetUsage_4.TabIndex = 3;
-            // 
-            // lbl_SkillSetUsage_3
-            // 
-            this.lbl_SkillSetUsage_3.AutoSize = true;
-            this.lbl_SkillSetUsage_3.Location = new System.Drawing.Point(81, 6);
-            this.lbl_SkillSetUsage_3.Name = "lbl_SkillSetUsage_3";
-            this.lbl_SkillSetUsage_3.Size = new System.Drawing.Size(73, 13);
-            this.lbl_SkillSetUsage_3.TabIndex = 2;
-            this.lbl_SkillSetUsage_3.Text = "skill sets, e.g. ";
-            // 
-            // lbl_SkillSetUsage_2
-            // 
-            this.lbl_SkillSetUsage_2.AutoSize = true;
-            this.lbl_SkillSetUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.lbl_SkillSetUsage_2.Location = new System.Drawing.Point(57, 6);
-            this.lbl_SkillSetUsage_2.Name = "lbl_SkillSetUsage_2";
-            this.lbl_SkillSetUsage_2.Size = new System.Drawing.Size(13, 13);
-            this.lbl_SkillSetUsage_2.TabIndex = 1;
-            this.lbl_SkillSetUsage_2.TabStop = true;
-            this.lbl_SkillSetUsage_2.Text = "0";
-            // 
-            // lbl_SkillSetUsage_1
-            // 
-            this.lbl_SkillSetUsage_1.AutoSize = true;
-            this.lbl_SkillSetUsage_1.Location = new System.Drawing.Point(6, 6);
-            this.lbl_SkillSetUsage_1.Name = "lbl_SkillSetUsage_1";
-            this.lbl_SkillSetUsage_1.Size = new System.Drawing.Size(50, 13);
-            this.lbl_SkillSetUsage_1.TabIndex = 0;
-            this.lbl_SkillSetUsage_1.Text = "In use by";
             // 
             // pnl_MonsterSkillUsage
             // 
@@ -487,24 +470,73 @@ namespace FFTPatcher.Editors
             this.pnl_MonsterSkillUsage.Controls.Add(this.lbl_MonsterSkillUsage_3);
             this.pnl_MonsterSkillUsage.Controls.Add(this.lbl_MonsterSkillUsage_2);
             this.pnl_MonsterSkillUsage.Controls.Add(this.lbl_MonsterSkillUsage_1);
-            this.pnl_MonsterSkillUsage.Location = new System.Drawing.Point(175, 245);
+            this.pnl_MonsterSkillUsage.Location = new System.Drawing.Point(175, 216);
             this.pnl_MonsterSkillUsage.Name = "pnl_MonsterSkillUsage";
-            this.pnl_MonsterSkillUsage.Size = new System.Drawing.Size(289, 26);
+            this.pnl_MonsterSkillUsage.Size = new System.Drawing.Size(400, 16);
             this.pnl_MonsterSkillUsage.TabIndex = 30;
             // 
             // lbl_MonsterSkillUsage_4
             // 
             this.lbl_MonsterSkillUsage_4.AutoSize = true;
             this.lbl_MonsterSkillUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.lbl_MonsterSkillUsage_4.Location = new System.Drawing.Point(177, 6);
+            this.lbl_MonsterSkillUsage_4.Location = new System.Drawing.Point(177, 1);
             this.lbl_MonsterSkillUsage_4.Name = "lbl_MonsterSkillUsage_4";
             this.lbl_MonsterSkillUsage_4.Size = new System.Drawing.Size(0, 13);
             this.lbl_MonsterSkillUsage_4.TabIndex = 3;
             // 
+            // pnl_ENTDUsage
+            // 
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_4);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_3);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_2);
+            this.pnl_ENTDUsage.Controls.Add(this.lbl_ENTDUsage_1);
+            this.pnl_ENTDUsage.Location = new System.Drawing.Point(175, 233);
+            this.pnl_ENTDUsage.Name = "pnl_ENTDUsage";
+            this.pnl_ENTDUsage.Size = new System.Drawing.Size(400, 16);
+            this.pnl_ENTDUsage.TabIndex = 31;
+            // 
+            // lbl_ENTDUsage_4
+            // 
+            this.lbl_ENTDUsage_4.AutoSize = true;
+            this.lbl_ENTDUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_ENTDUsage_4.Location = new System.Drawing.Point(154, 1);
+            this.lbl_ENTDUsage_4.Name = "lbl_ENTDUsage_4";
+            this.lbl_ENTDUsage_4.Size = new System.Drawing.Size(0, 13);
+            this.lbl_ENTDUsage_4.TabIndex = 3;
+            // 
+            // lbl_ENTDUsage_3
+            // 
+            this.lbl_ENTDUsage_3.AutoSize = true;
+            this.lbl_ENTDUsage_3.Location = new System.Drawing.Point(81, 1);
+            this.lbl_ENTDUsage_3.Name = "lbl_ENTDUsage_3";
+            this.lbl_ENTDUsage_3.Size = new System.Drawing.Size(69, 13);
+            this.lbl_ENTDUsage_3.TabIndex = 2;
+            this.lbl_ENTDUsage_3.Text = "ENTDs, e.g. ";
+            // 
+            // lbl_ENTDUsage_2
+            // 
+            this.lbl_ENTDUsage_2.AutoSize = true;
+            this.lbl_ENTDUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_ENTDUsage_2.Location = new System.Drawing.Point(57, 1);
+            this.lbl_ENTDUsage_2.Name = "lbl_ENTDUsage_2";
+            this.lbl_ENTDUsage_2.Size = new System.Drawing.Size(13, 13);
+            this.lbl_ENTDUsage_2.TabIndex = 1;
+            this.lbl_ENTDUsage_2.TabStop = true;
+            this.lbl_ENTDUsage_2.Text = "0";
+            // 
+            // lbl_ENTDUsage_1
+            // 
+            this.lbl_ENTDUsage_1.AutoSize = true;
+            this.lbl_ENTDUsage_1.Location = new System.Drawing.Point(6, 1);
+            this.lbl_ENTDUsage_1.Name = "lbl_ENTDUsage_1";
+            this.lbl_ENTDUsage_1.Size = new System.Drawing.Size(50, 13);
+            this.lbl_ENTDUsage_1.TabIndex = 0;
+            this.lbl_ENTDUsage_1.Text = "In use by";
+            // 
             // lbl_MonsterSkillUsage_3
             // 
             this.lbl_MonsterSkillUsage_3.AutoSize = true;
-            this.lbl_MonsterSkillUsage_3.Location = new System.Drawing.Point(81, 6);
+            this.lbl_MonsterSkillUsage_3.Location = new System.Drawing.Point(81, 1);
             this.lbl_MonsterSkillUsage_3.Name = "lbl_MonsterSkillUsage_3";
             this.lbl_MonsterSkillUsage_3.Size = new System.Drawing.Size(96, 13);
             this.lbl_MonsterSkillUsage_3.TabIndex = 2;
@@ -514,7 +546,7 @@ namespace FFTPatcher.Editors
             // 
             this.lbl_MonsterSkillUsage_2.AutoSize = true;
             this.lbl_MonsterSkillUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.lbl_MonsterSkillUsage_2.Location = new System.Drawing.Point(57, 6);
+            this.lbl_MonsterSkillUsage_2.Location = new System.Drawing.Point(57, 1);
             this.lbl_MonsterSkillUsage_2.Name = "lbl_MonsterSkillUsage_2";
             this.lbl_MonsterSkillUsage_2.Size = new System.Drawing.Size(13, 13);
             this.lbl_MonsterSkillUsage_2.TabIndex = 1;
@@ -524,11 +556,89 @@ namespace FFTPatcher.Editors
             // lbl_MonsterSkillUsage_1
             // 
             this.lbl_MonsterSkillUsage_1.AutoSize = true;
-            this.lbl_MonsterSkillUsage_1.Location = new System.Drawing.Point(6, 6);
+            this.lbl_MonsterSkillUsage_1.Location = new System.Drawing.Point(6, 1);
             this.lbl_MonsterSkillUsage_1.Name = "lbl_MonsterSkillUsage_1";
             this.lbl_MonsterSkillUsage_1.Size = new System.Drawing.Size(50, 13);
             this.lbl_MonsterSkillUsage_1.TabIndex = 0;
             this.lbl_MonsterSkillUsage_1.Text = "In use by";
+            // 
+            // lbl_SkillSetUsage_3
+            // 
+            this.lbl_SkillSetUsage_3.AutoSize = true;
+            this.lbl_SkillSetUsage_3.Location = new System.Drawing.Point(81, 1);
+            this.lbl_SkillSetUsage_3.Name = "lbl_SkillSetUsage_3";
+            this.lbl_SkillSetUsage_3.Size = new System.Drawing.Size(73, 13);
+            this.lbl_SkillSetUsage_3.TabIndex = 2;
+            this.lbl_SkillSetUsage_3.Text = "skill sets, e.g. ";
+            // 
+            // lbl_SkillSetUsage_2
+            // 
+            this.lbl_SkillSetUsage_2.AutoSize = true;
+            this.lbl_SkillSetUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_SkillSetUsage_2.Location = new System.Drawing.Point(57, 1);
+            this.lbl_SkillSetUsage_2.Name = "lbl_SkillSetUsage_2";
+            this.lbl_SkillSetUsage_2.Size = new System.Drawing.Size(13, 13);
+            this.lbl_SkillSetUsage_2.TabIndex = 1;
+            this.lbl_SkillSetUsage_2.TabStop = true;
+            this.lbl_SkillSetUsage_2.Text = "0";
+            // 
+            // lbl_SkillSetUsage_1
+            // 
+            this.lbl_SkillSetUsage_1.AutoSize = true;
+            this.lbl_SkillSetUsage_1.Location = new System.Drawing.Point(6, 1);
+            this.lbl_SkillSetUsage_1.Name = "lbl_SkillSetUsage_1";
+            this.lbl_SkillSetUsage_1.Size = new System.Drawing.Size(50, 13);
+            this.lbl_SkillSetUsage_1.TabIndex = 0;
+            this.lbl_SkillSetUsage_1.Text = "In use by";
+            // 
+            // pnl_JobUsage
+            // 
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_4);
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_3);
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_2);
+            this.pnl_JobUsage.Controls.Add(this.lbl_JobUsage_1);
+            this.pnl_JobUsage.Location = new System.Drawing.Point(175, 250);
+            this.pnl_JobUsage.Name = "pnl_JobUsage";
+            this.pnl_JobUsage.Size = new System.Drawing.Size(400, 16);
+            this.pnl_JobUsage.TabIndex = 32;
+            // 
+            // lbl_JobUsage_4
+            // 
+            this.lbl_JobUsage_4.AutoSize = true;
+            this.lbl_JobUsage_4.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_JobUsage_4.Location = new System.Drawing.Point(177, 1);
+            this.lbl_JobUsage_4.Name = "lbl_JobUsage_4";
+            this.lbl_JobUsage_4.Size = new System.Drawing.Size(0, 13);
+            this.lbl_JobUsage_4.TabIndex = 3;
+            // 
+            // lbl_JobUsage_3
+            // 
+            this.lbl_JobUsage_3.AutoSize = true;
+            this.lbl_JobUsage_3.Location = new System.Drawing.Point(81, 1);
+            this.lbl_JobUsage_3.Name = "lbl_JobUsage_3";
+            this.lbl_JobUsage_3.Size = new System.Drawing.Size(73, 13);
+            this.lbl_JobUsage_3.TabIndex = 2;
+            this.lbl_JobUsage_3.Text = "jobs, e.g. ";
+            // 
+            // lbl_JobUsage_2
+            // 
+            this.lbl_JobUsage_2.AutoSize = true;
+            this.lbl_JobUsage_2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_JobUsage_2.Location = new System.Drawing.Point(57, 1);
+            this.lbl_JobUsage_2.Name = "lbl_JobUsage_2";
+            this.lbl_JobUsage_2.Size = new System.Drawing.Size(13, 13);
+            this.lbl_JobUsage_2.TabIndex = 1;
+            this.lbl_JobUsage_2.TabStop = true;
+            this.lbl_JobUsage_2.Text = "0";
+            // 
+            // lbl_JobUsage_1
+            // 
+            this.lbl_JobUsage_1.AutoSize = true;
+            this.lbl_JobUsage_1.Location = new System.Drawing.Point(6, 1);
+            this.lbl_JobUsage_1.Name = "lbl_JobUsage_1";
+            this.lbl_JobUsage_1.Size = new System.Drawing.Size(50, 13);
+            this.lbl_JobUsage_1.TabIndex = 0;
+            this.lbl_JobUsage_1.Text = "In use by";
             // 
             // AbilityEditor
             // 
@@ -537,6 +647,8 @@ namespace FFTPatcher.Editors
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.pnl_JobUsage);
+            this.Controls.Add(this.pnl_ENTDUsage);
             this.Controls.Add(this.pnl_MonsterSkillUsage);
             this.Controls.Add(this.pnl_SkillSetUsage);
             this.Controls.Add(this.effectLabel);
@@ -573,6 +685,10 @@ namespace FFTPatcher.Editors
             this.pnl_SkillSetUsage.PerformLayout();
             this.pnl_MonsterSkillUsage.ResumeLayout(false);
             this.pnl_MonsterSkillUsage.PerformLayout();
+            this.pnl_ENTDUsage.ResumeLayout(false);
+            this.pnl_ENTDUsage.PerformLayout();
+            this.pnl_JobUsage.ResumeLayout(false);
+            this.pnl_JobUsage.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -608,5 +724,15 @@ namespace FFTPatcher.Editors
         private System.Windows.Forms.Label lbl_MonsterSkillUsage_3;
         private System.Windows.Forms.LinkLabel lbl_MonsterSkillUsage_2;
         private System.Windows.Forms.Label lbl_MonsterSkillUsage_1;
+        private System.Windows.Forms.Panel pnl_ENTDUsage;
+        private System.Windows.Forms.LinkLabel lbl_ENTDUsage_4;
+        private System.Windows.Forms.Label lbl_ENTDUsage_3;
+        private System.Windows.Forms.LinkLabel lbl_ENTDUsage_2;
+        private System.Windows.Forms.Label lbl_ENTDUsage_1;
+        private System.Windows.Forms.Panel pnl_JobUsage;
+        private System.Windows.Forms.LinkLabel lbl_JobUsage_4;
+        private System.Windows.Forms.Label lbl_JobUsage_3;
+        private System.Windows.Forms.LinkLabel lbl_JobUsage_2;
+        private System.Windows.Forms.Label lbl_JobUsage_1;
     }
 }

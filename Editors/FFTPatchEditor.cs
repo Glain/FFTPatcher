@@ -46,9 +46,14 @@ namespace FFTPatcher.Editors
 
             allAbilitiesEditor1.SkillSetClicked += SkillSetClicked;
             allAbilitiesEditor1.MonsterSkillClicked += MonsterSkillClicked;
+            allAbilitiesEditor1.ENTDClicked += ENTDClicked;
+            allAbilitiesEditor1.JobClicked += JobClicked;
+
             allSkillSetsEditor1.JobClicked += JobClicked;
+            allSkillSetsEditor1.ENTDClicked += ENTDClicked;
 
             allJobsEditor1.ViewStatsClicked += ViewStatsClicked;
+            allJobsEditor1.ENTDClicked += ENTDClicked;
 
             tabControl.Selected += tabControl_Selected;
 
@@ -67,20 +72,20 @@ namespace FFTPatcher.Editors
             this.Enabled = true;
 
             PatchUtility.BuildReferenceList(FFTPatch.ItemAttributes, FFTPatch.InflictStatuses, FFTPatch.Abilities, FFTPatch.Items, 
-                FFTPatch.SkillSets, FFTPatch.MonsterSkills, FFTPatch.Jobs);
+                FFTPatch.SkillSets, FFTPatch.MonsterSkills, FFTPatch.Jobs, FFTPatch.ENTDs);
 
             allAbilitiesEditor1.UpdateView( FFTPatch.Abilities, FFTPatch.InflictStatuses, FFTPatch.Context );
             allActionMenusEditor1.UpdateView( FFTPatch.ActionMenus );
             allInflictStatusesEditor1.UpdateView(FFTPatch.InflictStatuses, FFTPatch.Context);
             allItemAttributesEditor1.UpdateView( FFTPatch.ItemAttributes, FFTPatch.Context );
             allItemsEditor1.UpdateView( FFTPatch.Items, FFTPatch.StoreInventories, FFTPatch.InflictStatuses, FFTPatch.ItemAttributes, FFTPatch.Context );
-            allJobsEditor1.UpdateView( FFTPatch.Jobs, FFTPatch.SkillSets, FFTPatch.Context );
+            allJobsEditor1.UpdateView( FFTPatch.Jobs, FFTPatch.SkillSets, FFTPatch.Abilities, FFTPatch.Context );
             allMonsterSkillsEditor1.UpdateView( FFTPatch.MonsterSkills, FFTPatch.Abilities, FFTPatch.Context );
             allPoachProbabilitiesEditor1.UpdateView( FFTPatch.PoachProbabilities, FFTPatch.Context );
             allSkillSetsEditor1.UpdateView( FFTPatch.SkillSets, FFTPatch.Abilities, FFTPatch.Context );
             allStatusAttributesEditor1.UpdateView(FFTPatch.StatusAttributes, FFTPatch.Context);
             jobLevelsEditor1.UpdateView( FFTPatch.JobLevels, FFTPatch.Context );
-            entdEditor1.UpdateView( FFTPatch.ENTDs, FFTPatch.Context );
+            entdEditor1.UpdateView( FFTPatch.ENTDs, FFTPatch.Jobs, FFTPatch.SkillSets, FFTPatch.Abilities, FFTPatch.Context );
             allMoveFindItemsEditor1.UpdateView(FFTPatch.MoveFind, FFTPatch.Context);
             allStoreInventoryEditor1.UpdateView( FFTPatch.StoreInventories, FFTPatch.Items, FFTPatch.Context );
             allAnimationsEditor1.UpdateView(FFTPatch.AbilityAnimations);
@@ -240,6 +245,18 @@ namespace FFTPatcher.Editors
             tabControl.SelectedTab = jobsPage;
         }
 
+        private void ENTDClicked(object sender, ReferenceEventArgs e)
+        {
+            if (e.ReferencingIndexes != null)
+            {
+                entdEditor1.SetListBoxHighlightedIndexes(e.ReferencingIndexes);
+            }
+
+            entdEditor1.SelectedIndex = e.Index;
+            entdEditor1.UpdateListBox();
+            tabControl.SelectedTab = entdTab;
+        }
+
         private void ViewStatsClicked(object sender, ReferenceEventArgs e)
         {
             int jobID = e.Index;
@@ -304,6 +321,11 @@ namespace FFTPatcher.Editors
             {
                 allSkillSetsEditor1.UpdateSelectedEntry();
                 allSkillSetsEditor1.UpdateListBox();
+            }
+            else if (e.TabPage == jobsPage)
+            {
+                allJobsEditor1.UpdateSelectedEntry();
+                allJobsEditor1.UpdateListBox();
             }
         }
 
