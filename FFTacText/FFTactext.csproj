@@ -239,8 +239,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="CleanFiles" AfterTargets="Clean">
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
   <PropertyGroup>
-    <PostBuildEvent>rem copy "$(SolutionDir)\$(ConfigurationName)\FFTTextCompression.dll" "$(TargetDir)"</PostBuildEvent>
     <PreBuildEvent>"$(ProjectDir)zipResources.bat" "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>

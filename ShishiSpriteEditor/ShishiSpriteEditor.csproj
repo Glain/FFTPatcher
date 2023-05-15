@@ -544,4 +544,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="CleanFiles" AfterTargets="Clean">
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
 </Project>

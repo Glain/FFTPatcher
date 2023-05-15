@@ -662,8 +662,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="CleanFiles" AfterTargets="Clean">
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)zipResources.bat" "$(ProjectDir)"
-</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)zipResources.bat" "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>
