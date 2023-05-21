@@ -111,7 +111,11 @@ namespace FFTorgASM
             string strMode = Enum.GetName(typeof(ASMEncodingMode), asmUtility.EncodingMode);
             string xmlPatchesPath = Settings.XmlPatchesPath.Replace('/', '\\');
             string readPath = Path.Combine(Path.Combine(Application.StartupPath, xmlPatchesPath), strMode);
-            string[] files = (fileList == null) ? Directory.GetFiles(readPath, "*.xml", SearchOption.TopDirectoryOnly) : fileList.ToArray();
+
+            string[] files = (fileList == null) 
+                ? Directory.Exists(readPath) ? Directory.GetFiles(readPath, "*.xml", SearchOption.TopDirectoryOnly) : new string[0] 
+                : fileList.ToArray();
+
             lsb_FilesList.SelectedIndices.Clear();
 
             clb_Patches.Items.Clear();
