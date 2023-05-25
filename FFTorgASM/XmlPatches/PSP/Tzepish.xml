@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patches>
+
+    <Patch name="Fix Swiftness/Defend/Beastmaster AI Bugs">
+    <Description>Fixes funky AI decision-making when they have Swiftness, Defend, or Beastmaster equipped.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="089b1cd4" offsetMode="RAM" mode="ASM">
+            andi v0,v1,0x0008             #Check for Swiftness (not Beastmaster)
+            beq v0,zero,0x089b1cf0        #Branch if not Swiftness
+            lbu v0,0x0001(s3)             #Load CT
+            addiu v0,v0,0x0001            #Round up (Fixes another bug - original forgot to round up)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="089b1cf0" offsetMode="RAM" mode="ASM">
+            andi v0,v1,0x0004             #Check for Instant Cast (not Defend)
+        </Location>
+    </Patch>
+
+    <Patch name="Fix for blocked abilities with Now casting time not turning red">
+    <Description>"Now" abilities in the Act Menu (abilities with instant casting time) will turn red if they cannot be cast due to low MP or Silence, just like all other abilities.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="089281c4" offsetMode="RAM" mode="ASM">
+            nop                           #Bypass the check for 0 casting time
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="089281fc" offsetMode="RAM" mode="ASM">
+            nop                           #Bypass the check for 0 casting time
+        </Location>
+    </Patch>
+
+    <Patch name="Fix for Bardsong and Dance not showing preview effect">
+    <Description>Songs and Dances will show a preview value (for healing, damage, or stat adjustment) before executing.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="0891b2ac" offsetMode="RAM" mode="ASM">
+            addu v0,zero,zero             #Remove Persevere flag check (always show preview)
+        </Location>
+    </Patch>
+
+    <Patch name="Fix for Nether Mantra Faith/Atheist Swap">
+    <Description>Fixes the bug that causes Faith and Atheism to NOT properly reverse when used with Nether Mantra. Nether Mantra is supposed to deal MORE damage to lower Faith targets, not less. (Marach's equipped Gokuu Pole weapon will now actually make sense - he wants to inflict Atheist on people to power up his magic.)</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088ad8c4" offsetMode="RAM" mode="ASM">
+            andi a0,a0,0x0040             #Max damage for Attacker Atheist (not Faith)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088ad8dc" offsetMode="RAM" mode="ASM">
+            andi a0,a0,0x0080             #Min damage for Attacker Faith (not Atheist)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088ad904" offsetMode="RAM" mode="ASM">
+            andi a0,a0,0x0040             #Max damage for Target Atheist (not Faith)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088ad91c" offsetMode="RAM" mode="ASM">
+            andi a0,a0,0x0080             #Min damage for Target Faith (not Atheist)
+        </Location>
+    </Patch>
+
+    <Patch name="Fix Random Unit equipment selection (Glain)">
+    <Description>Improves unit random equipment selection. Units will now randomly choose among the best of each item type, not just the best of the first item type and ANY of the remaining item types. In other words, you will no longer see lategame Knights wearing earlygame robes all the time. This ASM was originally written by Glain.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c5fe0" offsetMode="RAM" mode="ASM">
+            bne at,zero,STORE             #Branch if Previous Level is less or equal to Item Level (if next item is an upgrade)
+            addu s6,v1,zero               #Previous Level = Item Level
+            addiu s3,s3,0x0001            #Increment List Index for next item type (not an upgrade, must be a new type)
+     STORE: andi v0,s3,0x00ff             #v0 = Current List Index
+            addu v0,v0,sp                 #Update memory address for storing next candidate item
+            sb s5,0x0030(v0)              #Store item ID at designated memory address
+            nop
+            nop
+            nop
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c6014" offsetMode="RAM" mode="ASM">
+            addiu s0,s3,0x0001            #s0 = s3 + 1 (instead of just s3)
+            bne s6,zero,0x088c6028        #Branch if at least one item was chosen (Previous Level not 0)
+        </Location>
+    </Patch>
+
+    <Patch name="Smart Encounters (Xifanie)">
+    <Description>The player can choose when they want to fight random encounters. Click ON a green dot to fight an encounter, or click PAST a green dot to walk over it safely. This ASM was originally written by Xifanie.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="08907100" offsetMode="RAM" mode="ASM">
+            lui v1,0x0935
+            lw v0,-0x1f34(v1)
+            lw v1,-0x1f30(v1)
+            bne v0,v1,0x089071ec
+            addu v0,zero,zero
+            addu v0,s2,s3
+            nop
+            nop
+            nop
+            nop
+            nop
+            nop
+            nop
+        </Location>
+    </Patch>
+
+    <Patch name="Prevent Knockback if there are attacks remaining">
+    <Description>The target of a hit will not be knocked back unless its the last hit of a combo. In other words, you will not knock the target back on the first hit of Dual Wield and whiff the second hit. Especially useful with Barrage.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088a3e14" offsetMode="RAM" mode="ASM">
+            lui v1,0x092e
+            lbu a2,0x5c4e(v1)             #Load Total Number of Hits
+            lbu a1,0x5c4f(v1)             #Load Current Strike Counter
+            addiu a1,a1,0x0001            #Add 1 to represent the current hit
+            bne a1,a2,0x088a4020          #Branch to end if not the last hit (no knockback)
+            lbu a0,0x5c7b(v1)             #Load Current Ability Target counter
+            addiu a1,zero,0x0001          #One (number of targets)
+            bne a0,a1,0x088a4020          #Branch to end if there are multiple targets (no knockback)
+            lw a2,0x5c48(v1)              #Load Target Data
+            lbu a0,0x0005(a2)             #Load Target ENTD Flags
+            andi a1,a0,0x0004             #Immortal (entd)
+            bne a1,zero,0x088a4020        #Branch to end if target is immortal (no knockback)
+            lw a1,0x5c44(v1)              #Load Attacker Data
+            beq a2,a1,0x088a4020          #Branch to end if the attacker is the target (no knockback)
+            lbu at,0x01a6(a2)             #Load Mount Data
+            bne at,zero,0x088a4020        #Branch to end if the target is mounted (no knockback)
+            andi a0,a0,0x0003             #Flags 1 and 2 (entd) (Ramza)
+            addiu v1,zero,0x0003          #Flags 1 and 2 (entd) (Ramza)
+            beq a0,v1,0x088a4020          #Branch to end if target is Ramza (no knockback)
+            nop
+            nop
+            nop
+        </Location>
+    </Patch>
+
+    <Patch name="Player units always crystalize (never treasurize) on death">
+    <Description>Causes player units to always crystalize, never treasurize, when they die. Note that items are refunded when a unit crystalizes, but not when they treasurize, so this ensures you cannot lose important items for good from unit death.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c0184" offsetMode="RAM" mode="ASM">
+            bnel v0,zero,0x088c01a0       #Branch if player unit (likely)
+             addiu v0,zero,0x0040          #v0 = 40 (Crystalize, not treasurize) ^
+            addiu v0,zero,0x0010          #Else, 50% chance
+        </Location>
+    </Patch>
+
+    <Patch name="Increase Jump attribute cap from 7 to 9">
+    <Description>Increases the Jump attribute cap from 7 to 9.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c5620" offsetMode="RAM" mode="ASM">
+            slti at,v1,0x000a             #Check if Jump attribute is less than 10 (instead of 08)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c562c" offsetMode="RAM" mode="ASM">
+            addiu v1,zero,0x0009          #Jump maximum = 09 (instead of 07)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c58f4" offsetMode="RAM" mode="ASM">
+            slti at,v1,0x000a             #Check if Jump attribute is less than 10 (instead of 08)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c5900" offsetMode="RAM" mode="ASM">
+            addiu v1,zero,0x0009          #Jump maximum = 09 (instead of 07)
+        </Location>
+    </Patch>
+
+    <Patch name="Remove Phoenix Down healing randomization">
+    <Description>Phoenix Down will heal for the Z value in FFTPatcher (default 20) instead of random rolling.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b1694" offsetMode="RAM" mode="ASM">
+            lbu s0,0x0001(v0)             #s0 = Load Item Z Value
+            lui v1,0x092e
+            lw v1,0x5c10(v1)              #Load Current Action Data
+            sh s0,0x0006(v1)              #Store HP Damage = Item Z Value
+            nop
+            nop
+            nop
+            nop
+            nop
+            nop
+            nop
+            nop
+        </Location>
+    </Patch>
+
+    <Patch name="Phoenix Down hits undead for 25% HP (instead of 100%)">
+    <Description>Phoenix Down will hit undead for 25% HP instead of instant death. This makes it more consistent with Raise and Arise and fixes the weird situation where Chemists are the best undead slayers.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b1658" offsetMode="RAM" mode="ASM">
+            lui v0,0x092e
+            lw a0,0x5c48(v0)              #Load Target Data
+            lbu v1,0x0062(a0)             #Load Current Status 1
+            andi v1,v1,0x0010             #Undead
+            beq v1,zero,0x088b1684        #Branch past this stuff if not Undead
+            lhu a0,0x0032(a0)             #Load MaxHP (instead of CurrentHP)
+            addiu a0,a0,0x03              #Round up
+            srl a0,a0,0x02                #Divide MaxHP by 4
+            lw v1,0x5c10(v0)              #Load Current Action Data
+            j 0x088b16dc                  #Jump ahead of the HP restoring calculation
+             sh a0,0x0006(v1)              #Set HP Damage = 25% of MaxHP (rounded up) ^
+        </Location>
+    </Patch>
+
+    <Patch name="Undead always reanimate (instead of 50% chance)">
+    <Description>Undead creatures will always come back to life (instead of 50% chance) when their countdown is up.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c011c" offsetMode="RAM" mode="ASM">
+            beq v0,zero,0x088c017c        #Branch if not undead
+            nop
+            addiu v0,zero,0x0001          #Set always (instead of 50% chance)
+            beq v0,zero,0x088c017c        #Branch if not reviving (now never for undead)
+            nop
+        </Location>
+    </Patch>
+
+    <Patch name="Double the miss rate for Blind and Confused units">
+    <Description>Makes Blind a more powerful status effect by increasing its hit penalty. Nerfs Confuse because it uses the same hit penalty (so units are more likely to miss when attacking their allies).</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088a731c" offsetMode="RAM" mode="ASM">
+            srl v1,v1,0x02                #Divide hit rate by 4 (instead of 2)
+        </Location>
+    </Patch>
+
+    <Patch name="Focus increases both PA and MA">
+    <Description>Buffs Focus to increase magic power in addition to physical power, making it useful for spellcasting classes.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088a5a08" offsetMode="RAM" mode="ASM">
+            lw v1,0x5c10(v1)              #Load current action data
+            ori a1,a0,0x0080
+            addiu a0,zero,0x0001
+            sb a1,0x0016(v1)              #Store Y+Bonus flag as PA Boost
+            sb a1,0x0017(v1)              #Store Y+Bonus flag as MA Boost
+        </Location>
+    </Patch>
+
+    <Patch name="Nerf Chakra MP healing by 50%">
+    <Description>Halves the amount of MP Chakra restores. Chakra will use RecoveredHP/4 instead of RecoveredHP/2 for MP Recovery.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b0550" offsetMode="RAM" mode="ASM">
+            sra v1,a0,0x02                #Divide HP Recovery by four (instead of two)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b0558" offsetMode="RAM" mode="ASM">
+            sra v1,v1,0x02                #Divide HP Recovery by four (instead of two)
+        </Location>
+    </Patch>
+
+    <Patch name="Shirahadori works only against melee attacks">
+    <Description>Does not allow Shirahadori if the range on the triggering attack is 3 or greater.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b7248" offsetMode="RAM" mode="ASM">
+            lui v0,0x092e
+            lbu at,0x5c85(v0)             #Load Current Ability Flags 4
+            andi at,at,0x0010             #Check Shirahadori flag
+            beq at,zero,0x088b730c        #Branch to end if not Shirahadori
+            lbu at,0x5c8d(v0)             #Load Weapon Range
+            sltiu at,at,0x0003            #Set if Range is less than 3
+            beq at,zero,0x088b730c        #Branch to end if range is 3 or greater
+            lw v1,0x5c48(v0)              #Load Target Data
+            addiu a0,zero,0x0064          #a0 = 100
+            lbu a1,0x002b(v1)             #Load Brave
+        </Location>
+    </Patch>
+
+    <Patch name="Increase HP Boost bonus to +100% (from +20%)">
+    <Description>Increases the Dark Knight's HP Boost to +100% HP (instead of +20%). Note this bonus is based on unarmored HP total, which is why 20% is so laughable.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c469c" offsetMode="RAM" mode="ASM">
+            ori t1,zero,0x00c8            #t1 = New Max HP percent (200%)
+            multu t1,v1
+            mflo v1                       #v1 = MaxHP * New Percent
+            addiu v1,v1,0x0063            #Round up
+            ori t1,zero,0x0064            #t1 = Divisor (100)
+            divu v1,t1
+            mflo v1                       #v1 = Final MaxHP
+        </Location>
+    </Patch>
+
+    <Patch name="JP Boost is always on">
+    <Description>All characters will always be considered to have JP Boost equipped. (This renders the actual JP Boost ability useless.)</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b87a0" offsetMode="RAM" mode="ASM">
+            addiu v0,zero,0x0001          #v0 = 1 always (instead of checking for JP Boost)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088d5708" offsetMode="RAM" mode="ASM">
+            addiu v0,zero,0x0001          #v0 = 1 always (instead of checking for JP Boost)
+        </Location>
+    </Patch>
+
+    <Patch name="Beastmaster is always on">
+    <Description>Always allows the final monster ability by removing Beastmaster checks. (This renders the actual Beastmaster ability useless.)</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="089b3efc" offsetMode="RAM" mode="ASM">
+            j 0x089b3fd8                  #Just go straight to valid without all the checking
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088bf31c" offsetMode="RAM" mode="ASM">
+            j 0x088bf404                  #Just go straight to valid without all the checking
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="089b56c8" offsetMode="RAM" mode="ASM">
+            nop                           #Remove a branch taken if unit does not have Beastmaster
+        </Location>
+    </Patch>
+
+    <Patch name="Remove Monster Breeding">
+    <Description>Allied monsters will no longer lay eggs!</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c1fa4" offsetMode="RAM" mode="ASM">
+            addiu v0,zero,0xffff          #Party Slot = Invalid (egg creation failure)
+            j 0x088c2034                  #Jump to the end
+        </Location>
+    </Patch>
+
+    <Patch name="Remove permanent Brave and Faith alterations">
+    <Description>Resets Brave and Faith back to their original values instead of updating them after battle.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="0894a1d8" offsetMode="RAM" mode="ASM">
+            lbu v0,0x002a(s0)             #Load original Brave (instead of calculating new Brave)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="0894a220" offsetMode="RAM" mode="ASM">
+            lbu s4,0x002c(s0)             #Load original Faith (instead of calculating new Faith)
+        </Location>
+    </Patch>
+
+    <Patch name="Increase Brave/Faith gains from Steel, Praise, and Preach (intended to be used with the above)">
+    <Description>Increases the potency of Steel, Praise, and Preach, so that these skills are still worth using if permanent Brave and Faith alterations are turned off. Intended to be used with the above hack, but can be used standalone if you want these skills to be overpowered.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088a5d28" offsetMode="RAM" mode="ASM">
+            sll a0,a0,0x02                #Multiply Praise original Brave gain by four
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088a5d60" offsetMode="RAM" mode="ASM">
+            sll a0,a0,0x02                #Multiply Preach original Faith gain by four
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088a5dc8" offsetMode="RAM" mode="ASM">
+            sll a0,a0,0x02                #Multiply Steel original Brave gain by four
+        </Location>
+    </Patch>
+
+    <Patch name="Remove unit desertion for too low Brave / too high Faith">
+    <Description>Units will not desert the team after battle if their Brave gets too low or Faith gets too high.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="0894a230" offsetMode="RAM" mode="ASM">
+            addu at,zero,zero             #No desertion threat (at = 0) always (instead of only if Guest character)
+        </Location>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="0894a6b0" offsetMode="RAM" mode="ASM">
+            addu at,zero,zero             #No desertion (at = 0) always (instead of only if Guest character)
+        </Location>
+    </Patch>
+
+    <Patch name="Poacher's Den opens in Chapter 2 (instead of Chapter 3)">
+    <Description>Changes the flag used for determining if the Poacher's Den is open, so that it opens in Chapter 2 instead of Chapter 3.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="0890b400" offsetMode="RAM" mode="ASM">
+            addiu a0,zero,0x0091          #Use the Propositions flag insteads of Poacher's Den flag
+        </Location>
+    </Patch>
+
+    <Patch name="Increase Poach rare item chance to 50% (instead of 12.5%)">
+    <Description>Increases the odds of receiving the Rare item from Poach to 50% instead of 12.5%. Enable with the above hack to make early Poaching a really fun time.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088b63f4" offsetMode="RAM" mode="ASM">
+            addiu a1,zero,0x0080          #Rare Poach chance = 128/256
+        </Location>
+    </Patch>
+
+    <Patch name="Change Ramza's gender to female">
+    <Description>Changes Ramza's internal gender byte to Female. This handles Ramza's death scream and gender detection for things like Zodiac compatibility and Steal Heart. But if you are looking to fully convert Ramza to female for your mod, you'll need to adjust sprites, text, and the tutorial Ramza character manually.</Description>
+        <Location file="PSP_GAME_SYSDIR_BOOT_BIN" offset="088c22b8" offsetMode="RAM" mode="ASM">
+            addiu v0,zero,0x0040          #Ramza's Gender = Female
+        </Location>
+    </Patch>
+</Patches>
