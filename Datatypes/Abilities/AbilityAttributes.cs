@@ -205,7 +205,7 @@ namespace FFTPatcher.Datatypes
             Elements = new Elements( second[7] );
 
             byte b = second[8];
-            Formula = AbilityFormula.PSPAbilityFormulaHash[second[8]];
+            Formula = AbilityFormula.GetAbilityFormulaHash(context)[second[8]];
             X = second[9];
             Y = second[10];
             InflictStatus = second[11];

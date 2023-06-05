@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using PatcherLib;
+using PatcherLib.Datatypes;
 
 namespace FFTPatcher.Datatypes
 {
@@ -39,6 +40,14 @@ namespace FFTPatcher.Datatypes
         public byte Value { get; private set; }
 
 		#endregion Public Properties 
+
+        public static Dictionary<byte, AbilityFormula> GetAbilityFormulaHash(Context context)
+        {
+            if (context == Context.US_PSP)
+                return PSPAbilityFormulaHash;
+            else
+                return PSXAbilityFormulaHash;
+        }
 
 		#region Constructors (2) 
 

@@ -108,7 +108,7 @@ namespace FFTPatcher.Datatypes
         {
             Range = weaponBytes[0];
             PatcherLib.Utilities.Utilities.CopyByteToBooleans( weaponBytes[1], ref Striking, ref Lunging, ref Direct, ref Arc, ref TwoSwords, ref TwoHands, ref Throwable, ref Force2Hands );
-            Formula = AbilityFormula.PSPAbilityFormulaHash[weaponBytes[2]];
+            Formula = AbilityFormula.GetAbilityFormulaHash(context)[weaponBytes[2]];
             Unknown = weaponBytes[3];
             WeaponPower = weaponBytes[4];
             EvadePercentage = weaponBytes[5];
