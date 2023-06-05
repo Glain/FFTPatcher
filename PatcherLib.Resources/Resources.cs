@@ -27,6 +27,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace PatcherLib
 {
+    using PatcherLib.Datatypes;
     using PatcherLib.Utilities;
     using System.Xml;
     public static class ResourcesClass
@@ -89,6 +90,65 @@ namespace PatcherLib
         }
         */
 
+        internal static IList<string> GetStringsFromNumberedXmlNodes(ResourceListInfo info, Context context)
+        {
+            string newXPath = "";
+            bool ignore = false;
+
+            for (int i = 0; i < info.XPath.Length; i++)
+            {
+                if (info.XPath[i] == '[')
+                    ignore = true;
+
+                if (!ignore)
+                    newXPath += info.XPath[i];
+
+                if (info.XPath[i] == ']')
+                    ignore = false;
+            }
+
+            XmlNodeList nodeList = info.Doc.SelectNodes(string.Format(newXPath));
+            int resultCount = Math.Max(nodeList.Count, info.Length);
+            string[] result = new string[resultCount];
+
+            bool isPSX = (context == Context.US_PSX);
+
+            for (int i = info.StartIndex; i < (info.StartIndex + resultCount); i++)
+            {
+                XmlNode node = info.Doc.SelectSingleNode(string.Format(info.XPath, i));
+
+                string text = string.Empty;
+                if (node != null)
+                {
+                    text = node.InnerText;
+                    if (isPSX)
+                    {
+                        XmlAttribute attrPSP = node.Attributes["psp"];
+                        if ((attrPSP != null) && (attrPSP.Value.ToLower() == "true"))
+                        {
+                            XmlAttribute attrPSXName = node.Attributes["psxName"];
+                            if (attrPSXName != null)
+                            {
+                                text = attrPSXName.Value;
+                            }
+                            else
+                            {
+                                text = string.Empty;
+                            }
+                        }
+                    }
+                }
+
+                result[i - info.StartIndex] = text;
+            }
+            for (int i = 0; i < resultCount; i++)
+            {
+                result[i] = result[i] ?? string.Empty;
+            }
+
+            return result;
+        }
+
         internal static IList<string> GetStringsFromNumberedXmlNodes(ResourceListInfo info)
         {
             string newXPath = "";
@@ -124,31 +184,33 @@ namespace PatcherLib
         }
 
         private static XmlDocument abilityFormulasDoc;
-        private static IDictionary<byte, string> abilityFormulas;
+        private static Dictionary<Context, IDictionary<byte, string>> abilityFormulas;
 
-        public static IDictionary<byte, string> AbilityFormulas
+        public static IDictionary<byte, string> GetAbilityFormulas(Context context)
         {
-            get
+            if (abilityFormulas == null)
             {
-                if( abilityFormulas == null )
-                {
-                    var temp = new Dictionary<byte, string>();
-                    var formulaNames = ResourcesClass.GetStringsFromNumberedXmlNodes(
-                        new ResourceListInfo { 
-                            Doc = abilityFormulasDoc,
-                            XPath = "/AbilityFormulas/Ability[@value='{0:X2}']",
-                            Length = 256,
-                            StartIndex = 0 } );
-                    for( int i = 0; i < 256; i++ )
-                    {
-                        temp.Add((byte)i, formulaNames[i]);
-                    }
+                abilityFormulas = new Dictionary<Context, IDictionary<byte, string>>();
+            }
 
-                    abilityFormulas = new PatcherLib.Datatypes.ReadOnlyDictionary<byte, string>(temp);
+            if (!abilityFormulas.ContainsKey(context))
+            {
+                var temp = new Dictionary<byte, string>();
+                var formulaNames = ResourcesClass.GetStringsFromNumberedXmlNodes(
+                    new ResourceListInfo {
+                        Doc = abilityFormulasDoc,
+                        XPath = "/AbilityFormulas/Ability[@value='{0:X2}']",
+                        Length = 256,
+                        StartIndex = 0 }, context);
+                for (int i = 0; i < 256; i++)
+                {
+                    temp.Add((byte)i, formulaNames[i]);
                 }
 
-                return abilityFormulas;
+                abilityFormulas.Add(context, new PatcherLib.Datatypes.ReadOnlyDictionary<byte, string>(temp));
             }
+
+            return abilityFormulas[context];
         }
 
         public static IDictionary<string, IList<byte>> ZipFileContents

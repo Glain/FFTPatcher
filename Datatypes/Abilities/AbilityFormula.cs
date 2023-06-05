@@ -25,7 +25,7 @@ namespace FFTPatcher.Datatypes
 {
     public class AbilityFormula
     {
-		#region Public Properties (6) 
+        #region Public Properties (6) 
 
         public string Formula { get; private set; }
 
@@ -39,7 +39,7 @@ namespace FFTPatcher.Datatypes
 
         public byte Value { get; private set; }
 
-		#endregion Public Properties 
+        #endregion Public Properties 
 
         public static Dictionary<byte, AbilityFormula> GetAbilityFormulaHash(Context context)
         {
@@ -49,38 +49,42 @@ namespace FFTPatcher.Datatypes
                 return PSXAbilityFormulaHash;
         }
 
-		#region Constructors (2) 
-
-        static AbilityFormula()
+        public static void InitAbilityFormulas()
         {
-            PSXAbilityFormulas = new List<AbilityFormula>( ResourcesClass.AbilityFormulas.Count );
-            PSXAbilityFormulaHash = new Dictionary<byte, AbilityFormula>( ResourcesClass.AbilityFormulas.Count );
+            IDictionary<byte, string> psxMap = ResourcesClass.GetAbilityFormulas(Context.US_PSX);
+            IDictionary<byte, string> pspMap = ResourcesClass.GetAbilityFormulas(Context.US_PSP);
 
-            PSPAbilityFormulas = new List<AbilityFormula>( ResourcesClass.AbilityFormulas.Count );
-            PSPAbilityFormulaHash = new Dictionary<byte, AbilityFormula>( ResourcesClass.AbilityFormulas.Count );
+            PSXAbilityFormulas = new List<AbilityFormula>(psxMap.Count);
+            PSXAbilityFormulaHash = new Dictionary<byte, AbilityFormula>(psxMap.Count);
 
-            foreach (KeyValuePair<byte, string> kvp in ResourcesClass.AbilityFormulas)
+            PSPAbilityFormulas = new List<AbilityFormula>(pspMap.Count);
+            PSPAbilityFormulaHash = new Dictionary<byte, AbilityFormula>(pspMap.Count);
+
+            foreach (KeyValuePair<byte, string> kvp in psxMap)
             {
                 AbilityFormula a = new AbilityFormula();
                 a.Value = kvp.Key;
                 a.Formula = kvp.Value;
 
-                if( a.Value >= 0x65 && a.Value <= 0x6A )
-                {
-                    AbilityFormula ab = new AbilityFormula();
-                    ab.Value = kvp.Key;
-                    ab.Formula = string.Empty;
-                    PSXAbilityFormulas.Add( ab );
-                    PSXAbilityFormulaHash.Add( ab.Value, ab );
-                }
-                else
-                {
-                    PSXAbilityFormulas.Add( a );
-                    PSXAbilityFormulaHash.Add( a.Value, a );
-                }
-                PSPAbilityFormulas.Add( a );
-                PSPAbilityFormulaHash.Add( a.Value, a );
+                PSXAbilityFormulas.Add(a);
+                PSXAbilityFormulaHash.Add(a.Value, a);
             }
+
+            foreach (KeyValuePair<byte, string> kvp in pspMap)
+            {
+                AbilityFormula a = new AbilityFormula();
+                a.Value = kvp.Key;
+                a.Formula = kvp.Value;
+                PSPAbilityFormulas.Add(a);
+                PSPAbilityFormulaHash.Add(a.Value, a);
+            }
+        }
+
+        #region Constructors
+
+        static AbilityFormula()
+        {
+            InitAbilityFormulas();
         }
 
         private AbilityFormula()
