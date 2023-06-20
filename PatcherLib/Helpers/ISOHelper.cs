@@ -45,7 +45,7 @@ namespace PatcherLib.Helpers
                 {
                     FFTPack.Files fftpackSector;
                     if (!Utilities.Utilities.TryParseEnum<FFTPack.Files>(sectorName, out fftpackSector))
-                        throw new ArgumentException("Invalid sector name!");
+                        throw new ArgumentException("Invalid sector name: " + sectorName);
                     else
                         return fftpackSector;
                 }
@@ -56,7 +56,7 @@ namespace PatcherLib.Helpers
             {
                 PsxIso.Sectors psxSector;
                 if (!Utilities.Utilities.TryParseEnum<PsxIso.Sectors>(sectorName, out psxSector))
-                    throw new ArgumentException("Invalid sector name!");
+                    throw new ArgumentException("Invalid sector name: " + sectorName);
                 else
                     return psxSector;
             }
