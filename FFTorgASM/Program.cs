@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using static FFTorgASM.PatchData;
 
 namespace FFTorgASM
 {
@@ -67,14 +68,31 @@ namespace FFTorgASM
                             asmEncodingMode = ASMEncoding.ASMEncodingMode.PSP;
 
                         ASMEncoding.ASMEncodingUtility asmUtility = new ASMEncoding.ASMEncodingUtility(asmEncodingMode);
+
                         PatchData patchData = new PatchData(new string[1] { patchFilepaths.Key }, asmUtility);
-                        PatchResult result = PatchHelper.PatchISO(isoPath, patchData.AllPatches, asmUtility, false);
-                        Console.WriteLine((result.IsSuccess ? "(Success) " : "(ERROR) ") + result.Message);
+                        PatchFile patchFile = patchData.FilePatches[0];
+
+                        if (patchFile.LoadedCorrectly)
+                        {
+                            try
+                            {
+                                PatchResult result = PatchHelper.PatchISO(isoPath, patchData.AllPatches, asmUtility, false);
+                                Console.WriteLine((result.IsSuccess ? "(Success) " : "(ERROR) ") + result.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("(ERROR) " + ex.Message);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("(ERROR) " + patchFile.ErrorText);
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error: " + ex.Message);
+                    Console.WriteLine("(ERROR) " + ex.Message);
                 }
 
                 return true;
