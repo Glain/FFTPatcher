@@ -235,7 +235,7 @@ namespace FFTPatcher.SpriteEditor
                         WriteImageToIsoInner( iso, newBmp, format );
                     }
                 }
-                else
+                else if (image.Palette.Entries.Length <= 16)
                 {
                     PatcherLib.Iso.KnownPosition newPalettePosition = palettePosition.AddOffset(CurrentPalette * palettePosition.Length, 0);
                     IList<Byte> originalPaletteBytes = newPalettePosition.ReadIso(iso);
@@ -244,6 +244,10 @@ namespace FFTPatcher.SpriteEditor
 
                     newPalettePosition.PatchIso(iso, paletteBytes);
                     PatchIsoBytes(iso, imageBytes);
+                }
+                else
+                {
+                    throw new Exception("Palette has too many entries (" + image.Palette.Entries.Length + ")");
                 }
             //}
         }

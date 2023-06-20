@@ -149,6 +149,11 @@ namespace FFTPatcher.SpriteEditor
                         if (Directory.Exists(spritesDirectory))
                         {
                             AllSprites.AllSpritesDoWorkResult result = sprites.LoadAllSprites(iso, spritesDirectory);
+                            if (!string.IsNullOrEmpty(result.ErrorText))
+                            {
+                                sbOutput.AppendLine(result.ErrorText);
+                            }
+
                             bool isSuccess = (result.DoWorkResult == AllSprites.AllSpritesDoWorkResult.Result.Success);
                             sbOutput.AppendLine(isSuccess ? (result.ImagesProcessed.ToString() + " sprites imported.") : "Failed to import sprites!");
                         }
@@ -156,6 +161,11 @@ namespace FFTPatcher.SpriteEditor
                         {
                             AllOtherImages images = AllOtherImages.FromIso(iso);
                             AllOtherImages.AllImagesDoWorkResult result = images.ImportAllImages(iso, imagesDirectory);
+                            if (!string.IsNullOrEmpty(result.ErrorText))
+                            {
+                                sbOutput.AppendLine(result.ErrorText);
+                            }
+
                             bool isSuccess = (result.DoWorkResult == AllOtherImages.AllImagesDoWorkResult.Result.Success);
                             sbOutput.AppendLine(isSuccess ? (result.ImagesProcessed.ToString() + " images imported.") : "Failed to import images!");
                         }

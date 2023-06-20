@@ -38,12 +38,14 @@ namespace FFTPatcher.SpriteEditor
 
             public Result DoWorkResult { get; private set; }
             public int ImagesProcessed { get; private set; }
-            public AllSpritesDoWorkResult(Result result, int images)
+            public string ErrorText { get; private set; }
+
+            public AllSpritesDoWorkResult(Result result, int images, string errorText)
             {
                 DoWorkResult = result;
                 ImagesProcessed = images;
+                ErrorText = errorText;
             }
-
         }
 
         private IList<Sprite> sprites;
@@ -344,6 +346,7 @@ namespace FFTPatcher.SpriteEditor
             int total = 0;
             int complete = 0;
             int imagesProcessed = 0;
+            StringBuilder sb_ErrorText = new StringBuilder();
 
             Dictionary<string, Sprite> fileMap = new Dictionary<string, Sprite>();
             foreach (Sprite sprite in sprites)
@@ -398,6 +401,7 @@ namespace FFTPatcher.SpriteEditor
                     }
                     catch (Exception ex) 
                     {
+                        sb_ErrorText.AppendLine(filepath + ": " + ex.Message);
                         //MyMessageBox.Show(string.Format("{0}{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace));      // DEBUG
                     }
                 }
@@ -407,7 +411,7 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
-            return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed);
+            return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed, sb_ErrorText.ToString());
         }
 
         private AllSpritesDoWorkResult ExportAllSprites(Stream iso, ImageFormat format, string path, bool importExport8bpp, int paletteIndex, Action<int> progressReporter)
@@ -416,6 +420,7 @@ namespace FFTPatcher.SpriteEditor
             int total = 0;
             int complete = 0;
             int imagesProcessed = 0;
+            StringBuilder sb_ErrorText = new StringBuilder();
 
             /*
             if (progress)
@@ -476,7 +481,7 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
-            return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed);
+            return new AllSpritesDoWorkResult(AllSpritesDoWorkResult.Result.Success, imagesProcessed, sb_ErrorText.ToString());
         }
 
         public byte[] GetShishiPatchBytes()

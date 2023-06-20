@@ -28,6 +28,7 @@ using PatcherLib;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Drawing.Imaging;
 using FFTPatcher.SpriteEditor.Helpers;
+using System.Text;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -557,7 +558,14 @@ namespace FFTPatcher.SpriteEditor
                     backgroundWorker1.ProgressChanged -= progressHandler;
                     backgroundWorker1.DoWork -= allOtherImagesEditor1.AllOtherImages.ImportAllImages;
                     allOtherImagesEditor1.RefreshPictureBox(true);
-                    MyMessageBox.Show( this, string.Format( "{0} images imported", result.ImagesProcessed ), result.DoWorkResult.ToString(), MessageBoxButtons.OK );
+
+                    StringBuilder sb_ResultText = new StringBuilder();
+                    if (!string.IsNullOrEmpty(result.ErrorText))
+                        sb_ResultText.AppendLine(result.ErrorText);
+                    sb_ResultText.AppendLine(string.Format("{0} images imported.", result.ImagesProcessed));
+
+                    string caption = (result.DoWorkResult == AllOtherImages.AllImagesDoWorkResult.Result.Success) ? "Result" : "Failure";
+                    MyMessageBox.Show( this, sb_ResultText.ToString(), caption, MessageBoxButtons.OK );
                 };
                 if (InvokeRequired) Invoke( mi );
                 else mi();
@@ -621,7 +629,14 @@ namespace FFTPatcher.SpriteEditor
                     backgroundWorker1.ProgressChanged -= progressHandler;
                     backgroundWorker1.DoWork -= allSpritesEditor1.Sprites.LoadAllSprites;
                     allSpritesEditor1.ReloadCurrentSprite();
-                    MyMessageBox.Show(this, string.Format("{0} sprites imported", result.ImagesProcessed), result.DoWorkResult.ToString(), MessageBoxButtons.OK);
+
+                    StringBuilder sb_ResultText = new StringBuilder();
+                    if (!string.IsNullOrEmpty(result.ErrorText))
+                        sb_ResultText.AppendLine(result.ErrorText);
+                    sb_ResultText.AppendLine(string.Format("{0} sprites imported.", result.ImagesProcessed));
+
+                    string caption = (result.DoWorkResult == AllSprites.AllSpritesDoWorkResult.Result.Success) ? "Result" : "Failure";
+                    MyMessageBox.Show(this, sb_ResultText.ToString(), caption, MessageBoxButtons.OK);
                 };
                 if (InvokeRequired) Invoke(mi);
                 else mi();

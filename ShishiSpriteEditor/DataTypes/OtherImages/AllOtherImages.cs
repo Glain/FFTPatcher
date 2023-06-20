@@ -37,15 +37,15 @@ namespace FFTPatcher.SpriteEditor
 
             public Result DoWorkResult { get; private set; }
             public int ImagesProcessed { get; private set; }
-            public AllImagesDoWorkResult(Result result, int images)
+            public string ErrorText { get; private set; }
+
+            public AllImagesDoWorkResult(Result result, int images, string errorText)
             {
                 DoWorkResult = result;
                 ImagesProcessed = images;
+                ErrorText = errorText;
             }
-
         }
-
-
 
         private List<AbstractImageList> images;
         public List<AbstractImageList> Images
@@ -92,6 +92,7 @@ namespace FFTPatcher.SpriteEditor
             int total = 0;
             int complete = 0;
             int imagesProcessed = 0;
+            StringBuilder sb_ErrorText = new StringBuilder();
 
             if (progress)
             {
@@ -127,27 +128,34 @@ namespace FFTPatcher.SpriteEditor
 
                     if (File.Exists(filePath))
                     {
-                        if (img.CanSelectPalette() && (img.PaletteCount > 1))
+                        try
                         {
-                            ISelectablePalette4bppImage img4bpp = ((ISelectablePalette4bppImage)img);
-                            bool importExport8bpp = img4bpp.ImportExport8bpp;
-                            int currentPalette = img4bpp.CurrentPalette;
+                            if (img.CanSelectPalette() && (img.PaletteCount > 1))
+                            {
+                                ISelectablePalette4bppImage img4bpp = ((ISelectablePalette4bppImage)img);
+                                bool importExport8bpp = img4bpp.ImportExport8bpp;
+                                int currentPalette = img4bpp.CurrentPalette;
 
-                            img4bpp.ImportExport8bpp = true;
-                            img4bpp.CurrentPalette = Math.Max(0, img4bpp.CurrentPalette - 15);
+                                img4bpp.ImportExport8bpp = true;
+                                img4bpp.CurrentPalette = Math.Max(0, img4bpp.CurrentPalette - 15);
 
-                            img.WriteImageToIso(iso, filePath, format);
+                                img.WriteImageToIso(iso, filePath, format);
 
-                            img4bpp.ImportExport8bpp = importExport8bpp;
-                            img4bpp.CurrentPalette = currentPalette;
+                                img4bpp.ImportExport8bpp = importExport8bpp;
+                                img4bpp.CurrentPalette = currentPalette;
+                            }
+                            else
+                            {
+                                img.WriteImageToIso(iso, filePath, format);
+                            }
+
+                            usedFilenameSet.Add(name);
+                            imagesProcessed++;
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            img.WriteImageToIso(iso, filePath, format);
+                            sb_ErrorText.AppendLine(filePath + ": " + ex.Message);
                         }
-
-                        usedFilenameSet.Add(name);
-                        imagesProcessed++;
                     }
                     if (progress)
                     {
@@ -156,7 +164,7 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
-            return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed );
+            return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed, sb_ErrorText.ToString() );
         }
 
         public AllImagesDoWorkResult ImportAllImages( Stream iso, string path )
@@ -189,6 +197,8 @@ namespace FFTPatcher.SpriteEditor
             int total = 0;
             int complete = 0;
             int imagesProcessed = 0;
+            StringBuilder sb_ErrorText = new StringBuilder();
+
             if (progress)
                 images.ForEach( i => total += i.Count );
 
@@ -264,7 +274,7 @@ namespace FFTPatcher.SpriteEditor
                 }
             }
 
-            return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed );
+            return new AllImagesDoWorkResult( AllImagesDoWorkResult.Result.Success, imagesProcessed, sb_ErrorText.ToString() );
         }
 
         public void ExportAllImages( Stream iso, System.Drawing.Imaging.ImageFormat format, string path )
