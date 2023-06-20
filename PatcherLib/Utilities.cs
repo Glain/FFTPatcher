@@ -856,10 +856,20 @@ namespace PatcherLib.Utilities
                     */
 
                     string file = ISOHelper.GetSectorName(patchedByteArray.SectorEnum);
+                    bool isFile = true;
+                    int sector = 0;
+                    if (int.TryParse(file, out sector) && (sector > 0))
+                    {
+                        isFile = false;
+                        file = sector.ToString("X");
+                    }
 
-                    sb.AppendFormat("        <Location file=\"{0}\"{1}{2}>{3}", file,
+                    sb.AppendFormat("        <Location {0}=\"{1}\"{2}{3}>{4}", 
+                        (isFile ? "file" : "sector"),
+                        file,
                         (patchedByteArray.IsSequentialOffset ? "" : String.Format(" offset=\"{0}\"", patchedByteArray.Offset.ToString("X"))),
-                        (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""), Environment.NewLine);
+                        (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""), 
+                        Environment.NewLine);
 
                     foreach (uint fourByteSet in fourByteSets)
                     {
