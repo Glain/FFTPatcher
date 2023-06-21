@@ -20,6 +20,7 @@
 using System;
 using System.Windows.Forms;
 using System.IO;
+using PatcherLib.Utilities;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -89,18 +90,33 @@ namespace FFTPatcher.SpriteEditor
             System.Collections.Generic.KeyValuePair<string, string> patchFilepaths = PatcherLib.Utilities.Utilities.GetPatchFilepathAndDirectory(args);
 
             bool isExpand = false;
+            int expandIndex = 0;
             for (int index = 0; index < args.Length; index++)
             {
                 if (args[index].ToLower().Trim().Equals("-expand"))
                 {
                     isExpand = true;
+                    expandIndex = index;
                     break;
                 }
             }
 
             if ((string.IsNullOrEmpty(patchFilepaths.Key)) || (string.IsNullOrEmpty(patchFilepaths.Value)))
             {
-                return false;
+                if ((isExpand) && (args.Length > (expandIndex + 1)))
+                {
+                    string isoPath = Utilities.GetInputFilepath(args[expandIndex + 1], new string[3] { ".bin", ".iso", ".img" });
+                    using (Stream iso = File.Open(isoPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+                    {
+                        AllSprites.FromIso(iso, isExpand);
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
