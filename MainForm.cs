@@ -498,9 +498,10 @@ namespace FFTPatcher
                         if (args.Error is Exception)
                         {
                             MyMessageBox.Show( this,
-                                "Could not merge files.\n" +
-                                "Make sure you chose the correct file and that there is\n" +
-                                "enough room in the destination directory.",
+                                "Could not merge files." + Environment.NewLine +
+                                "Make sure you chose the correct file and that there is" + Environment.NewLine +
+                                "enough room in the destination directory." + Environment.NewLine +
+                                (string.IsNullOrEmpty(args.Error.Message) ? "" : args.Error.Message),
                                 "Error", MessageBoxButtons.OK );
                         }
                     };

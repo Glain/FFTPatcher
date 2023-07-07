@@ -363,7 +363,13 @@ namespace PatcherLib.Iso
                 }
                 else
                 {
-                    throw new Exception();
+                    string file = "";
+                    FFTPackFiles.TryGetValue(index, out file);
+
+                    if (string.IsNullOrEmpty(file))
+                        throw new Exception("Could not load file for index: " + index);
+                    else
+                        throw new Exception("Could not load file: " + FFTPackFiles[index]);
                 }
 
                 byte[] result = new byte[stream.Length];
