@@ -3983,10 +3983,11 @@
         <Location file="BATTLE_BIN" offset="15D4B0" mode="ASM" offsetMode="RAM">
             #   Parameters:
             #       a0 = Ability ID
-            #       s0 = Battle unit data pointer
+            #       t2 = Battle unit data pointer
             #   Returns:
             #       s0 = CT (if jump)
             #       a2 = sp + 16 (if jump)
+            #       v0 = (v0 less than 8)
             #   Preserve: v1
             @set_jump_ability_data:
         
@@ -3994,7 +3995,7 @@
                     bne     a0, t0, set_jump_ability_data_end
                     li      t1, 50
         
-                    lbu     t0, 0x38(s0)
+                    lbu     t0, 0x38(t2)
                     la      ra, 0x80181ad8
                     divu    t1, t0
                     mflo    s0
@@ -4002,7 +4003,7 @@
         
                 set_jump_ability_data_end:
                     jr      ra
-                    nop
+                    sltiu   v0, v0, 8
         
         
             @ai_ability_data_setting_hook:
@@ -4089,7 +4090,11 @@
             j       @generic_jump_hook
             ori     a0, a0, 0xc730
         </Location>
+        <Location file="BATTLE_BIN" offset="181838" mode="ASM" offsetMode="RAM">
+            sw      s0, 0x0c(sp)
+        </Location>
         <Location file="BATTLE_BIN" offset="181AB4" mode="ASM" offsetMode="RAM">
+            lw      t2, 0x0c(sp)
             jal     @set_jump_ability_data
             addiu   v0, a0, -0x0196
         </Location>
@@ -4445,7 +4450,7 @@
                 lbu     v0, -0x0734(at)
                 lbu     v1, 0x38c3(t0)
                 andi    v0, v0, 0x3f
-                sb      v0, 0x38cd(at)
+                sb      v0, 0x38cd(t0)
                 lui     t2, 0x8006
                 
                 .if     %UsingTLW
