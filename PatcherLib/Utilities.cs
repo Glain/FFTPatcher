@@ -1020,6 +1020,25 @@ namespace PatcherLib.Utilities
             return str;
         }
 
+        public static XmlAttribute GetCaseInsensitiveAttribute(XmlNode node, String name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return null;
+
+            XmlAttribute attr = node.Attributes[name];
+            if (attr != null)
+                return attr;
+
+            string nameLower = name.ToLower().Trim();
+            foreach (XmlAttribute xmlAttr in node.Attributes)
+            {
+                if (xmlAttr.Name.ToLower().Equals(nameLower))
+                    return xmlAttr;
+            }
+
+            return null;
+        }
+
         public static byte[] GetZipEntry(ICSharpCode.SharpZipLib.Zip.ZipFile file, string entry, bool throwOnError)
         {
             if (file.FindEntry(entry, false) == -1)

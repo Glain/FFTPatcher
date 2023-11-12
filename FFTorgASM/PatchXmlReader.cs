@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using ASMEncoding.Helpers;
 using PatcherLib.Helpers;
+using PatcherLib.Utilities;
 
 namespace FFTorgASM
 {
@@ -79,7 +80,7 @@ namespace FFTorgASM
 
         private static KeyValuePair<string, string> GetPatchNameAndDescription( XmlNode node )
         {
-            string name = node.Attributes["name"].InnerText;
+            string name = Utilities.GetCaseInsensitiveAttribute(node, "name").InnerText;
             XmlNode descriptionNode = node.SelectSingleNode( "Description" );
             string description = name;
             if ( descriptionNode != null )
@@ -95,7 +96,7 @@ namespace FFTorgASM
             KeyValuePair<string, string> nameDesc = GetPatchNameAndDescription( node );
 
             bool hideInDefault = false;
-            XmlAttribute attrHideInDefault = node.Attributes["hideInDefault"];
+            XmlAttribute attrHideInDefault = Utilities.GetCaseInsensitiveAttribute(node, "hideInDefault");
             if (attrHideInDefault != null)
             {
                 if (attrHideInDefault.InnerText.ToLower().Trim() == "true")
@@ -103,7 +104,7 @@ namespace FFTorgASM
             }
 
             bool isHidden = false;
-            XmlAttribute attrIsHidden = node.Attributes["hidden"];
+            XmlAttribute attrIsHidden = Utilities.GetCaseInsensitiveAttribute(node, "hidden");
             if (attrIsHidden != null)
             {
                 if (attrIsHidden.InnerText.ToLower().Trim() == "true")
@@ -116,8 +117,8 @@ namespace FFTorgASM
             Type sectorType = ISOHelper.GetSectorType(context);
 
             Enum defaultSector = ISOHelper.GetSector(0, context); // (Enum)Enum.ToObject(sectorType, 0);
-            XmlAttribute attrDefaultFile = node.Attributes["file"];
-            XmlAttribute attrDefaultSector = node.Attributes["sector"];
+            XmlAttribute attrDefaultFile = Utilities.GetCaseInsensitiveAttribute(node, "file");
+            XmlAttribute attrDefaultSector = Utilities.GetCaseInsensitiveAttribute(node, "sector");
 
             if (attrDefaultFile != null)
             {
@@ -141,20 +142,19 @@ namespace FFTorgASM
 
             foreach ( XmlNode location in currentLocs )
             {
-                //UInt32 offset = UInt32.Parse( location.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
-                XmlAttribute offsetAttribute = location.Attributes["offset"];
-                XmlAttribute fileAttribute = location.Attributes["file"];
-                XmlAttribute sectorAttribute = location.Attributes["sector"];
-                XmlAttribute modeAttribute = location.Attributes["mode"];
-                XmlAttribute offsetModeAttribute = location.Attributes["offsetMode"];
-                XmlAttribute inputFileAttribute = location.Attributes["inputFile"];
-                XmlAttribute replaceLabelsAttribute = location.Attributes["replaceLabels"];
-                XmlAttribute attrLabel = location.Attributes["label"];
-                XmlAttribute attrSpecific = location.Attributes["specific"];
-                XmlAttribute attrMovable = location.Attributes["movable"];
-                XmlAttribute attrAlign = location.Attributes["align"];
-                XmlAttribute attrStatic = location.Attributes["static"];
-                XmlAttribute attrBinaryFile = location.Attributes["binaryFile"];
+                XmlAttribute offsetAttribute = Utilities.GetCaseInsensitiveAttribute(location, "offset");
+                XmlAttribute fileAttribute = Utilities.GetCaseInsensitiveAttribute(location, "file");
+                XmlAttribute sectorAttribute = Utilities.GetCaseInsensitiveAttribute(location, "sector");
+                XmlAttribute modeAttribute = Utilities.GetCaseInsensitiveAttribute(location, "mode");
+                XmlAttribute offsetModeAttribute = Utilities.GetCaseInsensitiveAttribute(location, "offsetMode");
+                XmlAttribute inputFileAttribute = Utilities.GetCaseInsensitiveAttribute(location, "inputFile");
+                XmlAttribute replaceLabelsAttribute = Utilities.GetCaseInsensitiveAttribute(location, "replaceLabels");
+                XmlAttribute attrLabel = Utilities.GetCaseInsensitiveAttribute(location, "label");
+                XmlAttribute attrSpecific = Utilities.GetCaseInsensitiveAttribute(location, "specific");
+                XmlAttribute attrMovable = Utilities.GetCaseInsensitiveAttribute(location, "movable");
+                XmlAttribute attrAlign = Utilities.GetCaseInsensitiveAttribute(location, "align");
+                XmlAttribute attrStatic = Utilities.GetCaseInsensitiveAttribute(location, "static");
+                XmlAttribute attrBinaryFile = Utilities.GetCaseInsensitiveAttribute(location, "binaryFile");
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -545,8 +545,8 @@ namespace FFTorgASM
             currentLocs = node.SelectNodes("STRLocation");
             foreach (XmlNode location in currentLocs)
             {
-                XmlAttribute fileAttribute = location.Attributes["file"];
-                XmlAttribute sectorAttribute = location.Attributes["sector"];
+                XmlAttribute fileAttribute = Utilities.GetCaseInsensitiveAttribute(location, "file");
+                XmlAttribute sectorAttribute = Utilities.GetCaseInsensitiveAttribute(location, "sector");
 
                 //PsxIso.Sectors sector = (PsxIso.Sectors)0;
                 Enum sector = ISOHelper.GetSector(0, context); // (Enum)Enum.ToObject(sectorType, 0);
@@ -568,7 +568,7 @@ namespace FFTorgASM
                     throw new Exception();
                 }
 
-                string filename = location.Attributes["input"].InnerText;
+                string filename = Utilities.GetCaseInsensitiveAttribute(location, "input").InnerText;
                 filename = System.IO.Path.Combine( System.IO.Path.GetDirectoryName( xmlFileName ), filename );
 
                 patches.Add(new STRPatchedByteArray(sector, filename));
@@ -580,14 +580,14 @@ namespace FFTorgASM
         public static IList<AsmPatch> GetPatches( XmlNode rootNode, string xmlFilename, ASMEncodingUtility asmUtility )
         {
             bool rootHideInDefault = false;
-            XmlAttribute attrHideInDefault = rootNode.Attributes["hideInDefault"];
+            XmlAttribute attrHideInDefault = Utilities.GetCaseInsensitiveAttribute(rootNode, "hideInDefault");
             if (attrHideInDefault != null)
             {
                 rootHideInDefault = (attrHideInDefault.InnerText.ToLower().Trim() == "true");
             }
 
             bool rootIsHidden = false;
-            XmlAttribute attrIsHidden = rootNode.Attributes["hidden"];
+            XmlAttribute attrIsHidden = Utilities.GetCaseInsensitiveAttribute(rootNode, "hidden");
             if (attrIsHidden != null)
             {
                 rootIsHidden = (attrIsHidden.InnerText.ToLower().Trim() == "true");
@@ -604,7 +604,7 @@ namespace FFTorgASM
 
             foreach ( XmlNode node in patchNodes )
             {
-                XmlAttribute ignoreNode = node.Attributes["ignore"];
+                XmlAttribute ignoreNode = Utilities.GetCaseInsensitiveAttribute(node, "ignore");
                 if ( ignoreNode != null && Boolean.Parse( ignoreNode.InnerText ) )
                     continue;
 
@@ -612,8 +612,8 @@ namespace FFTorgASM
 
                 //PsxIso.Sectors defaultSector = (PsxIso.Sectors)0;
                 //Enum defaultSector = (Enum)Enum.ToObject(sectorType, 0);
-                XmlAttribute attrDefaultFile = node.Attributes["file"];
-                XmlAttribute attrDefaultSector = node.Attributes["sector"];
+                XmlAttribute attrDefaultFile = Utilities.GetCaseInsensitiveAttribute(node, "file");
+                XmlAttribute attrDefaultSector = Utilities.GetCaseInsensitiveAttribute(node, "sector");
 
                 if (attrDefaultFile != null)
                 {
@@ -638,7 +638,7 @@ namespace FFTorgASM
                 XmlNodeList includeNodes = node.SelectNodes("Include");
                 foreach (XmlNode includeNode in includeNodes)
                 {
-                    XmlAttribute attrPatch = includeNode.Attributes["patch"];
+                    XmlAttribute attrPatch = Utilities.GetCaseInsensitiveAttribute(includeNode, "patch");
                     if (attrPatch != null)
                     {
                         string patchName = attrPatch.InnerText.ToLower().Trim();
@@ -669,21 +669,18 @@ namespace FFTorgASM
 
                 foreach ( XmlNode varNode in node.SelectNodes( "Variable" ) )
                 {
-                	XmlAttribute numBytesAttr = varNode.Attributes["bytes"];
+                	XmlAttribute numBytesAttr = Utilities.GetCaseInsensitiveAttribute(varNode, "bytes");
                     string strNumBytes = (numBytesAttr == null) ? "1" : numBytesAttr.InnerText;
                     byte numBytes = (byte)(UInt32.Parse(strNumBytes) & 0xff);
                 	
-                    string varName = varNode.Attributes["name"].InnerText;
+                    string varName = Utilities.GetCaseInsensitiveAttribute(varNode, "name").InnerText;
 
-                    XmlAttribute fileAttribute = varNode.Attributes["file"];
-                    XmlAttribute sectorAttribute = varNode.Attributes["sector"];
-                    XmlAttribute attrSpecific = varNode.Attributes["specific"];
-                    XmlAttribute attrAlign = varNode.Attributes["align"];
+                    XmlAttribute fileAttribute = Utilities.GetCaseInsensitiveAttribute(varNode, "file");
+                    XmlAttribute sectorAttribute = Utilities.GetCaseInsensitiveAttribute(varNode, "sector");
+                    XmlAttribute attrSpecific = Utilities.GetCaseInsensitiveAttribute(varNode, "specific");
+                    XmlAttribute attrAlign = Utilities.GetCaseInsensitiveAttribute(varNode, "align");
 
-                    //PsxIso.Sectors varSec = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), varNode.Attributes["file"].InnerText );
-                    //UInt32 varOffset = UInt32.Parse( varNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
-                    //string strOffsetAttr = varNode.Attributes["offset"].InnerText;
-                    XmlAttribute offsetAttribute = varNode.Attributes["offset"];
+                    XmlAttribute offsetAttribute = Utilities.GetCaseInsensitiveAttribute(varNode, "offset");
                     string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                     string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
                     bool ignoreOffsetMode = false;
@@ -700,7 +697,7 @@ namespace FFTorgASM
                             align = 0;
                     }
 
-                    XmlAttribute symbolAttribute = varNode.Attributes["symbol"];
+                    XmlAttribute symbolAttribute = Utilities.GetCaseInsensitiveAttribute(varNode, "symbol");
                     bool isSymbol = (symbolAttribute != null) && PatcherLib.Utilities.Utilities.ParseBool(symbolAttribute.InnerText);
 
                     if (isSymbol)
@@ -768,7 +765,7 @@ namespace FFTorgASM
                         sbPatchErrorText.AppendLine("Error in patch XML: Invalid file/sector!");
                     }
 
-                    XmlAttribute offsetModeAttribute = varNode.Attributes["offsetMode"];
+                    XmlAttribute offsetModeAttribute = Utilities.GetCaseInsensitiveAttribute(varNode, "offsetMode");
                     bool isRamOffset = false;
                     if ((!ignoreOffsetMode) && (offsetModeAttribute != null))
                     {
@@ -778,7 +775,7 @@ namespace FFTorgASM
 
                     int ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
 
-                    XmlAttribute defaultAttr = varNode.Attributes["default"];
+                    XmlAttribute defaultAttr = Utilities.GetCaseInsensitiveAttribute(varNode, "default");
                     Byte[] byteArray = new Byte[numBytes];
                     UInt32 def = 0;
                     if ( defaultAttr != null )
@@ -831,9 +828,9 @@ namespace FFTorgASM
                     string referenceOperatorSymbol = "";
                     uint referenceOperand = 0;
 
-                    XmlAttribute attrReference = varNode.Attributes["reference"];
-                    XmlAttribute attrOperator = varNode.Attributes["operator"];
-                    XmlAttribute attrOperand = varNode.Attributes["operand"];
+                    XmlAttribute attrReference = Utilities.GetCaseInsensitiveAttribute(varNode, "reference");
+                    XmlAttribute attrOperator = Utilities.GetCaseInsensitiveAttribute(varNode, "operator");
+                    XmlAttribute attrOperand = Utilities.GetCaseInsensitiveAttribute(varNode, "operand");
                     
                     if (attrReference != null)
                     {
@@ -851,7 +848,7 @@ namespace FFTorgASM
                     XmlNodeList presetNodeList = varNode.SelectNodes("Preset");
 
                     string presetKey = null;
-                    XmlAttribute attrPreset = varNode.Attributes["preset"];
+                    XmlAttribute attrPreset = Utilities.GetCaseInsensitiveAttribute(varNode, "preset");
                     if (attrPreset != null)
                     {
                         presetKey = attrPreset.InnerText;
@@ -864,9 +861,9 @@ namespace FFTorgASM
                     {
                         foreach (XmlNode presetNode in presetNodeList)
                         {
-                            XmlAttribute attrName = presetNode.Attributes["name"];
-                            XmlAttribute attrValue = presetNode.Attributes["value"];
-                            XmlAttribute attrModify = presetNode.Attributes["modify"];
+                            XmlAttribute attrName = Utilities.GetCaseInsensitiveAttribute(presetNode, "name");
+                            XmlAttribute attrValue = Utilities.GetCaseInsensitiveAttribute(presetNode, "value");
+                            XmlAttribute attrModify = Utilities.GetCaseInsensitiveAttribute(presetNode, "modify");
                             UInt32 value = 0;
 
                             byte[] valueBytes = new Byte[numBytes];
@@ -932,10 +929,9 @@ namespace FFTorgASM
 
                 XmlNode theRealNode = fileNodes[0];
 
-                //PsxIso.Sectors sector = (PsxIso.Sectors)Enum.Parse( typeof( PsxIso.Sectors ), theRealNode.Attributes["file"].InnerText );
-                Enum sector = (Enum)Enum.Parse(sectorType, theRealNode.Attributes["file"].InnerText);
-                UInt32 offset = UInt32.Parse( theRealNode.Attributes["offset"].InnerText, System.Globalization.NumberStyles.HexNumber );
-                UInt32 expectedLength = UInt32.Parse( theRealNode.Attributes["expectedLength"].InnerText, System.Globalization.NumberStyles.HexNumber );
+                Enum sector = (Enum)Enum.Parse(sectorType, Utilities.GetCaseInsensitiveAttribute(theRealNode, "file").InnerText);
+                UInt32 offset = UInt32.Parse( Utilities.GetCaseInsensitiveAttribute(theRealNode, "offset").InnerText, System.Globalization.NumberStyles.HexNumber );
+                UInt32 expectedLength = UInt32.Parse( Utilities.GetCaseInsensitiveAttribute(theRealNode, "expectedLength").InnerText, System.Globalization.NumberStyles.HexNumber );
 
                 result.Add(new FileAsmPatch(name, shortXmlFilename, description, new InputFilePatch(sector, offset, expectedLength)));
 
