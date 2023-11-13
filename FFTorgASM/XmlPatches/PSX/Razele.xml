@@ -604,7 +604,7 @@
     </Description>
     <Location file="BATTLE_BIN" offset="11F624">
       2108E003
-      DF54000C
+      FF4D050C
       1980023C
       21F82000
       1980033C
@@ -826,33 +826,33 @@
         For example, if I want Equip Armor to be Equip Knight Gear (Knight Sword + Sword + Shield + Helm + Armor), then EQ1 = 10 + 8 = 18, EQ2 = 00, EQ3 = 10 + 08 + 01 = 19, EQ4 = 00.
     </Description>
     <Location file="SCUS_942_21" offset="4CA7C">
-      00000534
-      8F008390
-      00000000
-      0418A300
-      80006230
-      08004010
-      0680033C
-      80100500
-      21184300
-      E8C2638C
-      4A00828C
-      00000000
-      25104300
-      4A0082AC
-      0100A524
-      0800A32C
-      F0FF6014
-      0A00A22C
-      06004010
-      00000000
-      06008390
-      00000000
-      0418A300
-      A4700108
-      00806230
-      0800E003
-      00000000
+        00000534
+        8F008390
+        06008890
+        0418A300
+        80006230
+        0A004010
+        0680033C
+        80100500
+        21184300
+        E8C2638C
+        4D008288
+        4A008298
+        00000000
+        25104300
+        4D0082A8
+        4A0082B8
+        0100A524
+        0800A32C
+        EEFF6014
+        0A00A22C
+        04004010
+        00000000
+        0418A800
+        A4700108
+        00806230
+        0800E003
+        00000000
     </Location>
     <Variable name="EQA1" file="BATTLE_BIN" default="0" offset="4CAE8"/>
     <Variable name="EQA2" file="BATTLE_BIN" default="0" offset="4CAE9"/>

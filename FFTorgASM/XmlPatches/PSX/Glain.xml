@@ -7596,6 +7596,33 @@
         <Variable name="Magical Shift" bytes="1" default="7" symbol="true" />
         <Variable name="Magical Invert" bytes="1" default="00" preset="boolean" symbol="true" />
     </Patch>
+    <Patch name="HP% formulas use MIN(999,MaxHP)">
+        <Description>
+            Does not use free space.
+        </Description>
+        <Location file="BATTLE_BIN" offset="186624" mode="ASM" offsetMode="RAM">
+                lui     t0, 0x8019
+                lw      t1, 0x2d98(t0)
+                lbu     t2, 0x38fa(t0)
+                lhu     t3, 0x2a(t1)
+                lui     t4, 0x51eb
+
+                sltiu   t5, t3, 1000
+                bne     t5, zero, past_hp_cap
+                ori     t4, t4, 0x851f
+
+                li      t3, 999
+
+            past_hp_cap:
+                mult    t3, t2
+                mflo    t5
+
+                lw      v1, 0x2d90(t0)
+                addiu   t5, t5, 99
+                mult    t5, t4
+                nop
+        </Location>
+    </Patch>
     <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v3)">
         <Description>
             Changes formula 3B to a mana burn/feedback ability using MA * Y damage to both MP and HP.
