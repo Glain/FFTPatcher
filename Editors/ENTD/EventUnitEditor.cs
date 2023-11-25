@@ -24,7 +24,6 @@ using FFTPatcher.Controls;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib;
-using System.Security.Principal;
 
 namespace FFTPatcher.Editors
 {
