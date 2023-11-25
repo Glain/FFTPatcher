@@ -333,7 +333,7 @@ Still in testing. Please message me on the forums (Pride) or on discord (@Pride)
                                      sll   r2,r18,0x01                                      #Job counter * 2
 									 
 @EndPrep:                            addu  r2,r2,r22                                        #Job Wheel Pointer * Job counter * 2	
-                                     addiu r3,r0,0xffff                                     #r3 + 0xffff
+                                     addiu r3,r0,%lo(0xffff)                                #r3 + 0xffff
                                      sh    r3,0x0000(r2)                                    #Store xFFFF as last entry in Job Wheel (end of job wheel)
                                      addu  r2,r18,r0                                        #r2 = Unlocked Job Counter
                                      lw    r31,0x002c(r29)                                  #

@@ -5,18 +5,18 @@
     <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
     <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
 @melee_spellcaster:
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0010(sp)
       jal 0x801885b8				#Magic Evade. If Physical use 0x80188510.
       nop
       bne v0,zero,MSED
       lui v0,0x8018
       jal @acc_mag_melee  			#Calculate (PA + X)*Faith% acc, based on 0x801889cc.
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       bne v0,zero,MSED
       lui v0,0x8018
       jal @dmg_f_melee				#DMG_F(PA*(WP+Y)), based on 0x80188d84.
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
 MSED: lw ra,0x0010(sp)
       addiu sp,sp,0x0018
       jr ra
@@ -90,7 +90,7 @@ MSED: lw ra,0x0010(sp)
     <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
       lui t0,0x8019
       lw a2,-0x0b20(t0)
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0010(sp)
       lbu v0,0x0024(a2)
       lw t0,0x2d98(t0)				#Read unit data from attacker slot.
@@ -190,7 +190,7 @@ IJED: nop
   <Patch name="Mighty sword WOTL">
     <Description>Mighty swordskills have 100% chance to break equipment, but damage is WP*PA if gear is about to be broken. If no gear, human or not, it will do normal damage like other swordskills (WP+Y)*PA. Maintenance or Safeguard prevents item breakage and damage.</Description>
     <Location file="BATTLE_BIN" offset="189B94" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
       jal 0x00188510			#Physical Evade Calculation.
@@ -242,7 +242,7 @@ MSED: lw ra,0x0010(sp)
   <Patch name="Mighty sword v2">
     <Description>Mighty swordskills have 100% chance to break equipment, but now it won't do damage if gear is about to be broken. If no gear, human or not, it will do normal damage like other swordskills (WP+Y)*PA. Maintenance or Safeguard prevents item breakage and damage. Overwrites 'WOTL' version.</Description>
     <Location file="BATTLE_BIN" offset="189B94" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
       jal 0x00188510			#Physical Evade Calculation.
@@ -295,7 +295,7 @@ MSED: lw ra,0x0010(sp)
     <Description>Like vanilla, 35 free spaces.</Description>
     <Location file="BATTLE_BIN" offset="18D3C0" mode="ASM" offsetMode="RAM">
       lui a0,0x8019
-      addiu sp,sp,0xffe0
+      addiu sp,sp,%lo(0xffe0)
       sw s2,0x0018(sp)
       sw ra,0x001c(sp)
       lw s2,0x2d90(a0)			#target current action pointer
@@ -433,13 +433,13 @@ BSED: j 0x0018D44C
     <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
       ori v1,zero,0x00ff
       lui t2,0x8006
-      addiu v0,t2,0x97df		#Load Inventory, last byte.
+      addiu v0,t2,%lo(0x97df)		#Load Inventory, last byte.
       ori t1,zero,0x00ef
 SILP: sltu t0,t1,v1
       sb t0,0x0000(v0)			#Store 1 of F0 and higher items, 0 for others.
-      addiu v1,v1,0xffff		#v1 = v1 - 1, next type of item.
+      addiu v1,v1,%lo(0xffff)		#v1 = v1 - 1, next type of item.
       bgez v1,SILP			#Loop to clear.
-      addiu v0,v0,0xffff		#v0 = v0 - 1, next byte of type item.
+      addiu v0,v0,%lo(0xffff)		#v0 = v0 - 1, next byte of type item.
       ori v0,zero,0x0205		#Store Potion 5 and Hi Potion 2.
       sh v0,-0x6830(t2)
       ori v0,zero,0x0201		#Store Phoenix Down 2 and clear FE and FF items.
@@ -598,7 +598,7 @@ ERED: jr ra
   <Patch name="Monster eggs in last roster slot only">
     <Description>Self-explanatory.</Description>
     <Location file="SCUS_942_21" offset="59E18" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffd8
+      addiu sp,sp,%lo(0xffd8)
       sw a0,0x001c(sp)
       sw s0,0x0010(sp)
       addu s0,a1,zero			#s0 = Egg Mod (used as birthday)
@@ -710,11 +710,11 @@ JGS4: addiu s0,s0,0x0001
     <Location file="SCUS_942_21" offset="42A10" mode="ASM" offsetMode="RAM">
       ori v1,zero,0x00ff
       lui t2,0x8006
-      addiu v0,t2,0x97df		#Load Inventory, last byte.
+      addiu v0,t2,%lo(0x97df)		#Load Inventory, last byte.
 SILP: sb zero,0x0000(v0)
-      addiu v1,v1,0xffff		#v1 = v1 - 1, next type of item.
+      addiu v1,v1,%lo(0xffff)		#v1 = v1 - 1, next type of item.
       bgez v1,SILP			#Loop to clear.
-      addiu v0,v0,0xffff		#v0 = v0 - 1, next byte of type item.
+      addiu v0,v0,%lo(0xffff)		#v0 = v0 - 1, next byte of type item.
       ori v0,zero,0x0005		#Store Potion 5.
       jr ra
       sh v0,-0x6830(t2)
@@ -882,12 +882,12 @@ M2LP: lh a0,0x0000(v0)			#Avoid listing skill set for secondary ss.
 M2S1: addiu a0,sp,0x0010
       addu v0,s0,a0
       lh v1,0x0000(v0)
-      addiu at,zero,0xffff
+      addiu at,zero,%lo(0xffff)
       bne v1,at,M2LP
       addu v0,s0,a0
       sll v0,s2,0x01
       addu v0,v0,s4
-      addiu v1,zero,0xffff
+      addiu v1,zero,%lo(0xffff)
       sh v1,0x0000(v0)
       addu v0,s2,zero
       lw ra,0x0054(sp)
@@ -924,13 +924,13 @@ M2S1: addiu a0,sp,0x0010
       beq v0,zero,M3S1
       ori v1,zero,0x005d
       j 0x001255d0
-      addiu v0,zero,0xfffc
+      addiu v0,zero,%lo(0xfffc)
 M3S1: lh a0,0x0024(s0)
       ori at,zero,@oej_id
       beq a0,at,0x001255d0
-      addiu v0,zero,0xfffa
+      addiu v0,zero,%lo(0xfffa)
       beq a0,v1,0x001255d0
-      addiu v0,zero,0xfffa
+      addiu v0,zero,%lo(0xfffa)
     </Location>
     <Location file="BATTLE_BIN" offset="182B60" mode="ASM" offsetMode="RAM">
       lbu at,0x0003(r17)		#Block act and move for the turn of mentalist.
@@ -1001,18 +1001,18 @@ SKIP: j 0x00187b5c
     <Description>Redirects empty formula 18 to F6400 (the same as Glain's Formula 3B), so it becomes DMG_F(PA*(WP+Y))  Hit_F(PA+X)%. Uses 22 instructions.</Description>
     <Location file="BATTLE_BIN" offset="F6400" mode="ASM">
 @melee_spellcaster:
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0010(sp)
       jal 0x001885b8			#Magic Evade. If Physical use 0x00188510.
       nop
       bne v0,zero,MSED
       lui v0,0x8018
       jal @acc_mag_melee  		#Calculate (PA + X)*Faith% acc, based on 0x001889cc.
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       bne v0,zero,MSED
       lui v0,0x8018
       jal @dmg_f_melee			#DMG_F(PA*(WP+Y)), based on 0x00188d84.
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
 MSED: lw ra,0x0010(sp)
       addiu sp,sp,0x0018
       jr ra
@@ -1073,7 +1073,7 @@ MSED: lw ra,0x0010(sp)
     <Location file="BATTLE_BIN" offset="176C10" mode="ASM" offsetMode="RAM">
       lui t0,0x8019
       lw a2,-0x0b20(t0)
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0010(sp)
       lbu v0,0x0024(a2)
       lw t0,0x2d98(t0)			#Read unit data from attacker slot.
@@ -1114,7 +1114,7 @@ AIED: j 0x001942f0
       bne v0,zero,0x001181b4
       lui v0,0x8019
       beq at,zero,0x001181b4		#at is original s1, in wheel is zero, otherwise not.
-      addiu v0,v0,0xc704
+      addiu v0,v0,%lo(0xc704)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="119C90" mode="ASM" offsetMode="RAM">
       lhu t0,0x0000(s0)
@@ -1123,7 +1123,7 @@ AIED: j 0x001942f0
       andi v0,t0,0x4000
       beq v0,zero,SSS1
       andi t0,t0,0x1000			#To handle mastered star.
-      addiu s0,s1,0xba10
+      addiu s0,s1,%lo(0xba10)
 SSS1: lui at,0x801d
       addu at,at,s3
       lh v0,-0x7bdc(at)
@@ -1149,10 +1149,10 @@ SSS1: lui at,0x801d
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="120B90" mode="ASM" offsetMode="RAM">
       nop				#To prevent possible load delay.
-      addiu at,a0,0xff70
+      addiu at,a0,%lo(0xff70)
       sltiu at,at,0x000b
       beq at,zero,WAED
-      addiu v0,a0,0xff70		#Increase possible job ids to 8F?.
+      addiu v0,a0,%lo(0xff70)		#Increase possible job ids to 8F?.
       ori v0,zero,0x0001
 WAED: jr ra
       sltiu v0,v0,0x000e
@@ -1168,7 +1168,7 @@ WAED: jr ra
       lbu a0,0x0024(v0)			#Monster wheel adds 1000h, so unless andi, just load byte instead of half.
       lbu a3,0x0072(v0)			#Since plotting routines are mixed, needed a3 to check Sprite Set.
 @setup_formation_sprite:		#Now the plotting sprite routine is one for the roster and the wheel.
-      addiu sp,sp,0xffd0		#Now the wheel support both human and monster sprites.
+      addiu sp,sp,%lo(0xffd0)		#Now the wheel support both human and monster sprites.
       sw ra,0x0010(sp)
       sw s0,0x0014(sp)
       sw s1,0x0018(sp)
@@ -1180,15 +1180,15 @@ WAED: jr ra
       ori v0,zero,0x009a		#Job ID special cases, 9a.
       beq v0,s0,SFSF
       ori v0,zero,0x51
-      addiu v0,s0,0xff6a		#Job ID special cases, 96, 97, 98 (dummy) and 99.
+      addiu v0,s0,%lo(0xff6a)		#Job ID special cases, 96, 97, 98 (dummy) and 99.
       bltz v0,SFS1
 SFS0: addiu v0,v0,0x004e
       j SFSF
-SFS1: addiu at,s0,0xff70		#Job ID special cases, 90 and 91.
+SFS1: addiu at,s0,%lo(0xff70)		#Job ID special cases, 90 and 91.
       bltz at,SFS2
       sll v0,at,0x02
       j SFS0
-SFS2: addiu at,s0,0xffa2		#Monsters Job IDs from 5e to 8f.
+SFS2: addiu at,s0,%lo(0xffa2)		#Monsters Job IDs from 5e to 8f.
       bltz at,SFS3
       ori v0,zero,0x0003
       divu at,v0
@@ -1218,7 +1218,7 @@ SFS7: bne v1,v0,SFS8			#if not mime branch?
       sll v1,s0,0x01
       j SFS9				#if mime v1 = 3c and v0 = job*2
       ori v1,zero,0x003c
-SFS8: addiu v1,v1,0xff84
+SFS8: addiu v1,v1,%lo(0xff84)
 SFS9: andi v0,a1,0x0040			#Female
       beq v0,zero,SFSE
       sll v0,v1,0x10
@@ -1229,14 +1229,14 @@ SFSF: sw a1,0x0020(sp)			#Store gender for later use.
       sll a0,v0,0x01
       addu a0,a0,v0
       sll a0,a0,0x02
-      addiu v0,t0,0xda44
+      addiu v0,t0,%lo(0xda44)
       addu a0,a0,v0
       or a1,a2,zero
       jal 0x000222dc
       ori a2,zero,0x000c		#It must be 0x000c or almost nothing will be drawn.
       ori v0,zero,0x0048		#Reis dragon form, exception. Since its higher than 34 but it is not generic.
       beq v0,s0,SFSA
-      addiu v0,s0,0xffcb
+      addiu v0,s0,%lo(0xffcb)
       sltiu v0,v0,0x0029		#Generic job.
       bne v0,zero,SFED
 SFSA: sb s0,-0x0002(sp)			#Store Job ID in the stack to use it in next jal.
@@ -1265,7 +1265,7 @@ SFED: lw ra,0x0010(sp)
       addiu sp,sp,0x0030
 @monster_wheel:				#Custom routine, monster Job ID list maker.
       beq a0,zero,MWED			#It cannot be used as jal beside the place it is used.
-      addiu a0,a1,0xffa2
+      addiu a0,a1,%lo(0xffa2)
       sltiu v0,a0,0x0030		#8d, is the last hydra.
       beq v0,zero,MWED
       nop				#Nops for adding restrictions to unlock wheel.
@@ -1313,7 +1313,7 @@ MWED: jr ra				#Since next instruction is a lui over at, it does not matter.
       blez a1,FCED
       sll v0,a0,0x10
       sra a2,v0,0x10
-      addiu a0,at,0xd5ec
+      addiu a0,at,%lo(0xd5ec)
 FCLP: lw at,0x0000(a0)
       addiu a0,a0,0x0004
       lh at,0x002c(at)
@@ -1326,7 +1326,7 @@ FCED: jr ra
       addu v0,v1,zero
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="12257C" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffd0		#This is part of the routine that writes the Jobs ID list.
+      addiu sp,sp,%lo(0xffd0)		#This is part of the routine that writes the Jobs ID list.
       sw ra,0x002c(sp)			#Mostly is vanilla, but optimized to gain space for a routine.
       sw s6,0x0028(sp)
       sw s5,0x0024(sp)
@@ -1339,7 +1339,7 @@ FCED: jr ra
       addu s5,a2,zero
       andi s1,a0,0x00ff
       lui v1,0x801d
-      addiu v1,v1,0xd5ec
+      addiu v1,v1,%lo(0xd5ec)
       sll v0,s1,0x02
       addu s3,v0,v1
       lw a0,0x0000(s3)
@@ -1361,7 +1361,7 @@ FCED: jr ra
 JWS1: addu v0,v0,s6
       sh s0,0x0000(v0)
       lui v1,0x801d
-      addiu v1,v1,0xd5ec
+      addiu v1,v1,%lo(0xd5ec)
       sll v0,s1,0x02
       addu s4,v0,v1
       lw s0,0x0000(s4)
@@ -1413,7 +1413,7 @@ JWS1: addu v0,v0,s6
       or a3,a0,zero			#Since plotting routines are mixed, needed a3 to check Sprite Set.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1090C8" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe0		#This routine returns values for palette calculation.
+      addiu sp,sp,%lo(0xffe0)		#This routine returns values for palette calculation.
       sw ra,0x0018(sp)			#The Job ID is already stored in the stack for future use.
       sw s1,0x0014(sp)
       jal 0x00059af0
@@ -1429,14 +1429,14 @@ JWS1: addu v0,v0,s6
     <Location file="WORLD_WORLD_BIN" offset="118EE8" mode="ASM" offsetMode="RAM">
     .eqv  %mjw_txtnum, 0x004D
       andi a0,a0,0x00ff
-      addiu v0,a0,0xffa2
+      addiu v0,a0,%lo(0xffa2)
       sltiu v0,v0,0x0032
       bne v0,zero,WTED
       addiu v0,zero,%mjw_txtnum
       slti v0,a0,0x004a
       bne v0,r0,WTED
       addiu v0,a0,0x0013
-      addiu v0,a0,0xffb6
+      addiu v0,a0,%lo(0xffb6)
 WTED: jr ra
       andi v0,v0,0x00ff
     </Location>
@@ -1444,7 +1444,7 @@ WTED: jr ra
   <Patch name="MJW - Show job descriptions on monster wheel req">
     <Description>Requires 'MJW'. Set job descriptions as req message for the unlocked monster jobs.</Description>
     <Location file="WORLD_WORLD_BIN" offset="118EE8" mode="ASM" offsetMode="RAM">
-      addiu v0,a0,0xffa2
+      addiu v0,a0,%lo(0xffa2)
       sltiu v0,v0,0x0032
       bne v0,zero,WTED
       or v0,a0,zero
@@ -1452,7 +1452,7 @@ WTED: jr ra
       slti v0,a0,0x004a
       bne v0,r0,WTED
       addiu v0,a0,0x0013
-      addiu v0,a0,0xffb6
+      addiu v0,a0,%lo(0xffb6)
 WTED: jr ra
       or v0,v0,t0
     </Location>
@@ -1473,7 +1473,7 @@ WTED: jr ra
       ori a0,zero,0x6000
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1134E8" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe8
+      addiu sp,sp,%lo(0xffe8)
       sw ra,0x0014(sp)
       sw s0,0x0010(sp)
       andi a2,a0,0xffff
@@ -1611,12 +1611,12 @@ SFS4: ori at,zero,@oej_id
       j SFS6
       ori v1,zero,@oej_fe_unit		#Set OEJ female Formation Sprite.
 SFS5: or v1,s0,zero
-      addiu at,v1,0xffa4		#Check if mime or dancer.
+      addiu at,v1,%lo(0xffa4)		#Check if mime or dancer.
       bltz at,SFS7			#If not, branch.
       sll v1,s0,0x01
       sll at,at,0x01
       addiu v1,at,0x00b6
-SFS7: addiu v1,v1,0xff84
+SFS7: addiu v1,v1,%lo(0xff84)
       andi v0,a1,0x0040			#Female
       beq v0,zero,SFSE
       sll v0,v1,0x10
@@ -1795,7 +1795,7 @@ UJED: jr ra
       8000				<!--Ex: 0200 0888 8008 0000 8000 = CHM2, WHM8, BLM8 ,TMM8, SUM8, ORA8, CAL8-->
     </Location>
     <Location file="SCUS_942_21" offset="5B2B4" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe0		#From ENTD calculation job, simplification, free space for routines.
+      addiu sp,sp,%lo(0xffe0)		#From ENTD calculation job, simplification, free space for routines.
       sw s0,0x0010(sp)
       addu s0,a0,zero			#s0 = Unit's Data Pointer
       sw s1,0x0014(sp)
@@ -1834,7 +1834,7 @@ EJS3: srl v0,a3,0x01			#Job Unlocked / 2 (Job Byte)
       addu a2,zero,zero			#Counter = 0
       addu t1,a3,zero			#t1 = Job Unlocked
       lui v1,0x8006
-      addiu v1,v1,0x60ba		#v1 = Job Unlock Requirements
+      addiu v1,v1,%lo(0x60ba)		#v1 = Job Unlock Requirements
       sll v0,t1,0x02			#Job Unlocked * 4
       addu v0,v0,t1			#Job Unlocked * 5
       sll v0,v0,0x01			#Job Unlocked * 10
@@ -1935,7 +1935,7 @@ M1ED: jr ra
       addiu v0,zero,0x005b
       or v0,a1,zero
 M2ED: or a1,v0,zero
-      addiu v0,a1,0xffb6
+      addiu v0,a1,%lo(0xffb6)
       jr t0
       sltiu v0,v0,0x0014
       nop
@@ -1956,7 +1956,7 @@ BSS1: bne v0,a2,BSS2
       j 0x0005e1a8
       ori v0,zero,@oej_m_ss		#Set OEJ male Sprite Set.
 BSS2: sll v0,a2,0x01			#Job ID * 2.
-      addiu v0,v0,0xffcc		#Job ID * 2 - 0x34.
+      addiu v0,v0,%lo(0xffcc)		#Job ID * 2 - 0x34.
       andi v1,v1,0x0001
       j 0x0005e1a8
       addu v0,v0,v1
@@ -1968,7 +1968,7 @@ BSS2: sll v0,a2,0x01			#Job ID * 2.
       ori t0,t0,0xddb8
       beq v0,zero,0x0005ddc4
       addu s0,zero,zero
-      addiu s0,a1,0xffb6
+      addiu s0,a1,%lo(0xffb6)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122634" mode="ASM" offsetMode="RAM">
       lw at,0x0000(s0)			#This is the second half of the routine that writes the Jobs ID list.
@@ -2023,7 +2023,7 @@ W1S6: addiu s3,s3,0x0001
       bne v0,zero,W1LP
 W1ED: sll v0,s2,0x01
       addu v0,v0,s6
-      addiu v1,zero,0xffff
+      addiu v1,zero,%lo(0xffff)
       sh v1,0x0000(v0)
       addu v0,s2,zero
       lw ra,0x002c(sp)
@@ -2096,7 +2096,7 @@ W3LP: ori v0,zero,0x0001
       addiu s1,s1,0x0001
       sltiu v0,s1,0x0013
       bne v0,zero,W3LP
-      addiu a2,s0,0xffff
+      addiu a2,s0,%lo(0xffff)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="1223DC" mode="ASM" offsetMode="RAM">
       j @oej_mjpss1			#Multi-purpose fixing routine.
@@ -2117,7 +2117,7 @@ W4S1: sll v0,a1,0x10			#Gender
       ori v1,zero,@oej_ma_unit		#Set OEJ male Formation Sprite.
       j 0x00125918
       ori v1,zero,@oej_fe_unit		#Set OEJ female Formation Sprite.
-W4S2: addiu at,v1,0xffa4		#Check if mime or dancer.
+W4S2: addiu at,v1,%lo(0xffa4)		#Check if mime or dancer.
       bltz at,0x00125904		#If not, branch.
       sll v0,a0,0x01
       sll at,at,0x01
@@ -2142,11 +2142,11 @@ W4S2: addiu at,v1,0xffa4		#Check if mime or dancer.
       lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
       ori v1,zero,0x005c
       beq v0,v1,W5S1			#Branch if Dancer.
-      addiu a1,a1,0xfffe
+      addiu a1,a1,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,W5S1			#Branch if not Mime.
       addiu a1,a1,0x0002
-      addiu a1,a1,0xfffe
+      addiu a1,a1,%lo(0xfffe)
 W5S1: sll v0,a1,0x01
       lui at,0x8019
       addu at,at,v0
@@ -2179,11 +2179,11 @@ W5S2: bne v1,v0,0x0010cbb0
       lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
       ori v1,zero,0x005c
       beq v0,v1,W6S1			#Branch if Dancer.
-      addiu a0,a0,0xfffe
+      addiu a0,a0,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,W6S1			#Branch if not Mime.
       addiu a0,a0,0x0002
-      addiu a0,a0,0xfffe
+      addiu a0,a0,%lo(0xfffe)
 W6S1: sll v0,a0,0x01
       lui at,0x8019
       addu at,at,v0
@@ -2216,11 +2216,11 @@ W6S2: bne v1,v0,0x00109340
       lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
       ori v1,zero,0x005c
       beq v0,v1,W7S1			#Branch if Dancer.
-      addiu a0,a0,0xfffe
+      addiu a0,a0,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,W7S1			#Branch if not Mime.
       addiu a0,a0,0x0002
-      addiu a0,a0,0xfffe
+      addiu a0,a0,%lo(0xfffe)
 W7S1: sll v0,a0,0x01
       lui at,0x8019
       addu at,at,v0
@@ -2253,11 +2253,11 @@ W7S2: bne v1,v0,0x001091bc
       lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
       ori v1,zero,0x005c
       beq v0,v1,W8S1			#Branch if Dancer.
-      addiu a0,a0,0xfffe
+      addiu a0,a0,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,W8S1			#Branch if not Mime.
       addiu a0,a0,0x0002
-      addiu a0,a0,0xfffe
+      addiu a0,a0,%lo(0xfffe)
 W8S1: sll v0,a0,0x01
       lui at,0x8015
       addu at,at,v0
@@ -2273,7 +2273,7 @@ W8S2: bne v1,v0,0x000e50c0
       nop				#One free space.
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="122488" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffd8
+      addiu sp,sp,%lo(0xffd8)
       sw s0,0x0018(sp)
       lui s0,0x801d
       lbu v0,-0x2878(s0)
@@ -2289,7 +2289,7 @@ W8S2: bne v1,v0,0x000e50c0
       addiu s2,zero,0x005b
       or s2,a0,zero
 W9S1: or a0,s2,zero			#End of custom code.
-      addiu s0,s0,0xd5ec
+      addiu s0,s0,%lo(0xd5ec)
 W9LP: lw v0,0x0000(s0)
       jal 0x00120b90
       lh a0,0x0024(v0)
@@ -2298,7 +2298,7 @@ W9LP: lw v0,0x0000(s0)
       jal 0x0012b1d0
       addiu a0,a0,0x0077
       jal 0x0012b354
-      addiu a0,s2,0xffb6
+      addiu a0,s2,%lo(0xffb6)
       jal 0x0012b354
       ori a0,zero,0x0001
       bne v0,zero,W9E2
@@ -2319,10 +2319,10 @@ W9E2: lw ra,0x0024(sp)
     </Location>
     <Location file="WORLD_WORLD_BIN" offset="120B90" mode="ASM" offsetMode="RAM">
       nop				#To prevent possible load delay.
-      addiu at,a0,0xff70
+      addiu at,a0,%lo(0xff70)
       sltiu at,at,0x000b
       beq at,zero,WAED
-      addiu v0,a0,0xff70		#Increase possible job ids to 8F?.
+      addiu v0,a0,%lo(0xff70)		#Increase possible job ids to 8F?.
       ori v0,zero,0x0001
 WAED: jr ra
       sltiu v0,v0,0x000e
@@ -2348,11 +2348,11 @@ WAED: jr ra
       lbu v0,0x0002(s0)			#3 of 3 Parts of the attack out formation sprite handling routine.
       ori v1,zero,0x005c
       beq v0,v1,A1S1			#Branch if Dancer.
-      addiu a1,a1,0xfffe
+      addiu a1,a1,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,A1S1			#Branch if not Mime.
       addiu a1,a1,0x0002
-      addiu a1,a1,0xfffe
+      addiu a1,a1,%lo(0xfffe)
 A1S1: sll v0,a1,0x01
       lui at,0x801d
       addu at,at,v0
@@ -2388,11 +2388,11 @@ A1S2: bne v1,v0,0x001c8798
       lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
       ori v1,zero,0x005c
       beq v0,v1,A2S1			#Branch if Dancer.
-      addiu a3,a3,0xfffe
+      addiu a3,a3,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,A2S1			#Branch if not Mime.
       addiu a3,a3,0x0002
-      addiu a3,a3,0xfffe
+      addiu a3,a3,%lo(0xfffe)
 A2S1: sll v0,a3,0x01
       lui at,0x801d
       addu at,at,v0
@@ -2425,11 +2425,11 @@ A2S2: bne v1,v0,0x001c82e4
       lbu v0,0x0002(s0)			#3 of 3 Parts of one of the portrait handling routines.
       ori v1,zero,0x005c
       beq v0,v1,R1S1			#Branch if Dancer.
-      addiu a3,a3,0xfffe
+      addiu a3,a3,%lo(0xfffe)
       ori v1,zero,0x005d
       bne v0,v1,R1S1			#Branch if not Mime.
       addiu a3,a3,0x0002
-      addiu a3,a3,0xfffe
+      addiu a3,a3,%lo(0xfffe)
 R1S1: sll v0,a3,0x01
       lui at,0x801d
       addu a3,at,v0
@@ -2474,17 +2474,17 @@ BMED: or s0,v0,zero
       ori t0,t0,0xea34
       beq v0,zero,0x0017ea40
       nop
-      addiu v0,a1,0xffb6
+      addiu v0,a1,%lo(0xffb6)
       sw v0,0x0000(a2)
     </Location>
     <Location file="BATTLE_BIN" offset="17EA80" mode="ASM" offsetMode="RAM">
-      addiu sp,sp,0xffe0		#From Store JP and UJ, simplification, free space for routines.
+      addiu sp,sp,%lo(0xffe0)		#From Store JP and UJ, simplification, free space for routines.
       sw s1,0x0014(sp)
       addu s1,a3,zero			#s1 = Generic Job ID
       sw ra,0x0018(sp)
       sw s0,0x0010(sp)
       bltz a1,SJED			#Branch if JP is less than 0
-      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
       sll v0,a0,0x03			#ID * 8
       subu v0,v0,a0			#ID * 7
       sll v0,v0,0x06			#ID * 1c0
@@ -2494,12 +2494,12 @@ BMED: or s0,v0,zero
       lbu v1,0x0001(s0)			#Load Unit's Unit ID
       ori v0,zero,0x00ff		#v0 = FF
       beq v1,v0,SJED			#Branch if Unit doesn't exist
-      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
       lhu v0,0x0058(s0)			#Load Unit's Current Statuses 1 and 2
       lbu a0,0x0006(s0)			#Load Gender Byte
       andi v0,v0,0x0160
       bne v0,zero,SJED			#Branch if Unit is a Crystal or Dead or Treasure
-      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
       nop				#Free space used to manage Spillover JP.
       nop
       nop
@@ -2513,12 +2513,12 @@ BMED: or s0,v0,zero
       nop
       andi v0,a0,0x0020
       bne v0,zero,SJED			#Branch if Unit is a monster
-      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
       lbu v0,0x01ba(s0)			#Load Unit's Modified ENTD Flags
       andi v1,a2,0x00ff			#v1 = Team Flags
       andi v0,v0,0x0030			#v0 = Team Flags
       bne v0,v1,SJED			#Branch if the Teams differ
-      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
       sll v0,s1,0x01
       addu a2,v0,s0
       lhu v0,0x00dc(a2)			#Load Job's JP
@@ -2690,7 +2690,7 @@ ERED: jr ra
       bne s1,at,SJSA
       and v0,t0,a0			#t0 = Gender Flags
       beq v0,zero,0x0017ebe0		#Branch if the gender differs
-SJSA: addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+SJSA: addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
     </Location>
   </Patch>
   <Patch name="OEJ - No Spillover JP for OEJ">
@@ -2701,7 +2701,7 @@ SJSA: addiu v0,zero,0xffff		#v0 = FFFF (Fail)
       bne s1,at,SJSB
       andi v1,a0,0x0020
       bne s0,s2,0x0017ebe0		#Branch if not the same unit
-      addiu v0,zero,0xffff		#v0 = FFFF (Fail)
+      addiu v0,zero,%lo(0xffff)		#v0 = FFFF (Fail)
 SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
     </Location>
   </Patch>
@@ -4034,7 +4034,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             .eqv %stage4_id, 0x0035
             .eqv %stage4_lc, 0x3206
             @lvl_up_section:
-            addiu sp,sp,0xffc8
+            addiu sp,sp,%lo(0xffc8)
             sw ra,0x0010(sp)
             sw s3,0x0020(sp)
             sw s2,0x001c(sp)
@@ -4125,7 +4125,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             nop
         </Location>
         <Location file="SCUS_942_21" offset="5D880" mode="ASM" offsetMode="RAM">
-            addiu sp,sp,0xffe0
+            addiu sp,sp,%lo(0xffe0)
             sw s0,0x0010(sp)
             addu s0,a0,zero			#s0 = Unit's Data Pointer.
             sw ra,0x0018(sp)
@@ -4158,7 +4158,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             nop
         </Location>
         <Location file="SCUS_942_21" offset="5D8FC" mode="ASM" offsetMode="RAM">
-            addiu sp,sp,0xfff8
+            addiu sp,sp,%lo(0xfff8)
             sw ra,0x0010(sp)
             addu t0,a0,zero			#t0 = Party Data Pointer
             lbu a0,0x0016(t0)			#Load Party Level
@@ -4245,7 +4245,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
         <Location file="WORLD_WORLD_BIN" offset="129B7C" mode="ASM" offsetMode="RAM">
             lui t0,0x801d			#Sort of vanilla code sorted.
             lbu t1,-0x7ab0(t0)		#Load ...
-            addiu sp,sp,0xffc0		#Vanilla code.
+            addiu sp,sp,%lo(0xffc0)		#Vanilla code.
             bne t1,zero,0x00129ce0		#Check if ... Finish to avoid paging.
             sw ra,0x0038(sp)			#Vanilla code sorted, for the 2 spaces needed.
             sw s1,0x0034(sp)
@@ -4267,7 +4267,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             or t0,a3,zero			#Save current pos.
         </Location>
         <Location file="WORLD_WORLD_BIN" offset="12BB88" mode="ASM" offsetMode="RAM">
-            addiu sp,sp,0xffe0
+            addiu sp,sp,%lo(0xffe0)
             or t1,zero,a2			#Save original a2.
             SULP: andi t7,a0,0x0008			#Check if R1 is pressed.
             bne t7,zero,SUS2
@@ -4276,7 +4276,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             bne t7,zero,SUS4
             andi t7,a0,0x0004			#Check if L1 is pressed.
             bne t7,zero,SUS2
-            addiu v0,t0,0xffff
+            addiu v0,t0,%lo(0xffff)
             andi t7,a0,0x8000			#Check if left is pressed.
             bne t7,zero,SUS4
             subu t7,a2,a1
@@ -4302,9 +4302,9 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             sll t2,v0,2
             addu t1,t0,t5			#Destination UnitIndex.
             addu t7,t0,t1
-            addiu v1,t7,0xffff		#Check if sum of both UnitIndex less than or equal 1
+            addiu v1,t7,%lo(0xffff)		#Check if sum of both UnitIndex less than or equal 1
             blez v1,SUAE
-            addiu v1,t7,0xffd9		#Check if sum of both UnitIndex greater than or equal 39
+            addiu v1,t7,%lo(0xffd9)		#Check if sum of both UnitIndex greater than or equal 39
             bgez v1,SUAE
             addu t7,t6,t2
             lw  t7,-0x2a14(t7)
@@ -4327,7 +4327,7 @@ SJSB: bne v1,zero,0x0017ebe0		#Branch if Unit is a monster
             SUS3: ori v1,zero,0x0100
             ori t2,zero,0xff			#If it was, keep it like that.
             or v0,a3,zero			#Dont move the cursor.
-            SUIL: addiu v1,v1,0xffff		#Swap data.
+            SUIL: addiu v1,v1,%lo(0xffff)		#Swap data.
             lbu t5,0(t7)
             lbu t4,0(t6)
             bne t2,t8,SUIS

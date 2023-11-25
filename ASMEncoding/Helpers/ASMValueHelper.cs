@@ -7,7 +7,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ASMEncoding.Helpers
@@ -66,6 +65,62 @@ namespace ASMEncoding.Helpers
 		{
             return LabelHelper.GetAnyUnsignedValue(val, skipLabelAssertion);
 		}
+
+        public uint GetImmediateValue(string val, int length, bool isSigned, bool skipLabelAssertion = false)
+        {
+            uint value = 0;
+
+            uint uMaxValue = (length == 32) ? uint.MaxValue : (uint)((1L << length) - 1);
+            int iMaxValue = (length == 32) ? int.MaxValue : (int)((1L << (length - 1)) - 1);
+            int iMinValue = (length == 32) ? int.MinValue : (int)(-(1L << (length - 1)));
+
+            uint minNegatedValue = ((uint)Int32.MaxValue + 1);
+
+            if (val.StartsWith("0x"))
+            {
+                value = HexToUnsigned(val.Substring(2, val.Length - 2));
+                ASMDebugHelper.assert(isSigned || (value <= uMaxValue), string.Format("Unsigned immediate ({0}) greater than maximum value (0x{1})", val, uMaxValue.ToString("x")));
+                ASMDebugHelper.assert(!isSigned || (value <= iMaxValue), string.Format("Signed immediate ({0}) greater than maximum value (0x{1})", val, iMaxValue.ToString("x")));
+            }
+            else if (val.StartsWith("-0x"))
+            {
+                ASMDebugHelper.assert(isSigned, "Negative unsigned immediate: " + val);
+                value = HexToUnsigned(val.Substring(3, val.Length - 3));
+                
+                ASMDebugHelper.assert(value <= minNegatedValue, string.Format("Signed immediate ({0}) less than minimum value (-0x{1})", val, minNegatedValue.ToString("x")));
+                int iValue = -(Convert.ToInt32(value));
+                ASMDebugHelper.assert(iValue >= iMinValue, string.Format("Signed immediate ({0}) less than minimum value (-0x{1})", val, (-iMinValue).ToString("x")));
+                ASMDebugHelper.assert(iValue <= iMaxValue, string.Format("Signed immediate ({0}) greater than maximum value (0x{1})", val, iMaxValue.ToString("x")));
+                value = (value == 0) ? 0 : (uint)(0x100000000 - value);
+
+            }
+            else if (ASMStringHelper.StringIsNumeric(val))
+            {
+                value = Convert.ToUInt32(val);
+                ASMDebugHelper.assert(isSigned || (value <= uMaxValue), string.Format("Unsigned immediate ({0}) greater than maximum value (0x{1})", val, uMaxValue.ToString("x")));
+                ASMDebugHelper.assert(!isSigned || (value <= iMaxValue), string.Format("Signed immediate ({0}) greater than maximum value (0x{1})", val, iMaxValue.ToString("x")));
+            }
+            else if ((val.StartsWith("-")) && (val.Length > 1))
+            {
+                ASMDebugHelper.assert(isSigned, "Negative unsigned immediate: " + val);
+                string str_uvalue = val.Substring(1);
+                bool isNumeric = ASMStringHelper.StringIsNumeric(str_uvalue);
+                ASMDebugHelper.assert(isNumeric, "Could not parse negative value: " + val);
+
+                uint uvalue = Convert.ToUInt32(str_uvalue);
+                ASMDebugHelper.assert(value <= minNegatedValue, string.Format("Signed immediate ({0}) less than minimum value (-0x{1})", val, minNegatedValue.ToString("x")));
+                int iValue = -(Convert.ToInt32(value));
+                ASMDebugHelper.assert(iValue >= iMinValue, string.Format("Signed immediate ({0}) less than minimum value (0x{1})", val, iMinValue.ToString("x")));
+                ASMDebugHelper.assert(iValue <= iMaxValue, string.Format("Signed immediate ({0}) greater than maximum value (0x{1})", val, iMaxValue.ToString("x")));
+                value = (uvalue == 0) ? 0 : (uint)(0x100000000 - uvalue);
+            }
+            else
+            {
+                return LabelHelper.LabelToUnsigned(val, skipLabelAssertion);
+            }
+
+            return value;
+        }
 
         public static string UnsignedToHex_WithLength(uint num, int reqLength)
         {

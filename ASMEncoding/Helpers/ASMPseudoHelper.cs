@@ -45,8 +45,13 @@ namespace ASMEncoding.Helpers
 		public EncodeLine[] TranslatePseudoSingle(EncodingFormat encoding, string[] parts, int index, uint pc, bool skipLabelAssertion = false)
 		{
 			List<EncodeLine> result = new List<EncodeLine>();
-			
-			int startParenIndex = 0;
+
+            //result.Add(new EncodeLine(parts, index));
+            //return result.ToArray();
+
+            bool reportErrors = !skipLabelAssertion;
+
+            int startParenIndex = 0;
 			int endParenIndex = 0;
 			string strImmed = "";
 			string[] newParts;
@@ -71,41 +76,42 @@ namespace ASMEncoding.Helpers
 			{
 				strArgs = ASMStringHelper.RemoveSpaces(parts[1]);
 				args = strArgs.Split(',');
-			}
-			
-			switch (encoding.Command)
-			{
-				case "jalr":
-					if (args.Length == 1)
-					{
-						//parts[1] = args[0] + ",ra";
+            }
+
+            switch (encoding.Command)
+            {
+                case "jalr":
+                    if (args.Length == 1)
+                    {
+                        //parts[1] = args[0] + ",ra";
                         parts[1] = "ra," + args[0];
-					}
-					result.Add(new EncodeLine(parts,index));
-					break;
-					
-				case "mul":
-				case "div":
-				case "rem":
-				case "mod":
+                    }
+                    result.Add(new EncodeLine(parts, index));
+                    break;
+
+                case "mul":
+                case "div":
+                case "rem":
+                case "mod":
                     if (((encoding.Command == "mul") && (encoding.Opcode == ASMFormatHelper.Opcodes.Special2))
-                        || ((encoding.Command == "div") && (args.Length < 3)))
-					{
-						result.Add(new EncodeLine(parts,index));
-						break;
-					}
-					
-					newParts = new string[2];
-					newParts[0] = (encoding.Command == "mul") ? "mult" : "div";
-					newParts[1] = args[1] + "," + args[2];
-					result.Add(new EncodeLine(newParts,index));
-					
-					parts[0] = ((encoding.Command == "mul") || (encoding.Command == "div")) ? "mflo" : "mfhi";
-					parts[1] = args[0];
-					result.Add(new EncodeLine(parts,index));
-					
-					break;
-				
+                        || ((encoding.Command == "div") && (args.Length < 3))
+                        || ((encoding.Command == "mod") && (args.Length < 3)))
+                    {
+                        result.Add(new EncodeLine(parts, index));
+                        break;
+                    }
+
+                    newParts = new string[2];
+                    newParts[0] = (encoding.Command == "mul") ? "mult" : "div";
+                    newParts[1] = args[1] + "," + args[2];
+                    result.Add(new EncodeLine(newParts, index));
+
+                    parts[0] = ((encoding.Command == "mul") || (encoding.Command == "div")) ? "mflo" : "mfhi";
+                    parts[1] = args[0];
+                    result.Add(new EncodeLine(parts, index));
+
+                    break;
+
                 case "add":
                 case "addu":
                 case "and":
@@ -152,22 +158,31 @@ namespace ASMEncoding.Helpers
                     result.Add(new EncodeLine(parts, index));
                     break;
 
-				case "bgt":
-				case "blt":
-				case "bge":
-				case "ble":										
-					argIndex0 = ((encoding.Command == "bgt") || (encoding.Command == "ble")) ? 1 : 0;
-					argIndex1 = (argIndex0 > 0) ? 0 : 1;
-					doesBranchIfEqual = ((encoding.Command == "bge") || (encoding.Command == "ble"));
-					
-					newParts = new string[2];
-					newParts[0] = "slt";
-					newParts[1] = "at," + args[argIndex0] + "," + args[argIndex1];
-					result.Add(new EncodeLine(newParts,index));
-					
-					parts[0] = doesBranchIfEqual ? "beq" : "bne";
-					parts[1] = "at,zero," + args[2];
-					result.Add(new EncodeLine(parts,index));
+                case "bgt":
+                case "blt":
+                case "bge":
+                case "ble":
+                    argIndex0 = ((encoding.Command == "bgt") || (encoding.Command == "ble")) ? 1 : 0;
+                    argIndex1 = (argIndex0 > 0) ? 0 : 1;
+                    doesBranchIfEqual = ((encoding.Command == "bge") || (encoding.Command == "ble"));
+
+                    if ((IsAssemblerTemporary(args[0])) || (IsAssemblerTemporary(args[1])))
+                    {
+                        if (reportErrors)
+                            _errorTextBuilder.AppendLine("WARNING: Cannot expand " + encoding.Command + " instruction due to use of $at register at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8));
+                        result.Add(new EncodeLine(parts, index));
+                    }
+                    else
+                    {
+                        newParts = new string[2];
+                        newParts[0] = "slt";
+                        newParts[1] = "at," + args[argIndex0] + "," + args[argIndex1];
+                        result.Add(new EncodeLine(newParts, index));
+
+                        parts[0] = doesBranchIfEqual ? "beq" : "bne";
+                        parts[1] = "at,zero," + args[2];
+                        result.Add(new EncodeLine(parts, index));
+                    }
 					
 					break;
 					
@@ -186,11 +201,14 @@ namespace ASMEncoding.Helpers
                     isStore = encoding.Command.ToLower().StartsWith("s");
 					useAT = ((startParenIndex >= 0) || (isStore));
                     //useAT = isStore;
-					
+
+                    bool canUseAT = useAT ? !IsAssemblerTemporary(args[0]) : false;
+
 					if (startParenIndex >= 0)
 					{
 						regS = args[1].Substring(startParenIndex+1, endParenIndex-startParenIndex-1);
 						strImmed = args[1].Substring(0,startParenIndex);
+                        canUseAT = canUseAT && !IsAssemblerTemporary(regS);
 					}
 					else
 						strImmed = args[1];
@@ -206,7 +224,16 @@ namespace ASMEncoding.Helpers
 
 					if (((ivalue > 0x7fff) && (strImmed[0] != '-') && (!isHiLo)) || isLabel)
 					{
-						ushortval = (ushort)(ivalue & 0xffff);
+                        if (useAT && !canUseAT)
+                        {
+                            if (reportErrors)
+                                _errorTextBuilder.AppendLine("WARNING: Cannot expand " + encoding.Command + 
+                                    " instruction due to use of $at register at address 0x" + ASMValueHelper.UnsignedToHex_WithLength(pc, 8));
+                            result.Add(new EncodeLine(parts, index));
+                            break;
+                        }
+
+                        ushortval = (ushort)(ivalue & 0xffff);
 						if (ushortval >= 0x8000)
 						{
 							useNegativeOffset = true;
@@ -282,7 +309,7 @@ namespace ASMEncoding.Helpers
                     else if (ivalue >= 0xffff8000)
 					{
 						parts[0] = "addiu";
-						parts[1] = args[0] + ",zero," + ((ushort)(ivalue & 0xffff));
+						parts[1] = args[0] + ",zero," + ASMValueHelper.UnsignedShortToSignedShort((ushort)(ivalue & 0xffff));
 						result.Add(new EncodeLine(parts,index));
 					}
 					else
@@ -477,7 +504,7 @@ namespace ASMEncoding.Helpers
                             if (reportErrors)
                             {
                                 //result.errorMessage = "Error translating pseudoinstruction: " + line;
-                                _errorTextBuilder.Append("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")\r\n");
+                                _errorTextBuilder.AppendLine("Error translating pseudoinstruction: " + line + " (" + ex.Message + ")");
                             }
                             //result.lines = null;
                             //return result;
@@ -493,5 +520,17 @@ namespace ASMEncoding.Helpers
             result.errorMessage = _errorTextBuilder.ToString();
 			return result;
 		}
+
+        private bool IsAssemblerTemporary(string register)
+        {
+            if (!string.IsNullOrEmpty(register))
+            {
+                string registerLower = register.ToLower();
+                if ((registerLower.Equals("$at")) || (registerLower.Equals("at")) || (registerLower.Equals("$1")) || (registerLower.Equals("r1")) || (registerLower.Equals("$r1")))
+                    return true;
+            }
+
+            return false;
+        }
 	}
 }

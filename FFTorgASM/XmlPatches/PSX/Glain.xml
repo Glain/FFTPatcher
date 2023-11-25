@@ -6861,40 +6861,89 @@
         </Location>
         <Variable name="Require Different Teams" bytes="1" default="01" symbol="true" preset="boolean" />
     </Patch>
+    <Patch name="RNG Seed Manipulation" hidden="true">
+        <Description>
+            Contains functions for RNG seed manipulation.
+        </Description>
+        <Location file="SCUS_942_21" offset="27B00" mode="ASM" offsetMode="RAM">
+            @get_timer:
+                    li      t2, 0xb0
+                    jr      t2
+                    li      t1, 0x03
+                    
+            @get_new_random_seed:
+                    addiu   sp, sp, -16
+                    sw      s0, 4(sp)
+                    sw      ra, 8(sp)
+                    
+                    jal     @get_timer
+                    li      a0, 0
+                    
+                    move    s0, v0
+                    
+                    jal     @get_timer
+                    li      a0, 1
+                    
+                    sll     v0, v0, 16
+                    or      v0, v0, s0
+                    
+                    lw      ra, 8(sp)
+                    lw      s0, 4(sp)
+                    jr      ra
+                    addiu   sp, sp, 16
+        </Location>
+    </Patch>
     <Patch name="Story battles have fixed unit generation">
         <Description>
             Story battles use fixed unit generation (per playthrough) by using a static RNG seed per battle.
             This will apply to ENTD entries from "Starting ENTD" variable and upward.
         </Description>
+        <Include patch="RNG Seed Manipulation" />
         <Location file="BATTLE_BIN" offset="15D180" mode="ASM" offsetMode="RAM">
             .label  @address_entd_entry_id, 0x80047600
             .label  @address_entd_rng_seed, 0x80057964
-            .label  @address_rng_seed, 0xA0009010
+            
+            .label  @srand, 0x8002231c
+        
 
             @handle_entd_rng_seed:
-                    lw      t3, @address_entd_entry_id
-                    lui     t4, %hi(@address_rng_seed)
-                    li      t5, 0
-                    sltiu   t0, t3, %StartingENTD
-                    bne     t0, zero, handle_entd_rng_seed_end
-                    lui     t2, %hi(@address_entd_rng_seed)
+                    addiu   sp, sp, -24
+                    sw      s0, 4(sp)
+                    sw      s1, 8(sp)
+                    sw      ra, 12(sp)
                     
+                    lw      s1, @address_entd_entry_id
+                    nop
+                    sltiu   t0, s1, %StartingENTD
+                    bne     t0, zero, handle_entd_rng_seed_end
+                    li      v0, 0
+                    
+                    jal     @get_new_random_seed
+                    li      a0, 0
+                    
+                    lui     t2, %hi(@address_entd_rng_seed)
                     lhu     t0, %lo(@address_entd_rng_seed) (t2)
-                    lw      t5, %lo(@address_rng_seed) (t4)
+                    move    s0, v0
                     bne     t0, zero, handle_entd_rng_seed_store
-                    andi    t1, t5, 0xffff
+                    andi    t1, s0, 0xffff
                     
                     sh      t1, %lo(@address_entd_rng_seed) (t2)
                     move    t0, t1
                     
                 handle_entd_rng_seed_store:
-                    multu   t0, t3
-                    mflo    t0
-                    sw      t0, %lo(@address_rng_seed) (t4)
+                    multu   t0, s1
+                    mflo    a0
+                    jal     @srand
+                    nop
+                    move    v0, s0
                     
                 handle_entd_rng_seed_end:
+                    lw      ra, 12(sp)
+                    lw      s1, 8(sp)
+                    lw      s0, 4(sp)
+                    addiu   sp, sp, 24
                     jr      ra
-                    sw      t5, 0x0c(sp)
+                    sw      v0, 0x0c(sp)
         </Location>
         <Location file="BATTLE_BIN" offset="17F8DC" mode="ASM" offsetMode="RAM">
                     lui     t0, 0x8019
@@ -6902,15 +6951,18 @@
                     sh      zero, 0x3844(t0)
                     sb      zero, 0x3920(t0)
                     jal     @handle_entd_rng_seed
+                    move    s0, a0
+                    jal     0x8005cbd0
                     nop
         </Location>
         <Location file="BATTLE_BIN" offset="17FBB8" mode="ASM" offsetMode="RAM">
                     lw      t0, 0x0c(sp)
                     nop
                     beq     t0, zero, load_entd_units_end
-                    lui     t1, %hi(@address_rng_seed)
+                    nop
                     
-                    sw      t0, %lo(@address_rng_seed) (t1)
+                    jal     @srand
+                    move    a0, t0
                     
                 load_entd_units_end:
                     j       0x8007e974
@@ -6919,6 +6971,7 @@
         <Variable name="Starting ENTD" bytes="2" default="0180" symbol="true" />
     </Patch>
     <Patch name="Soldier office keeps same soldiers until one is hired">
+        <Include patch="RNG Seed Manipulation" />
         <Description>
             Soldier office retains the same soldiers (with the same stats) until one of them is hired, and then new soldiers are available for hire. 
         </Description>
@@ -6930,32 +6983,35 @@
         </Location>
         <Location file="WORLD_WORLD_BIN" offset="148500" mode="ASM" offsetMode="RAM">
             .label  @address_soldier_office_rng_seed, 0x80057960
-            .label  @address_rng_seed, 0xA0009010
             
+            .label  @srand, 0x8002231c
             .label  @generate_party_unit_in_formation, 0x801209c4
             .label  @obtain_gil, 0x801207bc
         
-        
+                        
             @soldier_office_generate_unit_hook:
-                    addiu   sp, sp, -24
+                    addiu   sp, sp, -16
                     sw      s0, 4(sp)
-                    sw      s1, 8(sp)
-                    sw      ra, 12(sp)
-                    
-                    lw      s1, @address_rng_seed
+                    sw      ra, 8(sp)
                     
                     jal     @soldier_office_restore_rng_seed
                     move    s0, a0
                     jal     @generate_party_unit_in_formation
                     move    a0, s0
                     
-                    sw      s1, @address_rng_seed
+                    move    s0, v0
                     
-                    lw      ra, 12(sp)
-                    lw      s1, 8(sp)
+                    jal     @get_new_random_seed
+                    li      a0, 0
+                    jal     @srand
+                    move    a0, v0
+                    
+                    move    v0, s0
+                    
+                    lw      ra, 8(sp)
                     lw      s0, 4(sp)
                     jr      ra
-                    addiu   sp, sp, 24
+                    addiu   sp, sp, 16
         
         
             @soldier_office_war_funds_hook:
@@ -6963,8 +7019,12 @@
                     sw      s0, 4(sp)
                     sw      ra, 8(sp)
                 
-                    jal     @soldier_office_store_rng_seed
                     move    s0, a0
+                    
+                    jal     @get_new_random_seed
+                    li      a0, 0
+                    jal     @soldier_office_store_rng_seed
+                    move    a0, v0
                     jal     @obtain_gil
                     move    a0, s0
                     
@@ -6975,10 +7035,9 @@
         
         
             @soldier_office_store_rng_seed:
-                    lui     a0, %hi(@address_soldier_office_rng_seed)
-                    j       @store_rng_seed
-                    addiu   a0, a0, %lo(@address_soldier_office_rng_seed)
-                
+                    lui     t0, %hi(@address_soldier_office_rng_seed)
+                    jr      ra
+                    sw      a0, %lo(@address_soldier_office_rng_seed) (t0)
                 
             @soldier_office_restore_rng_seed:
                     addiu   sp, sp, -24
@@ -6992,9 +7051,11 @@
                     nop
                     
                 soldier_office_restore_rng_seed_store:
-                    jal     @soldier_office_store_rng_seed
-                    nop
+                    jal     @get_new_random_seed
+                    li      a0, 0
                     move    s1, v0
+                    jal     @soldier_office_store_rng_seed
+                    move    a0, v0
                  
                 soldier_office_restore_rng_seed_type:
                     bne     s0, zero, soldier_office_restore_rng_seed_call
@@ -7003,7 +7064,7 @@
                     andi    a0, s1, 0xffff
                     
                 soldier_office_restore_rng_seed_call:
-                    jal     @restore_rng_seed
+                    jal     @srand
                     nop
                     
                 soldier_office_restore_rng_seed_end:
@@ -7012,18 +7073,6 @@
                     lw      s0, 4(sp)
                     jr      ra
                     addiu   sp, sp, 24
-
-
-            @store_rng_seed:
-                    lw      v0, @address_rng_seed
-                    jr      ra
-                    sw      v0, 0(a0)
-
-
-            @restore_rng_seed:
-                lui     at, %hi(@address_rng_seed)
-                jr      ra
-                sw      a0, %lo(@address_rng_seed) (at)
         </Location>
     </Patch>
     <Patch name="Soldier office calculates display price">
@@ -7621,6 +7670,11 @@
                 addiu   t5, t5, 99
                 mult    t5, t4
                 nop
+        </Location>
+    </Patch>
+    <Patch name="Remove main character bio entry hardcoding">
+        <Location file="WORLD_WLDCORE_BIN" offset="83CFC" mode="ASM" offsetMode="RAM">
+            b   0x80083d2c
         </Location>
     </Patch>
     <Patch name="Formula 3B: Mana Burn / Feedback (MA * Y) (v3)">

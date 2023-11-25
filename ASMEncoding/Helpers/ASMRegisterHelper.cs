@@ -415,8 +415,18 @@ namespace ASMEncoding.Helpers
             int firstDigitChar = 0;
             for (; ((firstDigitChar < register.Length) && !char.IsDigit(register[firstDigitChar])); firstDigitChar++) ;
             string prefix = register.Substring(0, firstDigitChar).ToLower();
-            register = register.Replace(prefix, "");
-            return int.Parse(register);
+            string strRegisterIndex = register.Replace(prefix, "");
+
+            bool isValidPrefix = false;
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                string comparePrefix = prefix.ToLower();
+                if ((comparePrefix == "$") || (comparePrefix == "r") || (comparePrefix == "$r"))
+                    isValidPrefix = true;
+            }
+
+            ASMDebugHelper.assert(isValidPrefix, string.Format("Invalid register name: {0}", register));
+            return int.Parse(strRegisterIndex);
         }
 
         private void AddVFPUAliasesToDictionary(VFPUAliases aliases, int regIndex)

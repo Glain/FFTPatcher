@@ -176,10 +176,10 @@ namespace ASMEncoding.Helpers
 			
 			List<byte> byteList = new List<byte>();
 
-            if (oldErrorText != _errorTextBuilder.ToString())
-            {
-                return new ASMEncoderResult(encodedASMBuilder.ToString(), byteList.ToArray(), asm, _errorTextBuilder.ToString());
-            }
+            //if (oldErrorText != _errorTextBuilder.ToString())
+            //{
+            //    return new ASMEncoderResult(encodedASMBuilder.ToString(), byteList.ToArray(), asm, _errorTextBuilder.ToString());
+            //}
 			
 			foreach (string line in lines)
 			{				
@@ -389,8 +389,11 @@ namespace ASMEncoding.Helpers
                         regIndex++;
                         break;
                     case ASMElementTypeCharacter.SignedImmediate:
+                        immedValue[immedIndex] = EncodeImmediate(args[argsIndex], encodingFormat.ImmediateLengths[immedIndex], true, (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
+                        immedIndex++;
+                        break;
                     case ASMElementTypeCharacter.UnsignedImmediate:
-                        immedValue[immedIndex] = EncodeImmediate(args[argsIndex], encodingFormat.ImmediateLengths[immedIndex], (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
+                        immedValue[immedIndex] = EncodeImmediate(args[argsIndex], encodingFormat.ImmediateLengths[immedIndex], false, (uint)encodingFormat.ImmediateIncludeMasks[immedIndex]);
                         immedIndex++;
                         break;
                     case ASMElementTypeCharacter.BranchImmediate:
@@ -485,6 +488,7 @@ namespace ASMEncoding.Helpers
 		private uint EncodeGPRegister(string register)
 		{
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.GPRegister, 0);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GPRegister, "Invalid register index: " + regNum.ToString());
             return (uint)regNum;
 
             //ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GPRegister, "Invalid GPR index: " + regNum.ToString());
@@ -494,6 +498,7 @@ namespace ASMEncoding.Helpers
         private uint EncodeGenericRegister(string register)
         {
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.GenericRegister, 0);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GenericRegister, "Invalid register index: " + regNum.ToString());
             return (uint)regNum;
 
             //ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GPRegister, "Invalid register index: " + regNum.ToString());
@@ -503,6 +508,7 @@ namespace ASMEncoding.Helpers
         private uint EncodeFloatRegister(string register)
         {
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.FloatRegister, 0);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.FloatRegister, "Invalid floating point register index: " + regNum.ToString());
             return (uint)regNum;
 
             //ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.FloatRegister, "Invalid floating point register index: " + regNum.ToString());
@@ -512,6 +518,7 @@ namespace ASMEncoding.Helpers
         private uint EncodeVFPURegister(string register, int vfpuRegisterMode)
         {
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.VFPURegister, vfpuRegisterMode);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.VFPURegister, "Invalid VFPU register index: " + regNum.ToString());
             return (uint)regNum;
 
             //ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.VFPURegister, "Invalid VFPU register index: " + regNum.ToString());
@@ -555,39 +562,44 @@ namespace ASMEncoding.Helpers
         private uint EncodeCop0Register(string register)
         {
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.Cop0Register, 0);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GenericRegister, "Invalid register index: " + regNum.ToString());
             return (uint)regNum;
         }
 
         private uint EncodeGTEControlRegister(string register)
         {
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.GTEControlRegister, 0);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GenericRegister, "Invalid register index: " + regNum.ToString());
             return (uint)regNum;
         }
 
         private uint EncodeGTEDataRegister(string register)
         {
             int regNum = RegHelper.TranslateRegister(register, ASMElementTypeCharacter.GTEDataRegister, 0);
+            ASMDebugHelper.assert(regNum <= ASMRegisterHelper.MaxValues.GenericRegister, "Invalid register index: " + regNum.ToString());
             return (uint)regNum;
         }
 
 		// Accepts 0x[hex] or [dec] format
         private uint EncodeImmediate(string strImmed, int length, uint mask)
         {
-            /*
-            if ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
-                return ASMValueHelper.UnsignedToBinary_WithLength(ASMValueHelper.HexToUnsigned_AnySign(strImmed, length), length);
-			else
-                return ASMValueHelper.UnsignedToBinaryAny_WithLength(Convert.ToInt32(strImmed), length);
-            */
+            //if ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
+            //    return ASMValueHelper.UnsignedToBinary_WithLength(ASMValueHelper.HexToUnsigned_AnySign(strImmed, length), length);
+			//else
+            //    return ASMValueHelper.UnsignedToBinaryAny_WithLength(Convert.ToInt32(strImmed), length);
 
-            /*
-            if ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
-                return ASMValueHelper.HexToUnsigned_AnySign(strImmed, length) & mask;
-            else
-                return ASMValueHelper.SignedToUnsigned(Convert.ToInt32(strImmed)) & mask;
-            */
+            //if ((strImmed.StartsWith("0x")) || (strImmed.StartsWith("-0x")))
+            //    return ASMValueHelper.HexToUnsigned_AnySign(strImmed, length) & mask;
+            //else
+            //    return ASMValueHelper.SignedToUnsigned(Convert.ToInt32(strImmed)) & mask;
 
             return ValueHelper.GetAnyUnsignedValue(strImmed) & mask;
+        }
+
+        private uint EncodeImmediate(string strImmed, int length, bool isSigned, uint mask)
+        {
+            return ValueHelper.GetAnyUnsignedValue(strImmed) & mask;
+            //return ValueHelper.GetImmediateValue(strImmed, length, isSigned) & mask;
         }
 
         private uint EncodeImmediate(int immed, int length, uint mask)
@@ -626,7 +638,7 @@ namespace ASMEncoding.Helpers
         private uint EncodeShiftedImmediate(string val, int length, int shiftAmount, uint mask)
         {
             //return EncodeImmediate(val, length + shiftAmount).Substring(0, length);
-            return EncodeImmediate(val, length + shiftAmount, mask) << shiftAmount;
+            return EncodeImmediate(val, length + shiftAmount, true, mask) << shiftAmount;
         }
 
         private uint EncodeVFPUPrefixImmediate(string val, int prefixType, int length)
