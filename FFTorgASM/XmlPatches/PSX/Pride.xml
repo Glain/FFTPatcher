@@ -1933,7 +1933,7 @@ There's an option to increase or decrease the Status CT	timers through the unit 
 						@Get_Status_Storage_Location:
 								lui r2, 0x8004							#
 								addu r2, r2, r5							#
-								lbu r2,0x110(r2)                        #r2 = Status Storage Location
+								lbu r2,0x1100(r2)                       #r2 = Status Storage Location
 								jr r31									#
 								addu r1, r2, r7							#r1 = Unit Data Pointer + Storage Offset
 		</Location>	
