@@ -127,11 +127,11 @@ namespace PatcherLib.Iso
         /// <param name="patchEccEdc">Whether or not ECC/EDC blocks should be updated</param>
         /// <param name="offset">Where in the ISO to start writing</param>
         /// <param name="input">Bytes to write</param>
-        public static void PatchFile( IsoType isoType, string isoFile, bool patchEccEdc, long offset, IList<byte> input, bool patchIso )
+        public static void PatchFile( IsoType isoType, string isoFile, bool patchEccEdc, long offset, IList<byte> input, bool patchIso, byte maskWrite)
         {
             using( FileStream stream = new FileStream( isoFile, FileMode.Open ) )
             {
-                PatchFile( isoType, stream, patchEccEdc, offset, input, patchIso );
+                PatchFile( isoType, stream, patchEccEdc, offset, input, patchIso, maskWrite);
             }
         }
 
@@ -143,11 +143,11 @@ namespace PatcherLib.Iso
         /// <param name="patchEccEdc">Whether or not ECC/EDC blocks should be updated</param>
         /// <param name="offset">Where in the ISO to start writing</param>
         /// <param name="input">Bytes to write</param>
-        public static void PatchFile( IsoType isoType, Stream iso, bool patchEccEdc, long offset, IList<byte> input, bool patchIso )
+        public static void PatchFile( IsoType isoType, Stream iso, bool patchEccEdc, long offset, IList<byte> input, bool patchIso, byte maskWrite )
         {
             using ( MemoryStream inputStream = new MemoryStream( input.ToArray() ) )
             {
-                PatchFile( isoType, iso, patchEccEdc, offset, inputStream, patchIso );
+                PatchFile( isoType, iso, patchEccEdc, offset, inputStream, patchIso, maskWrite );
             }
         }
 
@@ -159,7 +159,7 @@ namespace PatcherLib.Iso
         /// <param name="patchEccEdc">Whether or not ECC/EDC blocks should be updated</param>
         /// <param name="offset">Where in the ISO to start writing</param>
         /// <param name="input">Stream that contains the bytes to write</param>
-        public static void PatchFile( IsoType isoType, Stream iso, bool patchEccEdc, long offset, Stream input, bool patchIso )
+        public static void PatchFile( IsoType isoType, Stream iso, bool patchEccEdc, long offset, Stream input, bool patchIso, byte maskWrite )
         {
             int type = (int)isoType;
             int sectorSize = sectorSizes[type];
@@ -189,6 +189,14 @@ namespace PatcherLib.Iso
                 byte[] originalSector = sector.ToArray();
 
                 sizeRead = input.Read( sector, (int)sectorStart, (int)sectorLength );
+
+                if (maskWrite > 0)
+                {
+                    for (int index = 0; index < sectorSize; index++)
+                    {
+                        sector[index] = (byte)((sector[index] & maskWrite) | (originalSector[index] & ~maskWrite));
+                    }
+                }
 
                 if( isoType != IsoType.Mode1 && (sector[0x12] & 8) == 0 )
                 {
@@ -226,9 +234,10 @@ namespace PatcherLib.Iso
         /// <param name="patchEccEdc">Whether or not ECC/EDC blocks should be updated</param>
         /// <param name="sectorNumber">The sector number where the file begins</param>
         /// <param name="input">Bytes to write</param>
-        public static void PatchFileAtSector( IsoType isoType, string isoFile, bool patchEccEdc, int sectorNumber, IList<byte> input, bool patchIso )
+        public static void PatchFileAtSector( IsoType isoType, string isoFile, bool patchEccEdc, int sectorNumber, IList<byte> input, 
+            bool patchIso, byte maskWrite )
         {
-            PatchFileAtSector( isoType, isoFile, patchEccEdc, sectorNumber, 0, input, patchIso );
+            PatchFileAtSector( isoType, isoFile, patchEccEdc, sectorNumber, 0, input, patchIso, maskWrite );
         }
 
         /// <summary>
@@ -240,11 +249,12 @@ namespace PatcherLib.Iso
         /// <param name="sectorNumber">The sector number where the file begins</param>
         /// <param name="offset">Where in the file to start writing</param>
         /// <param name="input">Bytes to write</param>
-        public static void PatchFileAtSector( IsoType isoType, string isoFile, bool patchEccEdc, int sectorNumber, long offset, IList<byte> input, bool patchIso )
+        public static void PatchFileAtSector( IsoType isoType, string isoFile, bool patchEccEdc, int sectorNumber, long offset, 
+            IList<byte> input, bool patchIso, byte maskWrite)
         {
             using ( FileStream stream = new FileStream( isoFile, FileMode.Open ) )
             {
-                PatchFileAtSector( isoType, stream, patchEccEdc, sectorNumber, offset, input, patchIso );
+                PatchFileAtSector( isoType, stream, patchEccEdc, sectorNumber, offset, input, patchIso, maskWrite );
             }
         }
 
@@ -257,7 +267,8 @@ namespace PatcherLib.Iso
         /// <param name="sectorNumber">The sector number where the file begins</param>
         /// <param name="offset">Where in the file to start writing</param>
         /// <param name="input">Bytes to write</param>
-        public static void PatchFileAtSector( IsoType isoType, Stream iso, bool patchEccEdc, int sectorNumber, long offset, IList<byte> input, bool patchIso )
+        public static void PatchFileAtSector( IsoType isoType, Stream iso, bool patchEccEdc, int sectorNumber, long offset, 
+            IList<byte> input, bool patchIso, byte maskWrite)
         {
             int dataSize = dataSizes[(int)isoType];
             int dataStart = dataStarts[(int)isoType];
@@ -268,7 +279,7 @@ namespace PatcherLib.Iso
 
             long realOffset = (sectorNumber + sectorsToAdvance) * sectorSize + dataStart + newOffset;
 
-            PatchFile( isoType, iso, patchEccEdc, realOffset, input, patchIso );
+            PatchFile( isoType, iso, patchEccEdc, realOffset, input, patchIso, maskWrite );
         }
 
         public static byte[] ReadFile( IsoType isoType, Stream iso, int fileSector, int offset, int length )

@@ -166,6 +166,8 @@ namespace PatcherLib.Datatypes
         public string Label { get; set; }
         public bool IsStatic { get; set; }
 
+        public byte MaskWrite { get; set; }
+
 		#endregion Public Properties 
 
 		#region Constructors (4) 
@@ -303,6 +305,7 @@ namespace PatcherLib.Datatypes
             result.ErrorText = ErrorText;
             result.Label = Label;
             result.IsStatic = IsStatic;
+            result.MaskWrite = MaskWrite;
             return result;
         }
 
@@ -319,6 +322,7 @@ namespace PatcherLib.Datatypes
             result.ErrorText = ErrorText;
             result.Label = Label;
             result.IsStatic = IsStatic;
+            result.MaskWrite = MaskWrite;
             return result;
         }
     }

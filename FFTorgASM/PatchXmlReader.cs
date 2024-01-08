@@ -155,6 +155,7 @@ namespace FFTorgASM
                 XmlAttribute attrAlign = Utilities.GetCaseInsensitiveAttribute(location, "align");
                 XmlAttribute attrStatic = Utilities.GetCaseInsensitiveAttribute(location, "static");
                 XmlAttribute attrBinaryFile = Utilities.GetCaseInsensitiveAttribute(location, "binaryFile");
+                XmlAttribute attrWriteMask = Utilities.GetCaseInsensitiveAttribute(location, "writeMask");
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -346,6 +347,13 @@ namespace FFTorgASM
                     bool.TryParse(attrStatic.InnerText, out isStatic);
                 }
 
+                byte maskWrite = 0;
+                if (attrWriteMask != null)
+                {
+                    byte.TryParse(attrWriteMask.InnerText, System.Globalization.NumberStyles.HexNumber, 
+                        System.Globalization.CultureInfo.CurrentCulture, out maskWrite);
+                }
+
                 int ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
 
                 int offsetIndex = 0;
@@ -448,6 +456,7 @@ namespace FFTorgASM
                     patchedByteArray.ErrorText = errorText;
                     patchedByteArray.Label = label;
                     patchedByteArray.IsStatic = isStatic;
+                    patchedByteArray.MaskWrite = maskWrite;
 
                     if (replaceLabels)
                         replaceLabelsContentMap.Add(patchedByteArray, content);

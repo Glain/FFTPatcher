@@ -126,7 +126,7 @@ namespace PatcherLib.Iso
             return ReadFile(iso, knownPositions.Sector, knownPositions.StartLocation, knownPositions.Length);
         }
 
-        public static PatchPsxSaveStateResult PatchPsxSaveState(BinaryReader reader, IEnumerable<PatcherLib.Datatypes.PatchedByteArray> patches)
+        public static PatchPsxSaveStateResult PatchPsxSaveState(BinaryReader reader, IEnumerable<PatchedByteArray> patches)
         {
             PatchPsxSaveStateResult result = new PatchPsxSaveStateResult();
 
@@ -181,7 +181,26 @@ namespace PatcherLib.Iso
 
                     if (isValid)
                     {
-                        stream.WriteArrayToPosition(patch.GetBytes(), patch.Offset + startOffset);
+                        if (patch.MaskWrite > 0)
+                        {
+                            byte[] patchBytes = patch.GetBytes();
+
+                            byte[] originalBytes = new byte[patchBytes.Length];
+                            long patchStartOffset = patch.Offset + startOffset;
+                            stream.Seek(patchStartOffset, SeekOrigin.Begin);
+                            stream.Read(originalBytes, 0, patchBytes.Length);
+
+                            for (int index = 0; index < patchBytes.Length; index++)
+                            {
+                                patchBytes[index] = (byte)((patchBytes[index] & patch.MaskWrite) | (originalBytes[index] & ~patch.MaskWrite));
+                            }
+
+                            stream.WriteArrayToPosition(patchBytes, patchStartOffset);
+                        }
+                        else
+                        {
+                            stream.WriteArrayToPosition(patch.GetBytes(), patch.Offset + startOffset);
+                        }
                     }
                 }
             }
@@ -360,7 +379,7 @@ namespace PatcherLib.Iso
             else
             {
                 IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector,
-                    patch.Offset, patch.GetBytes(), true);
+                    patch.Offset, patch.GetBytes(), true, patch.MaskWrite);
             }
         }
 

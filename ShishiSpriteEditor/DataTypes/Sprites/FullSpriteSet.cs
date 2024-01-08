@@ -176,7 +176,8 @@ namespace FFTPatcher.SpriteEditor
                 if ( patch != null )
                 {
                     worker.ReportProgress( tasksComplete++ * 100 / totalTasks, "Patching " + patch.SectorEnum.ToString() );
-                    IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, stream, true, patch.Sector, patch.Offset, patch.GetBytes(), true);
+                    IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, stream, true, 
+                        patch.Sector, patch.Offset, patch.GetBytes(), true, patch.MaskWrite);
                 }
                 else
                 {

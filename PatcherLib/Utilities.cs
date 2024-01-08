@@ -864,11 +864,12 @@ namespace PatcherLib.Utilities
                         file = sector.ToString("X");
                     }
 
-                    sb.AppendFormat("        <Location {0}=\"{1}\"{2}{3}>{4}", 
+                    sb.AppendFormat("        <Location {0}=\"{1}\"{2}{3}{4}>{5}", 
                         (isFile ? "file" : "sector"),
                         file,
                         (patchedByteArray.IsSequentialOffset ? "" : String.Format(" offset=\"{0}\"", patchedByteArray.Offset.ToString("X"))),
-                        (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""), 
+                        (patchedByteArray.MarkedAsData ? " mode=\"DATA\"" : ""),
+                        ((patchedByteArray.MaskWrite > 0) ? " writeMask=\"" + patchedByteArray.MaskWrite.ToString("X2") + "\"" : ""),
                         Environment.NewLine);
 
                     foreach (uint fourByteSet in fourByteSets)
