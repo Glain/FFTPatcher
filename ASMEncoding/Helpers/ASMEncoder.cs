@@ -176,10 +176,10 @@ namespace ASMEncoding.Helpers
 			
 			List<byte> byteList = new List<byte>();
 
-            //if (oldErrorText != _errorTextBuilder.ToString())
-            //{
-            //    return new ASMEncoderResult(encodedASMBuilder.ToString(), byteList.ToArray(), asm, _errorTextBuilder.ToString());
-            //}
+            if (oldErrorText != _errorTextBuilder.ToString())
+            {
+                return new ASMEncoderResult(encodedASMBuilder.ToString(), byteList.ToArray(), asm, _errorTextBuilder.ToString());
+            }
 			
 			foreach (string line in lines)
 			{				
