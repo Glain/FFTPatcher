@@ -274,8 +274,10 @@ namespace FFTPatcher.Editors
 
                 if (abilityAttr.OldInflictStatus != abilityAttr.InflictStatus)
                 {
-                    inflictStatuses.InflictStatuses[abilityAttr.OldInflictStatus].ReferencingAbilityIDs.Remove(abilityIndex);
-                    inflictStatuses.InflictStatuses[abilityAttr.InflictStatus].ReferencingAbilityIDs.Add(abilityIndex);
+                    if (abilityAttr.OldInflictStatus < inflictStatuses.InflictStatuses.Length)
+                        inflictStatuses.InflictStatuses[abilityAttr.OldInflictStatus].ReferencingAbilityIDs.Remove(abilityIndex);
+                    if (abilityAttr.InflictStatus < inflictStatuses.InflictStatuses.Length)
+                        inflictStatuses.InflictStatuses[abilityAttr.InflictStatus].ReferencingAbilityIDs.Add(abilityIndex);
                 }
 
                 abilityAttr.OldInflictStatus = abilityAttr.InflictStatus;
