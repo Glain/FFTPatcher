@@ -1296,11 +1296,16 @@
             <Preset name="Custom" modify="true" />
         </Variable>
     </Patch>
-    <Patch name="Fix Reraise Graphic Width">
+    <Patch name="Fix Status Text Graphic Width">
         <Description>
-            The pixel width of the "Reraise" graphic is set to the wrong value normally (26, when it should be 28).  This patch fixes that.
+            This patch fixes issues with status text having the wrong lengths.
+            The pixel width of the "Reraise" graphic is set to the wrong value normally (26, when it should be 28).
+            The pixel width of the "Reflect" graphic is set to the wrong value normally (29, when it should be 28) (Fix provided by TheKillerNacho).
         </Description>
         <Location file="BATTLE_BIN" offset="14CF92" offsetMode="RAM">
+            1C
+        </Location>
+        <Location file="BATTLE_BIN" offset="14CFD2" offsetMode="RAM">
             1C
         </Location>
     </Patch>
@@ -7635,6 +7640,144 @@
         </Location>
         <Location file="EVENT_BUNIT_OUT" offset="1C6AFC" mode="ASM" offsetMode="RAM">
                 sh      t6, 0x4e(s2)
+        </Location>
+        <Location file="EVENT_ATTACK_OUT" offset="1C5C18" mode="ASM" offsetMode="RAM">
+                lui     t8, 0x801d
+                lui     t9, 0x801e
+
+                lbu     v1, -0x3201(t9)
+                lbu     a0, -0x31e0(t9)
+
+                lbu     a1, -0x31de(t9)
+                lhu     v0, -0x31fc(t9)
+
+                sh      s1, -0x5f38(t8)
+                sh      s1, -0x5f2e(t8)
+                sh      zero, -0x5f7e(t8)
+                sh      v1, -0x5f36(t8)
+
+                lbu     v1, -0x304a(t9)
+
+                srl     v0, v0, 12
+
+                sh      a0, -0x5f34(t8)
+                sh      a1, -0x5f32(t8)
+                sh      v0, -0x5f30(t8)
+
+                andi    v0, v1, 0x0030
+
+                beq     v0, zero, past_1
+                move    s3, s0
+
+                li      v0, 1
+                sh      v0, -0x5f7e(t8)
+
+            past_1:
+                andi    v0, v1, 0x0038
+                bne     v0, zero, past_2
+                addiu   v1, s1, 0x0200
+             
+                li      v0, 2
+                sh      v0, -0x5f7e(t8)
+                
+            past_2:
+                lbu     v0, -0x31e2(t9)
+                lbu     a0, -0x31e3(t9)
+                lhu     a1, -0x31da(t9)
+
+                sh      zero, -0x5f7c(t8)
+                sh      zero, -0x5f7a(t8)
+                sh      v1, -0x5f76(t8)
+                sh      v0, -0x5f80(t8)
+                sh      a0, -0x5f78(t8)
+                sh      a1, -0x5f70(t8)
+                
+                
+                bne     a1, zero, past_3
+                addiu   v0, a1, 1
+                sh      v0, -0x5f70(t8)
+             
+            past_3:
+                lhu     v0, -0x5f70(t8)
+                lhu     v1, -0x31d6(t9)
+                sh      v0, -0x5f74(t8)
+                sh      v1, -0x5f6a(t8)
+                bne     v1, zero, past_4
+                addiu   v0, v1, 1
+             
+                sh      v0, -0x5f6a(t8)
+             
+            past_4:
+                lhu     a0, -0x5f6a(t8)
+
+                lbu     a1, -0x31ca(t9)
+                lbu     a2, -0x31cc(t9)
+                lbu     a3, -0x31c9(t9)
+                lbu     t0, -0x31c6(t9)
+                lbu     t1, -0x31c5(t9)
+                lbu     t2, -0x31c8(t9)
+                lbu     t3, -0x31c7(t9)
+                lbu     t4, -0x31ce(t9)
+                lbu     t5, -0x31c1(t9)                #   Load P C-EV
+                lbu     t6, -0x31c3(t9)
+                lbu     t7, -0x31c3(t9)
+
+                lbu     v1, -0x31c2(t9)
+                li      v0, 100
+                sh      v0, -0x5f64(t8)
+                sh      v0, -0x5f68(t8)
+                sltu    v1, v1, t7
+                sh      a0, -0x5f6e(t8)
+                sh      a1, 0x0000(s2)
+                sh      a2, -0x5f16(t8)
+                sh      a3, -0x5f14(t8)
+                sh      t0, -0x5f0e(t8)
+                sh      t1, -0x5f0c(t8)
+                sh      t2, -0x5f12(t8)
+                sh      t3, -0x5f10(t8)
+                sh      t4, -0x5f06(t8)
+
+
+                lbu     t2, -0x31e0(t9)     # Brave
+                lbu     t3, -0x31de(t9)     # Faith
+
+                li      a0, %PhysicalBase
+                li      a1, %PhysicalMultiplier
+
+                .if %PhysicalInvert
+                    subu    t0, t2, a0
+                .else
+                    subu    t0, a0, t2
+                .endif
+                
+                bltz    t0, past_p_cev
+                multu   t0, a1
+                mflo    t0
+                srl     t0, t0, %PhysicalShift
+                addu    t5, t5, t0
+
+            past_p_cev:
+                li      t0, %MagicalBase
+                
+                .if %MagicalInvert
+                    subu    t0, t3, t0
+                .else
+                    subu    t0, t0, t3
+                .endif
+                
+                bltz    t0, past_m_cev
+                li      a0, 0
+                li      t1, %MagicalMultiplier
+                multu   t0, t1
+                mflo    t0
+                srl     t4, t0, %MagicalShift
+        
+            past_m_cev:
+                b       0x801c5df8
+                nop
+        </Location>
+        <Location file="EVENT_ATTACK_OUT" offset="1C5E4C" mode="ASM" offsetMode="RAM"> 
+                sh      t4, -0x5efa(r1)
         </Location>
         <Variable name="Physical Base" bytes="1" default="46" symbol="true" />
         <Variable name="Physical Multiplier" bytes="1" default="20" symbol="true" />
