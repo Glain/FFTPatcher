@@ -122,7 +122,7 @@ namespace FFTPatcher.Editors
             // 
             this.inflictStatusesEditor.Location = new System.Drawing.Point(101, 3);
             this.inflictStatusesEditor.Name = "inflictStatusesEditor";
-            this.inflictStatusesEditor.Size = new System.Drawing.Size(497, 182);
+            this.inflictStatusesEditor.Size = new System.Drawing.Size(620, 150);
             this.inflictStatusesEditor.Status = "Status";
             this.inflictStatusesEditor.Statuses = null;
             this.inflictStatusesEditor.TabIndex = 1;
@@ -240,7 +240,7 @@ namespace FFTPatcher.Editors
             this.Controls.Add(this.flagsCheckedListBox);
             this.Controls.Add(this.inflictStatusesEditor);
             this.Name = "InflictStatusEditor";
-            this.Size = new System.Drawing.Size(604, 263);
+            this.Size = new System.Drawing.Size(724, 263);
             ((System.ComponentModel.ISupportInitialize)(this.spinner_Repoint)).EndInit();
             this.pnl_ItemUsage.ResumeLayout(false);
             this.pnl_ItemUsage.PerformLayout();
