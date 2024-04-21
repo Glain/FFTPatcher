@@ -3961,7 +3961,7 @@
         <Location file="EVENT_REQUIRE_OUT" offset="1C6834" mode="ASM" offsetMode="RAM">
             jal     @handle_post_battle_party_unit_bench
         </Location>
-        <Location file="EVENT_REQUIRE_OUT" offset="1C6E24" mode="ASM" offsetMode="RAM">
+        <Location file="EVENT_REQUIRE_OUT" offset="1C6E14" mode="ASM" offsetMode="RAM">
             li      a2, 0
         </Location>
         <Location file="EVENT_REQUIRE_OUT" offset="1C6E40" offsetMode="RAM" mode="ASM">
