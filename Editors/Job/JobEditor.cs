@@ -320,7 +320,7 @@ namespace FFTPatcher.Editors
             {
                 ENTDClicked(this, new ReferenceEventArgs(GetFirstReferencingENTDIndex()));
             }
-        } 
+        }
 
         public event EventHandler ViewStatsClicked;
         private void btn_ViewStats_Click(object sender, EventArgs e)
