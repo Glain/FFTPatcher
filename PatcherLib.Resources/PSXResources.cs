@@ -211,5 +211,6 @@ namespace PatcherLib
         private static readonly XmlDocument spriteFilesDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.SpriteFilesXML].ToUTF8String().ToXmlDocument();
         private static readonly XmlDocument braveStoryDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.BraveStoryXML].ToUTF8String().ToXmlDocument();
         private static readonly XmlDocument propositionsDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.PropositionsXML].ToUTF8String().ToXmlDocument();
+        private static readonly XmlDocument ENTDDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSX.ENTDXML].ToUTF8String().ToXmlDocument();
     }
 }

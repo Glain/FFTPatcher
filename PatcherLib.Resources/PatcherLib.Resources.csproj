@@ -89,7 +89,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSPResources.cs" />
     <Compile Include="PSXResources.cs" />
+    <Compile Include="PSPResources.Labels.cs" />
+    <Compile Include="PSXResources.Labels.cs" />
     <Compile Include="Resources.cs" />
+    <Compile Include="Resources.Labels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\AbilityFormulas.xml" />
@@ -98,6 +101,7 @@
     <Content Include="Resources\PSP\Abilities\Effects.xml" />
     <Content Include="Resources\PSP\Abilities\Strings.xml" />
     <Content Include="Resources\PSP\Chronicle.xml" />
+    <Content Include="Resources\PSP\ENTD.xml" />
     <Content Include="Resources\PSP\EventNames.xml" />
     <Content Include="Resources\PSP\Items\ItemAttributes.xml" />
     <Content Include="Resources\PSP\Items\Items.xml" />
@@ -116,6 +120,7 @@
     <Content Include="Resources\PSX-US\Abilities\Effects.xml" />
     <Content Include="Resources\PSX-US\Abilities\Strings.xml" />
     <Content Include="Resources\PSX-US\BraveStory.xml" />
+    <Content Include="Resources\PSX-US\ENTD.xml" />
     <Content Include="Resources\PSX-US\EventNames.xml" />
     <Content Include="Resources\PSX-US\FileList.txt" />
     <Content Include="Resources\PSX-US\Items\ItemAttributes.xml" />

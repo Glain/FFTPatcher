@@ -58,7 +58,6 @@ namespace FFTPatcher.Editors
             System.Windows.Forms.Label jobsUnlockedLabel;
             System.Windows.Forms.Label unitIdLabel;
             System.Windows.Forms.Label jobLabel;
-            System.Windows.Forms.Label unitLabel;
             System.Windows.Forms.Label braveryLabel;
             System.Windows.Forms.Label faithLabel;
             System.Windows.Forms.Label birthdayLabel;
@@ -100,7 +99,10 @@ namespace FFTPatcher.Editors
             this.secondaryActionComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.supportComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
             this.reactionComboBox = new FFTPatcher.Controls.ComboBoxWithDefault();
+            this.unitLabel = new System.Windows.Forms.Label();
             this.unknownGroupBox = new System.Windows.Forms.GroupBox();
+            this.lblUnknown12 = new System.Windows.Forms.Label();
+            this.lblUnknown10 = new System.Windows.Forms.Label();
             this.unknown12Spinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.unknown10Spinner = new FFTPatcher.Controls.NumericUpDownWithDefault();
             this.upperLevelCheckBox = new System.Windows.Forms.CheckBox();
@@ -135,7 +137,6 @@ namespace FFTPatcher.Editors
             jobsUnlockedLabel = new System.Windows.Forms.Label();
             unitIdLabel = new System.Windows.Forms.Label();
             jobLabel = new System.Windows.Forms.Label();
-            unitLabel = new System.Windows.Forms.Label();
             braveryLabel = new System.Windows.Forms.Label();
             faithLabel = new System.Windows.Forms.Label();
             birthdayLabel = new System.Windows.Forms.Label();
@@ -247,7 +248,7 @@ namespace FFTPatcher.Editors
             teamColorLabel.AutoSize = true;
             teamColorLabel.Location = new System.Drawing.Point(292, 136);
             teamColorLabel.Name = "teamColorLabel";
-            teamColorLabel.Size = new System.Drawing.Size(61, 13);
+            teamColorLabel.Size = new System.Drawing.Size(34, 13);
             teamColorLabel.TabIndex = 40;
             teamColorLabel.Text = "Team";
             // 
@@ -274,7 +275,7 @@ namespace FFTPatcher.Editors
             initialDirectionLabel.AutoSize = true;
             initialDirectionLabel.Location = new System.Drawing.Point(2, 202);
             initialDirectionLabel.Name = "initialDirectionLabel";
-            initialDirectionLabel.Size = new System.Drawing.Size(74, 13);
+            initialDirectionLabel.Size = new System.Drawing.Size(76, 13);
             initialDirectionLabel.TabIndex = 36;
             initialDirectionLabel.Text = "Initial Direction";
             // 
@@ -283,7 +284,7 @@ namespace FFTPatcher.Editors
             jobsUnlockedLabel.AutoSize = true;
             jobsUnlockedLabel.Location = new System.Drawing.Point(2, 180);
             jobsUnlockedLabel.Name = "jobsUnlockedLabel";
-            jobsUnlockedLabel.Size = new System.Drawing.Size(76, 13);
+            jobsUnlockedLabel.Size = new System.Drawing.Size(78, 13);
             jobsUnlockedLabel.TabIndex = 34;
             jobsUnlockedLabel.Text = "Jobs Unlocked";
             // 
@@ -301,18 +302,9 @@ namespace FFTPatcher.Editors
             jobLabel.AutoSize = true;
             jobLabel.Location = new System.Drawing.Point(2, 72);
             jobLabel.Name = "jobLabel";
-            jobLabel.Size = new System.Drawing.Size(24, 13);
+            jobLabel.Size = new System.Drawing.Size(61, 13);
             jobLabel.TabIndex = 31;
             jobLabel.Text = "Current Job";
-            // 
-            // unitLabel
-            // 
-            unitLabel.AutoSize = true;
-            unitLabel.Location = new System.Drawing.Point(2, 6);
-            unitLabel.Name = "unitLabel";
-            unitLabel.Size = new System.Drawing.Size(53, 13);
-            unitLabel.TabIndex = 17;
-            unitLabel.Text = "Unit";
             // 
             // braveryLabel
             // 
@@ -728,8 +720,19 @@ namespace FFTPatcher.Editors
             this.reactionComboBox.TabIndex = 2;
             this.reactionComboBox.Tag = "Reaction";
             // 
+            // unitLabel
+            // 
+            this.unitLabel.AutoSize = true;
+            this.unitLabel.Location = new System.Drawing.Point(2, 6);
+            this.unitLabel.Name = "unitLabel";
+            this.unitLabel.Size = new System.Drawing.Size(26, 13);
+            this.unitLabel.TabIndex = 17;
+            this.unitLabel.Text = "Unit";
+            // 
             // unknownGroupBox
             // 
+            this.unknownGroupBox.Controls.Add(this.lblUnknown12);
+            this.unknownGroupBox.Controls.Add(this.lblUnknown10);
             this.unknownGroupBox.Controls.Add(this.unknown12Spinner);
             this.unknownGroupBox.Controls.Add(this.unknown10Spinner);
             this.unknownGroupBox.Location = new System.Drawing.Point(428, 226);
@@ -737,12 +740,30 @@ namespace FFTPatcher.Editors
             this.unknownGroupBox.Size = new System.Drawing.Size(150, 103);
             this.unknownGroupBox.TabIndex = 45;
             this.unknownGroupBox.TabStop = false;
-            this.unknownGroupBox.Text = "Unknown";
+            this.unknownGroupBox.Text = "Unused";
+            // 
+            // lblUnknown12
+            // 
+            this.lblUnknown12.AutoSize = true;
+            this.lblUnknown12.Location = new System.Drawing.Point(6, 52);
+            this.lblUnknown12.Name = "lblUnknown12";
+            this.lblUnknown12.Size = new System.Drawing.Size(85, 13);
+            this.lblUnknown12.TabIndex = 15;
+            this.lblUnknown12.Text = "Unused (0x16b):";
+            // 
+            // lblUnknown10
+            // 
+            this.lblUnknown10.AutoSize = true;
+            this.lblUnknown10.Location = new System.Drawing.Point(6, 27);
+            this.lblUnknown10.Name = "lblUnknown10";
+            this.lblUnknown10.Size = new System.Drawing.Size(85, 13);
+            this.lblUnknown10.TabIndex = 14;
+            this.lblUnknown10.Text = "Unused (0x169):";
             // 
             // unknown12Spinner
             // 
             this.unknown12Spinner.Hexadecimal = true;
-            this.unknown12Spinner.Location = new System.Drawing.Point(70, 25);
+            this.unknown12Spinner.Location = new System.Drawing.Point(100, 50);
             this.unknown12Spinner.Maximum = new decimal(new int[] {
             255,
             0,
@@ -757,7 +778,7 @@ namespace FFTPatcher.Editors
             // unknown10Spinner
             // 
             this.unknown10Spinner.Hexadecimal = true;
-            this.unknown10Spinner.Location = new System.Drawing.Point(14, 25);
+            this.unknown10Spinner.Location = new System.Drawing.Point(100, 25);
             this.unknown10Spinner.Maximum = new decimal(new int[] {
             255,
             0,
@@ -774,7 +795,7 @@ namespace FFTPatcher.Editors
             this.upperLevelCheckBox.AutoSize = true;
             this.upperLevelCheckBox.Location = new System.Drawing.Point(209, 201);
             this.upperLevelCheckBox.Name = "upperLevelCheckBox";
-            this.upperLevelCheckBox.Size = new System.Drawing.Size(80, 17);
+            this.upperLevelCheckBox.Size = new System.Drawing.Size(84, 17);
             this.upperLevelCheckBox.TabIndex = 44;
             this.upperLevelCheckBox.Text = "Upper Level";
             this.upperLevelCheckBox.UseVisualStyleBackColor = true;
@@ -1032,7 +1053,7 @@ namespace FFTPatcher.Editors
             this.Controls.Add(unitIdLabel);
             this.Controls.Add(this.flags2CheckedListBox);
             this.Controls.Add(jobLabel);
-            this.Controls.Add(unitLabel);
+            this.Controls.Add(this.unitLabel);
             this.Controls.Add(this.spriteSetComboBox);
             this.Controls.Add(braveryLabel);
             this.Controls.Add(this.jobComboBox);
@@ -1069,6 +1090,7 @@ namespace FFTPatcher.Editors
             skillsGroupBox.ResumeLayout(false);
             skillsGroupBox.PerformLayout();
             this.unknownGroupBox.ResumeLayout(false);
+            this.unknownGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.unknown12Spinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.unknown10Spinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.unitIDSpinner)).EndInit();
@@ -1127,5 +1149,8 @@ namespace FFTPatcher.Editors
         private Controls.CheckedListBoxNoHighlightWithDefault clbAIFlags2;
         private System.Windows.Forms.Label experienceLabel;
         private Controls.ComboBoxWithDefault experienceComboBox;
+        private System.Windows.Forms.Label unitLabel;
+        private System.Windows.Forms.Label lblUnknown12;
+        private System.Windows.Forms.Label lblUnknown10;
     }
 }

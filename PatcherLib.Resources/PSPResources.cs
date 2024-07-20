@@ -92,5 +92,6 @@ namespace PatcherLib
         private static readonly XmlDocument spriteFilesDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.SpriteFilesXML].ToUTF8String().ToXmlDocument();
         private static readonly XmlDocument chronicleDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.ChroniclesXML].ToUTF8String().ToXmlDocument();
         private static readonly XmlDocument propositionsDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.PropositionsXML].ToUTF8String().ToXmlDocument();
+        private static readonly XmlDocument ENTDDoc = ResourcesClass.ZipFileContents[ResourcesClass.Paths.PSP.ENTDXML].ToUTF8String().ToXmlDocument();
     }
 }

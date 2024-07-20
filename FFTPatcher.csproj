@@ -441,6 +441,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\LabelUtility.cs" />
     <Compile Include="ViewStatForm.cs">
       <SubType>Form</SubType>
     </Compile>

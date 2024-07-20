@@ -29,6 +29,8 @@ namespace PatcherLib
 {
     using PatcherLib.Datatypes;
     using PatcherLib.Utilities;
+    using System.Diagnostics;
+    using System.Runtime.Remoting.Messaging;
     using System.Xml;
     public static class ResourcesClass
     {
@@ -55,6 +57,11 @@ namespace PatcherLib
             SpecialNames,
             SpriteSets,
             AbilityProperties
+        }
+
+        internal enum LabelType
+        {
+            ENTDUnused
         }
 
         internal struct ResourceListInfo
@@ -182,6 +189,50 @@ namespace PatcherLib
             }
             
             return result;
+        }
+
+        internal static Dictionary<string, string> GetLabelsFromXmlNodes(ResourceListInfo info)
+        {
+            return GetLabelsFromXmlNodes(info.Doc, info.XPath);
+        }
+
+        internal static Dictionary<string, string> GetLabelsFromXmlNodes(XmlDocument xmlDocument, string xpath)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            xpath = GetModifiedXpath(xpath);
+            XmlNode parentNode = xmlDocument.SelectSingleNode(string.Format(xpath));
+
+            XmlNodeList nodes = parentNode.ChildNodes;
+            if (nodes != null)
+            {
+                foreach (XmlNode node in nodes)
+                {
+                    result.Add(node.Name, node.InnerText);
+                }
+            }
+
+            return result;
+        }
+
+        private static string GetModifiedXpath(string xpath)
+        {
+            string newXPath = "";
+            bool ignore = false;
+
+            for (int i = 0; i < xpath.Length; i++)
+            {
+                if (xpath[i] == '[')
+                    ignore = true;
+
+                if (!ignore)
+                    newXPath += xpath[i];
+
+                if (xpath[i] == ']')
+                    ignore = false;
+            }
+
+            return newXPath;
         }
 
         private static XmlDocument abilityFormulasDoc;
@@ -549,6 +600,7 @@ namespace PatcherLib
                 public const string ItemsStringsXML = "PSP/Items/Strings.xml";
                 public const string ShopNamesXML = "PSP/ShopNames.xml";
                 public const string SpriteFilesXML = "PSP/SpriteFiles.xml";
+                public const string ENTDXML = "PSP/ENTD.xml";
             }
 
             public static class PSX
@@ -602,6 +654,7 @@ namespace PatcherLib
                 public const string ShopNamesXML = "PSX-US/ShopNames.xml";
                 public const string MapNamesXML = "PSX-US/MapNames.xml";
                 public const string SpriteFilesXML = "PSX-US/SpriteFiles.xml";
+                public const string ENTDXML = "PSX-US/ENTD.xml";
             }
         }
     }

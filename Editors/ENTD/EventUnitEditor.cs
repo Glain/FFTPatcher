@@ -24,6 +24,7 @@ using FFTPatcher.Controls;
 using FFTPatcher.Datatypes;
 using PatcherLib.Datatypes;
 using PatcherLib;
+using PatcherLib.Resources;
 
 namespace FFTPatcher.Editors
 {
@@ -380,6 +381,12 @@ namespace FFTPatcher.Editors
             preRequisiteJobComboBox.DataSource = GetPreReqJobDataSource();
             preRequisiteJobComboBox.ValueMember = "Key";
             preRequisiteJobComboBox.DisplayMember = "Value";
+
+            IDictionary<string, string> unusedLabels = (ourContext == Context.US_PSP) ? PSPResources.Labels.ENTDUnused : PSXResources.Labels.ENTDUnused;
+
+            LabelUtility.SetControlLabelFromMap(unusedLabels, ResourcesLabels.ENTDUnused.SectionLabel, unknownGroupBox);
+            LabelUtility.SetControlLabelFromMap(unusedLabels, ResourcesLabels.ENTDUnused.FirstLabel, lblUnknown10);
+            LabelUtility.SetControlLabelFromMap(unusedLabels, ResourcesLabels.ENTDUnused.SecondLabel, lblUnknown12);
         }
 
         private List<KeyValuePair<int, string>> GetPreReqJobDataSource()
