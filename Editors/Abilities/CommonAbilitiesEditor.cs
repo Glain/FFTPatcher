@@ -160,6 +160,7 @@ namespace FFTPatcher.Editors
                 aiCheckedListBox.Items.Clear();
                 aiCheckedListBox.Items.AddRange( ourContext == Context.US_PSP ? PSPResources.Lists.AbilityAI.ToArray() : PSXResources.Lists.AbilityAI.ToArray() );
                 abilityTypeComboBox.DataSource = ourContext == Context.US_PSP ? PSPResources.Lists.AbilityTypes : PSXResources.Lists.AbilityTypes;
+                propertiesCheckedListBox.DataSource = ourContext == Context.US_PSP ? PSPResources.Lists.AbilityProperties : PSXResources.Lists.AbilityProperties;
             }
 
             jpCostSpinner.SetValueAndDefault( ability.JPCost, ability.Default.JPCost, toolTip );

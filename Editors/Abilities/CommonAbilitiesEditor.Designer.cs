@@ -146,19 +146,6 @@ namespace FFTPatcher.Editors
         	// propertiesCheckedListBox
         	// 
         	this.propertiesCheckedListBox.FormattingEnabled = true;
-        	this.propertiesCheckedListBox.Items.AddRange(new object[] {
-        	        	        	"Learn with JP (Player)",
-        	        	        	"Display Ability Name",
-        	        	        	"Learn on Hit",
-        	        	        	"",
-        	        	        	"Used by AI",
-        	        	        	"Only Hits Allies/Self",
-        	        	        	"Only Hits Enemies",
-        	        	        	"",
-        	        	        	"Require Monster Skill",
-        	        	        	"Use Weapon Range",
-        	        	        	"",
-        	        	        	"Evade with Motion"});
         	this.propertiesCheckedListBox.Location = new System.Drawing.Point(6, 81);
         	this.propertiesCheckedListBox.Name = "propertiesCheckedListBox";
         	this.propertiesCheckedListBox.Size = new System.Drawing.Size(142, 184);

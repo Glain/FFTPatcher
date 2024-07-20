@@ -30,126 +30,196 @@ namespace PatcherLib
 
 
             private static IDictionary<ListType, ResourceListInfo> typeInfo = new Dictionary<ListType, ResourceListInfo> {
-                { ListType.Propositions,
+                { 
+                    ListType.Propositions,
                     new ResourceListInfo {
                         Doc = PSPResources.propositionsDoc,
                         XPath = "/Errands/entry[@value='{0}']/@name",
                         Length = 96,
-                        StartIndex = 0 } },
-                { ListType.Treasures,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.Treasures,
                     new ResourceListInfo {
                         Doc = PSPResources.chronicleDoc,
                         XPath = "/Chron/Artefacts/Entry[@value='{0}']",
                         Length = 45,
-                        StartIndex = 0 } },
-                { ListType.UnexploredLands,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.UnexploredLands,
                     new ResourceListInfo {
                         Doc = PSPResources.chronicleDoc,
                         XPath = "/Chron/Wonders/Entry[@value='{0}']",
                         Length = 16,
-                        StartIndex = 0 } },
-                { ListType.AbilityAI, 
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.AbilityAI, 
                     new ResourceListInfo { 
                         Doc = PSPResources.abilitiesStringsDoc, 
                         XPath = "/AbilityStrings/AI/string[@value='{0}']/@name",
                         Length = 24, 
-                        StartIndex = 0 } },
-                { ListType.AbilityAttributes, 
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.AbilityAttributes, 
                     new ResourceListInfo { 
                         Doc = PSPResources.abilitiesStringsDoc, 
                         XPath = "/AbilityStrings/Attributes/string[@value='{0}']/@name",
                         Length = 32,
-                        StartIndex = 0 } },
-                { ListType.AbilityEffects, 
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.AbilityEffects, 
                     new ResourceListInfo {
                         Doc = PSPResources.abilityEffectsDoc,
                         XPath = "/Effects/Effect[@value='{0:X3}']/@name",
                         Length = 512,
-                        StartIndex = 0 } },
-                { ListType.UnitNames, 
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.UnitNames, 
                     new ResourceListInfo {
                         Doc = PSPResources.unitNamesDoc,
                         XPath = "/Names/n[@id='{0}']",
                         Length = 768,
-                        StartIndex = 0 } },
-                { ListType.MonsterNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.MonsterNames,
                     new ResourceListInfo {
                         Doc = PSPResources.jobsDoc,
                         XPath = "/Jobs/Job[@offset='{0:X2}']/@name",
                         Length = 48,
-                        StartIndex = 0x5E } },
-                { ListType.SkillSetNames,
+                        StartIndex = 0x5E 
+                    } 
+                },
+                { 
+                    ListType.SkillSetNames,
                     new ResourceListInfo {
                         Doc = PSPResources.skillSetsDoc,
                         XPath = "/SkillSets/SkillSet[@byte='{0:X2}']/@name",
                         Length = 0xE3,
-                        StartIndex = 0 } },
-                { ListType.JobNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.JobNames,
                     new ResourceListInfo {
                         Doc = PSPResources.jobsDoc,
                         XPath = "/Jobs/Job[@offset='{0:X2}']/@name",
                         Length = 0xAA,
-                        StartIndex = 0 } },
-                { ListType.EventNames, 
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.EventNames, 
                     new ResourceListInfo {
                         Doc = PSPResources.eventNamesDoc,
                         XPath = "/Events/Event[@value='{0:X3}']/@name",
                         Length = 0x200 + 77,
-                        StartIndex = 0 } },
-                { ListType.ItemNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.ItemNames,
                     new ResourceListInfo {
                         Doc = PSPResources.itemsDoc,
                         XPath = "/Items/Item[@offset='{0}']/@name",
                         Length = 316,
-                        StartIndex = 0 } },
-                { ListType.AbilityNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.AbilityNames,
                     new ResourceListInfo {
                         Doc = abilitiesDoc,
                         XPath = "/Abilities/Ability[@value='{0}']/@name",
                         Length = 512,
-                        StartIndex = 0 } },
-                { ListType.AbilityTypes,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.AbilityTypes,
                     new ResourceListInfo {
                         Doc = PSPResources.abilitiesStringsDoc,
                         XPath = "/AbilityStrings/Types/string[@value='{0}']/@name",
                         Length = 16,
-                        StartIndex = 0 } },
-                { ListType.MapNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.MapNames,
                     new ResourceListInfo {
                         Doc = PSPResources.mapNamesDoc,
                         XPath = "/MapNames/Map[@value='{0}']",
                         Length = 128,
-                        StartIndex = 0 } },
-                { ListType.ShopAvailabilities,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.ShopAvailabilities,
                     new ResourceListInfo {
                         Doc = PSPResources.itemsStringsDoc,
                         XPath = "/ItemStrings/ShopAvailabilities/string[@value='{0}']/@name",
                         Length = 21,
-                        StartIndex = 0 } },
-                { ListType.StatusNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.StatusNames,
                     new ResourceListInfo {
                         Doc = PSPResources.statusNamesDoc,
                         XPath = "/Statuses/Status[@offset='{0}']/@name",
                         Length = 40,
-                        StartIndex = 0 } },
-                { ListType.SpecialNames,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.SpecialNames,
                     new ResourceListInfo {
                         Doc = PSPResources.specialNamesDoc,
                         XPath = "/SpecialNames/SpecialName[@byte='{0:X2}']/@name",
                         Length = 256,
-                        StartIndex = 0 } },
-                { ListType.SpriteSets,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.SpriteSets,
                     new ResourceListInfo {
                         Doc = PSPResources.spriteSetsDoc,
                         XPath = "/Sprites/Sprite[@byte='{0:X2}']/@name",
                         Length = 256,
-                        StartIndex = 0 } },
-                { ListType.SpriteFiles,
+                        StartIndex = 0 
+                    } 
+                },
+                { 
+                    ListType.SpriteFiles,
                     new ResourceListInfo {
                         Doc = PSPResources.spriteFilesDoc,
                         XPath = "/sprites/s[@n='{0:X2}']",
                         Length = 0xAA,
-                        StartIndex = 0 } } };
+                        StartIndex = 0 
+                    } 
+                },
+                {
+                    ListType.AbilityProperties,
+                    new ResourceListInfo {
+                        Doc = PSPResources.abilitiesStringsDoc,
+                        XPath = "/AbilityStrings/Properties/string[@value='{0}']/@name",
+                        Length = 12,
+                        StartIndex = 0
+                    }
+                }
+            };
 
 
 
@@ -276,6 +346,14 @@ namespace PatcherLib
                 get
                 {
                     return GetListForType( ListType.AbilityTypes );
+                }
+            }
+
+            public static IList<string> AbilityProperties
+            {
+                get
+                {
+                    return GetListForType(ListType.AbilityProperties);
                 }
             }
 

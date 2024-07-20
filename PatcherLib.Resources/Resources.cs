@@ -54,6 +54,7 @@ namespace PatcherLib
             UnitNames,
             SpecialNames,
             SpriteSets,
+            AbilityProperties
         }
 
         internal struct ResourceListInfo

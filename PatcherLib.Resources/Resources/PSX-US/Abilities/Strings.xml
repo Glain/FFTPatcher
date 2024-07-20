@@ -78,6 +78,20 @@
     <string value="30" name="Evadeable"/>
     <string value="31" name="Can Select Unit"/>
   </Attributes>
+  <Properties>
+    <string value="0" name="Learn with JP (Player)" />
+    <string value="1" name="Display Ability Name" />
+    <string value="2" name="Learn on Hit" />
+    <string value="3" name="" />
+    <string value="4" name="Used by AI" />
+    <string value="5" name="Only Hits Allies/Self" />
+    <string value="6" name="Only Hits Enemies" />
+    <string value="7" name="" />
+    <string value="8" name="Require Monster Skill" />
+    <string value="9" name="Use Weapon Range" />
+    <string value="10" name="" />
+    <string value="11" name="Evade with Motion" />
+  </Properties>
   <Types>
     <string value="0" name="Blank"/>
     <string value="1" name="Normal"/>
