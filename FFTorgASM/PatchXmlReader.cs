@@ -369,7 +369,15 @@ namespace FFTorgASM
                         try
                         {
                             if (isRamOffset)
-                                fileOffset -= (UInt32)ftrOffset;
+                            {
+                                if (offset > (UInt32)ftrOffset)
+                                    fileOffset -= (UInt32)ftrOffset;
+                                else
+                                {
+                                    string message = String.Format("RAM offset (0x{0}) invalid for sector {1}!", ramOffset.ToString("X"), ISOHelper.GetSectorName(sector));
+                                    sbOuterErrorText.AppendLine(message);
+                                }
+                            }
                             else
                                 ramOffset += (UInt32)ftrOffset;
                         }
@@ -810,7 +818,15 @@ namespace FFTorgASM
                             try
                             {
                                 if (isRamOffset)
-                                    fileOffset -= (UInt32)ftrOffset;
+                                {
+                                    if (offset > (UInt32)ftrOffset)
+                                        fileOffset -= (UInt32)ftrOffset;
+                                    else
+                                    {
+                                        string message = String.Format("Variable ({0}): RAM offset (0x{1}) invalid for sector {2}!", varName, offset.ToString("X"), ISOHelper.GetSectorName(sector));
+                                        sbPatchErrorText.AppendLine(message);
+                                    }
+                                }
                                 //else
                                 //    ramOffset += (UInt32)ftrOffset;
                             }
