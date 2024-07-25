@@ -240,6 +240,12 @@ namespace ASMEncoding.Helpers
             }
         }
 
+        public void ClearAllLabels()
+        {
+            LabelDict.Clear();
+            PersistentLabelDict.Clear();
+        }
+
 		public string LabelToHex(string label, int reqLength)
 		{
 			return ASMValueHelper.UnsignedToHex_WithLength(LabelToUnsigned(label),reqLength);

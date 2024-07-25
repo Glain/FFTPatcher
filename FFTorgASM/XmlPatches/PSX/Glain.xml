@@ -1012,6 +1012,8 @@
         </Location>
         <Location file="BATTLE_BIN" offset="F6230" mode="ASM">
             @defense_outer:
+                .label  @formula_tail, 0x8015CD20
+            
                 addiu   sp, sp, -8
                 sw      ra, 4(sp)
 

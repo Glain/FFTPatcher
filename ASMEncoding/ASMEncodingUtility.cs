@@ -130,6 +130,11 @@ namespace ASMEncoding
             return _helper[(int)EncodingMode].ReplaceLabelsInHex(hex, littleEndian, replaceAll);
         }
 
+        public void ClearLabels()
+        {
+            _helper[(int)EncodingMode].ClearLabels();
+        }
+
         public static uint ProcessStartPC(string asm, string pcText)
         {
             return ASMEncodingUtilityHelper.ProcessStartPC(asm, pcText);

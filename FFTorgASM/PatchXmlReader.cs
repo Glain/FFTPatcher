@@ -91,7 +91,7 @@ namespace FFTorgASM
             return new KeyValuePair<string, string>(name, description);
         }
 
-        private static GetPatchResult GetPatch(XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, List<VariableType> variables)
+        private static GetPatchResult GetPatch(XmlNode node, string xmlFileName, ASMEncodingUtility asmUtility, List<VariableType> variables, List<PatchedByteArray> includePatches)
         {
             KeyValuePair<string, string> nameDesc = GetPatchNameAndDescription( node );
 
@@ -135,7 +135,8 @@ namespace FFTorgASM
             }
 
             XmlNodeList currentLocs = node.SelectNodes( "Location" );
-            List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count );
+            List<PatchedByteArray> patches = new List<PatchedByteArray>( currentLocs.Count + includePatches.Count );
+            patches.AddRange(includePatches);
             StringBuilder sbOuterErrorText = new StringBuilder();
 
             Dictionary<PatchedByteArray, string> replaceLabelsContentMap = new Dictionary<PatchedByteArray, string>();
@@ -621,6 +622,8 @@ namespace FFTorgASM
 
             foreach ( XmlNode node in patchNodes )
             {
+                asmUtility.ClearLabels();
+
                 XmlAttribute ignoreNode = Utilities.GetCaseInsensitiveAttribute(node, "ignore");
                 if ( ignoreNode != null && Boolean.Parse( ignoreNode.InnerText ) )
                     continue;
@@ -926,11 +929,12 @@ namespace FFTorgASM
                     variables.Add( vType );
                 }
 
-                GetPatchResult getPatchResult = GetPatch(node, xmlFilename, asmUtility, variables);
+                GetPatchResult getPatchResult = GetPatch(node, xmlFilename, asmUtility, variables, includePatches);
 
-                List<PatchedByteArray> patches = new List<PatchedByteArray>(includePatches.Count + getPatchResult.StaticPatches.Count);
-                patches.AddRange(includePatches);
-                patches.AddRange(getPatchResult.StaticPatches);
+                //List<PatchedByteArray> patches = new List<PatchedByteArray>(includePatches.Count + getPatchResult.StaticPatches.Count);
+                //patches.AddRange(includePatches);
+                //patches.AddRange(getPatchResult.StaticPatches);
+                IList<PatchedByteArray> patches = getPatchResult.StaticPatches;
 
                 AsmPatch asmPatch = new AsmPatch(getPatchResult.Name, shortXmlFilename, getPatchResult.Description, patches, 
                     (getPatchResult.HideInDefault | rootHideInDefault), (getPatchResult.IsHidden | rootIsHidden), variables);

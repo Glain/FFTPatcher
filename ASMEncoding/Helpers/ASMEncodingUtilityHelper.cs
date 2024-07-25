@@ -199,6 +199,11 @@ namespace ASMEncoding
             return _asmEncoder.ReplaceLabelsInHex(hex, littleEndian, replaceAll);
         }
 
+        public void ClearLabels()
+        {
+            _labelHelper.ClearAllLabels();
+        }
+
         public static uint ProcessStartPC(string asm, string pcText)
         {
             return ASMPCHelper.ProcessStartPC(asm, pcText);

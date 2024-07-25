@@ -382,6 +382,7 @@ namespace FFTorgASM
 
         public void Update(ASMEncoding.ASMEncodingUtility asmUtility)
         {
+            asmUtility.ClearLabels();
             UpdateReferenceVariableValues();
 
             List<PatchedByteArray> allPatches = GetAllPatches();
