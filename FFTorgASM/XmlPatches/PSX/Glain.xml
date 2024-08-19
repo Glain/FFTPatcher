@@ -5082,7 +5082,15 @@
                     move    t0, t1
     
                 store_secondary_skillset_redux:
+                    beq     t0, zero, end
                     sb      t0, 0x13(s0)
+        
+                    addiu   t3, v0, -0x4a
+                    sb      t3, 14(sp)
+                    move    a0, s0
+                    move    a1, s1
+                    jal     @job_unlocked_loop
+                    addiu   a2, sp, 12
     
                 end:
                     j       0x8001231c
