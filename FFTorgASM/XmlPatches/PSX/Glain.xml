@@ -4574,6 +4574,14 @@
 		    nop
 	    </Location>
     </Patch>
+    <Patch name="Double JP Gain">
+        <Location file="BATTLE_BIN" offset="17E944" mode="ASM" offsetMode="RAM">
+                lbu     v0, 5(s2)
+        </Location>
+        <Location file="BATTLE_BIN" offset="17E954" mode="ASM" offsetMode="RAM">
+                sll     s1, s1, 1
+        </Location>
+    </Patch>
     <Patch name="Equippable R/S/M only limited by job innates">
         <Description> 
             Similar to Inherent R/S/M limitation hack, but checks full ability IDs.
