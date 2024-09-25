@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace ASMEncoding.Helpers
 {
@@ -19,6 +20,9 @@ namespace ASMEncoding.Helpers
             public static int FloatRegister = 5;
             public static int VFPURegister = 7;
             public static int GenericRegister = 5;
+            public static int Cop0Register = 5;
+            public static int GTEControlRegister = 5;
+            public static int GTEDataRegister = 5;
         }
 
         internal class MaxValues
@@ -166,6 +170,9 @@ namespace ASMEncoding.Helpers
                 case ASMElementTypeCharacter.VFPURegister: return EncodingBitLengths.VFPURegister;
                 case ASMElementTypeCharacter.InvertedSingleBitVFPURegister: return EncodingBitLengths.VFPURegister;
                 case ASMElementTypeCharacter.PartialVFPURegister: return EncodingBitLengths.VFPURegister;
+                case ASMElementTypeCharacter.Cop0Register: return EncodingBitLengths.Cop0Register;
+                case ASMElementTypeCharacter.GTEControlRegister: return EncodingBitLengths.GTEControlRegister;
+                case ASMElementTypeCharacter.GTEDataRegister: return EncodingBitLengths.GTEDataRegister;
                 default: return EncodingBitLengths.GenericRegister;
             }
         }

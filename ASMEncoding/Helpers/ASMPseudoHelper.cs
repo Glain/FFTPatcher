@@ -321,8 +321,20 @@ namespace ASMEncoding.Helpers
 					}
 					
 					break;
-					
-				default:
+
+                case "cfc0":
+                case "ctc0":
+                case "mfc0":
+                case "mtc0":
+                    if (args.Length == 2)
+                    {
+                        parts[1] = parts[1] + ",0";
+                    }
+
+                    result.Add(new EncodeLine(parts, index));
+                    break;
+
+                default:
 					result.Add(new EncodeLine(parts,index));
 					break;
 			}
