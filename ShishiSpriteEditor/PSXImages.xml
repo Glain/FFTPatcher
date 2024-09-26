@@ -1736,6 +1736,18 @@
             </Position>
         </Raw16BitImage>
     </Section>
+    <Section Name="SQUARESOFT" Filename="SCUS_942.21" Filesize="356352">
+        <Raw16BitImage>
+            <Name>SQUARESOFT</Name>
+            <Width>180</Width>
+            <Height>16</Height>
+            <Sector>SCUS_942_21</Sector>
+            <Position>
+                <Offset>221696</Offset>
+                <Length>5760</Length>
+            </Position>
+        </Raw16BitImage>
+    </Section>
     <Section Name="Town Backgrounds" Filename="WLDPIC.BIN" Filesize="874496">
         <Names>
             <Name>Lesalia Imperial Capital</Name>
