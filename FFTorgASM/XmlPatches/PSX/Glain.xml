@@ -7806,6 +7806,27 @@
         <Variable name="Magical Shift" bytes="1" default="7" symbol="true" />
         <Variable name="Magical Invert" bytes="1" default="00" preset="boolean" symbol="true" />
     </Patch>
+    <Patch name="Enemies autolearn entire skillsets" file="SCUS_942_21">
+        <Description>Enemies autolearn their entire skill sets.</Description>
+        <Location offset="5CEA8" mode="ASM" offsetMode="RAM">
+            jal     @check_auto_learn
+        </Location>
+        <Location offset="5CEB4" mode="ASM" offsetMode="RAM">
+            bne     a3, v0, 0x8005cef0
+        </Location>
+        <Location offset="5D090" mode="ASM" offsetMode="RAM">
+            j       0x8001edc0
+            nop
+        </Location>
+        <Location offset="5D098" label="check_auto_learn" mode="ASM" offsetMode="RAM">
+            lbu     t2, 5(t0)
+            nop
+            andi    t2, t2, 0x30
+            sltu    t2, zero, t2
+            jr      ra
+            or      s6, s6, t2
+        </Location>
+    </Patch>
     <Patch name="HP% formulas use MIN(999,MaxHP)">
         <Description>
             Does not use free space.
