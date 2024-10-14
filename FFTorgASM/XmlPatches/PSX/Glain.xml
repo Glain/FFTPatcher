@@ -3204,8 +3204,8 @@
         <Description>
             Fixes the equipment duplication glitches that can be triggered from using Best Fit in the shops.
         </Description>
-        <Location file="WORLD_WORLD_BIN" offset="124360" mode="ASM" offsetMode="RAM">
-            b       0x80124378
+        <Location file="WORLD_WORLD_BIN" offset="124354" mode="ASM" offsetMode="RAM">
+            b       0x80124360
         </Location>
         <Location file="WORLD_WORLD_BIN" offset="1367FC" mode="ASM" offsetMode="RAM">
             beq     v0, zero, 0x80136818
