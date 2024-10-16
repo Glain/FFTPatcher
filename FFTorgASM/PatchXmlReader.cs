@@ -362,6 +362,11 @@ namespace FFTorgASM
                 {
                     UInt32 offset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
 
+                    if ((context == Context.US_PSX) && ((offset & PsxIso.KSeg0Mask) == PsxIso.KSeg0Mask))
+                    {
+                        offset = offset & ~PsxIso.KSeg0Mask;
+                    }
+
                     UInt32 ramOffset = offset;
                     UInt32 fileOffset = offset;
 
@@ -813,6 +818,12 @@ namespace FFTorgASM
                     foreach (string strOffset in strOffsets)
                     {
                         UInt32 offset = UInt32.Parse(strOffset, System.Globalization.NumberStyles.HexNumber);
+
+                        if ((context == Context.US_PSX) && ((offset & PsxIso.KSeg0Mask) == PsxIso.KSeg0Mask))
+                        {
+                            offset = offset & ~PsxIso.KSeg0Mask;
+                        }
+
                         //UInt32 ramOffset = offset;
                         UInt32 fileOffset = offset;
 
