@@ -4247,7 +4247,14 @@
         <Variable name="Using TLW" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="Skillset menu hardcoding fix">
-        <Description>Skillset menu actions based on action menu instead of being hardcoded to skillset ID.  Fixes some issues resulting from changing action menus on generic skillsets.  Similar to (and mutually exclusive with) Generic Skillset Fix / Skillset Behaviors hack, but based on action menu.</Description>
+        <Description>
+            Skillset menu actions based on action menu instead of being hardcoded to skillset ID.  
+            Fixes some issues resulting from changing action menus on generic skillsets.  
+            Similar to (and mutually exclusive with) Generic Skillset Fix / Skillset Behaviors hack, but based on action menu.
+            
+            Skillset notes:
+                Throw: AI sees ability index 0 as Shuriken, 1 as Ball, and only checks one other ability for everything else.  If changing the Throw skillset, keep this ability order.
+        </Description>
         <Location file="BATTLE_BIN" offset="1411B4" mode="ASM" offsetMode="RAM">
                 li      v0, 0x12
                 lui     t7, 0x8016
@@ -4472,6 +4479,15 @@
                 lbu     s2, 0x5cb4(t2)
                 li      v0, 7
                 bne     s2, v0, 0x8018b4b4
+        </Location>
+        <Location file="BATTLE_BIN" offset="181D30" mode="ASM" offsetMode="RAM">
+                nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="181D3C" mode="ASM" offsetMode="RAM">
+                move    a1, s0
+        </Location>
+        <Location file="BATTLE_BIN" offset="181EBC" mode="ASM" offsetMode="RAM">
+                move    v0, s5
         </Location>
         <Variable name="Using TLW" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
