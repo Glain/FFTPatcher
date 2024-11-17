@@ -2800,5 +2800,37 @@
             </Position>
         </Greyscale4bppImage>
     </Section>
+    <Section Name="WORLD.BIN - Other Graphics" Filename="WORLD.BIN" Filesize="973144">
+        <PalettedImage4bpp>
+            <Name>Menu/Numbers</Name>
+            <Width>256</Width>
+            <Height>32</Height>
+            <Sector>WORLD_WORLD_BIN</Sector>
+            <PalettePosition>
+                <Offset>374968</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <PaletteCount>2</PaletteCount>
+            <Position>
+                <Offset>370872</Offset>
+                <Length>4096</Length>
+            </Position>
+        </PalettedImage4bpp>
+        <PalettedImage4bpp>
+            <Name>Proposition/Equip</Name>
+            <Width>256</Width>
+            <Height>10</Height>
+            <Sector>WORLD_WORLD_BIN</Sector>
+            <PaletteCount>4</PaletteCount>
+            <PalettePosition>
+                <Offset>704592</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>703312</Offset>
+                <Length>1280</Length>
+            </Position>
+        </PalettedImage4bpp>
+    </Section>
     <Section Effects="" />
 </PsxFiles>
