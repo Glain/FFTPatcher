@@ -505,5 +505,32 @@ namespace FFTPatcher.Datatypes
                 return true;
             }
         }
+
+        public static bool PsxSavestateHasBuggyLevelBonuses(System.IO.Stream stream)
+        {
+            bool allBad = true;
+            foreach (var badInstruction in badPsxInstructions)
+            {
+                byte[] bytes = PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.Sectors.WORLD_WLDCORE_BIN, badInstruction.Item1, 4, null);
+                if (bytes != null)
+                    allBad &= Utilities.CompareArrays(bytes, badInstruction.Item2);
+            }
+
+            if (allBad)
+                return true;
+
+            bool allGood = true;
+            foreach (var goodInstruction in goodPsxInstructions)
+            {
+                byte[] bytes = PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.Sectors.WORLD_WLDCORE_BIN, goodInstruction.Item1, 4, null);
+                if (bytes != null)
+                    allGood &= Utilities.CompareArrays(bytes, goodInstruction.Item2);
+            }
+
+            if (allGood)
+                return false;
+
+            return true;
+        }
     }
 }

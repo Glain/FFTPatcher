@@ -520,7 +520,7 @@ namespace FFTPatcher.Datatypes
                     PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.JobFormationSprites1),
                     PatcherLib.Iso.PsxIso.GetBlock(stream, PatcherLib.Iso.PsxIso.JobFormationSprites2),
                     AllPropositions.IsoHasBuggyLevelBonuses(stream, Context.US_PSX)
-                    );
+                );
             }
         }
 
@@ -559,6 +559,50 @@ namespace FFTPatcher.Datatypes
                     PatcherLib.Iso.PspIso.GetBlock(stream, info, PatcherLib.Iso.PspIso.JobFormationSprites1[0]),
                     PatcherLib.Iso.PspIso.GetBlock(stream, info, PatcherLib.Iso.PspIso.JobFormationSprites2[0]),
                     AllPropositions.IsoHasBuggyLevelBonuses(stream, Context.US_PSP)) ;
+            }
+        }
+        public void OpenPsxSavestate(string filename)
+        {
+            using (FileStream stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            {
+                Context = Context.US_PSX;
+
+                byte[] formationScreenSpriteBytes = null;
+                if (PatcherLib.Iso.PsxIso.IsSectorInPsxSaveState(stream, PatcherLib.Iso.PsxIso.Sectors.WORLD_WORLD_BIN))
+                    formationScreenSpriteBytes = PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.JobFormationSprites2, PSXResources.Binaries.JobFormationSprites2);
+                else if (PatcherLib.Iso.PsxIso.IsSectorInPsxSaveState(stream, PatcherLib.Iso.PsxIso.Sectors.EVENT_ATTACK_OUT))
+                    formationScreenSpriteBytes = PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.JobFormationSprites2C, PSXResources.Binaries.JobFormationSprites2);
+                else if (PatcherLib.Iso.PsxIso.IsSectorInPsxSaveState(stream, PatcherLib.Iso.PsxIso.Sectors.EVENT_REQUIRE_OUT))
+                    formationScreenSpriteBytes = PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.JobFormationSprites2D, PSXResources.Binaries.JobFormationSprites2);
+
+                LoadDataFromBytes(
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.Abilities, PSXResources.Binaries.Abilities),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.AbilityEffects, PSXResources.Binaries.AbilityEffects),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.AbilityAnimations, PSXResources.Binaries.AbilityAnimations),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.OldItems, PSXResources.Binaries.OldItems),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.OldItemAttributes, PSXResources.Binaries.OldItemAttributes),
+                    null,
+                    null,
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.Jobs, PSXResources.Binaries.Jobs),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.JobLevels, PSXResources.Binaries.JobLevels),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.SkillSets, PSXResources.Binaries.SkillSets),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.MonsterSkills, PSXResources.Binaries.MonsterSkills),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.ActionEvents, PSXResources.Binaries.ActionEvents),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.StatusAttributes, PSXResources.Binaries.StatusAttributes),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.InflictStatuses, PSXResources.Binaries.InflictStatuses),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.PoachProbabilities, PSXResources.Binaries.PoachProbabilities),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.ENTD1, PSXResources.Binaries.ENTD1),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.ENTD2, PSXResources.Binaries.ENTD2),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.ENTD3, PSXResources.Binaries.ENTD3),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.ENTD4, PSXResources.Binaries.ENTD4),
+                    null,
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.MoveFindItems, PSXResources.Binaries.MoveFind),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.StoreInventories, PSXResources.Binaries.StoreInventories),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.Propositions, PSXResources.Binaries.Propositions),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.JobFormationSprites1, PSXResources.Binaries.JobFormationSprites1),
+                    PatcherLib.Iso.PsxIso.LoadFromPsxSaveState(stream, PatcherLib.Iso.PsxIso.JobFormationSprites2, formationScreenSpriteBytes),
+                    AllPropositions.PsxSavestateHasBuggyLevelBonuses(stream)
+                );
             }
         }
 

@@ -24,6 +24,7 @@ using System;
 using PatcherLib.Utilities;
 using PatcherLib.Datatypes;
 using PatcherLib.Helpers;
+using System.Security.Cryptography;
 
 namespace PatcherLib.Iso
 {
@@ -234,7 +235,11 @@ namespace PatcherLib.Iso
             int ramToPsvOffset = FindRamToPsvOffset(stream);
             int startOffset = ramOffset + ramToPsvOffset;
 
-            KeyValuePair<int, byte[]> checkValue = FileCheckValues[sector];
+            KeyValuePair<int, byte[]> checkValue;
+            bool hasCheckValue = FileCheckValues.TryGetValue(sector, out checkValue);
+            if (!hasCheckValue)
+                return false;
+
             byte[] buffer = new byte[4];
             stream.Seek(startOffset + checkValue.Key, SeekOrigin.Begin);
             stream.Read(buffer, 0, 4);
@@ -280,6 +285,59 @@ namespace PatcherLib.Iso
             return result;
         }
 
+        public static byte[] LoadFromPsxSaveState(Stream stream, uint ramLocation, int length)
+        {
+            return LoadFromPsxSaveState(stream, new KeyValuePair<uint, int>(ramLocation, length));
+        }
+
+        public static byte[] LoadFromPsxSaveState(Stream stream, KeyValuePair<uint, int> ramPosition)
+        {
+            return LoadFromPsxSaveState(stream, new List<KeyValuePair<uint, int>>() { ramPosition })[0];
+        }
+
+        public static List<byte[]> LoadFromPsxSaveState(Stream stream, IList<KeyValuePair<uint, int>> ramPositions)
+        {
+            List<byte[]> result = new List<byte[]>(ramPositions.Count);
+            int ramToPsvOffset = FindRamToPsvOffset(stream);
+
+            foreach (KeyValuePair<uint, int> ramPosition in ramPositions)
+            {
+                uint ramOffset = ramPosition.Key & 0x7FFFFFFFU;
+                int psvLocation = (int)(ramOffset + ramToPsvOffset);
+                byte[] buffer = new byte[ramPosition.Value];
+                stream.Seek(psvLocation, SeekOrigin.Begin);
+                stream.Read(buffer, 0, ramPosition.Value);
+                result.Add(buffer);
+            }
+
+            return result;
+        }
+
+        public static byte[] LoadFromPsxSaveState(Stream stream, PsxIso.KnownPosition pos, IList<byte> defaultBytes)
+        {
+            return LoadFromPsxSaveState(stream, pos.Sector, pos.StartLocation, pos.Length, defaultBytes);
+        }
+
+        public static byte[] LoadFromPsxSaveState(Stream stream, PsxIso.Sectors sector, int offset, int length, IList<byte> defaultBytes)
+        {
+            if (IsSectorInPsxSaveState(stream, sector))
+            {
+                int ramOffset = GetRamOffset(sector, offset, -1);
+                if (ramOffset >= 0)
+                {
+                    return LoadFromPsxSaveState(stream, (uint)ramOffset, length);
+                }
+                else
+                {
+                    return defaultBytes?.ToArray();
+                }
+            }
+            else
+            {
+                return defaultBytes?.ToArray();
+            }
+        }
+
         public static SectorPair[] GetSectorPairs()
         {
             PsxIso.Sectors[] sectors = (PsxIso.Sectors[])Enum.GetValues(typeof(PsxIso.Sectors));
@@ -321,6 +379,12 @@ namespace PatcherLib.Iso
                 fileToRamOffset = -1;
 
             return fileToRamOffset;
+        }
+
+        public static int GetRamOffset(PsxIso.Sectors sector, int offset, int defaultValue)
+        {
+            int ramOffset = GetRamOffset(sector);
+            return (ramOffset == -1) ? defaultValue : (ramOffset + offset);
         }
 
         public static string GetSectorName(int sector)

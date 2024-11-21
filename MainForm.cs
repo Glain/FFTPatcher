@@ -462,8 +462,10 @@ namespace FFTPatcher
         {
             TakeFocus();
             openPatchedPsxIso.Enabled = true;
-            patchPsxIsoMenuItem.Enabled = fftPatchEditor1.Enabled && FFTPatch.Context == Context.US_PSX;
-            menuItem_PatchPSXSavestate.Enabled = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
+
+            bool isPSX = fftPatchEditor1.Enabled && (FFTPatch.Context == Context.US_PSX);
+            patchPsxIsoMenuItem.Enabled = isPSX;
+            menuItem_PatchPSXSavestate.Enabled = isPSX;
         }
 
         private void rebuildFFTPackMenuItem_Click( object sender, EventArgs e )
@@ -636,6 +638,19 @@ namespace FFTPatcher
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 PatcherLib.ResourcesClass.GenerateDefaultResourcesZip(Path.Combine(dialog.FileName, "Resources.zip"));
+            }
+        }
+
+        private void menuItem_OpenPSXSaveState_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Filter = "PSV files (*.psv)|*.psv";
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                Environment.CurrentDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+                TryAndHandle(delegate () {
+                    FFTPatch.OpenPsxSavestate(openFileDialog.FileName);
+                    fftPatchEditor1.LoadFFTPatch(FFTPatch);
+                }, true);
             }
         }
 

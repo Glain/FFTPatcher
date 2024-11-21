@@ -17,6 +17,8 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Windows.Forms;
+
 namespace FFTPatcher
 {
     partial class MainForm
@@ -66,12 +68,14 @@ namespace FFTPatcher
             this.openMenuItem = new System.Windows.Forms.MenuItem();
             this.saveMenuItem = new System.Windows.Forms.MenuItem();
             this.saveAsPspMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem_SavePatchXML = new System.Windows.Forms.MenuItem();
             this.exitMenuItem = new System.Windows.Forms.MenuItem();
             this.psxMenu = new System.Windows.Forms.MenuItem();
             this.patchPsxIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.openPatchedPsxIso = new System.Windows.Forms.MenuItem();
             this.separator_PSXMenu = new System.Windows.Forms.MenuItem();
             this.menuItem_PatchPSXSavestate = new System.Windows.Forms.MenuItem();
+            this.menuItem_OpenPSXSavestate = new System.Windows.Forms.MenuItem();
             this.pspMenu = new System.Windows.Forms.MenuItem();
             this.patchPspIsoMenuItem = new System.Windows.Forms.MenuItem();
             this.cheatdbMenuItem = new System.Windows.Forms.MenuItem();
@@ -89,7 +93,6 @@ namespace FFTPatcher
             this.applyPatchOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.patchPsxBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.menuItem_SavePatchXML = new System.Windows.Forms.MenuItem();
             this.fftPatchEditor1 = new FFTPatcher.Editors.FFTPatchEditor();
             separator1 = new System.Windows.Forms.MenuItem();
             separator2 = new System.Windows.Forms.MenuItem();
@@ -206,6 +209,13 @@ namespace FFTPatcher
             this.saveAsPspMenuItem.Index = 5;
             this.saveAsPspMenuItem.Text = "Save &as PSP patch...";
             // 
+            // menuItem_SavePatchXML
+            // 
+            this.menuItem_SavePatchXML.Enabled = false;
+            this.menuItem_SavePatchXML.Index = 6;
+            this.menuItem_SavePatchXML.Text = "Save patch XML...";
+            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
+            // 
             // exitMenuItem
             // 
             this.exitMenuItem.Index = 10;
@@ -218,7 +228,8 @@ namespace FFTPatcher
             this.patchPsxIsoMenuItem,
             this.openPatchedPsxIso,
             this.separator_PSXMenu,
-            this.menuItem_PatchPSXSavestate});
+            this.menuItem_PatchPSXSavestate,
+            this.menuItem_OpenPSXSavestate});
             this.psxMenu.Text = "PS&X";
             // 
             // patchPsxIsoMenuItem
@@ -241,8 +252,14 @@ namespace FFTPatcher
             // 
             this.menuItem_PatchPSXSavestate.Enabled = false;
             this.menuItem_PatchPSXSavestate.Index = 3;
-            this.menuItem_PatchPSXSavestate.Text = "Patch pSX Savestate";
+            this.menuItem_PatchPSXSavestate.Text = "Patch pSX Savestate...";
             this.menuItem_PatchPSXSavestate.Click += new System.EventHandler(this.menuItem_PatchPSXSaveState_Click);
+            // 
+            // menuItem_OpenPSXSavestate
+            // 
+            this.menuItem_OpenPSXSavestate.Index = 4;
+            this.menuItem_OpenPSXSavestate.Text = "Open pSX Savestate...";
+            this.menuItem_OpenPSXSavestate.Click += new System.EventHandler(this.menuItem_OpenPSXSaveState_Click);
             // 
             // pspMenu
             // 
@@ -356,14 +373,6 @@ namespace FFTPatcher
             this.patchPsxBackgroundWorker.WorkerReportsProgress = true;
             this.patchPsxBackgroundWorker.WorkerSupportsCancellation = true;
             // 
-            // menuItem_SavePatchXML
-            // 
-            this.menuItem_SavePatchXML.Enabled = false;
-            this.menuItem_SavePatchXML.Index = 6;
-            this.menuItem_SavePatchXML.Text = "Save patch XML...";
-            this.menuItem_SavePatchXML.Visible = true;            
-            this.menuItem_SavePatchXML.Click += new System.EventHandler(this.menuItem_SavePatchXML_Click);
-            // 
             // fftPatchEditor1
             // 
             this.fftPatchEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -426,7 +435,7 @@ namespace FFTPatcher
         private System.Windows.Forms.MenuItem menuItem_RestoreDefaults;
         private System.Windows.Forms.MenuItem separator_Edit1;
         private System.Windows.Forms.MenuItem menuItem_SavePatchXML;
-
+        private System.Windows.Forms.MenuItem menuItem_OpenPSXSavestate;
     }
 }
 
