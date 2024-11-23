@@ -1134,11 +1134,11 @@
             </Sectors>
             <Sections count="5">
                 <Section value="0" entries="1" empty="true" compressible="false" dte="true" hide="true"/>
-                <Section value="1" entries="172" name="Faith/Brave Warning quotes" compressible="true" dte="false">
+                <Section value="1" entries="172" name="Faith/Brave Warning quotes" compressible="false" dte="false">
                     <includeResource name="PatcherLib.PSXResources+Lists.SpriteSets" start="1" end="73" offset="23" format="{0}\nLow Brave"/>
                     <includeResource name="PatcherLib.PSXResources+Lists.SpriteSets" start="1" end="73" offset="97" format="{0}\nHigh Faith"/>
                 </Section>
-                <Section value="2" entries="172" name="Faith/Brave Leaving quotes" compressible="true" dte="false">
+                <Section value="2" entries="172" name="Faith/Brave Leaving quotes" compressible="false" dte="false">
                     <includeResource name="PatcherLib.PSXResources+Lists.SpriteSets" start="1" end="73" offset="23" format="{0}\nLow Brave\n(Leaving)"/>
                     <includeResource name="PatcherLib.PSXResources+Lists.SpriteSets" start="1" end="73" offset="97" format="{0}\nHigh Faith\n(Leaving)"/>
                 </Section>
