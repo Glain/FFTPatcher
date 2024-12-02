@@ -45,15 +45,23 @@ namespace FFTPatcher.Datatypes
             Name = name;
         }
 
-		#endregion Constructors 
+        #endregion Constructors 
 
         private static IDictionary<UInt16, Effect> CreateEffectMap(IList<string> abilityEffects)
         {
-            Dictionary<UInt16, Effect> effectMap = new Dictionary<UInt16, Effect>(513);
-            
+            Dictionary<UInt16, Effect> effectMap = new Dictionary<UInt16, Effect>(Settings.Prefs.ShowAllAbilityEffects ? 65536 : 513);
+
             for (UInt16 i = 0; i < 512; i++)
             {
                 effectMap[i] = new Effect(i, abilityEffects[i]);
+            }
+
+            if (Settings.Prefs.ShowAllAbilityEffects)
+            {
+                for (UInt16 i = 512; i < 65535; i++)
+                {
+                    effectMap[i] = new Effect(i, "");
+                }   
             }
 
             effectMap[0xFFFF] = new Effect(0xFFFF, "");

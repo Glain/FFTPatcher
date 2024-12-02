@@ -16,6 +16,11 @@ namespace FFTPatcher
             NotAlways = 2
         }
 
+        public class Preferences
+        {
+            public bool ShowAllAbilityEffects { get; set; }
+        }
+
         public class CombinedColor
         {
             public bool UseColor { get; set; }
@@ -69,6 +74,15 @@ namespace FFTPatcher
             new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(255, 255, 255), ForegroundColor = Color.Black },
             new CombinedColor() { UseColor = true, BackgroundColor = Color.FromArgb(0, 0, 0), ForegroundColor = Color.White },
         };
+
+        private Preferences _prefs;
+        public static Preferences Prefs
+        {
+            get 
+            { 
+                return GetSettings()._prefs; 
+            }
+        }
 
         private CombinedColor _modifiedColor;
         public static CombinedColor ModifiedColor 
@@ -158,6 +172,8 @@ namespace FFTPatcher
             XmlDocument settingsXml = GetSettingsXml(_settingsFilename);
             if (settingsXml != null)
             {
+                instance._prefs = GetPreferences(settingsXml.SelectSingleNode("//Preferences"));
+
                 instance._modifiedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//ModifiedColor"), _defaultModifiedColor);
                 instance._unreferencedColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//UnreferencedColor"), _defaultUnreferencedColor);
                 instance._duplicateColor = GetCombinedColorFromNode(settingsXml.SelectSingleNode("//DuplicateColor"), _defaultDuplicateColor);
@@ -182,6 +198,14 @@ namespace FFTPatcher
                 _teamColors = _defaultTeamColors,
                 _elementNames = _defaultElementNames,
                 _elementColors = _defaultElementColors
+            };
+        }
+
+        private static Preferences GetPreferences(XmlNode xmlNode)
+        {
+            return new Preferences
+            {
+                ShowAllAbilityEffects = GetValueFromInnerNode<bool>(xmlNode, "ShowAllAbilityEffects")
             };
         }
 
@@ -338,6 +362,18 @@ namespace FFTPatcher
 
                 return names;
             }
+        }
+
+        private static T GetValueFromInnerNode<T>(XmlNode xmlNode, string innerNodeTag)
+        {
+            XmlNode innerNode = xmlNode[innerNodeTag];
+            T value = default(T);
+            if (innerNode != null)
+            {
+                value = GetValueFromAttribute<T>(innerNode.Attributes["Value"]);
+            }
+
+            return value;
         }
 
         private static T GetValueFromAttribute<T>(XmlAttribute attr)

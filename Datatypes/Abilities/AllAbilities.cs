@@ -288,16 +288,23 @@ namespace FFTPatcher.Datatypes
                         defaultEffectIndex = (ushort)(defaultEffectIndex & ~Ability.ItemEffectPrefixValue);
                     }
 
-                    effect = effects[effectIndex];
-                    defaultEffect = effects[defaultEffectIndex];
+                    effects.TryGetValue(effectIndex, out effect);
+                    effects.TryGetValue(defaultEffectIndex, out defaultEffect);
+
+                    //effect = effects[effectIndex];
+                    //defaultEffect = effects[defaultEffectIndex];
                 }
 
                 if( i <= 0x16F )
                 {
                     second = bytes.Sub( 0x1000 + 14 * i, 0x1000 + 14 * i + 13 );
                     defaultSecond = defaultBytes.Sub( 0x1000 + 14 * i, 0x1000 + 14 * i + 13 );
-                    effect = effects[PatcherLib.Utilities.Utilities.BytesToUShort( effectsBytes[i * 2], effectsBytes[i * 2 + 1] )];
-                    defaultEffect = effects[PatcherLib.Utilities.Utilities.BytesToUShort( defaultEffects[i * 2], defaultEffects[i * 2 + 1] )];
+
+                    ushort effectIndex = PatcherLib.Utilities.Utilities.BytesToUShort(effectsBytes[i * 2], effectsBytes[i * 2 + 1]);
+                    ushort defaultEffectIndex = PatcherLib.Utilities.Utilities.BytesToUShort(defaultEffects[i * 2], defaultEffects[i * 2 + 1]);
+
+                    effects.TryGetValue(effectIndex, out effect);
+                    effects.TryGetValue(defaultEffectIndex, out defaultEffect);
                 }
                 else if( i <= 0x17D )
                 {
