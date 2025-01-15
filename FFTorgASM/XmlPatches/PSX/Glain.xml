@@ -7843,6 +7843,28 @@
             or      s6, s6, t2
         </Location>
     </Patch>
+    <Patch name="Abandon gives flat evasion bonus">
+        <Location file="BATTLE_BIN" offset="1853C0" mode="ASM" offsetMode="RAM">
+            lbu     t0, 0x38de(v1)
+            nop
+            addiu   t0, t0, %Bonus
+            sb      t0, 0x38de(v1)
+            nop
+        </Location>
+        <Location file="BATTLE_BIN" offset="188520" mode="ASM" offsetMode="RAM">
+            .if %IgnoreConcentrate
+            .else
+                jal     0x8018537c
+                nop
+                jal     0x801852e4
+                nop
+                jal     0x80185328
+                nop
+            .endif
+        </Location>
+        <Variable name="Bonus" bytes="1" default="14" symbol="true" />
+        <Variable name="IgnoreConcentrate" bytes="1" default="00" symbol="true" preset="boolean" />
+    </Patch>
     <Patch name="HP% formulas use MIN(999,MaxHP)">
         <Description>
             Does not use free space.
