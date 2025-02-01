@@ -2222,7 +2222,7 @@
                     nop
                     
                     li      t1, 365
-                    multu   t0, t1
+                    multu   v0, t1
                     mflo    t0                   #   result * 365
                     
                     #sll     t0, v0, 3           #   result * 8
@@ -7864,6 +7864,109 @@
         </Location>
         <Variable name="Bonus" bytes="1" default="14" symbol="true" />
         <Variable name="IgnoreConcentrate" bytes="1" default="00" symbol="true" preset="boolean" />
+    </Patch>
+    <Patch name="Formula - Revive as Undead (0x18)">
+        <Description>
+            Creates a formula that revives units as undead, cancelling dead and also applying Undead and either Charm or Invite, based on variables, in a single cast.
+            To change which formula it uses, change the starting offset and the 0x18 constant.
+        </Description>
+        <Location file="BATTLE_BIN" offset="18F670" offsetMode="RAM" mode="DATA" replaceLabels="true">
+            @formula
+        </Location>
+        <Location file="BATTLE_BIN" offset="184CCC" offsetMode="RAM" mode="ASM">
+                    j       @status_hook_check_formula
+                    lui     t1, 0x8006
+        </Location>
+        <Location file="BATTLE_BIN" offset="15E898" mode="ASM" offsetMode="RAM">
+            @formula:
+                    addiu   sp, sp, -16
+                    sw      ra, 4(sp)
+
+                    lui     t0, 0x8019
+                    lw      t2, 0x2d98(t0)
+                    nop
+                    
+                    lbu     t4, 0x58(t2)
+                    nop
+
+                    #  Miss if target is not KO
+                    andi    t4, t4, 0x20
+                    beq     t4, zero, miss
+                    nop
+
+                continue:
+                    #   Heal Y% HP
+                    jal     0x80186624
+                    nop
+                    lui     t0, 0x8019
+                    lw	    t1, 0x2d90(t0)
+                    li      t3, 0x20
+                    lbu     t2, 4(t1)
+                    lbu     t4, 6(t1)
+                    sb      t2, 6(t1)
+                    sb      t4, 4(t1)
+
+                    #   Remove KO
+                    sb      t3, 0x20(t1)
+                    sb      t3, 0x3860(t0)
+
+                    #   Add Undead
+                    li      t3, 0x10
+                    sb      t3, 0x1b(t1)
+
+                    .if     %InflictInvite
+                        #   Add Invite
+                        li      t3, 0x40
+                        sb      t3, 0x1c(t1)
+                    .endif
+
+                    .if     %InflictCharm
+                        #   Add Charm
+                        li      t3, 0x20
+                        sb      t3, 0x1f(t1)
+                    .endif
+
+                    #   Set type = Status + HP Healing
+                    li      t3, 0x48
+                    jal     0x80187eb4
+                    sb      t3, 0x25(t1)
+
+                    #   Hit_F(MA + X)%
+                    jal     0x801889cc
+                    nop
+
+                    beq     v0, zero, end
+                    nop
+
+                miss:
+                    jal     0x8018430c
+                    nop
+                    j       end
+                    nop
+
+                end:
+                    lw      ra, 4(sp)
+                    addiu   sp, sp, 16
+                    jr      ra
+                    nop
+
+
+            @status_hook_check_formula:
+                    lui     t4, 0x8019
+                    lbu     t4, 0x38f8(t4)
+                    li      t5, 0x18
+                    bne     t4, t5, normal_return
+                    addiu   t1, t1, 0x5def
+
+                    j   0x80184d78
+                    nop
+
+                normal_return:
+                    j   0x80184cd4
+                    nop
+        </Location>
+        <Variable name="Inflict Invite" bytes="1" default="01" symbol="true" preset="boolean" />
+        <Variable name="Inflict Charm" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="HP% formulas use MIN(999,MaxHP)">
         <Description>
