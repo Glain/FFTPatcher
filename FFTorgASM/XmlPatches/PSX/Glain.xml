@@ -7865,12 +7865,12 @@
         <Variable name="Bonus" bytes="1" default="14" symbol="true" />
         <Variable name="IgnoreConcentrate" bytes="1" default="00" symbol="true" preset="boolean" />
     </Patch>
-    <Patch name="Formula - Revive as Undead (0x18)">
+    <Patch name="Formula - Revive as Undead">
         <Description>
             Creates a formula that revives units as undead, cancelling dead and also applying Undead and either Charm or Invite, based on variables, in a single cast.
-            To change which formula it uses, change the starting offset and the 0x18 constant.
+            To change which formula it uses, change the Formula ID variable.
         </Description>
-        <Location file="BATTLE_BIN" offset="18F670" offsetMode="RAM" mode="DATA" replaceLabels="true">
+        <Location file="BATTLE_BIN" offset="18F610" offsetMode="RAM" mode="DATA" replaceLabels="true" offsetVariable="multFormulaID">
             @formula
         </Location>
         <Location file="BATTLE_BIN" offset="184CCC" offsetMode="RAM" mode="ASM">
@@ -7954,7 +7954,7 @@
             @status_hook_check_formula:
                     lui     t4, 0x8019
                     lbu     t4, 0x38f8(t4)
-                    li      t5, 0x18
+                    li      t5, %FormulaID
                     bne     t4, t5, normal_return
                     addiu   t1, t1, 0x5def
 
@@ -7965,8 +7965,10 @@
                     j   0x80184cd4
                     nop
         </Location>
+        <Variable name="Formula ID" bytes="1" default="18" symbol="true" />
         <Variable name="Inflict Invite" bytes="1" default="01" symbol="true" preset="boolean" />
         <Variable name="Inflict Charm" bytes="1" default="00" symbol="true" preset="boolean" />
+        <Variable name="multFormulaID" bytes="2" reference="Formula ID" operator="*" operand="4" symbol="true" />
     </Patch>
     <Patch name="HP% formulas use MIN(999,MaxHP)">
         <Description>

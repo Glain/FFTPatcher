@@ -384,6 +384,7 @@ namespace FFTorgASM
         {
             asmUtility.ClearLabels();
             UpdateReferenceVariableValues();
+            UpdateVariableOffsets();
 
             List<PatchedByteArray> allPatches = GetAllPatches();
             StringBuilder sbPrefix = new StringBuilder();
@@ -472,6 +473,19 @@ namespace FFTorgASM
                 }
 
                 UpdateVariable(variable, value);
+            }
+        }
+        
+        private void UpdateVariableOffsets()
+        {
+            foreach (PatchedByteArray pba in innerList)
+            {
+                if (!string.IsNullOrEmpty(pba.OffsetVariable))
+                {
+                    byte[] referenceBytes = VariableMap[pba.OffsetVariable].ByteArray;
+                    uint value = Utilities.GetUnsignedByteArrayValue_LittleEndian(referenceBytes);
+                    pba.Offset = pba.BaseOffset + value;
+                }
             }
         }
 
@@ -606,6 +620,8 @@ namespace FFTorgASM
                     {
                         patchedByteArray.Offset += patchRange.MoveOffset; // offset;
                         patchedByteArray.RamOffset += patchRange.MoveOffset; // offset;
+                        patchedByteArray.BaseOffset += patchRange.MoveOffset;
+                        patchedByteArray.BaseRamOffset += patchRange.MoveOffset;
                         //isSequentialAdd[patchRange] = true;
                     }
                     /*

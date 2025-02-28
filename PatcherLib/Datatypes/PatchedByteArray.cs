@@ -136,7 +136,7 @@ namespace PatcherLib.Datatypes
 
     public class PatchedByteArray: ICopyableEntry<PatchedByteArray>
     {
-		#region Public Properties (4) 
+		#region Public Properties 
 
         public virtual byte[] GetBytes()
         {
@@ -168,9 +168,13 @@ namespace PatcherLib.Datatypes
 
         public byte MaskWrite { get; set; }
 
-		#endregion Public Properties 
+        public string OffsetVariable { get; set; }
+        public long BaseOffset { get; set; }
+        public long BaseRamOffset { get; set; }
 
-		#region Constructors (4) 
+        #endregion Public Properties 
+
+        #region Constructors 
 
         public PatchedByteArray( PsxIso.Sectors sector, long offset, byte[] bytes )
             : this( (int)sector, offset, bytes )
@@ -223,6 +227,7 @@ namespace PatcherLib.Datatypes
         {
             Sector = sector;
             Offset = offset;
+            BaseOffset = offset;
         }
 
 		#endregion Constructors 
@@ -306,6 +311,9 @@ namespace PatcherLib.Datatypes
             result.Label = Label;
             result.IsStatic = IsStatic;
             result.MaskWrite = MaskWrite;
+            result.OffsetVariable = OffsetVariable;
+            result.BaseOffset = BaseOffset;
+            result.BaseRamOffset = BaseRamOffset;
             return result;
         }
 
@@ -323,6 +331,9 @@ namespace PatcherLib.Datatypes
             result.Label = Label;
             result.IsStatic = IsStatic;
             result.MaskWrite = MaskWrite;
+            result.OffsetVariable = OffsetVariable;
+            result.BaseOffset = BaseOffset;
+            result.BaseRamOffset = BaseRamOffset;
             return result;
         }
     }
