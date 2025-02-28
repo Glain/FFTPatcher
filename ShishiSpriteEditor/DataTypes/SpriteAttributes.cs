@@ -61,7 +61,11 @@ namespace FFTPatcher.SpriteEditor
             }
             else if (pspPos != null)
             {
-                PspIso.ApplyPatch(iso, pspInfo, pspPos.GetPatchedByteArray(ToByteArray()));
+                PspIso.KnownPosition ebootPos = new PspIso.KnownPosition(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, pspPos.StartLocation, pspPos.Length);
+                byte[] bytes = ToByteArray();
+
+                PspIso.ApplyPatch(iso, pspInfo, pspPos.GetPatchedByteArray(bytes));
+                PspIso.ApplyPatch(iso, pspInfo, ebootPos.GetPatchedByteArray(bytes));
             }
         }
 
