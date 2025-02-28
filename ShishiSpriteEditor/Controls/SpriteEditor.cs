@@ -68,6 +68,7 @@ namespace FFTPatcher.SpriteEditor
             get { return chkImportExport8bpp.Checked; }
         }
 
+        private bool hasDataChange = false;
         private Stream iso;
 
         public SpriteEditor()
@@ -333,7 +334,8 @@ namespace FFTPatcher.SpriteEditor
         {
             if ( !ignoreChanges )
             {
-                (Sprite as CharacterSprite).SetSHP( iso, (SpriteType)shpComboBox.SelectedItem );
+                (Sprite as CharacterSprite).SetSHP( iso, (SpriteType)shpComboBox.SelectedItem, hasDataChange );
+                hasDataChange = true;
                 ReloadSprite();
                 UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
             }
@@ -343,7 +345,8 @@ namespace FFTPatcher.SpriteEditor
         {
             if ( !ignoreChanges )
             {
-                (Sprite as CharacterSprite).SetSEQ(iso, (SpriteType)seqComboBox.SelectedItem);
+                (Sprite as CharacterSprite).SetSEQ(iso, (SpriteType)seqComboBox.SelectedItem, hasDataChange);
+                hasDataChange = true;
                 UpdateAnimationTab(Sprite as CharacterSprite,Sprite);
             }
         }
@@ -351,14 +354,18 @@ namespace FFTPatcher.SpriteEditor
         private void flyingCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (!ignoreChanges)
-                (Sprite as CharacterSprite).SetFlying(iso, flyingCheckbox.Checked);
+            {
+                (Sprite as CharacterSprite).SetFlying(iso, flyingCheckbox.Checked, hasDataChange);
+                hasDataChange = true;
+            }
         }
 
         private void cmb_Height_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!ignoreChanges)
             {
-                (Sprite as CharacterSprite).SetHeight(iso, (byte)cmb_Height.SelectedItem);
+                (Sprite as CharacterSprite).SetHeight(iso, (byte)cmb_Height.SelectedItem, hasDataChange);
+                hasDataChange = true;
             }
         }
 

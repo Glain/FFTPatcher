@@ -18,7 +18,7 @@ namespace FFTPatcher.SpriteEditor
 
         private const int sp2MaxLength = 256 * 256 / 2;
         public int NumChildren { get { return location.SubSpriteLocations.Count; } }
-        internal void SetSHP(Stream iso, SpriteType shp)
+        internal void SetSHP(Stream iso, SpriteType shp, bool hasDataChange)
         {
             if (SHP != shp)
             {
@@ -27,23 +27,23 @@ namespace FFTPatcher.SpriteEditor
                     CachedSprite = null;
                 }
 
-                attributes.SetSHP(iso, shp);
+                attributes.SetSHP(iso, shp, hasDataChange);
             }
         }
 
-        internal void SetSEQ(Stream iso, SpriteType seq)
+        internal void SetSEQ(Stream iso, SpriteType seq, bool hasDataChange)
         {
-            attributes.SetSEQ(iso, seq);
+            attributes.SetSEQ(iso, seq, hasDataChange);
         }
 
-        internal void SetFlying(Stream iso, bool flying)
+        internal void SetFlying(Stream iso, bool flying, bool hasDataChange)
         {
-            attributes.SetFlying(iso, flying);
+            attributes.SetFlying(iso, flying, hasDataChange);
         }
 
-        internal void SetHeight(Stream iso, byte height)
+        internal void SetHeight(Stream iso, byte height, bool hasDataChange)
         {
-            attributes.SetHeight(iso, height);
+            attributes.SetHeight(iso, height, hasDataChange);
         }
 
         private enum SpriteAlignment

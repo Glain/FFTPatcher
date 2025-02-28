@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using PatcherLib.Iso;
 using System.IO;
+using static PatcherLib.Iso.PspIso;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace FFTPatcher.SpriteEditor
 {
@@ -29,31 +31,31 @@ namespace FFTPatcher.SpriteEditor
         public bool Flying { get; private set; }
         public byte Height { get; private set; }
 
-        internal void SetSHP(Stream iso, SpriteType shp)
+        internal void SetSHP(Stream iso, SpriteType shp, bool hasDataChange)
         {
             SHP = shp;
-            UpdateIso(iso);
+            UpdateIso(iso, hasDataChange);
         }
 
-        internal void SetSEQ(Stream iso, SpriteType seq)
+        internal void SetSEQ(Stream iso, SpriteType seq, bool hasDataChange)
         {
             SEQ = seq;
-            UpdateIso(iso);
+            UpdateIso(iso, hasDataChange);
         }
 
-        internal void SetFlying(Stream iso, bool flying)
+        internal void SetFlying(Stream iso, bool flying, bool hasDataChange)
         {
             Flying = flying;
-            UpdateIso(iso);
+            UpdateIso(iso, hasDataChange);
         }
 
-        internal void SetHeight(Stream iso, byte height)
+        internal void SetHeight(Stream iso, byte height, bool hasDataChange)
         {
             Height = height;
-            UpdateIso(iso);
+            UpdateIso(iso, hasDataChange);
         }
 
-        private void UpdateIso(Stream iso)
+        private void UpdateIso(Stream iso, bool hasDataChange)
         {
             if (psxPos != null)
             {
@@ -61,6 +63,12 @@ namespace FFTPatcher.SpriteEditor
             }
             else if (pspPos != null)
             {
+                if (!hasDataChange)
+                {
+                    PspIsoInfo info = PspIsoInfo.GetPspIsoInfo(iso);
+                    PspIso.DecryptISO(iso, info);
+                }
+
                 PspIso.KnownPosition ebootPos = new PspIso.KnownPosition(PspIso.Sectors.PSP_GAME_SYSDIR_EBOOT_BIN, pspPos.StartLocation, pspPos.Length);
                 byte[] bytes = ToByteArray();
 
