@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Patches>
     <Patch name="Set Action Mods" hidden="true">
-        <Location file="BATTLE_BIN" offset="1594A8" mode="ASM" offsetMode="RAM">
+        <Location file="BATTLE_BIN" offset="1509D0" mode="ASM" offsetMode="RAM">
             #   ROUTINE: Apply addend/multiplier to actions (Standard and return/drain action)
             #   Parameters: a0 = Multiplier (16.16 fixed point)
             #       NOTE: This routine does not modify temporary (t) registers.
@@ -7877,7 +7877,7 @@
                     j       @status_hook_check_formula
                     lui     t1, 0x8006
         </Location>
-        <Location file="BATTLE_BIN" offset="15E898" mode="ASM" offsetMode="RAM">
+        <Location file="BATTLE_BIN" offset="15AFC0" mode="ASM" offsetMode="RAM">
             @formula:
                     addiu   sp, sp, -16
                     sw      ra, 4(sp)
