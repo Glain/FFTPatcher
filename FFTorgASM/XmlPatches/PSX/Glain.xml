@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <Patches>
     <Patch name="Set Action Mods" hidden="true">
-        <Location file="BATTLE_BIN" offset="1509D0" mode="ASM" offsetMode="RAM">
+        <Location file="BATTLE_BIN" offset="15B600" mode="ASM" offsetMode="RAM">
             #   ROUTINE: Apply addend/multiplier to actions (Standard and return/drain action)
             #   Parameters: a0 = Multiplier (16.16 fixed point)
             #       NOTE: This routine does not modify temporary (t) registers.
@@ -6717,11 +6717,17 @@
                     move    s6, a0          #   actingUnitIndex
                     move    s7, a1          #   learnedAbilityStorePtr
                     
+                    #   Find acting unit flags, if necessary
                     .if     %RequireDifferentTeams
-                        #   Find acting unit flags
                         jal     0x80180afc
                         nop
                         lbu     s3, 5(v0)
+                    .else
+                        .if     %RequireNonControl
+                            jal     0x80180afc
+                            nop
+                            lbu     s3, 5(v0)
+                        .endif
                     .endif
 
                     lui     t0, 0x8019
@@ -6769,6 +6775,12 @@
                         andi    t1, s3, 0x30
                         andi    t0, t0, 0x30
                         beq     t0, t1, process_learn_on_hit_unit_loop_end
+                        nop
+                    .endif
+                    
+                    .if     %RequireNonControl
+                        andi    t0, s3, 0x08
+                        bne     t0, zero, process_learn_on_hit_unit_loop_end
                         nop
                     .endif
                     
@@ -6898,7 +6910,8 @@
                     jal     @process_unit_learn_on_hit
                     li      a1, 1
         </Location>
-        <Variable name="Require Different Teams" bytes="1" default="01" symbol="true" preset="boolean" />
+        <Variable name="Require Different Teams" bytes="1" default="00" symbol="true" preset="boolean" />
+        <Variable name="Require Non Control" bytes="1" default="01" symbol="true" preset="boolean" />
     </Patch>
     <Patch name="RNG Seed Manipulation" hidden="true">
         <Description>
