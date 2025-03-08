@@ -2586,6 +2586,21 @@
                 <Length>65024</Length>
             </Position>
         </PalettedImage8bpp>
+        <PalettedImage4bpp>
+            <Name>OTHER</Name>
+            <Width>512</Width>
+            <Height>254</Height>
+            <Sector>BATTLE_OTHER_SPR</Sector>
+            <PaletteCount>32</PaletteCount>
+            <PalettePosition>
+                <Offset>0</Offset>
+                <Length>32</Length>
+            </PalettePosition>
+            <Position>
+                <Offset>6940672</Offset>
+                <Length>65024</Length>
+            </Position>
+        </PalettedImage4bpp>
     </Section>
     <Section Name="OTHER.SPR" Filename="OTHER.SPR" Filesize="33792">
         <PalettedImage4bpp>
