@@ -239,7 +239,7 @@
         sw      s0, 4(sp)
         move    s0, ra
         
-        .if     >, %UsingEventInstructionUpgrade, 0
+        .if     %UsingEventInstructionUpgrade
             jal     0x80146078         
             nop
             move    s3, v0
@@ -429,11 +429,14 @@
         nop
         
         #   Skip if this isn't the last Camera instruction
-        lw      t0, @address_event_last_camera_instruction_pointer
-        addiu   t1, s1, -1
-        bne     t0, t1, check_event_skip_skip
-        nop
-        
+        .if     %UsingEventInstructionUpgrade
+        .else
+            lw      t0, @address_event_last_camera_instruction_pointer
+            addiu   t1, s1, -1
+            bne     t0, t1, check_event_skip_skip
+            nop
+        .endif
+
         #   Speed up Camera (0x19): Parameter byte 14 (Time) = 1 frame
         li      t0, 1
         sb      t0, 14(s1)      #   Low byte = 1
@@ -448,10 +451,13 @@
         nop
         
         #   Skip if this isn't the last Focus instruction
-        lw      t0, @address_event_last_focus_instruction_pointer
-        addiu   t1, s1, -1
-        bne     t0, t1, check_event_skip_skip
-        nop
+        .if     %UsingEventInstructionUpgrade
+        .else
+            lw      t0, @address_event_last_focus_instruction_pointer
+            addiu   t1, s1, -1
+            bne     t0, t1, check_event_skip_skip
+            nop
+        .endif
         
         j       check_event_skip_generic
         nop
@@ -628,7 +634,7 @@
         nop
     
     check_event_skip_end:
-        .if     >, %UsingEventInstructionUpgrade, 0
+        .if     %UsingEventInstructionUpgrade
             move    v0, s3
         .else
             li      v0, 0xc0

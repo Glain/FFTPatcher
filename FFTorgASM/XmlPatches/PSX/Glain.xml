@@ -1368,7 +1368,7 @@
             .if     %UsingEventInstructionUpgrade
                 00002286
                 DE008FE1
-                C180A00E
+                C100A00E
                 611C3C56
                 6F33D680
                 00000000
@@ -1377,7 +1377,7 @@
             .else
                 FFFF2F86
                 DE018FE1
-                C180A00E
+                C100A00E
                 611C3C56
                 6F37D6BF
                 00000000
