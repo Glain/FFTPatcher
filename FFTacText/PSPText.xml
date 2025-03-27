@@ -1210,6 +1210,18 @@
         <Section value="0" entries="31" empty="true" dte="true" compressible="false" name=""/>
       </Sections>
     </OneShotFile>
+
+    <OneShotFile>
+        <DisplayName>BOOT.BIN 9</DisplayName>
+        <Guid>{4AD1E1F0-A25C-43EC-99B8-F62042B24F69}</Guid>
+        <Size>220</Size>
+        <Sectors>
+            <BootBin offset="2990552"/>
+        </Sectors>
+        <Sections count="1">
+            <Section value="0" entries="11" empty="true" dte="true" compressible="false" name=""/>
+        </Sections>
+    </OneShotFile>
     
     <PartitionedFile>
       <DisplayName>SNPLMES.BIN</DisplayName>
