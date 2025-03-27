@@ -158,6 +158,7 @@ namespace FFTorgASM
                 XmlAttribute attrBinaryFile = Utilities.GetCaseInsensitiveAttribute(location, "binaryFile");
                 XmlAttribute attrWriteMask = Utilities.GetCaseInsensitiveAttribute(location, "writeMask");
                 XmlAttribute attrOffsetVariable = Utilities.GetCaseInsensitiveAttribute(location, "offsetVariable");
+                XmlAttribute attrRepeat = Utilities.GetCaseInsensitiveAttribute(location, "repeat");
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -360,6 +361,36 @@ namespace FFTorgASM
                 if (attrOffsetVariable != null)
                 {
                     offsetVariable = attrOffsetVariable.InnerText;
+                }
+
+                int repeat = 0;
+                if (attrRepeat != null)
+                {
+                    Int32.TryParse(attrRepeat.InnerText, out repeat);
+                    if (repeat < 0)
+                        repeat = 0;
+
+                    if (repeat > 0)
+                    {
+                        if (isBinaryContent)
+                        {
+                            byte[] newBinaryContent = new byte[binaryContent.Length * repeat];
+                            for (int index = 0; index < repeat; index++)
+                            {
+                                Array.Copy(binaryContent, 0, newBinaryContent, index * repeat, binaryContent.Length);
+                            }
+                            binaryContent = newBinaryContent;
+                        }
+                        else
+                        {
+                            StringBuilder sb = new StringBuilder((content.Length + 2) * repeat);
+                            for (int index = 0; index < repeat; index++)
+                            {
+                                sb.AppendLine(content);
+                            }
+                            content = sb.ToString();
+                        }
+                    }
                 }
 
                 int ftrOffset = ISOHelper.GetFileToRamOffset(sector, context);
