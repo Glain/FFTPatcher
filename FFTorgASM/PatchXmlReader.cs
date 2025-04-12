@@ -159,6 +159,7 @@ namespace FFTorgASM
                 XmlAttribute attrWriteMask = Utilities.GetCaseInsensitiveAttribute(location, "writeMask");
                 XmlAttribute attrOffsetVariable = Utilities.GetCaseInsensitiveAttribute(location, "offsetVariable");
                 XmlAttribute attrRepeat = Utilities.GetCaseInsensitiveAttribute(location, "repeat");
+                XmlAttribute attrInsert = Utilities.GetCaseInsensitiveAttribute(location, "insert");
 
                 string strOffsetAttr = (offsetAttribute != null) ? offsetAttribute.InnerText : "";
                 string[] strOffsets = strOffsetAttr.Replace(" ", "").Split(',');
@@ -363,6 +364,17 @@ namespace FFTorgASM
                     offsetVariable = attrOffsetVariable.InnerText;
                 }
 
+                bool isInsert = false;
+                int insertNumBytesToMove = 0;
+                if (attrInsert != null)
+                {
+                    Int32.TryParse(attrInsert.InnerText, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out insertNumBytesToMove);
+                    if (insertNumBytesToMove > 0)
+                    {
+                        isInsert = true;
+                    }
+                }
+
                 int repeat = 0;
                 if (attrRepeat != null)
                 {
@@ -511,6 +523,8 @@ namespace FFTorgASM
                     patchedByteArray.IsStatic = isStatic;
                     patchedByteArray.MaskWrite = maskWrite;
                     patchedByteArray.OffsetVariable = offsetVariable;
+                    patchedByteArray.IsInsert = isInsert;
+                    patchedByteArray.InsertNumBytesToMove = insertNumBytesToMove;
 
                     if (replaceLabels)
                         replaceLabelsContentMap.Add(patchedByteArray, content);

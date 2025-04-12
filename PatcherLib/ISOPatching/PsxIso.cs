@@ -184,7 +184,7 @@ namespace PatcherLib.Iso
                     {
                         if (patch.MaskWrite > 0)
                         {
-                            byte[] patchBytes = patch.GetBytes();
+                            byte[] patchBytes = new List<byte>(patch.GetBytes()).ToArray();
 
                             byte[] originalBytes = new byte[patchBytes.Length];
                             long patchStartOffset = patch.Offset + startOffset;
@@ -196,11 +196,36 @@ namespace PatcherLib.Iso
                                 patchBytes[index] = (byte)((patchBytes[index] & patch.MaskWrite) | (originalBytes[index] & ~patch.MaskWrite));
                             }
 
-                            stream.WriteArrayToPosition(patchBytes, patchStartOffset);
+                            if (patch.IsInsert)
+                            {
+                                byte[] bytesToMove = new byte[patch.InsertNumBytesToMove];
+                                stream.Seek(patchStartOffset, SeekOrigin.Begin);
+                                stream.Read(bytesToMove, 0, patch.InsertNumBytesToMove);
+                                stream.WriteArrayToPosition(patchBytes, patchStartOffset);
+                                stream.WriteArrayToPosition(bytesToMove, patchStartOffset + patchBytes.Length);
+                            }
+                            else
+                            {
+                                stream.WriteArrayToPosition(patchBytes, patchStartOffset);
+                            }
                         }
                         else
                         {
-                            stream.WriteArrayToPosition(patch.GetBytes(), patch.Offset + startOffset);
+                            if (patch.IsInsert)
+                            {
+                                long patchStartOffset = patch.Offset + startOffset;
+                                byte[] patchBytes = patch.GetBytes();
+                                byte[] bytesToMove = new byte[patch.InsertNumBytesToMove];
+
+                                stream.Seek(patchStartOffset, SeekOrigin.Begin);
+                                stream.Read(bytesToMove, 0, patch.InsertNumBytesToMove);
+                                stream.WriteArrayToPosition(patchBytes, patchStartOffset);
+                                stream.WriteArrayToPosition(bytesToMove, patchStartOffset + patchBytes.Length);
+                            }
+                            else
+                            {
+                                stream.WriteArrayToPosition(patch.GetBytes(), patch.Offset + startOffset);
+                            }
                         }
                     }
                 }
@@ -442,8 +467,18 @@ namespace PatcherLib.Iso
             }
             else
             {
-                IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector,
-                    patch.Offset, patch.GetBytes(), true, patch.MaskWrite);
+                if (patch.IsInsert)
+                {
+                    byte[] patchBytes = patch.GetBytes();
+                    byte[] bytesToMove = PsxIso.ReadFile(iso, (PsxIso.Sectors)patch.Sector, (int)patch.Offset, patch.InsertNumBytesToMove);
+                    IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector, patch.Offset, patchBytes, true, patch.MaskWrite);
+                    IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector, patch.Offset + patchBytes.Length, bytesToMove, true, 0);
+                }
+                else
+                {
+                    IsoPatch.PatchFileAtSector(IsoPatch.IsoType.Mode2Form1, iso, true, patch.Sector,
+                        patch.Offset, patch.GetBytes(), true, patch.MaskWrite);
+                }
             }
         }
 

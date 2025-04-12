@@ -371,11 +371,31 @@ namespace PatcherLib.Iso
             {
                 if (patch.SectorEnum.GetType() == typeof( PspIso.Sectors ))
                 {
-                    stream.WriteArrayToPosition( patch.GetBytes(), (int)(info[(PspIso.Sectors)patch.SectorEnum] * 2048) + patch.Offset );
+                    if (patch.IsInsert)
+                    {
+                        byte[] patchBytes = patch.GetBytes();
+                        byte[] bytesToMove = GetFile(stream, info, (PspIso.Sectors)patch.SectorEnum, (int)patch.Offset, patch.InsertNumBytesToMove);
+                        stream.WriteArrayToPosition(patchBytes, (int)(info[(PspIso.Sectors)patch.SectorEnum] * 2048) + patch.Offset);
+                        stream.WriteArrayToPosition(bytesToMove, (int)(info[(PspIso.Sectors)patch.SectorEnum] * 2048) + patch.Offset + patchBytes.Length);
+                    }
+                    else
+                    {
+                        stream.WriteArrayToPosition(patch.GetBytes(), (int)(info[(PspIso.Sectors)patch.SectorEnum] * 2048) + patch.Offset);
+                    }
                 }
                 else if (patch.SectorEnum.GetType() == typeof( FFTPack.Files ))
                 {
-                    FFTPack.PatchFile( stream, info, (int)((FFTPack.Files)patch.SectorEnum), (int)patch.Offset, patch.GetBytes() );
+                    if (patch.IsInsert)
+                    {
+                        byte[] patchBytes = patch.GetBytes();
+                        byte[] bytesToMove = GetFile(stream, info, (FFTPack.Files)patch.SectorEnum, (int)patch.Offset, patch.InsertNumBytesToMove);
+                        FFTPack.PatchFile(stream, info, (int)((FFTPack.Files)patch.SectorEnum), (int)patch.Offset, patchBytes);
+                        FFTPack.PatchFile(stream, info, (int)((FFTPack.Files)patch.SectorEnum), (int)patch.Offset + patchBytes.Length, bytesToMove);
+                    }
+                    else
+                    {
+                        FFTPack.PatchFile(stream, info, (int)((FFTPack.Files)patch.SectorEnum), (int)patch.Offset, patch.GetBytes());
+                    }
                 }
                 else
                 {

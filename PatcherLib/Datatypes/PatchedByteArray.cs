@@ -172,6 +172,9 @@ namespace PatcherLib.Datatypes
         public long BaseOffset { get; set; }
         public long BaseRamOffset { get; set; }
 
+        public bool IsInsert { get; set; }
+        public int InsertNumBytesToMove { get; set; }
+
         #endregion Public Properties 
 
         #region Constructors 
@@ -248,6 +251,12 @@ namespace PatcherLib.Datatypes
             if (bytes.Length != compareBytes.Length)
                 return false;
 
+            if (IsInsert != patchedByteArray.IsInsert) 
+                return false;
+
+            if (InsertNumBytesToMove != patchedByteArray.InsertNumBytesToMove) 
+                return false;
+
             for (int index = 0; index < bytes.Length; index++)
             {
                 if (bytes[index] != compareBytes[index])
@@ -314,6 +323,8 @@ namespace PatcherLib.Datatypes
             result.OffsetVariable = OffsetVariable;
             result.BaseOffset = BaseOffset;
             result.BaseRamOffset = BaseRamOffset;
+            result.IsInsert = IsInsert;
+            result.InsertNumBytesToMove = InsertNumBytesToMove;
             return result;
         }
 
@@ -334,6 +345,8 @@ namespace PatcherLib.Datatypes
             result.OffsetVariable = OffsetVariable;
             result.BaseOffset = BaseOffset;
             result.BaseRamOffset = BaseRamOffset;
+            result.IsInsert = IsInsert;
+            result.InsertNumBytesToMove = InsertNumBytesToMove;
             return result;
         }
     }
