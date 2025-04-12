@@ -114,7 +114,7 @@
             // 
             this.trapsCheckedListBox.FormattingEnabled = true;
             this.trapsCheckedListBox.Items.AddRange( new object[] {
-            "No Activation",
+            "Upper Level",
             "",
             "Always Trap",
             "Disable Trap",
