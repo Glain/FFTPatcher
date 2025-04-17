@@ -206,4 +206,68 @@
         </Location>
     </Patch>
 
+<Patch name="Change Serial/Memcard ID - SCUS">
+    <Description>Cerabow's Serial/Memcard ID Edit Hack
+Details here: https://ffhacktics.com/wiki/Mod_Serials
+Special thanks to Xifanie, Pride, and Glain for making this possible.
+
+Using this hack will make porting games to PSP/PS Vita more challenging. Using PSX2PSP to convert a game image with this hack may not "just work" and may require workarounds.
+
+This hack changes the serial of the ISO (no real impact on gameplay, mostly a label some emulators will show) and the Memcard ID. The Memcard ID is a unique identifier that every PS1 game has. It's what keeps FF7 saves from showing in your FFT save list.
+
+Vanilla Serial: SCUS_942.21
+Vanilla Memcard ID: BASCUS-94221FFT
+This hack changes...
+Serial: [1st Char][2nd Char][3rd Char][4th Char]_942.21
+Memcard ID: BA[1st Char][2nd Char][3rd Char][4th Char]-94221FFT
+
+TLW Serial: TLW2_942.21
+TLW Memcard ID: BATLW2-94221FFT
+
+Character conversion table (Hex values):
+0 - 30
+1 - 31
+2 - 32
+3 - 33
+4 - 34
+5 - 35
+6 - 36
+7 - 37
+8 - 38
+9 - 39
+A - 41
+B - 42
+C - 43
+D - 44
+E - 45
+F - 46
+G - 47
+H - 48
+I - 49
+J - 4A
+K - 4B
+L - 4C
+M - 4D
+N - 4E
+O - 4F
+P - 50
+Q - 51
+R - 52
+S - 53
+T - 54
+U - 55
+V - 56
+W - 57
+X - 58
+Y - 59
+Z - 5A
+
+Vanilla is SCUS, so the default values would be 53, 43, 55, and 53.
+</Description>
+	<Variable name="1st Character" specific="22:265, SYSTEM_CNF:0E, EVENT_CARD_OUT:2,16,2A,3E,52,66,7A,8E,A2,B6,CA,DE,F2,106,11A, WORLD_WORLD_BIN:BE,D2,E6,FA,10E,122,136,14A,15E,172,186,19A,1AE,1C2,1D6" bytes="1" default="54" />
+	<Variable name="2nd Character" specific="22:266, SYSTEM_CNF:0F, EVENT_CARD_OUT:3,17,2B,3F,53,67,7B,8F,A3,B7,CB,DF,F3,107,11B, WORLD_WORLD_BIN:BF,D3,E7,FB,10F,123,137,14B,15F,173,187,19B,1AF,1C3,1D7" bytes="1" default="4C" />
+	<Variable name="3rd Character" specific="22:267, SYSTEM_CNF:10, EVENT_CARD_OUT:4,18,2C,40,54,68,7C,90,A4,B8,CC,E0,F4,108,11C, WORLD_WORLD_BIN:C0,D4,E8,FC,110,124,138,14C,160,174,188,19C,1B0,1C4,1D8" bytes="1" default="57" />
+	<Variable name="4th Character" specific="22:268, SYSTEM_CNF:11, EVENT_CARD_OUT:5,19,2D,41,55,69,7D,91,A5,B9,CD,E1,F5,109,11D, WORLD_WORLD_BIN:C1,D5,E9,FD,111,125,139,14D,161,175,189,19D,1B1,1C5,1D9" bytes="1" default="32" />
+  </Patch>
+  
 </Patches>
