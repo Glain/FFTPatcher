@@ -1653,6 +1653,7 @@ This conflicts with:
 Apply after using both of the others.</Description>
 
 		<Location file="SCUS_942_21" offset="5c5dc" mode="ASM" offsetMode="RAM">
+									.label @Data_Nullifying,0x8005e644
 									j 0x80028670							#
 									addu r16,r5,r0                      	#r16 = Level Up Check
 									jal @Data_Nullifying                	#Zero out bonus stats
@@ -1834,22 +1835,8 @@ Use the Patcher to determine what Status ID to use under the Inflict Status tab.
 	<Patch name="Status CT Rewrite">
 		<Description>Every Status can now have a CT by setting the time in the FFTPatcher and setting the variable x01 to x0F.&#13;&#10;You are still limited to only 16 timers but they can share CTs. I.E. Poison and Regen can share a CT but will need to cancel and/or not allow them to stack on each other.&#13;&#10;If the status does not have a CT, set the variable to FF.
 There's an option to increase or decrease the Status CT	timers through the unit data (ie attaching it to a support) and comes with it assigned to Train and Secret Hunt. Edit the dropdowns to change this. Or set both to 0 if you don't want this at all. Ths ASMs to disable the vanilla effect of Train and Secret Hunt are also in my XML,
-		</Description>
-		<Location file="SCUS_942_21" offset="40BD8" mode="ASM" offsetMode="RAM" inputFile="build_now_loading_rewrite.asm" />
-		<Location file="SCUS_942_21" offset="41100" offsetMode="RAM" mode="DATA" >
-								FF FF FF FF								<!-- Blank / Crystal / Dead / Undead  -->
-								FF FF FF FF								<!-- Charging / Jumping / Defending / Performing -->
-								FF FF FF FF								<!-- Petrifty / Invitation / Darkness / Confusion -->
-								FF FF FF FF								<!-- Silence / Blood Suck / "Cursed" / Treasure -->
-								FF FF FF FF								<!-- Oil / Float / Reraise / Transparent -->
-								FF FF FF FF								<!-- Berserk / Chicken / Frog / Critical -->
-								00 01 02 03								<!-- Poison / Regen / Protect / Shell -->
-								04 05 06 07								<!-- Haste / Slow / Stop / Wall -->
-								08 09 0A 0B								<!-- Faith / Innocent / Charm / Sleep -->
-								0C 0D 0E 0F								<!-- Dont Move / Dont Act / Reflect / Death Sentence -->
-		</Location>
-		
-		<Location file="SCUS_942_21" mode="ASM" offsetMode="RAM">						
+		</Description>		
+		<Location file="SCUS_942_21" mode="ASM" offset="2705C" offsetMode="RAM">						
 						@Set_Dead_CT:
 								lbu r2, 0x0005(r7)						#Load Unit Battle Flags
 								lbu r3, 0x0006(r7)						#Load Unit Gender
@@ -1872,17 +1859,17 @@ There's an option to increase or decrease the Status CT	timers through the unit 
 								nop										#
 
 						@Status_CT_RSM:	
-								lbu r4,0x0091(r7)	Load Unit Supports	#
+								lbu r4, %CTIncreaseUnitData (r7)		#Load Unit Supports
 								addu r3, r8, r0							#
-								andi r4, r4, 0x0080						#
+								andi r4, r4, %CTIncreaseBit				#
 								beq r4, r0, @CT_RSM_no_boost			#Branch if Support is not active
 								nop										#
 								sll r4, r3, 0x01						#
 								addu r4, r4, r3							#
 								srl r3, r4, 0x01						#r3 = CT * 3 / 2
-@CT_RSM_no_boost:				lbu r4,0x0091(r7)						#Load Unit Supports
+@CT_RSM_no_boost:				lbu r4, %CTDecreaseUnitData (r7)		#Load Unit Supports
 								nop										#
-								andi r4, r4, 0x0040						#
+								andi r4, r4, %CTDecreaseBit				#
 								beq r4, r0, @CT_RSM_no_decrease			#Branch if Support is not active
 								nop										#
 								srl r3, r3, 0x01						#CT / 2
@@ -1890,53 +1877,63 @@ There's an option to increase or decrease the Status CT	timers through the unit 
 								nop										#
 
 		</Location>
-		
+        <Location file="SCUS_942_21" mode="DATA" label="address_status_storage_location">
+            FF FF FF FF								<!-- Blank / Crystal / Dead / Undead  -->
+            FF FF FF FF								<!-- Charging / Jumping / Defending / Performing -->
+            FF FF FF FF								<!-- Petrifty / Invitation / Darkness / Confusion -->
+            FF FF FF FF								<!-- Silence / Blood Suck / "Cursed" / Treasure -->
+            FF FF FF FF								<!-- Oil / Float / Reraise / Transparent -->
+            FF FF FF FF								<!-- Berserk / Chicken / Frog / Critical -->
+            00 01 02 03								<!-- Poison / Regen / Protect / Shell -->
+            04 05 06 07								<!-- Haste / Slow / Stop / Wall -->
+            08 09 0A 0B								<!-- Faith / Innocent / Charm / Sleep -->
+            0C 0D 0E 0F								<!-- Dont Move / Dont Act / Reflect / Death Sentence -->
+        </Location>
 		<Location file="SCUS_942_21" offset="5DB70" mode="ASM" offsetMode="RAM">
-						.label @Get_Status_Storage_Location,0x8005DBFC
-						@CT_Magic_Main:
-								addiu r29, r29, -0x0018					#r4 = Unit Data Pointer; r5 = Counter; r6 = Initialize Status
-								sw r31, 0x0010(r29)						#
-								ori r2, r0, 0x0002						#
-								bne r2, r5, @CTMMain.not_dead			#Branch if Status to check is not Dead
-								addu r7, r4, r0							#r7 = Unit Data Pointer
-								jal @Set_Dead_CT						#Set Dead CT
-								ori r8, r0, 0x00FF						#(Immortal Dead Timer)
-@CTMMain.not_dead:				jal @Get_Status_Storage_Location		#Get Status Storage Location
-								nop										#
-								lui r2, 0x8006							#
-								sll r3, r5, 0x04						#Counter * 16
-								addu r2, r2, r3							#0x80060000 + Counter * 16
-								lbu r8, 0x5DE7(r2)						#r8 = Status CT
-								nop										#
-								beq r8, r0, @CTMMain.end				#Branch to End if Status has no CT
-								addu r2, r0, r0							#Clear r2
-								beq r6, r0, @CTMMain.set_status			#Branch to next section if beginning status
-								nop										#
-								sb r0, 0x005D(r1)						#
-								j @CTMMain.end							#Jump to End
-								addu r2,r0,r0							#Clear r2
-@CTMMain.set_status:			ori r3, r0, 0x0027						#
-								bne r3, r5, @CTMMain.not_ds				#Branch if Status is not Death Sentence
-								addu r2,r0,r0							#Clear r2
-								jal @Death_Sentence						#Death Sentence
-								nop										#
-								bne r2, r0, @CTMMain.end				#Branch if r2 = xffff
-								nop										#
-@CTMMain.not_ds:				jal @Status_CT_RSM						#Check CT Status Supports
-								nop										#
-								sb r3, 0x005D(r1)						#Store Status CT
-@CTMMain.end:					lw r31, 0x0010(r29)						#
-								addiu r29, r29, 0x0018					#
-								jr r31									#
-								nop										#
+            @CT_Magic_Main:
+            addiu r29, r29, -0x0018					#r4 = Unit Data Pointer; r5 = Counter; r6 = Initialize Status
+            sw r31, 0x0010(r29)						#
+            ori r2, r0, 0x0002						#
+            bne r2, r5, @CTMMain.not_dead			#Branch if Status to check is not Dead
+            addu r7, r4, r0							#r7 = Unit Data Pointer
+            jal @Set_Dead_CT						#Set Dead CT
+            ori r8, r0, 0x00FF						#(Immortal Dead Timer)
+            @CTMMain.not_dead:				jal @Get_Status_Storage_Location		#Get Status Storage Location
+            nop										#
+            lui r2, 0x8006							#
+            sll r3, r5, 0x04						#Counter * 16
+            addu r2, r2, r3							#0x80060000 + Counter * 16
+            lbu r8, 0x5DE7(r2)						#r8 = Status CT
+            nop										#
+            beq r8, r0, @CTMMain.end				#Branch to End if Status has no CT
+            addu r2, r0, r0							#Clear r2
+            beq r6, r0, @CTMMain.set_status			#Branch to next section if beginning status
+            nop										#
+            sb r0, 0x005D(r1)						#
+            j @CTMMain.end							#Jump to End
+            addu r2,r0,r0							#Clear r2
+            @CTMMain.set_status:			ori r3, r0, 0x0027						#
+            bne r3, r5, @CTMMain.not_ds				#Branch if Status is not Death Sentence
+            addu r2,r0,r0							#Clear r2
+            jal @Death_Sentence						#Death Sentence
+            nop										#
+            bne r2, r0, @CTMMain.end				#Branch if r2 = xffff
+            nop										#
+            @CTMMain.not_ds:				jal @Status_CT_RSM						#Check CT Status Supports
+            nop										#
+            sb r3, 0x005D(r1)						#Store Status CT
+            @CTMMain.end:					lw r31, 0x0010(r29)						#
+            addiu r29, r29, 0x0018					#
+            jr r31									#
+            nop										#
 
-						@Get_Status_Storage_Location:
-								lui r2, 0x8004							#
-								addu r2, r2, r5							#
-								lbu r2,0x1100(r2)                       #r2 = Status Storage Location
-								jr r31									#
-								addu r1, r2, r7							#r1 = Unit Data Pointer + Storage Offset
-		</Location>	
+            @Get_Status_Storage_Location:
+            lui r2, %hi(@address_status_storage_location)
+            addu r2, r2, r5							#
+            lbu r2, %lo(@address_status_storage_location) (r2)                       #r2 = Status Storage Location
+            jr r31									#
+            addu r1, r2, r7							#r1 = Unit Data Pointer + Storage Offset
+        </Location>	
 
 		<Location file="BATTLE_BIN" offset="15E6E0" mode="ASM" offsetMode="RAM">
 						@CT_Status_Timer_Inner:
@@ -2021,10 +2018,10 @@ Timer.cannot_remove_status:		lw r31, 0x000C(r29)						#
 								jr r31									#
 								addiu r29, r29, 0x0018					#		
 		</Location>
-		<Variable name="CT Increase Unit Data" file="SCUS_942_21" offset="40ff4" offsetMode="RAM" default="91" />
-		<Variable name="CT Increase bit" file="SCUS_942_21" offset="40ff8" offsetMode="RAM" default="80" />
-		<Variable name="CT Decrease Unit Data" file="SCUS_942_21" offset="41014" offsetMode="RAM" default="91" />
-		<Variable name="CT Decrease bit" file="SCUS_942_21" offset="4101c" offsetMode="RAM" default="40" />
+		<Variable name="CT Increase Unit Data" symbol="true" default="92" />
+		<Variable name="CT Increase Bit" symbol="true" default="01" />
+		<Variable name="CT Decrease Unit Data" symbol="true" default="92" />
+		<Variable name="CT Decrease Bit" symbol="true" default="02" />
 	</Patch>
 
 	<Patch name="R/S/M: Move +1/2/3 and Jump +1/2/3 edits">
@@ -2165,7 +2162,11 @@ Movement.CE.end:				jr    r31									#
 		<Variable name="PA +" specific="SCUS_942_21:5C940,WORLD_WORLD_BIN:13E47C" offsetMode="RAM" bytes="1" default="02" />
 		<Variable name="MA +" specific="SCUS_942_21:5C954,WORLD_WORLD_BIN:13E490" offsetMode="RAM" bytes="1" default="02" />
 		<Variable name="Speed +" specific="SCUS_942_21:5C968,WORLD_WORLD_BIN:13E4A4" offsetMode="RAM" bytes="1" default="01" />
-		<Variable name="Class Evasion +" specific="SCUS_942_21:41070,WORLD_WORLD_BIN:13E4B8" offsetMode="RAM" bytes="1" default="14" />	
+		<Variable name="Class Evasion +" specific="SCUS_942_21:41070,WORLD_WORLD_BIN:13E4B8" offsetMode="RAM" bytes="1" default="14" />
+
+        <Variable name="Now Loading Red Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
+        <Variable name="Now Loading Green Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
+        <Variable name="Now Loading Blue Value" file="SCUS_942_21" symbol="true" bytes="1" default="80" />
 	</Patch>
 
 	<Patch name="Transparent not lost on action or taking damage">
