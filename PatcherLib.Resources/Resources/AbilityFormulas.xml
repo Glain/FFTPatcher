@@ -30,7 +30,7 @@
   <Ability value="09">Dmg_(Y/100)% Hit_F(MA+X)% ME</Ability>
   <Ability value="0A">Hit_F(MA+X)% ME</Ability>
   <Ability value="0B">Hit_F(MA+X)% NE</Ability>
-  <Ability value="0C">Heal_F(MA*Y) NE</Ability>
+  <Ability value="0C">Heal_F(MA*Y) NS NE</Ability>
   <Ability value="0D">Heal_(Y)% Hit_F(MA+X)% NE</Ability>
   <Ability value="0E">Dmg_(Y)% Hit_F(MA+X)% 100% Status Hide Status</Ability>
   <Ability value="0F">AbsorbMP_(Y)% Hit_F(MA+X)% NS ME</Ability>
