@@ -6432,13 +6432,7 @@
             Formula = Max(Z * 10, (MaxHP or MaxMP) * (Multiplier) / 128)
             Examples: 100% is 0x80, 75% is 0x60, 50% is 0x40
         </Description>
-        <Location file="BATTLE_BIN" offset="15AE04" offsetMode="RAM" mode="DATA" label="item_healing_multipliers">
-            %PotionMultiplier
-            %Hi-PotionMultiplier
-            %X-PotionMultiplier
-            %EtherMultiplier
-            %Hi-EtherMultiplier
-        </Location>
+        <Location file="BATTLE_BIN" offset="15AE04" offsetMode="RAM" mode="DATA" label="item_healing_multipliers"></Location>
         <Location file="BATTLE_BIN" offset="15AE0C" offsetMode="RAM" mode="ASM">
             @calc_heal_amount:
                 #   (a0 = Amount, a1 = Unit offset for Max value (0x2a = MaxHP, 0x2e = MaxMP), a2 = Store offset for Action (0x04 = HP Damage, 0x0a = MP Healing)
@@ -6490,11 +6484,11 @@
                     sll     a0, v0, 1
                     j       @item_mp_heal_hook
         </Location>
-        <Variable symbol="true" bytes="1" default="14" name="Potion Multiplier" />
-        <Variable symbol="true" bytes="1" default="28" name="Hi-Potion Multiplier" />
-        <Variable symbol="true" bytes="1" default="3C" name="X-Potion Multiplier" />
-        <Variable symbol="true" bytes="1" default="1E" name="Ether Multiplier" />
-        <Variable symbol="true" bytes="1" default="3C" name="Hi-Ether Multiplier" />
+        <Variable file="BATTLE_BIN" offset="15AE04" offsetMode="RAM" bytes="1" default="14" name="Potion Multiplier"  />
+        <Variable file="BATTLE_BIN" offset="15AE05" offsetMode="RAM" bytes="1" default="28" name="Hi-Potion Multiplier" />
+        <Variable file="BATTLE_BIN" offset="15AE06" offsetMode="RAM" bytes="1" default="3C" name="X-Potion Multiplier" />
+        <Variable file="BATTLE_BIN" offset="15AE07" offsetMode="RAM" bytes="1" default="1E" name="Ether Multiplier" />
+        <Variable file="BATTLE_BIN" offset="15AE08" offsetMode="RAM" bytes="1" default="3C" name="Hi-Ether Multiplier" />
     </Patch>
     <Patch name="Units survive KO countdown">
         <Description>
