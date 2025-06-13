@@ -44,7 +44,7 @@ namespace ASMEncoding
             if (EncodingMode == ASMEncodingMode.PSP)
             {
                 resultSet.Remove(ASMCheckCondition.LoadDelay);
-                //resultSet.Remove(ASMCheckCondition.LoadInBranchDelaySlot);
+                resultSet.Remove(ASMCheckCondition.MultCountdown);
             }
             return resultSet;
         }

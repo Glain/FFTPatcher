@@ -580,7 +580,10 @@ namespace FFTorgASM
                     };
 
                     if (asmUtility.EncodingMode == ASMEncodingMode.PSP)
+                    {
                         checkConditions.Remove(ASMCheckCondition.LoadDelay);
+                        checkConditions.Remove(ASMCheckCondition.MultCountdown);
+                    }
 
                     ASMCheckResult checkResult = asmUtility.CheckASMFromBytes(patchedByteArray.GetBytes(), (uint)patchedByteArray.RamOffset, true, false, checkConditions);
 
