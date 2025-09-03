@@ -8181,4 +8181,21 @@
             lhu     a0, 0x28(v0)            # Load HP (instead of MP)
         </Location>
     </Patch>
+    <Patch name="Formula: +MA (Y)">
+        <Location file="BATTLE_BIN" offset="18F610" offsetMode="RAM" mode="DATA" replaceLabels="true" offsetVariable="multFormulaID">
+            @formula
+        </Location>
+        <Location file="BATTLE_BIN" offset="15B090" mode="ASM" offsetMode="RAM" label="formula">
+            lui     t0, 0x8019
+            lbu     t1, 0x38fa(t0)
+            lw      t2, 0x2d90(t0)
+            ori     t1, t1, 0x80
+            sb      t1, 0x15(t2)
+            li      t1, 1
+            jr      ra
+            sb      t1, 0x25(t2)
+        </Location>
+        <Variable name="Formula ID" bytes="1" default="18" symbol="true" />
+        <Variable name="multFormulaID" bytes="2" reference="Formula ID" operator="*" operand="4" symbol="true" />
+    </Patch>
 </Patches>
