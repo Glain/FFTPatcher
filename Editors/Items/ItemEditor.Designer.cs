@@ -947,7 +947,7 @@ namespace FFTPatcher.Editors
         	        	        	"Accessory",
         	        	        	"",
         	        	        	"Rare",
-        	        	        	""});
+                                    "Can't Steal/Break"});
         	this.itemAttributesCheckedListBox.Location = new System.Drawing.Point(372, 3);
         	this.itemAttributesCheckedListBox.Name = "itemAttributesCheckedListBox";
         	this.itemAttributesCheckedListBox.Size = new System.Drawing.Size(107, 124);
