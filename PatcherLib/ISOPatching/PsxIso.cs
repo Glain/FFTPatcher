@@ -78,7 +78,7 @@ namespace PatcherLib.Iso
             { Sectors.EVENT_OPTION_OUT, new KeyValuePair<int, byte[]>(0x50, new byte[4] { 0xac, 0x5f, 0xb5, 0x26 }) },
             { Sectors.EVENT_ETC_OUT, new KeyValuePair<int, byte[]>(0x20, new byte[4] { 0x14, 0x00, 0xB1, 0xAF }) },
             { Sectors.EVENT_BUNIT_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x00, 0x00, 0xc7, 0x14 }) },
-            { Sectors.EVENT_CARD_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x42, 0x41, 0x53, 0x43 }) },
+            { Sectors.EVENT_CARD_OUT, new KeyValuePair<int, byte[]>(0x0c, new byte[4] { 0x46, 0x46, 0x54, 0x4f }) },
 
             { Sectors.EVENT_HELPMENU_OUT, new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x04, 0x75, 0xa5, 0x24 }) },
             { Sectors.EVENT_JOBSTTS_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }) }
