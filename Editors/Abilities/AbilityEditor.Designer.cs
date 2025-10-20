@@ -152,7 +152,7 @@ namespace FFTPatcher.Editors
             idLabel.Name = "idLabel";
             idLabel.Size = new System.Drawing.Size(51, 13);
             idLabel.TabIndex = 21;
-            idLabel.Text = "Ability ID:";
+            idLabel.Text = "RSM Ability ID:";
             // 
             // arithmeticksLabel
             // 
