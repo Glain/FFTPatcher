@@ -58,8 +58,10 @@ namespace PatcherLib.Iso
             { Sectors.EVENT_ETC_OUT, 0x1BF000 },
             { Sectors.EVENT_BUNIT_OUT, 0x1BF000 },
             { Sectors.EVENT_CARD_OUT, 0x1BF000 },
+            { Sectors.EVENT_DEBUGCHR_OUT, 0x1BF000 },
             { Sectors.EVENT_HELPMENU_OUT, 0x1DF000 },
-            { Sectors.EVENT_JOBSTTS_OUT, 0x1DF000 }
+            { Sectors.EVENT_JOBSTTS_OUT, 0x1DF000 },
+            { Sectors.EVENT_SMALL_OUT, 0x1DF000 }
         };
 
         private static readonly Dictionary<PsxIso.Sectors, KeyValuePair<int, byte[]>> FileCheckValues = new Dictionary<PsxIso.Sectors, KeyValuePair<int, byte[]>>()
@@ -79,9 +81,11 @@ namespace PatcherLib.Iso
             { Sectors.EVENT_ETC_OUT, new KeyValuePair<int, byte[]>(0x20, new byte[4] { 0x14, 0x00, 0xB1, 0xAF }) },
             { Sectors.EVENT_BUNIT_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x00, 0x00, 0xc7, 0x14 }) },
             { Sectors.EVENT_CARD_OUT, new KeyValuePair<int, byte[]>(0x0c, new byte[4] { 0x46, 0x46, 0x54, 0x4f }) },
+            { Sectors.EVENT_DEBUGCHR_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x16, 0x80, 0x02, 0x3c }) },
 
             { Sectors.EVENT_HELPMENU_OUT, new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x04, 0x75, 0xa5, 0x24 }) },
-            { Sectors.EVENT_JOBSTTS_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }) }
+            { Sectors.EVENT_JOBSTTS_OUT, new KeyValuePair<int, byte[]>(0, new byte[4] { 0x25, 0x64, 0x00, 0x45 }) },
+            { Sectors.EVENT_SMALL_OUT, new KeyValuePair<int, byte[]>(0x10, new byte[4] { 0x70, 0x70, 0x42, 0x8c }) }
         };
 
         public static readonly KnownPosition Abilities = new KnownPosition(Sectors.SCUS_942_21, 0x4F3F0, 9414);
