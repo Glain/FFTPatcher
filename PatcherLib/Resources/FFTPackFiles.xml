@@ -899,7 +899,7 @@
   <file entry="0881" name="OPEN/OPEN.BIN"/>
   <file entry="0882" name="OPEN/OPNTEX.BIN"/>
   <file entry="0883" name="OPEN/OPNBK.BIN"/>
-  <file entry="0884" name="BATTLE/hchar_pdat_hchar_DAT.BIN"/>
+  <file entry="0884" name="BATTLE/hchar_pdat_hchar_dat.bin"/>
   <file entry="0885" name="BATTLE/ANKOKU_M.SPR"/>
   <file entry="0886" name="BATTLE/ANKOKU_W.SPR"/>
   <file entry="0887" name="BATTLE/TAMA_M.SPR"/>
@@ -911,12 +911,12 @@
   <file entry="0893" name="BATTLE/BULEMONDA_M.SPR"/>
   <file entry="0894" name="BATTLE/BULECHANGE_M.SPR"/>
   <file entry="0895" name="BATTLE/SWORD_M.SPR"/>
-  <file entry="0896" name="BATTLE/face_dst_face_DAT.BIN"/>
+  <file entry="0896" name="BATTLE/face_dst_face_dat.bin"/>
   <file entry="0897" name="BATTLE/ENTD5.ENT"/>
-  <file entry="0898" name="WOTL/Assorted_Graphics.BIN"/>
-  <file entry="0899" name="WOTL/Map_Thumbnails.BIN"/>
-  <file entry="0900" name="WOTL/World_Map_Titles.BIN"/>
-  <file entry="0901" name="WOTL/Now_Loading.BIN"/>
+  <file entry="0898" name="WOTL/Assorted_Graphics.bin"/>
+  <file entry="0899" name="WOTL/Map_Thumbnails.bin"/>
+  <file entry="0900" name="WOTL/World_Map_Titles.bin"/>
+  <file entry="0901" name="WOTL/Now_Loading.bin"/>
   <file entry="0902" name="SAVEIMAGE/902.png"/>
   <file entry="0903" name="SAVEIMAGE/903.png"/>
   <file entry="0904" name="SAVEIMAGE/904.png"/>
@@ -951,9 +951,9 @@
   <file entry="0933" name="SAVEIMAGE/933.png"/>
   <file entry="0934" name="SAVEIMAGE/934.png"/>
   <file entry="0935" name="SAVEIMAGE/935.png"/>
-  <file entry="0936" name="WOTL/Menu_Options.BIN"/>
-  <file entry="0937" name="WOTL/staff_DAT_staffname_DAT.BIN"/>
-  <file entry="0938" name="WOTL/VPAC_SOUND_Effects.BIN"/>
+  <file entry="0936" name="WOTL/Menu_Options.bin"/>
+  <file entry="0937" name="WOTL/staff_dat_staffname_dat.bin"/>
+  <file entry="0938" name="WOTL/VPAC_SOUND_Effects.bin"/>
   <file entry="0939" name="EFFECT/efc_e000dat_data.bin"/>
   <file entry="0940" name="EFFECT/efc_e001dat_data.bin"/>
   <file entry="0941" name="EFFECT/efc_e002dat_data.bin"/>
@@ -1439,7 +1439,7 @@
   <file entry="2223" name="MAP/MAP002.90"/>
   <file entry="2224" name="MAP/MAP002.91"/>
   <file entry="2225" name="MAP/MAP002.GNS"/>
-  <file entry="2226" name="MAP/map_dst_map002_DAT.bin"/>
+  <file entry="2226" name="MAP/map_dst_map002_dat.bin"/>
   <file entry="2227" name="MAP/MAP003.8"/>
   <file entry="2228" name="MAP/MAP003.9"/>
   <file entry="2229" name="MAP/MAP003.12"/>
@@ -1449,7 +1449,7 @@
   <file entry="2233" name="MAP/MAP003.20"/>
   <file entry="2234" name="MAP/MAP003.21"/>
   <file entry="2235" name="MAP/MAP003.GNS"/>
-  <file entry="2236" name="MAP/map_dst_map003_DAT.bin"/>
+  <file entry="2236" name="MAP/map_dst_map003_dat.bin"/>
   <file entry="2237" name="MAP/MAP004.7"/>
   <file entry="2238" name="MAP/MAP004.8"/>
   <file entry="2239" name="MAP/MAP004.13"/>
@@ -1467,7 +1467,7 @@
   <file entry="2251" name="MAP/MAP004.35"/>
   <file entry="2252" name="MAP/MAP004.54"/>
   <file entry="2253" name="MAP/MAP004.GNS"/>
-  <file entry="2254" name="MAP/map_dst_map004_DAT.bin"/>
+  <file entry="2254" name="MAP/map_dst_map004_dat.bin"/>
   <file entry="2255" name="MAP/MAP005.7"/>
   <file entry="2256" name="MAP/MAP005.8"/>
   <file entry="2257" name="MAP/MAP005.10"/>
@@ -1489,7 +1489,7 @@
   <file entry="2273" name="MAP/MAP005.35"/>
   <file entry="2274" name="MAP/MAP005.40"/>
   <file entry="2275" name="MAP/MAP005.GNS"/>
-  <file entry="2276" name="MAP/map_dst_map005_DAT.bin"/>
+  <file entry="2276" name="MAP/map_dst_map005_dat.bin"/>
   <file entry="2277" name="MAP/MAP006.11"/>
   <file entry="2278" name="MAP/MAP006.12"/>
   <file entry="2279" name="MAP/MAP006.13"/>
@@ -1507,7 +1507,7 @@
   <file entry="2291" name="MAP/MAP006.49"/>
   <file entry="2292" name="MAP/MAP006.50"/>
   <file entry="2293" name="MAP/MAP006.GNS"/>
-  <file entry="2294" name="MAP/map_dst_map006_DAT.bin"/>
+  <file entry="2294" name="MAP/map_dst_map006_dat.bin"/>
   <file entry="2295" name="MAP/MAP007.8"/>
   <file entry="2296" name="MAP/MAP007.9"/>
   <file entry="2297" name="MAP/MAP007.11"/>
@@ -1517,7 +1517,7 @@
   <file entry="2301" name="MAP/MAP007.19"/>
   <file entry="2302" name="MAP/MAP007.20"/>
   <file entry="2303" name="MAP/MAP007.GNS"/>
-  <file entry="2304" name="MAP/map_dst_map007_DAT.bin"/>
+  <file entry="2304" name="MAP/map_dst_map007_dat.bin"/>
   <file entry="2305" name="MAP/MAP008.27"/>
   <file entry="2306" name="MAP/MAP008.8"/>
   <file entry="2307" name="MAP/MAP008.11"/>
@@ -1535,7 +1535,7 @@
   <file entry="2319" name="MAP/MAP008.39"/>
   <file entry="2320" name="MAP/MAP008.20"/>
   <file entry="2321" name="MAP/MAP008.GNS"/>
-  <file entry="2322" name="MAP/map_dst_map008_DAT.bin"/>
+  <file entry="2322" name="MAP/map_dst_map008_dat.bin"/>
   <file entry="2323" name="MAP/MAP009.8"/>
   <file entry="2324" name="MAP/MAP009.9"/>
   <file entry="2325" name="MAP/MAP009.13"/>
@@ -1579,7 +1579,7 @@
   <file entry="2363" name="MAP/MAP011.49"/>
   <file entry="2364" name="MAP/MAP011.53"/>
   <file entry="2365" name="MAP/MAP011.GNS"/>
-  <file entry="2366" name="MAP/map_dst_map011_DAT.bin"/>
+  <file entry="2366" name="MAP/map_dst_map011_dat.bin"/>
   <file entry="2367" name="MAP/MAP012.8"/>
   <file entry="2368" name="MAP/MAP012.9"/>
   <file entry="2369" name="MAP/MAP012.10"/>
@@ -1597,7 +1597,7 @@
   <file entry="2381" name="MAP/MAP012.40"/>
   <file entry="2382" name="MAP/MAP012.41"/>
   <file entry="2383" name="MAP/MAP012.GNS"/>
-  <file entry="2384" name="MAP/map_dst_map012_DAT.bin"/>
+  <file entry="2384" name="MAP/map_dst_map012_dat.bin"/>
   <file entry="2385" name="MAP/MAP013.8"/>
   <file entry="2386" name="MAP/MAP013.9"/>
   <file entry="2387" name="MAP/MAP013.11"/>
@@ -1607,7 +1607,7 @@
   <file entry="2391" name="MAP/MAP013.19"/>
   <file entry="2392" name="MAP/MAP013.20"/>
   <file entry="2393" name="MAP/MAP013.GNS"/>
-  <file entry="2394" name="MAP/map_dst_map013_DAT.bin"/>
+  <file entry="2394" name="MAP/map_dst_map013_dat.bin"/>
   <file entry="2395" name="MAP/MAP014.7"/>
   <file entry="2396" name="MAP/MAP014.8"/>
   <file entry="2397" name="MAP/MAP014.9"/>
@@ -1626,7 +1626,7 @@
   <file entry="2410" name="MAP/MAP014.20"/>
   <file entry="2411" name="MAP/MAP014.41"/>
   <file entry="2412" name="MAP/MAP014.GNS"/>
-  <file entry="2413" name="MAP/map_dst_map014_DAT.bin"/>
+  <file entry="2413" name="MAP/map_dst_map014_dat.bin"/>
   <file entry="2414" name="MAP/MAP015.8"/>
   <file entry="2415" name="MAP/MAP015.9"/>
   <file entry="2416" name="MAP/MAP015.60"/>
@@ -1735,7 +1735,7 @@
   <file entry="2519" name="MAP/MAP020.19"/>
   <file entry="2520" name="MAP/MAP020.20"/>
   <file entry="2521" name="MAP/MAP020.GNS"/>
-  <file entry="2522" name="MAP/map_dst_map020_DAT.bin"/>
+  <file entry="2522" name="MAP/map_dst_map020_dat.bin"/>
   <file entry="2523" name="MAP/MAP021.44"/>
   <file entry="2524" name="MAP/MAP021.8"/>
   <file entry="2525" name="MAP/MAP021.15"/>
@@ -1753,7 +1753,7 @@
   <file entry="2537" name="MAP/MAP021.26"/>
   <file entry="2538" name="MAP/MAP021.51"/>
   <file entry="2539" name="MAP/MAP021.GNS"/>
-  <file entry="2540" name="MAP/map_dst_map021_DAT.bin"/>
+  <file entry="2540" name="MAP/map_dst_map021_dat.bin"/>
   <file entry="2541" name="MAP/MAP022.8"/>
   <file entry="2542" name="MAP/MAP022.9"/>
   <file entry="2543" name="MAP/MAP022.12"/>
@@ -1775,7 +1775,7 @@
   <file entry="2559" name="MAP/MAP022.54"/>
   <file entry="2560" name="MAP/MAP022.55"/>
   <file entry="2561" name="MAP/MAP022.GNS"/>
-  <file entry="2562" name="MAP/map_dst_map022_DAT.bin"/>
+  <file entry="2562" name="MAP/map_dst_map022_dat.bin"/>
   <file entry="2563" name="MAP/MAP023.8"/>
   <file entry="2564" name="MAP/MAP023.9"/>
   <file entry="2565" name="MAP/MAP023.10"/>
@@ -1788,7 +1788,7 @@
   <file entry="2572" name="MAP/MAP023.24"/>
   <file entry="2573" name="MAP/MAP023.25"/>
   <file entry="2574" name="MAP/MAP023.GNS"/>
-  <file entry="2575" name="MAP/map_dst_map023_DAT.bin"/>
+  <file entry="2575" name="MAP/map_dst_map023_dat.bin"/>
   <file entry="2576" name="MAP/MAP024.6"/>
   <file entry="2577" name="MAP/MAP024.7"/>
   <file entry="2578" name="MAP/MAP024.10"/>
@@ -1798,7 +1798,7 @@
   <file entry="2582" name="MAP/MAP024.18"/>
   <file entry="2583" name="MAP/MAP024.19"/>
   <file entry="2584" name="MAP/MAP024.GNS"/>
-  <file entry="2585" name="MAP/map_dst_map024_DAT.bin"/>
+  <file entry="2585" name="MAP/map_dst_map024_dat.bin"/>
   <file entry="2586" name="MAP/MAP025.7"/>
   <file entry="2587" name="MAP/MAP025.8"/>
   <file entry="2588" name="MAP/MAP025.9"/>
@@ -1811,11 +1811,11 @@
   <file entry="2595" name="MAP/MAP025.24"/>
   <file entry="2596" name="MAP/MAP025.25"/>
   <file entry="2597" name="MAP/MAP025.GNS"/>
-  <file entry="2598" name="MAP/map_dst_map025_DAT.bin"/>
+  <file entry="2598" name="MAP/map_dst_map025_dat.bin"/>
   <file entry="2599" name="MAP/MAP026.8"/>
   <file entry="2600" name="MAP/MAP026.9"/>
   <file entry="2601" name="MAP/MAP026.GNS"/>
-  <file entry="2602" name="MAP/map_dst_map026_DAT.bin"/>
+  <file entry="2602" name="MAP/map_dst_map026_dat.bin"/>
   <file entry="2603" name="MAP/MAP027.7"/>
   <file entry="2604" name="MAP/MAP027.8"/>
   <file entry="2605" name="MAP/MAP027.10"/>
@@ -1826,7 +1826,7 @@
   <file entry="2610" name="MAP/MAP027.17"/>
   <file entry="2611" name="MAP/MAP027.22"/>
   <file entry="2612" name="MAP/MAP027.GNS"/>
-  <file entry="2613" name="MAP/map_dst_map027_DAT.bin"/>
+  <file entry="2613" name="MAP/map_dst_map027_dat.bin"/>
   <file entry="2614" name="MAP/MAP028.6"/>
   <file entry="2615" name="MAP/MAP028.7"/>
   <file entry="2616" name="MAP/MAP028.8"/>
@@ -1837,7 +1837,7 @@
   <file entry="2621" name="MAP/MAP028.16"/>
   <file entry="2622" name="MAP/MAP028.17"/>
   <file entry="2623" name="MAP/MAP028.GNS"/>
-  <file entry="2624" name="MAP/map_dst_map028_DAT.bin"/>
+  <file entry="2624" name="MAP/map_dst_map028_dat.bin"/>
   <file entry="2625" name="MAP/MAP029.7"/>
   <file entry="2626" name="MAP/MAP029.8"/>
   <file entry="2627" name="MAP/MAP029.10"/>
@@ -1848,7 +1848,7 @@
   <file entry="2632" name="MAP/MAP029.17"/>
   <file entry="2633" name="MAP/MAP029.22"/>
   <file entry="2634" name="MAP/MAP029.GNS"/>
-  <file entry="2635" name="MAP/map_dst_map029_DAT.bin"/>
+  <file entry="2635" name="MAP/map_dst_map029_dat.bin"/>
   <file entry="2636" name="MAP/MAP030.6"/>
   <file entry="2637" name="MAP/MAP030.7"/>
   <file entry="2638" name="MAP/MAP030.8"/>
@@ -1859,7 +1859,7 @@
   <file entry="2643" name="MAP/MAP030.15"/>
   <file entry="2644" name="MAP/MAP030.20"/>
   <file entry="2645" name="MAP/MAP030.GNS"/>
-  <file entry="2646" name="MAP/map_dst_map030_DAT.bin"/>
+  <file entry="2646" name="MAP/map_dst_map030_dat.bin"/>
   <file entry="2647" name="MAP/MAP031.7"/>
   <file entry="2648" name="MAP/MAP031.8"/>
   <file entry="2649" name="MAP/MAP031.11"/>
@@ -1881,7 +1881,7 @@
   <file entry="2665" name="MAP/MAP031.39"/>
   <file entry="2666" name="MAP/MAP031.44"/>
   <file entry="2667" name="MAP/MAP031.GNS"/>
-  <file entry="2668" name="MAP/map_dst_map031_DAT.bin"/>
+  <file entry="2668" name="MAP/map_dst_map031_dat.bin"/>
   <file entry="2669" name="MAP/MAP032.8"/>
   <file entry="2670" name="MAP/MAP032.9"/>
   <file entry="2671" name="MAP/MAP032.11"/>
@@ -1892,7 +1892,7 @@
   <file entry="2676" name="MAP/MAP032.18"/>
   <file entry="2677" name="MAP/MAP032.23"/>
   <file entry="2678" name="MAP/MAP032.GNS"/>
-  <file entry="2679" name="MAP/map_dst_map032_DAT.bin"/>
+  <file entry="2679" name="MAP/map_dst_map032_dat.bin"/>
   <file entry="2680" name="MAP/MAP033.8"/>
   <file entry="2681" name="MAP/MAP033.9"/>
   <file entry="2682" name="MAP/MAP033.18"/>
@@ -1904,7 +1904,7 @@
   <file entry="2688" name="MAP/MAP034.15"/>
   <file entry="2689" name="MAP/MAP034.19"/>
   <file entry="2690" name="MAP/MAP034.GNS"/>
-  <file entry="2691" name="MAP/map_dst_map034_DAT.bin"/>
+  <file entry="2691" name="MAP/map_dst_map034_dat.bin"/>
   <file entry="2692" name="MAP/MAP035.7"/>
   <file entry="2693" name="MAP/MAP035.8"/>
   <file entry="2694" name="MAP/MAP035.11"/>
@@ -1926,7 +1926,7 @@
   <file entry="2710" name="MAP/MAP035.43"/>
   <file entry="2711" name="MAP/MAP035.44"/>
   <file entry="2712" name="MAP/MAP035.GNS"/>
-  <file entry="2713" name="MAP/map_dst_map035_DAT.bin"/>
+  <file entry="2713" name="MAP/map_dst_map035_dat.bin"/>
   <file entry="2714" name="MAP/MAP036.1"/>
   <file entry="2715" name="MAP/MAP036.4"/>
   <file entry="2716" name="MAP/MAP036.5"/>
@@ -1947,13 +1947,13 @@
   <file entry="2731" name="MAP/MAP036.45"/>
   <file entry="2732" name="MAP/MAP036.46"/>
   <file entry="2733" name="MAP/MAP036.GNS"/>
-  <file entry="2734" name="MAP/map_dst_map036_DAT.bin"/>
+  <file entry="2734" name="MAP/map_dst_map036_dat.bin"/>
   <file entry="2735" name="MAP/MAP037.6"/>
   <file entry="2736" name="MAP/MAP037.7"/>
   <file entry="2737" name="MAP/MAP037.9"/>
   <file entry="2738" name="MAP/MAP037.10"/>
   <file entry="2739" name="MAP/MAP037.GNS"/>
-  <file entry="2740" name="MAP/map_dst_map037_DAT.bin"/>
+  <file entry="2740" name="MAP/map_dst_map037_dat.bin"/>
   <file entry="2741" name="MAP/MAP038.11"/>
   <file entry="2742" name="MAP/MAP038.12"/>
   <file entry="2743" name="MAP/MAP038.15"/>
@@ -1975,11 +1975,11 @@
   <file entry="2759" name="MAP/MAP038.47"/>
   <file entry="2760" name="MAP/MAP038.48"/>
   <file entry="2761" name="MAP/MAP038.GNS"/>
-  <file entry="2762" name="MAP/map_dst_map038_DAT.bin"/>
+  <file entry="2762" name="MAP/map_dst_map038_dat.bin"/>
   <file entry="2763" name="MAP/MAP039.8"/>
   <file entry="2764" name="MAP/MAP039.9"/>
   <file entry="2765" name="MAP/MAP039.GNS"/>
-  <file entry="2766" name="MAP/map_dst_map039_DAT.bin"/>
+  <file entry="2766" name="MAP/map_dst_map039_dat.bin"/>
   <file entry="2767" name="MAP/MAP040.9"/>
   <file entry="2768" name="MAP/MAP040.10"/>
   <file entry="2769" name="MAP/MAP040.11"/>
@@ -2000,13 +2000,13 @@
   <file entry="2784" name="MAP/MAP040.22"/>
   <file entry="2785" name="MAP/MAP040.35"/>
   <file entry="2786" name="MAP/MAP040.GNS"/>
-  <file entry="2787" name="MAP/map_dst_map040_DAT.bin"/>
+  <file entry="2787" name="MAP/map_dst_map040_dat.bin"/>
   <file entry="2788" name="MAP/MAP041.5"/>
   <file entry="2789" name="MAP/MAP041.11"/>
   <file entry="2790" name="MAP/MAP041.19"/>
   <file entry="2791" name="MAP/MAP041.20"/>
   <file entry="2792" name="MAP/MAP041.GNS"/>
-  <file entry="2793" name="MAP/map_dst_map041_DAT.bin"/>
+  <file entry="2793" name="MAP/map_dst_map041_dat.bin"/>
   <file entry="2794" name="MAP/MAP042.8"/>
   <file entry="2795" name="MAP/MAP042.9"/>
   <file entry="2796" name="MAP/MAP042.12"/>
@@ -2044,13 +2044,13 @@
   <file entry="2828" name="MAP/MAP044.43"/>
   <file entry="2829" name="MAP/MAP044.44"/>
   <file entry="2830" name="MAP/MAP044.GNS"/>
-  <file entry="2831" name="MAP/map_dst_map044_DAT.bin"/>
+  <file entry="2831" name="MAP/map_dst_map044_dat.bin"/>
   <file entry="2832" name="MAP/MAP045.6"/>
   <file entry="2833" name="MAP/MAP045.7"/>
   <file entry="2834" name="MAP/MAP045.10"/>
   <file entry="2835" name="MAP/MAP045.11"/>
   <file entry="2836" name="MAP/MAP045.GNS"/>
-  <file entry="2837" name="MAP/map_dst_map045_DAT.bin"/>
+  <file entry="2837" name="MAP/map_dst_map045_dat.bin"/>
   <file entry="2838" name="MAP/MAP046.8"/>
   <file entry="2839" name="MAP/MAP046.9"/>
   <file entry="2840" name="MAP/MAP046.12"/>
@@ -2083,7 +2083,7 @@
   <file entry="2867" name="MAP/MAP047.45"/>
   <file entry="2868" name="MAP/MAP047.61"/>
   <file entry="2869" name="MAP/MAP047.GNS"/>
-  <file entry="2870" name="MAP/map_dst_map047_DAT.bin"/>
+  <file entry="2870" name="MAP/map_dst_map047_dat.bin"/>
   <file entry="2871" name="MAP/MAP048.8"/>
   <file entry="2872" name="MAP/MAP048.9"/>
   <file entry="2873" name="MAP/MAP048.12"/>
@@ -2126,7 +2126,7 @@
   <file entry="2910" name="MAP/MAP049.42"/>
   <file entry="2911" name="MAP/MAP049.43"/>
   <file entry="2912" name="MAP/MAP049.GNS"/>
-  <file entry="2913" name="MAP/map_dst_map049_DAT.bin"/>
+  <file entry="2913" name="MAP/map_dst_map049_dat.bin"/>
   <file entry="2914" name="MAP/MAP050.7"/>
   <file entry="2915" name="MAP/MAP050.8"/>
   <file entry="2916" name="MAP/MAP050.11"/>
@@ -2148,7 +2148,7 @@
   <file entry="2932" name="MAP/MAP050.43"/>
   <file entry="2933" name="MAP/MAP050.44"/>
   <file entry="2934" name="MAP/MAP050.GNS"/>
-  <file entry="2935" name="MAP/map_dst_map050_DAT.bin"/>
+  <file entry="2935" name="MAP/map_dst_map050_dat.bin"/>
   <file entry="2936" name="MAP/MAP051.7"/>
   <file entry="2937" name="MAP/MAP051.8"/>
   <file entry="2938" name="MAP/MAP051.16"/>
@@ -2167,28 +2167,28 @@
   <file entry="2951" name="MAP/MAP051.49"/>
   <file entry="2952" name="MAP/MAP051.50"/>
   <file entry="2953" name="MAP/MAP051.GNS"/>
-  <file entry="2954" name="MAP/map_dst_map051_DAT.bin"/>
+  <file entry="2954" name="MAP/map_dst_map051_dat.bin"/>
   <file entry="2955" name="MAP/MAP052.9"/>
   <file entry="2956" name="MAP/MAP052.10"/>
   <file entry="2957" name="MAP/MAP052.GNS"/>
-  <file entry="2958" name="MAP/map_dst_map052_DAT.bin"/>
+  <file entry="2958" name="MAP/map_dst_map052_dat.bin"/>
   <file entry="2959" name="MAP/MAP053.7"/>
   <file entry="2960" name="MAP/MAP053.8"/>
   <file entry="2961" name="MAP/MAP053.10"/>
   <file entry="2962" name="MAP/MAP053.19"/>
   <file entry="2963" name="MAP/MAP053.22"/>
   <file entry="2964" name="MAP/MAP053.GNS"/>
-  <file entry="2965" name="MAP/map_dst_map053_DAT.bin"/>
+  <file entry="2965" name="MAP/map_dst_map053_dat.bin"/>
   <file entry="2966" name="MAP/MAP054.7"/>
   <file entry="2967" name="MAP/MAP054.8"/>
   <file entry="2968" name="MAP/MAP054.GNS"/>
-  <file entry="2969" name="MAP/map_dst_map054_DAT.bin"/>
+  <file entry="2969" name="MAP/map_dst_map054_dat.bin"/>
   <file entry="2970" name="MAP/MAP055.12"/>
   <file entry="2971" name="MAP/MAP055.13"/>
   <file entry="2972" name="MAP/MAP055.15"/>
   <file entry="2973" name="MAP/MAP055.14"/>
   <file entry="2974" name="MAP/MAP055.GNS"/>
-  <file entry="2975" name="MAP/map_dst_map055_DAT.bin"/>
+  <file entry="2975" name="MAP/map_dst_map055_dat.bin"/>
   <file entry="2976" name="MAP/MAP056.0"/>
   <file entry="2977" name="MAP/MAP056.3"/>
   <file entry="2978" name="MAP/MAP056.4"/>
@@ -2209,7 +2209,7 @@
   <file entry="2993" name="MAP/MAP056.47"/>
   <file entry="2994" name="MAP/MAP056.48"/>
   <file entry="2995" name="MAP/MAP056.GNS"/>
-  <file entry="2996" name="MAP/map_dst_map056_DAT.bin"/>
+  <file entry="2996" name="MAP/map_dst_map056_dat.bin"/>
   <file entry="2997" name="MAP/MAP057.8"/>
   <file entry="2998" name="MAP/MAP057.9"/>
   <file entry="2999" name="MAP/MAP057.GNS"/>
@@ -2222,7 +2222,7 @@
   <file entry="3006" name="MAP/MAP060.8"/>
   <file entry="3007" name="MAP/MAP060.9"/>
   <file entry="3008" name="MAP/MAP060.GNS"/>
-  <file entry="3009" name="MAP/map_dst_map060_DAT.bin"/>
+  <file entry="3009" name="MAP/map_dst_map060_dat.bin"/>
   <file entry="3010" name="MAP/MAP061.7"/>
   <file entry="3011" name="MAP/MAP061.8"/>
   <file entry="3012" name="MAP/MAP061.9"/>
@@ -2237,7 +2237,7 @@
   <file entry="3021" name="MAP/MAP062.19"/>
   <file entry="3022" name="MAP/MAP062.20"/>
   <file entry="3023" name="MAP/MAP062.GNS"/>
-  <file entry="3024" name="MAP/map_dst_map062_DAT.bin"/>
+  <file entry="3024" name="MAP/map_dst_map062_dat.bin"/>
   <file entry="3025" name="MAP/MAP063.6"/>
   <file entry="3026" name="MAP/MAP063.7"/>
   <file entry="3027" name="MAP/MAP063.10"/>
@@ -2254,7 +2254,7 @@
   <file entry="3038" name="MAP/MAP064.14"/>
   <file entry="3039" name="MAP/MAP064.19"/>
   <file entry="3040" name="MAP/MAP064.GNS"/>
-  <file entry="3041" name="MAP/map_dst_map064_DAT.bin"/>
+  <file entry="3041" name="MAP/map_dst_map064_dat.bin"/>
   <file entry="3042" name="MAP/MAP065.8"/>
   <file entry="3043" name="MAP/MAP065.9"/>
   <file entry="3044" name="MAP/MAP065.GNS"/>
@@ -2278,7 +2278,7 @@
   <file entry="3062" name="MAP/MAP066.28"/>
   <file entry="3063" name="MAP/MAP066.41"/>
   <file entry="3064" name="MAP/MAP066.GNS"/>
-  <file entry="3065" name="MAP/map_dst_map066_DAT.bin"/>
+  <file entry="3065" name="MAP/map_dst_map066_dat.bin"/>
   <file entry="3066" name="MAP/MAP067.7"/>
   <file entry="3067" name="MAP/MAP067.8"/>
   <file entry="3068" name="MAP/MAP067.9"/>
@@ -2316,17 +2316,17 @@
   <file entry="3100" name="MAP/MAP068.19"/>
   <file entry="3101" name="MAP/MAP068.20"/>
   <file entry="3102" name="MAP/MAP068.GNS"/>
-  <file entry="3103" name="MAP/map_dst_map068_DAT.bin"/>
+  <file entry="3103" name="MAP/map_dst_map068_dat.bin"/>
   <file entry="3104" name="MAP/MAP069.7"/>
   <file entry="3105" name="MAP/MAP069.8"/>
   <file entry="3106" name="MAP/MAP069.GNS"/>
-  <file entry="3107" name="MAP/map_dst_map069_DAT.bin"/>
+  <file entry="3107" name="MAP/map_dst_map069_dat.bin"/>
   <file entry="3108" name="MAP/MAP070.6"/>
   <file entry="3109" name="MAP/MAP070.7"/>
   <file entry="3110" name="MAP/MAP070.10"/>
   <file entry="3111" name="MAP/MAP070.11"/>
   <file entry="3112" name="MAP/MAP070.GNS"/>
-  <file entry="3113" name="MAP/map_dst_map070_DAT.bin"/>
+  <file entry="3113" name="MAP/map_dst_map070_dat.bin"/>
   <file entry="3114" name="MAP/MAP071.8"/>
   <file entry="3115" name="MAP/MAP071.9"/>
   <file entry="3116" name="MAP/MAP071.28"/>
@@ -2348,7 +2348,7 @@
   <file entry="3132" name="MAP/MAP071.44"/>
   <file entry="3133" name="MAP/MAP071.45"/>
   <file entry="3134" name="MAP/MAP071.GNS"/>
-  <file entry="3135" name="MAP/map_dst_map071_DAT.bin"/>
+  <file entry="3135" name="MAP/map_dst_map071_dat.bin"/>
   <file entry="3136" name="MAP/MAP072.13"/>
   <file entry="3137" name="MAP/MAP072.9"/>
   <file entry="3138" name="MAP/MAP072.10"/>
@@ -2368,7 +2368,7 @@
   <file entry="3152" name="MAP/MAP072.30"/>
   <file entry="3153" name="MAP/MAP072.39"/>
   <file entry="3154" name="MAP/MAP072.GNS"/>
-  <file entry="3155" name="MAP/map_dst_map072_DAT.bin"/>
+  <file entry="3155" name="MAP/map_dst_map072_dat.bin"/>
   <file entry="3156" name="MAP/MAP073.2"/>
   <file entry="3157" name="MAP/MAP073.3"/>
   <file entry="3158" name="MAP/MAP073.6"/>
@@ -2378,7 +2378,7 @@
   <file entry="3162" name="MAP/MAP073.23"/>
   <file entry="3163" name="MAP/MAP073.24"/>
   <file entry="3164" name="MAP/MAP073.GNS"/>
-  <file entry="3165" name="MAP/map_dst_map073_DAT.bin"/>
+  <file entry="3165" name="MAP/map_dst_map073_dat.bin"/>
   <file entry="3166" name="MAP/MAP074.8"/>
   <file entry="3167" name="MAP/MAP074.9"/>
   <file entry="3168" name="MAP/MAP074.10"/>
@@ -2399,7 +2399,7 @@
   <file entry="3183" name="MAP/MAP074.30"/>
   <file entry="3184" name="MAP/MAP074.34"/>
   <file entry="3185" name="MAP/MAP074.GNS"/>
-  <file entry="3186" name="MAP/map_dst_map074_DAT.bin"/>
+  <file entry="3186" name="MAP/map_dst_map074_dat.bin"/>
   <file entry="3187" name="MAP/MAP075.8"/>
   <file entry="3188" name="MAP/MAP075.9"/>
   <file entry="3189" name="MAP/MAP075.11"/>
@@ -2421,7 +2421,7 @@
   <file entry="3205" name="MAP/MAP075.17"/>
   <file entry="3206" name="MAP/MAP075.46"/>
   <file entry="3207" name="MAP/MAP075.GNS"/>
-  <file entry="3208" name="MAP/map_dst_map075_DAT.bin"/>
+  <file entry="3208" name="MAP/map_dst_map075_dat.bin"/>
   <file entry="3209" name="MAP/MAP076.6"/>
   <file entry="3210" name="MAP/MAP076.7"/>
   <file entry="3211" name="MAP/MAP076.9"/>
@@ -2440,7 +2440,7 @@
   <file entry="3224" name="MAP/MAP076.36"/>
   <file entry="3225" name="MAP/MAP076.37"/>
   <file entry="3226" name="MAP/MAP076.GNS"/>
-  <file entry="3227" name="MAP/map_dst_map076_DAT.bin"/>
+  <file entry="3227" name="MAP/map_dst_map076_dat.bin"/>
   <file entry="3228" name="MAP/MAP077.8"/>
   <file entry="3229" name="MAP/MAP077.9"/>
   <file entry="3230" name="MAP/MAP077.11"/>
@@ -2483,7 +2483,7 @@
   <file entry="3267" name="MAP/MAP078.35"/>
   <file entry="3268" name="MAP/MAP078.48"/>
   <file entry="3269" name="MAP/MAP078.GNS"/>
-  <file entry="3270" name="MAP/map_dst_map078_DAT.bin"/>
+  <file entry="3270" name="MAP/map_dst_map078_dat.bin"/>
   <file entry="3271" name="MAP/MAP079.6"/>
   <file entry="3272" name="MAP/MAP079.7"/>
   <file entry="3273" name="MAP/MAP079.8"/>
@@ -2516,7 +2516,7 @@
   <file entry="3300" name="MAP/MAP080.11"/>
   <file entry="3301" name="MAP/MAP080.40"/>
   <file entry="3302" name="MAP/MAP080.GNS"/>
-  <file entry="3303" name="MAP/map_dst_map080_DAT.bin"/>
+  <file entry="3303" name="MAP/map_dst_map080_dat.bin"/>
   <file entry="3304" name="MAP/MAP081.6"/>
   <file entry="3305" name="MAP/MAP081.7"/>
   <file entry="3306" name="MAP/MAP081.10"/>
@@ -2538,7 +2538,7 @@
   <file entry="3322" name="MAP/MAP081.18"/>
   <file entry="3323" name="MAP/MAP081.43"/>
   <file entry="3324" name="MAP/MAP081.GNS"/>
-  <file entry="3325" name="MAP/map_dst_map081_DAT.bin"/>
+  <file entry="3325" name="MAP/map_dst_map081_dat.bin"/>
   <file entry="3326" name="MAP/MAP082.6"/>
   <file entry="3327" name="MAP/MAP082.7"/>
   <file entry="3328" name="MAP/MAP082.9"/>
@@ -2557,7 +2557,7 @@
   <file entry="3341" name="MAP/MAP082.14"/>
   <file entry="3342" name="MAP/MAP082.37"/>
   <file entry="3343" name="MAP/MAP082.GNS"/>
-  <file entry="3344" name="MAP/map_dst_map082_DAT.bin"/>
+  <file entry="3344" name="MAP/map_dst_map082_dat.bin"/>
   <file entry="3345" name="MAP/MAP083.8"/>
   <file entry="3346" name="MAP/MAP083.9"/>
   <file entry="3347" name="MAP/MAP083.10"/>
@@ -2572,7 +2572,7 @@
   <file entry="3356" name="MAP/MAP083.28"/>
   <file entry="3357" name="MAP/MAP083.38"/>
   <file entry="3358" name="MAP/MAP083.GNS"/>
-  <file entry="3359" name="MAP/map_dst_map083_DAT.bin"/>
+  <file entry="3359" name="MAP/map_dst_map083_dat.bin"/>
   <file entry="3360" name="MAP/MAP084.6"/>
   <file entry="3361" name="MAP/MAP084.7"/>
   <file entry="3362" name="MAP/MAP084.14"/>
@@ -2594,7 +2594,7 @@
   <file entry="3378" name="MAP/MAP084.34"/>
   <file entry="3379" name="MAP/MAP084.43"/>
   <file entry="3380" name="MAP/MAP084.GNS"/>
-  <file entry="3381" name="MAP/map_dst_map084_DAT.bin"/>
+  <file entry="3381" name="MAP/map_dst_map084_dat.bin"/>
   <file entry="3382" name="MAP/MAP085.6"/>
   <file entry="3383" name="MAP/MAP085.7"/>
   <file entry="3384" name="MAP/MAP085.9"/>
@@ -2616,7 +2616,7 @@
   <file entry="3400" name="MAP/MAP085.15"/>
   <file entry="3401" name="MAP/MAP085.34"/>
   <file entry="3402" name="MAP/MAP085.GNS"/>
-  <file entry="3403" name="MAP/map_dst_map085_DAT.bin"/>
+  <file entry="3403" name="MAP/map_dst_map085_dat.bin"/>
   <file entry="3404" name="MAP/MAP086.6"/>
   <file entry="3405" name="MAP/MAP086.7"/>
   <file entry="3406" name="MAP/MAP086.9"/>
@@ -2638,7 +2638,7 @@
   <file entry="3422" name="MAP/MAP086.18"/>
   <file entry="3423" name="MAP/MAP086.34"/>
   <file entry="3424" name="MAP/MAP086.GNS"/>
-  <file entry="3425" name="MAP/map_dst_map086_DAT.bin"/>
+  <file entry="3425" name="MAP/map_dst_map086_dat.bin"/>
   <file entry="3426" name="MAP/MAP087.8"/>
   <file entry="3427" name="MAP/MAP087.9"/>
   <file entry="3428" name="MAP/MAP087.10"/>
@@ -2651,7 +2651,7 @@
   <file entry="3435" name="MAP/MAP087.17"/>
   <file entry="3436" name="MAP/MAP087.18"/>
   <file entry="3437" name="MAP/MAP087.GNS"/>
-  <file entry="3438" name="MAP/map_dst_map087_DAT.bin"/>
+  <file entry="3438" name="MAP/map_dst_map087_dat.bin"/>
   <file entry="3439" name="MAP/MAP088.8"/>
   <file entry="3440" name="MAP/MAP088.9"/>
   <file entry="3441" name="MAP/MAP088.23"/>
@@ -2673,7 +2673,7 @@
   <file entry="3457" name="MAP/MAP088.35"/>
   <file entry="3458" name="MAP/MAP088.36"/>
   <file entry="3459" name="MAP/MAP088.GNS"/>
-  <file entry="3460" name="MAP/map_dst_map088_DAT.bin"/>
+  <file entry="3460" name="MAP/map_dst_map088_dat.bin"/>
   <file entry="3461" name="MAP/MAP089.6"/>
   <file entry="3462" name="MAP/MAP089.7"/>
   <file entry="3463" name="MAP/MAP089.10"/>
@@ -2695,7 +2695,7 @@
   <file entry="3479" name="MAP/MAP089.42"/>
   <file entry="3480" name="MAP/MAP089.43"/>
   <file entry="3481" name="MAP/MAP089.GNS"/>
-  <file entry="3482" name="MAP/map_dst_map089_DAT.bin"/>
+  <file entry="3482" name="MAP/map_dst_map089_dat.bin"/>
   <file entry="3483" name="MAP/MAP090.6"/>
   <file entry="3484" name="MAP/MAP090.7"/>
   <file entry="3485" name="MAP/MAP090.10"/>
@@ -2717,7 +2717,7 @@
   <file entry="3501" name="MAP/MAP090.42"/>
   <file entry="3502" name="MAP/MAP090.43"/>
   <file entry="3503" name="MAP/MAP090.GNS"/>
-  <file entry="3504" name="MAP/map_dst_map090_DAT.bin"/>
+  <file entry="3504" name="MAP/map_dst_map090_dat.bin"/>
   <file entry="3505" name="MAP/MAP091.8"/>
   <file entry="3506" name="MAP/MAP091.9"/>
   <file entry="3507" name="MAP/MAP091.10"/>
@@ -2728,7 +2728,7 @@
   <file entry="3512" name="MAP/MAP091.21"/>
   <file entry="3513" name="MAP/MAP091.22"/>
   <file entry="3514" name="MAP/MAP091.GNS"/>
-  <file entry="3515" name="MAP/map_dst_map091_DAT.bin"/>
+  <file entry="3515" name="MAP/map_dst_map091_dat.bin"/>
   <file entry="3516" name="MAP/MAP092.30"/>
   <file entry="3517" name="MAP/MAP092.9"/>
   <file entry="3518" name="MAP/MAP092.12"/>
@@ -2746,7 +2746,7 @@
   <file entry="3530" name="MAP/MAP092.20"/>
   <file entry="3531" name="MAP/MAP092.21"/>
   <file entry="3532" name="MAP/MAP092.GNS"/>
-  <file entry="3533" name="MAP/map_dst_map092_DAT.bin"/>
+  <file entry="3533" name="MAP/map_dst_map092_dat.bin"/>
   <file entry="3534" name="MAP/MAP093.6"/>
   <file entry="3535" name="MAP/MAP093.7"/>
   <file entry="3536" name="MAP/MAP093.10"/>
@@ -2756,7 +2756,7 @@
   <file entry="3540" name="MAP/MAP093.18"/>
   <file entry="3541" name="MAP/MAP093.19"/>
   <file entry="3542" name="MAP/MAP093.GNS"/>
-  <file entry="3543" name="MAP/map_dst_map093_DAT.bin"/>
+  <file entry="3543" name="MAP/map_dst_map093_dat.bin"/>
   <file entry="3544" name="MAP/MAP094.7"/>
   <file entry="3545" name="MAP/MAP094.8"/>
   <file entry="3546" name="MAP/MAP094.16"/>
@@ -2854,7 +2854,7 @@
   <file entry="3638" name="MAP/MAP100.7"/>
   <file entry="3639" name="MAP/MAP100.8"/>
   <file entry="3640" name="MAP/MAP100.GNS"/>
-  <file entry="3641" name="MAP/map_dst_map100_DAT.bin"/>
+  <file entry="3641" name="MAP/map_dst_map100_dat.bin"/>
   <file entry="3642" name="MAP/MAP101.9"/>
   <file entry="3643" name="MAP/MAP101.10"/>
   <file entry="3644" name="MAP/MAP101.GNS"/>
@@ -2881,12 +2881,12 @@
   <file entry="3665" name="MAP/MAP103.35"/>
   <file entry="3666" name="MAP/MAP103.40"/>
   <file entry="3667" name="MAP/MAP103.GNS"/>
-  <file entry="3668" name="MAP/map_dst_map103_DAT.bin"/>
+  <file entry="3668" name="MAP/map_dst_map103_dat.bin"/>
   <file entry="3669" name="MAP/MAP104.8"/>
   <file entry="3670" name="MAP/MAP104.9"/>
   <file entry="3671" name="MAP/MAP104.10"/>
   <file entry="3672" name="MAP/MAP104.GNS"/>
-  <file entry="3673" name="MAP/map_dst_map104_DAT.bin"/>
+  <file entry="3673" name="MAP/map_dst_map104_dat.bin"/>
   <file entry="3674" name="MAP/MAP105.6"/>
   <file entry="3675" name="MAP/MAP105.15"/>
   <file entry="3676" name="MAP/MAP105.14"/>
@@ -2989,7 +2989,7 @@
   <file entry="3773" name="MAP/MAP115.22"/>
   <file entry="3774" name="MAP/MAP115.43"/>
   <file entry="3775" name="MAP/MAP115.GNS"/>
-  <file entry="3776" name="MAP/map_dst_map115_DAT.bin"/>
+  <file entry="3776" name="MAP/map_dst_map115_dat.bin"/>
   <file entry="3777" name="MAP/MAP116.6"/>
   <file entry="3778" name="MAP/MAP116.7"/>
   <file entry="3779" name="MAP/MAP116.GNS"/>
@@ -3006,9 +3006,9 @@
   <file entry="3790" name="MAP/MAP125.7"/>
   <file entry="3791" name="MAP/MAP125.GNS"/>
   <file entry="3792" name="MAP/MAP126.GNS"/>
-  <file entry="3793" name="MAP/map_dst_map126_DAT.bin"/>
+  <file entry="3793" name="MAP/map_dst_map126_dat.bin"/>
   <file entry="3794" name="MAP/MAP127.GNS"/>
-  <file entry="3795" name="MAP/map_dst_map127_DAT.bin"/>
+  <file entry="3795" name="MAP/map_dst_map127_dat.bin"/>
   <file entry="3796" name="MAP/MAP68000.DOC"/>
   <file entry="3797" name="MAP/new_map_new_map001_9.bin"/>
   <file entry="3798" name="MAP/new_map_new_map002_55.bin"/>
