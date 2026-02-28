@@ -613,7 +613,7 @@
           <entry value="37" name="Can't move"/>
           <entry value="38" name="Arithmeticks not allowed"/>
         </Section>
-        <Section value="3" entries="80" empty="false" dte="true" compressible="true" name="Battle messages">
+        <Section value="3" entries="80" empty="false" dte="false" compressible="false" name="Battle messages">
           <entry value="0" name=""/>
           <entry value="1" name="Item broke"/>
           <entry value="2" name="Stole item"/>
