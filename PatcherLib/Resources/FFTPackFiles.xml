@@ -785,7 +785,7 @@
   <file entry="0767" name="MENU/TUTO7.SCR"/>
   <file entry="0768" name="MENU/TUTO7.MES"/>
   <file entry="0769" name="MENU/FFTSAVE.DAT"/>
-  <fuke entry="0770" name="WORLD/WLDTEX2.BIN.jap.unused"/>
+  <file entry="0770" name="WORLD/WLDTEX.TM2"/>
   <file entry="0771" name="WORLD/WLDPIC.BIN"/>
   <file entry="0772" name="WORLD/WLDMES.BIN"/>
   <file entry="0773" name="WORLD/SNPLBIN.BIN"/>
@@ -896,21 +896,27 @@
   <file entry="0878" name="SOUND/MUSIC_97.SMD"/>
   <file entry="0879" name="SOUND/MUSIC_98.SMD"/>
   <file entry="0880" name="SOUND/MUSIC_99.SMD"/>
-  <file entry="0881" name="OPEN/OPEN.BIN.jap.unused"/>
+  <file entry="0881" name="OPEN/OPEN.BIN"/>
   <file entry="0882" name="OPEN/OPNTEX.BIN"/>
   <file entry="0883" name="OPEN/OPNBK.BIN"/>
-  <file entry="0885" name="BATTLE/MaleDarkKnight.SPR"/>
-  <file entry="0886" name="BATTLE/FemaleDarkKnight.SPR"/>
-  <file entry="0887" name="BATTLE/MaleOnionKnight.SPR"/>
-  <file entry="0888" name="BATTLE/FemaleOnionKnight.SPR"/>
-  <file entry="0889" name="BATTLE/Balthier.SPR"/>
-  <file entry="0890" name="BATTLE/Luso.SPR"/>
-  <file entry="0891" name="BATTLE/DeathKnightArgath.SPR"/>
-  <file entry="0892" name="BATTLE/Aliste.SPR"/>
-  <file entry="0893" name="BATTLE/BremondtHuman.SPR"/>
-  <file entry="0894" name="BATTLE/BremondtDarkDragon.SPR"/>
-  <file entry="0895" name="BATTLE/SwordInStone.SPR"/>
+  <file entry="0884" name="BATTLE/HCHAR.DAT"/>
+  <file entry="0885" name="BATTLE/ANKOKU_M.SPR"/>
+  <file entry="0886" name="BATTLE/ANKOKU_W.SPR"/>
+  <file entry="0887" name="BATTLE/TAMA_M.SPR"/>
+  <file entry="0888" name="BATTLE/TAMA_W.SPR"/>
+  <file entry="0889" name="BATTLE/VALUHUREA_M.SPR"/>
+  <file entry="0890" name="BATTLE/KAITO_M.SPR"/>
+  <file entry="0891" name="BATTLE/ALGAKUMA_M.SPR"/>
+  <file entry="0892" name="BATTLE/ARLES_M.SPR"/>
+  <file entry="0893" name="BATTLE/BULEMONDA_M.SPR"/>
+  <file entry="0894" name="BATTLE/BULECHANGE_M.SPR"/>
+  <file entry="0895" name="BATTLE/SWORD_M.SPR"/>
+  <file entry="0896" name="BATTLE/FACE.DAT"/>
   <file entry="0897" name="BATTLE/ENTD5.ENT"/>
+  <file entry="0898" name="WOTL/ASSORTED_GRAPHICS.BIN"/>
+  <file entry="0899" name="WOTL/MAP_THUMBNAILS.BIN"/>
+  <file entry="0900" name="WOTL/WORLD_MAP_TITLES.BIN"/>
+  <file entry="0901" name="WOTL/NOW_LOADING.BIN"/>
   <file entry="0902" name="SAVEIMAGE/902.png"/>
   <file entry="0903" name="SAVEIMAGE/903.png"/>
   <file entry="0904" name="SAVEIMAGE/904.png"/>
@@ -945,297 +951,410 @@
   <file entry="0933" name="SAVEIMAGE/933.png"/>
   <file entry="0934" name="SAVEIMAGE/934.png"/>
   <file entry="0935" name="SAVEIMAGE/935.png"/>
-  <file entry="0936" name="WORLD/WLDTEX.TM2"/>
-  <file entry="0940" name="EFFECT/E001.BIN.duplicate"/>
-  <file entry="0941" name="EFFECT/E002.BIN.duplicate"/>
-  <file entry="0942" name="EFFECT/E003.BIN.duplicate"/>
-  <file entry="0947" name="EFFECT/E008.BIN.duplicate"/>
-  <file entry="0948" name="EFFECT/E009.BIN.duplicate"/>
-  <file entry="0949" name="EFFECT/E010.BIN.duplicate"/>
-  <file entry="0950" name="EFFECT/E011.BIN.duplicate"/>
-  <file entry="0951" name="EFFECT/E012.BIN.duplicate"/>
-  <file entry="0952" name="EFFECT/E013.BIN.duplicate"/>
-  <file entry="0953" name="EFFECT/E014.BIN.duplicate"/>
-  <file entry="0955" name="EFFECT/E016.BIN.duplicate"/>
-  <file entry="0956" name="EFFECT/E017.BIN.duplicate"/>
-  <file entry="0957" name="EFFECT/E018.BIN.duplicate"/>
-  <file entry="0958" name="EFFECT/E019.BIN.duplicate"/>
-  <file entry="0959" name="EFFECT/E020.BIN.duplicate"/>
-  <file entry="0960" name="EFFECT/E021.BIN.duplicate"/>
-  <file entry="0961" name="EFFECT/E022.BIN.duplicate"/>
-  <file entry="0962" name="EFFECT/E023.BIN.duplicate"/>
-  <file entry="0963" name="EFFECT/E024.BIN.duplicate"/>
-  <file entry="0964" name="EFFECT/E025.BIN.duplicate"/>
-  <file entry="0965" name="EFFECT/E026.BIN.duplicate"/>
-  <file entry="0966" name="EFFECT/E027.BIN.duplicate"/>
-  <file entry="0967" name="EFFECT/E028.BIN.duplicate"/>
-  <file entry="0968" name="EFFECT/E029.BIN.duplicate"/>
-  <file entry="0969" name="EFFECT/E030.BIN.duplicate"/>
-  <file entry="0970" name="EFFECT/E031.BIN.duplicate"/>
-  <file entry="0971" name="EFFECT/E032.BIN.duplicate"/>
-  <file entry="0973" name="EFFECT/E034.BIN.duplicate"/>
-  <file entry="0975" name="EFFECT/E036.BIN.duplicate"/>
-  <file entry="0976" name="EFFECT/E039.BIN.duplicate"/>
-  <file entry="0977" name="EFFECT/E040.BIN.duplicate"/>
-  <file entry="0979" name="EFFECT/E043.BIN.duplicate"/>
-  <file entry="0980" name="EFFECT/E044.BIN.duplicate"/>
-  <file entry="0981" name="EFFECT/E045.BIN.duplicate"/>
-  <file entry="0982" name="EFFECT/E046.BIN.duplicate"/>
-  <file entry="0984" name="EFFECT/E049.BIN.duplicate"/>
-  <file entry="0985" name="EFFECT/E050.BIN.duplicate"/>
-  <file entry="0986" name="EFFECT/E051.BIN.duplicate"/>
-  <file entry="0987" name="EFFECT/E052.BIN.duplicate"/>
-  <file entry="0988" name="EFFECT/E053.BIN.duplicate"/>
-  <file entry="0989" name="EFFECT/E054.BIN.duplicate"/>
-  <file entry="0990" name="EFFECT/E055.BIN.duplicate"/>
-  <file entry="0991" name="EFFECT/E056.BIN.duplicate"/>
-  <file entry="0992" name="EFFECT/E057.BIN.duplicate"/>
-  <file entry="0993" name="EFFECT/E058.BIN.duplicate"/>
-  <file entry="0994" name="EFFECT/E059.BIN.duplicate"/>
-  <file entry="0995" name="EFFECT/E060.BIN.duplicate"/>
-  <file entry="0996" name="EFFECT/E061.BIN.duplicate"/>
-  <file entry="0997" name="EFFECT/E062.BIN.duplicate"/>
-  <file entry="0998" name="EFFECT/E063.BIN.duplicate"/>
-  <file entry="1000" name="EFFECT/E066.BIN.duplicate"/>
-  <file entry="1011" name="EFFECT/E078.BIN.duplicate"/>
-  <file entry="1014" name="EFFECT/E081.BIN.duplicate"/>
-  <file entry="1015" name="EFFECT/E082.BIN.duplicate"/>
-  <file entry="1016" name="EFFECT/E083.BIN.duplicate"/>
-  <file entry="1017" name="EFFECT/E084.BIN.duplicate"/>
-  <file entry="1018" name="EFFECT/E085.BIN.duplicate"/>
-  <file entry="1019" name="EFFECT/E086.BIN.duplicate"/>
-  <file entry="1020" name="EFFECT/E087.BIN.duplicate"/>
-  <file entry="1028" name="EFFECT/E095.BIN.duplicate"/>
-  <file entry="1029" name="EFFECT/E096.BIN.duplicate"/>
-  <file entry="1030" name="EFFECT/E097.BIN.duplicate"/>
-  <file entry="1031" name="EFFECT/E098.BIN.duplicate"/>
-  <file entry="1032" name="EFFECT/E099.BIN.duplicate"/>
-  <file entry="1033" name="EFFECT/E100.BIN.duplicate"/>
-  <file entry="1034" name="EFFECT/E101.BIN.duplicate"/>
-  <file entry="1035" name="EFFECT/E102.BIN.duplicate"/>
-  <file entry="1036" name="EFFECT/E103.BIN.duplicate"/>
-  <file entry="1037" name="EFFECT/E104.BIN.duplicate"/>
-  <file entry="1038" name="EFFECT/E105.BIN.duplicate"/>
-  <file entry="1039" name="EFFECT/E106.BIN.duplicate"/>
-  <file entry="1040" name="EFFECT/E107.BIN.duplicate"/>
-  <file entry="1041" name="EFFECT/E108.BIN.duplicate"/>
-  <file entry="1042" name="EFFECT/E109.BIN.duplicate"/>
-  <file entry="1043" name="EFFECT/E110.BIN.duplicate"/>
-  <file entry="1044" name="EFFECT/E111.BIN.duplicate"/>
-  <file entry="1045" name="EFFECT/E112.BIN.duplicate"/>
-  <file entry="1046" name="EFFECT/E113.BIN.duplicate"/>
-  <file entry="1047" name="EFFECT/E114.BIN.duplicate"/>
-  <file entry="1048" name="EFFECT/E115.BIN.duplicate"/>
-  <file entry="1049" name="EFFECT/E116.BIN.duplicate"/>
-  <file entry="1050" name="EFFECT/E117.BIN.duplicate"/>
-  <file entry="1051" name="EFFECT/E118.BIN.duplicate"/>
-  <file entry="1052" name="EFFECT/E119.BIN.duplicate"/>
-  <file entry="1053" name="EFFECT/E120.BIN.duplicate"/>
-  <file entry="1054" name="EFFECT/E121.BIN.duplicate"/>
-  <file entry="1055" name="EFFECT/E122.BIN.duplicate"/>
-  <file entry="1056" name="EFFECT/E123.BIN.duplicate"/>
-  <file entry="1057" name="EFFECT/E124.BIN.duplicate"/>
-  <file entry="1058" name="EFFECT/E125.BIN.duplicate"/>
-  <file entry="1059" name="EFFECT/E126.BIN.duplicate"/>
-  <file entry="1060" name="EFFECT/E127.BIN.duplicate"/>
-  <file entry="1061" name="EFFECT/E128.BIN.duplicate"/>
-  <file entry="1062" name="EFFECT/E129.BIN.duplicate"/>
-  <file entry="1063" name="EFFECT/E130.BIN.duplicate"/>
-  <file entry="1064" name="EFFECT/E131.BIN.duplicate"/>
-  <file entry="1065" name="EFFECT/E132.BIN.duplicate"/>
-  <file entry="1066" name="EFFECT/E133.BIN.duplicate"/>
-  <file entry="1068" name="EFFECT/E135.BIN.duplicate"/>
-  <file entry="1069" name="EFFECT/E136.BIN.duplicate"/>
-  <file entry="1070" name="EFFECT/E137.BIN.duplicate"/>
-  <file entry="1072" name="EFFECT/E139.BIN.duplicate"/>
-  <file entry="1073" name="EFFECT/E140.BIN.duplicate"/>
-  <file entry="1074" name="EFFECT/E141.BIN.duplicate"/>
-  <file entry="1075" name="EFFECT/E142.BIN.duplicate"/>
-  <file entry="1076" name="EFFECT/E154.BIN.duplicate"/>
-  <file entry="1077" name="EFFECT/E156.BIN.duplicate"/>
-  <file entry="1078" name="EFFECT/E157.BIN.duplicate"/>
-  <file entry="1079" name="EFFECT/E158.BIN.duplicate"/>
-  <file entry="1080" name="EFFECT/E159.BIN.duplicate"/>
-  <file entry="1081" name="EFFECT/E160.BIN.duplicate"/>
-  <file entry="1083" name="EFFECT/E163.BIN.duplicate"/>
-  <file entry="1084" name="EFFECT/E164.BIN.duplicate"/>
-  <file entry="1085" name="EFFECT/E165.BIN.duplicate"/>
-  <file entry="1086" name="EFFECT/E166.BIN.duplicate"/>
-  <file entry="1088" name="EFFECT/E168.BIN.duplicate"/>
-  <file entry="1089" name="EFFECT/E169.BIN.duplicate"/>
-  <file entry="1090" name="EFFECT/E170.BIN.duplicate"/>
-  <file entry="1091" name="EFFECT/E171.BIN.duplicate"/>
-  <file entry="1092" name="EFFECT/E172.BIN.duplicate"/>
-  <file entry="1093" name="EFFECT/E173.BIN.duplicate"/>
-  <file entry="1095" name="EFFECT/E175.BIN.duplicate"/>
-  <file entry="1097" name="EFFECT/E177.BIN.duplicate"/>
-  <file entry="1098" name="EFFECT/E178.BIN.duplicate"/>
-  <file entry="1099" name="EFFECT/E179.BIN.duplicate"/>
-  <file entry="1100" name="EFFECT/E180.BIN.duplicate"/>
-  <file entry="1101" name="EFFECT/E181.BIN.duplicate"/>
-  <file entry="1102" name="EFFECT/E182.BIN.duplicate"/>
-  <file entry="1103" name="EFFECT/E183.BIN.duplicate"/>
-  <file entry="1104" name="EFFECT/E184.BIN.duplicate"/>
-  <file entry="1105" name="EFFECT/E185.BIN.duplicate"/>
-  <file entry="1106" name="EFFECT/E186.BIN.duplicate"/>
-  <file entry="1107" name="EFFECT/E187.BIN.duplicate"/>
-  <file entry="1108" name="EFFECT/E188.BIN.duplicate"/>
-  <file entry="1109" name="EFFECT/E189.BIN.duplicate"/>
-  <file entry="1110" name="EFFECT/E190.BIN.duplicate"/>
-  <file entry="1111" name="EFFECT/E191.BIN.duplicate"/>
-  <file entry="1112" name="EFFECT/E192.BIN.duplicate"/>
-  <file entry="1114" name="EFFECT/E194.BIN.duplicate"/>
-  <file entry="1115" name="EFFECT/E195.BIN.duplicate"/>
-  <file entry="1116" name="EFFECT/E196.BIN.duplicate"/>
-  <file entry="1117" name="EFFECT/E197.BIN.duplicate"/>
-  <file entry="1118" name="EFFECT/E198.BIN.duplicate"/>
-  <file entry="1119" name="EFFECT/E199.BIN.duplicate"/>
-  <file entry="1120" name="EFFECT/E200.BIN.duplicate"/>
-  <file entry="1121" name="EFFECT/E201.BIN.duplicate"/>
-  <file entry="1122" name="EFFECT/E202.BIN.duplicate"/>
-  <file entry="1123" name="EFFECT/E203.BIN.duplicate"/>
-  <file entry="1124" name="EFFECT/E204.BIN.duplicate"/>
-  <file entry="1125" name="EFFECT/E205.BIN.duplicate"/>
-  <file entry="1126" name="EFFECT/E206.BIN.duplicate"/>
-  <file entry="1127" name="EFFECT/E208.BIN.duplicate"/>
-  <file entry="1128" name="EFFECT/E210.BIN.duplicate"/>
-  <file entry="1129" name="EFFECT/E211.BIN.duplicate"/>
-  <file entry="1130" name="EFFECT/E212.BIN.duplicate"/>
-  <file entry="1131" name="EFFECT/E213.BIN.duplicate"/>
-  <file entry="1132" name="EFFECT/E214.BIN.duplicate"/>
-  <file entry="1133" name="EFFECT/E215.BIN.duplicate"/>
-  <file entry="1134" name="EFFECT/E216.BIN.duplicate"/>
-  <file entry="1135" name="EFFECT/E217.BIN.duplicate"/>
-  <file entry="1136" name="EFFECT/E218.BIN.duplicate"/>
-  <file entry="1137" name="EFFECT/E219.BIN.duplicate"/>
-  <file entry="1138" name="EFFECT/E220.BIN.duplicate"/>
-  <file entry="1139" name="EFFECT/E221.BIN.duplicate"/>
-  <file entry="1141" name="EFFECT/E223.BIN.duplicate"/>
-  <file entry="1142" name="EFFECT/E224.BIN.duplicate"/>
-  <file entry="1143" name="EFFECT/E225.BIN.duplicate"/>
-  <file entry="1144" name="EFFECT/E226.BIN.duplicate"/>
-  <file entry="1148" name="EFFECT/E231.BIN.duplicate"/>
-  <file entry="1149" name="EFFECT/E232.BIN.duplicate"/>
-  <file entry="1151" name="EFFECT/E234.BIN.duplicate"/>
-  <file entry="1154" name="EFFECT/E237.BIN.duplicate"/>
-  <file entry="1155" name="EFFECT/E238.BIN.duplicate"/>
-  <file entry="1156" name="EFFECT/E239.BIN.duplicate"/>
-  <file entry="1160" name="EFFECT/E243.BIN.duplicate"/>
-  <file entry="1172" name="EFFECT/E260.BIN.duplicate"/>
-  <file entry="1173" name="EFFECT/E261.BIN.duplicate"/>
-  <file entry="1174" name="EFFECT/E262.BIN.duplicate"/>
-  <file entry="1175" name="EFFECT/E263.BIN.duplicate"/>
-  <file entry="1176" name="EFFECT/E264.BIN.duplicate"/>
-  <file entry="1177" name="EFFECT/E265.BIN.duplicate"/>
-  <file entry="1178" name="EFFECT/E266.BIN.duplicate"/>
-  <file entry="1179" name="EFFECT/E267.BIN.duplicate"/>
-  <file entry="1180" name="EFFECT/E268.BIN.duplicate"/>
-  <file entry="1181" name="EFFECT/E269.BIN.duplicate"/>
-  <file entry="1182" name="EFFECT/E270.BIN.duplicate"/>
-  <file entry="1183" name="EFFECT/E271.BIN.duplicate"/>
-  <file entry="1184" name="EFFECT/E272.BIN.duplicate"/>
-  <file entry="1185" name="EFFECT/E273.BIN.duplicate"/>
-  <file entry="1186" name="EFFECT/E288.BIN.duplicate"/>
-  <file entry="1187" name="EFFECT/E289.BIN.duplicate"/>
-  <file entry="1188" name="EFFECT/E290.BIN.duplicate"/>
-  <file entry="1189" name="EFFECT/E291.BIN.duplicate"/>
-  <file entry="1190" name="EFFECT/E292.BIN.duplicate"/>
-  <file entry="1191" name="EFFECT/E293.BIN.duplicate"/>
-  <file entry="1192" name="EFFECT/E294.BIN.duplicate"/>
-  <file entry="1193" name="EFFECT/E295.BIN.duplicate"/>
-  <file entry="1194" name="EFFECT/E306.BIN.duplicate"/>
-  <file entry="1195" name="EFFECT/E307.BIN.duplicate"/>
-  <file entry="1196" name="EFFECT/E308.BIN.duplicate"/>
-  <file entry="1197" name="EFFECT/E309.BIN.duplicate"/>
-  <file entry="1198" name="EFFECT/E310.BIN.duplicate"/>
-  <file entry="1199" name="EFFECT/E311.BIN.duplicate"/>
-  <file entry="1200" name="EFFECT/E312.BIN.duplicate"/>
-  <file entry="1201" name="EFFECT/E313.BIN.duplicate"/>
-  <file entry="1203" name="EFFECT/E316.BIN.duplicate"/>
-  <file entry="1205" name="EFFECT/E318.BIN.duplicate"/>
-  <file entry="1206" name="EFFECT/E319.BIN.duplicate"/>
-  <file entry="1207" name="EFFECT/E320.BIN.duplicate"/>
-  <file entry="1208" name="EFFECT/E321.BIN.duplicate"/>
-  <file entry="1209" name="EFFECT/E322.BIN.duplicate"/>
-  <file entry="1210" name="EFFECT/E323.BIN.duplicate"/>
-  <file entry="1211" name="EFFECT/E324.BIN.duplicate"/>
-  <file entry="1212" name="EFFECT/E325.BIN.duplicate"/>
-  <file entry="1213" name="EFFECT/E326.BIN.duplicate"/>
-  <file entry="1214" name="EFFECT/E327.BIN.duplicate"/>
-  <file entry="1215" name="EFFECT/E328.BIN.duplicate"/>
-  <file entry="1216" name="EFFECT/E329.BIN.duplicate"/>
-  <file entry="1217" name="EFFECT/E330.BIN.duplicate"/>
-  <file entry="1218" name="EFFECT/E331.BIN.duplicate"/>
-  <file entry="1219" name="EFFECT/E332.BIN.duplicate"/>
-  <file entry="1220" name="EFFECT/E333.BIN.duplicate"/>
-  <file entry="1221" name="EFFECT/E334.BIN.duplicate"/>
-  <file entry="1222" name="EFFECT/E335.BIN.duplicate"/>
-  <file entry="1224" name="EFFECT/E337.BIN.duplicate"/>
-  <file entry="1226" name="EFFECT/E339.BIN.duplicate"/>
-  <file entry="1227" name="EFFECT/E340.BIN.duplicate"/>
-  <file entry="1229" name="EFFECT/E342.BIN.duplicate"/>
-  <file entry="1230" name="EFFECT/E343.BIN.duplicate"/>
-  <file entry="1231" name="EFFECT/E344.BIN.duplicate"/>
-  <file entry="1232" name="EFFECT/E345.BIN.duplicate"/>
-  <file entry="1233" name="EFFECT/E346.BIN.duplicate"/>
-  <file entry="1234" name="EFFECT/E347.BIN.duplicate"/>
-  <file entry="1235" name="EFFECT/E348.BIN.duplicate"/>
-  <file entry="1236" name="EFFECT/E349.BIN.duplicate"/>
-  <file entry="1237" name="EFFECT/E350.BIN.duplicate"/>
-  <file entry="1238" name="EFFECT/E351.BIN.duplicate"/>
-  <file entry="1239" name="EFFECT/E352.BIN.duplicate"/>
-  <file entry="1240" name="EFFECT/E353.BIN.duplicate"/>
-  <file entry="1241" name="EFFECT/E354.BIN.duplicate"/>
-  <file entry="1243" name="EFFECT/E356.BIN.duplicate"/>
-  <file entry="1244" name="EFFECT/E357.BIN.duplicate"/>
-  <file entry="1245" name="EFFECT/E358.BIN.duplicate"/>
-  <file entry="1246" name="EFFECT/E359.BIN.duplicate"/>
-  <file entry="1247" name="EFFECT/E360.BIN.duplicate"/>
-  <file entry="1248" name="EFFECT/E361.BIN.duplicate"/>
-  <file entry="1249" name="EFFECT/E362.BIN.duplicate"/>
-  <file entry="1250" name="EFFECT/E363.BIN.duplicate"/>
-  <file entry="1251" name="EFFECT/E364.BIN.duplicate"/>
-  <file entry="1252" name="EFFECT/E365.BIN.duplicate"/>
-  <file entry="1253" name="EFFECT/E366.BIN.duplicate"/>
-  <file entry="1254" name="EFFECT/E367.BIN.duplicate"/>
-  <file entry="1255" name="EFFECT/E368.BIN.duplicate"/>
-  <file entry="1256" name="EFFECT/E369.BIN.duplicate"/>
-  <file entry="1257" name="EFFECT/E370.BIN.duplicate"/>
-  <file entry="1259" name="EFFECT/E372.BIN.duplicate"/>
-  <file entry="1261" name="EFFECT/E374.BIN.duplicate"/>
-  <file entry="1262" name="EFFECT/E375.BIN.duplicate"/>
-  <file entry="1264" name="EFFECT/E377.BIN.duplicate"/>
-  <file entry="1265" name="EFFECT/E378.BIN.duplicate"/>
-  <file entry="1266" name="EFFECT/E379.BIN.duplicate"/>
-  <file entry="1267" name="EFFECT/E380.BIN.duplicate"/>
-  <file entry="1273" name="EFFECT/E386.BIN.duplicate"/>
-  <file entry="1274" name="EFFECT/E387.BIN.duplicate"/>
-  <file entry="1275" name="EFFECT/E388.BIN.duplicate"/>
-  <file entry="1276" name="EFFECT/E389.BIN.duplicate"/>
-  <file entry="1277" name="EFFECT/E390.BIN.duplicate"/>
-  <file entry="1278" name="EFFECT/E391.BIN.duplicate"/>
-  <file entry="1279" name="EFFECT/E392.BIN.duplicate"/>
-  <file entry="1280" name="EFFECT/E393.BIN.duplicate"/>
-  <file entry="1281" name="EFFECT/E394.BIN.duplicate"/>
-  <file entry="1283" name="EFFECT/E396.BIN.duplicate"/>
-  <file entry="1284" name="EFFECT/E397.BIN.duplicate"/>
-  <file entry="1285" name="EFFECT/E398.BIN.duplicate"/>
-  <file entry="1286" name="EFFECT/E399.BIN.duplicate"/>
-  <file entry="1287" name="EFFECT/E400.BIN.duplicate"/>
-  <file entry="1291" name="EFFECT/E404.BIN.duplicate"/>
-  <file entry="1292" name="EFFECT/E405.BIN.duplicate"/>
-  <file entry="1293" name="EFFECT/E406.BIN.duplicate"/>
-  <file entry="1294" name="EFFECT/E407.BIN.duplicate"/>
-  <file entry="1297" name="EFFECT/E410.BIN.duplicate"/>
-  <file entry="1300" name="EFFECT/E413.BIN.duplicate"/>
-  <file entry="1308" name="EFFECT/E457.BIN.duplicate"/>
-  <file entry="1310" name="EFFECT/E459.BIN.duplicate"/>
-  <file entry="1321" name="EFFECT/E470.BIN.duplicate"/>
-  <file entry="1330" name="EFFECT/E479.BIN.duplicate"/>
-  <file entry="1335" name="EFFECT/E484.BIN.duplicate"/>
-  <file entry="1337" name="EFFECT/E486.BIN.duplicate"/>
-  <file entry="1338" name="EFFECT/E509.BIN.duplicate"/>
-  <file entry="1339" name="EFFECT/E510.BIN.duplicate"/>
+  <file entry="0936" name="WOTL/MENU_OPTIONS.BIN"/>
+  <file entry="0937" name="WOTL/STAFFNAME.DAT"/>
+  <file entry="0938" name="WOTL/VPAC_SOUND_EFFECTS.BIN"/>
+  <file entry="0939" name="EFFECT/NEW/E000.BIN"/>
+  <file entry="0940" name="EFFECT/NEW/E001.BIN"/>
+  <file entry="0941" name="EFFECT/NEW/E002.BIN"/>
+  <file entry="0942" name="EFFECT/NEW/E003.BIN"/>
+  <file entry="0943" name="EFFECT/NEW/E004.BIN"/>
+  <file entry="0944" name="EFFECT/NEW/E005.BIN"/>
+  <file entry="0945" name="EFFECT/NEW/E006.BIN"/>
+  <file entry="0946" name="EFFECT/NEW/E007.BIN"/>
+  <file entry="0947" name="EFFECT/NEW/E008.BIN"/>
+  <file entry="0948" name="EFFECT/NEW/E009.BIN"/>
+  <file entry="0949" name="EFFECT/NEW/E010.BIN"/>
+  <file entry="0950" name="EFFECT/NEW/E011.BIN"/>
+  <file entry="0951" name="EFFECT/NEW/E012.BIN"/>
+  <file entry="0952" name="EFFECT/NEW/E013.BIN"/>
+  <file entry="0953" name="EFFECT/NEW/E014.BIN"/>
+  <file entry="0954" name="EFFECT/NEW/E015.BIN"/>
+  <file entry="0955" name="EFFECT/NEW/E016.BIN"/>
+  <file entry="0956" name="EFFECT/NEW/E017.BIN"/>
+  <file entry="0957" name="EFFECT/NEW/E018.BIN"/>
+  <file entry="0958" name="EFFECT/NEW/E019.BIN"/>
+  <file entry="0959" name="EFFECT/NEW/E020.BIN"/>
+  <file entry="0960" name="EFFECT/NEW/E021.BIN"/>
+  <file entry="0961" name="EFFECT/NEW/E022.BIN"/>
+  <file entry="0962" name="EFFECT/NEW/E023.BIN"/>
+  <file entry="0963" name="EFFECT/NEW/E024.BIN"/>
+  <file entry="0964" name="EFFECT/NEW/E025.BIN"/>
+  <file entry="0965" name="EFFECT/NEW/E026.BIN"/>
+  <file entry="0966" name="EFFECT/NEW/E027.BIN"/>
+  <file entry="0967" name="EFFECT/NEW/E028.BIN"/>
+  <file entry="0968" name="EFFECT/NEW/E029.BIN"/>
+  <file entry="0969" name="EFFECT/NEW/E030.BIN"/>
+  <file entry="0970" name="EFFECT/NEW/E031.BIN"/>
+  <file entry="0971" name="EFFECT/NEW/E032.BIN"/>
+  <file entry="0972" name="EFFECT/NEW/E033.BIN"/>
+  <file entry="0973" name="EFFECT/NEW/E034.BIN"/>
+  <file entry="0974" name="EFFECT/NEW/E035.BIN"/>
+  <file entry="0975" name="EFFECT/NEW/E036.BIN"/>
+  <file entry="0976" name="EFFECT/NEW/E039.BIN"/>
+  <file entry="0977" name="EFFECT/NEW/E040.BIN"/>
+  <file entry="0978" name="EFFECT/NEW/E041.BIN"/>
+  <file entry="0979" name="EFFECT/NEW/E043.BIN"/>
+  <file entry="0980" name="EFFECT/NEW/E044.BIN"/>
+  <file entry="0981" name="EFFECT/NEW/E045.BIN"/>
+  <file entry="0982" name="EFFECT/NEW/E046.BIN"/>
+  <file entry="0983" name="EFFECT/NEW/E047.BIN"/>
+  <file entry="0984" name="EFFECT/NEW/E049.BIN"/>
+  <file entry="0985" name="EFFECT/NEW/E050.BIN"/>
+  <file entry="0986" name="EFFECT/NEW/E051.BIN"/>
+  <file entry="0987" name="EFFECT/NEW/E052.BIN"/>
+  <file entry="0988" name="EFFECT/NEW/E053.BIN"/>
+  <file entry="0989" name="EFFECT/NEW/E054.BIN"/>
+  <file entry="0990" name="EFFECT/NEW/E055.BIN"/>
+  <file entry="0991" name="EFFECT/NEW/E056.BIN"/>
+  <file entry="0992" name="EFFECT/NEW/E057.BIN"/>
+  <file entry="0993" name="EFFECT/NEW/E058.BIN"/>
+  <file entry="0994" name="EFFECT/NEW/E059.BIN"/>
+  <file entry="0995" name="EFFECT/NEW/E060.BIN"/>
+  <file entry="0996" name="EFFECT/NEW/E061.BIN"/>
+  <file entry="0997" name="EFFECT/NEW/E062.BIN"/>
+  <file entry="0998" name="EFFECT/NEW/E063.BIN"/>
+  <file entry="0999" name="EFFECT/NEW/E065.BIN"/>
+  <file entry="1000" name="EFFECT/NEW/E066.BIN"/>
+  <file entry="1001" name="EFFECT/NEW/E067.BIN"/>
+  <file entry="1002" name="EFFECT/NEW/E068.BIN"/>
+  <file entry="1003" name="EFFECT/NEW/E069.BIN"/>
+  <file entry="1004" name="EFFECT/NEW/E070.BIN"/>
+  <file entry="1005" name="EFFECT/NEW/E071.BIN"/>
+  <file entry="1006" name="EFFECT/NEW/E072.BIN"/>
+  <file entry="1007" name="EFFECT/NEW/E073.BIN"/>
+  <file entry="1008" name="EFFECT/NEW/E074.BIN"/>
+  <file entry="1009" name="EFFECT/NEW/E076.BIN"/>
+  <file entry="1010" name="EFFECT/NEW/E077.BIN"/>
+  <file entry="1011" name="EFFECT/NEW/E078.BIN"/>
+  <file entry="1012" name="EFFECT/NEW/E079.BIN"/>
+  <file entry="1013" name="EFFECT/NEW/E080.BIN"/>
+  <file entry="1014" name="EFFECT/NEW/E081.BIN"/>
+  <file entry="1015" name="EFFECT/NEW/E082.BIN"/>
+  <file entry="1016" name="EFFECT/NEW/E083.BIN"/>
+  <file entry="1017" name="EFFECT/NEW/E084.BIN"/>
+  <file entry="1018" name="EFFECT/NEW/E085.BIN"/>
+  <file entry="1019" name="EFFECT/NEW/E086.BIN"/>
+  <file entry="1020" name="EFFECT/NEW/E087.BIN"/>
+  <file entry="1021" name="EFFECT/NEW/E088.BIN"/>
+  <file entry="1022" name="EFFECT/NEW/E089.BIN"/>
+  <file entry="1023" name="EFFECT/NEW/E090.BIN"/>
+  <file entry="1024" name="EFFECT/NEW/E091.BIN"/>
+  <file entry="1025" name="EFFECT/NEW/E092.BIN"/>
+  <file entry="1026" name="EFFECT/NEW/E093.BIN"/>
+  <file entry="1027" name="EFFECT/NEW/E094.BIN"/>
+  <file entry="1028" name="EFFECT/NEW/E095.BIN"/>
+  <file entry="1029" name="EFFECT/NEW/E096.BIN"/>
+  <file entry="1030" name="EFFECT/NEW/E097.BIN"/>
+  <file entry="1031" name="EFFECT/NEW/E098.BIN"/>
+  <file entry="1032" name="EFFECT/NEW/E099.BIN"/>
+  <file entry="1033" name="EFFECT/NEW/E100.BIN"/>
+  <file entry="1034" name="EFFECT/NEW/E101.BIN"/>
+  <file entry="1035" name="EFFECT/NEW/E102.BIN"/>
+  <file entry="1036" name="EFFECT/NEW/E103.BIN"/>
+  <file entry="1037" name="EFFECT/NEW/E104.BIN"/>
+  <file entry="1038" name="EFFECT/NEW/E105.BIN"/>
+  <file entry="1039" name="EFFECT/NEW/E106.BIN"/>
+  <file entry="1040" name="EFFECT/NEW/E107.BIN"/>
+  <file entry="1041" name="EFFECT/NEW/E108.BIN"/>
+  <file entry="1042" name="EFFECT/NEW/E109.BIN"/>
+  <file entry="1043" name="EFFECT/NEW/E110.BIN"/>
+  <file entry="1044" name="EFFECT/NEW/E111.BIN"/>
+  <file entry="1045" name="EFFECT/NEW/E112.BIN"/>
+  <file entry="1046" name="EFFECT/NEW/E113.BIN"/>
+  <file entry="1047" name="EFFECT/NEW/E114.BIN"/>
+  <file entry="1048" name="EFFECT/NEW/E115.BIN"/>
+  <file entry="1049" name="EFFECT/NEW/E116.BIN"/>
+  <file entry="1050" name="EFFECT/NEW/E117.BIN"/>
+  <file entry="1051" name="EFFECT/NEW/E118.BIN"/>
+  <file entry="1052" name="EFFECT/NEW/E119.BIN"/>
+  <file entry="1053" name="EFFECT/NEW/E120.BIN"/>
+  <file entry="1054" name="EFFECT/NEW/E121.BIN"/>
+  <file entry="1055" name="EFFECT/NEW/E122.BIN"/>
+  <file entry="1056" name="EFFECT/NEW/E123.BIN"/>
+  <file entry="1057" name="EFFECT/NEW/E124.BIN"/>
+  <file entry="1058" name="EFFECT/NEW/E125.BIN"/>
+  <file entry="1059" name="EFFECT/NEW/E126.BIN"/>
+  <file entry="1060" name="EFFECT/NEW/E127.BIN"/>
+  <file entry="1061" name="EFFECT/NEW/E128.BIN"/>
+  <file entry="1062" name="EFFECT/NEW/E129.BIN"/>
+  <file entry="1063" name="EFFECT/NEW/E130.BIN"/>
+  <file entry="1064" name="EFFECT/NEW/E131.BIN"/>
+  <file entry="1065" name="EFFECT/NEW/E132.BIN"/>
+  <file entry="1066" name="EFFECT/NEW/E133.BIN"/>
+  <file entry="1067" name="EFFECT/NEW/E134.BIN"/>
+  <file entry="1068" name="EFFECT/NEW/E135.BIN"/>
+  <file entry="1069" name="EFFECT/NEW/E136.BIN"/>
+  <file entry="1070" name="EFFECT/NEW/E137.BIN"/>
+  <file entry="1071" name="EFFECT/NEW/E138.BIN"/>
+  <file entry="1072" name="EFFECT/NEW/E139.BIN"/>
+  <file entry="1073" name="EFFECT/NEW/E140.BIN"/>
+  <file entry="1074" name="EFFECT/NEW/E141.BIN"/>
+  <file entry="1075" name="EFFECT/NEW/E142.BIN"/>
+  <file entry="1076" name="EFFECT/NEW/E154.BIN"/>
+  <file entry="1077" name="EFFECT/NEW/E156.BIN"/>
+  <file entry="1078" name="EFFECT/NEW/E157.BIN"/>
+  <file entry="1079" name="EFFECT/NEW/E158.BIN"/>
+  <file entry="1080" name="EFFECT/NEW/E159.BIN"/>
+  <file entry="1081" name="EFFECT/NEW/E160.BIN"/>
+  <file entry="1082" name="EFFECT/NEW/E161.BIN"/>
+  <file entry="1083" name="EFFECT/NEW/E163.BIN"/>
+  <file entry="1084" name="EFFECT/NEW/E164.BIN"/>
+  <file entry="1085" name="EFFECT/NEW/E165.BIN"/>
+  <file entry="1086" name="EFFECT/NEW/E166.BIN"/>
+  <file entry="1087" name="EFFECT/NEW/E167.BIN"/>
+  <file entry="1088" name="EFFECT/NEW/E168.BIN"/>
+  <file entry="1089" name="EFFECT/NEW/E169.BIN"/>
+  <file entry="1090" name="EFFECT/NEW/E170.BIN"/>
+  <file entry="1091" name="EFFECT/NEW/E171.BIN"/>
+  <file entry="1092" name="EFFECT/NEW/E172.BIN"/>
+  <file entry="1093" name="EFFECT/NEW/E173.BIN"/>
+  <file entry="1094" name="EFFECT/NEW/E174.BIN"/>
+  <file entry="1095" name="EFFECT/NEW/E175.BIN"/>
+  <file entry="1096" name="EFFECT/NEW/E176.BIN"/>
+  <file entry="1097" name="EFFECT/NEW/E177.BIN"/>
+  <file entry="1098" name="EFFECT/NEW/E178.BIN"/>
+  <file entry="1099" name="EFFECT/NEW/E179.BIN"/>
+  <file entry="1100" name="EFFECT/NEW/E180.BIN"/>
+  <file entry="1101" name="EFFECT/NEW/E181.BIN"/>
+  <file entry="1102" name="EFFECT/NEW/E182.BIN"/>
+  <file entry="1103" name="EFFECT/NEW/E183.BIN"/>
+  <file entry="1104" name="EFFECT/NEW/E184.BIN"/>
+  <file entry="1105" name="EFFECT/NEW/E185.BIN"/>
+  <file entry="1106" name="EFFECT/NEW/E186.BIN"/>
+  <file entry="1107" name="EFFECT/NEW/E187.BIN"/>
+  <file entry="1108" name="EFFECT/NEW/E188.BIN"/>
+  <file entry="1109" name="EFFECT/NEW/E189.BIN"/>
+  <file entry="1110" name="EFFECT/NEW/E190.BIN"/>
+  <file entry="1111" name="EFFECT/NEW/E191.BIN"/>
+  <file entry="1112" name="EFFECT/NEW/E192.BIN"/>
+  <file entry="1113" name="EFFECT/NEW/E193.BIN"/>
+  <file entry="1114" name="EFFECT/NEW/E194.BIN"/>
+  <file entry="1115" name="EFFECT/NEW/E195.BIN"/>
+  <file entry="1116" name="EFFECT/NEW/E196.BIN"/>
+  <file entry="1117" name="EFFECT/NEW/E197.BIN"/>
+  <file entry="1118" name="EFFECT/NEW/E198.BIN"/>
+  <file entry="1119" name="EFFECT/NEW/E199.BIN"/>
+  <file entry="1120" name="EFFECT/NEW/E200.BIN"/>
+  <file entry="1121" name="EFFECT/NEW/E201.BIN"/>
+  <file entry="1122" name="EFFECT/NEW/E202.BIN"/>
+  <file entry="1123" name="EFFECT/NEW/E203.BIN"/>
+  <file entry="1124" name="EFFECT/NEW/E204.BIN"/>
+  <file entry="1125" name="EFFECT/NEW/E205.BIN"/>
+  <file entry="1126" name="EFFECT/NEW/E206.BIN"/>
+  <file entry="1127" name="EFFECT/NEW/E208.BIN"/>
+  <file entry="1128" name="EFFECT/NEW/E210.BIN"/>
+  <file entry="1129" name="EFFECT/NEW/E211.BIN"/>
+  <file entry="1130" name="EFFECT/NEW/E212.BIN"/>
+  <file entry="1131" name="EFFECT/NEW/E213.BIN"/>
+  <file entry="1132" name="EFFECT/NEW/E214.BIN"/>
+  <file entry="1133" name="EFFECT/NEW/E215.BIN"/>
+  <file entry="1134" name="EFFECT/NEW/E216.BIN"/>
+  <file entry="1135" name="EFFECT/NEW/E217.BIN"/>
+  <file entry="1136" name="EFFECT/NEW/E218.BIN"/>
+  <file entry="1137" name="EFFECT/NEW/E219.BIN"/>
+  <file entry="1138" name="EFFECT/NEW/E220.BIN"/>
+  <file entry="1139" name="EFFECT/NEW/E221.BIN"/>
+  <file entry="1140" name="EFFECT/NEW/E222.BIN"/>
+  <file entry="1141" name="EFFECT/NEW/E223.BIN"/>
+  <file entry="1142" name="EFFECT/NEW/E224.BIN"/>
+  <file entry="1143" name="EFFECT/NEW/E225.BIN"/>
+  <file entry="1144" name="EFFECT/NEW/E226.BIN"/>
+  <file entry="1145" name="EFFECT/NEW/E228.BIN"/>
+  <file entry="1146" name="EFFECT/NEW/E229.BIN"/>
+  <file entry="1147" name="EFFECT/NEW/E230.BIN"/>
+  <file entry="1148" name="EFFECT/NEW/E231.BIN"/>
+  <file entry="1149" name="EFFECT/NEW/E232.BIN"/>
+  <file entry="1150" name="EFFECT/NEW/E233.BIN"/>
+  <file entry="1151" name="EFFECT/NEW/E234.BIN"/>
+  <file entry="1152" name="EFFECT/NEW/E235.BIN"/>
+  <file entry="1153" name="EFFECT/NEW/E236.BIN"/>
+  <file entry="1154" name="EFFECT/NEW/E237.BIN"/>
+  <file entry="1155" name="EFFECT/NEW/E238.BIN"/>
+  <file entry="1156" name="EFFECT/NEW/E239.BIN"/>
+  <file entry="1157" name="EFFECT/NEW/E240.BIN"/>
+  <file entry="1158" name="EFFECT/NEW/E241.BIN"/>
+  <file entry="1159" name="EFFECT/NEW/E242.BIN"/>
+  <file entry="1160" name="EFFECT/NEW/E243.BIN"/>
+  <file entry="1161" name="EFFECT/NEW/E244.BIN"/>
+  <file entry="1162" name="EFFECT/NEW/E245.BIN"/>
+  <file entry="1163" name="EFFECT/NEW/E246.BIN"/>
+  <file entry="1164" name="EFFECT/NEW/E247.BIN"/>
+  <file entry="1165" name="EFFECT/NEW/E248.BIN"/>
+  <file entry="1166" name="EFFECT/NEW/E249.BIN"/>
+  <file entry="1167" name="EFFECT/NEW/E255.BIN"/>
+  <file entry="1168" name="EFFECT/NEW/E256.BIN"/>
+  <file entry="1169" name="EFFECT/NEW/E257.BIN"/>
+  <file entry="1170" name="EFFECT/NEW/E258.BIN"/>
+  <file entry="1171" name="EFFECT/NEW/E259.BIN"/>
+  <file entry="1172" name="EFFECT/NEW/E260.BIN"/>
+  <file entry="1173" name="EFFECT/NEW/E261.BIN"/>
+  <file entry="1174" name="EFFECT/NEW/E262.BIN"/>
+  <file entry="1175" name="EFFECT/NEW/E263.BIN"/>
+  <file entry="1176" name="EFFECT/NEW/E264.BIN"/>
+  <file entry="1177" name="EFFECT/NEW/E265.BIN"/>
+  <file entry="1178" name="EFFECT/NEW/E266.BIN"/>
+  <file entry="1179" name="EFFECT/NEW/E267.BIN"/>
+  <file entry="1180" name="EFFECT/NEW/E268.BIN"/>
+  <file entry="1181" name="EFFECT/NEW/E269.BIN"/>
+  <file entry="1182" name="EFFECT/NEW/E270.BIN"/>
+  <file entry="1183" name="EFFECT/NEW/E271.BIN"/>
+  <file entry="1184" name="EFFECT/NEW/E272.BIN"/>
+  <file entry="1185" name="EFFECT/NEW/E273.BIN"/>
+  <file entry="1186" name="EFFECT/NEW/E288.BIN"/>
+  <file entry="1187" name="EFFECT/NEW/E289.BIN"/>
+  <file entry="1188" name="EFFECT/NEW/E290.BIN"/>
+  <file entry="1189" name="EFFECT/NEW/E291.BIN"/>
+  <file entry="1190" name="EFFECT/NEW/E292.BIN"/>
+  <file entry="1191" name="EFFECT/NEW/E293.BIN"/>
+  <file entry="1192" name="EFFECT/NEW/E294.BIN"/>
+  <file entry="1193" name="EFFECT/NEW/E295.BIN"/>
+  <file entry="1194" name="EFFECT/NEW/E306.BIN"/>
+  <file entry="1195" name="EFFECT/NEW/E307.BIN"/>
+  <file entry="1196" name="EFFECT/NEW/E308.BIN"/>
+  <file entry="1197" name="EFFECT/NEW/E309.BIN"/>
+  <file entry="1198" name="EFFECT/NEW/E310.BIN"/>
+  <file entry="1199" name="EFFECT/NEW/E311.BIN"/>
+  <file entry="1200" name="EFFECT/NEW/E312.BIN"/>
+  <file entry="1201" name="EFFECT/NEW/E313.BIN"/>
+  <file entry="1202" name="EFFECT/NEW/E314.BIN"/>
+  <file entry="1203" name="EFFECT/NEW/E316.BIN"/>
+  <file entry="1204" name="EFFECT/NEW/E315.BIN"/>
+  <file entry="1205" name="EFFECT/NEW/E318.BIN"/>
+  <file entry="1206" name="EFFECT/NEW/E319.BIN"/>
+  <file entry="1207" name="EFFECT/NEW/E320.BIN"/>
+  <file entry="1208" name="EFFECT/NEW/E321.BIN"/>
+  <file entry="1209" name="EFFECT/NEW/E322.BIN"/>
+  <file entry="1210" name="EFFECT/NEW/E323.BIN"/>
+  <file entry="1211" name="EFFECT/NEW/E324.BIN"/>
+  <file entry="1212" name="EFFECT/NEW/E325.BIN"/>
+  <file entry="1213" name="EFFECT/NEW/E326.BIN"/>
+  <file entry="1214" name="EFFECT/NEW/E327.BIN"/>
+  <file entry="1215" name="EFFECT/NEW/E328.BIN"/>
+  <file entry="1216" name="EFFECT/NEW/E329.BIN"/>
+  <file entry="1217" name="EFFECT/NEW/E330.BIN"/>
+  <file entry="1218" name="EFFECT/NEW/E331.BIN"/>
+  <file entry="1219" name="EFFECT/NEW/E332.BIN"/>
+  <file entry="1220" name="EFFECT/NEW/E333.BIN"/>
+  <file entry="1221" name="EFFECT/NEW/E334.BIN"/>
+  <file entry="1222" name="EFFECT/NEW/E335.BIN"/>
+  <file entry="1223" name="EFFECT/NEW/E336.BIN"/>
+  <file entry="1224" name="EFFECT/NEW/E337.BIN"/>
+  <file entry="1225" name="EFFECT/NEW/E338.BIN"/>
+  <file entry="1226" name="EFFECT/NEW/E339.BIN"/>
+  <file entry="1227" name="EFFECT/NEW/E340.BIN"/>
+  <file entry="1228" name="EFFECT/NEW/E341.BIN"/>
+  <file entry="1229" name="EFFECT/NEW/E342.BIN"/>
+  <file entry="1230" name="EFFECT/NEW/E343.BIN"/>
+  <file entry="1231" name="EFFECT/NEW/E344.BIN"/>
+  <file entry="1232" name="EFFECT/NEW/E345.BIN"/>
+  <file entry="1233" name="EFFECT/NEW/E346.BIN"/>
+  <file entry="1234" name="EFFECT/NEW/E347.BIN"/>
+  <file entry="1235" name="EFFECT/NEW/E348.BIN"/>
+  <file entry="1236" name="EFFECT/NEW/E349.BIN"/>
+  <file entry="1237" name="EFFECT/NEW/E350.BIN"/>
+  <file entry="1238" name="EFFECT/NEW/E351.BIN"/>
+  <file entry="1239" name="EFFECT/NEW/E352.BIN"/>
+  <file entry="1240" name="EFFECT/NEW/E353.BIN"/>
+  <file entry="1241" name="EFFECT/NEW/E354.BIN"/>
+  <file entry="1242" name="EFFECT/NEW/E355.BIN"/>
+  <file entry="1243" name="EFFECT/NEW/E356.BIN"/>
+  <file entry="1244" name="EFFECT/NEW/E357.BIN"/>
+  <file entry="1245" name="EFFECT/NEW/E358.BIN"/>
+  <file entry="1246" name="EFFECT/NEW/E359.BIN"/>
+  <file entry="1247" name="EFFECT/NEW/E360.BIN"/>
+  <file entry="1248" name="EFFECT/NEW/E361.BIN"/>
+  <file entry="1249" name="EFFECT/NEW/E362.BIN"/>
+  <file entry="1250" name="EFFECT/NEW/E363.BIN"/>
+  <file entry="1251" name="EFFECT/NEW/E364.BIN"/>
+  <file entry="1252" name="EFFECT/NEW/E365.BIN"/>
+  <file entry="1253" name="EFFECT/NEW/E366.BIN"/>
+  <file entry="1254" name="EFFECT/NEW/E367.BIN"/>
+  <file entry="1255" name="EFFECT/NEW/E368.BIN"/>
+  <file entry="1256" name="EFFECT/NEW/E369.BIN"/>
+  <file entry="1257" name="EFFECT/NEW/E370.BIN"/>
+  <file entry="1258" name="EFFECT/NEW/E371.BIN"/>
+  <file entry="1259" name="EFFECT/NEW/E372.BIN"/>
+  <file entry="1260" name="EFFECT/NEW/E373.BIN"/>
+  <file entry="1261" name="EFFECT/NEW/E374.BIN"/>
+  <file entry="1262" name="EFFECT/NEW/E375.BIN"/>
+  <file entry="1263" name="EFFECT/NEW/E376.BIN"/>
+  <file entry="1264" name="EFFECT/NEW/E377.BIN"/>
+  <file entry="1265" name="EFFECT/NEW/E378.BIN"/>
+  <file entry="1266" name="EFFECT/NEW/E379.BIN"/>
+  <file entry="1267" name="EFFECT/NEW/E380.BIN"/>
+  <file entry="1268" name="EFFECT/NEW/E381.BIN"/>
+  <file entry="1269" name="EFFECT/NEW/E382.BIN"/>
+  <file entry="1270" name="EFFECT/NEW/E383.BIN"/>
+  <file entry="1271" name="EFFECT/NEW/E384.BIN"/>
+  <file entry="1272" name="EFFECT/NEW/E385.BIN"/>
+  <file entry="1273" name="EFFECT/NEW/E386.BIN"/>
+  <file entry="1274" name="EFFECT/NEW/E387.BIN"/>
+  <file entry="1275" name="EFFECT/NEW/E388.BIN"/>
+  <file entry="1276" name="EFFECT/NEW/E389.BIN"/>
+  <file entry="1277" name="EFFECT/NEW/E390.BIN"/>
+  <file entry="1278" name="EFFECT/NEW/E391.BIN"/>
+  <file entry="1279" name="EFFECT/NEW/E392.BIN"/>
+  <file entry="1280" name="EFFECT/NEW/E393.BIN"/>
+  <file entry="1281" name="EFFECT/NEW/E394.BIN"/>
+  <file entry="1282" name="EFFECT/NEW/E395.BIN"/>
+  <file entry="1283" name="EFFECT/NEW/E396.BIN"/>
+  <file entry="1284" name="EFFECT/NEW/E397.BIN"/>
+  <file entry="1285" name="EFFECT/NEW/E398.BIN"/>
+  <file entry="1286" name="EFFECT/NEW/E399.BIN"/>
+  <file entry="1287" name="EFFECT/NEW/E400.BIN"/>
+  <file entry="1288" name="EFFECT/NEW/E401.BIN"/>
+  <file entry="1289" name="EFFECT/NEW/E402.BIN"/>
+  <file entry="1290" name="EFFECT/NEW/E403.BIN"/>
+  <file entry="1291" name="EFFECT/NEW/E404.BIN"/>
+  <file entry="1292" name="EFFECT/NEW/E405.BIN"/>
+  <file entry="1293" name="EFFECT/NEW/E406.BIN"/>
+  <file entry="1294" name="EFFECT/NEW/E407.BIN"/>
+  <file entry="1295" name="EFFECT/NEW/E408.BIN"/>
+  <file entry="1296" name="EFFECT/NEW/E409.BIN"/>
+  <file entry="1297" name="EFFECT/NEW/E410.BIN"/>
+  <file entry="1298" name="EFFECT/NEW/E411.BIN"/>
+  <file entry="1299" name="EFFECT/NEW/E412.BIN"/>
+  <file entry="1300" name="EFFECT/NEW/E413.BIN"/>
+  <file entry="1301" name="EFFECT/NEW/E450.BIN"/>
+  <file entry="1302" name="EFFECT/NEW/E451.BIN"/>
+  <file entry="1303" name="EFFECT/NEW/E452.BIN"/>
+  <file entry="1304" name="EFFECT/NEW/E453.BIN"/>
+  <file entry="1305" name="EFFECT/NEW/E454.BIN"/>
+  <file entry="1306" name="EFFECT/NEW/E455.BIN"/>
+  <file entry="1307" name="EFFECT/NEW/E456.BIN"/>
+  <file entry="1308" name="EFFECT/NEW/E457.BIN"/>
+  <file entry="1309" name="EFFECT/NEW/E458.BIN"/>
+  <file entry="1310" name="EFFECT/NEW/E459.BIN"/>
+  <file entry="1311" name="EFFECT/NEW/E460.BIN"/>
+  <file entry="1312" name="EFFECT/NEW/E461.BIN"/>
+  <file entry="1313" name="EFFECT/NEW/E462.BIN"/>
+  <file entry="1314" name="EFFECT/NEW/E463.BIN"/>
+  <file entry="1315" name="EFFECT/NEW/E464.BIN"/>
+  <file entry="1316" name="EFFECT/NEW/E465.BIN"/>
+  <file entry="1317" name="EFFECT/NEW/E466.BIN"/>
+  <file entry="1318" name="EFFECT/NEW/E467.BIN"/>
+  <file entry="1319" name="EFFECT/NEW/E468.BIN"/>
+  <file entry="1320" name="EFFECT/NEW/E469.BIN"/>
+  <file entry="1321" name="EFFECT/NEW/E470.BIN"/>
+  <file entry="1322" name="EFFECT/NEW/E471.BIN"/>
+  <file entry="1323" name="EFFECT/NEW/E472.BIN"/>
+  <file entry="1324" name="EFFECT/NEW/E473.BIN"/>
+  <file entry="1325" name="EFFECT/NEW/E474.BIN"/>
+  <file entry="1326" name="EFFECT/NEW/E475.BIN"/>
+  <file entry="1327" name="EFFECT/NEW/E476.BIN"/>
+  <file entry="1328" name="EFFECT/NEW/E477.BIN"/>
+  <file entry="1329" name="EFFECT/NEW/E478.BIN"/>
+  <file entry="1330" name="EFFECT/NEW/E479.BIN"/>
+  <file entry="1331" name="EFFECT/NEW/E480.BIN"/>
+  <file entry="1332" name="EFFECT/NEW/E481.BIN"/>
+  <file entry="1333" name="EFFECT/NEW/E482.BIN"/>
+  <file entry="1334" name="EFFECT/NEW/E483.BIN"/>
+  <file entry="1335" name="EFFECT/NEW/E484.BIN"/>
+  <file entry="1336" name="EFFECT/NEW/E485.BIN"/>
+  <file entry="1337" name="EFFECT/NEW/E486.BIN"/>
+  <file entry="1338" name="EFFECT/NEW/E509.BIN"/>
+  <file entry="1339" name="EFFECT/NEW/E510.BIN"/>
   <file entry="2142" name="MAP/MAP000.5"/>
   <file entry="2143" name="MAP/MAP000.GNS"/>
   <file entry="2144" name="MAP/MAP001.8"/>
@@ -1320,6 +1439,7 @@
   <file entry="2223" name="MAP/MAP002.90"/>
   <file entry="2224" name="MAP/MAP002.91"/>
   <file entry="2225" name="MAP/MAP002.GNS"/>
+  <file entry="2226" name="MAP/NEW/MAP002.DAT"/>
   <file entry="2227" name="MAP/MAP003.8"/>
   <file entry="2228" name="MAP/MAP003.9"/>
   <file entry="2229" name="MAP/MAP003.12"/>
@@ -1329,6 +1449,7 @@
   <file entry="2233" name="MAP/MAP003.20"/>
   <file entry="2234" name="MAP/MAP003.21"/>
   <file entry="2235" name="MAP/MAP003.GNS"/>
+  <file entry="2236" name="MAP/NEW/MAP003.DAT"/>
   <file entry="2237" name="MAP/MAP004.7"/>
   <file entry="2238" name="MAP/MAP004.8"/>
   <file entry="2239" name="MAP/MAP004.13"/>
@@ -1346,6 +1467,7 @@
   <file entry="2251" name="MAP/MAP004.35"/>
   <file entry="2252" name="MAP/MAP004.54"/>
   <file entry="2253" name="MAP/MAP004.GNS"/>
+  <file entry="2254" name="MAP/NEW/MAP004.DAT"/>
   <file entry="2255" name="MAP/MAP005.7"/>
   <file entry="2256" name="MAP/MAP005.8"/>
   <file entry="2257" name="MAP/MAP005.10"/>
@@ -1367,6 +1489,7 @@
   <file entry="2273" name="MAP/MAP005.35"/>
   <file entry="2274" name="MAP/MAP005.40"/>
   <file entry="2275" name="MAP/MAP005.GNS"/>
+  <file entry="2276" name="MAP/NEW/MAP005.DAT"/>
   <file entry="2277" name="MAP/MAP006.11"/>
   <file entry="2278" name="MAP/MAP006.12"/>
   <file entry="2279" name="MAP/MAP006.13"/>
@@ -1384,6 +1507,7 @@
   <file entry="2291" name="MAP/MAP006.49"/>
   <file entry="2292" name="MAP/MAP006.50"/>
   <file entry="2293" name="MAP/MAP006.GNS"/>
+  <file entry="2294" name="MAP/NEW/MAP006.DAT"/>
   <file entry="2295" name="MAP/MAP007.8"/>
   <file entry="2296" name="MAP/MAP007.9"/>
   <file entry="2297" name="MAP/MAP007.11"/>
@@ -1393,6 +1517,7 @@
   <file entry="2301" name="MAP/MAP007.19"/>
   <file entry="2302" name="MAP/MAP007.20"/>
   <file entry="2303" name="MAP/MAP007.GNS"/>
+  <file entry="2304" name="MAP/NEW/MAP007.DAT"/>
   <file entry="2305" name="MAP/MAP008.27"/>
   <file entry="2306" name="MAP/MAP008.8"/>
   <file entry="2307" name="MAP/MAP008.11"/>
@@ -1410,6 +1535,7 @@
   <file entry="2319" name="MAP/MAP008.39"/>
   <file entry="2320" name="MAP/MAP008.20"/>
   <file entry="2321" name="MAP/MAP008.GNS"/>
+  <file entry="2322" name="MAP/NEW/MAP008.DAT"/>
   <file entry="2323" name="MAP/MAP009.8"/>
   <file entry="2324" name="MAP/MAP009.9"/>
   <file entry="2325" name="MAP/MAP009.13"/>
@@ -1453,6 +1579,7 @@
   <file entry="2363" name="MAP/MAP011.49"/>
   <file entry="2364" name="MAP/MAP011.53"/>
   <file entry="2365" name="MAP/MAP011.GNS"/>
+  <file entry="2366" name="MAP/NEW/MAP011.DAT"/>
   <file entry="2367" name="MAP/MAP012.8"/>
   <file entry="2368" name="MAP/MAP012.9"/>
   <file entry="2369" name="MAP/MAP012.10"/>
@@ -1470,6 +1597,7 @@
   <file entry="2381" name="MAP/MAP012.40"/>
   <file entry="2382" name="MAP/MAP012.41"/>
   <file entry="2383" name="MAP/MAP012.GNS"/>
+  <file entry="2384" name="MAP/NEW/MAP012.DAT"/>
   <file entry="2385" name="MAP/MAP013.8"/>
   <file entry="2386" name="MAP/MAP013.9"/>
   <file entry="2387" name="MAP/MAP013.11"/>
@@ -1479,6 +1607,7 @@
   <file entry="2391" name="MAP/MAP013.19"/>
   <file entry="2392" name="MAP/MAP013.20"/>
   <file entry="2393" name="MAP/MAP013.GNS"/>
+  <file entry="2394" name="MAP/NEW/MAP013.DAT"/>
   <file entry="2395" name="MAP/MAP014.7"/>
   <file entry="2396" name="MAP/MAP014.8"/>
   <file entry="2397" name="MAP/MAP014.9"/>
@@ -1497,6 +1626,7 @@
   <file entry="2410" name="MAP/MAP014.20"/>
   <file entry="2411" name="MAP/MAP014.41"/>
   <file entry="2412" name="MAP/MAP014.GNS"/>
+  <file entry="2413" name="MAP/NEW/MAP014.DAT"/>
   <file entry="2414" name="MAP/MAP015.8"/>
   <file entry="2415" name="MAP/MAP015.9"/>
   <file entry="2416" name="MAP/MAP015.60"/>
@@ -1605,6 +1735,7 @@
   <file entry="2519" name="MAP/MAP020.19"/>
   <file entry="2520" name="MAP/MAP020.20"/>
   <file entry="2521" name="MAP/MAP020.GNS"/>
+  <file entry="2522" name="MAP/NEW/MAP020.DAT"/>
   <file entry="2523" name="MAP/MAP021.44"/>
   <file entry="2524" name="MAP/MAP021.8"/>
   <file entry="2525" name="MAP/MAP021.15"/>
@@ -1622,6 +1753,7 @@
   <file entry="2537" name="MAP/MAP021.26"/>
   <file entry="2538" name="MAP/MAP021.51"/>
   <file entry="2539" name="MAP/MAP021.GNS"/>
+  <file entry="2540" name="MAP/NEW/MAP021.DAT"/>
   <file entry="2541" name="MAP/MAP022.8"/>
   <file entry="2542" name="MAP/MAP022.9"/>
   <file entry="2543" name="MAP/MAP022.12"/>
@@ -1643,6 +1775,7 @@
   <file entry="2559" name="MAP/MAP022.54"/>
   <file entry="2560" name="MAP/MAP022.55"/>
   <file entry="2561" name="MAP/MAP022.GNS"/>
+  <file entry="2562" name="MAP/NEW/MAP022.DAT"/>
   <file entry="2563" name="MAP/MAP023.8"/>
   <file entry="2564" name="MAP/MAP023.9"/>
   <file entry="2565" name="MAP/MAP023.10"/>
@@ -1655,6 +1788,7 @@
   <file entry="2572" name="MAP/MAP023.24"/>
   <file entry="2573" name="MAP/MAP023.25"/>
   <file entry="2574" name="MAP/MAP023.GNS"/>
+  <file entry="2575" name="MAP/NEW/MAP023.DAT"/>
   <file entry="2576" name="MAP/MAP024.6"/>
   <file entry="2577" name="MAP/MAP024.7"/>
   <file entry="2578" name="MAP/MAP024.10"/>
@@ -1664,6 +1798,7 @@
   <file entry="2582" name="MAP/MAP024.18"/>
   <file entry="2583" name="MAP/MAP024.19"/>
   <file entry="2584" name="MAP/MAP024.GNS"/>
+  <file entry="2585" name="MAP/NEW/MAP024.DAT"/>
   <file entry="2586" name="MAP/MAP025.7"/>
   <file entry="2587" name="MAP/MAP025.8"/>
   <file entry="2588" name="MAP/MAP025.9"/>
@@ -1676,9 +1811,11 @@
   <file entry="2595" name="MAP/MAP025.24"/>
   <file entry="2596" name="MAP/MAP025.25"/>
   <file entry="2597" name="MAP/MAP025.GNS"/>
+  <file entry="2598" name="MAP/NEW/MAP025.DAT"/>
   <file entry="2599" name="MAP/MAP026.8"/>
   <file entry="2600" name="MAP/MAP026.9"/>
   <file entry="2601" name="MAP/MAP026.GNS"/>
+  <file entry="2602" name="MAP/NEW/MAP026.DAT"/>
   <file entry="2603" name="MAP/MAP027.7"/>
   <file entry="2604" name="MAP/MAP027.8"/>
   <file entry="2605" name="MAP/MAP027.10"/>
@@ -1689,6 +1826,7 @@
   <file entry="2610" name="MAP/MAP027.17"/>
   <file entry="2611" name="MAP/MAP027.22"/>
   <file entry="2612" name="MAP/MAP027.GNS"/>
+  <file entry="2613" name="MAP/NEW/MAP027.DAT"/>
   <file entry="2614" name="MAP/MAP028.6"/>
   <file entry="2615" name="MAP/MAP028.7"/>
   <file entry="2616" name="MAP/MAP028.8"/>
@@ -1699,6 +1837,7 @@
   <file entry="2621" name="MAP/MAP028.16"/>
   <file entry="2622" name="MAP/MAP028.17"/>
   <file entry="2623" name="MAP/MAP028.GNS"/>
+  <file entry="2624" name="MAP/NEW/MAP028.DAT"/>
   <file entry="2625" name="MAP/MAP029.7"/>
   <file entry="2626" name="MAP/MAP029.8"/>
   <file entry="2627" name="MAP/MAP029.10"/>
@@ -1709,6 +1848,7 @@
   <file entry="2632" name="MAP/MAP029.17"/>
   <file entry="2633" name="MAP/MAP029.22"/>
   <file entry="2634" name="MAP/MAP029.GNS"/>
+  <file entry="2635" name="MAP/NEW/MAP029.DAT"/>
   <file entry="2636" name="MAP/MAP030.6"/>
   <file entry="2637" name="MAP/MAP030.7"/>
   <file entry="2638" name="MAP/MAP030.8"/>
@@ -1719,6 +1859,7 @@
   <file entry="2643" name="MAP/MAP030.15"/>
   <file entry="2644" name="MAP/MAP030.20"/>
   <file entry="2645" name="MAP/MAP030.GNS"/>
+  <file entry="2646" name="MAP/NEW/MAP030.DAT"/>
   <file entry="2647" name="MAP/MAP031.7"/>
   <file entry="2648" name="MAP/MAP031.8"/>
   <file entry="2649" name="MAP/MAP031.11"/>
@@ -1740,6 +1881,7 @@
   <file entry="2665" name="MAP/MAP031.39"/>
   <file entry="2666" name="MAP/MAP031.44"/>
   <file entry="2667" name="MAP/MAP031.GNS"/>
+  <file entry="2668" name="MAP/NEW/MAP031.DAT"/>
   <file entry="2669" name="MAP/MAP032.8"/>
   <file entry="2670" name="MAP/MAP032.9"/>
   <file entry="2671" name="MAP/MAP032.11"/>
@@ -1750,6 +1892,7 @@
   <file entry="2676" name="MAP/MAP032.18"/>
   <file entry="2677" name="MAP/MAP032.23"/>
   <file entry="2678" name="MAP/MAP032.GNS"/>
+  <file entry="2679" name="MAP/NEW/MAP032.DAT"/>
   <file entry="2680" name="MAP/MAP033.8"/>
   <file entry="2681" name="MAP/MAP033.9"/>
   <file entry="2682" name="MAP/MAP033.18"/>
@@ -1761,6 +1904,7 @@
   <file entry="2688" name="MAP/MAP034.15"/>
   <file entry="2689" name="MAP/MAP034.19"/>
   <file entry="2690" name="MAP/MAP034.GNS"/>
+  <file entry="2691" name="MAP/NEW/MAP034.DAT"/>
   <file entry="2692" name="MAP/MAP035.7"/>
   <file entry="2693" name="MAP/MAP035.8"/>
   <file entry="2694" name="MAP/MAP035.11"/>
@@ -1782,6 +1926,7 @@
   <file entry="2710" name="MAP/MAP035.43"/>
   <file entry="2711" name="MAP/MAP035.44"/>
   <file entry="2712" name="MAP/MAP035.GNS"/>
+  <file entry="2713" name="MAP/NEW/MAP035.DAT"/>
   <file entry="2714" name="MAP/MAP036.1"/>
   <file entry="2715" name="MAP/MAP036.4"/>
   <file entry="2716" name="MAP/MAP036.5"/>
@@ -1802,11 +1947,13 @@
   <file entry="2731" name="MAP/MAP036.45"/>
   <file entry="2732" name="MAP/MAP036.46"/>
   <file entry="2733" name="MAP/MAP036.GNS"/>
+  <file entry="2734" name="MAP/NEW/MAP036.DAT"/>
   <file entry="2735" name="MAP/MAP037.6"/>
   <file entry="2736" name="MAP/MAP037.7"/>
   <file entry="2737" name="MAP/MAP037.9"/>
   <file entry="2738" name="MAP/MAP037.10"/>
   <file entry="2739" name="MAP/MAP037.GNS"/>
+  <file entry="2740" name="MAP/NEW/MAP037.DAT"/>
   <file entry="2741" name="MAP/MAP038.11"/>
   <file entry="2742" name="MAP/MAP038.12"/>
   <file entry="2743" name="MAP/MAP038.15"/>
@@ -1828,9 +1975,11 @@
   <file entry="2759" name="MAP/MAP038.47"/>
   <file entry="2760" name="MAP/MAP038.48"/>
   <file entry="2761" name="MAP/MAP038.GNS"/>
+  <file entry="2762" name="MAP/NEW/MAP038.DAT"/>
   <file entry="2763" name="MAP/MAP039.8"/>
   <file entry="2764" name="MAP/MAP039.9"/>
   <file entry="2765" name="MAP/MAP039.GNS"/>
+  <file entry="2766" name="MAP/NEW/MAP039.DAT"/>
   <file entry="2767" name="MAP/MAP040.9"/>
   <file entry="2768" name="MAP/MAP040.10"/>
   <file entry="2769" name="MAP/MAP040.11"/>
@@ -1851,11 +2000,13 @@
   <file entry="2784" name="MAP/MAP040.22"/>
   <file entry="2785" name="MAP/MAP040.35"/>
   <file entry="2786" name="MAP/MAP040.GNS"/>
+  <file entry="2787" name="MAP/NEW/MAP040.DAT"/>
   <file entry="2788" name="MAP/MAP041.5"/>
   <file entry="2789" name="MAP/MAP041.11"/>
   <file entry="2790" name="MAP/MAP041.19"/>
   <file entry="2791" name="MAP/MAP041.20"/>
   <file entry="2792" name="MAP/MAP041.GNS"/>
+  <file entry="2793" name="MAP/NEW/MAP041.DAT"/>
   <file entry="2794" name="MAP/MAP042.8"/>
   <file entry="2795" name="MAP/MAP042.9"/>
   <file entry="2796" name="MAP/MAP042.12"/>
@@ -1893,11 +2044,13 @@
   <file entry="2828" name="MAP/MAP044.43"/>
   <file entry="2829" name="MAP/MAP044.44"/>
   <file entry="2830" name="MAP/MAP044.GNS"/>
+  <file entry="2831" name="MAP/NEW/MAP044.DAT"/>
   <file entry="2832" name="MAP/MAP045.6"/>
   <file entry="2833" name="MAP/MAP045.7"/>
   <file entry="2834" name="MAP/MAP045.10"/>
   <file entry="2835" name="MAP/MAP045.11"/>
   <file entry="2836" name="MAP/MAP045.GNS"/>
+  <file entry="2837" name="MAP/NEW/MAP045.DAT"/>
   <file entry="2838" name="MAP/MAP046.8"/>
   <file entry="2839" name="MAP/MAP046.9"/>
   <file entry="2840" name="MAP/MAP046.12"/>
@@ -1930,6 +2083,7 @@
   <file entry="2867" name="MAP/MAP047.45"/>
   <file entry="2868" name="MAP/MAP047.61"/>
   <file entry="2869" name="MAP/MAP047.GNS"/>
+  <file entry="2870" name="MAP/NEW/MAP047.DAT"/>
   <file entry="2871" name="MAP/MAP048.8"/>
   <file entry="2872" name="MAP/MAP048.9"/>
   <file entry="2873" name="MAP/MAP048.12"/>
@@ -1972,6 +2126,7 @@
   <file entry="2910" name="MAP/MAP049.42"/>
   <file entry="2911" name="MAP/MAP049.43"/>
   <file entry="2912" name="MAP/MAP049.GNS"/>
+  <file entry="2913" name="MAP/NEW/MAP049.DAT"/>
   <file entry="2914" name="MAP/MAP050.7"/>
   <file entry="2915" name="MAP/MAP050.8"/>
   <file entry="2916" name="MAP/MAP050.11"/>
@@ -1993,6 +2148,7 @@
   <file entry="2932" name="MAP/MAP050.43"/>
   <file entry="2933" name="MAP/MAP050.44"/>
   <file entry="2934" name="MAP/MAP050.GNS"/>
+  <file entry="2935" name="MAP/NEW/MAP050.DAT"/>
   <file entry="2936" name="MAP/MAP051.7"/>
   <file entry="2937" name="MAP/MAP051.8"/>
   <file entry="2938" name="MAP/MAP051.16"/>
@@ -2011,23 +2167,28 @@
   <file entry="2951" name="MAP/MAP051.49"/>
   <file entry="2952" name="MAP/MAP051.50"/>
   <file entry="2953" name="MAP/MAP051.GNS"/>
+  <file entry="2954" name="MAP/NEW/MAP051.DAT"/>
   <file entry="2955" name="MAP/MAP052.9"/>
   <file entry="2956" name="MAP/MAP052.10"/>
   <file entry="2957" name="MAP/MAP052.GNS"/>
+  <file entry="2958" name="MAP/NEW/MAP052.DAT"/>
   <file entry="2959" name="MAP/MAP053.7"/>
   <file entry="2960" name="MAP/MAP053.8"/>
   <file entry="2961" name="MAP/MAP053.10"/>
   <file entry="2962" name="MAP/MAP053.19"/>
   <file entry="2963" name="MAP/MAP053.22"/>
   <file entry="2964" name="MAP/MAP053.GNS"/>
+  <file entry="2965" name="MAP/NEW/MAP053.DAT"/>
   <file entry="2966" name="MAP/MAP054.7"/>
   <file entry="2967" name="MAP/MAP054.8"/>
   <file entry="2968" name="MAP/MAP054.GNS"/>
+  <file entry="2969" name="MAP/NEW/MAP054.DAT"/>
   <file entry="2970" name="MAP/MAP055.12"/>
   <file entry="2971" name="MAP/MAP055.13"/>
   <file entry="2972" name="MAP/MAP055.15"/>
   <file entry="2973" name="MAP/MAP055.14"/>
   <file entry="2974" name="MAP/MAP055.GNS"/>
+  <file entry="2975" name="MAP/NEW/MAP055.DAT"/>
   <file entry="2976" name="MAP/MAP056.0"/>
   <file entry="2977" name="MAP/MAP056.3"/>
   <file entry="2978" name="MAP/MAP056.4"/>
@@ -2048,6 +2209,7 @@
   <file entry="2993" name="MAP/MAP056.47"/>
   <file entry="2994" name="MAP/MAP056.48"/>
   <file entry="2995" name="MAP/MAP056.GNS"/>
+  <file entry="2996" name="MAP/NEW/MAP056.DAT"/>
   <file entry="2997" name="MAP/MAP057.8"/>
   <file entry="2998" name="MAP/MAP057.9"/>
   <file entry="2999" name="MAP/MAP057.GNS"/>
@@ -2060,12 +2222,14 @@
   <file entry="3006" name="MAP/MAP060.8"/>
   <file entry="3007" name="MAP/MAP060.9"/>
   <file entry="3008" name="MAP/MAP060.GNS"/>
+  <file entry="3009" name="MAP/NEW/MAP060.DAT"/>
   <file entry="3010" name="MAP/MAP061.7"/>
   <file entry="3011" name="MAP/MAP061.8"/>
   <file entry="3012" name="MAP/MAP061.9"/>
   <file entry="3013" name="MAP/MAP061.10"/>
   <file entry="3014" name="MAP/MAP061.GNS"/>
   <file entry="3015" name="MAP/MAP062.7"/>
+  <file entry="3016" name="MAP/MAP062.8"/>
   <file entry="3017" name="MAP/MAP062.11"/>
   <file entry="3018" name="MAP/MAP062.12"/>
   <file entry="3019" name="MAP/MAP062.15"/>
@@ -2073,6 +2237,7 @@
   <file entry="3021" name="MAP/MAP062.19"/>
   <file entry="3022" name="MAP/MAP062.20"/>
   <file entry="3023" name="MAP/MAP062.GNS"/>
+  <file entry="3024" name="MAP/NEW/MAP062.DAT"/>
   <file entry="3025" name="MAP/MAP063.6"/>
   <file entry="3026" name="MAP/MAP063.7"/>
   <file entry="3027" name="MAP/MAP063.10"/>
@@ -2089,6 +2254,7 @@
   <file entry="3038" name="MAP/MAP064.14"/>
   <file entry="3039" name="MAP/MAP064.19"/>
   <file entry="3040" name="MAP/MAP064.GNS"/>
+  <file entry="3041" name="MAP/NEW/MAP064.DAT"/>
   <file entry="3042" name="MAP/MAP065.8"/>
   <file entry="3043" name="MAP/MAP065.9"/>
   <file entry="3044" name="MAP/MAP065.GNS"/>
@@ -2112,6 +2278,7 @@
   <file entry="3062" name="MAP/MAP066.28"/>
   <file entry="3063" name="MAP/MAP066.41"/>
   <file entry="3064" name="MAP/MAP066.GNS"/>
+  <file entry="3065" name="MAP/NEW/MAP066.DAT"/>
   <file entry="3066" name="MAP/MAP067.7"/>
   <file entry="3067" name="MAP/MAP067.8"/>
   <file entry="3068" name="MAP/MAP067.9"/>
@@ -2149,14 +2316,17 @@
   <file entry="3100" name="MAP/MAP068.19"/>
   <file entry="3101" name="MAP/MAP068.20"/>
   <file entry="3102" name="MAP/MAP068.GNS"/>
+  <file entry="3103" name="MAP/NEW/MAP068.DAT"/>
   <file entry="3104" name="MAP/MAP069.7"/>
   <file entry="3105" name="MAP/MAP069.8"/>
   <file entry="3106" name="MAP/MAP069.GNS"/>
+  <file entry="3107" name="MAP/NEW/MAP069.DAT"/>
   <file entry="3108" name="MAP/MAP070.6"/>
   <file entry="3109" name="MAP/MAP070.7"/>
   <file entry="3110" name="MAP/MAP070.10"/>
   <file entry="3111" name="MAP/MAP070.11"/>
   <file entry="3112" name="MAP/MAP070.GNS"/>
+  <file entry="3113" name="MAP/NEW/MAP070.DAT"/>
   <file entry="3114" name="MAP/MAP071.8"/>
   <file entry="3115" name="MAP/MAP071.9"/>
   <file entry="3116" name="MAP/MAP071.28"/>
@@ -2178,6 +2348,7 @@
   <file entry="3132" name="MAP/MAP071.44"/>
   <file entry="3133" name="MAP/MAP071.45"/>
   <file entry="3134" name="MAP/MAP071.GNS"/>
+  <file entry="3135" name="MAP/NEW/MAP071.DAT"/>
   <file entry="3136" name="MAP/MAP072.13"/>
   <file entry="3137" name="MAP/MAP072.9"/>
   <file entry="3138" name="MAP/MAP072.10"/>
@@ -2197,6 +2368,7 @@
   <file entry="3152" name="MAP/MAP072.30"/>
   <file entry="3153" name="MAP/MAP072.39"/>
   <file entry="3154" name="MAP/MAP072.GNS"/>
+  <file entry="3155" name="MAP/NEW/MAP072.DAT"/>
   <file entry="3156" name="MAP/MAP073.2"/>
   <file entry="3157" name="MAP/MAP073.3"/>
   <file entry="3158" name="MAP/MAP073.6"/>
@@ -2206,6 +2378,7 @@
   <file entry="3162" name="MAP/MAP073.23"/>
   <file entry="3163" name="MAP/MAP073.24"/>
   <file entry="3164" name="MAP/MAP073.GNS"/>
+  <file entry="3165" name="MAP/NEW/MAP073.DAT"/>
   <file entry="3166" name="MAP/MAP074.8"/>
   <file entry="3167" name="MAP/MAP074.9"/>
   <file entry="3168" name="MAP/MAP074.10"/>
@@ -2226,6 +2399,7 @@
   <file entry="3183" name="MAP/MAP074.30"/>
   <file entry="3184" name="MAP/MAP074.34"/>
   <file entry="3185" name="MAP/MAP074.GNS"/>
+  <file entry="3186" name="MAP/NEW/MAP074.DAT"/>
   <file entry="3187" name="MAP/MAP075.8"/>
   <file entry="3188" name="MAP/MAP075.9"/>
   <file entry="3189" name="MAP/MAP075.11"/>
@@ -2247,6 +2421,7 @@
   <file entry="3205" name="MAP/MAP075.17"/>
   <file entry="3206" name="MAP/MAP075.46"/>
   <file entry="3207" name="MAP/MAP075.GNS"/>
+  <file entry="3208" name="MAP/NEW/MAP075.DAT"/>
   <file entry="3209" name="MAP/MAP076.6"/>
   <file entry="3210" name="MAP/MAP076.7"/>
   <file entry="3211" name="MAP/MAP076.9"/>
@@ -2265,6 +2440,7 @@
   <file entry="3224" name="MAP/MAP076.36"/>
   <file entry="3225" name="MAP/MAP076.37"/>
   <file entry="3226" name="MAP/MAP076.GNS"/>
+  <file entry="3227" name="MAP/NEW/MAP076.DAT"/>
   <file entry="3228" name="MAP/MAP077.8"/>
   <file entry="3229" name="MAP/MAP077.9"/>
   <file entry="3230" name="MAP/MAP077.11"/>
@@ -2307,6 +2483,7 @@
   <file entry="3267" name="MAP/MAP078.35"/>
   <file entry="3268" name="MAP/MAP078.48"/>
   <file entry="3269" name="MAP/MAP078.GNS"/>
+  <file entry="3270" name="MAP/NEW/MAP078.DAT"/>
   <file entry="3271" name="MAP/MAP079.6"/>
   <file entry="3272" name="MAP/MAP079.7"/>
   <file entry="3273" name="MAP/MAP079.8"/>
@@ -2339,6 +2516,7 @@
   <file entry="3300" name="MAP/MAP080.11"/>
   <file entry="3301" name="MAP/MAP080.40"/>
   <file entry="3302" name="MAP/MAP080.GNS"/>
+  <file entry="3303" name="MAP/NEW/MAP080.DAT"/>
   <file entry="3304" name="MAP/MAP081.6"/>
   <file entry="3305" name="MAP/MAP081.7"/>
   <file entry="3306" name="MAP/MAP081.10"/>
@@ -2360,6 +2538,7 @@
   <file entry="3322" name="MAP/MAP081.18"/>
   <file entry="3323" name="MAP/MAP081.43"/>
   <file entry="3324" name="MAP/MAP081.GNS"/>
+  <file entry="3325" name="MAP/NEW/MAP081.DAT"/>
   <file entry="3326" name="MAP/MAP082.6"/>
   <file entry="3327" name="MAP/MAP082.7"/>
   <file entry="3328" name="MAP/MAP082.9"/>
@@ -2378,6 +2557,7 @@
   <file entry="3341" name="MAP/MAP082.14"/>
   <file entry="3342" name="MAP/MAP082.37"/>
   <file entry="3343" name="MAP/MAP082.GNS"/>
+  <file entry="3344" name="MAP/NEW/MAP082.DAT"/>
   <file entry="3345" name="MAP/MAP083.8"/>
   <file entry="3346" name="MAP/MAP083.9"/>
   <file entry="3347" name="MAP/MAP083.10"/>
@@ -2392,6 +2572,7 @@
   <file entry="3356" name="MAP/MAP083.28"/>
   <file entry="3357" name="MAP/MAP083.38"/>
   <file entry="3358" name="MAP/MAP083.GNS"/>
+  <file entry="3359" name="MAP/NEW/MAP083.DAT"/>
   <file entry="3360" name="MAP/MAP084.6"/>
   <file entry="3361" name="MAP/MAP084.7"/>
   <file entry="3362" name="MAP/MAP084.14"/>
@@ -2413,6 +2594,7 @@
   <file entry="3378" name="MAP/MAP084.34"/>
   <file entry="3379" name="MAP/MAP084.43"/>
   <file entry="3380" name="MAP/MAP084.GNS"/>
+  <file entry="3381" name="MAP/NEW/MAP084.DAT"/>
   <file entry="3382" name="MAP/MAP085.6"/>
   <file entry="3383" name="MAP/MAP085.7"/>
   <file entry="3384" name="MAP/MAP085.9"/>
@@ -2434,6 +2616,7 @@
   <file entry="3400" name="MAP/MAP085.15"/>
   <file entry="3401" name="MAP/MAP085.34"/>
   <file entry="3402" name="MAP/MAP085.GNS"/>
+  <file entry="3403" name="MAP/NEW/MAP085.DAT"/>
   <file entry="3404" name="MAP/MAP086.6"/>
   <file entry="3405" name="MAP/MAP086.7"/>
   <file entry="3406" name="MAP/MAP086.9"/>
@@ -2455,6 +2638,7 @@
   <file entry="3422" name="MAP/MAP086.18"/>
   <file entry="3423" name="MAP/MAP086.34"/>
   <file entry="3424" name="MAP/MAP086.GNS"/>
+  <file entry="3425" name="MAP/NEW/MAP086.DAT"/>
   <file entry="3426" name="MAP/MAP087.8"/>
   <file entry="3427" name="MAP/MAP087.9"/>
   <file entry="3428" name="MAP/MAP087.10"/>
@@ -2467,6 +2651,7 @@
   <file entry="3435" name="MAP/MAP087.17"/>
   <file entry="3436" name="MAP/MAP087.18"/>
   <file entry="3437" name="MAP/MAP087.GNS"/>
+  <file entry="3438" name="MAP/NEW/MAP087.DAT"/>
   <file entry="3439" name="MAP/MAP088.8"/>
   <file entry="3440" name="MAP/MAP088.9"/>
   <file entry="3441" name="MAP/MAP088.23"/>
@@ -2488,6 +2673,7 @@
   <file entry="3457" name="MAP/MAP088.35"/>
   <file entry="3458" name="MAP/MAP088.36"/>
   <file entry="3459" name="MAP/MAP088.GNS"/>
+  <file entry="3460" name="MAP/NEW/MAP088.DAT"/>
   <file entry="3461" name="MAP/MAP089.6"/>
   <file entry="3462" name="MAP/MAP089.7"/>
   <file entry="3463" name="MAP/MAP089.10"/>
@@ -2509,6 +2695,7 @@
   <file entry="3479" name="MAP/MAP089.42"/>
   <file entry="3480" name="MAP/MAP089.43"/>
   <file entry="3481" name="MAP/MAP089.GNS"/>
+  <file entry="3482" name="MAP/NEW/MAP089.DAT"/>
   <file entry="3483" name="MAP/MAP090.6"/>
   <file entry="3484" name="MAP/MAP090.7"/>
   <file entry="3485" name="MAP/MAP090.10"/>
@@ -2530,6 +2717,7 @@
   <file entry="3501" name="MAP/MAP090.42"/>
   <file entry="3502" name="MAP/MAP090.43"/>
   <file entry="3503" name="MAP/MAP090.GNS"/>
+  <file entry="3504" name="MAP/NEW/MAP090.DAT"/>
   <file entry="3505" name="MAP/MAP091.8"/>
   <file entry="3506" name="MAP/MAP091.9"/>
   <file entry="3507" name="MAP/MAP091.10"/>
@@ -2540,6 +2728,7 @@
   <file entry="3512" name="MAP/MAP091.21"/>
   <file entry="3513" name="MAP/MAP091.22"/>
   <file entry="3514" name="MAP/MAP091.GNS"/>
+  <file entry="3515" name="MAP/NEW/MAP091.DAT"/>
   <file entry="3516" name="MAP/MAP092.30"/>
   <file entry="3517" name="MAP/MAP092.9"/>
   <file entry="3518" name="MAP/MAP092.12"/>
@@ -2557,6 +2746,7 @@
   <file entry="3530" name="MAP/MAP092.20"/>
   <file entry="3531" name="MAP/MAP092.21"/>
   <file entry="3532" name="MAP/MAP092.GNS"/>
+  <file entry="3533" name="MAP/NEW/MAP092.DAT"/>
   <file entry="3534" name="MAP/MAP093.6"/>
   <file entry="3535" name="MAP/MAP093.7"/>
   <file entry="3536" name="MAP/MAP093.10"/>
@@ -2566,6 +2756,7 @@
   <file entry="3540" name="MAP/MAP093.18"/>
   <file entry="3541" name="MAP/MAP093.19"/>
   <file entry="3542" name="MAP/MAP093.GNS"/>
+  <file entry="3543" name="MAP/NEW/MAP093.DAT"/>
   <file entry="3544" name="MAP/MAP094.7"/>
   <file entry="3545" name="MAP/MAP094.8"/>
   <file entry="3546" name="MAP/MAP094.16"/>
@@ -2663,6 +2854,7 @@
   <file entry="3638" name="MAP/MAP100.7"/>
   <file entry="3639" name="MAP/MAP100.8"/>
   <file entry="3640" name="MAP/MAP100.GNS"/>
+  <file entry="3641" name="MAP/NEW/MAP100.DAT"/>
   <file entry="3642" name="MAP/MAP101.9"/>
   <file entry="3643" name="MAP/MAP101.10"/>
   <file entry="3644" name="MAP/MAP101.GNS"/>
@@ -2689,10 +2881,12 @@
   <file entry="3665" name="MAP/MAP103.35"/>
   <file entry="3666" name="MAP/MAP103.40"/>
   <file entry="3667" name="MAP/MAP103.GNS"/>
+  <file entry="3668" name="MAP/NEW/MAP103.DAT"/>
   <file entry="3669" name="MAP/MAP104.8"/>
   <file entry="3670" name="MAP/MAP104.9"/>
   <file entry="3671" name="MAP/MAP104.10"/>
   <file entry="3672" name="MAP/MAP104.GNS"/>
+  <file entry="3673" name="MAP/NEW/MAP104.DAT"/>
   <file entry="3674" name="MAP/MAP105.6"/>
   <file entry="3675" name="MAP/MAP105.15"/>
   <file entry="3676" name="MAP/MAP105.14"/>
@@ -2795,6 +2989,7 @@
   <file entry="3773" name="MAP/MAP115.22"/>
   <file entry="3774" name="MAP/MAP115.43"/>
   <file entry="3775" name="MAP/MAP115.GNS"/>
+  <file entry="3776" name="MAP/NEW/MAP115.DAT"/>
   <file entry="3777" name="MAP/MAP116.6"/>
   <file entry="3778" name="MAP/MAP116.7"/>
   <file entry="3779" name="MAP/MAP116.GNS"/>
@@ -2810,7 +3005,183 @@
   <file entry="3789" name="MAP/MAP125.6"/>
   <file entry="3790" name="MAP/MAP125.7"/>
   <file entry="3791" name="MAP/MAP125.GNS"/>
-  <file entry="3821" name="MAP/MAP011.22.duplicate"/>
-  <file entry="3822" name="MAP/MAP011.28.duplicate"/>
-  <file entry="3827" name="MAP/MAP011.53.duplicate"/>
+  <file entry="3792" name="MAP/MAP126.GNS"/>
+  <file entry="3793" name="MAP/NEW/MAP126.DAT"/>
+  <file entry="3794" name="MAP/MAP127.GNS"/>
+  <file entry="3795" name="MAP/NEW/MAP127.DAT"/>
+  <file entry="3796" name="MAP/MAP68000.DOC"/>
+  <file entry="3797" name="MAP/NEW/MAP001.9"/>
+  <file entry="3798" name="MAP/NEW/MAP002.55"/>
+  <file entry="3799" name="MAP/NEW/MAP002.9"/>
+  <file entry="3800" name="MAP/NEW/MAP003.9"/>
+  <file entry="3801" name="MAP/NEW/MAP004.13"/>
+  <file entry="3802" name="MAP/NEW/MAP004.18"/>
+  <file entry="3803" name="MAP/NEW/MAP004.24"/>
+  <file entry="3804" name="MAP/NEW/MAP004.30"/>
+  <file entry="3805" name="MAP/NEW/MAP004.36"/>
+  <file entry="3806" name="MAP/NEW/MAP004.42"/>
+  <file entry="3807" name="MAP/NEW/MAP004.48"/>
+  <file entry="3808" name="MAP/NEW/MAP004.54"/>
+  <file entry="3809" name="MAP/NEW/MAP004.8"/>
+  <file entry="3810" name="MAP/NEW/MAP005.8"/>
+  <file entry="3811" name="MAP/NEW/MAP006.12"/>
+  <file entry="3812" name="MAP/NEW/MAP006.31"/>
+  <file entry="3813" name="MAP/NEW/MAP006.36"/>
+  <file entry="3814" name="MAP/NEW/MAP006.43"/>
+  <file entry="3815" name="MAP/NEW/MAP006.50"/>
+  <file entry="3816" name="MAP/NEW/MAP007.9"/>
+  <file entry="3817" name="MAP/NEW/MAP008.28"/>
+  <file entry="3818" name="MAP/NEW/MAP008.8"/>
+  <file entry="3819" name="MAP/NEW/MAP009.9"/>
+  <file entry="3820" name="MAP/NEW/MAP010.9"/>
+  <file entry="3821" name="MAP/NEW/MAP011.22"/>
+  <file entry="3822" name="MAP/NEW/MAP011.28"/>
+  <file entry="3823" name="MAP/NEW/MAP011.33"/>
+  <file entry="3824" name="MAP/NEW/MAP011.40"/>
+  <file entry="3825" name="MAP/NEW/MAP011.43"/>
+  <file entry="3826" name="MAP/NEW/MAP011.47"/>
+  <file entry="3827" name="MAP/NEW/MAP011.53"/>
+  <file entry="3828" name="MAP/NEW/MAP011.8"/>
+  <file entry="3829" name="MAP/NEW/MAP012.9"/>
+  <file entry="3830" name="MAP/NEW/MAP013.9"/>
+  <file entry="3831" name="MAP/NEW/MAP014.26"/>
+  <file entry="3832" name="MAP/NEW/MAP014.31"/>
+  <file entry="3833" name="MAP/NEW/MAP014.36"/>
+  <file entry="3834" name="MAP/NEW/MAP014.41"/>
+  <file entry="3835" name="MAP/NEW/MAP014.8"/>
+  <file entry="3836" name="MAP/NEW/MAP015.46"/>
+  <file entry="3837" name="MAP/NEW/MAP015.9"/>
+  <file entry="3838" name="MAP/NEW/MAP016.31"/>
+  <file entry="3839" name="MAP/NEW/MAP016.9"/>
+  <file entry="3840" name="MAP/NEW/MAP017.10"/>
+  <file entry="3841" name="MAP/NEW/MAP018.14"/>
+  <file entry="3842" name="MAP/NEW/MAP018.19"/>
+  <file entry="3843" name="MAP/NEW/MAP018.24"/>
+  <file entry="3844" name="MAP/NEW/MAP018.34"/>
+  <file entry="3845" name="MAP/NEW/MAP018.39"/>
+  <file entry="3846" name="MAP/NEW/MAP018.44"/>
+  <file entry="3847" name="MAP/NEW/MAP018.49"/>
+  <file entry="3848" name="MAP/NEW/MAP018.9"/>
+  <file entry="3849" name="MAP/NEW/MAP019.8"/>
+  <file entry="3850" name="MAP/NEW/MAP020.8"/>
+  <file entry="3851" name="MAP/NEW/MAP021.15"/>
+  <file entry="3852" name="MAP/NEW/MAP021.33"/>
+  <file entry="3853" name="MAP/NEW/MAP021.39"/>
+  <file entry="3854" name="MAP/NEW/MAP021.45"/>
+  <file entry="3855" name="MAP/NEW/MAP021.51"/>
+  <file entry="3856" name="MAP/NEW/MAP021.8"/>
+  <file entry="3857" name="MAP/NEW/MAP022.9"/>
+  <file entry="3858" name="MAP/NEW/MAP023.9"/>
+  <file entry="3859" name="MAP/NEW/MAP024.7"/>
+  <file entry="3860" name="MAP/NEW/MAP025.8"/>
+  <file entry="3861" name="MAP/NEW/MAP026.9"/>
+  <file entry="3862" name="MAP/NEW/MAP027.8"/>
+  <file entry="3863" name="MAP/NEW/MAP028.7"/>
+  <file entry="3864" name="MAP/NEW/MAP029.8"/>
+  <file entry="3865" name="MAP/NEW/MAP030.7"/>
+  <file entry="3866" name="MAP/NEW/MAP031.8"/>
+  <file entry="3867" name="MAP/NEW/MAP032.9"/>
+  <file entry="3868" name="MAP/NEW/MAP034.11"/>
+  <file entry="3869" name="MAP/NEW/MAP034.15"/>
+  <file entry="3870" name="MAP/NEW/MAP034.19"/>
+  <file entry="3871" name="MAP/NEW/MAP034.7"/>
+  <file entry="3872" name="MAP/NEW/MAP035.8"/>
+  <file entry="3873" name="MAP/NEW/MAP036.46"/>
+  <file entry="3874" name="MAP/NEW/MAP037.7"/>
+  <file entry="3875" name="MAP/NEW/MAP038.12"/>
+  <file entry="3876" name="MAP/NEW/MAP039.9"/>
+  <file entry="3877" name="MAP/NEW/MAP040.10"/>
+  <file entry="3878" name="MAP/NEW/MAP041.11"/>
+  <file entry="3879" name="MAP/NEW/MAP041.20"/>
+  <file entry="3880" name="MAP/NEW/MAP041.5"/>
+  <file entry="3881" name="MAP/NEW/MAP042.9"/>
+  <file entry="3882" name="MAP/NEW/MAP043.9"/>
+  <file entry="3883" name="MAP/NEW/MAP044.8"/>
+  <file entry="3884" name="MAP/NEW/MAP045.7"/>
+  <file entry="3885" name="MAP/NEW/MAP046.9"/>
+  <file entry="3886" name="MAP/NEW/MAP047.17"/>
+  <file entry="3887" name="MAP/NEW/MAP048.9"/>
+  <file entry="3888" name="MAP/NEW/MAP049.8"/>
+  <file entry="3889" name="MAP/NEW/MAP050.8"/>
+  <file entry="3890" name="MAP/NEW/MAP051.17"/>
+  <file entry="3891" name="MAP/NEW/MAP051.32"/>
+  <file entry="3892" name="MAP/NEW/MAP051.38"/>
+  <file entry="3893" name="MAP/NEW/MAP051.44"/>
+  <file entry="3894" name="MAP/NEW/MAP051.50"/>
+  <file entry="3895" name="MAP/NEW/MAP051.8"/>
+  <file entry="3896" name="MAP/NEW/MAP052.10"/>
+  <file entry="3897" name="MAP/NEW/MAP053.10"/>
+  <file entry="3898" name="MAP/NEW/MAP053.8"/>
+  <file entry="3899" name="MAP/NEW/MAP054.8"/>
+  <file entry="3900" name="MAP/NEW/MAP055.13"/>
+  <file entry="3901" name="MAP/NEW/MAP056.48"/>
+  <file entry="3902" name="MAP/NEW/MAP057.9"/>
+  <file entry="3903" name="MAP/NEW/MAP058.9"/>
+  <file entry="3904" name="MAP/NEW/MAP059.9"/>
+  <file entry="3905" name="MAP/NEW/MAP060.9"/>
+  <file entry="3906" name="MAP/NEW/MAP061.8"/>
+  <file entry="3907" name="MAP/NEW/MAP062.8"/>
+  <file entry="3908" name="MAP/NEW/MAP063.7"/>
+  <file entry="3909" name="MAP/NEW/MAP064.10"/>
+  <file entry="3910" name="MAP/NEW/MAP064.14"/>
+  <file entry="3911" name="MAP/NEW/MAP064.19"/>
+  <file entry="3912" name="MAP/NEW/MAP065.9"/>
+  <file entry="3913" name="MAP/NEW/MAP066.8"/>
+  <file entry="3914" name="MAP/NEW/MAP067.8"/>
+  <file entry="3915" name="MAP/NEW/MAP068.29"/>
+  <file entry="3916" name="MAP/NEW/MAP068.8"/>
+  <file entry="3917" name="MAP/NEW/MAP069.8"/>
+  <file entry="3918" name="MAP/NEW/MAP070.7"/>
+  <file entry="3919" name="MAP/NEW/MAP071.9"/>
+  <file entry="3920" name="MAP/NEW/MAP072.9"/>
+  <file entry="3921" name="MAP/NEW/MAP073.24"/>
+  <file entry="3922" name="MAP/NEW/MAP074.9"/>
+  <file entry="3923" name="MAP/NEW/MAP075.9"/>
+  <file entry="3924" name="MAP/NEW/MAP076.7"/>
+  <file entry="3925" name="MAP/NEW/MAP077.9"/>
+  <file entry="3926" name="MAP/NEW/MAP078.9"/>
+  <file entry="3927" name="MAP/NEW/MAP079.7"/>
+  <file entry="3928" name="MAP/NEW/MAP080.7"/>
+  <file entry="3929" name="MAP/NEW/MAP081.7"/>
+  <file entry="3930" name="MAP/NEW/MAP082.7"/>
+  <file entry="3931" name="MAP/NEW/MAP083.38"/>
+  <file entry="3932" name="MAP/NEW/MAP083.9"/>
+  <file entry="3933" name="MAP/NEW/MAP084.7"/>
+  <file entry="3934" name="MAP/NEW/MAP085.7"/>
+  <file entry="3935" name="MAP/NEW/MAP087.9"/>
+  <file entry="3936" name="MAP/NEW/MAP088.9"/>
+  <file entry="3937" name="MAP/NEW/MAP089.7"/>
+  <file entry="3938" name="MAP/NEW/MAP090.7"/>
+  <file entry="3939" name="MAP/NEW/MAP091.9"/>
+  <file entry="3940" name="MAP/NEW/MAP092.31"/>
+  <file entry="3941" name="MAP/NEW/MAP092.9"/>
+  <file entry="3942" name="MAP/NEW/MAP093.7"/>
+  <file entry="3943" name="MAP/NEW/MAP094.17"/>
+  <file entry="3944" name="MAP/NEW/MAP094.8"/>
+  <file entry="3945" name="MAP/NEW/MAP095.29"/>
+  <file entry="3946" name="MAP/NEW/MAP095.8"/>
+  <file entry="3947" name="MAP/NEW/MAP096.13"/>
+  <file entry="3948" name="MAP/NEW/MAP096.17"/>
+  <file entry="3949" name="MAP/NEW/MAP096.21"/>
+  <file entry="3950" name="MAP/NEW/MAP096.8"/>
+  <file entry="3951" name="MAP/NEW/MAP097.8"/>
+  <file entry="3952" name="MAP/NEW/MAP098.7"/>
+  <file entry="3953" name="MAP/NEW/MAP100.8"/>
+  <file entry="3954" name="MAP/NEW/MAP101.10"/>
+  <file entry="3955" name="MAP/NEW/MAP102.8"/>
+  <file entry="3956" name="MAP/NEW/MAP103.10"/>
+  <file entry="3957" name="MAP/NEW/MAP104.10"/>
+  <file entry="3958" name="MAP/NEW/MAP104.9"/>
+  <file entry="3959" name="MAP/NEW/MAP105.15"/>
+  <file entry="3960" name="MAP/NEW/MAP105.7"/>
+  <file entry="3961" name="MAP/NEW/MAP106.7"/>
+  <file entry="3962" name="MAP/NEW/MAP107.7"/>
+  <file entry="3963" name="MAP/NEW/MAP108.7"/>
+  <file entry="3964" name="MAP/NEW/MAP109.7"/>
+  <file entry="3965" name="MAP/NEW/MAP110.7"/>
+  <file entry="3966" name="MAP/NEW/MAP111.9"/>
+  <file entry="3967" name="MAP/NEW/MAP112.7"/>
+  <file entry="3968" name="MAP/NEW/MAP113.7"/>
+  <file entry="3969" name="MAP/NEW/MAP114.7"/>
+  <file entry="3970" name="MAP/NEW/MAP115.7"/>
 </files>

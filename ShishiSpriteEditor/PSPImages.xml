@@ -1197,6 +1197,31 @@
             </Position>
         </PalettedImage4bppSectioned>
     </Section>
+    <Section Name="HCHAR.DAT (WOTL Formation Screen Sprites)" Filesize="3136">
+        <Names>
+            <Name>Dark Knight Male</Name>
+            <Name>Dark Knight Female</Name>
+            <Name>Onion Knight Male</Name>
+            <Name>Onion Knight Female</Name>
+            <Name>Balthier</Name>
+            <Name>Luso</Name>
+        </Names>
+        <Repeat Number="6" Offset="512" PaletteOffset="512">
+            <PalettedImage4bpp>
+                <Width>24</Width>
+                <Height>40</Height>
+                <FFTPack>884</FFTPack>
+                <PalettePosition>
+                    <Offset>64</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>96</Offset>
+                    <Length>480</Length>
+                </Position>
+            </PalettedImage4bpp>
+        </Repeat>
+    </Section>
     <Section Name="WLDFACE.BIN" Filename="WLDFACE.BIN" Filesize="131072">
         <Names>
             <Name>Ramza (Chapter 1)</Name>
@@ -1640,6 +1665,51 @@
                 <Length>30720</Length>
             </Position>
         </PalettedImage4bpp>
+    </Section>
+    <Section Name="FACE.DAT (WOTL Portraits)" Filesize="6480">
+        <Names>
+            <Name>Dark Knight Male</Name>
+            <Name>Dark Knight Female</Name>
+            <Name>Onion Knight Male</Name>
+            <Name>Onion Knight Female</Name>
+            <Name>Balthier</Name>
+            <Name>Luso</Name>
+        </Names>
+        <Repeat Number="6" Offset="800" PaletteOffset="800">
+            <PalettedImage4bpp>
+                <Width>32</Width>
+                <Height>48</Height>
+                <FFTPack>896</FFTPack>
+                <PalettePosition>
+                    <Offset>80</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>112</Offset>
+                    <Length>768</Length>
+                </Position>
+            </PalettedImage4bpp>
+        </Repeat>
+    </Section>
+    <Section Name="BONUS.BIN" Filename="BONUS.BIN" Filesize="958464">
+        <Repeat Number="71" Offset="26624" PaletteOffset="26624">
+            <PalettedImage4bpp>
+                <Name>BONUS.BIN</Name>
+                <Width>256</Width>
+                <Height>200</Height>
+                <FFTPack>EVENT_BONUS_BIN</FFTPack>
+                <PaletteCount>16</PaletteCount>
+                <DefaultPalette>0</DefaultPalette>
+                <PalettePosition>
+                    <Offset>25600</Offset>
+                    <Length>32</Length>
+                </PalettePosition>
+                <Position>
+                    <Offset>0</Offset>
+                    <Length>25600</Length>
+                </Position>
+            </PalettedImage4bpp>
+        </Repeat>
     </Section>
     <Section Name="BONUS.BIN" Filename="BONUS.BIN" Filesize="958464">
         <Repeat Number="71" Offset="26624" PaletteOffset="26624">
