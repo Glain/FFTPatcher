@@ -1674,8 +1674,10 @@
             <Name>Onion Knight Female</Name>
             <Name>Balthier</Name>
             <Name>Luso</Name>
+            <Name>Bremondt Freitberg</Name>
+            <Name>Aliste Rosenheim</Name>
         </Names>
-        <Repeat Number="6" Offset="800" PaletteOffset="800">
+        <Repeat Number="8" Offset="800" PaletteOffset="800">
             <PalettedImage4bpp>
                 <Width>32</Width>
                 <Height>48</Height>
