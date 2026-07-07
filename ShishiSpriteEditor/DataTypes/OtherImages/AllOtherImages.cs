@@ -575,7 +575,7 @@ namespace FFTPatcher.SpriteEditor
         public static AbstractImage GetPSPEffectImage(Stream iso, int effectIndex, string effectName, PatcherLib.Iso.PspIso.PspIsoInfo pspIsoInfo)
         {
             string strEffectNumber = effectIndex.ToString("000");
-            string sectorName = string.Format("EFFECT_E{0}_BIN", strEffectNumber);
+            string sectorName = string.Format("EFFECT_NEW_E{0}_BIN", strEffectNumber);
 
             PatcherLib.Iso.FFTPack.Files fftPack = (PatcherLib.Iso.FFTPack.Files)3;
 
