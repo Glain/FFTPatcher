@@ -80,28 +80,32 @@ namespace FFTPatcher.Editors
         	this.Monster.DataPropertyName = "MonsterName";
         	this.Monster.Frozen = true;
         	this.Monster.HeaderText = "Monster";
+            this.Monster.MinimumWidth = 90;
         	this.Monster.Name = "Monster";
         	this.Monster.ReadOnly = true;
-        	this.Monster.Width = 70;
+        	this.Monster.Width = 90;
         	// 
         	// CommonItem
         	// 
         	this.CommonItem.DataPropertyName = "Common";
         	this.CommonItem.HeaderText = "Common Item (~88%)";
+            this.CommonItem.MinimumWidth = 140;
         	this.CommonItem.Name = "CommonItem";
-        	this.CommonItem.Width = 72;
+        	this.CommonItem.Width = 140;
         	// 
         	// UncommonItem
         	// 
         	this.UncommonItem.DataPropertyName = "Uncommon";
         	this.UncommonItem.HeaderText = "Uncommon Item (~12%)";
+            this.UncommonItem.MinimumWidth = 150;
         	this.UncommonItem.Name = "UncommonItem";
-        	this.UncommonItem.Width = 84;
+        	this.UncommonItem.Width = 150;
         	// 
         	// AllPoachProbabilitiesEditor
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
         	this.Controls.Add(this.dataGridView);
         	this.Name = "AllPoachProbabilitiesEditor";
         	this.Size = new System.Drawing.Size(567, 327);

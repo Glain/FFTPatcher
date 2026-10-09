@@ -373,9 +373,9 @@ namespace FFTPatcher.Editors
             this.clbAIFlags1.Items.AddRange(new object[] {
             "",
             "Focus Unit",
-            "Stay Near X/Y",
+            "Focus X/Y",
             "Aggressive",
-            "Defensive",
+            "Enable Focus",
             "",
             "",
             ""});

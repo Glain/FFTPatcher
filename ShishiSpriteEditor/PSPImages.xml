@@ -24,7 +24,7 @@
             <Width>256</Width>
             <Height>256</Height>
             <FFTPack>33</FFTPack>
-            <PaletteCount>16</PaletteCount>
+            <PaletteCount>33</PaletteCount>
             <DefaultPalette>0</DefaultPalette>
             <PalettePosition>
                 <Offset>32768</Offset>
@@ -892,7 +892,7 @@
                     <Length>32</Length>
                 </PalettePosition>
                 <Position>
-                    <Offset>2560</Offset>
+                    <Offset>2432</Offset>
                     <Length>25600</Length>
                 </Position>
             </PalettedImage4bpp>
@@ -1689,26 +1689,6 @@
                 <Position>
                     <Offset>112</Offset>
                     <Length>768</Length>
-                </Position>
-            </PalettedImage4bpp>
-        </Repeat>
-    </Section>
-    <Section Name="BONUS.BIN" Filename="BONUS.BIN" Filesize="958464">
-        <Repeat Number="71" Offset="26624" PaletteOffset="26624">
-            <PalettedImage4bpp>
-                <Name>BONUS.BIN</Name>
-                <Width>256</Width>
-                <Height>200</Height>
-                <FFTPack>EVENT_BONUS_BIN</FFTPack>
-                <PaletteCount>16</PaletteCount>
-                <DefaultPalette>0</DefaultPalette>
-                <PalettePosition>
-                    <Offset>25600</Offset>
-                    <Length>32</Length>
-                </PalettePosition>
-                <Position>
-                    <Offset>0</Offset>
-                    <Length>25600</Length>
                 </Position>
             </PalettedImage4bpp>
         </Repeat>

@@ -259,9 +259,9 @@ namespace FFTPatcher.Editors
             // 
             // startingStatusesEditor
             // 
-            this.startingStatusesEditor.Location = new System.Drawing.Point(0, 566);
+            this.startingStatusesEditor.Location = new System.Drawing.Point(3, 526);
             this.startingStatusesEditor.Name = "startingStatusesEditor";
-            this.startingStatusesEditor.Size = new System.Drawing.Size(505, 178);
+            this.startingStatusesEditor.Size = new System.Drawing.Size(613, 150);
             this.startingStatusesEditor.Status = "Starting Status";
             this.startingStatusesEditor.Statuses = null;
             this.startingStatusesEditor.TabIndex = 12;
@@ -269,9 +269,9 @@ namespace FFTPatcher.Editors
             // 
             // statusImmunityEditor
             // 
-            this.statusImmunityEditor.Location = new System.Drawing.Point(0, 387);
+            this.statusImmunityEditor.Location = new System.Drawing.Point(3, 367);
             this.statusImmunityEditor.Name = "statusImmunityEditor";
-            this.statusImmunityEditor.Size = new System.Drawing.Size(505, 178);
+            this.statusImmunityEditor.Size = new System.Drawing.Size(613, 150);
             this.statusImmunityEditor.Status = "Status Immunity";
             this.statusImmunityEditor.Statuses = null;
             this.statusImmunityEditor.TabIndex = 11;
@@ -279,9 +279,9 @@ namespace FFTPatcher.Editors
             // 
             // permanentStatusesEditor
             // 
-            this.permanentStatusesEditor.Location = new System.Drawing.Point(0, 208);
+            this.permanentStatusesEditor.Location = new System.Drawing.Point(3, 208);
             this.permanentStatusesEditor.Name = "permanentStatusesEditor";
-            this.permanentStatusesEditor.Size = new System.Drawing.Size(505, 178);
+            this.permanentStatusesEditor.Size = new System.Drawing.Size(613, 150);
             this.permanentStatusesEditor.Status = "Permanent Status";
             this.permanentStatusesEditor.Statuses = null;
             this.permanentStatusesEditor.TabIndex = 10;
